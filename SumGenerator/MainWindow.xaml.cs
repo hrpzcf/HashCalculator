@@ -69,6 +69,7 @@ namespace SumGenerator
             this.uiTextBlock_ClosingBracket.Visibility = Visibility.Visible;
             this.uiTextBlock_CheckingFileName.Visibility = Visibility.Visible;
             this.uiProgressbar_TaskProgress.Visibility = Visibility.Visible;
+            this.uiButton_ExportAsText.IsEnabled = false;
         }
 
         private void HideProgressInfo()
@@ -81,6 +82,7 @@ namespace SumGenerator
             this.uiTextBlock_ClosingBracket.Visibility = Visibility.Hidden;
             this.uiTextBlock_CheckingFileName.Visibility = Visibility.Hidden;
             this.uiProgressbar_TaskProgress.Visibility = Visibility.Hidden;
+            this.uiButton_ExportAsText.IsEnabled = true;
         }
 
         private void UpdateProgress(int nth, string name)

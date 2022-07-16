@@ -127,6 +127,7 @@
                 Click="OnButton_ClearFileList_Click"
                 Content="清空结果" />
             <Button
+                x:Name="uiButton_ExportAsText"
                 Grid.Column="3"
                 Margin="8,8,8,8"
                 Padding="16,8,16,8"
