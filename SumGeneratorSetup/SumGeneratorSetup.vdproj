@@ -34,13 +34,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_41EEF066CDD11CE410A95AC9256961F4"
+        "OwnerKey" = "8:_43F68922ACEB4F3FB3580610D1041E5C"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_43F68922ACEB4F3FB3580610D1041E5C"
+        "OwnerKey" = "8:_41EEF066CDD11CE410A95AC9256961F4"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -70,10 +70,10 @@
             "ComponentsUrl" = "8:"
                 "Items"
                 {
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.8"
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.6.2"
                     {
-                    "Name" = "8:Microsoft .NET Framework 4.8 (x86 和 x64)"
-                    "ProductCode" = "8:.NETFramework,Version=v4.8"
+                    "Name" = "8:Microsoft .NET Framework 4.6.2 (x86 和 x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.6.2"
                     }
                 }
             }
@@ -102,10 +102,10 @@
             "ComponentsUrl" = "8:"
                 "Items"
                 {
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.8"
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.6.2"
                     {
-                    "Name" = "8:Microsoft .NET Framework 4.8 (x86 和 x64)"
-                    "ProductCode" = "8:.NETFramework,Version=v4.8"
+                    "Name" = "8:Microsoft .NET Framework 4.6.2 (x86 和 x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.6.2"
                     }
                 }
             }
@@ -130,7 +130,7 @@
                 {
                 "Name" = "8:.NET Framework"
                 "Message" = "8:[VSDNETMSG]"
-                "FrameworkVersion" = "8:.NETFramework,Version=v4.8"
+                "FrameworkVersion" = "8:.NETFramework,Version=v4.6.2"
                 "AllowLaterVersions" = "11:FALSE"
                 "InstallUrl" = "8:http://go.microsoft.com/fwlink/?LinkId=863262"
                 }
