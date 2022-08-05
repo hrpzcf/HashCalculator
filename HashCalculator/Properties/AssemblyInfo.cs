@@ -7,13 +7,13 @@ using System.Windows;
 // 有关程序集的一般信息由以下
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("SumGenerator")]
-[assembly: AssemblyDescription("SHA256 批量生成器，带导出为文本功能。")]
+[assembly: AssemblyTitle("HashCalculator")]
+[assembly: AssemblyDescription("一款文件 SHA256 哈希值批量计算器，也支持将结果导出为 sha256sums 文件功能和批量检验哈希值功能。")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("SumGenerator")]
-[assembly: AssemblyProduct("SumGenerator")]
+[assembly: AssemblyCompany("HashCalculator")]
+[assembly: AssemblyProduct("HashCalculator")]
 [assembly: AssemblyCopyright("Copyright ©  2022")]
-[assembly: AssemblyTrademark("SumGenerator")]
+[assembly: AssemblyTrademark("HashCalculator")]
 [assembly: AssemblyCulture("")]
 
 // 将 ComVisible 设置为 false 会使此程序集中的类型
@@ -51,5 +51,5 @@ using System.Windows;
 //可以指定所有这些值，也可以使用“生成号”和“修订号”的默认值
 //通过使用 "*"，如下所示:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("1.0.3.0")]
+[assembly: AssemblyFileVersion("1.0.3.0")]

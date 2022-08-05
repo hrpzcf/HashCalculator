@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SumGenerator", "SumGenerator\SumGenerator.csproj", "{16B60D29-4D81-4360-814C-1A0FFFF5D75B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HashCalculator", "HashCalculator\HashCalculator.csproj", "{16B60D29-4D81-4360-814C-1A0FFFF5D75B}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SumGeneratorSetup", "SumGeneratorSetup\SumGeneratorSetup.vdproj", "{E9A03744-472E-412D-BD05-D81FB8817103}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "HashCalculatorSetup", "HashCalculatorSetup\HashCalculatorSetup.vdproj", "{E9A03744-472E-412D-BD05-D81FB8817103}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

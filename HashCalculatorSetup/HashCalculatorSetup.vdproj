@@ -3,7 +3,7 @@
 "VSVersion" = "3:800"
 "ProjectType" = "8:{978C614F-708E-4E1A-B201-565925725DBA}"
 "IsWebType" = "8:FALSE"
-"ProjectName" = "8:SumGeneratorSetup"
+"ProjectName" = "8:HashCalculatorSetup"
 "LanguageId" = "3:2052"
 "CodePage" = "3:936"
 "UILanguageId" = "3:2052"
@@ -51,7 +51,7 @@
         "DisplayName" = "8:Debug"
         "IsDebugOnly" = "11:TRUE"
         "IsReleaseOnly" = "11:FALSE"
-        "OutputFilename" = "8:Debug\\SumGeneratorSetup.msi"
+        "OutputFilename" = "8:Debug\\HashCalculatorSetup.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -83,7 +83,7 @@
         "DisplayName" = "8:Release"
         "IsDebugOnly" = "11:FALSE"
         "IsReleaseOnly" = "11:TRUE"
-        "OutputFilename" = "8:Release\\SumGeneratorSetup.msi"
+        "OutputFilename" = "8:Release\\HashCalculatorSetup.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -171,7 +171,7 @@
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9002850C42184E109228057C41090707"
             {
-            "SourcePath" = "8:..\\SumGenerator\\Images\\icon.ico"
+            "SourcePath" = "8:..\\HashCalculator\\Images\\icon.ico"
             "TargetName" = "8:icon.ico"
             "Tag" = "8:"
             "Folder" = "8:_35CAFC4B99FB4FFDA44CB8912B66AE40"
@@ -244,7 +244,7 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:SumGenerator"
+        "ProductName" = "8:HashCalculator"
         "ProductCode" = "8:{9F815888-0A82-4C05-BBDC-E35A2216E0BB}"
         "PackageCode" = "8:{D44691A4-22B6-47BA-B3F8-5CBBBFEFF132}"
         "UpgradeCode" = "8:{88EDC7ED-DDA0-4D7B-9B9E-44CFA1A61B16}"
@@ -254,12 +254,12 @@
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
         "ProductVersion" = "8:1.0.0"
-        "Manufacturer" = "8:SumGenerator"
+        "Manufacturer" = "8:HashCalculator"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
-        "Title" = "8:SumGeneratorSetup"
+        "Title" = "8:HashCalculatorSetup"
         "Subject" = "8:"
-        "ARPCONTACT" = "8:SumGenerator"
+        "ARPCONTACT" = "8:HashCalculator"
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:"
         "ARPURLINFOABOUT" = "8:"
@@ -382,7 +382,7 @@
             }
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_D67E6FCF770449DBB152F09FE63C7ACE"
             {
-            "Name" = "8:SumGenerator"
+            "Name" = "8:HashCalculator"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
@@ -795,7 +795,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_43F68922ACEB4F3FB3580610D1041E5C"
             {
-            "SourcePath" = "8:..\\SumGenerator\\obj\\Release\\SumGenerator.exe"
+            "SourcePath" = "8:..\\HashCalculator\\obj\\Release\\HashCalculator.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_35CAFC4B99FB4FFDA44CB8912B66AE40"
