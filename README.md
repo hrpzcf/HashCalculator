@@ -1,6 +1,7 @@
 # HashCalculator
 
 ### 一款文件 SHA256 哈希值批量计算器，也支持将结果导出为 sha256sums 文件功能和批量检验哈希值功能。
+`本程序需要 .Net Framework 4.6.2 或以上版本的支持（Windows 10 1607 及以上版本自带）`
 
 <br>
 
