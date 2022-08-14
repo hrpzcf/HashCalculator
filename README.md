@@ -32,3 +32,6 @@
 ## 图示：
 ![img](./Images/using.gif)
 
+<br>
+
+## 程序更新日志：[程序更新日志](./CHANGELOG.md)
