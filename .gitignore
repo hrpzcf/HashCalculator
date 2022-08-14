@@ -361,3 +361,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Binarys/bccrypto-csharp-1.9.0-bin.zip
+/Binarys/bccrypto-csharp-1.9.0-src.zip

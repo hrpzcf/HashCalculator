@@ -6,6 +6,7 @@
         x:Key="{x:Static DataGrid.FocusBorderBrushKey}"
         Color="#FF000000" />
     <local:CmpResBgCvt x:Key="CmpResBgCvt" />
+    <local:AlgoTypeBgCvt x:Key="AlgoTypeBgCvt" />
     <Style
         x:Key="CellStyleNormal"
         TargetType="{x:Type DataGridCell}">
@@ -28,10 +29,11 @@
             <Trigger Property="IsSelected" Value="True">
                 <Setter Property="Foreground" Value="Black" />
                 <Setter Property="Background" Value="Transparent" />
-                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="BorderBrush" Value="Transparent" />
             </Trigger>
             <Trigger Property="IsKeyboardFocusWithin" Value="True">
-                <Setter Property="Background" Value="#3500A6FF" />
+                <Setter Property="Background" Value="#5000A6FF" />
+                <Setter Property="BorderBrush" Value="Transparent" />
             </Trigger>
             <Trigger Property="IsEnabled" Value="false">
                 <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />

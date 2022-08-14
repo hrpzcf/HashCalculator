@@ -15,7 +15,7 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_41EEF066CDD11CE410A95AC9256961F4"
+        "MsmKey" = "8:_1DA8D1E1903C6E79AF0BD65988C9EB5B"
         "OwnerKey" = "8:_43F68922ACEB4F3FB3580610D1041E5C"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -33,6 +33,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_9237124B19B3A269423D2201B3D39762"
+        "OwnerKey" = "8:_43F68922ACEB4F3FB3580610D1041E5C"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_43F68922ACEB4F3FB3580610D1041E5C"
         "MsmSig" = "8:_UNDEFINED"
@@ -40,7 +46,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_41EEF066CDD11CE410A95AC9256961F4"
+        "OwnerKey" = "8:_1DA8D1E1903C6E79AF0BD65988C9EB5B"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_9237124B19B3A269423D2201B3D39762"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -138,20 +150,20 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_41EEF066CDD11CE410A95AC9256961F4"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_1DA8D1E1903C6E79AF0BD65988C9EB5B"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:System.Net.Http, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
+            "AssemblyAsmDisplayName" = "8:BouncyCastle.Crypto, Version=1.9.0.0, Culture=neutral, PublicKeyToken=0e99375e54769942"
                 "ScatterAssemblies"
                 {
-                    "_41EEF066CDD11CE410A95AC9256961F4"
+                    "_1DA8D1E1903C6E79AF0BD65988C9EB5B"
                     {
-                    "Name" = "8:System.Net.Http.dll"
+                    "Name" = "8:BouncyCastle.Crypto.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:System.Net.Http.dll"
+            "SourcePath" = "8:BouncyCastle.Crypto.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_35CAFC4B99FB4FFDA44CB8912B66AE40"
@@ -165,7 +177,7 @@
             "SharedLegacy" = "11:FALSE"
             "PackageAs" = "3:1"
             "Register" = "3:1"
-            "Exclude" = "11:TRUE"
+            "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
@@ -187,6 +199,37 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_9237124B19B3A269423D2201B3D39762"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:System.Net.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
+                "ScatterAssemblies"
+                {
+                    "_9237124B19B3A269423D2201B3D39762"
+                    {
+                    "Name" = "8:System.Net.Http.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:System.Net.Http.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_35CAFC4B99FB4FFDA44CB8912B66AE40"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:TRUE"
+            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
         }
@@ -244,22 +287,22 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:HashCalculator"
-        "ProductCode" = "8:{9F815888-0A82-4C05-BBDC-E35A2216E0BB}"
-        "PackageCode" = "8:{D44691A4-22B6-47BA-B3F8-5CBBBFEFF132}"
+        "ProductName" = "8:哈希值批量计算器"
+        "ProductCode" = "8:{57351F73-F48E-44F7-90F6-0D127F0FF2DE}"
+        "PackageCode" = "8:{E1D6A2CF-11B6-431B-89F8-66007FA8D37E}"
         "UpgradeCode" = "8:{88EDC7ED-DDA0-4D7B-9B9E-44CFA1A61B16}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.0"
-        "Manufacturer" = "8:HashCalculator"
+        "ProductVersion" = "8:1.1.0"
+        "Manufacturer" = "8:52pojie.CN"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
         "Title" = "8:HashCalculatorSetup"
         "Subject" = "8:"
-        "ARPCONTACT" = "8:HashCalculator"
+        "ARPCONTACT" = "8:hrpzcf"
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:"
         "ARPURLINFOABOUT" = "8:"
@@ -368,7 +411,7 @@
         {
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_185DCCEEFEF247BBB35FD0A5B03A7E91"
             {
-            "Name" = "8:SumGen"
+            "Name" = "8:哈希值批量计算器"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
@@ -382,7 +425,7 @@
             }
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_D67E6FCF770449DBB152F09FE63C7ACE"
             {
-            "Name" = "8:HashCalculator"
+            "Name" = "8:哈希值批量计算器"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"

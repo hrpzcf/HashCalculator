@@ -1,4 +1,6 @@
-﻿namespace HashCalculator
+﻿using System.Threading;
+
+namespace HashCalculator
 {
     internal static class SerialGenerator
     {
@@ -56,5 +58,12 @@
                 CompletedCount = 0;
             }
         }
+    }
+
+    internal static class Locks
+    {
+        public static readonly object MainLock = new object();
+        public static readonly object AlgoSelectionLock = new object();
+        public static readonly Semaphore ComputeTaskLock = new Semaphore(4, 4);
     }
 }
