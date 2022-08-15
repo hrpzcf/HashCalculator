@@ -1,7 +1,6 @@
 ﻿using Org.BouncyCastle.Crypto.Digests;
 using System;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Windows;
 
@@ -9,9 +8,41 @@ namespace HashCalculator
 {
     internal enum CmpRes
     {
+        NoOption,
         NoResult,
         Matched,
         Mismatch,
+    }
+
+    // 封装这个类计算文件哈希值，虽然实现了与其他哈希值算法代码的统一
+    // 但计算 216MB 文件的 SHA224 比手动投喂 Sha224Digest 慢 0.2 秒左右
+    // 手动投喂：使用 UsingBouncyCastleSha224 方法
+    internal class BouncyCastSha224 : HashAlgorithm
+    {
+        private readonly Sha224Digest sha224digest;
+
+        public BouncyCastSha224()
+        {
+            this.sha224digest = new Sha224Digest();
+        }
+
+        public override void Initialize()
+        {
+            this.sha224digest?.Reset();
+        }
+
+        protected override void HashCore(byte[] array, int ibStart, int cbSize)
+        {
+            sha224digest.BlockUpdate(array, ibStart, cbSize);
+        }
+
+        protected override byte[] HashFinal()
+        {
+            int size = this.sha224digest.GetDigestSize();
+            byte[] sha224ComputeResult = new byte[size];
+            sha224digest.DoFinal(sha224ComputeResult, 0);
+            return sha224ComputeResult;
+        }
     }
 
     internal class HashModel : DependencyObject
@@ -33,7 +64,7 @@ namespace HashCalculator
             "CmpResult",
             typeof(CmpRes),
             typeof(HashModel),
-            new PropertyMetadata(CmpRes.NoResult)
+            new PropertyMetadata(CmpRes.NoOption)
         );
 
         public HashModel(int serial, FileInfo path)
@@ -83,11 +114,11 @@ namespace HashCalculator
         public void EnterGenerateUnderLimit()
         {
             Locks.ComputeTaskLock.WaitOne();
-            this.GenerateHashValue();
+            this.ComputeManyHashValue();
             Locks.ComputeTaskLock.Release();
         }
 
-        private void GenerateHashValue()
+        private void ComputeManyHashValue()
         {
             AlgoType algoType;
             HashAlgorithm hashAlgo;
@@ -116,8 +147,10 @@ namespace HashCalculator
                     hashAlgo = new MD5Cng();
                     break;
                 case AlgoType.SHA224:
-                    this.UsingBouncyCastleSha224Hash();
+                    this.UsingBouncyCastleSha224();
                     return;
+                    //hashAlgo = new BouncyCastSha224();
+                    //break;
                 case AlgoType.SHA256:
                 default:
                     hashAlgo = new SHA256Cng();
@@ -130,28 +163,23 @@ namespace HashCalculator
                     using (hashAlgo)
                     {
                         hashAlgo.ComputeHash(fs);
-                        string hashString = BitConverter
+                        string hashStr = BitConverter
                         .ToString(hashAlgo.Hash)
                         .Replace("-", "");
-                        Application.Current.Dispatcher.Invoke(() => { this.Hash = hashString; });
+                        Application.Current.Dispatcher.Invoke(() => { this.Hash = hashStr; });
                         this.completed = true;
                     }
                 }
             }
             catch
             {
-                Application.Current.Dispatcher.Invoke(
-                    () =>
-                    {
-                        this.Hash = "无法读取文件 / 计算出错";
-                    }
-                );
+                Application.Current.Dispatcher.Invoke(() => { this.Hash = "无法读取文件 / 计算出错"; });
             }
         BeforeReturn:
             CompletionCounter.Increment();
         }
 
-        private void UsingBouncyCastleSha224Hash()
+        private void UsingBouncyCastleSha224()
         {
             int blen = 2097152;
             int outBytesLength;
@@ -165,21 +193,16 @@ namespace HashCalculator
                     while ((bytesReaded = fs.Read(buffer, 0, blen)) != 0)
                         sha224.BlockUpdate(buffer, 0, bytesReaded);
                     outBytesLength = sha224.DoFinal(buffer, 0);
-                    string hashString = BitConverter
+                    string hashStr = BitConverter
                         .ToString(buffer, 0, outBytesLength)
                         .Replace("-", "");
-                    Application.Current.Dispatcher.Invoke(() => { this.Hash = hashString; });
+                    Application.Current.Dispatcher.Invoke(() => { this.Hash = hashStr; });
                     this.completed = true;
                 }
             }
             catch
             {
-                Application.Current.Dispatcher.Invoke(
-                    () =>
-                    {
-                        this.Hash = "无法读取文件 / 计算出错";
-                    }
-                );
+                Application.Current.Dispatcher.Invoke(() => { this.Hash = "无法读取文件 / 计算出错"; });
             }
             CompletionCounter.Increment();
         }

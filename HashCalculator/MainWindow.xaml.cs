@@ -26,6 +26,7 @@ namespace HashCalculator
                 case CmpRes.Mismatch:
                     return "Red";
                 case CmpRes.NoResult:
+                    return "#64888888";
                 default:
                     return "Transparent";
             }
@@ -342,7 +343,7 @@ namespace HashCalculator
                 this.hashPairs.Add(new string[] { this.uiTextBox_ValueToCompare.Text.Trim(), "" });
         }
 
-        private void HashComparison()
+        private void Button_StartCompare_Click(object sender, RoutedEventArgs e)
         {
             this.hashPairs.Clear();
             if (string.IsNullOrEmpty(this.uiTextBox_ValueToCompare.Text))
@@ -353,11 +354,6 @@ namespace HashCalculator
             this.GenerateHashPairs();
             foreach (HashModel hm in this.hashModels)
                 hm.CmpResult = this.hashPairs.IsMatch(hm.Hash, hm.Name);
-        }
-
-        private void Button_StartCompare_Click(object sender, RoutedEventArgs e)
-        {
-            this.HashComparison();
         }
 
         private void TextBox_ValueToCompare_PreviewDragOver(object sender, DragEventArgs e)
