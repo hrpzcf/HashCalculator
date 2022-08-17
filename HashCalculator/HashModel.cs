@@ -33,14 +33,14 @@ namespace HashCalculator
 
         protected override void HashCore(byte[] array, int ibStart, int cbSize)
         {
-            sha224digest.BlockUpdate(array, ibStart, cbSize);
+            this.sha224digest.BlockUpdate(array, ibStart, cbSize);
         }
 
         protected override byte[] HashFinal()
         {
             int size = this.sha224digest.GetDigestSize();
             byte[] sha224ComputeResult = new byte[size];
-            sha224digest.DoFinal(sha224ComputeResult, 0);
+            this.sha224digest.DoFinal(sha224ComputeResult, 0);
             return sha224ComputeResult;
         }
     }
@@ -48,6 +48,12 @@ namespace HashCalculator
     internal class HashModel : DependencyObject
     {
         private bool completed = false;
+        private static readonly DependencyProperty ExportProperty = DependencyProperty.Register(
+            "Export",
+            typeof(bool),
+            typeof(HashModel),
+            new PropertyMetadata(true)
+        );
         private static readonly DependencyProperty HashAlgoProperty = DependencyProperty.Register(
             "Hash",
             typeof(string),
@@ -86,26 +92,30 @@ namespace HashCalculator
 
         public string Name { get; set; }
 
-        public bool Export { get; set; }
+        public bool Export
+        {
+            set { this.SetValue(ExportProperty, value); }
+            get { return (bool)this.GetValue(ExportProperty); }
+        }
 
         public bool Completed { get { return this.completed; } }
 
         public string Hash
         {
-            get { return (string)this.GetValue(HashAlgoProperty); }
             set { this.SetValue(HashAlgoProperty, value); }
+            get { return (string)this.GetValue(HashAlgoProperty); }
         }
 
         public AlgoType HashName
         {
-            get { return (AlgoType)this.GetValue(HashNameProperty); }
             set { this.SetValue(HashNameProperty, value); }
+            get { return (AlgoType)this.GetValue(HashNameProperty); }
         }
 
         public CmpRes CmpResult
         {
-            get { return (CmpRes)this.GetValue(CmpResultProperty); }
             set { this.SetValue(CmpResultProperty, value); }
+            get { return (CmpRes)this.GetValue(CmpResultProperty); }
         }
 
         /// <summary>
@@ -129,7 +139,9 @@ namespace HashCalculator
             }
             if (!this.Path.Exists)
             {
-                Application.Current.Dispatcher.Invoke(() => { this.Hash = "非普通文件 / 无法访问"; });
+                Application.Current.Dispatcher.Invoke(
+                    () => { this.Hash = "非普通文件 / 无法访问"; this.Export = false; }
+                );
                 goto BeforeReturn;
             }
             switch (algoType)
@@ -149,8 +161,8 @@ namespace HashCalculator
                 case AlgoType.SHA224:
                     this.UsingBouncyCastleSha224();
                     return;
-                    //hashAlgo = new BouncyCastSha224();
-                    //break;
+                //hashAlgo = new BouncyCastSha224();
+                //break;
                 case AlgoType.SHA256:
                 default:
                     hashAlgo = new SHA256Cng();
@@ -173,7 +185,9 @@ namespace HashCalculator
             }
             catch
             {
-                Application.Current.Dispatcher.Invoke(() => { this.Hash = "无法读取文件 / 计算出错"; });
+                Application.Current.Dispatcher.Invoke(
+                    () => { this.Hash = "无法读取文件 / 计算出错"; this.Export = false; }
+                );
             }
         BeforeReturn:
             CompletionCounter.Increment();
@@ -202,7 +216,9 @@ namespace HashCalculator
             }
             catch
             {
-                Application.Current.Dispatcher.Invoke(() => { this.Hash = "无法读取文件 / 计算出错"; });
+                Application.Current.Dispatcher.Invoke(
+                    () => { this.Hash = "无法读取文件 / 计算出错"; this.Export = false; }
+                );
             }
             CompletionCounter.Increment();
         }

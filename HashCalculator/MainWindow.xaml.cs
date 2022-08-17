@@ -266,7 +266,7 @@ namespace HashCalculator
                         goto pause;
                     fi = new FileInfo(this.filepathsQueue.Dequeue());
                     serial = SerialGenerator.GetSerial();
-                    this.Dispatcher.Invoke(asm, serial, fi);
+                    Application.Current.Dispatcher.Invoke(asm, serial, fi);
                 }
             pause:
                 Thread.Sleep(10);
