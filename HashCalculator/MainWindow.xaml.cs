@@ -122,7 +122,7 @@ namespace HashCalculator
         public MainWindow()
         {
             this.InitializeComponent();
-            this.Title += $" {Info.VERSION} — {Info.AUTHOR} @ www.52pojie.cn";
+            this.Title = $"{Info.Title} v{Info.Version} — {Info.Author} @ {Info.Published}";
             this.uiDataGrid_HashFiles.ItemsSource = this.hashModels;
             this.aupdate = new Action<Task>(this.UpdateProgress);
             new Thread(this.ThreadAddHashModel) { IsBackground = true }.Start();
@@ -151,14 +151,14 @@ namespace HashCalculator
             if (!(e.Data.GetData(DataFormats.FileDrop) is string[] data) || data.Length == 0)
                 return;
             this.ComputedFilesPath.AddRange(data);
-            Thread thread = new Thread(new ParameterizedThreadStart(this.EnqueueFilePaths))
+            Thread thread = new Thread(new ParameterizedThreadStart(this.EnqueueFilesPath))
             {
                 IsBackground = true
             };
             thread.Start(data);
         }
 
-        private void EnqueueFilePaths(object data)
+        private void EnqueueFilesPath(object data)
         {
             IEnumerable<string> paths = data as IEnumerable<string>;
             lock (Locks.MainLock)
@@ -166,7 +166,7 @@ namespace HashCalculator
                 foreach (string path in paths)
                     this.filepathsQueue.Enqueue(path);
                 this.QueuedFilesCount += paths.Count();
-                this.Dispatcher.Invoke(this.AfterQueuedFilesChanged);
+                Application.Current.Dispatcher.Invoke(this.AfterFilesQueued);
             }
         }
 
@@ -200,7 +200,7 @@ namespace HashCalculator
             this.uiProgressbar_TaskProgress.Visibility = Visibility.Hidden;
         }
 
-        private void AfterQueuedFilesChanged()
+        private void AfterFilesQueued()
         {
             if (this.QueuedFilesCount < 1)
                 return;
@@ -245,7 +245,7 @@ namespace HashCalculator
                     SerialGenerator.Reset();
                 }
                 // 与 DataGrid_FilesToCalculate_Drop 方法类似
-                Thread thread = new Thread(new ParameterizedThreadStart(this.EnqueueFilePaths))
+                Thread thread = new Thread(new ParameterizedThreadStart(this.EnqueueFilesPath))
                 {
                     IsBackground = true
                 };
