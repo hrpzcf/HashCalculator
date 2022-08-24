@@ -25,6 +25,7 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+        <Setter Property="ToolTip" Value="{Binding Path}"/>
         <Style.Triggers>
             <Trigger Property="IsSelected" Value="True">
                 <Setter Property="Foreground" Value="Black" />
