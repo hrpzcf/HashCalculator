@@ -6,7 +6,7 @@
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="设置"
-    Width="300"
+    Width="320"
     Height="200"
     ResizeMode="NoResize"
     WindowStartupLocation="CenterOwner"
@@ -20,10 +20,29 @@
         </Grid.RowDefinitions>
         <CheckBox
             x:Name="uiCheckBox_RembMainSize"
+            Margin="0,0,0,4"
             Padding="4,0,0,0"
             Click="CheckBox_RembMainSize_Click"
             Content="主窗口关闭时保存窗口尺寸" />
-        <Grid Grid.RowSpan="3" />
+        <Grid
+            Grid.Row="1"
+            Margin="0,0,0,4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                Margin="0,0,4,0"
+                VerticalAlignment="Center"
+                Text="当拖入面板对象包含文件夹时" />
+            <ComboBox x:Name="uiComboBox_SearchPolicy"
+                Grid.Column="1"
+                SelectedIndex="0">
+                <ComboBoxItem Content="搜索一代子文件" />
+                <ComboBoxItem Content="搜索全部子文件" />
+                <ComboBoxItem Content="不搜索该文件夹" />
+            </ComboBox>
+        </Grid>
         <Grid
             Grid.Row="3"
             Margin="0,4,0,0">
@@ -48,7 +67,7 @@
                 Padding="16,4,16,4"
                 Background="{x:Null}"
                 Click="Button_Cancel_Click"
-                Content="取消"
+                Content="关闭"
                 IsCancel="True" />
             <Button
                 x:Name="uiButton_Apply"

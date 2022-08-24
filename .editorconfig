@@ -23,10 +23,10 @@ dotnet_sort_system_directives_first = false
 file_header_template = unset
 
 # this. 和 Me. 首选项
-dotnet_style_qualification_for_event = true:suggestion
+dotnet_style_qualification_for_event = true
 dotnet_style_qualification_for_field = true
-dotnet_style_qualification_for_method = true:suggestion
-dotnet_style_qualification_for_property = true:suggestion
+dotnet_style_qualification_for_method = true
+dotnet_style_qualification_for_property = true
 
 # 语言关键字与 bcl 类型首选项
 dotnet_style_predefined_type_for_locals_parameters_members = true
@@ -47,12 +47,12 @@ dotnet_style_collection_initializer = true
 dotnet_style_explicit_tuple_names = true
 dotnet_style_namespace_match_folder = true
 dotnet_style_null_propagation = true
-dotnet_style_object_initializer = false
+dotnet_style_object_initializer = true
 dotnet_style_operator_placement_when_wrapping = beginning_of_line
 dotnet_style_prefer_auto_properties = true
 dotnet_style_prefer_compound_assignment = true
-dotnet_style_prefer_conditional_expression_over_assignment = true
-dotnet_style_prefer_conditional_expression_over_return = true
+dotnet_style_prefer_conditional_expression_over_assignment = false
+dotnet_style_prefer_conditional_expression_over_return = false
 dotnet_style_prefer_foreach_explicit_cast_in_source = when_strongly_typed
 dotnet_style_prefer_inferred_anonymous_type_member_names = true
 dotnet_style_prefer_inferred_tuple_names = true
@@ -150,7 +150,7 @@ csharp_new_line_between_query_expression_clauses = true
 csharp_indent_block_contents = true
 csharp_indent_braces = false
 csharp_indent_case_contents = true
-csharp_indent_case_contents_when_block = false
+csharp_indent_case_contents_when_block = true
 csharp_indent_labels = one_less_than_current
 csharp_indent_switch_labels = true
 
@@ -180,7 +180,7 @@ csharp_space_between_square_brackets = false
 
 # 包装首选项
 csharp_preserve_single_line_blocks = true
-csharp_preserve_single_line_statements = false
+csharp_preserve_single_line_statements = true
 
 #### 命名样式 ####
 

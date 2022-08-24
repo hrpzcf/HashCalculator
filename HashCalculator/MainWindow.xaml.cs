@@ -111,20 +111,20 @@ namespace HashCalculator
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly ObservableCollection<HashModel> hashModels =
+        private readonly ObservableCollection<HashModel> HashModels =
             new ObservableCollection<HashModel>();
         private int QueuedFilesCount = 0;
-        private readonly Queue<string> filepathsQueue = new Queue<string>();
-        private readonly Action<Task> aupdate;
-        private readonly NameHashPairs hashPairs = new NameHashPairs();
-        private readonly List<string> ComputedFilesPath = new List<string>();
+        private readonly Queue<string> FilesPathQueue = new Queue<string>();
+        private readonly Action<Task> AUpdate;
+        private readonly NameHashPairs HashPairs = new NameHashPairs();
+        private readonly List<string> FilesPathDraggedInto = new List<string>();
 
         public MainWindow()
         {
             this.InitializeComponent();
             this.Title = $"{Info.Title} v{Info.Version} — {Info.Author} @ {Info.Published}";
-            this.uiDataGrid_HashFiles.ItemsSource = this.hashModels;
-            this.aupdate = new Action<Task>(this.UpdateProgress);
+            this.uiDataGrid_HashFiles.ItemsSource = this.HashModels;
+            this.AUpdate = new Action<Task>(this.UpdateProgress);
             new Thread(this.ThreadAddHashModel) { IsBackground = true }.Start();
             this.InitializeFromConfigure();
         }
@@ -144,18 +144,57 @@ namespace HashCalculator
             }
         }
 
+        private void SearchFoldersByPolicy(string[] data, List<string> DataPaths)
+        {
+            switch (Settings.Current.FolderSearchPolicy)
+            {
+                default:
+                case 0:
+                    foreach (string p in data)
+                    {
+                        if (Directory.Exists(p))
+                        {
+                            DirectoryInfo di = new DirectoryInfo(p);
+                            DataPaths.AddRange(di.GetFiles().Select(i => i.FullName));
+                        }
+                        else if (File.Exists(p)) DataPaths.Add(p);
+                    }
+                    break;
+                case 1:
+                    foreach (string p in data)
+                    {
+                        if (Directory.Exists(p))
+                        {
+                            DirectoryInfo di = new DirectoryInfo(p);
+                            DataPaths.AddRange(
+                                di.GetFiles(".", SearchOption.AllDirectories).Select(i => i.FullName)
+                            );
+                        }
+                        else if (File.Exists(p)) DataPaths.Add(p);
+                    }
+                    break;
+                case 2:
+                    foreach (string p in data) if (File.Exists(p)) DataPaths.Add(p);
+                    break;
+            }
+        }
+
         private void DataGrid_FilesToCalculate_Drop(object sender, DragEventArgs e)
         {
             if (!e.Data.GetDataPresent(DataFormats.FileDrop))
                 return;
             if (!(e.Data.GetData(DataFormats.FileDrop) is string[] data) || data.Length == 0)
                 return;
-            this.ComputedFilesPath.AddRange(data);
+            List<string> EnqueueParameter = new List<string>();
+            this.SearchFoldersByPolicy(data, EnqueueParameter);
+            if (EnqueueParameter.Count == 0)
+                return;
+            this.FilesPathDraggedInto.AddRange(EnqueueParameter);
             Thread thread = new Thread(new ParameterizedThreadStart(this.EnqueueFilesPath))
             {
                 IsBackground = true
             };
-            thread.Start(data);
+            thread.Start(EnqueueParameter);
         }
 
         private void EnqueueFilesPath(object data)
@@ -164,7 +203,7 @@ namespace HashCalculator
             lock (Locks.MainLock)
             {
                 foreach (string path in paths)
-                    this.filepathsQueue.Enqueue(path);
+                    this.FilesPathQueue.Enqueue(path);
                 this.QueuedFilesCount += paths.Count();
                 Application.Current.Dispatcher.Invoke(this.AfterFilesQueued);
             }
@@ -213,8 +252,8 @@ namespace HashCalculator
         private void AddHashModel(int serial, FileInfo fi)
         {
             HashModel model = new HashModel(serial, fi);
-            this.hashModels.Add(model);
-            Task.Run(model.EnterGenerateUnderLimit).ContinueWith(this.aupdate);
+            this.HashModels.Add(model);
+            Task.Run(model.EnterGenerateUnderLimit).ContinueWith(this.AUpdate);
         }
 
         private void UpdateProgress(Task task)
@@ -241,7 +280,7 @@ namespace HashCalculator
             {
                 if (deleteLines)
                 {
-                    this.hashModels.Clear();
+                    this.HashModels.Clear();
                     SerialGenerator.Reset();
                 }
                 // 与 DataGrid_FilesToCalculate_Drop 方法类似
@@ -249,7 +288,7 @@ namespace HashCalculator
                 {
                     IsBackground = true
                 };
-                thread.Start(this.ComputedFilesPath);
+                thread.Start(this.FilesPathDraggedInto);
             }
         }
 
@@ -262,9 +301,9 @@ namespace HashCalculator
             {
                 lock (Locks.MainLock)
                 {
-                    if (this.filepathsQueue.Count == 0)
+                    if (this.FilesPathQueue.Count == 0)
                         goto pause;
-                    fi = new FileInfo(this.filepathsQueue.Dequeue());
+                    fi = new FileInfo(this.FilesPathQueue.Dequeue());
                     serial = SerialGenerator.GetSerial();
                     Application.Current.Dispatcher.Invoke(asm, serial, fi);
                 }
@@ -276,14 +315,14 @@ namespace HashCalculator
         // TODO 使用以下方法清空列表后，计算任务并未停下，需要增加停止计算任务的逻辑
         private void Button_ClearFileList_Click(object sender, RoutedEventArgs e)
         {
-            this.hashModels.Clear();
-            this.ComputedFilesPath.Clear();
+            this.HashModels.Clear();
+            this.FilesPathDraggedInto.Clear();
             SerialGenerator.Reset();
         }
 
         private void Button_ExportAsTextFile_Click(object sender, RoutedEventArgs e)
         {
-            if (this.hashModels.Count == 0)
+            if (this.HashModels.Count == 0)
             {
                 MessageBox.Show("列表中没有任何需要导出的条目。", "提示");
                 return;
@@ -299,12 +338,12 @@ namespace HashCalculator
             if (sf.ShowDialog() != true)
                 return;
             config.SavedPath = Path.GetDirectoryName(sf.FileName);
-            Settings.SaveConfig();
+            Settings.SaveConfigure();
             try
             {
                 using (StreamWriter sw = File.CreateText(sf.FileName))
                 {
-                    foreach (HashModel hm in this.hashModels)
+                    foreach (HashModel hm in this.HashModels)
                         if (hm.Completed && hm.Export)
                             sw.WriteLine($"{hm.Hash} *{hm.Name}");
                 }
@@ -328,7 +367,7 @@ namespace HashCalculator
                 try
                 {
                     foreach (string line in File.ReadAllLines(this.uiTextBox_ValueToCompare.Text))
-                        this.hashPairs.Add(
+                        this.HashPairs.Add(
                             line.Split(new char[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries)
                         );
                     return;
@@ -340,20 +379,20 @@ namespace HashCalculator
                 }
             }
             else
-                this.hashPairs.Add(new string[] { this.uiTextBox_ValueToCompare.Text.Trim(), "" });
+                this.HashPairs.Add(new string[] { this.uiTextBox_ValueToCompare.Text.Trim(), "" });
         }
 
         private void Button_StartCompare_Click(object sender, RoutedEventArgs e)
         {
-            this.hashPairs.Clear();
+            this.HashPairs.Clear();
             if (string.IsNullOrEmpty(this.uiTextBox_ValueToCompare.Text))
             {
                 MessageBox.Show("尚未输入哈希值检验依据。", "提示");
                 return;
             }
             this.GenerateHashPairs();
-            foreach (HashModel hm in this.hashModels)
-                hm.CmpResult = this.hashPairs.IsMatch(hm.Hash, hm.Name);
+            foreach (HashModel hm in this.HashModels)
+                hm.CmpResult = this.HashPairs.IsMatch(hm.Hash, hm.Name);
         }
 
         private void TextBox_ValueToCompare_PreviewDragOver(object sender, DragEventArgs e)
@@ -383,7 +422,7 @@ namespace HashCalculator
         {
             this.Topmost = this.uiCheckBox_WindowTopMost.IsChecked == true;
             Settings.Current.MainWindowTopmost = this.Topmost;
-            Settings.SaveConfig();
+            Settings.SaveConfigure();
         }
 
         private void ComboBox_HashAlgorithm_SelectionChanged(
@@ -395,7 +434,7 @@ namespace HashCalculator
             {
                 Settings.Current.SelectedAlgo =
                     (AlgoType)this.uiComboBox_HashAlgorithm.SelectedIndex;
-                Settings.SaveConfig();
+                Settings.SaveConfigure();
             }
         }
 
@@ -428,7 +467,7 @@ namespace HashCalculator
             {
                 Settings.Current.MainWindowWidth = this.Width;
                 Settings.Current.MainWindowHeight = this.Height;
-                Settings.SaveConfig();
+                Settings.SaveConfigure();
             }
         }
 

@@ -35,17 +35,17 @@ namespace HashCalculator
             get
             {
                 if (config == null)
-                    config = LoadConfig();
+                    config = LoadConfigure();
                 return config;
             }
             set
             {
                 config = value;
-                SaveConfig();
+                SaveConfigure();
             }
         }
 
-        public static bool SaveConfig()
+        public static bool SaveConfigure()
         {
             try
             {
@@ -64,7 +64,7 @@ namespace HashCalculator
             }
         }
 
-        private static Configure LoadConfig()
+        private static Configure LoadConfigure()
         {
             if (!File.Exists(configFile))
                 return new Configure();
@@ -112,14 +112,16 @@ namespace HashCalculator
 
         public double MainWindowWidth
         {
-            get { return mainWindowWidth; }
-            set { mainWindowWidth = value; }
+            get { return this.mainWindowWidth; }
+            set { this.mainWindowWidth = value; }
         }
 
         public double MainWindowHeight
         {
-            get { return mainWindowHeight; }
-            set { mainWindowHeight = value; }
+            get { return this.mainWindowHeight; }
+            set { this.mainWindowHeight = value; }
         }
+
+        public int FolderSearchPolicy { get; set; }
     }
 }

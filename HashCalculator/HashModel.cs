@@ -137,13 +137,6 @@ namespace HashCalculator
                 algoType = Settings.Current.SelectedAlgo;
                 Application.Current.Dispatcher.Invoke(() => { this.HashName = algoType; });
             }
-            if (!this.Path.Exists)
-            {
-                Application.Current.Dispatcher.Invoke(
-                    () => { this.Hash = "非普通文件 / 无法访问"; this.Export = false; }
-                );
-                goto BeforeReturn;
-            }
             switch (algoType)
             {
                 case AlgoType.SHA1:
@@ -189,7 +182,6 @@ namespace HashCalculator
                     () => { this.Hash = "无法读取文件 / 计算出错"; this.Export = false; }
                 );
             }
-        BeforeReturn:
             CompletionCounter.Increment();
         }
 
