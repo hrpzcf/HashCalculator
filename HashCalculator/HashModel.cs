@@ -168,9 +168,9 @@ namespace HashCalculator
                     using (hashAlgo)
                     {
                         hashAlgo.ComputeHash(fs);
-                        string hashStr = BitConverter
-                        .ToString(hashAlgo.Hash)
-                        .Replace("-", "");
+                        string hashStr = BitConverter.ToString(hashAlgo.Hash).Replace("-", "");
+                        if (Settings.Current.UseLowercaseHash)
+                            hashStr = hashStr.ToLower();
                         Application.Current.Dispatcher.Invoke(() => { this.Hash = hashStr; });
                         this.completed = true;
                     }
@@ -199,9 +199,9 @@ namespace HashCalculator
                     while ((bytesReaded = fs.Read(buffer, 0, blen)) != 0)
                         sha224.BlockUpdate(buffer, 0, bytesReaded);
                     outBytesLength = sha224.DoFinal(buffer, 0);
-                    string hashStr = BitConverter
-                        .ToString(buffer, 0, outBytesLength)
-                        .Replace("-", "");
+                    string hashStr = BitConverter.ToString(buffer, 0, outBytesLength).Replace("-", "");
+                    if (Settings.Current.UseLowercaseHash)
+                        hashStr = hashStr.ToLower();
                     Application.Current.Dispatcher.Invoke(() => { this.Hash = hashStr; });
                     this.completed = true;
                 }

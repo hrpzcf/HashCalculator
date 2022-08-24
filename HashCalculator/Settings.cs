@@ -123,5 +123,7 @@ namespace HashCalculator
         }
 
         public int FolderSearchPolicy { get; set; }
+
+        public bool UseLowercaseHash { get; set; }
     }
 }

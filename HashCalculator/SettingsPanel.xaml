@@ -15,6 +15,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
@@ -34,8 +35,9 @@
             <TextBlock
                 Margin="0,0,4,0"
                 VerticalAlignment="Center"
-                Text="当拖入面板对象包含文件夹时" />
-            <ComboBox x:Name="uiComboBox_SearchPolicy"
+                Text="当拖入面板对象包含文件夹时：" />
+            <ComboBox
+                x:Name="uiComboBox_SearchPolicy"
                 Grid.Column="1"
                 SelectedIndex="0">
                 <ComboBoxItem Content="搜索一代子文件" />
@@ -43,8 +45,15 @@
                 <ComboBoxItem Content="不搜索该文件夹" />
             </ComboBox>
         </Grid>
+        <CheckBox
+            x:Name="uiCheckBox_UseLowercaseHash"
+            Grid.Row="2"
+            Margin="0,0,0,4"
+            Padding="4,0,0,0"
+            Click="CheckBox_UseLowercaseHash_Click"
+            Content="计算所得哈希值使用小写字母形式" />
         <Grid
-            Grid.Row="3"
+            Grid.Row="4"
             Margin="0,4,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
