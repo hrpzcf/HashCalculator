@@ -359,14 +359,14 @@ namespace HashCalculator
         {
             if (this.uiComboBox_ComparisonMethod.SelectedIndex == 0)
             {
-                if (!File.Exists(this.uiTextBox_ValueToCompare.Text))
+                if (!File.Exists(this.uiTextBox_HashValueOrFilePath.Text))
                 {
                     MessageBox.Show("检验依据来源文件不存在。", "提示");
                     return;
                 }
                 try
                 {
-                    foreach (string line in File.ReadAllLines(this.uiTextBox_ValueToCompare.Text))
+                    foreach (string line in File.ReadAllLines(this.uiTextBox_HashValueOrFilePath.Text))
                         this.HashPairs.Add(
                             line.Split(new char[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries)
                         );
@@ -379,13 +379,13 @@ namespace HashCalculator
                 }
             }
             else
-                this.HashPairs.Add(new string[] { this.uiTextBox_ValueToCompare.Text.Trim(), "" });
+                this.HashPairs.Add(new string[] { this.uiTextBox_HashValueOrFilePath.Text.Trim(), "" });
         }
 
         private void Button_StartCompare_Click(object sender, RoutedEventArgs e)
         {
             this.HashPairs.Clear();
-            if (string.IsNullOrEmpty(this.uiTextBox_ValueToCompare.Text))
+            if (string.IsNullOrEmpty(this.uiTextBox_HashValueOrFilePath.Text))
             {
                 MessageBox.Show("尚未输入哈希值检验依据。", "提示");
                 return;
@@ -395,27 +395,24 @@ namespace HashCalculator
                 hm.CmpResult = this.HashPairs.IsMatch(hm.Hash, hm.Name);
         }
 
-        private void TextBox_ValueToCompare_PreviewDragOver(object sender, DragEventArgs e)
+        private void TextBox_HashValueOrFilePath_PreviewDragOver(object sender, DragEventArgs e)
         {
             e.Handled = true;
         }
 
-        private void TextBox_FilesToHash_PreviewDrop(object sender, DragEventArgs e)
+        private void TextBox_HashValueOrFilePath_PreviewDrop(object sender, DragEventArgs e)
         {
             if (!e.Data.GetDataPresent(DataFormats.FileDrop))
                 return;
             if (!(e.Data.GetData(DataFormats.FileDrop) is string[] data) || data.Length == 0)
                 return;
-            this.uiTextBox_ValueToCompare.Text = data[0];
+            this.uiTextBox_HashValueOrFilePath.Text = data[0];
         }
 
-        private void TextBox_TextContent_Changed(object sender, TextChangedEventArgs e)
+        private void TextBox_HashValueOrFilePath_Changed(object sender, TextChangedEventArgs e)
         {
-            this.uiComboBox_ComparisonMethod.SelectedIndex = File.Exists(
-                this.uiTextBox_ValueToCompare.Text
-            )
-              ? 0
-              : 1;
+            this.uiComboBox_ComparisonMethod.SelectedIndex =
+                File.Exists(this.uiTextBox_HashValueOrFilePath.Text) ? 0 : 1;
         }
 
         private void CheckBox_WindowTopmost_Click(object sender, RoutedEventArgs e)
@@ -483,10 +480,9 @@ namespace HashCalculator
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
-                Filter = "所有文件|*.*",
                 Multiselect = true,
-                InitialDirectory = Environment.GetFolderPath(
-                    Environment.SpecialFolder.Desktop),
+                Filter = "所有文件|*.*",
+                DereferenceLinks = false,
             };
             if (openFileDialog.ShowDialog() == true)
             {
@@ -497,6 +493,18 @@ namespace HashCalculator
                     IsBackground = true
                 };
                 thread.Start(this.FilesPathDraggedInto);
+            }
+        }
+
+        private void Button_SelectHashSetFile_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "所有文件|*.*",
+            };
+            if (openFileDialog.ShowDialog() == true)
+            {
+                this.uiTextBox_HashValueOrFilePath.Text = openFileDialog.FileName;
             }
         }
     }

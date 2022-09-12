@@ -156,6 +156,7 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <TextBlock
                     VerticalAlignment="Center"
@@ -171,19 +172,25 @@
                     <ComboBoxItem Content="单个哈希值" />
                 </ComboBox>
                 <TextBox
-                    x:Name="uiTextBox_ValueToCompare"
+                    x:Name="uiTextBox_HashValueOrFilePath"
                     Grid.Column="2"
                     Margin="8,0,0,0"
                     Padding="1,2,1,2"
                     MaxLines="1"
-                    PreviewDragOver="TextBox_ValueToCompare_PreviewDragOver"
-                    PreviewDrop="TextBox_FilesToHash_PreviewDrop"
-                    TextChanged="TextBox_TextContent_Changed" />
+                    PreviewDragOver="TextBox_HashValueOrFilePath_PreviewDragOver"
+                    PreviewDrop="TextBox_HashValueOrFilePath_PreviewDrop"
+                    TextChanged="TextBox_HashValueOrFilePath_Changed" />
                 <Button
-                    x:Name="uiButton_StartCompare"
                     Grid.Column="3"
                     Margin="8,0,0,0"
-                    Padding="16,4,16,4"
+                    Padding="8,1,8,1"
+                    Click="Button_SelectHashSetFile_Click"
+                    Content="..." />
+                <Button
+                    x:Name="uiButton_StartCompare"
+                    Grid.Column="4"
+                    Margin="8,0,0,0"
+                    Padding="16,1,16,1"
                     Click="Button_StartCompare_Click"
                     Content="检验" />
             </Grid>
