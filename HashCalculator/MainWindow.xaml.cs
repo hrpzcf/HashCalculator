@@ -478,5 +478,26 @@ namespace HashCalculator
                 this.uiDataGrid_HashFiles.SelectedIndex = -1;
             }
         }
+
+        private void Button_SelectFiles_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "所有文件|*.*",
+                Multiselect = true,
+                InitialDirectory = Environment.GetFolderPath(
+                    Environment.SpecialFolder.Desktop),
+            };
+            if (openFileDialog.ShowDialog() == true)
+            {
+                this.FilesPathDraggedInto.AddRange(openFileDialog.FileNames);
+                // 与 DataGrid_FilesToCalculate_Drop 方法类似
+                Thread thread = new Thread(new ParameterizedThreadStart(this.EnqueueFilesPath))
+                {
+                    IsBackground = true
+                };
+                thread.Start(this.FilesPathDraggedInto);
+            }
+        }
     }
 }

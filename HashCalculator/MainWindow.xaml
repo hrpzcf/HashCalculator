@@ -23,6 +23,7 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <Menu
                 VerticalAlignment="Center"
@@ -31,14 +32,26 @@
                     Click="MenuItem_Settings_Click"
                     Header="设置" />
             </Menu>
-            <TextBlock
+            <CheckBox
+                x:Name="uiCheckBox_WindowTopMost"
                 Grid.Column="1"
+                Margin="0,0,16,0"
+                Padding="4,0,0,0"
+                VerticalAlignment="Center"
+                Background="{x:Null}"
+                Click="CheckBox_WindowTopmost_Click"
+                Content="本窗口置顶" />
+            <TextBlock
+                Grid.Column="2"
+                Margin="16,0,0,0"
                 VerticalAlignment="Center"
                 Text="算法：" />
             <ComboBox
                 x:Name="uiComboBox_HashAlgorithm"
-                Grid.Column="2"
+                Grid.Column="3"
                 Width="100"
+                Margin="0,0,16,0"
+                Padding="6,3,6,3"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 SelectedIndex="0">
@@ -49,15 +62,13 @@
                 <ComboBoxItem Content="SHA512" />
                 <ComboBoxItem Content="MD5" />
             </ComboBox>
-            <CheckBox
-                x:Name="uiCheckBox_WindowTopMost"
-                Grid.Column="3"
-                Margin="28,0,0,0"
-                Padding="4,0,0,0"
-                VerticalAlignment="Center"
-                Background="{x:Null}"
-                Click="CheckBox_WindowTopmost_Click"
-                Content="本窗口置顶" />
+            <Button
+                Grid.Column="4"
+                Margin="16,0,0,0"
+                Padding="12,1,12,1"
+                Click="Button_SelectFiles_Click"
+                Content="选择文件"
+                ToolTip="也可以将文件、文件夹直接拖入下方面板。" />
         </Grid>
         <Grid
             Grid.Row="1"
