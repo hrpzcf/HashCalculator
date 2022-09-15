@@ -259,7 +259,7 @@ namespace HashCalculator
         private void UpdateProgress(Task task)
         {
             int completed = CompletionCounter.Count();
-            this.Dispatcher.Invoke(
+            Application.Current.Dispatcher.Invoke(
                 () =>
                 {
                     this.uiProgressbar_TaskProgress.Value = completed;
@@ -270,7 +270,7 @@ namespace HashCalculator
             {
                 CompletionCounter.ResetCount();
                 this.QueuedFilesCount = 0;
-                this.Dispatcher.Invoke(this.HideProgressInfo);
+                Application.Current.Dispatcher.Invoke(this.HideProgressInfo);
             }
         }
 
