@@ -7,6 +7,21 @@ using static System.Environment;
 
 namespace HashCalculator
 {
+    /// <summary>
+    /// 同时计算多少个文件的哈希值，用于创建信号量
+    /// </summary>
+    [Serializable]
+    internal enum SimCalc
+    {
+        One,
+        Two,
+        Four,
+        Eight,
+    }
+
+    /// <summary>
+    /// 哈希算法类型，Unknown 是创建 HashModule 实例时的默认值
+    /// </summary>
     [Serializable]
     internal enum AlgoType
     {
@@ -16,6 +31,7 @@ namespace HashCalculator
         SHA384,
         SHA512,
         MD5,
+        Unknown = -1,
     }
 
     internal static class Settings
@@ -38,11 +54,7 @@ namespace HashCalculator
                     config = LoadConfigure();
                 return config;
             }
-            set
-            {
-                config = value;
-                SaveConfigure();
-            }
+            set { config = value; SaveConfigure(); }
         }
 
         public static bool SaveConfigure()
@@ -83,9 +95,11 @@ namespace HashCalculator
     [Serializable]
     internal sealed class Configure
     {
-        private string savedPath = string.Empty;
         private double mainWindowWidth = 800;
         private double mainWindowHeight = 600;
+        private double mainWindowTop = 0;
+        private double mainWindowLeft = 0;
+        private string savedPath = string.Empty;
 
         public string SavedPath
         {
@@ -104,26 +118,26 @@ namespace HashCalculator
             }
         }
 
-        public bool RembMainWinSize { get; set; }
+        public bool RembMainWindowSize { get; set; }
 
         public AlgoType SelectedAlgo { get; set; }
 
         public bool MainWindowTopmost { get; set; }
 
-        public double MainWindowWidth
-        {
-            get { return this.mainWindowWidth; }
-            set { this.mainWindowWidth = value; }
-        }
+        public double MainWindowWidth { get { return this.mainWindowWidth; } set { this.mainWindowWidth = value; } }
 
-        public double MainWindowHeight
-        {
-            get { return this.mainWindowHeight; }
-            set { this.mainWindowHeight = value; }
-        }
+        public double MainWindowHeight { get { return this.mainWindowHeight; } set { this.mainWindowHeight = value; } }
 
         public int FolderSearchPolicy { get; set; }
 
         public bool UseLowercaseHash { get; set; }
+
+        public bool RemMainWindowPosition { get; set; }
+
+        public double MainWindowTop { get { return this.mainWindowTop; } set { this.mainWindowTop = value; } }
+
+        public double MainWindowLeft { get { return this.mainWindowLeft; } set { this.mainWindowLeft = value; } }
+
+        public SimCalc SimulCalculate { get; set; }
     }
 }

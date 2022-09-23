@@ -58,13 +58,13 @@ namespace HashCalculator
             "Hash",
             typeof(string),
             typeof(HashModel),
-            new PropertyMetadata("正在计算...")
+            new PropertyMetadata("等待计算...")
         );
         private static readonly DependencyProperty HashNameProperty = DependencyProperty.Register(
             "HashName",
             typeof(AlgoType),
             typeof(HashModel),
-            new PropertyMetadata(AlgoType.SHA256)
+            new PropertyMetadata(AlgoType.Unknown)
         );
         private static readonly DependencyProperty CmpResultProperty = DependencyProperty.Register(
             "CmpResult",
@@ -123,9 +123,9 @@ namespace HashCalculator
         /// </summary>
         public void EnterGenerateUnderLimit()
         {
-            Locks.ComputeTaskLock.WaitOne();
+            Locks.ComputeLock.WaitOne();
             this.ComputeManyHashValue();
-            Locks.ComputeTaskLock.Release();
+            Locks.ComputeLock.Release();
         }
 
         private void ComputeManyHashValue()
@@ -135,7 +135,7 @@ namespace HashCalculator
             lock (Locks.AlgoSelectionLock)
             {
                 algoType = Settings.Current.SelectedAlgo;
-                Application.Current.Dispatcher.Invoke(() => { this.HashName = algoType; });
+                Application.Current.Dispatcher.Invoke(() => { this.HashName = algoType; this.Hash = "正在计算..."; });
             }
             switch (algoType)
             {

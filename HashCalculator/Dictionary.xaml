@@ -7,6 +7,7 @@
         Color="#FF000000" />
     <local:CmpResBgCvt x:Key="CmpResBgCvt" />
     <local:AlgoTypeBgCvt x:Key="AlgoTypeBgCvt" />
+    <local:AlgoTypeNameCvt x:Key="AlgoTypeNameCvt" />
     <Style
         x:Key="CellStyleNormal"
         TargetType="{x:Type DataGridCell}">
@@ -25,7 +26,7 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Setter Property="ToolTip" Value="{Binding Path}"/>
+        <Setter Property="ToolTip" Value="{Binding Path}" />
         <Style.Triggers>
             <Trigger Property="IsSelected" Value="True">
                 <Setter Property="Foreground" Value="Black" />

@@ -12,23 +12,29 @@ namespace HashCalculator
         {
             this.InitializeComponent();
             this.InitializeFromConfigure(Settings.Current);
+            this.uiComboBox_SearchPolicy.SelectionChanged += this.ComboBox_SelectionChanged;
+            this.uiComboBox_SimulCalculate.SelectionChanged += this.ComboBox_SelectionChanged;
         }
 
         private void InitializeFromConfigure(Configure config)
         {
-            this.uiCheckBox_RembMainSize.IsChecked = config.RembMainWinSize;
+            this.uiCheckBox_RembMainSize.IsChecked = config.RembMainWindowSize;
             this.uiComboBox_SearchPolicy.SelectedIndex = config.FolderSearchPolicy;
             this.uiCheckBox_UseLowercaseHash.IsChecked = config.UseLowercaseHash;
-            this.uiComboBox_SearchPolicy.SelectionChanged += this.ComboBox_SearchPolicy_SelectionChanged;
+            this.uiCheckBox_RemMainWinPos.IsChecked = config.RemMainWindowPosition;
+            this.uiComboBox_SimulCalculate.SelectedIndex = (int)config.SimulCalculate;
         }
 
         private void Button_Apply_Click(object sender, RoutedEventArgs e)
         {
-            this.uiButton_LoadDefault.IsEnabled = true;
             this.uiButton_Apply.IsEnabled = false;
-            Settings.Current.RembMainWinSize = this.uiCheckBox_RembMainSize.IsChecked ?? false;
-            Settings.Current.FolderSearchPolicy = this.uiComboBox_SearchPolicy.SelectedIndex;
-            Settings.Current.UseLowercaseHash = this.uiCheckBox_UseLowercaseHash.IsChecked ?? false;
+            this.uiButton_LoadDefault.IsEnabled = true;
+            Configure config = Settings.Current;
+            config.RembMainWindowSize = this.uiCheckBox_RembMainSize.IsChecked ?? false;
+            config.FolderSearchPolicy = this.uiComboBox_SearchPolicy.SelectedIndex;
+            config.UseLowercaseHash = this.uiCheckBox_UseLowercaseHash.IsChecked ?? false;
+            config.RemMainWindowPosition = this.uiCheckBox_RemMainWinPos.IsChecked ?? false;
+            config.SimulCalculate = (SimCalc)this.uiComboBox_SimulCalculate.SelectedIndex;
             Settings.SaveConfigure();
         }
 
@@ -49,7 +55,12 @@ namespace HashCalculator
             this.uiButton_Apply.IsEnabled = true;
         }
 
-        private void ComboBox_SearchPolicy_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            this.uiButton_Apply.IsEnabled = true;
+        }
+
+        private void CheckBox_RemMainWinPos_Click(object sender, RoutedEventArgs e)
         {
             this.uiButton_Apply.IsEnabled = true;
         }

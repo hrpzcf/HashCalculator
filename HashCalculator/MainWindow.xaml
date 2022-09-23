@@ -120,7 +120,7 @@
                                         Padding="4,2,4,2"
                                         VerticalAlignment="Center"
                                         Background="{Binding HashName, Converter={StaticResource AlgoTypeBgCvt}}"
-                                        Text="{Binding HashName}" />
+                                        Text="{Binding HashName, Converter={StaticResource AlgoTypeNameCvt}}" />
                                     <TextBlock
                                         Grid.Column="1"
                                         Padding="4,0,4,0"

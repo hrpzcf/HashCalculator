@@ -67,6 +67,21 @@ namespace HashCalculator
         }
     }
 
+    internal class AlgoTypeNameCvt : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if ((AlgoType)value == AlgoType.Unknown)
+                return "待定";
+            return value;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     internal class NameHashPairs
     {
         private readonly Dictionary<string, string> nameHashPairs =
@@ -137,11 +152,32 @@ namespace HashCalculator
             this.uiComboBox_HashAlgorithm.SelectedIndex = (int)config.SelectedAlgo;
             this.uiComboBox_HashAlgorithm.SelectionChanged +=
                 this.ComboBox_HashAlgorithm_SelectionChanged;
-            if (config.RembMainWinSize)
+            if (config.RemMainWindowPosition)
+            {
+                this.Top = config.MainWindowTop;
+                this.Left = config.MainWindowLeft;
+            }
+            if (config.RembMainWindowSize)
             {
                 this.Width = config.MainWindowWidth;
                 this.Height = config.MainWindowHeight;
             }
+        }
+
+        private void Window_MainWindow_Closing(object sender, CancelEventArgs e)
+        {
+            Configure config = Settings.Current;
+            if (config.RemMainWindowPosition)
+            {
+                config.MainWindowTop = this.Top;
+                config.MainWindowLeft = this.Left;
+            }
+            if (config.RembMainWindowSize)
+            {
+                config.MainWindowWidth = this.Width;
+                config.MainWindowHeight = this.Height;
+            }
+            Settings.SaveConfigure();
         }
 
         private void SearchFoldersByPolicy(string[] data, List<string> DataPaths)
@@ -246,7 +282,10 @@ namespace HashCalculator
             this.uiProgressbar_TaskProgress.Maximum = this.QueuedFilesCount;
             this.uiTextBlock_TotalTaskCount.Text = this.QueuedFilesCount.ToString();
             if (CompletionCounter.Count() <= 0)
+            {
                 this.ShowProgressInfo();
+                Locks.UpdateComputeLock(); // 更新“同时计算多少个文件”的信号量
+            }
         }
 
         private void AddHashModel(int serial, FileInfo fi)
@@ -296,7 +335,7 @@ namespace HashCalculator
         {
             int serial;
             FileInfo fi;
-            Action<int, FileInfo> asm = new Action<int, FileInfo>(this.AddHashModel);
+            Action<int, FileInfo> ahm = new Action<int, FileInfo>(this.AddHashModel);
             while (true)
             {
                 lock (Locks.MainLock)
@@ -305,7 +344,7 @@ namespace HashCalculator
                         goto pause;
                     fi = new FileInfo(this.FilesPathQueue.Dequeue());
                     serial = SerialGenerator.GetSerial();
-                    Application.Current.Dispatcher.Invoke(asm, serial, fi);
+                    Application.Current.Dispatcher.Invoke(ahm, serial, fi);
                 }
             pause:
                 Thread.Sleep(10);
@@ -429,8 +468,7 @@ namespace HashCalculator
         {
             lock (Locks.AlgoSelectionLock)
             {
-                Settings.Current.SelectedAlgo =
-                    (AlgoType)this.uiComboBox_HashAlgorithm.SelectedIndex;
+                Settings.Current.SelectedAlgo = (AlgoType)this.uiComboBox_HashAlgorithm.SelectedIndex;
                 Settings.SaveConfigure();
             }
         }
@@ -456,16 +494,6 @@ namespace HashCalculator
         {
             Window settingsWindow = new SettingsPanel() { Owner = this };
             settingsWindow.ShowDialog();
-        }
-
-        private void Window_MainWindow_Closing(object sender, CancelEventArgs e)
-        {
-            if (Settings.Current.RembMainWinSize)
-            {
-                Settings.Current.MainWindowWidth = this.Width;
-                Settings.Current.MainWindowHeight = this.Height;
-                Settings.SaveConfigure();
-            }
         }
 
         private void DataGrid_HashFiles_PrevKeyDown(object sender, KeyEventArgs e)
@@ -498,13 +526,13 @@ namespace HashCalculator
 
         private void Button_SelectHashSetFile_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog
+            OpenFileDialog askUserFilePath = new OpenFileDialog
             {
                 Filter = "所有文件|*.*",
             };
-            if (openFileDialog.ShowDialog() == true)
+            if (askUserFilePath.ShowDialog() == true)
             {
-                this.uiTextBox_HashValueOrFilePath.Text = openFileDialog.FileName;
+                this.uiTextBox_HashValueOrFilePath.Text = askUserFilePath.FileName;
             }
         }
     }

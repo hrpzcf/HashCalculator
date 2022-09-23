@@ -64,6 +64,30 @@ namespace HashCalculator
     {
         public static readonly object MainLock = new object();
         public static readonly object AlgoSelectionLock = new object();
-        public static readonly Semaphore ComputeTaskLock = new Semaphore(4, 4);
+        public static Semaphore ComputeLock = new Semaphore(4, 4);
+
+        public static void UpdateComputeLock()
+        {
+            int semaphoreCount;
+            switch (Settings.Current.SimulCalculate)
+            {
+                case SimCalc.One:
+                    semaphoreCount = 1;
+                    break;
+                case SimCalc.Two:
+                    semaphoreCount = 2;
+                    break;
+                case SimCalc.Four:
+                    semaphoreCount = 4;
+                    break;
+                case SimCalc.Eight:
+                    semaphoreCount = 8;
+                    break;
+                default:
+                    semaphoreCount = 4;
+                    break;
+            }
+            ComputeLock = new Semaphore(semaphoreCount, semaphoreCount);
+        }
     }
 }
