@@ -6,82 +6,101 @@
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="设置"
-    Width="360"
-    Height="240"
+    Width="400"
+    Height="280"
+    Closing="Window_SettingsPanel_Closing"
     WindowStartupLocation="CenterOwner"
     mc:Ignorable="d">
-    <Grid Margin="8,4,8,4">
+    <Grid Margin="16,8,16,8">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <CheckBox
-            x:Name="uiCheckBox_RemMainWinPos"
-            Margin="0,0,0,4"
-            Padding="4,0,0,0"
-            Click="CheckBox_RemMainWinPos_Click"
-            Content="记住主窗口关闭时的位置" />
-        <CheckBox
-            x:Name="uiCheckBox_RembMainSize"
-            Grid.Row="1"
-            Margin="0,0,0,4"
-            Padding="4,0,0,0"
-            Click="CheckBox_RembMainSize_Click"
-            Content="记住主窗口关闭时的大小" />
-        <Grid
-            Grid.Row="2"
-            Margin="0,0,0,4">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <TextBlock
-                VerticalAlignment="Center"
-                Text="当拖入面板对象包含文件夹时：" />
-            <ComboBox
-                x:Name="uiComboBox_SearchPolicy"
-                Grid.Column="1"
-                SelectedIndex="0">
-                <ComboBoxItem Content="搜索一代子文件" />
-                <ComboBoxItem Content="搜索全部子文件" />
-                <ComboBoxItem Content="不搜索该文件夹" />
-            </ComboBox>
-        </Grid>
-        <CheckBox
-            x:Name="uiCheckBox_UseLowercaseHash"
-            Grid.Row="3"
-            Margin="0,0,0,4"
-            Padding="4,0,0,0"
-            Click="CheckBox_UseLowercaseHash_Click"
-            Content="计算所得哈希值使用小写字母形式" />
-        <Grid
-            Grid.Row="4"
-            Margin="0,0,0,4">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <TextBlock
-                VerticalAlignment="Center"
-                Text="同时计算多少个文件的哈希值：" />
-            <ComboBox
-                x:Name="uiComboBox_SimulCalculate"
-                Grid.Column="1"
-                SelectedIndex="2">
-                <ComboBoxItem Content="1 个 - 大多数文件很大" />
-                <ComboBoxItem Content="2 个 - 大多数文件较大" />
-                <ComboBoxItem Content="4 个 - 大多数文件较小" />
-                <ComboBoxItem Content="8 个 - 大多数文件很小" />
-            </ComboBox>
-        </Grid>
-        <Grid
-            Grid.Row="6"
-            Margin="0,4,0,0">
+        <ScrollViewer
+            Margin="0,0,0,8"
+            HorizontalScrollBarVisibility="Auto"
+            VerticalScrollBarVisibility="Auto">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <CheckBox
+                    x:Name="uiCheckBox_RemMainWinPos"
+                    Margin="0,0,0,4"
+                    Padding="4,0,0,0"
+                    Click="CheckBoxes_ActivateApplyButton_Click"
+                    Content="主窗口关闭时记住窗口的位置" />
+                <CheckBox
+                    x:Name="uiCheckBox_RembMainSize"
+                    Grid.Row="1"
+                    Margin="0,0,0,4"
+                    Padding="4,0,0,0"
+                    Click="CheckBoxes_ActivateApplyButton_Click"
+                    Content="主窗口关闭时记住窗口的大小" />
+                <Grid
+                    Grid.Row="2"
+                    Margin="0,0,0,4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        Text="当拖入面板对象包含文件夹时：" />
+                    <ComboBox
+                        x:Name="uiComboBox_SearchPolicy"
+                        Grid.Column="1"
+                        SelectedIndex="0">
+                        <ComboBoxItem Content="搜索一代子文件" />
+                        <ComboBoxItem Content="搜索全部子文件" />
+                        <ComboBoxItem Content="不搜索该文件夹" />
+                    </ComboBox>
+                </Grid>
+                <CheckBox
+                    x:Name="uiCheckBox_UseLowercaseHash"
+                    Grid.Row="3"
+                    Margin="0,0,0,4"
+                    Padding="4,0,0,0"
+                    Click="CheckBoxes_ActivateApplyButton_Click"
+                    Content="计算所得哈希值使用小写字母形式" />
+                <Grid
+                    Grid.Row="4"
+                    Margin="0,0,0,4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        Text="同时计算多少个文件的哈希值：" />
+                    <ComboBox
+                        x:Name="uiComboBox_SimulCalculate"
+                        Grid.Column="1"
+                        SelectedIndex="2">
+                        <ComboBoxItem Content="1 个 - 大多数文件很大" />
+                        <ComboBoxItem Content="2 个 - 大多数文件较大" />
+                        <ComboBoxItem Content="4 个 - 大多数文件较小" />
+                        <ComboBoxItem Content="8 个 - 大多数文件很小" />
+                    </ComboBox>
+                </Grid>
+                <CheckBox
+                    x:Name="uiCheckBox_SearchForComparison"
+                    Grid.Row="5"
+                    Margin="0,0,0,4"
+                    Padding="4,0,0,0"
+                    VerticalAlignment="Center"
+                    Click="CheckBoxes_ActivateApplyButton_Click"
+                    Content="如果面板为空且校验依据是文件，可以直接点击校验"
+                    ToolTip="当面板为空时，如果校验依据选择的是通用格式的哈希值文本文件，则：&#10;点击&#x3C;校验&#x3E;后程序会自动解析文件并在相同目录下寻找要计算哈希值的文件完成计算并显示校验结果。&#10;通用格式的哈希值文件请参考程序&#x3C;导出结果&#x3E;功能导出的文件的内容排布格式。" />
+            </Grid>
+        </ScrollViewer>
+        <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition Width="Auto" />

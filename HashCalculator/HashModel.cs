@@ -73,10 +73,13 @@ namespace HashCalculator
             new PropertyMetadata(CmpRes.NoOption)
         );
 
-        public HashModel(int serial, FileInfo path)
+        private readonly string ExpectedHashValue;
+
+        public HashModel(int serial, FileInfo path, string expected)
         {
             this.Serial = serial;
             this.Path = path;
+            this.ExpectedHashValue = expected?.ToLower();
             this.Initialize();
         }
 
@@ -172,6 +175,15 @@ namespace HashCalculator
                         if (Settings.Current.UseLowercaseHash)
                             hashStr = hashStr.ToLower();
                         Application.Current.Dispatcher.Invoke(() => { this.Hash = hashStr; });
+                        if (ExpectedHashValue != null)
+                        {
+                            CmpRes result;
+                            if (hashStr.ToLower() == this.ExpectedHashValue)
+                                result = CmpRes.Matched;
+                            else
+                                result = CmpRes.Mismatch;
+                            Application.Current.Dispatcher.Invoke(() => { this.CmpResult = result; });
+                        }
                         this.completed = true;
                     }
                 }
@@ -203,6 +215,15 @@ namespace HashCalculator
                     if (Settings.Current.UseLowercaseHash)
                         hashStr = hashStr.ToLower();
                     Application.Current.Dispatcher.Invoke(() => { this.Hash = hashStr; });
+                    if (ExpectedHashValue != null)
+                    {
+                        CmpRes result;
+                        if (hashStr.ToLower() == this.ExpectedHashValue)
+                            result = CmpRes.Matched;
+                        else
+                            result = CmpRes.Mismatch;
+                        Application.Current.Dispatcher.Invoke(() => { this.CmpResult = result; });
+                    }
                     this.completed = true;
                 }
             }

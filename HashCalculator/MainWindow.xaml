@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="文件哈希值批量计算器"
     Width="1000"
-    Height="800"
+    Height="500"
     Closing="Window_MainWindow_Closing"
     Icon="/Images/icon.png"
     SnapsToDevicePixels="True"
@@ -131,6 +131,7 @@
                                         Margin="4,0,4,0"
                                         Padding="8,0,8,0"
                                         VerticalAlignment="Center"
+                                        Background="White"
                                         Click="Button_CopyHashValue_Click"
                                         Content="复制" />
                                 </Grid>
@@ -144,7 +145,7 @@
                     <DataGridTextColumn
                         MinWidth="60"
                         CellStyle="{StaticResource CmpResStyle}"
-                        Header="检验结果"
+                        Header="校验结果"
                         IsReadOnly="True" />
                 </DataGrid.Columns>
             </DataGrid>
@@ -160,7 +161,7 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock
                     VerticalAlignment="Center"
-                    Text="哈希值批量检验 - 依据来源：" />
+                    Text="哈希值批量校验 - 依据来源：" />
                 <ComboBox
                     x:Name="uiComboBox_ComparisonMethod"
                     Grid.Column="1"
@@ -192,7 +193,8 @@
                     Margin="8,0,0,0"
                     Padding="16,1,16,1"
                     Click="Button_StartCompare_Click"
-                    Content="检验" />
+                    Content="校验"
+                    ToolTip="当面板为空时，如果校验依据选择的是通用格式的哈希值文本文件，则：&#10;点击&#x3C;校验&#x3E;后程序会自动解析文件并在相同目录下寻找要计算哈希值的文件完成计算并显示校验结果。&#10;通用格式的哈希值文件请参考程序&#x3C;导出结果&#x3E;功能导出的文件的内容排布格式。" />
             </Grid>
             <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>
@@ -260,7 +262,7 @@
                     Padding="16,4,16,4"
                     Click="Button_ExportAsTextFile_Click"
                     Content="导出结果"
-                    ToolTip="导出面板中的计算结果。&#10;没有计算结果的行不会被导出，[导出]列没有选中的也不会被导出。" />
+                    ToolTip="导出面板中的计算结果。&#10;没有计算结果的行不会被导出，&#60;导出&#62;列没有选中的也不会被导出。" />
                 <Button
                     x:Name="uiButton_RefreshCopy"
                     Grid.Column="3"
@@ -268,7 +270,7 @@
                     Padding="16,4,16,4"
                     Click="Button_CopyRefreshHash_Click"
                     Content="复制重算"
-                    ToolTip="将已经拖入面板的文件作为源，在面板中增加新的行，新行以[算法]下拉框所选算法重新计算哈希值。" />
+                    ToolTip="将已经拖入面板的文件作为源，在面板中增加新的行，新行以&#60;算法&#62;下拉框所选算法重新计算哈希值。" />
                 <Button
                     x:Name="uiButton_RefreshCurrentHash"
                     Grid.Column="4"
@@ -276,7 +278,7 @@
                     Padding="16,4,16,4"
                     Click="Button_RefreshCurrentHash_Click"
                     Content="原地重算"
-                    ToolTip="以[算法]下拉框所选算法重新计算面板中所有行的文件的哈希值。" />
+                    ToolTip="以&#60;算法&#62;下拉框所选算法重新计算面板中所有行的文件的哈希值。" />
             </Grid>
         </Grid>
     </Grid>

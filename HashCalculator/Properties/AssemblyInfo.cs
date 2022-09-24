@@ -8,7 +8,7 @@ using System.Windows;
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
 [assembly: AssemblyTitle("文件哈希值批量计算器")]
-[assembly: AssemblyDescription("一个文件哈希值批量计算器，也支持将结果导出为文本文件功能和批量检验哈希值功能。")]
+[assembly: AssemblyDescription("一个文件哈希值批量计算器，也支持将结果导出为文本文件功能和批量校验哈希值功能。")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("HashCalculator")]
 [assembly: AssemblyProduct("HashCalculator")]

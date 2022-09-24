@@ -12,8 +12,8 @@ namespace HashCalculator
         {
             this.InitializeComponent();
             this.InitializeFromConfigure(Settings.Current);
-            this.uiComboBox_SearchPolicy.SelectionChanged += this.ComboBox_SelectionChanged;
-            this.uiComboBox_SimulCalculate.SelectionChanged += this.ComboBox_SelectionChanged;
+            this.uiComboBox_SearchPolicy.SelectionChanged += this.ComboBoxes_ActivateApplyButton_SelectionChanged;
+            this.uiComboBox_SimulCalculate.SelectionChanged += this.ComboBoxes_ActivateApplyButton_SelectionChanged;
         }
 
         private void InitializeFromConfigure(Configure config)
@@ -23,6 +23,9 @@ namespace HashCalculator
             this.uiCheckBox_UseLowercaseHash.IsChecked = config.UseLowercaseHash;
             this.uiCheckBox_RemMainWinPos.IsChecked = config.RemMainWindowPosition;
             this.uiComboBox_SimulCalculate.SelectedIndex = (int)config.SimulCalculate;
+            this.uiCheckBox_SearchForComparison.IsChecked = config.SearchForComparison;
+            this.Width = config.SettingsWinWidth;
+            this.Height = config.SettingsWinHeight;
         }
 
         private void Button_Apply_Click(object sender, RoutedEventArgs e)
@@ -35,7 +38,8 @@ namespace HashCalculator
             config.UseLowercaseHash = this.uiCheckBox_UseLowercaseHash.IsChecked ?? false;
             config.RemMainWindowPosition = this.uiCheckBox_RemMainWinPos.IsChecked ?? false;
             config.SimulCalculate = (SimCalc)this.uiComboBox_SimulCalculate.SelectedIndex;
-            Settings.SaveConfigure();
+            config.SearchForComparison = this.uiCheckBox_SearchForComparison.IsChecked ?? false;
+            //Settings.SaveConfigure(); // 窗口关闭时会 SaveConfigure
         }
 
         private void Button_Cancel_Click(object sender, RoutedEventArgs e)
@@ -50,22 +54,19 @@ namespace HashCalculator
             this.InitializeFromConfigure(new Configure());
         }
 
-        private void CheckBox_RembMainSize_Click(object sender, RoutedEventArgs e)
+        private void Window_SettingsPanel_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            Settings.Current.SettingsWinWidth = this.Width;
+            Settings.Current.SettingsWinHeight = this.Height;
+            Settings.SaveConfigure();
+        }
+
+        private void CheckBoxes_ActivateApplyButton_Click(object sender, RoutedEventArgs e)
         {
             this.uiButton_Apply.IsEnabled = true;
         }
 
-        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            this.uiButton_Apply.IsEnabled = true;
-        }
-
-        private void CheckBox_RemMainWinPos_Click(object sender, RoutedEventArgs e)
-        {
-            this.uiButton_Apply.IsEnabled = true;
-        }
-
-        private void CheckBox_UseLowercaseHash_Click(object sender, RoutedEventArgs e)
+        private void ComboBoxes_ActivateApplyButton_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             this.uiButton_Apply.IsEnabled = true;
         }

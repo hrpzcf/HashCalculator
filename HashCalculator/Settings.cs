@@ -54,7 +54,7 @@ namespace HashCalculator
                     config = LoadConfigure();
                 return config;
             }
-            set { config = value; SaveConfigure(); }
+            set { config = value; /*SaveConfigure();*/ }
         }
 
         public static bool SaveConfigure()
@@ -95,11 +95,15 @@ namespace HashCalculator
     [Serializable]
     internal sealed class Configure
     {
-        private double mainWindowWidth = 800;
-        private double mainWindowHeight = 600;
-        private double mainWindowTop = 0;
-        private double mainWindowLeft = 0;
+        private double mainWindowWidth = 800.0;
+        private double mainWindowHeight = 600.0;
+        private double mainWindowTop = 0.0;
+        private double mainWindowLeft = 0.0;
         private string savedPath = string.Empty;
+        private SimCalc simulCalculate = SimCalc.Four;
+        private double settingsWinWidth = 400.0;
+        private double settingsWinHeight = 280.0;
+        private bool activelySearchForComparison = true;
 
         public string SavedPath
         {
@@ -138,6 +142,12 @@ namespace HashCalculator
 
         public double MainWindowLeft { get { return this.mainWindowLeft; } set { this.mainWindowLeft = value; } }
 
-        public SimCalc SimulCalculate { get; set; }
+        public SimCalc SimulCalculate { get { return this.simulCalculate; } set { this.simulCalculate = value; } }
+
+        public double SettingsWinWidth { get { return this.settingsWinWidth; } set { this.settingsWinWidth = value; } }
+
+        public double SettingsWinHeight { get { return this.settingsWinHeight; } set { this.settingsWinHeight = value; } }
+
+        public bool SearchForComparison { get { return this.activelySearchForComparison; } set { this.activelySearchForComparison = value; } }
     }
 }
