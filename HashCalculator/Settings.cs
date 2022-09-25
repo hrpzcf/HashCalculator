@@ -103,7 +103,7 @@ namespace HashCalculator
         private SimCalc simulCalculate = SimCalc.Four;
         private double settingsWinWidth = 400.0;
         private double settingsWinHeight = 280.0;
-        private bool activelySearchForComparison = true;
+        private bool searchForComparison = true;
 
         public string SavedPath
         {
@@ -132,7 +132,9 @@ namespace HashCalculator
 
         public double MainWindowHeight { get { return this.mainWindowHeight; } set { this.mainWindowHeight = value; } }
 
-        public int FolderSearchPolicy { get; set; }
+        public int FolderSearchPolicy1 { get; set; }
+
+        public int FolderSearchPolicy2 { get; set; }
 
         public bool UseLowercaseHash { get; set; }
 
@@ -148,6 +150,6 @@ namespace HashCalculator
 
         public double SettingsWinHeight { get { return this.settingsWinHeight; } set { this.settingsWinHeight = value; } }
 
-        public bool SearchForComparison { get { return this.activelySearchForComparison; } set { this.activelySearchForComparison = value; } }
+        public bool SearchForComparison { get { return this.searchForComparison; } set { this.searchForComparison = value; } }
     }
 }

@@ -21,10 +21,10 @@ namespace HashCalculator
         private readonly ObservableCollection<HashModel> HashModels =
             new ObservableCollection<HashModel>();
         private int QueuedFilesCount = 0;
-        private readonly Queue<PathExpP> FilesPathExpsQueue = new Queue<PathExpP>();
+        private readonly Queue<PathExp> FilesPathExpsQueue = new Queue<PathExp>();
         private readonly Action<Task> AUpdate;
         private readonly HashNameItems hashNameItems = new HashNameItems();
-        private readonly List<PathExpP> FilesPathExpsDraggedInto = new List<PathExpP>();
+        private readonly List<PathExp> FilesPathExpsDraggedInto = new List<PathExp>();
 
         public MainWindow()
         {
@@ -74,7 +74,7 @@ namespace HashCalculator
 
         private void SearchFoldersByPolicy(string[] data, List<string> DataPaths)
         {
-            switch (Settings.Current.FolderSearchPolicy)
+            switch (Settings.Current.FolderSearchPolicy1)
             {
                 default:
                 case 0:
@@ -117,7 +117,7 @@ namespace HashCalculator
             this.SearchFoldersByPolicy(data, searchedPaths);
             if (searchedPaths.Count == 0)
                 return;
-            IEnumerable<PathExpP> pathsExps = searchedPaths.Select(s => new PathExpP(s));
+            IEnumerable<PathExp> pathsExps = searchedPaths.Select(s => new PathExp(s));
             this.FilesPathExpsDraggedInto.AddRange(pathsExps);
             Thread thread = new Thread(new ParameterizedThreadStart(this.EnqueueFilesPath))
             {
@@ -128,10 +128,10 @@ namespace HashCalculator
 
         private void EnqueueFilesPath(object data)
         {
-            IEnumerable<PathExpP> pexps = data as IEnumerable<PathExpP>;
+            IEnumerable<PathExp> pexps = data as IEnumerable<PathExp>;
             lock (Locks.MainLock)
             {
-                foreach (PathExpP pe in pexps)
+                foreach (PathExp pe in pexps)
                     this.FilesPathExpsQueue.Enqueue(pe);
                 this.QueuedFilesCount += pexps.Count();
                 Application.Current.Dispatcher.Invoke(this.AfterFilesQueued);
@@ -235,7 +235,7 @@ namespace HashCalculator
                 {
                     if (this.FilesPathExpsQueue.Count == 0)
                         goto pause;
-                    PathExpP pep = this.FilesPathExpsQueue.Dequeue();
+                    PathExp pep = this.FilesPathExpsQueue.Dequeue();
                     fi = new FileInfo(pep.filePath);
                     serial = SerialGenerator.GetSerial();
                     Application.Current.Dispatcher.Invoke(ahm, serial, fi, pep.expected);
@@ -328,13 +328,18 @@ namespace HashCalculator
                 this.hashNameItems.Add(new string[] { pathOrHash.Trim(), "" });
         }
 
-        private void CompareHashWithExpectedHash(string path)
+        private void CompareWithExpectedHash(string path)
         {
-            FileInfo fileInfo = new FileInfo(path);
-            string parent = fileInfo.DirectoryName;
-            List<string[]> pathExpList = new List<string[]>();
+            FileInfo hashValueFileInfo = new FileInfo(path);
+            FileInfo[] infosInSameFolder;
+            if (Settings.Current.FolderSearchPolicy2 == 0)
+                infosInSameFolder = hashValueFileInfo.Directory.GetFiles(
+                    "*", SearchOption.AllDirectories);
+            else
+                infosInSameFolder = hashValueFileInfo.Directory.GetFiles();
             try
             {
+                List<PathExp> pathAndExpectedList = new List<PathExp>();
                 foreach (string line in File.ReadAllLines(path))
                 {
                     string[] items = line.Split(
@@ -349,19 +354,25 @@ namespace HashCalculator
                         else
                             continue;
                     }
-                    items[1] = Path.Combine(
-                        parent, items[1].Trim(new char[] { '*', ' ', '\n' }));
-                    if (!File.Exists(items[1])) continue;
-                    pathExpList.Add(items);
+                    items[1] = items[1].Trim(new char[] { '*', ' ', '\n' });
+                    foreach (FileInfo fi in infosInSameFolder)
+                    {
+                        if (items[1].ToLower() == fi.Name.ToLower())
+                        {
+                            items[1] = fi.FullName;
+                            pathAndExpectedList.Add(new PathExp(items));
+                        }
+                    }
                 }
-                IEnumerable<PathExpP> pathsExps = pathExpList.Select(hp => new PathExpP(hp));
-                this.FilesPathExpsDraggedInto.AddRange(pathsExps);
+                if (pathAndExpectedList.Count == 0)
+                    return;
+                this.FilesPathExpsDraggedInto.AddRange(pathAndExpectedList);
                 // 与 DataGrid_FilesToCalculate_Drop 方法类似
                 Thread thread = new Thread(new ParameterizedThreadStart(this.EnqueueFilesPath))
                 {
                     IsBackground = true
                 };
-                thread.Start(pathsExps);
+                thread.Start(pathAndExpectedList);
             }
             catch { return; }
         }
@@ -378,7 +389,7 @@ namespace HashCalculator
                 && File.Exists(pathOrHash)
                 && this.HashModels.Count == 0)
             {
-                this.CompareHashWithExpectedHash(pathOrHash);
+                this.CompareWithExpectedHash(pathOrHash);
             }
             else
             {
@@ -467,8 +478,8 @@ namespace HashCalculator
             };
             if (askFilePaths.ShowDialog() == true)
             {
-                IEnumerable<PathExpP> pathsExps = askFilePaths.FileNames
-                    .Select(s => new PathExpP(s));
+                IEnumerable<PathExp> pathsExps = askFilePaths.FileNames
+                    .Select(s => new PathExp(s));
                 this.FilesPathExpsDraggedInto.AddRange(pathsExps);
                 // 与 DataGrid_FilesToCalculate_Drop 方法类似
                 Thread thread = new Thread(new ParameterizedThreadStart(this.EnqueueFilesPath))

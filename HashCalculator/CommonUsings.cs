@@ -7,15 +7,15 @@ using System.Windows.Data;
 
 namespace HashCalculator
 {
-    internal struct PathExpP
+    internal struct PathExp
     {
-        public PathExpP(string p)
+        public PathExp(string p)
         {
             this.filePath = p;
             this.expected = null;
         }
 
-        public PathExpP(string[] hp)
+        public PathExp(string[] hp)
         {
             this.filePath = hp[1];
             this.expected = hp[0];

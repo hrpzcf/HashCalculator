@@ -12,18 +12,20 @@ namespace HashCalculator
         {
             this.InitializeComponent();
             this.InitializeFromConfigure(Settings.Current);
-            this.uiComboBox_SearchPolicy.SelectionChanged += this.ComboBoxes_ActivateApplyButton_SelectionChanged;
+            this.uiComboBox_SearchPolicy1.SelectionChanged += this.ComboBoxes_ActivateApplyButton_SelectionChanged;
+            this.uiComboBox_SearchPolicy2.SelectionChanged += this.ComboBoxes_ActivateApplyButton_SelectionChanged;
             this.uiComboBox_SimulCalculate.SelectionChanged += this.ComboBoxes_ActivateApplyButton_SelectionChanged;
         }
 
         private void InitializeFromConfigure(Configure config)
         {
             this.uiCheckBox_RembMainSize.IsChecked = config.RembMainWindowSize;
-            this.uiComboBox_SearchPolicy.SelectedIndex = config.FolderSearchPolicy;
+            this.uiComboBox_SearchPolicy1.SelectedIndex = config.FolderSearchPolicy1;
             this.uiCheckBox_UseLowercaseHash.IsChecked = config.UseLowercaseHash;
             this.uiCheckBox_RemMainWinPos.IsChecked = config.RemMainWindowPosition;
             this.uiComboBox_SimulCalculate.SelectedIndex = (int)config.SimulCalculate;
             this.uiCheckBox_SearchForComparison.IsChecked = config.SearchForComparison;
+            this.uiComboBox_SearchPolicy2.SelectedIndex = config.FolderSearchPolicy2;
             this.Width = config.SettingsWinWidth;
             this.Height = config.SettingsWinHeight;
         }
@@ -34,11 +36,12 @@ namespace HashCalculator
             this.uiButton_LoadDefault.IsEnabled = true;
             Configure config = Settings.Current;
             config.RembMainWindowSize = this.uiCheckBox_RembMainSize.IsChecked ?? false;
-            config.FolderSearchPolicy = this.uiComboBox_SearchPolicy.SelectedIndex;
+            config.FolderSearchPolicy1 = this.uiComboBox_SearchPolicy1.SelectedIndex;
             config.UseLowercaseHash = this.uiCheckBox_UseLowercaseHash.IsChecked ?? false;
             config.RemMainWindowPosition = this.uiCheckBox_RemMainWinPos.IsChecked ?? false;
             config.SimulCalculate = (SimCalc)this.uiComboBox_SimulCalculate.SelectedIndex;
             config.SearchForComparison = this.uiCheckBox_SearchForComparison.IsChecked ?? false;
+            config.FolderSearchPolicy2 = this.uiComboBox_SearchPolicy2.SelectedIndex;
             //Settings.SaveConfigure(); // 窗口关闭时会 SaveConfigure
         }
 
