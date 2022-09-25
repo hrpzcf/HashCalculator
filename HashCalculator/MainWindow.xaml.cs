@@ -29,8 +29,8 @@ namespace HashCalculator
         public MainWindow()
         {
             this.InitializeComponent();
-            this.Title = $"{Info.Title} v{Info.Version} — {Info.Author} @ {Info.Published}";
             this.uiDataGrid_HashFiles.ItemsSource = this.HashModels;
+            this.Title = $"{Info.Title} v{Info.Ver} — {Info.Author} @ {Info.Published}";
             this.AUpdate = new Action<Task>(this.UpdateProgress);
             new Thread(this.ThreadAddHashModel) { IsBackground = true }.Start();
             this.InitializeFromConfigure();
