@@ -95,7 +95,7 @@ namespace HashCalculator
                         {
                             DirectoryInfo di = new DirectoryInfo(p);
                             DataPaths.AddRange(
-                                di.GetFiles(".", SearchOption.AllDirectories).Select(i => i.FullName)
+                                di.GetFiles("*", SearchOption.AllDirectories).Select(i => i.FullName)
                             );
                         }
                         else if (File.Exists(p)) DataPaths.Add(p);
