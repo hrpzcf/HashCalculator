@@ -175,7 +175,7 @@ namespace HashCalculator
                         if (Settings.Current.UseLowercaseHash)
                             hashStr = hashStr.ToLower();
                         Application.Current.Dispatcher.Invoke(() => { this.Hash = hashStr; });
-                        if (ExpectedHashValue != null)
+                        if (this.ExpectedHashValue != null)
                         {
                             CmpRes result;
                             if (hashStr.ToLower() == this.ExpectedHashValue)
@@ -215,7 +215,7 @@ namespace HashCalculator
                     if (Settings.Current.UseLowercaseHash)
                         hashStr = hashStr.ToLower();
                     Application.Current.Dispatcher.Invoke(() => { this.Hash = hashStr; });
-                    if (ExpectedHashValue != null)
+                    if (this.ExpectedHashValue != null)
                     {
                         CmpRes result;
                         if (hashStr.ToLower() == this.ExpectedHashValue)
