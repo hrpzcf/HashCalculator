@@ -12,7 +12,7 @@
     Icon="/Images/icon.png"
     SnapsToDevicePixels="True"
     mc:Ignorable="d">
-    <Grid Margin="4,0,4,0">
+    <Grid Margin="4,4,4,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition />
@@ -40,10 +40,9 @@
                 VerticalAlignment="Center"
                 Background="{x:Null}"
                 Click="CheckBox_WindowTopmost_Click"
-                Content="本窗口置顶" />
+                Content="窗口置顶" />
             <TextBlock
                 Grid.Column="2"
-                Margin="16,0,0,0"
                 VerticalAlignment="Center"
                 Text="算法：" />
             <ComboBox
@@ -63,8 +62,8 @@
                 <ComboBoxItem Content="MD5" />
             </ComboBox>
             <Button
+                x:Name="uiButton_SelectFilesToHash"
                 Grid.Column="4"
-                Margin="16,0,0,0"
                 Padding="12,1,12,1"
                 Click="Button_SelectFiles_Click"
                 Content="选择文件"
