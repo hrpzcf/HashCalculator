@@ -40,31 +40,28 @@
             font-weight: bold;
         }
 
-        .green {
+        .result {
             display: inline-block;
             width: 45px;
-            height: 18px;
-            background-color: ForestGreen;
+            height: 16px;
             vertical-align: bottom;
             margin: 0 4px;
+        }
+
+        .green {
+            background-color: ForestGreen;
         }
 
         .red {
-            display: inline-block;
-            width: 45px;
-            height: 18px;
             background-color: red;
-            vertical-align: bottom;
-            margin: 0 4px;
         }
 
         .gray {
-            display: inline-block;
-            width: 45px;
-            height: 18px;
             background-color: #aaa;
-            vertical-align: bottom;
-            margin: 0 4px;
+        }
+
+        .black {
+            background-color: black;
         }
 
         .notice {
@@ -149,6 +146,10 @@
                             <li>
                                 校验结果显示<span class="result gray"></span>色：该文件与&quot;校验依据&quot;没有关联。
                             </li>
+                            <li>
+                                校验结果显示<span class="result black"></span>
+                                色：程序未能确认被校验文件的哈希值是否与校验依据中对应文件名指示的哈希值是否匹配。出现此结果的原因是校验依据文件中含有相同文件名的行，且这些文件名指示的哈希值不一样。
+                            </li>
                             <li>校验结果没有显示颜色：该行文件的哈希值结果还没有执行过校验操作。</li>
                         </ul>
                     </li>
@@ -219,8 +220,7 @@
                             class="steps">计算所得哈希值使用小写字母形式：</span>主界面表格中的&quot;哈希值&quot;列显示的哈希值字母使用小写形式，否则使用大写形式（大小写不影响校验功能）。
                     </li>
                     <li>
-                        <span
-                            class="steps">同时计算多少个文件的哈希值：</span>选择合适的选项可以加快文件哈希值的计算速度，这里的&quot;大小&quot;是相对于硬盘的读取速度来说的。
+                        <span class="steps">同时计算多少个文件的哈希值：</span>选择合适的选项可以加快文件哈希值的计算速度，这里的&quot;大小&quot;是相对于硬盘的读取速度来说的。
                         <ul>
                             <li><span class="steps">1 个 - 大多数文件很大：</span>当大多数拖入面板或选择的文件都很大（500MB 以上）时使用此选项。</li>
                             <li><span class="steps">2 个 - 大多数文件较大：</span>当大多数拖入面板或选择的文件都较大（300MB 左右）时使用此选项。</li>
@@ -246,7 +246,8 @@
         <ul class="outter_ul">
             <li><span class="steps">复制哈希值时弹出窗口显示&quot;复制哈希值失败&quot;：</span>点击复制按钮过快或者偶发复制失败。</li>
             <li><span class="steps">弹出窗口显示&quot;未捕获的未知异常&quot;：</span>程序意料之外的异常。</li>
-            <li><span class="steps">在依据所在文件夹中找不到依据中列出的文件：</span>请确认依据文件 sums 是否与要被计算哈希值的文件在同一个文件夹。如果要被计算哈希值的文件在比 sums 更深层的文件夹中，则请打开&quot;设置&quot;，检查&quot;当使用快速校验时&quot;是否选择了&quot;搜索依据所在目录的所有子文件&quot;选项。</li>
+            <li><span class="steps">在依据所在文件夹中找不到依据中列出的文件：</span>请确认依据文件 sums 是否与要被计算哈希值的文件在同一个文件夹。如果要被计算哈希值的文件在比 sums
+                更深层的文件夹中，则请打开&quot;设置&quot;，检查&quot;当使用快速校验时&quot;是否选择了&quot;搜索依据所在目录的所有子文件&quot;选项。</li>
             <li><span class="steps">要计算哈希值的文件不存在或无法访问：</span>可能因为用户权限原因无法访问该要被计算哈希值的文件。</li>
             <li><span class="steps">读取要被计算哈希值的文件失败或计算出错：</span>打开要被计算哈希值的文件失败，或者计算该文件哈希值的过程中出现不可预料的错误。</li>
         </ul>
