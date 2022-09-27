@@ -7,23 +7,23 @@ using System.Windows.Data;
 
 namespace HashCalculator
 {
-    internal struct PathExp
+    internal struct ModelArg
     {
-        public PathExp(string[] hp)
+        public ModelArg(string[] hp)
         {
             this.useless = false;
             this.filePath = hp[1];
             this.expected = hp[0];
         }
 
-        public PathExp(string p)
+        public ModelArg(string p)
         {
             this.useless = false;
             this.filePath = p;
             this.expected = null;
         }
 
-        public PathExp(string p, bool useless)
+        public ModelArg(string p, bool useless)
         {
             this.useless = useless;
             this.filePath = p;
@@ -33,6 +33,7 @@ namespace HashCalculator
         public string filePath;
         public bool useless;
         public string expected;
+        public CancellationToken cancelToken;
     }
 
     internal static class SerialGenerator
@@ -97,7 +98,7 @@ namespace HashCalculator
     {
         public static readonly object MainLock = new object();
         public static readonly object AlgoSelectionLock = new object();
-        public static Semaphore ComputeLock = new Semaphore(4, 4);
+        public static Semaphore HashComputeLock = new Semaphore(4, 4);
 
         public static void UpdateComputeLock()
         {
@@ -120,7 +121,7 @@ namespace HashCalculator
                     semaphoreCount = 4;
                     break;
             }
-            ComputeLock = new Semaphore(semaphoreCount, semaphoreCount);
+            HashComputeLock = new Semaphore(semaphoreCount, semaphoreCount);
         }
     }
 
@@ -184,7 +185,7 @@ namespace HashCalculator
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if ((AlgoType)value == AlgoType.Unknown)
-                return "未知";
+                return "算法未定";
             return value;
         }
 
@@ -194,8 +195,10 @@ namespace HashCalculator
         }
     }
 
-    // BUG 当一个哈希值文件中有同名文件时，此类比较方法就可能会出错
-    internal class NameHashItems
+    /// <summary>
+    /// 文件哈希值校验的依据，此依据从文件解析而来
+    /// </summary>
+    internal class Basis
     {
         private readonly Dictionary<string, List<string>> nameHashs =
             new Dictionary<string, List<string>>();
@@ -219,7 +222,7 @@ namespace HashCalculator
             return true;
         }
 
-        public CmpRes Compare(string name, string hash)
+        public CmpRes Verify(string name, string hash)
         {
             if (hash == null || name == null || this.nameHashs.Count == 0)
                 return CmpRes.Unrelated;

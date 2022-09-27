@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Security.Cryptography;
+using System.Threading;
 using System.Windows;
 
 namespace HashCalculator
@@ -67,18 +68,17 @@ namespace HashCalculator
 
     internal class HashModel : DependencyObject
     {
-        private bool completed = false;
         private static readonly DependencyProperty ExportProperty = DependencyProperty.Register(
             "Export",
             typeof(bool),
             typeof(HashModel),
-            new PropertyMetadata(true)
+            new PropertyMetadata(false)
         );
         private static readonly DependencyProperty HashAlgoProperty = DependencyProperty.Register(
             "Hash",
             typeof(string),
             typeof(HashModel),
-            new PropertyMetadata("等待计算...")
+            new PropertyMetadata("正在排队...")
         );
         private static readonly DependencyProperty HashNameProperty = DependencyProperty.Register(
             "HashName",
@@ -92,22 +92,20 @@ namespace HashCalculator
             typeof(HashModel),
             new PropertyMetadata(CmpRes.NoResult)
         );
-        private readonly bool Useless;
+        private bool calculationCompleted = false; // 使用此字段是为了 Completed 属性只读
         private readonly string ExpectedHash;
+        private readonly bool Useless;
+        private readonly CancellationToken CancelToken;
+        private const int blockSize = 2097152;
 
-        public HashModel(int serial, PathExp pathExp)
+        public HashModel(int serial, ModelArg args)
         {
             this.Serial = serial;
-            this.Path = new FileInfo(pathExp.filePath);
-            this.ExpectedHash = pathExp.expected?.ToLower();
-            this.Useless = pathExp.useless;
-            this.Initialize();
-        }
-
-        private void Initialize()
-        {
+            this.Path = new FileInfo(args.filePath);
             this.Name = this.Path.Name;
-            this.Export = true;
+            this.ExpectedHash = args.expected?.ToLower();
+            this.Useless = args.useless;
+            this.CancelToken = args.cancelToken;
         }
 
         public int Serial { get; set; }
@@ -122,7 +120,11 @@ namespace HashCalculator
             get { return (bool)this.GetValue(ExportProperty); }
         }
 
-        public bool Completed { get { return this.completed; } }
+        /// <summary>
+        /// 如果计算未完成，即使“导出”（Export）被用户勾上也不会被导出。
+        /// 因为计算未完成时 Completed 为 false，导出结果时同时验证 Completed 和 Export。
+        /// </summary>
+        public bool Completed { get { return this.calculationCompleted; } }
 
         public string Hash
         {
@@ -142,20 +144,34 @@ namespace HashCalculator
             get { return (CmpRes)this.GetValue(CmpResultProperty); }
         }
 
+        public void CancelledCallback()
+        {
+            if (this.Completed) return;
+            CompletionCounter.Increment();
+            Application.Current.Dispatcher.Invoke(() => { this.Hash = "任务已被取消"; });
+        }
+
         /// <summary>
-        /// 在限制线程数量下计算文件的散列值
+        /// 在限制线程数量下计算文件的哈希值
         /// </summary>
         public void EnterGenerateUnderLimit()
         {
-            Locks.ComputeLock.WaitOne();
+            Locks.HashComputeLock.WaitOne();
+            if (this.CancelToken.IsCancellationRequested)
+            {
+                CompletionCounter.Increment();
+                Application.Current.Dispatcher.Invoke(() => { this.Hash = "任务已被取消"; });
+                Locks.HashComputeLock.Release();
+                return;
+            }
             this.ComputeManyHashValue();
-            Locks.ComputeLock.Release();
+            Locks.HashComputeLock.Release();
         }
 
         private void ComputeManyHashValue()
         {
             AlgoType algoType;
-            HashAlgorithm hashAlgo;
+            HashAlgorithm algorithmHash;
             lock (Locks.AlgoSelectionLock)
             {
                 algoType = Settings.Current.SelectedAlgo;
@@ -167,16 +183,16 @@ namespace HashCalculator
             switch (algoType)
             {
                 case AlgoType.SHA1:
-                    hashAlgo = new SHA1Cng();
+                    algorithmHash = new SHA1Cng();
                     break;
                 case AlgoType.SHA384:
-                    hashAlgo = new SHA384Cng();
+                    algorithmHash = new SHA384Cng();
                     break;
                 case AlgoType.SHA512:
-                    hashAlgo = new SHA512Cng();
+                    algorithmHash = new SHA512Cng();
                     break;
                 case AlgoType.MD5:
-                    hashAlgo = new MD5Cng();
+                    algorithmHash = new MD5Cng();
                     break;
                 case AlgoType.SHA224:
                     this.UsingBouncyCastleSha224();
@@ -185,38 +201,47 @@ namespace HashCalculator
                 //break;
                 case AlgoType.SHA256:
                 default:
-                    hashAlgo = new SHA256Cng();
+                    algorithmHash = new SHA256Cng();
                     break;
             }
             if (this.Useless)
             {
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    this.Export = false;
-                    this.Hash = "在依据所在文件夹中找不到依据中列出的文件";
-                });
-                goto taskFinishing;
+                Application.Current.Dispatcher.Invoke(
+                    () => { this.Hash = "在依据所在文件夹找不到依据中列出的文件"; });
+                goto TaskFinishing;
             }
             else if (!this.Path.Exists)
             {
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    this.Export = false;
-                    this.Hash = "要计算哈希值的文件不存在或无法访问";
-                });
-                goto taskFinishing;
+                Application.Current.Dispatcher.Invoke(
+                    () => { this.Hash = "要计算哈希值的文件不存在或无法访问"; });
+                goto TaskFinishing;
             }
             try
             {
                 using (FileStream fs = File.OpenRead(this.Path.FullName))
                 {
-                    using (hashAlgo)
+                    using (algorithmHash)
                     {
-                        hashAlgo.ComputeHash(fs);
-                        string hashStr = BitConverter.ToString(hashAlgo.Hash).Replace("-", "");
+                        int readedSize = 0;
+                        byte[] buffer = new byte[blockSize];
+                        while (true)
+                        {
+                            if (this.CancelToken.IsCancellationRequested)
+                            {
+                                Application.Current.Dispatcher.Invoke(
+                                    () => { this.Hash = "任务已被取消"; });
+                                goto TaskFinishing;
+                            }
+                            readedSize = fs.Read(buffer, 0, buffer.Length);
+                            if (readedSize <= 0) break;
+                            algorithmHash.TransformBlock(buffer, 0, readedSize, null, 0);
+                        }
+                        algorithmHash.TransformFinalBlock(buffer, 0, 0);
+                        string hashStr = BitConverter.ToString(algorithmHash.Hash).Replace("-", "");
                         if (Settings.Current.UseLowercaseHash)
                             hashStr = hashStr.ToLower();
-                        Application.Current.Dispatcher.Invoke(() => { this.Hash = hashStr; });
+                        Application.Current.Dispatcher.Invoke(
+                            () => { this.Export = true; this.Hash = hashStr; });
                         if (this.ExpectedHash != null)
                         {
                             CmpRes result;
@@ -226,58 +251,58 @@ namespace HashCalculator
                                 result = CmpRes.Mismatch;
                             Application.Current.Dispatcher.Invoke(() => { this.CmpResult = result; });
                         }
-                        this.completed = true;
+                        this.calculationCompleted = true;
                     }
                 }
             }
             catch
             {
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    this.Export = false;
-                    this.Hash = "读取要被计算哈希值的文件失败或计算出错";
-                });
+                Application.Current.Dispatcher.Invoke(
+                    () => { this.Hash = "读取要被计算哈希值的文件失败或计算出错"; });
             }
-        taskFinishing:
+        TaskFinishing:
             CompletionCounter.Increment();
         }
 
         private void UsingBouncyCastleSha224()
         {
-            int blen = 2097152;
-            int outBytesLength;
             if (this.Useless)
             {
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    this.Export = false;
-                    this.Hash = "在依据所在文件夹中找不到依据中列出的文件";
-                });
-                goto taskFinishing;
+                Application.Current.Dispatcher.Invoke(
+                    () => { this.Hash = "在依据所在文件夹找不到依据中列出的文件"; });
+                goto TaskFinishing;
             }
             else if (!this.Path.Exists)
             {
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    this.Export = false;
-                    this.Hash = "要计算哈希值的文件不存在或无法访问";
-                });
-                goto taskFinishing;
+                Application.Current.Dispatcher.Invoke(
+                    () => { this.Hash = "要计算哈希值的文件不存在或无法访问"; });
+                goto TaskFinishing;
             }
             try
             {
                 using (FileStream fs = File.OpenRead(this.Path.FullName))
                 {
-                    Sha224Digest sha224 = new Sha224Digest();
-                    int bytesReaded = 0;
-                    byte[] buffer = new byte[blen];
-                    while ((bytesReaded = fs.Read(buffer, 0, blen)) != 0)
-                        sha224.BlockUpdate(buffer, 0, bytesReaded);
-                    outBytesLength = sha224.DoFinal(buffer, 0);
-                    string hashStr = BitConverter.ToString(buffer, 0, outBytesLength).Replace("-", "");
+                    int readedSize = 0;
+                    Sha224Digest algorithmHash = new Sha224Digest();
+                    byte[] buffer = new byte[blockSize];
+                    while (true)
+                    {
+                        if (this.CancelToken.IsCancellationRequested)
+                        {
+                            Application.Current.Dispatcher.Invoke(
+                                () => { this.Hash = "任务已被取消"; });
+                            goto TaskFinishing;
+                        }
+                        readedSize = fs.Read(buffer, 0, blockSize);
+                        if (readedSize <= 0) break;
+                        algorithmHash.BlockUpdate(buffer, 0, readedSize);
+                    }
+                    int outLength = algorithmHash.DoFinal(buffer, 0);
+                    string hashStr = BitConverter.ToString(buffer, 0, outLength).Replace("-", "");
                     if (Settings.Current.UseLowercaseHash)
                         hashStr = hashStr.ToLower();
-                    Application.Current.Dispatcher.Invoke(() => { this.Hash = hashStr; });
+                    Application.Current.Dispatcher.Invoke(
+                        () => { this.Export = true; this.Hash = hashStr; });
                     if (this.ExpectedHash != null)
                     {
                         CmpRes result;
@@ -287,18 +312,15 @@ namespace HashCalculator
                             result = CmpRes.Mismatch;
                         Application.Current.Dispatcher.Invoke(() => { this.CmpResult = result; });
                     }
-                    this.completed = true;
+                    this.calculationCompleted = true;
                 }
             }
             catch
             {
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    this.Export = false;
-                    this.Hash = "读取要被计算哈希值的文件失败或计算出错";
-                });
+                Application.Current.Dispatcher.Invoke(
+                    () => { this.Hash = "读取要被计算哈希值的文件失败或计算出错"; });
             }
-        taskFinishing:
+        TaskFinishing:
             CompletionCounter.Increment();
         }
     }
