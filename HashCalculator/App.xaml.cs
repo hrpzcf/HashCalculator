@@ -10,10 +10,14 @@ namespace HashCalculator
     {
         private void AppDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
+            string exceptionTitle;
             // 剪贴板无法打开(CLIPBRD_E_CANT_OPEN)错误代码：0x800401D0
             if ((uint)e.Exception.HResult == 0x800401D0)
-                e.Handled = true;
-            MessageBox.Show($"复制哈希值失败：\n{e.Exception.Message}", "错误");
+                exceptionTitle = "复制哈希值失败";
+            else
+                exceptionTitle = "未捕获的未知异常";
+            MessageBox.Show($"{exceptionTitle}：\n{e.Exception.Message}", "错误");
+            e.Handled = true;
         }
     }
 }

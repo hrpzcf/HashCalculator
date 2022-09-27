@@ -184,7 +184,7 @@ namespace HashCalculator
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if ((AlgoType)value == AlgoType.Unknown)
-                return "待定";
+                return "未知";
             return value;
         }
 

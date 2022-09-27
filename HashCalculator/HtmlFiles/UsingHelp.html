@@ -164,7 +164,7 @@
                 <ol>
                     <li><span class="steps">可选步骤：</span>在右上角的&quot;算法&quot;下拉选择框中选择您要计算的哈希值类型。</li>
                     <li><span class="steps">必选步骤：</span>将 sums 拖入&quot;校验依据&quot;输入框中，或者点击输入框后的&quot;...&quot;按钮选择
-                        sums 文件，然后点击&quot;校验&quot;按钮，程序会自动在 sums 文件同一目录下查找相应要校验其哈希值的文件，然后显示在表格中并完成计算、显示校验结果。</li>
+                        sums 文件，然后点击&quot;校验&quot;按钮，程序会自动在 sums 文件同一目录下查找相应要被校验哈希值的文件，然后显示在表格中并完成计算、显示校验结果。</li>
                 </ol>
             </li>
         </ul>
@@ -180,7 +180,7 @@
                             class="steps">菜单栏的&quot;窗口置顶&quot;复选框：</span>勾选则使程序窗口保持在其他窗口的上方，即使已经切换到其他程序，本程序窗口也不会被其他窗口遮挡。
                     </li>
                     <li><span class="steps">菜单栏的&quot;算法&quot;下拉选择框：</span>要计算文件的哈希值类型。</li>
-                    <li><span class="steps">菜单栏的&quot;选择文件&quot;按钮：</span>选择要计算其哈希值的文件。</li>
+                    <li><span class="steps">菜单栏的&quot;选择文件&quot;按钮：</span>选择要被计算哈希值的文件。</li>
                     <li><span class="steps">主界面下方的&quot;校验依据&quot;输入框：</span>用于输入要校验的哈希值或者 hashsums 文件的路径。</li>
                     <li><span class="steps">主界面下方的&quot;...&quot;按钮：</span>选择 hashsums 文件并将路径显示在&quot;校验依据&quot;输入框。
                     </li>
@@ -240,6 +240,15 @@
                     <li><span class="steps">&quot;应用&quot;按钮：</span>使设置面板的设置生效，设置面板关闭后会将已生效的设置保存为本地文件。</li>
                 </ol>
             </li>
+        </ul>
+        <br>
+        <div class="title">可能出现的异常的含义</div>
+        <ul class="outter_ul">
+            <li><span class="steps">复制哈希值时弹出窗口显示&quot;复制哈希值失败&quot;：</span>点击复制按钮过快或者偶发复制失败。</li>
+            <li><span class="steps">弹出窗口显示&quot;未捕获的未知异常&quot;：</span>程序意料之外的异常。</li>
+            <li><span class="steps">在依据所在文件夹中找不到依据中列出的文件：</span>请确认依据文件 sums 是否与要被计算哈希值的文件在同一个文件夹。如果要被计算哈希值的文件在比 sums 更深层的文件夹中，则请打开&quot;设置&quot;，检查&quot;当使用快速校验时&quot;是否选择了&quot;搜索依据所在目录的所有子文件&quot;选项。</li>
+            <li><span class="steps">要计算哈希值的文件不存在或无法访问：</span>可能因为用户权限原因无法访问该要被计算哈希值的文件。</li>
+            <li><span class="steps">读取要被计算哈希值的文件失败或计算出错：</span>打开要被计算哈希值的文件失败，或者计算该文件哈希值的过程中出现不可预料的错误。</li>
         </ul>
     </div>
 </body>

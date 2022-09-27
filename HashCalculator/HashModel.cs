@@ -193,7 +193,7 @@ namespace HashCalculator
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     this.Export = false;
-                    this.Hash = "找不到依据中的文件：检查设置中的\"使用快速校验时\"选项";
+                    this.Hash = "在依据所在文件夹中找不到依据中列出的文件";
                 });
                 goto taskFinishing;
             }
@@ -235,7 +235,7 @@ namespace HashCalculator
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     this.Export = false;
-                    this.Hash = "错误：读取文件失败或计算出错";
+                    this.Hash = "读取要被计算哈希值的文件失败或计算出错";
                 });
             }
         taskFinishing:
@@ -251,7 +251,7 @@ namespace HashCalculator
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     this.Export = false;
-                    this.Hash = "找不到依据中的文件：检查设置中的\"使用快速校验时\"选项";
+                    this.Hash = "在依据所在文件夹中找不到依据中列出的文件";
                 });
                 goto taskFinishing;
             }
@@ -295,7 +295,7 @@ namespace HashCalculator
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     this.Export = false;
-                    this.Hash = "错误：读取文件失败或计算出错";
+                    this.Hash = "读取要被计算哈希值的文件失败或计算出错";
                 });
             }
         taskFinishing:
