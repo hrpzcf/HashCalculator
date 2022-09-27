@@ -178,6 +178,7 @@ namespace HashCalculator
             this.uiTextBlock_TotalTaskCount.Text = this.QueuedFilesCount.ToString();
             if (CompletionCounter.Count() <= 0)
             {
+                ToolTipReport.Instance.Report = "暂无报告";
                 this.ShowProgressInfo();
                 Locks.UpdateComputeLock(); // 更新“同时计算多少个文件”的信号量
             }
@@ -193,6 +194,40 @@ namespace HashCalculator
             tokenSrc.Token.Register(hashModel.CancelledCallback);
             Task.Run(hashModel.EnterGenerateUnderLimit, tokenSrc.Token)
                 .ContinueWith(this.ActUpdateProgress);
+        }
+
+        private void GenerateToolTipReport()
+        {
+            int noresult, unrelated, matched, mismatch, uncertain;
+            noresult = unrelated = matched = mismatch = uncertain = 0;
+            foreach (HashModel hm in this.HashModels)
+            {
+                switch (hm.CmpResult)
+                {
+                    case CmpRes.NoResult:
+                        ++noresult;
+                        break;
+                    case CmpRes.Unrelated:
+                        ++unrelated;
+                        break;
+                    case CmpRes.Matched:
+                        ++matched;
+                        break;
+                    case CmpRes.Mismatch:
+                        ++mismatch;
+                        break;
+                    case CmpRes.Uncertain:
+                        ++uncertain;
+                        break;
+                }
+            }
+            ToolTipReport.Instance.Report
+                = $"校验报告：\n\n匹配数量：{matched}\n"
+                + $"不匹配数量：{mismatch}\n"
+                + $"不确定：{uncertain}\n"
+                + $"无关联：{unrelated}\n"
+                + $"没有校验：{noresult} \n\n"
+                + $"文件总数：{this.HashModels.Count}";
         }
 
         private void UpdateProgress(Task task)
@@ -211,6 +246,7 @@ namespace HashCalculator
                 CompletionCounter.ResetCount();
                 this.QueuedFilesCount = 0;
                 Application.Current.Dispatcher.Invoke(this.HideProgressInfo);
+                Application.Current.Dispatcher.Invoke(this.GenerateToolTipReport);
             }
         }
 
@@ -412,6 +448,7 @@ namespace HashCalculator
                         hm.CmpResult = CmpRes.NoResult;
                 }
             }
+            this.GenerateToolTipReport();
         }
 
         private void TextBox_HashValueOrFilePath_PreviewDragOver(object sender, DragEventArgs e)

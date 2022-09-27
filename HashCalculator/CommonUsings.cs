@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
+using System.Windows;
 using System.Windows.Data;
 
 namespace HashCalculator
@@ -215,7 +216,7 @@ namespace HashCalculator
             string hash = hashName[0].Trim().ToUpper();
             // Windows 文件名不区分大小写
             string name = hashName[1].Trim(new char[] { '*', ' ', '\n' }).ToUpper();
-            if (nameHashs.ContainsKey(name))
+            if (this.nameHashs.ContainsKey(name))
                 this.nameHashs[name].Add(hash);
             else
                 this.nameHashs[name] = new List<string> { hash };
@@ -247,6 +248,26 @@ namespace HashCalculator
                     return CmpRes.Uncertain;
             }
             return hashs.Contains(hash) ? CmpRes.Matched : CmpRes.Mismatch;
+        }
+    }
+
+    public class ToolTipReport : DependencyObject
+    {
+        public static ToolTipReport Instance;
+        private static readonly DependencyProperty ReportProperty
+            = DependencyProperty.Register(
+                "Report",
+                typeof(string),
+                typeof(ToolTipReport),
+                new PropertyMetadata("暂无报告")
+        );
+
+        public ToolTipReport() { Instance = this; }
+
+        public string Report
+        {
+            set { this.SetValue(ReportProperty, value); }
+            get { return (string)this.GetValue(ReportProperty); }
         }
     }
 }

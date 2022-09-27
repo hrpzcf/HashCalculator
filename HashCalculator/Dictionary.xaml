@@ -8,6 +8,7 @@
     <local:CmpResBgCvt x:Key="CmpResBgCvt" />
     <local:AlgoTypeBgCvt x:Key="AlgoTypeBgCvt" />
     <local:AlgoTypeNameCvt x:Key="AlgoTypeNameCvt" />
+    <local:ToolTipReport x:Key="ToolTipReport" />
     <Style
         x:Key="CellStyleNormal"
         TargetType="{x:Type DataGridCell}">
@@ -121,6 +122,8 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+        <Setter Property="ToolTip" Value="{Binding Report, Source={StaticResource ToolTipReport}}" />
+        <Setter Property="ToolTipService.ShowDuration" Value="60000" />
         <Style.Triggers>
             <Trigger Property="IsEnabled" Value="false">
                 <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
