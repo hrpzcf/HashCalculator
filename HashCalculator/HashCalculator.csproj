@@ -64,6 +64,9 @@
     <Compile Include="SettingsPanel.xaml.cs">
       <DependentUpon>SettingsPanel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UsingHelp.xaml.cs">
+      <DependentUpon>UsingHelp.xaml</DependentUpon>
+    </Compile>
     <Page Include="Dictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -83,6 +86,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="SettingsPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UsingHelp.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -120,6 +127,10 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\icon.ico" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="HtmlFiles\UsingHelp.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -103,7 +103,6 @@ namespace HashCalculator
         private SimCalc simulCalculate = SimCalc.Four;
         private double settingsWinWidth = 400.0;
         private double settingsWinHeight = 280.0;
-        private bool searchForComparison = true;
 
         public string SavedPath
         {
@@ -149,7 +148,5 @@ namespace HashCalculator
         public double SettingsWinWidth { get { return this.settingsWinWidth; } set { this.settingsWinWidth = value; } }
 
         public double SettingsWinHeight { get { return this.settingsWinHeight; } set { this.settingsWinHeight = value; } }
-
-        public bool SearchForComparison { get { return this.searchForComparison; } set { this.searchForComparison = value; } }
     }
 }

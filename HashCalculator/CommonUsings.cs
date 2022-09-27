@@ -9,19 +9,29 @@ namespace HashCalculator
 {
     internal struct PathExp
     {
-        public PathExp(string p)
-        {
-            this.filePath = p;
-            this.expected = null;
-        }
-
         public PathExp(string[] hp)
         {
+            this.useless = false;
             this.filePath = hp[1];
             this.expected = hp[0];
         }
 
+        public PathExp(string p)
+        {
+            this.useless = false;
+            this.filePath = p;
+            this.expected = null;
+        }
+
+        public PathExp(string p, bool useless)
+        {
+            this.useless = useless;
+            this.filePath = p;
+            this.expected = null;
+        }
+
         public string filePath;
+        public bool useless;
         public string expected;
     }
 
@@ -120,12 +130,15 @@ namespace HashCalculator
         {
             switch ((CmpRes)value)
             {
+                case CmpRes.Unrelated:
+                    return "#64888888";
                 case CmpRes.Matched:
                     return "ForestGreen";
                 case CmpRes.Mismatch:
                     return "Red";
+                case CmpRes.Uncertain:
+                    return "black";
                 case CmpRes.NoResult:
-                    return "#64888888";
                 default:
                     return "Transparent";
             }
@@ -133,7 +146,7 @@ namespace HashCalculator
 
         public object ConvertBack(object value, Type targetType, object param, CultureInfo culture)
         {
-            return CmpRes.NoResult; // 此处未使用，只返回默认值
+            return CmpRes.Unrelated; // 此处未使用，只返回默认值
         }
     }
 
@@ -181,42 +194,56 @@ namespace HashCalculator
         }
     }
 
-    internal class HashNameItems
+    // BUG 当一个哈希值文件中有同名文件时，此类比较方法就可能会出错
+    internal class NameHashItems
     {
-        private readonly Dictionary<string, string> hashNameItems =
-            new Dictionary<string, string>();
+        private readonly Dictionary<string, List<string>> nameHashs =
+            new Dictionary<string, List<string>>();
 
         public void Clear()
         {
-            this.hashNameItems.Clear();
+            this.nameHashs.Clear();
         }
 
-        public bool Add(string[] item)
+        public bool Add(string[] hashName)
         {
-            if (item.Length < 2 || item[0] == null || item[1] == null)
+            if (hashName.Length < 2 || hashName[0] == null || hashName[1] == null)
                 return false;
-            string hash = item[0].Trim().ToUpper();
+            string hash = hashName[0].Trim().ToUpper();
             // Windows 文件名不区分大小写
-            string name = item[1].Trim(new char[] { '*', ' ', '\n' }).ToUpper();
-            this.hashNameItems[name] = hash;
+            string name = hashName[1].Trim(new char[] { '*', ' ', '\n' }).ToUpper();
+            if (nameHashs.ContainsKey(name))
+                this.nameHashs[name].Add(hash);
+            else
+                this.nameHashs[name] = new List<string> { hash };
             return true;
         }
 
-        public CmpRes Compare(string hash, string name)
+        public CmpRes Compare(string name, string hash)
         {
-            if (hash == null || name == null || this.hashNameItems.Count == 0)
-                return CmpRes.NoResult;
+            if (hash == null || name == null || this.nameHashs.Count == 0)
+                return CmpRes.Unrelated;
             // Windows 文件名不区分大小写
             name = name.Trim(new char[] { '*', ' ', '\n' }).ToUpper();
             hash = hash.Trim().ToUpper();
-            if (this.hashNameItems.Keys.Count == 1 && this.hashNameItems.Keys.Contains(""))
-                if (this.hashNameItems.Values.Contains(hash))
+            if (this.nameHashs.Keys.Count == 1
+                && this.nameHashs.Keys.Contains(string.Empty))
+                if (this.nameHashs[string.Empty].Contains(hash))
                     return CmpRes.Matched;
                 else
-                    return CmpRes.NoResult;
-            if (this.hashNameItems.TryGetValue(name, out string dicHash))
-                return dicHash == hash ? CmpRes.Matched : CmpRes.Mismatch;
-            return CmpRes.NoResult;
+                    return CmpRes.Unrelated;
+            if (!this.nameHashs.TryGetValue(name, out List<string> hashs))
+                return CmpRes.Unrelated;
+            if (hashs.Count == 0) return CmpRes.Uncertain;
+            if (hashs.Count > 1)
+            {
+                string fst = hashs.First();
+                if (hashs.All(i => i == fst))
+                    return fst == hash ? CmpRes.Matched : CmpRes.Mismatch;
+                else
+                    return CmpRes.Uncertain;
+            }
+            return hashs.Contains(hash) ? CmpRes.Matched : CmpRes.Mismatch;
         }
     }
 }

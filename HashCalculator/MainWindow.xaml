@@ -31,6 +31,9 @@
                 <MenuItem
                     Click="MenuItem_Settings_Click"
                     Header="设置" />
+                <MenuItem
+                    Click="MenuItem_UsingHelp_Click"
+                    Header="帮助" />
             </Menu>
             <CheckBox
                 x:Name="uiCheckBox_WindowTopMost"
@@ -160,7 +163,7 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock
                     VerticalAlignment="Center"
-                    Text="哈希值批量校验 - 依据来源：" />
+                    Text="文件哈希值批量校验依据：" />
                 <ComboBox
                     x:Name="uiComboBox_ComparisonMethod"
                     Grid.Column="1"
@@ -268,8 +271,8 @@
                     Margin="8,8,8,8"
                     Padding="16,4,16,4"
                     Click="Button_CopyRefreshHash_Click"
-                    Content="复制重算"
-                    ToolTip="将已经拖入面板的文件作为源，在面板中增加新的行，新行以&#60;算法&#62;下拉框所选算法重新计算哈希值。" />
+                    Content="新行重算"
+                    ToolTip="以&quot;算法&quot;下拉选择框选择的算法为准，计算表格中所有文件的哈希值，但不清除原来的计算结果，而是增加新的行来显示结果。" />
                 <Button
                     x:Name="uiButton_RefreshCurrentHash"
                     Grid.Column="4"
@@ -277,7 +280,7 @@
                     Padding="16,4,16,4"
                     Click="Button_RefreshCurrentHash_Click"
                     Content="原地重算"
-                    ToolTip="以&#60;算法&#62;下拉框所选算法重新计算面板中所有行的文件的哈希值。" />
+                    ToolTip="以&quot;算法&quot;下拉选择框选择的算法为准，清空表格内容并重新计算表格中所有文件的哈希值。" />
             </Grid>
         </Grid>
     </Grid>

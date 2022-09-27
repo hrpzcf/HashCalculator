@@ -8,10 +8,30 @@ namespace HashCalculator
 {
     internal enum CmpRes
     {
-        NoOption,
+        /// <summary>
+        /// 没有执行过比较操作
+        /// </summary>
         NoResult,
+
+        /// <summary>
+        /// 执行过比较操作但没有关联项
+        /// </summary>
+        Unrelated,
+
+        /// <summary>
+        /// 执行过比较操作且已匹配
+        /// </summary>
         Matched,
+
+        /// <summary>
+        /// 执行过比较操作但不匹配
+        /// </summary>
         Mismatch,
+
+        /// <summary>
+        /// 执行过比较操作但未能确定是否匹配
+        /// </summary>
+        Uncertain,
     }
 
     // 封装这个类计算文件哈希值，虽然实现了与其他哈希值算法代码的统一
@@ -70,16 +90,17 @@ namespace HashCalculator
             "CmpResult",
             typeof(CmpRes),
             typeof(HashModel),
-            new PropertyMetadata(CmpRes.NoOption)
+            new PropertyMetadata(CmpRes.NoResult)
         );
+        private readonly bool Useless;
+        private readonly string ExpectedHash;
 
-        private readonly string ExpectedHashValue;
-
-        public HashModel(int serial, FileInfo path, string expected)
+        public HashModel(int serial, PathExp pathExp)
         {
             this.Serial = serial;
-            this.Path = path;
-            this.ExpectedHashValue = expected?.ToLower();
+            this.Path = new FileInfo(pathExp.filePath);
+            this.ExpectedHash = pathExp.expected?.ToLower();
+            this.Useless = pathExp.useless;
             this.Initialize();
         }
 
@@ -138,7 +159,10 @@ namespace HashCalculator
             lock (Locks.AlgoSelectionLock)
             {
                 algoType = Settings.Current.SelectedAlgo;
-                Application.Current.Dispatcher.Invoke(() => { this.HashName = algoType; this.Hash = "正在计算..."; });
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    this.HashName = algoType; this.Hash = "正在计算...";
+                });
             }
             switch (algoType)
             {
@@ -164,6 +188,24 @@ namespace HashCalculator
                     hashAlgo = new SHA256Cng();
                     break;
             }
+            if (this.Useless)
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    this.Export = false;
+                    this.Hash = "找不到依据中的文件：检查设置中的\"使用快速校验时\"选项";
+                });
+                goto taskFinishing;
+            }
+            else if (!this.Path.Exists)
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    this.Export = false;
+                    this.Hash = "要计算哈希值的文件不存在或无法访问";
+                });
+                goto taskFinishing;
+            }
             try
             {
                 using (FileStream fs = File.OpenRead(this.Path.FullName))
@@ -175,10 +217,10 @@ namespace HashCalculator
                         if (Settings.Current.UseLowercaseHash)
                             hashStr = hashStr.ToLower();
                         Application.Current.Dispatcher.Invoke(() => { this.Hash = hashStr; });
-                        if (this.ExpectedHashValue != null)
+                        if (this.ExpectedHash != null)
                         {
                             CmpRes result;
-                            if (hashStr.ToLower() == this.ExpectedHashValue)
+                            if (hashStr.ToLower() == this.ExpectedHash)
                                 result = CmpRes.Matched;
                             else
                                 result = CmpRes.Mismatch;
@@ -190,10 +232,13 @@ namespace HashCalculator
             }
             catch
             {
-                Application.Current.Dispatcher.Invoke(
-                    () => { this.Hash = "无法读取文件 / 计算出错"; this.Export = false; }
-                );
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    this.Export = false;
+                    this.Hash = "错误：读取文件失败或计算出错";
+                });
             }
+        taskFinishing:
             CompletionCounter.Increment();
         }
 
@@ -201,6 +246,24 @@ namespace HashCalculator
         {
             int blen = 2097152;
             int outBytesLength;
+            if (this.Useless)
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    this.Export = false;
+                    this.Hash = "找不到依据中的文件：检查设置中的\"使用快速校验时\"选项";
+                });
+                goto taskFinishing;
+            }
+            else if (!this.Path.Exists)
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    this.Export = false;
+                    this.Hash = "要计算哈希值的文件不存在或无法访问";
+                });
+                goto taskFinishing;
+            }
             try
             {
                 using (FileStream fs = File.OpenRead(this.Path.FullName))
@@ -215,10 +278,10 @@ namespace HashCalculator
                     if (Settings.Current.UseLowercaseHash)
                         hashStr = hashStr.ToLower();
                     Application.Current.Dispatcher.Invoke(() => { this.Hash = hashStr; });
-                    if (this.ExpectedHashValue != null)
+                    if (this.ExpectedHash != null)
                     {
                         CmpRes result;
-                        if (hashStr.ToLower() == this.ExpectedHashValue)
+                        if (hashStr.ToLower() == this.ExpectedHash)
                             result = CmpRes.Matched;
                         else
                             result = CmpRes.Mismatch;
@@ -229,10 +292,13 @@ namespace HashCalculator
             }
             catch
             {
-                Application.Current.Dispatcher.Invoke(
-                    () => { this.Hash = "无法读取文件 / 计算出错"; this.Export = false; }
-                );
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    this.Export = false;
+                    this.Hash = "错误：读取文件失败或计算出错";
+                });
             }
+        taskFinishing:
             CompletionCounter.Increment();
         }
     }

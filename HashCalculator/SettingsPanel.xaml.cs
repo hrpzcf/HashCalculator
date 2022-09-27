@@ -24,7 +24,6 @@ namespace HashCalculator
             this.uiCheckBox_UseLowercaseHash.IsChecked = config.UseLowercaseHash;
             this.uiCheckBox_RemMainWinPos.IsChecked = config.RemMainWindowPosition;
             this.uiComboBox_SimulCalculate.SelectedIndex = (int)config.SimulCalculate;
-            this.uiCheckBox_SearchForComparison.IsChecked = config.SearchForComparison;
             this.uiComboBox_SearchPolicy2.SelectedIndex = config.FolderSearchPolicy2;
             this.Width = config.SettingsWinWidth;
             this.Height = config.SettingsWinHeight;
@@ -40,7 +39,6 @@ namespace HashCalculator
             config.UseLowercaseHash = this.uiCheckBox_UseLowercaseHash.IsChecked ?? false;
             config.RemMainWindowPosition = this.uiCheckBox_RemMainWinPos.IsChecked ?? false;
             config.SimulCalculate = (SimCalc)this.uiComboBox_SimulCalculate.SelectedIndex;
-            config.SearchForComparison = this.uiCheckBox_SearchForComparison.IsChecked ?? false;
             config.FolderSearchPolicy2 = this.uiComboBox_SearchPolicy2.SelectedIndex;
             //Settings.SaveConfigure(); // 窗口关闭时会 SaveConfigure
         }

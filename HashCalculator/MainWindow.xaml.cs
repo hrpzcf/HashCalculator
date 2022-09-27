@@ -22,16 +22,17 @@ namespace HashCalculator
             new ObservableCollection<HashModel>();
         private int QueuedFilesCount = 0;
         private readonly Queue<PathExp> FilesPathExpsQueue = new Queue<PathExp>();
-        private readonly Action<Task> AUpdate;
-        private readonly HashNameItems hashNameItems = new HashNameItems();
-        private readonly List<PathExp> FilesPathExpsDraggedInto = new List<PathExp>();
+        private readonly Action<Task> ActUpdateProgress;
+        private readonly NameHashItems nameHashItems = new NameHashItems();
+        private readonly CancellationTokenSource ccTokenSrc = new CancellationTokenSource();
+        private readonly List<PathExp> PathsExpsDraggedInto = new List<PathExp>();
 
         public MainWindow()
         {
             this.InitializeComponent();
             this.uiDataGrid_HashFiles.ItemsSource = this.HashModels;
             this.Title = $"{Info.Title} v{Info.Ver} — {Info.Author} @ {Info.Published}";
-            this.AUpdate = new Action<Task>(this.UpdateProgress);
+            this.ActUpdateProgress = new Action<Task>(this.UpdateProgress);
             new Thread(this.ThreadAddHashModel) { IsBackground = true }.Start();
             this.InitializeFromConfigure();
         }
@@ -118,7 +119,7 @@ namespace HashCalculator
             if (searchedPaths.Count == 0)
                 return;
             IEnumerable<PathExp> pathsExps = searchedPaths.Select(s => new PathExp(s));
-            this.FilesPathExpsDraggedInto.AddRange(pathsExps);
+            this.PathsExpsDraggedInto.AddRange(pathsExps);
             Thread thread = new Thread(new ParameterizedThreadStart(this.EnqueueFilesPath))
             {
                 IsBackground = true
@@ -128,12 +129,12 @@ namespace HashCalculator
 
         private void EnqueueFilesPath(object data)
         {
-            IEnumerable<PathExp> pexps = data as IEnumerable<PathExp>;
+            IEnumerable<PathExp> pathExps = data as IEnumerable<PathExp>;
             lock (Locks.MainLock)
             {
-                foreach (PathExp pe in pexps)
-                    this.FilesPathExpsQueue.Enqueue(pe);
-                this.QueuedFilesCount += pexps.Count();
+                foreach (PathExp pathExp in pathExps)
+                    this.FilesPathExpsQueue.Enqueue(pathExp);
+                this.QueuedFilesCount += pathExps.Count();
                 Application.Current.Dispatcher.Invoke(this.AfterFilesQueued);
             }
         }
@@ -181,11 +182,11 @@ namespace HashCalculator
             }
         }
 
-        private void AddHashModel(int serial, FileInfo fi, string expected)
+        private void AddHashModel(int serial, PathExp pathExp)
         {
-            HashModel hashModel = new HashModel(serial, fi, expected);
+            HashModel hashModel = new HashModel(serial, pathExp);
             this.HashModels.Add(hashModel);
-            Task.Run(hashModel.EnterGenerateUnderLimit).ContinueWith(this.AUpdate);
+            Task.Run(hashModel.EnterGenerateUnderLimit).ContinueWith(this.ActUpdateProgress);
         }
 
         private void UpdateProgress(Task task)
@@ -220,36 +221,34 @@ namespace HashCalculator
                 {
                     IsBackground = true
                 };
-                thread.Start(this.FilesPathExpsDraggedInto);
+                thread.Start(this.PathsExpsDraggedInto);
             }
         }
 
         private void ThreadAddHashModel()
         {
             int serial;
-            FileInfo fi;
-            Action<int, FileInfo, string> ahm = new Action<int, FileInfo, string>(this.AddHashModel);
+            Action<int, PathExp> ahm = new Action<int, PathExp>(this.AddHashModel);
             while (true)
             {
                 lock (Locks.MainLock)
                 {
                     if (this.FilesPathExpsQueue.Count == 0)
                         goto pause;
-                    PathExp pep = this.FilesPathExpsQueue.Dequeue();
-                    fi = new FileInfo(pep.filePath);
+                    PathExp pathExp = this.FilesPathExpsQueue.Dequeue();
                     serial = SerialGenerator.GetSerial();
-                    Application.Current.Dispatcher.Invoke(ahm, serial, fi, pep.expected);
+                    Application.Current.Dispatcher.Invoke(ahm, serial, pathExp);
                 }
             pause:
                 Thread.Sleep(10);
             }
         }
 
-        // TODO 使用以下方法清空列表后，计算任务并未停下，需要增加停止计算任务的逻辑
+        // TODO 需要增加停止计算任务的逻辑
         private void Button_ClearFileList_Click(object sender, RoutedEventArgs e)
         {
             this.HashModels.Clear();
-            this.FilesPathExpsDraggedInto.Clear();
+            this.PathsExpsDraggedInto.Clear();
             SerialGenerator.Reset();
         }
 
@@ -290,7 +289,7 @@ namespace HashCalculator
 
         private void GlobalUpdateHashNameItems(string pathOrHash)
         {
-            this.hashNameItems.Clear();
+            this.nameHashItems.Clear();
             if (this.uiComboBox_ComparisonMethod.SelectedIndex == 0)
             {
                 if (!File.Exists(pathOrHash))
@@ -314,7 +313,7 @@ namespace HashCalculator
                             else
                                 continue;
                         }
-                        this.hashNameItems.Add(items);
+                        this.nameHashItems.Add(items);
                     }
                     return;
                 }
@@ -325,7 +324,7 @@ namespace HashCalculator
                 }
             }
             else
-                this.hashNameItems.Add(new string[] { pathOrHash.Trim(), "" });
+                this.nameHashItems.Add(new string[] { pathOrHash.Trim(), "" });
         }
 
         private void CompareWithExpectedHash(string path)
@@ -333,12 +332,13 @@ namespace HashCalculator
             FileInfo hashValueFileInfo = new FileInfo(path);
             FileInfo[] infosInSameFolder;
             if (Settings.Current.FolderSearchPolicy2 == 0)
+                infosInSameFolder = hashValueFileInfo.Directory.GetFiles();
+            else
                 infosInSameFolder = hashValueFileInfo.Directory.GetFiles(
                     "*", SearchOption.AllDirectories);
-            else
-                infosInSameFolder = hashValueFileInfo.Directory.GetFiles();
             try
             {
+                bool fileFound = false;
                 List<PathExp> pathAndExpectedList = new List<PathExp>();
                 foreach (string line in File.ReadAllLines(path))
                 {
@@ -355,18 +355,22 @@ namespace HashCalculator
                             continue;
                     }
                     items[1] = items[1].Trim(new char[] { '*', ' ', '\n' });
+                    fileFound = false;
                     foreach (FileInfo fi in infosInSameFolder)
                     {
                         if (items[1].ToLower() == fi.Name.ToLower())
                         {
                             items[1] = fi.FullName;
                             pathAndExpectedList.Add(new PathExp(items));
+                            fileFound = true;
                         }
                     }
+                    if (!fileFound)
+                        pathAndExpectedList.Add(new PathExp(items[1], true));
                 }
                 if (pathAndExpectedList.Count == 0)
                     return;
-                this.FilesPathExpsDraggedInto.AddRange(pathAndExpectedList);
+                this.PathsExpsDraggedInto.AddRange(pathAndExpectedList);
                 // 与 DataGrid_FilesToCalculate_Drop 方法类似
                 Thread thread = new Thread(new ParameterizedThreadStart(this.EnqueueFilesPath))
                 {
@@ -385,9 +389,7 @@ namespace HashCalculator
                 MessageBox.Show("未输入哈希值校验依据。", "提示");
                 return;
             }
-            if (Settings.Current.SearchForComparison
-                && File.Exists(pathOrHash)
-                && this.HashModels.Count == 0)
+            if (this.HashModels.Count == 0 && File.Exists(pathOrHash))
             {
                 this.CompareWithExpectedHash(pathOrHash);
             }
@@ -396,7 +398,7 @@ namespace HashCalculator
                 this.GlobalUpdateHashNameItems(pathOrHash);
                 foreach (HashModel hm in this.HashModels)
                 {
-                    hm.CmpResult = this.hashNameItems.Compare(hm.Hash, hm.Name);
+                    hm.CmpResult = this.nameHashItems.Compare(hm.Name, hm.Hash);
                 }
             }
         }
@@ -468,6 +470,29 @@ namespace HashCalculator
             }
         }
 
+        private void Button_SelectHashSetFile_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog askUserFilePath = new OpenFileDialog
+            {
+                Filter = "所有文件|*.*",
+            };
+            if (askUserFilePath.ShowDialog() == true)
+            {
+                this.uiTextBox_HashValueOrFilePath.Text = askUserFilePath.FileName;
+                // TextBox_HashValueOrFilePath_Changed 已实现
+                //this.uiComboBox_ComparisonMethod.SelectedIndex = 0;
+            }
+        }
+
+        private void MenuItem_UsingHelp_Click(object sender, RoutedEventArgs e)
+        {
+            Window usingHelpWindow = new UsingHelp()
+            {
+                Owner = this,
+            };
+            usingHelpWindow.ShowDialog();
+        }
+
         private void Button_SelectFiles_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog askFilePaths = new OpenFileDialog
@@ -480,27 +505,13 @@ namespace HashCalculator
             {
                 IEnumerable<PathExp> pathsExps = askFilePaths.FileNames
                     .Select(s => new PathExp(s));
-                this.FilesPathExpsDraggedInto.AddRange(pathsExps);
+                this.PathsExpsDraggedInto.AddRange(pathsExps);
                 // 与 DataGrid_FilesToCalculate_Drop 方法类似
                 Thread thread = new Thread(new ParameterizedThreadStart(this.EnqueueFilesPath))
                 {
                     IsBackground = true
                 };
                 thread.Start(pathsExps);
-            }
-        }
-
-        private void Button_SelectHashSetFile_Click(object sender, RoutedEventArgs e)
-        {
-            OpenFileDialog askUserFilePath = new OpenFileDialog
-            {
-                Filter = "所有文件|*.*",
-            };
-            if (askUserFilePath.ShowDialog() == true)
-            {
-                this.uiTextBox_HashValueOrFilePath.Text = askUserFilePath.FileName;
-                // TextBox_HashValueOrFilePath_Changed 已实现
-                //this.uiComboBox_ComparisonMethod.SelectedIndex = 0;
             }
         }
     }

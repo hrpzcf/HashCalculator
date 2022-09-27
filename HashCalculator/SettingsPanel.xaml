@@ -90,15 +90,6 @@
                         <ComboBoxItem Content="8 个 - 大多数文件很小" />
                     </ComboBox>
                 </Grid>
-                <CheckBox
-                    x:Name="uiCheckBox_SearchForComparison"
-                    Grid.Row="5"
-                    Margin="0,0,0,4"
-                    Padding="4,0,0,0"
-                    VerticalAlignment="Center"
-                    Click="CheckBoxes_ActivateApplyButton_Click"
-                    Content="如果面板为空且校验依据是文件，可以直接点击校验"
-                    ToolTip="当面板为空时，如果校验依据选择的是通用格式的哈希值文本文件，则：&#10;点击&#x3C;校验&#x3E;后程序会自动解析文件并在相同目录下寻找要计算哈希值的文件完成计算并显示校验结果。&#10;通用格式的哈希值文件请参考程序&#x3C;导出结果&#x3E;功能导出的文件的内容排布格式。" />
                 <Grid
                     Grid.Row="6"
                     Margin="0,0,0,4">
@@ -108,13 +99,14 @@
                     </Grid.ColumnDefinitions>
                     <TextBlock
                         VerticalAlignment="Center"
-                        Text="直接点击校验时：" />
+                        Text="使用快速校验时："
+                        ToolTip="当面板为空时，如果校验依据选择的是通用格式的哈希值文本文件，则：&#10;点击&#x3C;校验&#x3E;后程序会自动解析文件并在相同目录下寻找要计算哈希值的文件完成计算并显示校验结果。&#10;通用格式的哈希值文件请参考程序&#x3C;导出结果&#x3E;功能导出的文件的内容排布格式。" />
                     <ComboBox
                         x:Name="uiComboBox_SearchPolicy2"
                         Grid.Column="1"
                         SelectedIndex="0">
-                        <ComboBoxItem Content="搜索依据所在目录的所有子文件" />
                         <ComboBoxItem Content="搜索依据所在目录的一代子文件" />
+                        <ComboBoxItem Content="搜索依据所在目录的所有子文件" />
                     </ComboBox>
                 </Grid>
             </Grid>
