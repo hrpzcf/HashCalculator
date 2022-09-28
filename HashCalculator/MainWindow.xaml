@@ -24,6 +24,7 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <Menu
                 VerticalAlignment="Center"
@@ -65,12 +66,20 @@
                 <ComboBoxItem Content="MD5" />
             </ComboBox>
             <Button
-                x:Name="uiButton_SelectFilesToHash"
+                x:Name="uiButton_SelectFoldersToHash"
                 Grid.Column="4"
+                Margin="0,0,16,0"
                 Padding="12,1,12,1"
-                Click="Button_SelectFiles_Click"
+                Click="Button_SelectFoldersToHash_Click"
+                Content="选择文件夹"
+                ToolTip="也可以将文件和文件夹直接拖放到下方表格中。" />
+            <Button
+                x:Name="uiButton_SelectFilesToHash"
+                Grid.Column="5"
+                Padding="12,1,12,1"
+                Click="Button_SelectFilesToHash_Click"
                 Content="选择文件"
-                ToolTip="也可以将文件、文件夹直接拖入下方面板。" />
+                ToolTip="也可以将文件、文件夹直接拖放到下方表格中。" />
         </Grid>
         <Grid
             Grid.Row="1"
@@ -259,21 +268,21 @@
                     Content="清空面板"
                     ToolTip="清空面板中显示的所有的行。" />
                 <Button
-                    x:Name="uiButton_CancelAllTask"
-                    Grid.Column="2"
-                    Margin="8,8,8,8"
-                    Padding="16,4,16,4"
-                    Click="Button_CancelAllTask_Click"
-                    Content="取消任务"
-                    ToolTip="取消全部运行中的哈希值计算任务和排队中的任务。" />
-                <Button
                     x:Name="uiButton_ExportAsText"
-                    Grid.Column="3"
+                    Grid.Column="2"
                     Margin="8,8,8,8"
                     Padding="16,4,16,4"
                     Click="Button_ExportAsTextFile_Click"
                     Content="导出结果"
                     ToolTip="导出面板中的计算结果。没有计算结果的行不会被导出，&quot;导出&quot;列没有选中的也不会被导出。" />
+                <Button
+                    x:Name="uiButton_CancelAllTask"
+                    Grid.Column="3"
+                    Margin="8,8,8,8"
+                    Padding="16,4,16,4"
+                    Click="Button_CancelAllTask_Click"
+                    Content="取消任务"
+                    ToolTip="取消全部运行中的哈希值计算任务和排队中的任务。" />
                 <Button
                     x:Name="uiButton_RefreshCopy"
                     Grid.Column="4"

@@ -259,7 +259,7 @@ namespace HashCalculator
                 "Report",
                 typeof(string),
                 typeof(ToolTipReport),
-                new PropertyMetadata("暂无报告")
+                new PropertyMetadata("暂无校验报告")
         );
 
         public ToolTipReport() { Instance = this; }

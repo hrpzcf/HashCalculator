@@ -20,11 +20,11 @@ namespace HashCalculator
         private void InitializeFromConfigure(Configure config)
         {
             this.uiCheckBox_RembMainSize.IsChecked = config.RembMainWindowSize;
-            this.uiComboBox_SearchPolicy1.SelectedIndex = config.FolderSearchPolicy1;
+            this.uiComboBox_SearchPolicy1.SelectedIndex = (int)config.DroppedSearchPolicy;
             this.uiCheckBox_UseLowercaseHash.IsChecked = config.UseLowercaseHash;
             this.uiCheckBox_RemMainWinPos.IsChecked = config.RemMainWindowPosition;
             this.uiComboBox_SimulCalculate.SelectedIndex = (int)config.SimulCalculate;
-            this.uiComboBox_SearchPolicy2.SelectedIndex = config.FolderSearchPolicy2;
+            this.uiComboBox_SearchPolicy2.SelectedIndex = (int)config.UsingQuickVerification;
             this.Width = config.SettingsWinWidth;
             this.Height = config.SettingsWinHeight;
         }
@@ -35,11 +35,11 @@ namespace HashCalculator
             this.uiButton_LoadDefault.IsEnabled = true;
             Configure config = Settings.Current;
             config.RembMainWindowSize = this.uiCheckBox_RembMainSize.IsChecked ?? false;
-            config.FolderSearchPolicy1 = this.uiComboBox_SearchPolicy1.SelectedIndex;
+            config.DroppedSearchPolicy = (SearchPolicy)this.uiComboBox_SearchPolicy1.SelectedIndex;
             config.UseLowercaseHash = this.uiCheckBox_UseLowercaseHash.IsChecked ?? false;
             config.RemMainWindowPosition = this.uiCheckBox_RemMainWinPos.IsChecked ?? false;
             config.SimulCalculate = (SimCalc)this.uiComboBox_SimulCalculate.SelectedIndex;
-            config.FolderSearchPolicy2 = this.uiComboBox_SearchPolicy2.SelectedIndex;
+            config.UsingQuickVerification = (SearchPolicy)this.uiComboBox_SearchPolicy2.SelectedIndex;
             //Settings.SaveConfigure(); // 窗口关闭时会 SaveConfigure
         }
 

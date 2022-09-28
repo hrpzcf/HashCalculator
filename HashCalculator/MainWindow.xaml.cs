@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Forms = System.Windows.Forms;
 
 namespace HashCalculator
 {
@@ -74,37 +75,37 @@ namespace HashCalculator
             Settings.SaveConfigure();
         }
 
-        private void SearchFoldersByPolicy(string[] data, List<string> DataPaths)
+        private void SearchUnderSpecifiedPolicy(string[] paths, List<string> outDataPaths)
         {
-            switch (Settings.Current.FolderSearchPolicy1)
+            switch (Settings.Current.DroppedSearchPolicy)
             {
                 default:
-                case 0:
-                    foreach (string p in data)
+                case SearchPolicy.Children:
+                    foreach (string p in paths)
                     {
                         if (Directory.Exists(p))
                         {
                             DirectoryInfo di = new DirectoryInfo(p);
-                            DataPaths.AddRange(di.GetFiles().Select(i => i.FullName));
+                            outDataPaths.AddRange(di.GetFiles().Select(i => i.FullName));
                         }
-                        else if (File.Exists(p)) DataPaths.Add(p);
+                        else if (File.Exists(p)) outDataPaths.Add(p);
                     }
                     break;
-                case 1:
-                    foreach (string p in data)
+                case SearchPolicy.Descendants:
+                    foreach (string p in paths)
                     {
                         if (Directory.Exists(p))
                         {
                             DirectoryInfo di = new DirectoryInfo(p);
-                            DataPaths.AddRange(
+                            outDataPaths.AddRange(
                                 di.GetFiles("*", SearchOption.AllDirectories).Select(i => i.FullName)
                             );
                         }
-                        else if (File.Exists(p)) DataPaths.Add(p);
+                        else if (File.Exists(p)) outDataPaths.Add(p);
                     }
                     break;
-                case 2:
-                    foreach (string p in data) if (File.Exists(p)) DataPaths.Add(p);
+                case SearchPolicy.DontSearch:
+                    foreach (string p in paths) if (File.Exists(p)) outDataPaths.Add(p);
                     break;
             }
         }
@@ -116,28 +117,26 @@ namespace HashCalculator
             if (!(e.Data.GetData(DataFormats.FileDrop) is string[] data) || data.Length == 0)
                 return;
             List<string> searchedPaths = new List<string>();
-            this.SearchFoldersByPolicy(data, searchedPaths);
+            this.SearchUnderSpecifiedPolicy(data, searchedPaths);
             if (searchedPaths.Count == 0)
                 return;
             IEnumerable<ModelArg> modelArgs = searchedPaths.Select(s => new ModelArg(s));
             this.FilesDroppedToHash.AddRange(modelArgs);
-            Thread thread = new Thread(new ParameterizedThreadStart(this.EnqueueFilesPath))
-            {
-                IsBackground = true
-            };
-            thread.Start(modelArgs);
+            this.CreateTaskToEnqueueFilePaths(modelArgs);
         }
 
-        private void EnqueueFilesPath(object data)
+        private void CreateTaskToEnqueueFilePaths(IEnumerable<ModelArg> modelArgs)
         {
-            IEnumerable<ModelArg> args = data as IEnumerable<ModelArg>;
-            lock (Locks.MainLock)
+            Task.Run(() =>
             {
-                foreach (ModelArg arg in args)
-                    this.FilesToHashQueue.Enqueue(arg);
-                this.QueuedFilesCount += args.Count();
-                Application.Current.Dispatcher.Invoke(this.AfterFilesQueued);
-            }
+                lock (Locks.MainLock)
+                {
+                    foreach (ModelArg arg in modelArgs)
+                        this.FilesToHashQueue.Enqueue(arg);
+                    this.QueuedFilesCount += modelArgs.Count();
+                    Application.Current.Dispatcher.Invoke(this.AfterFilesQueued);
+                }
+            });
         }
 
         private void ShowProgressInfo()
@@ -178,7 +177,7 @@ namespace HashCalculator
             this.uiTextBlock_TotalTaskCount.Text = this.QueuedFilesCount.ToString();
             if (CompletionCounter.Count() <= 0)
             {
-                ToolTipReport.Instance.Report = "暂无报告";
+                ToolTipReport.Instance.Report = "暂无校验报告";
                 this.ShowProgressInfo();
                 Locks.UpdateComputeLock(); // 更新“同时计算多少个文件”的信号量
             }
@@ -212,25 +211,21 @@ namespace HashCalculator
                 CompletionCounter.ResetCount();
                 this.QueuedFilesCount = 0;
                 Application.Current.Dispatcher.Invoke(this.HideProgressInfo);
+                Application.Current.Dispatcher.Invoke(this.GenerateVerificationReport);
             }
         }
 
-        private void RefreshCurrentDataGridLines(bool deleteLines)
+        private void RefreshCurrentDataGridLines(bool clearResults)
         {
-            lock (Locks.MainLock)
+
+            if (clearResults)
             {
-                if (deleteLines)
+                lock (Locks.MainLock)
                 {
-                    this.HashModels.Clear();
-                    SerialGenerator.Reset();
+                    this.HashModels.Clear(); SerialGenerator.Reset();
                 }
-                // 与 DataGrid_FilesToCalculate_Drop 方法类似
-                Thread thread = new Thread(new ParameterizedThreadStart(this.EnqueueFilesPath))
-                {
-                    IsBackground = true
-                };
-                thread.Start(this.FilesDroppedToHash);
             }
+            this.CreateTaskToEnqueueFilePaths(this.FilesDroppedToHash);
         }
 
         private void ThreadAddHashModel()
@@ -340,15 +335,25 @@ namespace HashCalculator
         {
             FileInfo hashValueFileInfo = new FileInfo(path);
             FileInfo[] infosInSameFolder;
-            if (Settings.Current.FolderSearchPolicy2 == 0)
+            if (Settings.Current.UsingQuickVerification == SearchPolicy.Children)
                 infosInSameFolder = hashValueFileInfo.Directory.GetFiles();
-            else
+            else if (Settings.Current.UsingQuickVerification == SearchPolicy.Descendants)
                 infosInSameFolder = hashValueFileInfo.Directory.GetFiles(
                     "*", SearchOption.AllDirectories);
+            else
+            {
+                MessageBox.Show(
+                    "设置项\"当使用快速校验时\"选择了不搜索" +
+                    "文件夹，快速校验无法完成，请在设置面板选择合适选项。",
+                    "提示",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+                return;
+            }
             try
             {
                 bool fileFound = false;
-                List<ModelArg> pathAndExpectedList = new List<ModelArg>();
+                List<ModelArg> hashModelArgsList = new List<ModelArg>();
                 foreach (string line in File.ReadAllLines(path))
                 {
                     string[] items = line.Split(
@@ -370,27 +375,22 @@ namespace HashCalculator
                         if (items[1].ToLower() == fi.Name.ToLower())
                         {
                             items[1] = fi.FullName;
-                            pathAndExpectedList.Add(new ModelArg(items));
+                            hashModelArgsList.Add(new ModelArg(items));
                             fileFound = true;
                         }
                     }
                     if (!fileFound)
-                        pathAndExpectedList.Add(new ModelArg(items[1], true));
+                        hashModelArgsList.Add(new ModelArg(items[1], true));
                 }
-                if (pathAndExpectedList.Count == 0)
+                if (hashModelArgsList.Count == 0)
                     return;
-                this.FilesDroppedToHash.AddRange(pathAndExpectedList);
-                // 与 DataGrid_FilesToCalculate_Drop 方法类似
-                Thread thread = new Thread(new ParameterizedThreadStart(this.EnqueueFilesPath))
-                {
-                    IsBackground = true
-                };
-                thread.Start(pathAndExpectedList);
+                this.FilesDroppedToHash.AddRange(hashModelArgsList);
+                this.CreateTaskToEnqueueFilePaths(hashModelArgsList);
             }
             catch { return; }
         }
 
-        private void GenerateHashValueVerificationReport()
+        private void GenerateVerificationReport()
         {
             int noresult, unrelated, matched, mismatch, uncertain;
             noresult = unrelated = matched = mismatch = uncertain = 0;
@@ -416,11 +416,11 @@ namespace HashCalculator
                 }
             }
             ToolTipReport.Instance.Report
-                = $"校验报告：\n\n匹配数量：{matched}\n"
-                + $"不匹配数量：{mismatch}\n"
+                = $"校验报告：\n\n已匹配：{matched}\n"
+                + $"不匹配：{mismatch}\n"
                 + $"不确定：{uncertain}\n"
                 + $"无关联：{unrelated}\n"
-                + $"没有校验：{noresult} \n\n"
+                + $"未校验：{noresult} \n\n"
                 + $"文件总数：{this.HashModels.Count}";
         }
 
@@ -435,6 +435,8 @@ namespace HashCalculator
             if (this.HashModels.Count == 0 && File.Exists(pathOrHash))
             {
                 this.CompareWithExpectedHash(pathOrHash);
+                // 因为要新线程计算哈希值，所以
+                // 此处 GenerateVerificationReport 移到 UpdateProgress 中
             }
             else
             {
@@ -446,8 +448,8 @@ namespace HashCalculator
                     else
                         hm.CmpResult = CmpRes.NoResult;
                 }
+                this.GenerateVerificationReport();
             }
-            this.GenerateHashValueVerificationReport();
         }
 
         private void TextBox_HashValueOrFilePath_PreviewDragOver(object sender, DragEventArgs e)
@@ -540,32 +542,11 @@ namespace HashCalculator
             usingHelpWindow.ShowDialog();
         }
 
-        private void Button_SelectFiles_Click(object sender, RoutedEventArgs e)
-        {
-            OpenFileDialog askFilePaths = new OpenFileDialog
-            {
-                Multiselect = true,
-                Filter = "所有文件|*.*",
-                DereferenceLinks = false,
-            };
-            if (askFilePaths.ShowDialog() == true)
-            {
-                IEnumerable<ModelArg> modelArgs = askFilePaths.FileNames.Select(s => new ModelArg(s));
-                this.FilesDroppedToHash.AddRange(modelArgs);
-                // 与 DataGrid_FilesToCalculate_Drop 方法类似
-                Thread thread = new Thread(new ParameterizedThreadStart(this.EnqueueFilesPath))
-                {
-                    IsBackground = true
-                };
-                thread.Start(modelArgs);
-            }
-        }
-
         private void Button_CancelAllTask_Click(object sender, RoutedEventArgs e)
         {
             lock (Locks.MainLock)
             {
-                this.QueuedFilesCount -= FilesToHashQueue.Count;
+                this.QueuedFilesCount -= this.FilesToHashQueue.Count;
                 this.FilesToHashQueue.Clear();
             }
             foreach (CancellationTokenSource cancelSrc in this.cancelTokenSrcs)
@@ -573,6 +554,48 @@ namespace HashCalculator
             this.UpdateProgress(null);
             MessageBox.Show("正在执行的任务和排队中的任务已全部取消。", "任务已取消");
         }
+
+        private void Button_SelectFilesToHash_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog askFilePaths = new OpenFileDialog
+            {
+                Filter = "所有文件|*.*",
+                DereferenceLinks = false,
+                Multiselect = true,
+                ValidateNames = true,
+            };
+            if (askFilePaths.ShowDialog() == true)
+            {
+                IEnumerable<ModelArg> modelArgs =
+                    askFilePaths.FileNames.Select(s => new ModelArg(s));
+                this.FilesDroppedToHash.AddRange(modelArgs);
+                this.CreateTaskToEnqueueFilePaths(modelArgs);
+            }
+        }
+
+        private void Button_SelectFoldersToHash_Click(object sender, RoutedEventArgs e)
+        {
+            if (Settings.Current.DroppedSearchPolicy == SearchPolicy.DontSearch)
+            {
+                MessageBox.Show("当前设置中的文件夹搜索策略为" +
+                    "\"不搜索该文件夹\"，此按钮无法获取文件夹下的文件，请更改为其他选项。", "提示");
+                return;
+            }
+            Forms.FolderBrowserDialog folderPaths = new Forms.FolderBrowserDialog();
+            if (folderPaths.ShowDialog() == Forms.DialogResult.OK)
+            {
+                List<string> filePaths = new List<string>();
+                if (folderPaths.SelectedPath == string.Empty)
+                {
+                    MessageBox.Show("没有选择任何文件夹", "提示");
+                    return;
+                }
+                this.SearchUnderSpecifiedPolicy(
+                    new string[] { folderPaths.SelectedPath }, filePaths);
+                IEnumerable<ModelArg> modelArgs = filePaths.Select(s => new ModelArg(s));
+                this.FilesDroppedToHash.AddRange(modelArgs);
+                this.CreateTaskToEnqueueFilePaths(modelArgs);
+            }
+        }
     }
-    // TODO 增加选择文件夹按钮
 }

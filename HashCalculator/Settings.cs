@@ -8,6 +8,17 @@ using static System.Environment;
 namespace HashCalculator
 {
     /// <summary>
+    /// 对文件夹的搜索策略
+    /// </summary>
+    [Serializable]
+    internal enum SearchPolicy
+    {
+        Children,
+        Descendants,
+        DontSearch,
+    }
+
+    /// <summary>
     /// 同时计算多少个文件的哈希值，用于创建信号量
     /// </summary>
     [Serializable]
@@ -131,9 +142,9 @@ namespace HashCalculator
 
         public double MainWindowHeight { get { return this.mainWindowHeight; } set { this.mainWindowHeight = value; } }
 
-        public int FolderSearchPolicy1 { get; set; }
+        public SearchPolicy DroppedSearchPolicy { get; set; }
 
-        public int FolderSearchPolicy2 { get; set; }
+        public SearchPolicy UsingQuickVerification { get; set; }
 
         public bool UseLowercaseHash { get; set; }
 
