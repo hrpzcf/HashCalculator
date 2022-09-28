@@ -196,40 +196,6 @@ namespace HashCalculator
                 .ContinueWith(this.ActUpdateProgress);
         }
 
-        private void GenerateToolTipReport()
-        {
-            int noresult, unrelated, matched, mismatch, uncertain;
-            noresult = unrelated = matched = mismatch = uncertain = 0;
-            foreach (HashModel hm in this.HashModels)
-            {
-                switch (hm.CmpResult)
-                {
-                    case CmpRes.NoResult:
-                        ++noresult;
-                        break;
-                    case CmpRes.Unrelated:
-                        ++unrelated;
-                        break;
-                    case CmpRes.Matched:
-                        ++matched;
-                        break;
-                    case CmpRes.Mismatch:
-                        ++mismatch;
-                        break;
-                    case CmpRes.Uncertain:
-                        ++uncertain;
-                        break;
-                }
-            }
-            ToolTipReport.Instance.Report
-                = $"校验报告：\n\n匹配数量：{matched}\n"
-                + $"不匹配数量：{mismatch}\n"
-                + $"不确定：{uncertain}\n"
-                + $"无关联：{unrelated}\n"
-                + $"没有校验：{noresult} \n\n"
-                + $"文件总数：{this.HashModels.Count}";
-        }
-
         private void UpdateProgress(Task task)
         {
             int completed = CompletionCounter.Count();
@@ -246,7 +212,6 @@ namespace HashCalculator
                 CompletionCounter.ResetCount();
                 this.QueuedFilesCount = 0;
                 Application.Current.Dispatcher.Invoke(this.HideProgressInfo);
-                Application.Current.Dispatcher.Invoke(this.GenerateToolTipReport);
             }
         }
 
@@ -425,6 +390,40 @@ namespace HashCalculator
             catch { return; }
         }
 
+        private void GenerateHashValueVerificationReport()
+        {
+            int noresult, unrelated, matched, mismatch, uncertain;
+            noresult = unrelated = matched = mismatch = uncertain = 0;
+            foreach (HashModel hm in this.HashModels)
+            {
+                switch (hm.CmpResult)
+                {
+                    case CmpRes.NoResult:
+                        ++noresult;
+                        break;
+                    case CmpRes.Unrelated:
+                        ++unrelated;
+                        break;
+                    case CmpRes.Matched:
+                        ++matched;
+                        break;
+                    case CmpRes.Mismatch:
+                        ++mismatch;
+                        break;
+                    case CmpRes.Uncertain:
+                        ++uncertain;
+                        break;
+                }
+            }
+            ToolTipReport.Instance.Report
+                = $"校验报告：\n\n匹配数量：{matched}\n"
+                + $"不匹配数量：{mismatch}\n"
+                + $"不确定：{uncertain}\n"
+                + $"无关联：{unrelated}\n"
+                + $"没有校验：{noresult} \n\n"
+                + $"文件总数：{this.HashModels.Count}";
+        }
+
         private void Button_StartCompare_Click(object sender, RoutedEventArgs e)
         {
             string pathOrHash = this.uiTextBox_HashValueOrFilePath.Text;
@@ -448,7 +447,7 @@ namespace HashCalculator
                         hm.CmpResult = CmpRes.NoResult;
                 }
             }
-            this.GenerateToolTipReport();
+            this.GenerateHashValueVerificationReport();
         }
 
         private void TextBox_HashValueOrFilePath_PreviewDragOver(object sender, DragEventArgs e)
@@ -575,4 +574,5 @@ namespace HashCalculator
             MessageBox.Show("正在执行的任务和排队中的任务已全部取消。", "任务已取消");
         }
     }
+    // TODO 增加选择文件夹按钮
 }
