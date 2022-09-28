@@ -82,9 +82,7 @@
 
         a {
             color: blue;
-            font-weight: bold;
             text-decoration: none;
-            font-size: 12px;
         }
     </style>
 </head>
@@ -153,6 +151,7 @@
                             <li>校验结果没有显示颜色：该行文件的哈希值结果还没有执行过校验操作。</li>
                         </ul>
                     </li>
+                    <li><span id="read_report" class="notice">查看校验报告：</span>完成文件的哈希值计算后或者点击&quot;校验&quot;按钮后，将鼠标悬停在任意一行的&quot;校验结果&quot;列上，就会显示本次校验结果的汇总报告。</li>
                 </ol>
                 <div class="tianchong"></div>
             </li>
@@ -161,11 +160,12 @@
                     <div id="quick" class="title2">快速批量校验文件哈希值</div>
                 </div>
                 <span>当你需要批量校验已下载的一批文件的哈希值时，如果这些文件的发布者提供了包含这些文件哈希值的文本文件(下称 sums 文件)，且该哈希值文件是通用格式（参考以上<a
-                        href="#importance">注意！！！</a>处的描述）的文本文件，则可以使用此功能。使用此功能需要保证面板为空，如果表格有内容，可以通过&quot;清空面板&quot;按钮清空表格。</span>
+                        href="#importance">请注意！！！</a>处的描述）的文本文件，则可以使用此功能。使用此功能需要保证面板为空，如果表格有内容，可以通过&quot;清空面板&quot;按钮清空表格。</span>
                 <ol>
                     <li><span class="steps">可选步骤：</span>在右上角的&quot;算法&quot;下拉选择框中选择您要计算的哈希值类型。</li>
                     <li><span class="steps">必选步骤：</span>将 sums 拖入&quot;校验依据&quot;输入框中，或者点击输入框后的&quot;...&quot;按钮选择
                         sums 文件，然后点击&quot;校验&quot;按钮，程序会自动在 sums 文件同一目录下查找相应要被校验哈希值的文件，然后显示在表格中并完成计算、显示校验结果。</li>
+                    <li><span class="notice">查看校验报告：</span>参考<a href="#read_report">查看校验报告</a>处的查看方法描述。</li>
                 </ol>
             </li>
         </ul>
@@ -181,6 +181,7 @@
                             class="steps">菜单栏的&quot;窗口置顶&quot;复选框：</span>勾选则使程序窗口保持在其他窗口的上方，即使已经切换到其他程序，本程序窗口也不会被其他窗口遮挡。
                     </li>
                     <li><span class="steps">菜单栏的&quot;算法&quot;下拉选择框：</span>要计算文件的哈希值类型。</li>
+                    <li><span class="steps">菜单栏的&quot;选择文件夹&quot;按钮：</span>选择要被计算哈希值的一批文件所在的文件夹。</li>
                     <li><span class="steps">菜单栏的&quot;选择文件&quot;按钮：</span>选择要被计算哈希值的文件。</li>
                     <li><span class="steps">主界面下方的&quot;校验依据&quot;输入框：</span>用于输入要校验的哈希值或者 hashsums 文件的路径。</li>
                     <li><span class="steps">主界面下方的&quot;...&quot;按钮：</span>选择 hashsums 文件并将路径显示在&quot;校验依据&quot;输入框。
