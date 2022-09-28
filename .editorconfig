@@ -23,10 +23,10 @@ dotnet_sort_system_directives_first = false
 file_header_template = unset
 
 # this. 和 Me. 首选项
-dotnet_style_qualification_for_event = true
+dotnet_style_qualification_for_event = true:suggestion
 dotnet_style_qualification_for_field = true
-dotnet_style_qualification_for_method = true
-dotnet_style_qualification_for_property = true
+dotnet_style_qualification_for_method = true:suggestion
+dotnet_style_qualification_for_property = true:suggestion
 
 # 语言关键字与 bcl 类型首选项
 dotnet_style_predefined_type_for_locals_parameters_members = true
@@ -47,7 +47,7 @@ dotnet_style_collection_initializer = true
 dotnet_style_explicit_tuple_names = true
 dotnet_style_namespace_match_folder = true
 dotnet_style_null_propagation = true
-dotnet_style_object_initializer = true
+dotnet_style_object_initializer = false
 dotnet_style_operator_placement_when_wrapping = beginning_of_line
 dotnet_style_prefer_auto_properties = true
 dotnet_style_prefer_compound_assignment = true
@@ -67,7 +67,7 @@ dotnet_style_readonly_field = true
 dotnet_code_quality_unused_parameters = all
 
 # 禁止显示首选项
-dotnet_remove_unnecessary_suppression_exclusions = none
+dotnet_remove_unnecessary_suppression_exclusions = 0
 
 # 新行首选项
 dotnet_style_allow_multiple_blank_lines_experimental = false
