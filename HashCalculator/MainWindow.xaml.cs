@@ -560,6 +560,7 @@ namespace HashCalculator
             OpenFileDialog askFilePaths = new OpenFileDialog
             {
                 Filter = "所有文件|*.*",
+                Title = "浏览文件",
                 DereferenceLinks = false,
                 Multiselect = true,
                 ValidateNames = true,
