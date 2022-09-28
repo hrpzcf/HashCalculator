@@ -535,7 +535,7 @@ namespace HashCalculator
 
         private void MenuItem_UsingHelp_Click(object sender, RoutedEventArgs e)
         {
-            Window usingHelpWindow = new UsingHelp()
+            Window usingHelpWindow = new UsingHelpWindow()
             {
                 Owner = this,
             };

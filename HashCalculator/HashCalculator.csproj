@@ -134,7 +134,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Resource Include="HtmlFiles\UsingHelp.html" />
+    <Resource Include="Others\UsingHelp.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
