@@ -240,7 +240,7 @@ namespace HashCalculator
                         goto pause;
                     ModelArg arg = this.FilesToHashQueue.Dequeue();
                     serial = SerialGenerator.GetSerial();
-                    Application.Current.Dispatcher.Invoke(ahm, serial, arg);
+                    Application.Current.Dispatcher.BeginInvoke(ahm, serial, arg);
                 }
             pause:
                 Thread.Sleep(10);
@@ -281,7 +281,9 @@ namespace HashCalculator
                 {
                     foreach (HashModel hm in this.HashModels)
                         if (hm.Completed && hm.Export)
+                        {
                             sw.WriteLine($"{hm.Hash} *{hm.Name}");
+                        }
                 }
             }
             catch (Exception ex)

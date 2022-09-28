@@ -41,20 +41,11 @@ namespace HashCalculator
     {
         private static int serialNum = 0;
 
-        public static void Reset()
-        {
-            serialNum = 0;
-        }
+        public static void Reset() { serialNum = 0; }
 
-        public static int GetSerial()
-        {
-            return ++serialNum;
-        }
+        public static int GetSerial() { return ++serialNum; }
 
-        public static void SerialBack()
-        {
-            --serialNum;
-        }
+        public static void SerialBack() { --serialNum; }
     }
 
     internal static class CompletionCounter
@@ -64,34 +55,22 @@ namespace HashCalculator
 
         public static void Increment()
         {
-            lock (locker)
-            {
-                ++CompletedCount;
-            }
+            lock (locker) { ++CompletedCount; }
         }
 
         public static void Decrement()
         {
-            lock (locker)
-            {
-                --CompletedCount;
-            }
+            lock (locker) { --CompletedCount; }
         }
 
         public static int Count()
         {
-            lock (locker)
-            {
-                return CompletedCount;
-            }
+            lock (locker) { return CompletedCount; }
         }
 
         public static void ResetCount()
         {
-            lock (locker)
-            {
-                CompletedCount = 0;
-            }
+            lock (locker) { CompletedCount = 0; }
         }
     }
 
