@@ -8,9 +8,9 @@ namespace HashCalculator
     {
         public UsingHelpWindow()
         {
-            InitializeComponent();
+            this.InitializeComponent();
             StreamResourceInfo stream = Application.GetResourceStream(
-                new Uri("Others/UsingHelp.html", UriKind.Relative));
+                new Uri("Pages/UsingHelp.html", UriKind.Relative));
             this.uiWebBrowser_ShowUsingHelp.NavigateToStream(stream.Stream);
         }
     }
