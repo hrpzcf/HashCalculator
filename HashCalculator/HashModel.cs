@@ -105,7 +105,7 @@ namespace HashCalculator
             this.Name = this.Path.Name;
             this.ExpectedHash = args.expected?.ToLower();
             this.Useless = args.useless;
-            this.CancelToken = args.cancelToken;
+            this.CancelToken = args.source.Token;
         }
 
         public int Serial { get; set; }
@@ -144,10 +144,10 @@ namespace HashCalculator
             get { return (CmpRes)this.GetValue(CmpResultProperty); }
         }
 
-        public void CancelledCallback()
+        public void Cancelled()
         {
             if (this.Completed) return;
-            CompletionCounter.Increment();
+            Counter.Increase();
             Application.Current.Dispatcher.Invoke(() => { this.Hash = "任务已被取消"; });
         }
 
@@ -159,7 +159,6 @@ namespace HashCalculator
             Locks.HashComputeLock.WaitOne();
             if (this.CancelToken.IsCancellationRequested)
             {
-                CompletionCounter.Increment();
                 Application.Current.Dispatcher.Invoke(() => { this.Hash = "任务已被取消"; });
                 Locks.HashComputeLock.Release();
                 return;
@@ -230,7 +229,7 @@ namespace HashCalculator
                             {
                                 Application.Current.Dispatcher.Invoke(
                                     () => { this.Hash = "任务已被取消"; });
-                                goto TaskFinishing;
+                                return;
                             }
                             readedSize = fs.Read(buffer, 0, buffer.Length);
                             if (readedSize <= 0) break;
@@ -245,7 +244,9 @@ namespace HashCalculator
                         if (this.ExpectedHash != null)
                         {
                             CmpRes result;
-                            if (hashStr.ToLower() == this.ExpectedHash)
+                            if (this.ExpectedHash == string.Empty)
+                                result = CmpRes.Uncertain;
+                            else if (hashStr.ToLower() == this.ExpectedHash)
                                 result = CmpRes.Matched;
                             else
                                 result = CmpRes.Mismatch;
@@ -261,7 +262,7 @@ namespace HashCalculator
                     () => { this.Hash = "读取要被计算哈希值的文件失败或计算出错"; });
             }
         TaskFinishing:
-            CompletionCounter.Increment();
+            Counter.Increase();
         }
 
         private void UsingBouncyCastleSha224()
@@ -291,7 +292,7 @@ namespace HashCalculator
                         {
                             Application.Current.Dispatcher.Invoke(
                                 () => { this.Hash = "任务已被取消"; });
-                            goto TaskFinishing;
+                            return;
                         }
                         readedSize = fs.Read(buffer, 0, blockSize);
                         if (readedSize <= 0) break;
@@ -306,7 +307,9 @@ namespace HashCalculator
                     if (this.ExpectedHash != null)
                     {
                         CmpRes result;
-                        if (hashStr.ToLower() == this.ExpectedHash)
+                        if (this.ExpectedHash == string.Empty)
+                            result = CmpRes.Uncertain;
+                        else if (hashStr.ToLower() == this.ExpectedHash)
                             result = CmpRes.Matched;
                         else
                             result = CmpRes.Mismatch;
@@ -321,7 +324,7 @@ namespace HashCalculator
                     () => { this.Hash = "读取要被计算哈希值的文件失败或计算出错"; });
             }
         TaskFinishing:
-            CompletionCounter.Increment();
+            Counter.Increase();
         }
     }
 }
