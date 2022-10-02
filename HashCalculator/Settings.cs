@@ -110,25 +110,25 @@ namespace HashCalculator
         private double mainWindowHeight = 600.0;
         private double mainWindowTop = 0.0;
         private double mainWindowLeft = 0.0;
-        private string savedPath = string.Empty;
+        private string savedDirPath = string.Empty;
         private SimCalc simulCalculate = SimCalc.Four;
         private double settingsWinWidth = 400.0;
         private double settingsWinHeight = 280.0;
 
-        public string SavedPath
+        public string SavedDirPath
         {
             get
             {
-                if (this.savedPath != string.Empty)
-                    return this.savedPath;
+                if (this.savedDirPath != string.Empty)
+                    return this.savedDirPath;
                 return GetFolderPath(SpecialFolder.Desktop);
             }
             set
             {
                 if (value != null)
-                    this.savedPath = value;
+                    this.savedDirPath = value;
                 else
-                    this.savedPath = string.Empty;
+                    this.savedDirPath = string.Empty;
             }
         }
 
@@ -144,7 +144,7 @@ namespace HashCalculator
 
         public SearchPolicy DroppedSearchPolicy { get; set; }
 
-        public SearchPolicy UsingQuickVerification { get; set; }
+        public SearchPolicy QuickVerificationSearchPolicy { get; set; }
 
         public bool UseLowercaseHash { get; set; }
 
