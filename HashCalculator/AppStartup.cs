@@ -15,7 +15,7 @@ namespace HashCalculator
             if ((uint)e.Exception.HResult == 0x800401D0)
                 excContent = "复制哈希值失败";
             else
-                excContent = "未知异常，请向开发者反馈";
+                excContent = "意外的异常，可打开帮助页面末尾链接向开发者反馈";
             e.Handled = true;
             MessageBox.Show($"{excContent}：\n{e.Exception.Message}", "错误");
         }
