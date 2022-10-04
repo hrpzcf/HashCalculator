@@ -129,7 +129,8 @@
                             <li>
                                 <span id="importance" class="notice">请注意！！！</span>
                                 该包含&quot;文件哈希值-文件名&quot;的文本文件内容必须是通用排版格式，即每行都是
-                                <span class="code">6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b *文件名</span>
+                                <span class="code">6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b
+                                    *文件名</span>
                                 这样的形式，否则本程序将无法解析该哈希值文件的内容并完成校验。其中哈希值不区分大小写，星号可有可无。
                             </li>
                         </ul>
@@ -151,7 +152,9 @@
                             <li>校验结果没有显示颜色：该行文件的哈希值结果还没有执行过校验操作。</li>
                         </ul>
                     </li>
-                    <li><span id="read_report" class="notice">查看校验报告：</span>完成文件的哈希值计算后或者点击&quot;校验&quot;按钮后，将鼠标悬停在任意一行的&quot;校验结果&quot;列上，就会显示本次校验结果的汇总报告。</li>
+                    <li><span id="read_report"
+                            class="notice">查看校验报告：</span>完成文件的哈希值计算后或者点击&quot;校验&quot;按钮后，将鼠标悬停在任意一行的&quot;校验结果&quot;列上，就会显示本次校验结果的汇总报告。
+                    </li>
                 </ol>
                 <div class="tianchong"></div>
             </li>
@@ -194,6 +197,9 @@
                     <li><span class="steps">主界面下方的&quot;清空面板&quot;按钮：</span>将表格中的所有计算结果清空。</li>
                     <li><span
                             class="steps">主界面下方的&quot;导出结果&quot;按钮：</span>将表格中所有&quot;导出&quot;列已勾选的行的哈希值和文件名导出为一个通用格式的文本文件。
+                    </li>
+                    <li><span
+                            class="steps">主界面下方的&quot;取消任务&quot;按钮：</span>立即取消所有已添加到表格中的哈希值计算任务并停止向表格增加剩下的任务，已完成的任务不受影响。
                     </li>
                     <li><span
                             class="steps">主界面下方的&quot;新行重算&quot;按钮：</span>以&quot;算法&quot;下拉选择框选择的算法为准，计算表格中所有文件的哈希值，但不清除原来的计算结果，而是增加新的行来显示结果。这对于需要对同一个文件计算多个类型的哈希值时很有用。
@@ -246,7 +252,11 @@
         <div class="title">可能出现的异常的含义</div>
         <ul class="outter_ul">
             <li><span class="steps">复制哈希值时弹出窗口显示&quot;复制哈希值失败&quot;：</span>点击复制按钮过快或者偶发复制失败。</li>
-            <li><span class="steps">弹出窗口显示&quot;未捕获的未知异常&quot;：</span>程序意料之外的异常。</li>
+            <li><span class="steps">弹出窗口显示&quot;意外的异常，请向开发者反馈&quot;：</span>程序意料之外的异常，可以到
+                <a href="https://gitee.com/hrpzcf/HashCalculator/issues" target="_blank">Gitee Issues</a> 或
+                <a href="https://github.com/hrpzcf/AwesomePyKit/issues" target="_blank">GitHub Issues</a> 或
+                <a href="https://www.52pojie.cn/thread-1671702-1-1.html" target="_blank">吾爱破解论坛</a> 向开发者反馈问题（需要登录）。
+            </li>
             <li><span class="steps">在依据所在文件夹中找不到依据中列出的文件：</span>请确认依据文件 sums 是否与要被计算哈希值的文件在同一个文件夹。如果要被计算哈希值的文件在比 sums
                 更深层的文件夹中，则请打开&quot;设置&quot;，检查&quot;当使用快速校验时&quot;是否选择了&quot;搜索依据所在目录的所有子文件&quot;选项。</li>
             <li><span class="steps">要计算哈希值的文件不存在或无法访问：</span>可能因为用户权限原因无法访问该要被计算哈希值的文件。</li>
