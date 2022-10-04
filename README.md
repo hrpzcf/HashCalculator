@@ -1,5 +1,15 @@
 # 文件哈希值批量计算器（HashCalculator）
 
+<div align="center">
+
+[![GitHub stars](https://img.shields.io/github/stars/hrpzcf/HashCalculator?label=Stars&logo=github)](https://github.com/hrpzcf/HashCalculator/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/hrpzcf/HashCalculator?label=Forks&logo=github)](https://github.com/hrpzcf/HashCalculator/network)
+[![GitHub issues](https://img.shields.io/github/issues/hrpzcf/HashCalculator?label=Issues&logo=github)](https://github.com/hrpzcf/HashCalculator/issues)
+[![GitHub license](https://img.shields.io/github/license/hrpzcf/HashCalculator?color=red&label=License)](https://github.com/hrpzcf/HashCalculator/blob/main/LICENSE)
+[![GitHub license](https://img.shields.io/github/v/release/hrpzcf/HashCalculator?label=Release)](https://github.com/hrpzcf/HashCalculator/releases)
+
+</div>
+
 一款文件哈希值批量计算器，也支持将结果导出为文本文件功能和批量检验哈希值功能。
 
 `程序需要 .Net Framework 4.6.2 或以上版本的支持（Windows 10 1607 及以上版本自带）`
