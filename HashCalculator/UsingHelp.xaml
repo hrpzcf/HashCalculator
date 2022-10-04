@@ -6,8 +6,8 @@
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="使用帮助"
-    Width="960"
-    Height="600"
+    Width="800"
+    Height="800"
     WindowStartupLocation="CenterOwner"
     mc:Ignorable="d">
     <Grid>
