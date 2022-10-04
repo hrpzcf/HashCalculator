@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Threading;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace HashCalculator
@@ -23,7 +24,7 @@ namespace HashCalculator
             this.uiComboBox_SearchPolicy1.SelectedIndex = (int)config.DroppedSearchPolicy;
             this.uiCheckBox_UseLowercaseHash.IsChecked = config.UseLowercaseHash;
             this.uiCheckBox_RemMainWinPos.IsChecked = config.RemMainWindowPosition;
-            this.uiComboBox_SimulCalculate.SelectedIndex = (int)config.SimulCalculate;
+            this.uiComboBox_SimulCalculate.SelectedIndex = (int)config.TaskLimit;
             this.uiComboBox_SearchPolicy2.SelectedIndex = (int)config.QuickVerificationSearchPolicy;
             this.Width = config.SettingsWinWidth;
             this.Height = config.SettingsWinHeight;
@@ -38,9 +39,10 @@ namespace HashCalculator
             config.DroppedSearchPolicy = (SearchPolicy)this.uiComboBox_SearchPolicy1.SelectedIndex;
             config.UseLowercaseHash = this.uiCheckBox_UseLowercaseHash.IsChecked ?? false;
             config.RemMainWindowPosition = this.uiCheckBox_RemMainWinPos.IsChecked ?? false;
-            config.SimulCalculate = (SimCalc)this.uiComboBox_SimulCalculate.SelectedIndex;
+            config.TaskLimit = (SimCalc)this.uiComboBox_SimulCalculate.SelectedIndex;
             config.QuickVerificationSearchPolicy = (SearchPolicy)this.uiComboBox_SearchPolicy2.SelectedIndex;
-            //Settings.SaveConfigure(); // 窗口关闭时会 SaveConfigure
+            // 这个操作放在这里是权衡后的结果，新线程是因为锁竞争导致按钮卡顿
+            new Thread(ModelTaskHelper.RefreshTaskLimit) { IsBackground = true }.Start();
         }
 
         private void Button_Cancel_Click(object sender, RoutedEventArgs e)

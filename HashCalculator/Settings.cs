@@ -154,7 +154,7 @@ namespace HashCalculator
 
         public double MainWindowLeft { get { return this.mainWindowLeft; } set { this.mainWindowLeft = value; } }
 
-        public SimCalc SimulCalculate { get { return this.simulCalculate; } set { this.simulCalculate = value; } }
+        public SimCalc TaskLimit { get { return this.simulCalculate; } set { this.simulCalculate = value; } }
 
         public double SettingsWinWidth { get { return this.settingsWinWidth; } set { this.settingsWinWidth = value; } }
 

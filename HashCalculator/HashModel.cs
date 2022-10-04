@@ -92,10 +92,10 @@ namespace HashCalculator
             typeof(HashModel),
             new PropertyMetadata(CmpRes.NoResult)
         );
-        private bool calculationCompleted = false; // 使用此字段是为了 Completed 属性只读
         private readonly string ExpectedHash;
+        private bool isCompleted = false;
         private readonly bool Useless;
-        private readonly CancellationToken CancelToken;
+        private readonly CancellationToken Token;
         private const int blockSize = 2097152;
 
         public HashModel(int serial, ModelArg args)
@@ -105,7 +105,7 @@ namespace HashCalculator
             this.Name = this.Path.Name;
             this.ExpectedHash = args.expected?.ToLower();
             this.Useless = args.useless;
-            this.CancelToken = args.source.Token;
+            this.Token = args.tokenSrc.Token;
         }
 
         public int Serial { get; set; }
@@ -124,7 +124,7 @@ namespace HashCalculator
         /// 如果计算未完成，即使“导出”（Export）被用户勾上也不会被导出。
         /// 因为计算未完成时 Completed 为 false，导出结果时同时验证 Completed 和 Export。
         /// </summary>
-        public bool Completed { get { return this.calculationCompleted; } }
+        public bool IsCompleted { get { return this.isCompleted; } }
 
         public string Hash
         {
@@ -146,8 +146,8 @@ namespace HashCalculator
 
         public void Cancelled()
         {
-            if (this.Completed) return;
-            Counter.Increase();
+            if (this.IsCompleted)
+                return;
             Application.Current.Dispatcher.Invoke(() => { this.Hash = "任务已被取消"; });
         }
 
@@ -156,21 +156,19 @@ namespace HashCalculator
         /// </summary>
         public void EnterGenerateUnderLimit()
         {
-            Locks.HashComputeLock.WaitOne();
-            if (this.CancelToken.IsCancellationRequested)
-            {
-                Application.Current.Dispatcher.Invoke(() => { this.Hash = "任务已被取消"; });
-                Locks.HashComputeLock.Release();
-                return;
-            }
             this.ComputeManyHashValue();
-            Locks.HashComputeLock.Release();
+            ModelTaskHelper.ReleaseTask();
         }
 
         private void ComputeManyHashValue()
         {
             AlgoType algoType;
             HashAlgorithm algorithmHash;
+            if (this.Token.IsCancellationRequested)
+            {
+                Application.Current.Dispatcher.Invoke(() => { this.Hash = "任务已被取消"; });
+                goto TaskRunningEnds;
+            }
             lock (Locks.AlgoSelectionLock)
             {
                 algoType = Settings.Current.SelectedAlgo;
@@ -206,14 +204,14 @@ namespace HashCalculator
             if (this.Useless)
             {
                 Application.Current.Dispatcher.Invoke(
-                    () => { this.Hash = "在依据所在文件夹找不到依据中列出的文件"; });
-                goto TaskFinishing;
+                    () => { this.Hash = "在依据所在文件夹中找不到此文件"; });
+                goto TaskRunningEnds;
             }
             else if (!this.Path.Exists)
             {
                 Application.Current.Dispatcher.Invoke(
                     () => { this.Hash = "要计算哈希值的文件不存在或无法访问"; });
-                goto TaskFinishing;
+                goto TaskRunningEnds;
             }
             try
             {
@@ -225,11 +223,11 @@ namespace HashCalculator
                         byte[] buffer = new byte[blockSize];
                         while (true)
                         {
-                            if (this.CancelToken.IsCancellationRequested)
+                            if (this.Token.IsCancellationRequested)
                             {
                                 Application.Current.Dispatcher.Invoke(
                                     () => { this.Hash = "任务已被取消"; });
-                                return;
+                                goto TaskRunningEnds;
                             }
                             readedSize = fs.Read(buffer, 0, buffer.Length);
                             if (readedSize <= 0) break;
@@ -252,7 +250,7 @@ namespace HashCalculator
                                 result = CmpRes.Mismatch;
                             Application.Current.Dispatcher.Invoke(() => { this.CmpResult = result; });
                         }
-                        this.calculationCompleted = true;
+                        this.isCompleted = true;
                     }
                 }
             }
@@ -261,8 +259,8 @@ namespace HashCalculator
                 Application.Current.Dispatcher.Invoke(
                     () => { this.Hash = "读取要被计算哈希值的文件失败或计算出错"; });
             }
-        TaskFinishing:
-            Counter.Increase();
+        TaskRunningEnds:
+            ModelTaskHelper.CounterIncrease();
         }
 
         private void UsingBouncyCastleSha224()
@@ -270,14 +268,14 @@ namespace HashCalculator
             if (this.Useless)
             {
                 Application.Current.Dispatcher.Invoke(
-                    () => { this.Hash = "在依据所在文件夹找不到依据中列出的文件"; });
-                goto TaskFinishing;
+                    () => { this.Hash = "在依据所在文件夹中找不到此文件"; });
+                goto TaskRunningEnds;
             }
             else if (!this.Path.Exists)
             {
                 Application.Current.Dispatcher.Invoke(
                     () => { this.Hash = "要计算哈希值的文件不存在或无法访问"; });
-                goto TaskFinishing;
+                goto TaskRunningEnds;
             }
             try
             {
@@ -288,11 +286,11 @@ namespace HashCalculator
                     byte[] buffer = new byte[blockSize];
                     while (true)
                     {
-                        if (this.CancelToken.IsCancellationRequested)
+                        if (this.Token.IsCancellationRequested)
                         {
                             Application.Current.Dispatcher.Invoke(
                                 () => { this.Hash = "任务已被取消"; });
-                            return;
+                            goto TaskRunningEnds;
                         }
                         readedSize = fs.Read(buffer, 0, blockSize);
                         if (readedSize <= 0) break;
@@ -315,7 +313,7 @@ namespace HashCalculator
                             result = CmpRes.Mismatch;
                         Application.Current.Dispatcher.Invoke(() => { this.CmpResult = result; });
                     }
-                    this.calculationCompleted = true;
+                    this.isCompleted = true;
                 }
             }
             catch
@@ -323,8 +321,8 @@ namespace HashCalculator
                 Application.Current.Dispatcher.Invoke(
                     () => { this.Hash = "读取要被计算哈希值的文件失败或计算出错"; });
             }
-        TaskFinishing:
-            Counter.Increase();
+        TaskRunningEnds:
+            ModelTaskHelper.CounterIncrease();
         }
     }
 }
