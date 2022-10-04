@@ -38,6 +38,20 @@
 
 # 图示：
 
+> ### Windows 7 运行效果
+
+![img](./Images/HashW7.png)
+
+> ### Windows 10 运行效果
+
+![img](./Images/HashW10.png)
+
+> ### Windows 11 运行效果
+
+![img](./Images/HashW11.png)
+
+> ### Windows 10 动图演示
+
 ![img](./Images/using.gif)
 
 <br>
