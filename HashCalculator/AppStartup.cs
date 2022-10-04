@@ -24,8 +24,6 @@ namespace HashCalculator
         {
             this.DispatcherUnhandledException += this.UnhandledException;
             this.StartupUri = new Uri("MainWindow.xaml", UriKind.Relative);
-            this.Resources = new ResourceDictionary();
-            this.Resources.Source = new Uri("ResDict.xaml", UriKind.Relative);
             this.Run();
         }
 
