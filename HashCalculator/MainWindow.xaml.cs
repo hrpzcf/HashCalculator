@@ -411,7 +411,7 @@ namespace HashCalculator
                 + $"不确定：{uncertain}\n"
                 + $"无关联：{unrelated}\n"
                 + $"未校验：{noresult} \n\n"
-                + $"已排队：{this.HashModels.Count}";
+                + $"队列总数：{this.HashModels.Count}";
         }
 
         private void AcceptNewFilePathsLockButtons()
