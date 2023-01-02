@@ -1,4 +1,4 @@
-﻿using System.Threading;
+﻿using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -27,6 +27,9 @@ namespace HashCalculator
             this.uiComboBox_SimulCalculate.SelectedIndex = (int)config.TaskLimit;
             this.uiComboBox_SearchPolicy2.SelectedIndex = (int)config.QuickVerificationSearchPolicy;
             this.uiCHeckBox_ShowResultText.IsChecked = config.ShowResultText;
+            this.uiCHeckBox_RecalculateIncomplete.IsChecked = config.RecalculateIncomplete;
+            this.uiCHeckBox_NoExportColumn.IsChecked = config.NoExportColumn;
+            this.uiCHeckBox_NoDurationColumn.IsChecked = config.NoDurationColumn;
             this.Width = config.SettingsWinWidth;
             this.Height = config.SettingsWinHeight;
         }
@@ -43,8 +46,11 @@ namespace HashCalculator
             config.TaskLimit = (SimCalc)this.uiComboBox_SimulCalculate.SelectedIndex;
             config.QuickVerificationSearchPolicy = (SearchPolicy)this.uiComboBox_SearchPolicy2.SelectedIndex;
             config.ShowResultText = this.uiCHeckBox_ShowResultText.IsChecked ?? false;
-            // 这个操作放在这里是权衡后的结果，新线程是因为锁竞争导致按钮卡顿
-            new Thread(ModelTaskHelper.RefreshTaskLimit) { IsBackground = true }.Start();
+            config.RecalculateIncomplete = this.uiCHeckBox_RecalculateIncomplete.IsChecked ?? false;
+            config.NoExportColumn = this.uiCHeckBox_NoExportColumn.IsChecked ?? false;
+            config.NoDurationColumn = this.uiCHeckBox_NoDurationColumn.IsChecked ?? false;
+            AppViewModel.Instance.SetColumnVisibility(config.NoExportColumn, config.NoDurationColumn);
+            Task.Run(() => { AppViewModel.SetConcurrent(config.TaskLimit); });
         }
 
         private void Button_Cancel_Click(object sender, RoutedEventArgs e)

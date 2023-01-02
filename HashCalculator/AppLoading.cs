@@ -6,7 +6,7 @@ using System.Windows.Threading;
 
 namespace HashCalculator
 {
-    internal class AppStartup : Application
+    internal class AppLoading : Application
     {
         private void UnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
@@ -22,7 +22,7 @@ namespace HashCalculator
 
         private void RunApplicationAfterInitialized()
         {
-            this.DispatcherUnhandledException += this.UnhandledException;
+            //this.DispatcherUnhandledException += this.UnhandledException;
             this.StartupUri = new Uri("MainWindow.xaml", UriKind.Relative);
             this.Run();
         }
@@ -48,7 +48,7 @@ namespace HashCalculator
         public static void Main()
         {
             AppDomain.CurrentDomain.AssemblyResolve += ApplicationAssemblyResolve;
-            AppStartup app = new AppStartup();
+            AppLoading app = new AppLoading();
             app.RunApplicationAfterInitialized();
         }
     }

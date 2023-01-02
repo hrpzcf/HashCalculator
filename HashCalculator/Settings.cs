@@ -7,44 +7,6 @@ using static System.Environment;
 
 namespace HashCalculator
 {
-    /// <summary>
-    /// 对文件夹的搜索策略
-    /// </summary>
-    [Serializable]
-    internal enum SearchPolicy
-    {
-        Children,
-        Descendants,
-        DontSearch,
-    }
-
-    /// <summary>
-    /// 同时计算多少个文件的哈希值，用于创建信号量
-    /// </summary>
-    [Serializable]
-    internal enum SimCalc
-    {
-        One,
-        Two,
-        Four,
-        Eight,
-    }
-
-    /// <summary>
-    /// 哈希算法类型，Unknown 是创建 HashModule 实例时的默认值
-    /// </summary>
-    [Serializable]
-    internal enum AlgoType
-    {
-        SHA256,
-        SHA1,
-        SHA224,
-        SHA384,
-        SHA512,
-        MD5,
-        Unknown = -1,
-    }
-
     internal static class Settings
     {
         private static readonly IFormatter formatter = new BinaryFormatter();
@@ -161,5 +123,11 @@ namespace HashCalculator
         public double SettingsWinHeight { get { return this.settingsWinHeight; } set { this.settingsWinHeight = value; } }
 
         public bool ShowResultText { get; set; }
+
+        public bool RecalculateIncomplete { get; set; }
+
+        public bool NoExportColumn { get; set; }
+
+        public bool NoDurationColumn { get; set; }
     }
 }

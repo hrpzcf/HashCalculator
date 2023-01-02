@@ -29,6 +29,9 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <CheckBox
@@ -116,6 +119,27 @@
                     Padding="4,0,0,0"
                     Click="CheckBoxes_ActivateApplyButton_Click"
                     Content="在校验结果的色块中显示文字描述" />
+                <CheckBox
+                    x:Name="uiCHeckBox_RecalculateIncomplete"
+                    Grid.Row="7"
+                    Margin="0,0,0,4"
+                    Padding="4,0,0,0"
+                    Click="CheckBoxes_ActivateApplyButton_Click"
+                    Content="点击“重新计算”时仅重新计算未完成的文件" />
+                <CheckBox
+                    x:Name="uiCHeckBox_NoExportColumn"
+                    Grid.Row="8"
+                    Margin="0,0,0,4"
+                    Padding="4,0,0,0"
+                    Click="CheckBoxes_ActivateApplyButton_Click"
+                    Content="不显示“导出”列" />
+                <CheckBox
+                    x:Name="uiCHeckBox_NoDurationColumn"
+                    Grid.Row="9"
+                    Margin="0,0,0,4"
+                    Padding="4,0,0,0"
+                    Click="CheckBoxes_ActivateApplyButton_Click"
+                    Content="不显示“运行时长”列" />
             </Grid>
         </ScrollViewer>
         <Grid Grid.Row="1">

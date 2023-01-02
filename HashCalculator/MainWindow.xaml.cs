@@ -13,31 +13,22 @@ using System.Windows.Input;
 
 namespace HashCalculator
 {
-    /// <summary>
-    /// MainWindow.xaml 的交互逻辑
-    /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly AppViewModel appViewModel = new AppViewModel();
+        private readonly ObservableCollection<HashViewModel> hashViewModels;
         private readonly Basis VerificationBasis = new Basis();
-        private readonly List<ModelArg> FilesDroppedToHash = new List<ModelArg>();
-        private readonly ObservableCollection<HashModel> HashModels =
-            new ObservableCollection<HashModel>();
 
         public MainWindow()
         {
+            this.DataContext = this.appViewModel;
+            this.hashViewModels = this.appViewModel.HashViewModels;
             this.InitializeComponent();
             this.Title = $"{Info.Title} v{Info.Ver} — {Info.Author} @ {Info.Published}";
-            this.uiDataGrid_HashFiles.ItemsSource = this.HashModels;
-            this.InitFromConfigure();
-            ModelTaskHelper.StartingEvent += this.ActionGroupStarting;
-            ModelTaskHelper.IncreaseEvent += this.ProgressInfoUpdate;
-            ModelTaskHelper.FinishedEvent += this.ActionGroupCompleted;
-            ModelTaskHelper.MaxCountEvent += this.ActionGroupMaxCount;
-            ModelTaskHelper.RefreshTaskLimit();
-            ModelTaskHelper.InitializeHelper(this.HashModels.Add);
+            this.InitializeFromConfigure();
         }
 
-        private void InitFromConfigure()
+        private void InitializeFromConfigure()
         {
             Configure config = Settings.Current;
             this.Topmost = config.MainWindowTopmost;
@@ -55,6 +46,9 @@ namespace HashCalculator
                 this.Width = config.MainWindowWidth;
                 this.Height = config.MainWindowHeight;
             }
+            this.appViewModel.SetColumnVisibility(
+                config.NoExportColumn, config.NoDurationColumn);
+            AppViewModel.SetConcurrent(config.TaskLimit);
         }
 
         private void Window_MainWindow_Closing(object sender, CancelEventArgs e)
@@ -119,110 +113,17 @@ namespace HashCalculator
             if (searchedPaths.Count == 0)
                 return;
             IEnumerable<ModelArg> modelArgs = searchedPaths.Select(s => new ModelArg(s));
-            this.FilesDroppedToHash.AddRange(modelArgs);
-            this.NewThreadAndEnqueueFilePaths(modelArgs);
-        }
-
-        private void NewThreadAndEnqueueFilePaths(IEnumerable<ModelArg> args)
-        {
-            ModelArg[] modelargs = args.ToArray();
-            for (int i = 0; i < modelargs.Length; ++i)
-                modelargs[i].tokenSrc = new CancellationTokenSource();
-            ModelTaskHelper.CounterMax(args.Count());
-            ModelTaskHelper.SendRequestToQueueArgs();
-            new Thread(() =>
-            {
-                ModelTaskHelper.QueueModelArgs(modelargs);
-            })
-            { IsBackground = true }.Start();
-        }
-
-        private void ProgressInfoShow()
-        {
-            this.uiButton_RefreshCopy.IsEnabled = false;
-            this.uiButton_RefreshCurrentHash.IsEnabled = false;
-            this.uiButton_StartCompare.IsEnabled = false;
-            this.uiButton_ClearModels.IsEnabled = false;
-            this.uiButton_ExportAsText.IsEnabled = false;
-            this.uiTextBlock_CompletedTotal.Visibility = Visibility.Visible;
-            this.uiTextBlock_CompletedCount.Text = "0";
-            this.uiTextBlock_CompletedCount.Visibility = Visibility.Visible;
-            this.uiTextBlock_Delimiter.Visibility = Visibility.Visible;
-            this.uiTextBlock_TotalTaskCount.Visibility = Visibility.Visible;
-            this.uiProgressbar_TaskProgress.Value = 0;
-            this.uiProgressbar_TaskProgress.Visibility = Visibility.Visible;
-        }
-
-        private void ProgressInfoHide()
-        {
-            this.uiButton_RefreshCopy.IsEnabled = true;
-            this.uiButton_RefreshCurrentHash.IsEnabled = true;
-            this.uiButton_StartCompare.IsEnabled = true;
-            this.uiButton_ClearModels.IsEnabled = true;
-            this.uiButton_ExportAsText.IsEnabled = true;
-            this.uiTextBlock_CompletedTotal.Visibility = Visibility.Hidden;
-            this.uiTextBlock_CompletedCount.Visibility = Visibility.Hidden;
-            this.uiTextBlock_Delimiter.Visibility = Visibility.Hidden;
-            this.uiTextBlock_TotalTaskCount.Visibility = Visibility.Hidden;
-            this.uiProgressbar_TaskProgress.Visibility = Visibility.Hidden;
-        }
-
-        private void ActionGroupStarting(int completed)
-        {
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                this.ProgressInfoShow();
-                ToolTipReport.Instance.Report = "暂无校验报告";
-            });
-        }
-
-        private void ProgressInfoUpdate(int completed)
-        {
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                this.uiProgressbar_TaskProgress.Value = completed;
-                this.uiTextBlock_CompletedCount.Text = $"{completed}";
-            });
-        }
-
-        private void ActionGroupCompleted(int completed)
-        {
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                this.ProgressInfoHide();
-                this.GenerateVerificationReport();
-            });
-        }
-
-        private void ActionGroupMaxCount(int maxCount)
-        {
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                this.uiProgressbar_TaskProgress.Maximum = maxCount;
-                this.uiTextBlock_TotalTaskCount.Text = $"{maxCount}";
-            });
-        }
-
-        private void RefreshCurrentDataGridLines(bool clearLines)
-        {
-            if (clearLines)
-            {
-                this.HashModels.Clear();
-                SerialGenerator.Reset();
-            }
-            this.NewThreadAndEnqueueFilePaths(this.FilesDroppedToHash);
+            this.appViewModel.QueueDisplayModels(modelArgs);
         }
 
         private void Button_ClearFileList_Click(object sender, RoutedEventArgs e)
         {
-            this.HashModels.Clear();
-            this.FilesDroppedToHash.Clear();
-            SerialGenerator.Reset();
+            this.appViewModel.ClearHashViewModels();
         }
 
         private void Button_ExportAsTextFile_Click(object sender, RoutedEventArgs e)
         {
-            if (this.HashModels.Count == 0)
+            if (this.hashViewModels.Count == 0)
             {
                 MessageBox.Show("列表中没有任何需要导出的条目。", "提示");
                 return;
@@ -238,13 +139,12 @@ namespace HashCalculator
             if (sf.ShowDialog() != true)
                 return;
             config.SavedDirPath = Path.GetDirectoryName(sf.FileName);
-            //Settings.SaveConfigure(); // 窗口关闭时会 SaveConfigure
             try
             {
                 using (StreamWriter sw = File.CreateText(sf.FileName))
                 {
-                    foreach (HashModel hm in this.HashModels)
-                        if (hm.IsCompleted && hm.Export)
+                    foreach (HashViewModel hm in this.hashViewModels)
+                        if (hm.IsSucceeded && hm.Export)
                         {
                             sw.WriteLine($"{hm.Hash} *{hm.Name}");
                         }
@@ -374,44 +274,9 @@ namespace HashCalculator
                         MessageBoxImage.Information);
                     return;
                 }
-                this.FilesDroppedToHash.AddRange(hashModelArgsList);
-                this.NewThreadAndEnqueueFilePaths(hashModelArgsList);
+                this.appViewModel.QueueDisplayModels(hashModelArgsList);
             }
             catch { return; }
-        }
-
-        private void GenerateVerificationReport()
-        {
-            int noresult, unrelated, matched, mismatch, uncertain;
-            noresult = unrelated = matched = mismatch = uncertain = 0;
-            foreach (HashModel hm in this.HashModels)
-            {
-                switch (hm.CmpResult)
-                {
-                    case CmpRes.NoResult:
-                        ++noresult;
-                        break;
-                    case CmpRes.Unrelated:
-                        ++unrelated;
-                        break;
-                    case CmpRes.Matched:
-                        ++matched;
-                        break;
-                    case CmpRes.Mismatch:
-                        ++mismatch;
-                        break;
-                    case CmpRes.Uncertain:
-                        ++uncertain;
-                        break;
-                }
-            }
-            ToolTipReport.Instance.Report
-                = $"校验报告：\n\n已匹配：{matched}\n"
-                + $"不匹配：{mismatch}\n"
-                + $"不确定：{uncertain}\n"
-                + $"无关联：{unrelated}\n"
-                + $"未校验：{noresult} \n\n"
-                + $"队列总数：{this.HashModels.Count}";
         }
 
         private void AcceptNewFilePathsLockButtons()
@@ -423,7 +288,6 @@ namespace HashCalculator
                 this.uiDataGrid_HashFiles.AllowDrop = false;
                 this.uiButton_SelectFoldersToHash.IsEnabled = false;
                 this.uiButton_SelectFoldersToHash.Content = "稍候...";
-                this.uiButton_StartCompare.IsEnabled = false;
                 this.uiButton_StartCompare.Content = "稍候...";
             });
         }
@@ -449,7 +313,7 @@ namespace HashCalculator
                 MessageBox.Show("未输入哈希值校验依据。", "提示");
                 return;
             }
-            if (this.HashModels.Count == 0 && File.Exists(pathOrHash))
+            if (this.hashViewModels.Count == 0 && File.Exists(pathOrHash))
             {
                 this.AcceptNewFilePathsLockButtons();
                 new Thread(() =>
@@ -458,21 +322,18 @@ namespace HashCalculator
                     this.AcceptNewFilePathsReleaseButtons();
                 })
                 { IsBackground = true }.Start();
-                // 因为要开新线程计算哈希值，所以
-                // 此处 GenerateVerificationReport 移到 UpdateProgress 中
             }
             else
             {
                 this.GlobalUpdateHashNameItems(pathOrHash);
-                foreach (HashModel hm in this.HashModels)
+                foreach (HashViewModel hm in this.hashViewModels)
                 {
-                    // 总是赋值以强制改变属性值
-                    // 防止二次校验的时候给属性赋相同值(无变化)导致前景色不更新
-                    hm.CmpResult = CmpRes.NoResult;
-                    if (hm.IsCompleted)
+                    if (hm.IsSucceeded)
                         hm.CmpResult = this.VerificationBasis.Verify(hm.Name, hm.Hash);
+                    else
+                        hm.CmpResult = CmpRes.NoResult;
                 }
-                this.GenerateVerificationReport();
+                this.appViewModel.GenerateVerificationReport();
             }
         }
 
@@ -500,7 +361,6 @@ namespace HashCalculator
         {
             this.Topmost = this.uiCheckBox_WindowTopMost.IsChecked == true;
             Settings.Current.MainWindowTopmost = this.Topmost;
-            //Settings.SaveConfigure(); // 窗口关闭时会 SaveConfigure
         }
 
         private void ComboBox_HashAlgorithm_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -508,25 +368,24 @@ namespace HashCalculator
             lock (Locks.AlgoSelectionLock)
             {
                 Settings.Current.SelectedAlgo = (AlgoType)this.uiComboBox_HashAlgorithm.SelectedIndex;
-                //Settings.SaveConfigure(); // 窗口关闭时会 SaveConfigure
             }
         }
 
         private void Button_CopyHashValue_Click(object sender, RoutedEventArgs e)
         {
             Button button = sender as Button;
-            HashModel hashModel = button.DataContext as HashModel;
+            HashViewModel hashModel = button.DataContext as HashViewModel;
             Clipboard.SetText(hashModel.Hash);
         }
 
         private void Button_CopyRefreshHash_Click(object sender, RoutedEventArgs e)
         {
-            this.RefreshCurrentDataGridLines(false);
+            this.appViewModel.Models_Restart(true);
         }
 
         private void Button_RefreshCurrentHash_Click(object sender, RoutedEventArgs e)
         {
-            this.RefreshCurrentDataGridLines(true);
+            this.appViewModel.Models_Restart(false);
         }
 
         private void MenuItem_Settings_Click(object sender, RoutedEventArgs e)
@@ -571,7 +430,7 @@ namespace HashCalculator
 
         private void Button_CancelAllTask_Click(object sender, RoutedEventArgs e)
         {
-            ModelTaskHelper.CancelTasks();
+            this.appViewModel.Models_CancelAll();
         }
 
         private void Button_SelectFilesToHash_Click(object sender, RoutedEventArgs e)
@@ -594,8 +453,7 @@ namespace HashCalculator
                 config.SavedDirPath = Path.GetDirectoryName(fileOpen.FileNames.ElementAt(0));
                 this.AcceptNewFilePathsLockButtons();
                 IEnumerable<ModelArg> modelArgs = fileOpen.FileNames.Select(s => new ModelArg(s));
-                this.FilesDroppedToHash.AddRange(modelArgs);
-                this.NewThreadAndEnqueueFilePaths(modelArgs);
+                this.appViewModel.QueueDisplayModels(modelArgs);
                 this.AcceptNewFilePathsReleaseButtons();
             }
         }
@@ -631,12 +489,25 @@ namespace HashCalculator
                 {
                     this.SearchUnderSpecifiedPolicy(folderOpen.FileNames, folderPaths);
                     IEnumerable<ModelArg> modelArgs = folderPaths.Select(s => new ModelArg(s));
-                    this.FilesDroppedToHash.AddRange(modelArgs);
-                    this.NewThreadAndEnqueueFilePaths(modelArgs);
+                    this.appViewModel.QueueDisplayModels(modelArgs);
                     this.AcceptNewFilePathsReleaseButtons();
                 })
                 { IsBackground = true }.Start();
             }
+        }
+
+        private void Button_CancelHashModel_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            HashViewModel hashModel = button.DataContext as HashViewModel;
+            this.appViewModel.Models_CancelOne(hashModel);
+        }
+
+        private void Button_RestartHashModel_CLick(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            HashViewModel hashModel = button.DataContext as HashViewModel;
+            this.appViewModel.Models_StartOne(hashModel);
         }
     }
 }
