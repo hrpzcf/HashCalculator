@@ -84,6 +84,32 @@ namespace HashCalculator
         public static readonly object EnqueueDequeueLock = new object();
     }
 
+    internal class CmpResFgCvt : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object param, CultureInfo culture)
+        {
+            switch ((CmpRes)value)
+            {
+                case CmpRes.Unrelated:
+                    return "Black";
+                case CmpRes.Matched:
+                    return "White";
+                case CmpRes.Mismatch:
+                    return "White";
+                case CmpRes.Uncertain:
+                    return "White";
+                case CmpRes.NoResult:
+                default:
+                    return "Transparent";
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object param, CultureInfo culture)
+        {
+            return CmpRes.Unrelated; // 此处未使用，只返回默认值
+        }
+    }
+
     internal class CmpResBgCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object param, CultureInfo culture)
@@ -97,7 +123,7 @@ namespace HashCalculator
                 case CmpRes.Mismatch:
                     return "Red";
                 case CmpRes.Uncertain:
-                    return "black";
+                    return "Black";
                 case CmpRes.NoResult:
                 default:
                     return "Transparent";
@@ -107,6 +133,32 @@ namespace HashCalculator
         public object ConvertBack(object value, Type targetType, object param, CultureInfo culture)
         {
             return CmpRes.Unrelated; // 此处未使用，只返回默认值
+        }
+    }
+
+    internal class CmpResTextCvt : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object param, CultureInfo culture)
+        {
+            switch ((CmpRes)value)
+            {
+                case CmpRes.Unrelated:
+                    return "无关联";
+                case CmpRes.Matched:
+                    return "已匹配";
+                case CmpRes.Mismatch:
+                    return "不匹配";
+                case CmpRes.Uncertain:
+                    return "不确定";
+                case CmpRes.NoResult:
+                default:
+                    return string.Empty;
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object param, CultureInfo culture)
+        {
+            return CmpRes.NoResult; // 此处未使用，只返回默认值
         }
     }
 

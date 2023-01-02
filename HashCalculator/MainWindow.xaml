@@ -15,7 +15,9 @@
     <Window.Resources>
         <local:AlgoTypeBgCvt x:Key="AlgoTypeBgCvt" />
         <local:AlgoTypeNameCvt x:Key="AlgoTypeNameCvt" />
+        <local:CmpResFgCvt x:Key="CmpResFgCvt" />
         <local:CmpResBgCvt x:Key="CmpResBgCvt" />
+        <local:CmpResTextCvt x:Key="CmpResTextCvt" />
         <local:ToolTipReport x:Key="ToolTipReport" />
         <Style
             x:Key="CellStyleNormal"
@@ -90,29 +92,12 @@
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsSelected" Value="True">
-                    <Setter Property="BorderBrush" Value="Blue" />
-                    <Setter Property="BorderThickness" Value="0,0,0,4" />
+                    <Setter Property="Background" Value="#64FFFF00"/>
                 </Trigger>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#64FFFF00" />
                 </Trigger>
             </Style.Triggers>
-        </Style>
-        <Style
-            x:Key="CmpResStyle"
-            TargetType="{x:Type DataGridCell}">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type DataGridCell}">
-                        <Border
-                            Background="{Binding CmpResult, Converter={StaticResource CmpResBgCvt}}"
-                            BorderBrush="Transparent"
-                            BorderThickness="4" />
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="ToolTip" Value="{Binding Report, Source={StaticResource ToolTipReport}}" />
-            <Setter Property="ToolTipService.ShowDuration" Value="60000" />
         </Style>
     </Window.Resources>
     <Grid Margin="4,4,4,0">
@@ -256,11 +241,21 @@
                         MinWidth="50"
                         Binding="{Binding Export}"
                         Header="导出" />
-                    <DataGridTextColumn
+                    <DataGridTemplateColumn
                         MinWidth="60"
-                        CellStyle="{StaticResource CmpResStyle}"
-                        Header="校验结果"
-                        IsReadOnly="True" />
+                        Header="校验结果">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Label
+                                    HorizontalContentAlignment="Center"
+                                    Background="{Binding CmpResult, Converter={StaticResource CmpResBgCvt}}"
+                                    Content="{Binding CmpResult, Converter={StaticResource CmpResTextCvt}}"
+                                    Foreground="{Binding CmpResult, Converter={StaticResource CmpResFgCvt}}"
+                                    ToolTip="{Binding Report, Source={StaticResource ToolTipReport}}"
+                                    ToolTipService.ShowDuration="60000" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
             <Grid
