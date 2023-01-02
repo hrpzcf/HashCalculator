@@ -466,10 +466,11 @@ namespace HashCalculator
                 this.GlobalUpdateHashNameItems(pathOrHash);
                 foreach (HashModel hm in this.HashModels)
                 {
+                    // 总是赋值以强制改变属性值
+                    // 防止二次校验的时候给属性赋相同值(无变化)导致前景色不更新
+                    hm.CmpResult = CmpRes.NoResult;
                     if (hm.IsCompleted)
                         hm.CmpResult = this.VerificationBasis.Verify(hm.Name, hm.Hash);
-                    else
-                        hm.CmpResult = CmpRes.NoResult;
                 }
                 this.GenerateVerificationReport();
             }

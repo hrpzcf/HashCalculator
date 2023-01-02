@@ -91,7 +91,7 @@
                     </ComboBox>
                 </Grid>
                 <Grid
-                    Grid.Row="6"
+                    Grid.Row="5"
                     Margin="0,0,0,4">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -109,6 +109,13 @@
                         <ComboBoxItem Content="搜索依据所在目录的所有子文件" />
                     </ComboBox>
                 </Grid>
+                <CheckBox
+                    x:Name="uiCHeckBox_ShowResultText"
+                    Grid.Row="6"
+                    Margin="0,0,0,4"
+                    Padding="4,0,0,0"
+                    Click="CheckBoxes_ActivateApplyButton_Click"
+                    Content="在校验结果的色块中显示文字描述" />
             </Grid>
         </ScrollViewer>
         <Grid Grid.Row="1">

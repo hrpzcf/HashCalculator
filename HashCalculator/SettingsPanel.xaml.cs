@@ -26,6 +26,7 @@ namespace HashCalculator
             this.uiCheckBox_RemMainWinPos.IsChecked = config.RemMainWindowPosition;
             this.uiComboBox_SimulCalculate.SelectedIndex = (int)config.TaskLimit;
             this.uiComboBox_SearchPolicy2.SelectedIndex = (int)config.QuickVerificationSearchPolicy;
+            this.uiCHeckBox_ShowResultText.IsChecked = config.ShowResultText;
             this.Width = config.SettingsWinWidth;
             this.Height = config.SettingsWinHeight;
         }
@@ -41,6 +42,7 @@ namespace HashCalculator
             config.RemMainWindowPosition = this.uiCheckBox_RemMainWinPos.IsChecked ?? false;
             config.TaskLimit = (SimCalc)this.uiComboBox_SimulCalculate.SelectedIndex;
             config.QuickVerificationSearchPolicy = (SearchPolicy)this.uiComboBox_SearchPolicy2.SelectedIndex;
+            config.ShowResultText = this.uiCHeckBox_ShowResultText.IsChecked ?? false;
             // 这个操作放在这里是权衡后的结果，新线程是因为锁竞争导致按钮卡顿
             new Thread(ModelTaskHelper.RefreshTaskLimit) { IsBackground = true }.Start();
         }

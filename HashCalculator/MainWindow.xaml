@@ -18,6 +18,7 @@
         <local:CmpResFgCvt x:Key="CmpResFgCvt" />
         <local:CmpResBgCvt x:Key="CmpResBgCvt" />
         <local:CmpResTextCvt x:Key="CmpResTextCvt" />
+        <local:CmpResBorderCvt x:Key="CmpResBorderCvt" />
         <local:ToolTipReport x:Key="ToolTipReport" />
         <Style
             x:Key="CellStyleNormal"
@@ -242,13 +243,15 @@
                         Binding="{Binding Export}"
                         Header="导出" />
                     <DataGridTemplateColumn
-                        MinWidth="70"
+                        MinWidth="60"
                         Header="校验结果">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Label
                                     HorizontalContentAlignment="Center"
                                     Background="{Binding CmpResult, Converter={StaticResource CmpResBgCvt}}"
+                                    BorderBrush="Transparent"
+                                    BorderThickness="{Binding CmpResult, Converter={StaticResource CmpResBorderCvt}}"
                                     Content="{Binding CmpResult, Converter={StaticResource CmpResTextCvt}}"
                                     FontSize="8pt"
                                     Foreground="{Binding CmpResult, Converter={StaticResource CmpResFgCvt}}"

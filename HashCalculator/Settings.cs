@@ -159,5 +159,7 @@ namespace HashCalculator
         public double SettingsWinWidth { get { return this.settingsWinWidth; } set { this.settingsWinWidth = value; } }
 
         public double SettingsWinHeight { get { return this.settingsWinHeight; } set { this.settingsWinHeight = value; } }
+
+        public bool ShowResultText { get; set; }
     }
 }

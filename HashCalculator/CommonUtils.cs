@@ -88,6 +88,8 @@ namespace HashCalculator
     {
         public object Convert(object value, Type targetType, object param, CultureInfo culture)
         {
+            if (!Settings.Current.ShowResultText)
+                return "Transparent";
             switch ((CmpRes)value)
             {
                 case CmpRes.Unrelated:
@@ -154,6 +156,22 @@ namespace HashCalculator
                 default:
                     return string.Empty;
             }
+        }
+
+        public object ConvertBack(object value, Type targetType, object param, CultureInfo culture)
+        {
+            return CmpRes.NoResult; // 此处未使用，只返回默认值
+        }
+    }
+
+    internal class CmpResBorderCvt : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object param, CultureInfo culture)
+        {
+            if (Settings.Current.ShowResultText)
+                return "0";
+            else
+                return "3";
         }
 
         public object ConvertBack(object value, Type targetType, object param, CultureInfo culture)
