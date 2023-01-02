@@ -92,7 +92,7 @@
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsSelected" Value="True">
-                    <Setter Property="Background" Value="#64FFFF00"/>
+                    <Setter Property="Background" Value="#64FFFF00" />
                 </Trigger>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#64FFFF00" />
@@ -242,7 +242,7 @@
                         Binding="{Binding Export}"
                         Header="导出" />
                     <DataGridTemplateColumn
-                        MinWidth="60"
+                        MinWidth="70"
                         Header="校验结果">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
@@ -250,6 +250,7 @@
                                     HorizontalContentAlignment="Center"
                                     Background="{Binding CmpResult, Converter={StaticResource CmpResBgCvt}}"
                                     Content="{Binding CmpResult, Converter={StaticResource CmpResTextCvt}}"
+                                    FontSize="8pt"
                                     Foreground="{Binding CmpResult, Converter={StaticResource CmpResFgCvt}}"
                                     ToolTip="{Binding Report, Source={StaticResource ToolTipReport}}"
                                     ToolTipService.ShowDuration="60000" />
