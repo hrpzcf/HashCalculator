@@ -10,6 +10,7 @@ namespace HashCalculator
         Uninited,
         Waiting,
         Running,
+        Paused,
         Finished,
     }
 
@@ -25,26 +26,22 @@ namespace HashCalculator
     }
 
     /// <summary>
-    /// 哈希值计算任务的控制方式
+    /// HashViewModel 的 PauseOrContinueModel 方法参数
     /// </summary>
-    internal enum CtrlMode
+    internal enum PauseMode
     {
         /// <summary>
-        /// 还未指定任务的启动模式
+        /// 暂停任务
         /// </summary>
-        None,
+        Pause,
         /// <summary>
-        /// 以自动模式启动计算任务
+        /// 继续任务
         /// </summary>
-        Auto,
+        Continue,
         /// <summary>
-        /// 以自动模式重新启动任务
+        /// 反转状态
         /// </summary>
-        Reauto,
-        /// <summary>
-        /// 以手动模式启动计算任务
-        /// </summary>
-        Manual,
+        Invert,
     }
 
     /// <summary>

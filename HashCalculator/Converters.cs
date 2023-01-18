@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Media.Imaging;
 
 namespace HashCalculator
 {
@@ -149,10 +150,50 @@ namespace HashCalculator
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if ((HashState)value != HashState.Running)
+            HashState state = (HashState)value;
+            if (state != HashState.Running && state != HashState.Paused)
                 return Visibility.Hidden;
             else
                 return Visibility.Visible;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class PauseBtnTextCvt : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            HashState state = (HashState)value;
+            if (state == HashState.Running)
+                return "暂停...";
+            else
+                return "继续...";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class PauseBtnImgsrcCvt : IValueConverter
+    {
+        private readonly BitmapImage paused =
+            new BitmapImage(new Uri("/Images/pause.png", UriKind.Relative));
+        private readonly BitmapImage noPaused =
+            new BitmapImage(new Uri("/Images/continue.png", UriKind.Relative));
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            HashState state = (HashState)value;
+            if (state == HashState.Running)
+                return paused;
+            else
+                return noPaused;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -165,7 +206,8 @@ namespace HashCalculator
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if ((HashState)value == HashState.Running)
+            HashState state = (HashState)value;
+            if (state == HashState.Running || state == HashState.Paused)
                 return Visibility.Hidden;
             else
                 return Visibility.Visible;
@@ -209,7 +251,7 @@ namespace HashCalculator
         }
     }
 
-    internal class VisibCancelledCvt : IValueConverter
+    internal class VisibCanceledCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

@@ -24,10 +24,12 @@
         <local:VisibNotCalcCvt x:Key="VisibNotCalcCvt" />
         <local:VisibWaitingCvt x:Key="VisibWaitingCvt" />
         <local:VisibSucceededCvt x:Key="VisibSucceededCvt" />
-        <local:VisibCancelledCvt x:Key="VisibCancelledCvt" />
+        <local:VisibCanceledCvt x:Key="VisibCanceledCvt" />
         <local:VisibTotalProgressCvt x:Key="VisibTotalProgressCvt" />
         <local:ButtonEnableCvt x:Key="ButtonEnableCvt" />
         <local:NoColumnCvt x:Key="NoColumnCvt" />
+        <local:PauseBtnImgsrcCvt x:Key="PauseBtnImgsrcCvt" />
+        <local:PauseBtnTextCvt x:Key="PauseBtnTextCvt" />
         <Style
             x:Key="CellStyleNormal"
             TargetType="{x:Type DataGridCell}">
@@ -273,20 +275,39 @@
                                         BorderThickness="0"
                                         Click="Button_CancelHashModel_Click"
                                         ToolTip="停止..."
+                                        ToolTipService.BetweenShowDelay="0"
+                                        ToolTipService.InitialShowDelay="0"
                                         Visibility="{Binding State, Converter={StaticResource VisibRunningCvt}}">
                                         <Image
                                             Source="/Images/stop.png"
                                             Stretch="None" />
                                     </Button>
+                                    <Button
+                                        Grid.Column="3"
+                                        Padding="3,3,3,3"
+                                        Background="Transparent"
+                                        BorderBrush="Transparent"
+                                        BorderThickness="0"
+                                        Click="Button_PauseHashModel_Click"
+                                        ToolTip="{Binding State, Converter={StaticResource PauseBtnTextCvt}}"
+                                        ToolTipService.BetweenShowDelay="0"
+                                        ToolTipService.InitialShowDelay="0"
+                                        Visibility="{Binding State, Converter={StaticResource VisibRunningCvt}}">
+                                        <Image
+                                            Source="{Binding State, Converter={StaticResource PauseBtnImgsrcCvt}}"
+                                            Stretch="None" />
+                                    </Button>
                                     <!--  正排队  -->
                                     <Button
-                                        Grid.Column="2"
+                                        Grid.Column="3"
                                         Padding="3,3,3,3"
                                         Background="Transparent"
                                         BorderBrush="Transparent"
                                         BorderThickness="0"
                                         Click="Button_CancelHashModel_Click"
                                         ToolTip="取消..."
+                                        ToolTipService.BetweenShowDelay="0"
+                                        ToolTipService.InitialShowDelay="0"
                                         Visibility="{Binding State, Converter={StaticResource VisibWaitingCvt}}">
                                         <Image
                                             Source="/Images/cancel.png"
@@ -294,13 +315,15 @@
                                     </Button>
                                     <!--  已成功  -->
                                     <Button
-                                        Grid.Column="2"
+                                        Grid.Column="3"
                                         Padding="3,3,3,3"
                                         Background="Transparent"
                                         BorderBrush="Transparent"
                                         BorderThickness="0"
                                         Click="Button_CopyHashValue_Click"
                                         ToolTip="复制..."
+                                        ToolTipService.BetweenShowDelay="0"
+                                        ToolTipService.InitialShowDelay="0"
                                         Visibility="{Binding Result, Converter={StaticResource VisibSucceededCvt}}">
                                         <Image
                                             Source="/Images/copy.png"
@@ -308,16 +331,18 @@
                                     </Button>
                                     <!--  已取消  -->
                                     <Button
-                                        Grid.Column="2"
+                                        Grid.Column="3"
                                         Padding="3,3,3,3"
                                         Background="Transparent"
                                         BorderBrush="Transparent"
                                         BorderThickness="0"
                                         Click="Button_RestartHashModel_CLick"
                                         ToolTip="开始..."
-                                        Visibility="{Binding Result, Converter={StaticResource VisibCancelledCvt}}">
+                                        ToolTipService.BetweenShowDelay="0"
+                                        ToolTipService.InitialShowDelay="0"
+                                        Visibility="{Binding Result, Converter={StaticResource VisibCanceledCvt}}">
                                         <Image
-                                            Source="/Images/refresh.png"
+                                            Source="/Images/start.png"
                                             Stretch="None" />
                                     </Button>
                                 </Grid>

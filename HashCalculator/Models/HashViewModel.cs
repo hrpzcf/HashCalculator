@@ -66,6 +66,8 @@ namespace HashCalculator
         private static readonly Dispatcher MainDispatcher
             = Application.Current.Dispatcher;
         private static readonly object manipulationLock = new object();
+        private readonly ManualResetEvent pauseEventHandle
+            = new ManualResetEvent(true);
 
         public event Action<HashViewModel> ModelCanbeStartEvent;
         public event Action<int> ComputeFinishedEvent;
@@ -282,6 +284,7 @@ namespace HashCalculator
                             if (readedSize <= 0) break;
                             MainDispatcher.Invoke(() => { this.Progress += readedSize; });
                             algoObject.TransformBlock(buffer, 0, readedSize, null, 0);
+                            this.pauseEventHandle.WaitOne();
                         }
                         algoObject.TransformFinalBlock(buffer, 0, 0);
                         string hashStr = BitConverter.ToString(algoObject.Hash).Replace("-", "");
@@ -366,6 +369,7 @@ namespace HashCalculator
                         if (readedSize <= 0) break;
                         MainDispatcher.Invoke(() => { this.Progress += readedSize; });
                         algorithmHash.BlockUpdate(buffer, 0, readedSize);
+                        this.pauseEventHandle.WaitOne();
                     }
                     int outLength = algorithmHash.DoFinal(buffer, 0);
                     string hashStr = BitConverter.ToString(buffer, 0, outLength).Replace("-", "");
@@ -409,6 +413,7 @@ namespace HashCalculator
 
         private void ResetHashViewModel()
         {
+            this.pauseEventHandle.Set();
             this.DurationofTask = string.Empty;
             this.Result = HashResult.NoResult;
             this.State = HashState.Waiting;
@@ -434,12 +439,54 @@ namespace HashCalculator
             }
         }
 
+        private bool PauseModel()
+        {
+            if (this.State == HashState.Running)
+            {
+                this.pauseEventHandle.Reset();
+                this.State = HashState.Paused;
+                return true;
+            }
+            return false;
+        }
+
+        private bool ContinueModel()
+        {
+            if (this.State == HashState.Paused)
+            {
+                this.pauseEventHandle.Set();
+                this.State = HashState.Running;
+                return true;
+            }
+            return false;
+        }
+
+        public bool PauseOrContinueModel(PauseMode mode)
+        {
+            lock (manipulationLock)
+            {
+                if (mode == PauseMode.Pause)
+                    return this.PauseModel();
+                else if (mode == PauseMode.Continue)
+                    return this.ContinueModel();
+                else if (mode == PauseMode.Invert)
+                {
+                    if (this.State == HashState.Running)
+                        return this.PauseModel();
+                    else if (this.State == HashState.Paused)
+                        return this.ContinueModel();
+                }
+                return false;
+            }
+        }
+
         public void ShutdownModel()
         {
             lock (manipulationLock)
             {
                 if (this.State == HashState.Finished)
                     return;
+                this.pauseEventHandle.Set();
                 if (!this.tokenSource.IsCancellationRequested)
                     this.tokenSource.Cancel();
                 if (this.State == HashState.Uninited || this.State == HashState.Waiting)

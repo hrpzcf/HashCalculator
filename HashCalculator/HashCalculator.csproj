@@ -147,7 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\information.png" />
-    <Resource Include="Images\refresh.png" />
+    <Resource Include="Images\start.png" />
     <Resource Include="Images\stop.png" />
   </ItemGroup>
   <ItemGroup>
@@ -158,6 +158,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\pause.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\continue.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

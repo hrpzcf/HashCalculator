@@ -340,6 +340,11 @@ namespace HashCalculator
                 + $"已取消：{canceled}";
         }
 
+        public void Models_PauseOne(HashViewModel model)
+        {
+            model.PauseOrContinueModel(PauseMode.Invert);
+        }
+
         public void Models_CancelAll()
         {
             this.cancellation?.Cancel();
