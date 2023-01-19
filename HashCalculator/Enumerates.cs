@@ -7,7 +7,6 @@ namespace HashCalculator
     /// </summary>
     internal enum HashState
     {
-        Uninited,
         Waiting,
         Running,
         Paused,

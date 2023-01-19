@@ -202,6 +202,7 @@ namespace HashCalculator
             model.ModelCanbeStartEvent += this.CanbeStartSubscriber;
             model.ComputeFinishedEvent += this.IncreaseQueueFinished;
             model.WaitingModelCanceledEvent += this.DecreaseQueueTotal;
+            model.StartupModel(false);
             this.HashViewModels.Add(model);
         }
 
@@ -218,11 +219,10 @@ namespace HashCalculator
                     MainDispatcher.Invoke(() => { this.DecreaseQueueTotal(argsCount); });
                     break;
                 }
-                MainDispatcher.Invoke(this.AHVMS, arg);
                 --argsCount;
+                MainDispatcher.Invoke(this.AHVMS, arg);
+                Thread.Sleep(1);
             }
-            foreach (HashViewModel model in this.HashViewModels)
-                model.StartupModel(true);
         }
 
         private void IncreaseQueueFinished(int number)

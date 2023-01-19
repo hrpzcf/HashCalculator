@@ -49,7 +49,7 @@ namespace HashCalculator
         private string _hashValue = "正在排队...";
         private bool _exportHash = false;
         private CmpRes _cmpResult = CmpRes.NoResult;
-        private HashState _currentState = HashState.Uninited;
+        private HashState _currentState = HashState.Waiting;
         private HashResult _currentResult = HashResult.NoResult;
         private long _progress = 0L;
         private long _progressTotal = 0L;
@@ -137,9 +137,9 @@ namespace HashCalculator
             {
                 switch (value)
                 {
-                    case HashState.Uninited:
-                        this.Hash = "未初始化...";
-                        break;
+                    //case HashState.Uninited:
+                    //    this.Hash = "未初始化...";
+                    //    break;
                     case HashState.Waiting:
                         this.Hash = "正在排队...";
                         break;
@@ -487,9 +487,10 @@ namespace HashCalculator
                 if (this.State == HashState.Finished)
                     return;
                 this.pauseEventHandle.Set();
-                if (!this.tokenSource.IsCancellationRequested)
+                if (this.tokenSource != null && 
+                    !this.tokenSource.IsCancellationRequested)
                     this.tokenSource.Cancel();
-                if (this.State == HashState.Uninited || this.State == HashState.Waiting)
+                if (this.State == HashState.Waiting)
                 {
                     this.State = HashState.Finished;
                     this.WaitingModelCanceledEvent?.Invoke(1);
