@@ -516,5 +516,15 @@ namespace HashCalculator
             HashViewModel hashModel = button.DataContext as HashViewModel;
             this.appViewModel.Models_PauseOne(hashModel);
         }
+
+        private void Button_PauseAllTask_Click(object sender, RoutedEventArgs e)
+        {
+            this.appViewModel.Models_PauseAll();
+        }
+
+        private void Button_ContinueAllTask_Click(object sender, RoutedEventArgs e)
+        {
+            this.appViewModel.Models_ContinueAll();
+        }
     }
 }

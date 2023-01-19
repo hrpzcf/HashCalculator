@@ -439,6 +439,8 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <Grid Margin="0,0,8,0">
                     <Grid.RowDefinitions>
@@ -489,7 +491,7 @@
                 <Button
                     x:Name="uiButton_ClearModels"
                     Grid.Column="1"
-                    Margin="8,8,8,8"
+                    Margin="4,8,4,8"
                     Padding="16,4,16,4"
                     Click="Button_ClearFileList_Click"
                     Content="清空面板"
@@ -498,24 +500,40 @@
                 <Button
                     x:Name="uiButton_ExportAsText"
                     Grid.Column="2"
-                    Margin="8,8,8,8"
+                    Margin="4,8,4,8"
                     Padding="16,4,16,4"
                     Click="Button_ExportAsTextFile_Click"
                     Content="导出结果"
                     IsEnabled="{Binding State, Converter={StaticResource ButtonEnableCvt}}"
                     ToolTip="导出面板中的计算结果。没有计算结果的行不会被导出，&quot;导出&quot;列没有选中的也不会被导出。" />
                 <Button
-                    x:Name="uiButton_CancelAllTask"
+                    x:Name="uiButton_ContinueAllTask"
                     Grid.Column="3"
-                    Margin="8,8,8,8"
+                    Margin="4,8,4,8"
+                    Padding="16,4,16,4"
+                    Click="Button_ContinueAllTask_Click"
+                    Content="继续"
+                    ToolTip="继续全部已暂停的哈希值计算任务。" />
+                <Button
+                    x:Name="uiButton_PauseAllTask"
+                    Grid.Column="4"
+                    Margin="4,8,4,8"
+                    Padding="16,4,16,4"
+                    Click="Button_PauseAllTask_Click"
+                    Content="暂停"
+                    ToolTip="暂停全部正在运行的哈希值计算任务。" />
+                <Button
+                    x:Name="uiButton_CancelAllTask"
+                    Grid.Column="5"
+                    Margin="4,8,4,8"
                     Padding="16,4,16,4"
                     Click="Button_CancelAllTask_Click"
-                    Content="取消任务"
-                    ToolTip="取消全部运行中的哈希值计算任务和排队中的任务。" />
+                    Content="取消"
+                    ToolTip="取消全部排队中、运行中和已暂停的哈希值计算任务。" />
                 <Button
                     x:Name="uiButton_RefreshCopy"
-                    Grid.Column="4"
-                    Margin="8,8,8,8"
+                    Grid.Column="6"
+                    Margin="4,8,4,8"
                     Padding="16,4,16,4"
                     Click="Button_CopyRefreshHash_Click"
                     Content="新行重算"
@@ -523,8 +541,8 @@
                     ToolTip="以&quot;算法&quot;下拉选择框选择的算法为准，计算表格中所有文件的哈希值，但不清除原来的计算结果，而是增加新的行来显示结果。" />
                 <Button
                     x:Name="uiButton_RefreshCurrentHash"
-                    Grid.Column="5"
-                    Margin="8,8,0,8"
+                    Grid.Column="7"
+                    Margin="4,8,0,8"
                     Padding="16,4,16,4"
                     Click="Button_RefreshCurrentHash_Click"
                     Content="重新计算"

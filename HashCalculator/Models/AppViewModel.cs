@@ -345,6 +345,18 @@ namespace HashCalculator
             model.PauseOrContinueModel(PauseMode.Invert);
         }
 
+        public void Models_PauseAll()
+        {
+            foreach (var model in this.HashViewModels)
+                model.PauseOrContinueModel(PauseMode.Pause);
+        }
+
+        public void Models_ContinueAll()
+        {
+            foreach (var model in this.HashViewModels)
+                model.PauseOrContinueModel(PauseMode.Continue);
+        }
+
         public void Models_CancelAll()
         {
             this.cancellation?.Cancel();
