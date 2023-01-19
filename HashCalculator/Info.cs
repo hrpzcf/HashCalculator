@@ -10,7 +10,7 @@ namespace HashCalculator
         private static readonly Version v = assembly.Version;
 
         public static readonly string AppName = assembly.Name;
-        public static readonly string Ver = $"{v.Major}.{v.Minor}.{v.Build}";
+        public static readonly string Ver = $"{v.Major}.{v.Minor}.{v.Build}-beta";
         public const string Title = "文件哈希值批量计算器";
         public const string Author = "hrpzcf";
         public const string Source = "https://github.com/hrpzcf/HashCalculator";

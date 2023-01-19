@@ -24,7 +24,7 @@ namespace HashCalculator
             this.DataContext = this.appViewModel;
             this.hashViewModels = this.appViewModel.HashViewModels;
             this.InitializeComponent();
-            this.Title = $"{Info.Title} v{Info.Ver} — {Info.Author} @ {Info.Published}";
+            this.Title = $"{Info.Title} v{Info.Ver} by {Info.Author} @ {Info.Published}";
             this.InitializeFromConfigure();
         }
 
