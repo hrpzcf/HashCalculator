@@ -14,39 +14,60 @@ namespace HashCalculator
 {
     internal class AppViewModel : INotifyPropertyChanged
     {
-        private delegate void AddModelsSource(ModelArg arg);
-        private readonly AddModelsSource AHVMS;
-        private QueueState queueState = QueueState.None;
+        private static readonly Dispatcher AppDispatcher
+            = Application.Current.Dispatcher;
+        private static readonly object serialNumberLock = new object();
+        private static TaskList queueCleaners;
+        private readonly DAddModelToTable addModelToTable;
+        private readonly BlockingCollection<HashViewModel> queue
+            = new BlockingCollection<HashViewModel>();
+        private int currentSerialNumber = 0;
+        private int finishedNumberInQueue = 0;
+        private int totalNumberInQueue = 0;
+        private CancellationTokenSource cancellation;
+        private List<ModelArg> droppedFiles = new List<ModelArg>();
         private string hashCheckReport = string.Empty;
         private bool noDurationColumn;
         private bool noExportColumn;
-        private static readonly Dispatcher MainDispatcher
-            = Application.Current.Dispatcher;
-        private CancellationTokenSource cancellation;
-        private int _currentSerialNumber = 0;
-        private int _finishedNumberInQueue = 0;
-        private int _totalNumberInQueue = 0;
-        private List<ModelArg> droppedFiles = new List<ModelArg>();
-        private static TaskList queueCleaners;
-        private readonly BlockingCollection<HashViewModel> hashViewModelsQueue
-            = new BlockingCollection<HashViewModel>();
-        private static readonly object _concurrentLock = new object();
-        private static readonly object _serialLock = new object();
-        private static readonly object _checkNumberLock = new object();
-        private static readonly object _queueNumberLock = new object();
+        private QueueState queueState = QueueState.None;
+        private static readonly object changeQueueCountLock = new object();
+        private static readonly object checkQueueCountLock = new object();
+        private static readonly object concurrentLock = new object();
+        private static readonly object displayModelLock = new object();
+        private static readonly object displayModelTaskLock = new object();
+        private delegate void DAddModelToTable(ModelArg arg);
 
         public static AppViewModel Instance;
+        public event PropertyChangedEventHandler PropertyChanged;
 
-        public bool NoExportColumn
+        public int FinishedInQueue
         {
-            get { return this.noExportColumn; }
-            set { this.noExportColumn = value; this.OnPropertyChanged(); }
+            get
+            {
+                lock (changeQueueCountLock)
+                    return this.finishedNumberInQueue;
+            }
+            set
+            {
+                lock (changeQueueCountLock)
+                    this.finishedNumberInQueue = value;
+                this.OnPropertyChanged();
+            }
         }
+
+        public ObservableCollection<HashViewModel> HashViewModels { get; }
+            = new ObservableCollection<HashViewModel>();
 
         public bool NoDurationColumn
         {
             get { return this.noDurationColumn; }
             set { this.noDurationColumn = value; this.OnPropertyChanged(); }
+        }
+
+        public bool NoExportColumn
+        {
+            get { return this.noExportColumn; }
+            set { this.noExportColumn = value; this.OnPropertyChanged(); }
         }
 
         public string Report
@@ -65,24 +86,6 @@ namespace HashCalculator
             }
         }
 
-        public int FinishedInQueue
-        {
-            get
-            {
-                lock (_queueNumberLock)
-                    return this._finishedNumberInQueue;
-            }
-            set
-            {
-                lock (_queueNumberLock)
-                    this._finishedNumberInQueue = value;
-                this.OnPropertyChanged();
-            }
-        }
-
-        public ObservableCollection<HashViewModel> HashViewModels { get; }
-            = new ObservableCollection<HashViewModel>();
-
         public QueueState State
         {
             get => this.queueState;
@@ -92,7 +95,7 @@ namespace HashCalculator
                     || this.queueState == QueueState.Stopped)
                     && value == QueueState.Started)
                 {
-                    MainDispatcher.Invoke(() => { this.Report = string.Empty; });
+                    AppDispatcher.Invoke(() => { this.Report = string.Empty; });
                     this.queueState = value;
                     this.OnPropertyChanged();
                 }
@@ -109,93 +112,25 @@ namespace HashCalculator
         {
             get
             {
-                lock (_queueNumberLock)
-                    return this._totalNumberInQueue;
+                lock (changeQueueCountLock)
+                    return this.totalNumberInQueue;
             }
             set
             {
-                lock (_queueNumberLock)
-                    this._totalNumberInQueue = value;
+                lock (changeQueueCountLock)
+                    this.totalNumberInQueue = value;
                 this.OnPropertyChanged();
             }
         }
 
         public AppViewModel()
         {
-            queueCleaners = new TaskList(8, this.ComputeMonitor);
-            this.AHVMS = new AddModelsSource(this.AddViewModelsSource);
+            queueCleaners = new TaskList(8, this.HashModelMonitor);
+            this.addModelToTable = new DAddModelToTable(this.AddModelToTable);
             Instance = this;
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void AfterQueueItemsCountChanges()
-        {
-            lock (_checkNumberLock)
-            {
-                if (this.TotalNumberInQueue > 0 && this.FinishedInQueue == 0 && this.State != QueueState.Started)
-                {
-                    MainDispatcher.Invoke(() => { this.State = QueueState.Started; });
-                }
-                else if (this.TotalNumberInQueue > 0 && this.FinishedInQueue == this.TotalNumberInQueue)
-                {
-                    MainDispatcher.Invoke(() =>
-                    {
-                        this.FinishedInQueue = this.TotalNumberInQueue = 0;
-                        this.State = QueueState.Stopped;
-                    });
-                }
-#if DEBUG
-                else if (this.FinishedInQueue < 0 || this.TotalNumberInQueue < 0)
-                {
-                    Console.WriteLine($"[异常] 已完成任务：{this.FinishedInQueue}，总数：{this.TotalNumberInQueue}");
-                    throw new InvalidOperationException("已完成数和总数异常");
-                }
-#endif
-            }
-        }
-
-        private void CanbeStartSubscriber(HashViewModel model)
-        {
-            if (!this.hashViewModelsQueue.Contains(model))
-            {
-                this.hashViewModelsQueue.Add(model);
-            }
-#if DEBUG
-            else
-            {
-                Console.WriteLine("当前队列已包含相同的元素");
-            }
-#endif
-        }
-
-        private void ComputeMonitor(object obj)
-        {
-            HashViewModel model;
-            CancellationToken token = (CancellationToken)obj;
-            while (true)
-            {
-                try
-                {
-                    model = this.hashViewModelsQueue.Take(token);
-                }
-                catch (OperationCanceledException)
-                {
-                    break;
-                }
-                model.ComputeHashValue();
-            }
-        }
-
-        private void DecreaseQueueTotal(int number)
-        {
-            if (number < 0)
-                number = 0;
-            this.TotalNumberInQueue -= number;
-            this.AfterQueueItemsCountChanges();
-        }
-
-        private void AddViewModelsSource(ModelArg arg)
+        private void AddModelToTable(ModelArg arg)
         {
             int modelSerial = this.SerialGet();
             HashViewModel model = new HashViewModel(modelSerial, arg);
@@ -206,23 +141,94 @@ namespace HashCalculator
             this.HashViewModels.Add(model);
         }
 
+        private void AfterQueueItemsCountChanges()
+        {
+            lock (checkQueueCountLock)
+            {
+                if (this.TotalNumberInQueue > 0 && this.FinishedInQueue == 0 &&
+                    this.State != QueueState.Started)
+                {
+                    AppDispatcher.Invoke(() => { this.State = QueueState.Started; });
+                }
+                else if (this.TotalNumberInQueue > 0 &&
+                    this.FinishedInQueue == this.TotalNumberInQueue)
+                {
+                    AppDispatcher.Invoke(() =>
+                    {
+                        this.FinishedInQueue = this.TotalNumberInQueue = 0;
+                        this.State = QueueState.Stopped;
+                    });
+                }
+#if DEBUG
+                else if (this.FinishedInQueue < 0 || this.TotalNumberInQueue < 0)
+                {
+                    Console.WriteLine(
+                        $"[异常] 已完成任务：{this.FinishedInQueue}，总数：{this.TotalNumberInQueue}");
+                    throw new InvalidOperationException("已完成数和总数异常");
+                }
+#endif
+            }
+        }
+
+        private void CanbeStartSubscriber(HashViewModel model)
+        {
+            if (!this.queue.Contains(model))
+            {
+                this.queue.Add(model);
+            }
+#if DEBUG
+            else
+            {
+                Console.WriteLine("当前队列已包含相同的元素");
+            }
+#endif
+        }
+
+        private void DecreaseQueueTotal(int number)
+        {
+            if (number < 0)
+                number = 0;
+            this.TotalNumberInQueue -= number;
+            this.AfterQueueItemsCountChanges();
+        }
+
         private void DisplayModels(IEnumerable<ModelArg> args, CancellationToken token)
         {
-            int argsCount = args.Count();
-            if (token.IsCancellationRequested || argsCount == 0)
-                return;
-            MainDispatcher.Invoke(() => { this.IncreaseQueueTotal(argsCount); });
-            foreach (ModelArg arg in args)
+            int argsCount, remainingArgsCount;
+            argsCount = remainingArgsCount = args.Count();
+            if (argsCount == 0) return;
+            AppDispatcher.Invoke(() => { this.IncreaseQueueTotal(argsCount); });
+            lock (displayModelLock)
             {
-                if (token.IsCancellationRequested)
+                foreach (ModelArg arg in args)
                 {
-                    MainDispatcher.Invoke(() => { this.DecreaseQueueTotal(argsCount); });
-                    break;
+                    if (token.IsCancellationRequested)
+                    {
+                        AppDispatcher.Invoke(
+                            () => { this.DecreaseQueueTotal(remainingArgsCount); });
+                        break;
+                    }
+                    --remainingArgsCount;
+                    AppDispatcher.Invoke(this.addModelToTable, arg);
+                    Thread.Sleep(1);
                 }
-                --argsCount;
-                MainDispatcher.Invoke(this.AHVMS, arg);
-                Thread.Sleep(1);
             }
+#if DEBUG
+            Console.WriteLine($"已添加哈希模型：{argsCount - remainingArgsCount}");
+#endif
+        }
+
+        private void HashModelMonitor(object obj)
+        {
+            HashViewModel model;
+            var token = (CancellationToken)obj;
+            do
+            {
+                try { model = this.queue.Take(token); }
+                catch (OperationCanceledException) { break; }
+                model.ComputeHashValue();
+            }
+            while (!token.IsCancellationRequested);
         }
 
         private void IncreaseQueueFinished(int number)
@@ -248,17 +254,17 @@ namespace HashCalculator
 
         private int SerialGet()
         {
-            lock (_serialLock) { return ++this._currentSerialNumber; }
+            lock (serialNumberLock) { return ++this.currentSerialNumber; }
         }
 
         private void SerialReset()
         {
-            lock (_serialLock) { this._currentSerialNumber = 0; }
+            lock (serialNumberLock) { this.currentSerialNumber = 0; }
         }
 
         public static void SetConcurrent(SimCalc num)
         {
-            lock (_concurrentLock)
+            lock (concurrentLock)
             {
                 switch (num)
                 {
@@ -278,17 +284,23 @@ namespace HashCalculator
             }
         }
 
-        public void SetColumnVisibility(bool noExportColumn, bool noDurationColumn)
-        {
-            this.NoExportColumn = noExportColumn;
-            this.NoDurationColumn = noDurationColumn;
-        }
-
         public void ClearHashViewModels()
         {
             this.droppedFiles.Clear();
             this.SerialReset();
             this.HashViewModels.Clear();
+        }
+
+        public void CreateTaskDisplayHashViewModels(IEnumerable<ModelArg> args)
+        {
+            lock (displayModelTaskLock)
+            {
+                this.droppedFiles.AddRange(args);
+                if (this.cancellation == null)
+                    this.cancellation = GlobalCancellation.Handle;
+                CancellationToken token = this.cancellation.Token;
+                Task.Run(() => { this.DisplayModels(args, token); }, token);
+            }
         }
 
         public void GenerateVerificationReport()
@@ -340,15 +352,21 @@ namespace HashCalculator
                 + $"已取消：{canceled}";
         }
 
-        public void Models_PauseOne(HashViewModel model)
+        public void Models_CancelAll()
         {
-            model.PauseOrContinueModel(PauseMode.Invert);
+            lock (displayModelTaskLock)
+            {
+                this.cancellation?.Cancel();
+                foreach (var model in this.HashViewModels)
+                    model.ShutdownModel();
+                this.cancellation?.Dispose();
+                this.cancellation = GlobalCancellation.Handle;
+            }
         }
 
-        public void Models_PauseAll()
+        public void Models_CancelOne(HashViewModel model)
         {
-            foreach (var model in this.HashViewModels)
-                model.PauseOrContinueModel(PauseMode.Pause);
+            model.ShutdownModel();
         }
 
         public void Models_ContinueAll()
@@ -357,29 +375,26 @@ namespace HashCalculator
                 model.PauseOrContinueModel(PauseMode.Continue);
         }
 
-        public void Models_CancelAll()
+        public void Models_PauseAll()
         {
-            this.cancellation?.Cancel();
-            this.cancellation?.Dispose();
             foreach (var model in this.HashViewModels)
-                model.ShutdownModel();
-            this.cancellation = GlobalCancellation.Handler;
+                model.PauseOrContinueModel(PauseMode.Pause);
         }
 
-        public void Models_CancelOne(HashViewModel model)
+        public void Models_PauseOne(HashViewModel model)
         {
-            model.ShutdownModel();
+            model.PauseOrContinueModel(PauseMode.Invert);
         }
 
         public void Models_Restart(bool newLines)
         {
             if (!newLines)
             {
-                bool forceStart = !Settings.Current.RecalculateIncomplete;
+                bool force = !Settings.Current.RecalculateIncomplete;
                 int canbeStartModelCount = 0;
                 foreach (var model in this.HashViewModels)
                 {
-                    if (model.StartupModel(forceStart))
+                    if (model.StartupModel(force))
                         ++canbeStartModelCount;
                 }
                 this.IncreaseQueueTotal(canbeStartModelCount);
@@ -390,7 +405,7 @@ namespace HashCalculator
                     return;
                 List<ModelArg> args = this.droppedFiles;
                 this.droppedFiles = new List<ModelArg>();
-                this.QueueDisplayModels(args);
+                this.CreateTaskDisplayHashViewModels(args);
             }
         }
 
@@ -400,13 +415,10 @@ namespace HashCalculator
             viewModel.StartupModel(true);
         }
 
-        public void QueueDisplayModels(IEnumerable<ModelArg> args)
+        public void SetColumnVisibility(bool noExportColumn, bool noDurationColumn)
         {
-            this.droppedFiles.AddRange(args);
-            if (this.cancellation == null)
-                this.Models_CancelAll();
-            CancellationToken token = this.cancellation.Token;
-            Task.Run(() => { this.DisplayModels(args, token); }, token);
+            this.NoExportColumn = noExportColumn;
+            this.NoDurationColumn = noDurationColumn;
         }
     }
 }

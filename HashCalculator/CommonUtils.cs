@@ -80,7 +80,7 @@ namespace HashCalculator
             }
         }
 
-        public static CancellationTokenSource Handler
+        public static CancellationTokenSource Handle
         {
             get
             {
@@ -96,7 +96,7 @@ namespace HashCalculator
 
     internal class TaskKeeper
     {
-        private CancellationTokenSource src;
+        private CancellationTokenSource tks;
         private Task task;
         private readonly Action<object> callback;
 
@@ -107,27 +107,28 @@ namespace HashCalculator
 
         public void Reset()
         {
-            if (this.src != null && this.task != null)
+            if (this.tks != null && this.task != null)
                 return;
-            this.src = new CancellationTokenSource();
-            this.task = Task.Factory.StartNew(this.callback, this.src.Token,
-                this.src.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
+            this.tks = new CancellationTokenSource();
+            this.task = Task.Factory.StartNew(this.callback, this.tks.Token,
+                this.tks.Token, TaskCreationOptions.LongRunning,
+                TaskScheduler.Default);
         }
 
         public void Cancel()
         {
-            if (this.src == null || this.task == null)
+            if (this.tks == null || this.task == null)
                 return;
-            this.src.Cancel();
+            this.tks.Cancel();
             this.task.Wait();
-            this.src.Dispose();
-            this.src = null;
+            this.tks.Dispose();
+            this.tks = null;
             this.task = null;
         }
 
         public bool IsAlive()
         {
-            return (this.src != null && this.task != null);
+            return (this.tks != null && this.task != null);
         }
     }
 

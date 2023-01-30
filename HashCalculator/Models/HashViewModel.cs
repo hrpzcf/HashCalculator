@@ -63,7 +63,7 @@ namespace HashCalculator
         private CancellationTokenSource tokenSource;
         private readonly bool isDeprecated;
         private const int blockSize = 2097152;
-        private static readonly Dispatcher MainDispatcher
+        private static readonly Dispatcher AppDispatcher
             = Application.Current.Dispatcher;
         private static readonly object manipulationLock = new object();
         private readonly ManualResetEvent pauseEventHandle
@@ -196,7 +196,7 @@ namespace HashCalculator
         {
             if (this.IsSucceeded)
                 return;
-            MainDispatcher.Invoke(() =>
+            AppDispatcher.Invoke(() =>
             {
                 this.HashName = AlgoType.Unknown;
                 this.Result = HashResult.Canceled;
@@ -215,7 +215,7 @@ namespace HashCalculator
             lock (Locks.AlgoSelectionLock)
             {
                 algoType = Settings.Current.SelectedAlgo;
-                MainDispatcher.Invoke(() =>
+                AppDispatcher.Invoke(() =>
                 {
                     this.HashName = algoType;
                     this.State = HashState.Running;
@@ -247,7 +247,7 @@ namespace HashCalculator
             }
             if (this.isDeprecated)
             {
-                MainDispatcher.Invoke(() =>
+                AppDispatcher.Invoke(() =>
                 {
                     this.Result = HashResult.HasFailed;
                     this.Hash = "在依据所在文件夹中找不到此文件";
@@ -256,7 +256,7 @@ namespace HashCalculator
             }
             else if (!this.Path.Exists)
             {
-                MainDispatcher.Invoke(() =>
+                AppDispatcher.Invoke(() =>
                 {
                     this.Result = HashResult.HasFailed;
                     this.Hash = "要计算哈希值的文件不存在或无法访问";
@@ -267,7 +267,7 @@ namespace HashCalculator
             {
                 using (FileStream fs = File.OpenRead(this.Path.FullName))
                 {
-                    MainDispatcher.Invoke(() =>
+                    AppDispatcher.Invoke(() =>
                     {
                         this.Progress = 0L;
                         this.ProgressTotal = fileSize = fs.Length;
@@ -282,7 +282,7 @@ namespace HashCalculator
                                 goto TaskRunningEnds;
                             readedSize = fs.Read(buffer, 0, buffer.Length);
                             if (readedSize <= 0) break;
-                            MainDispatcher.Invoke(() => { this.Progress += readedSize; });
+                            AppDispatcher.Invoke(() => { this.Progress += readedSize; });
                             algoObject.TransformBlock(buffer, 0, readedSize, null, 0);
                             this.pauseEventHandle.WaitOne();
                         }
@@ -290,7 +290,7 @@ namespace HashCalculator
                         string hashStr = BitConverter.ToString(algoObject.Hash).Replace("-", "");
                         if (Settings.Current.UseLowercaseHash)
                             hashStr = hashStr.ToLower();
-                        MainDispatcher.Invoke(
+                        AppDispatcher.Invoke(
                             () => { this.Export = true; this.Hash = hashStr; });
                         if (this.expectedHash != null)
                         {
@@ -301,15 +301,15 @@ namespace HashCalculator
                                 result = CmpRes.Matched;
                             else
                                 result = CmpRes.Mismatch;
-                            MainDispatcher.Invoke(() => { this.CmpResult = result; });
+                            AppDispatcher.Invoke(() => { this.CmpResult = result; });
                         }
                     }
                 }
-                MainDispatcher.Invoke(() => { this.Result = HashResult.Succeeded; });
+                AppDispatcher.Invoke(() => { this.Result = HashResult.Succeeded; });
             }
             catch
             {
-                MainDispatcher.Invoke(() =>
+                AppDispatcher.Invoke(() =>
                 {
                     this.Result = HashResult.HasFailed;
                     this.Hash = "读取文件失败或哈希值计算出错";
@@ -317,9 +317,9 @@ namespace HashCalculator
             }
         TaskRunningEnds:
             stopwatch.Stop();
-            MainDispatcher.Invoke(() => { this.State = HashState.Finished; });
+            AppDispatcher.Invoke(() => { this.State = HashState.Finished; });
             string durationof = $"{stopwatch.Elapsed.TotalSeconds:f2}";
-            MainDispatcher.Invoke(() =>
+            AppDispatcher.Invoke(() =>
             {
                 this.DurationofTask = durationof;
                 this.ModelDetails = $"文件名称：{this.Name}\n文件大小：{UnitCvt.FileSizeCvt(fileSize)}\n"
@@ -333,7 +333,7 @@ namespace HashCalculator
             long fileSize = 0L;
             if (this.isDeprecated)
             {
-                MainDispatcher.Invoke(() =>
+                AppDispatcher.Invoke(() =>
                 {
                     this.Result = HashResult.HasFailed;
                     this.Hash = "在依据所在文件夹中找不到此文件";
@@ -342,7 +342,7 @@ namespace HashCalculator
             }
             else if (!this.Path.Exists)
             {
-                MainDispatcher.Invoke(() =>
+                AppDispatcher.Invoke(() =>
                 {
                     this.Result = HashResult.HasFailed;
                     this.Hash = "要计算哈希值的文件不存在或无法访问";
@@ -353,7 +353,7 @@ namespace HashCalculator
             {
                 using (FileStream fs = File.OpenRead(this.Path.FullName))
                 {
-                    MainDispatcher.Invoke(() =>
+                    AppDispatcher.Invoke(() =>
                     {
                         this.Progress = 0L;
                         this.ProgressTotal = fileSize = fs.Length;
@@ -367,7 +367,7 @@ namespace HashCalculator
                             goto TaskRunningEnds;
                         readedSize = fs.Read(buffer, 0, blockSize);
                         if (readedSize <= 0) break;
-                        MainDispatcher.Invoke(() => { this.Progress += readedSize; });
+                        AppDispatcher.Invoke(() => { this.Progress += readedSize; });
                         algorithmHash.BlockUpdate(buffer, 0, readedSize);
                         this.pauseEventHandle.WaitOne();
                     }
@@ -375,7 +375,7 @@ namespace HashCalculator
                     string hashStr = BitConverter.ToString(buffer, 0, outLength).Replace("-", "");
                     if (Settings.Current.UseLowercaseHash)
                         hashStr = hashStr.ToLower();
-                    MainDispatcher.Invoke(() => { this.Export = true; this.Hash = hashStr; });
+                    AppDispatcher.Invoke(() => { this.Export = true; this.Hash = hashStr; });
                     if (this.expectedHash != null)
                     {
                         CmpRes result;
@@ -385,14 +385,14 @@ namespace HashCalculator
                             result = CmpRes.Matched;
                         else
                             result = CmpRes.Mismatch;
-                        MainDispatcher.Invoke(() => { this.CmpResult = result; });
+                        AppDispatcher.Invoke(() => { this.CmpResult = result; });
                     }
                 }
-                MainDispatcher.Invoke(() => { this.Result = HashResult.Succeeded; });
+                AppDispatcher.Invoke(() => { this.Result = HashResult.Succeeded; });
             }
             catch
             {
-                MainDispatcher.Invoke(() =>
+                AppDispatcher.Invoke(() =>
                 {
                     this.Result = HashResult.HasFailed;
                     this.Hash = "读取文件失败或哈希值计算出错";
@@ -400,9 +400,9 @@ namespace HashCalculator
             }
         TaskRunningEnds:
             stopwatch.Stop();
-            MainDispatcher.Invoke(() => { this.State = HashState.Finished; });
+            AppDispatcher.Invoke(() => { this.State = HashState.Finished; });
             string durationof = $"{stopwatch.Elapsed.TotalSeconds:f2}";
-            MainDispatcher.Invoke(() =>
+            AppDispatcher.Invoke(() =>
             {
                 this.DurationofTask = durationof;
                 this.ModelDetails = $"文件名称：{this.Name}\n文件大小：{UnitCvt.FileSizeCvt(fileSize)}\n"
