@@ -56,7 +56,7 @@
                     </Grid.ColumnDefinitions>
                     <TextBlock
                         VerticalAlignment="Center"
-                        Text="当拖入面板对象包含文件夹时：" />
+                        Text="当选择的计算对象中包含文件夹时：" />
                     <ComboBox
                         x:Name="uiComboBox_SearchPolicy1"
                         Grid.Column="1"
