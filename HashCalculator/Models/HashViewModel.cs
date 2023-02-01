@@ -65,7 +65,7 @@ namespace HashCalculator
         private const int blockSize = 2097152;
         private static readonly Dispatcher AppDispatcher
             = Application.Current.Dispatcher;
-        private static readonly object manipulationLock = new object();
+        private readonly object manipulationLock = new object();
         private readonly ManualResetEvent pauseEventHandle
             = new ManualResetEvent(true);
         private readonly object cmpResultLock = new object();
