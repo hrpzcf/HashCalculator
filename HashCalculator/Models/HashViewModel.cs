@@ -68,6 +68,7 @@ namespace HashCalculator
         private static readonly object manipulationLock = new object();
         private readonly ManualResetEvent pauseEventHandle
             = new ManualResetEvent(true);
+        private readonly object cmpResultLock = new object();
 
         public event Action<HashViewModel> ModelCanbeStartEvent;
         public event Action<int> ComputeFinishedEvent;
@@ -126,8 +127,19 @@ namespace HashCalculator
 
         public CmpRes CmpResult
         {
-            get { return this._cmpResult; }
-            set { this._cmpResult = value; this.OnPropertyChanged(); }
+            get
+            {
+                lock (cmpResultLock)
+                    return this._cmpResult;
+            }
+            set
+            {
+                lock (cmpResultLock)
+                {
+                    this._cmpResult = value;
+                    this.OnPropertyChanged();
+                }
+            }
         }
 
         public HashState State
@@ -137,9 +149,6 @@ namespace HashCalculator
             {
                 switch (value)
                 {
-                    //case HashState.Uninited:
-                    //    this.Hash = "未初始化...";
-                    //    break;
                     case HashState.Waiting:
                         this.Hash = "正在排队...";
                         break;
@@ -487,7 +496,7 @@ namespace HashCalculator
                 if (this.State == HashState.Finished)
                     return;
                 this.pauseEventHandle.Set();
-                if (this.tokenSource != null && 
+                if (this.tokenSource != null &&
                     !this.tokenSource.IsCancellationRequested)
                     this.tokenSource.Cancel();
                 if (this.State == HashState.Waiting)

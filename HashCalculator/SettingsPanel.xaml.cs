@@ -49,6 +49,7 @@ namespace HashCalculator
             config.RecalculateIncomplete = this.uiCHeckBox_RecalculateIncomplete.IsChecked ?? false;
             config.NoExportColumn = this.uiCHeckBox_NoExportColumn.IsChecked ?? false;
             config.NoDurationColumn = this.uiCHeckBox_NoDurationColumn.IsChecked ?? false;
+            AppViewModel.Instance.RefreshCmpResultDisplayStyle();
             AppViewModel.Instance.SetColumnVisibility(config.NoExportColumn, config.NoDurationColumn);
             Task.Run(() => { AppViewModel.SetConcurrent(config.TaskLimit); });
         }

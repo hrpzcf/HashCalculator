@@ -415,6 +415,12 @@ namespace HashCalculator
             viewModel.StartupModel(true);
         }
 
+        public void RefreshCmpResultDisplayStyle()
+        {
+            foreach (var model in this.HashViewModels)
+                model.CmpResult = model.CmpResult;
+        }
+
         public void SetColumnVisibility(bool noExportColumn, bool noDurationColumn)
         {
             this.NoExportColumn = noExportColumn;
