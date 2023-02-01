@@ -424,8 +424,9 @@ namespace HashCalculator
         {
             this.pauseEventHandle.Set();
             this.DurationofTask = string.Empty;
-            this.Result = HashResult.NoResult;
             this.State = HashState.Waiting;
+            this.Result = HashResult.NoResult;
+            this.CmpResult = CmpRes.NoResult;
             this.Progress = this.ProgressTotal = 0;
             this.HashName = AlgoType.Unknown;
         }
