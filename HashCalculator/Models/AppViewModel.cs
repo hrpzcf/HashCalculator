@@ -31,7 +31,6 @@ namespace HashCalculator
         private bool noExportColumn;
         private QueueState queueState = QueueState.None;
         private static readonly object changeQueueCountLock = new object();
-        private static readonly object checkQueueCountLock = new object();
         private static readonly object concurrentLock = new object();
         private static readonly object displayModelLock = new object();
         private static readonly object displayModelTaskLock = new object();
@@ -39,21 +38,6 @@ namespace HashCalculator
 
         public static AppViewModel Instance;
         public event PropertyChangedEventHandler PropertyChanged;
-
-        public int FinishedInQueue
-        {
-            get
-            {
-                lock (changeQueueCountLock)
-                    return this.finishedNumberInQueue;
-            }
-            set
-            {
-                lock (changeQueueCountLock)
-                    this.finishedNumberInQueue = value;
-                this.OnPropertyChanged();
-            }
-        }
 
         public ObservableCollection<HashViewModel> HashViewModels { get; }
             = new ObservableCollection<HashViewModel>();
@@ -110,17 +94,14 @@ namespace HashCalculator
 
         public int TotalNumberInQueue
         {
-            get
-            {
-                lock (changeQueueCountLock)
-                    return this.totalNumberInQueue;
-            }
-            set
-            {
-                lock (changeQueueCountLock)
-                    this.totalNumberInQueue = value;
-                this.OnPropertyChanged();
-            }
+            get { return this.totalNumberInQueue; }
+            set { this.totalNumberInQueue = value; this.OnPropertyChanged(); }
+        }
+
+        public int FinishedInQueue
+        {
+            get { return this.finishedNumberInQueue; }
+            set { this.finishedNumberInQueue = value; this.OnPropertyChanged(); }
         }
 
         public AppViewModel()
@@ -141,33 +122,35 @@ namespace HashCalculator
             this.HashViewModels.Add(model);
         }
 
-        private void AfterQueueItemsCountChanges()
+        private void QueueItemCountChanged()
         {
-            lock (checkQueueCountLock)
-            {
-                if (this.TotalNumberInQueue > 0 && this.FinishedInQueue == 0 &&
-                    this.State != QueueState.Started)
-                {
-                    AppDispatcher.Invoke(() => { this.State = QueueState.Started; });
-                }
-                else if (this.TotalNumberInQueue > 0 &&
-                    this.FinishedInQueue == this.TotalNumberInQueue)
-                {
-                    AppDispatcher.Invoke(() =>
-                    {
-                        this.FinishedInQueue = this.TotalNumberInQueue = 0;
-                        this.State = QueueState.Stopped;
-                    });
-                }
 #if DEBUG
-                else if (this.FinishedInQueue < 0 || this.TotalNumberInQueue < 0)
-                {
-                    Console.WriteLine(
-                        $"[异常] 已完成任务：{this.FinishedInQueue}，总数：{this.TotalNumberInQueue}");
-                    throw new InvalidOperationException("已完成数和总数异常");
-                }
+            Console.WriteLine(
+                $"已完成任务：{this.FinishedInQueue}，"
+                + $"总数：{this.TotalNumberInQueue}");
 #endif
+            if (this.TotalNumberInQueue > 0 && this.FinishedInQueue == 0 &&
+                this.State != QueueState.Started)
+            {
+                AppDispatcher.Invoke(
+                    () => { this.State = QueueState.Started; });
             }
+            else if (this.TotalNumberInQueue > 0 &&
+                this.FinishedInQueue == this.TotalNumberInQueue)
+            {
+                AppDispatcher.Invoke(() =>
+                {
+                    this.FinishedInQueue = this.TotalNumberInQueue = 0;
+                    this.State = QueueState.Stopped;
+                });
+            }
+#if DEBUG
+            else if (this.FinishedInQueue < 0 || this.TotalNumberInQueue < 0)
+            {
+                Console.WriteLine("已完成数和总数异常");
+                throw new InvalidOperationException("已完成数和总数异常");
+            }
+#endif
         }
 
         private void CanbeStartSubscriber(HashViewModel model)
@@ -182,14 +165,6 @@ namespace HashCalculator
                 Console.WriteLine("当前队列已包含相同的元素");
             }
 #endif
-        }
-
-        private void DecreaseQueueTotal(int number)
-        {
-            if (number < 0)
-                number = 0;
-            this.TotalNumberInQueue -= number;
-            this.AfterQueueItemsCountChanges();
         }
 
         private void DisplayModels(IEnumerable<ModelArg> args, CancellationToken token)
@@ -231,20 +206,34 @@ namespace HashCalculator
             while (!token.IsCancellationRequested);
         }
 
-        private void IncreaseQueueFinished(int number)
+        private void DecreaseQueueTotal(int number)
         {
-            if (number < 0)
-                number = 0;
-            this.FinishedInQueue += number;
-            this.AfterQueueItemsCountChanges();
+            lock (changeQueueCountLock)
+            {
+                if (number < 0) number = 0;
+                this.TotalNumberInQueue -= number;
+                this.QueueItemCountChanged();
+            }
         }
 
         private void IncreaseQueueTotal(int number)
         {
-            if (number < 0)
-                number = 0;
-            this.TotalNumberInQueue += number;
-            this.AfterQueueItemsCountChanges();
+            lock (changeQueueCountLock)
+            {
+                if (number < 0) number = 0;
+                this.TotalNumberInQueue += number;
+                this.QueueItemCountChanged();
+            }
+        }
+
+        private void IncreaseQueueFinished(int number)
+        {
+            lock (changeQueueCountLock)
+            {
+                if (number < 0) number = 0;
+                this.FinishedInQueue += number;
+                this.QueueItemCountChanged();
+            }
         }
 
         private void OnPropertyChanged([CallerMemberName] string name = null)
