@@ -27,6 +27,7 @@
         <local:VisibCanceledCvt x:Key="VisibCanceledCvt" />
         <local:VisibTotalProgressCvt x:Key="VisibTotalProgressCvt" />
         <local:ButtonEnableCvt x:Key="ButtonEnableCvt" />
+        <local:ButtonNotEnableCvt x:Key="ButtonNotEnableCvt" />
         <local:NoColumnCvt x:Key="NoColumnCvt" />
         <local:PauseBtnImgsrcCvt x:Key="PauseBtnImgsrcCvt" />
         <local:PauseBtnTextCvt x:Key="PauseBtnTextCvt" />
@@ -513,6 +514,7 @@
                     Padding="16,4,16,4"
                     Click="Button_ContinueAllTask_Click"
                     Content="继续"
+                    IsEnabled="{Binding State, Converter={StaticResource ButtonNotEnableCvt}}"
                     ToolTip="继续全部已暂停的哈希值计算任务。" />
                 <Button
                     x:Name="uiButton_PauseAllTask"
@@ -521,6 +523,7 @@
                     Padding="16,4,16,4"
                     Click="Button_PauseAllTask_Click"
                     Content="暂停"
+                    IsEnabled="{Binding State, Converter={StaticResource ButtonNotEnableCvt}}"
                     ToolTip="暂停全部正在运行的哈希值计算任务。" />
                 <Button
                     x:Name="uiButton_CancelAllTask"
@@ -529,6 +532,7 @@
                     Padding="16,4,16,4"
                     Click="Button_CancelAllTask_Click"
                     Content="取消"
+                    IsEnabled="{Binding State, Converter={StaticResource ButtonNotEnableCvt}}"
                     ToolTip="取消全部排队中、运行中和已暂停的哈希值计算任务。" />
                 <Button
                     x:Name="uiButton_RefreshCopy"
