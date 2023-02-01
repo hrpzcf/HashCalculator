@@ -330,4 +330,33 @@ namespace HashCalculator
             throw new NotImplementedException();
         }
     }
+
+    internal class ProgressWidthCvt : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            AlgoType algoType = (AlgoType)value;
+            switch (algoType)
+            {
+                case AlgoType.SHA1:
+                    return 270D;
+                case AlgoType.SHA224:
+                    return 380D;
+                case AlgoType.SHA256:
+                    return 430D;
+                case AlgoType.SHA384:
+                    return 650D;
+                case AlgoType.SHA512:
+                    return 860D;
+                default:
+                case AlgoType.MD5:
+                    return 210D;
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

@@ -31,6 +31,7 @@
         <local:NoColumnCvt x:Key="NoColumnCvt" />
         <local:PauseBtnImgsrcCvt x:Key="PauseBtnImgsrcCvt" />
         <local:PauseBtnTextCvt x:Key="PauseBtnTextCvt" />
+        <local:ProgressWidthCvt x:Key="ProgressWidthCvt" />
         <Style
             x:Key="CellStyleNormal"
             TargetType="{x:Type DataGridCell}">
@@ -229,7 +230,7 @@
                         Header="文件名"
                         IsReadOnly="True" />
                     <DataGridTemplateColumn
-                        MinWidth="350"
+                        MinWidth="210"
                         Header="哈希值">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
@@ -260,7 +261,7 @@
                                     <!--  正在计算状态  -->
                                     <ProgressBar
                                         Grid.Column="1"
-                                        Width="280"
+                                        Width="{Binding HashName, Converter={StaticResource ProgressWidthCvt}}"
                                         Height="6"
                                         Margin="4"
                                         HorizontalAlignment="Left"
