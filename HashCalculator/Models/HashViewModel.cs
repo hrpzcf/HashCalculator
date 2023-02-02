@@ -66,7 +66,7 @@ namespace HashCalculator
         private static readonly Dispatcher AppDispatcher
             = Application.Current.Dispatcher;
         private readonly object manipulationLock = new object();
-        private readonly ManualResetEvent pauseEventHandle
+        private readonly ManualResetEvent pauseManualResetEvent
             = new ManualResetEvent(true);
         private readonly object cmpResultLock = new object();
 
@@ -165,9 +165,6 @@ namespace HashCalculator
             {
                 switch (value)
                 {
-                    case HashResult.NoResult:
-                        this.Hash = "没有计算结果...";
-                        break;
                     case HashResult.Canceled:
                         this.Hash = "任务已被取消...";
                         break;
@@ -293,7 +290,7 @@ namespace HashCalculator
                             if (readedSize <= 0) break;
                             AppDispatcher.Invoke(() => { this.Progress += readedSize; });
                             algoObject.TransformBlock(buffer, 0, readedSize, null, 0);
-                            this.pauseEventHandle.WaitOne();
+                            this.pauseManualResetEvent.WaitOne();
                         }
                         algoObject.TransformFinalBlock(buffer, 0, 0);
                         string hashStr = BitConverter.ToString(algoObject.Hash).Replace("-", "");
@@ -378,7 +375,7 @@ namespace HashCalculator
                         if (readedSize <= 0) break;
                         AppDispatcher.Invoke(() => { this.Progress += readedSize; });
                         algorithmHash.BlockUpdate(buffer, 0, readedSize);
-                        this.pauseEventHandle.WaitOne();
+                        this.pauseManualResetEvent.WaitOne();
                     }
                     int outLength = algorithmHash.DoFinal(buffer, 0);
                     string hashStr = BitConverter.ToString(buffer, 0, outLength).Replace("-", "");
@@ -422,11 +419,11 @@ namespace HashCalculator
 
         private void ResetHashViewModel()
         {
-            this.pauseEventHandle.Set();
+            this.pauseManualResetEvent.Set();
             this.DurationofTask = string.Empty;
-            this.State = HashState.Waiting;
-            this.Result = HashResult.NoResult;
             this.CmpResult = CmpRes.NoResult;
+            this.Result = HashResult.NoResult;
+            this.State = HashState.Waiting;
             this.Progress = this.ProgressTotal = 0;
             this.HashName = AlgoType.Unknown;
         }
@@ -453,7 +450,7 @@ namespace HashCalculator
         {
             if (this.State == HashState.Running)
             {
-                this.pauseEventHandle.Reset();
+                this.pauseManualResetEvent.Reset();
                 this.State = HashState.Paused;
                 return true;
             }
@@ -464,7 +461,7 @@ namespace HashCalculator
         {
             if (this.State == HashState.Paused)
             {
-                this.pauseEventHandle.Set();
+                this.pauseManualResetEvent.Set();
                 this.State = HashState.Running;
                 return true;
             }
@@ -496,7 +493,7 @@ namespace HashCalculator
             {
                 if (this.State == HashState.Finished)
                     return;
-                this.pauseEventHandle.Set();
+                this.pauseManualResetEvent.Set();
                 if (this.tokenSource != null &&
                     !this.tokenSource.IsCancellationRequested)
                     this.tokenSource.Cancel();
