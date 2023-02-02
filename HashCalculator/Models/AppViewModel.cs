@@ -129,14 +129,16 @@ namespace HashCalculator
                 $"已完成任务：{this.FinishedInQueue}，"
                 + $"总数：{this.TotalNumberInQueue}");
 #endif
-            if (this.TotalNumberInQueue > 0 && this.FinishedInQueue == 0 &&
-                this.State != QueueState.Started)
+            if (this.FinishedInQueue != this.TotalNumberInQueue
+                && this.State != QueueState.Started)
             {
-                AppDispatcher.Invoke(
-                    () => { this.State = QueueState.Started; });
+                AppDispatcher.Invoke(() =>
+                {
+                    this.State = QueueState.Started;
+                });
             }
-            else if (this.TotalNumberInQueue > 0 &&
-                this.FinishedInQueue == this.TotalNumberInQueue)
+            else if (this.FinishedInQueue == this.TotalNumberInQueue
+                && this.State != QueueState.Stopped)
             {
                 AppDispatcher.Invoke(() =>
                 {
@@ -144,13 +146,6 @@ namespace HashCalculator
                     this.State = QueueState.Stopped;
                 });
             }
-#if DEBUG
-            else if (this.FinishedInQueue < 0 || this.TotalNumberInQueue < 0)
-            {
-                Console.WriteLine("已完成数和总数异常");
-                throw new InvalidOperationException("已完成数和总数异常");
-            }
-#endif
         }
 
         private void CanbeStartSubscriber(HashViewModel model)
