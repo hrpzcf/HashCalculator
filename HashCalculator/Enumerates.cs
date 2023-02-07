@@ -102,7 +102,7 @@ namespace HashCalculator
     }
 
     /// <summary>
-    /// 同时计算多少个文件的哈希值，用于创建信号量
+    /// 同时计算多少个文件的哈希值
     /// </summary>
     [Serializable]
     internal enum SimCalc

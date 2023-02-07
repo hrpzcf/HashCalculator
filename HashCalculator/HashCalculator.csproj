@@ -74,7 +74,6 @@
     <Compile Include="Models\AppViewModel.cs" />
     <Compile Include="Converters.cs" />
     <Compile Include="Enumerates.cs" />
-    <Compile Include="Models\ComboBoxViewModel.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

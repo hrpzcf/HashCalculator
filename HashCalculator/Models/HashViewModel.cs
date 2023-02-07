@@ -209,7 +209,7 @@ namespace HashCalculator
             });
         }
 
-        public void ComputeHashValue()
+        public void ComputeManyHashValue()
         {
             long fileSize = 0L;
             HashAlgorithm algoObject;

@@ -113,7 +113,7 @@ namespace HashCalculator
             if (searchedPaths.Count == 0)
                 return;
             IEnumerable<ModelArg> modelArgs = searchedPaths.Select(s => new ModelArg(s));
-            this.appViewModel.CreateTaskDisplayHashViewModels(modelArgs);
+            this.appViewModel.DisplayHashViewModelsTask(modelArgs);
         }
 
         private void Button_ClearFileList_Click(object sender, RoutedEventArgs e)
@@ -274,7 +274,7 @@ namespace HashCalculator
                         MessageBoxImage.Information);
                     return;
                 }
-                this.appViewModel.CreateTaskDisplayHashViewModels(hashModelArgsList);
+                this.appViewModel.DisplayHashViewModelsTask(hashModelArgsList);
             }
             catch { return; }
         }
@@ -453,7 +453,7 @@ namespace HashCalculator
                 config.SavedDirPath = Path.GetDirectoryName(fileOpen.FileNames.ElementAt(0));
                 this.AcceptNewFilePathsLockButtons();
                 IEnumerable<ModelArg> modelArgs = fileOpen.FileNames.Select(s => new ModelArg(s));
-                this.appViewModel.CreateTaskDisplayHashViewModels(modelArgs);
+                this.appViewModel.DisplayHashViewModelsTask(modelArgs);
                 this.AcceptNewFilePathsReleaseButtons();
             }
         }
@@ -489,7 +489,7 @@ namespace HashCalculator
                 {
                     this.SearchUnderSpecifiedPolicy(folderOpen.FileNames, folderPaths);
                     IEnumerable<ModelArg> modelArgs = folderPaths.Select(s => new ModelArg(s));
-                    this.appViewModel.CreateTaskDisplayHashViewModels(modelArgs);
+                    this.appViewModel.DisplayHashViewModelsTask(modelArgs);
                     this.AcceptNewFilePathsReleaseButtons();
                 })
                 { IsBackground = true }.Start();

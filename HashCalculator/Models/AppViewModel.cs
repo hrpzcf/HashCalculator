@@ -190,15 +190,20 @@ namespace HashCalculator
 
         private void HashModelMonitor(object obj)
         {
-            HashViewModel model;
-            var token = (CancellationToken)obj;
-            do
+            HashViewModel m;
+            var ct = (CancellationToken)obj;
+            while (!ct.IsCancellationRequested)
             {
-                try { model = this.queue.Take(token); }
-                catch (OperationCanceledException) { break; }
-                model.ComputeHashValue();
+                try
+                {
+                    m = this.queue.Take(ct);
+                }
+                catch (OperationCanceledException)
+                {
+                    break;
+                }
+                m.ComputeManyHashValue();
             }
-            while (!token.IsCancellationRequested);
         }
 
         private void DecreaseQueueTotal(int number)
@@ -275,7 +280,7 @@ namespace HashCalculator
             this.HashViewModels.Clear();
         }
 
-        public void CreateTaskDisplayHashViewModels(IEnumerable<ModelArg> args)
+        public void DisplayHashViewModelsTask(IEnumerable<ModelArg> args)
         {
             lock (displayModelTaskLock)
             {
@@ -389,7 +394,7 @@ namespace HashCalculator
                     return;
                 List<ModelArg> args = this.droppedFiles;
                 this.droppedFiles = new List<ModelArg>();
-                this.CreateTaskDisplayHashViewModels(args);
+                this.DisplayHashViewModelsTask(args);
             }
         }
 
