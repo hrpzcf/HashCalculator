@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -14,27 +13,25 @@ namespace HashCalculator
 {
     internal class AppViewModel : INotifyPropertyChanged
     {
+        private readonly ModelStarter starter = new ModelStarter(8);
         private static readonly Dispatcher AppDispatcher
             = Application.Current.Dispatcher;
         private static readonly object serialNumberLock = new object();
-        private static TaskList queueCleaners;
-        private readonly DAddModelToTable addModelToTable;
-        private readonly BlockingCollection<HashViewModel> queue
-            = new BlockingCollection<HashViewModel>();
+        private delegate void ModelToTableDelegate(ModelArg arg);
+        private readonly ModelToTableDelegate modelToTable;
         private int currentSerialNumber = 0;
         private int finishedNumberInQueue = 0;
         private int totalNumberInQueue = 0;
         private CancellationTokenSource cancellation;
         private List<ModelArg> droppedFiles = new List<ModelArg>();
         private string hashCheckReport = string.Empty;
-        private bool noDurationColumn;
         private bool noExportColumn;
+        private bool noDurationColumn;
         private QueueState queueState = QueueState.None;
         private static readonly object changeQueueCountLock = new object();
         private static readonly object concurrentLock = new object();
         private static readonly object displayModelLock = new object();
         private static readonly object displayModelTaskLock = new object();
-        private delegate void DAddModelToTable(ModelArg arg);
 
         public static AppViewModel Instance;
         public event PropertyChangedEventHandler PropertyChanged;
@@ -106,18 +103,17 @@ namespace HashCalculator
 
         public AppViewModel()
         {
-            queueCleaners = new TaskList(8, this.HashModelMonitor);
-            this.addModelToTable = new DAddModelToTable(this.AddModelToTable);
+            this.modelToTable = new ModelToTableDelegate(this.ModelToTable);
             Instance = this;
         }
 
-        private void AddModelToTable(ModelArg arg)
+        private void ModelToTable(ModelArg arg)
         {
             int modelSerial = this.SerialGet();
             HashViewModel model = new HashViewModel(modelSerial, arg);
-            model.ModelCanbeStartEvent += this.CanbeStartSubscriber;
             model.ComputeFinishedEvent += this.IncreaseQueueFinished;
             model.WaitingModelCanceledEvent += this.DecreaseQueueTotal;
+            model.ModelCanbeStartedEvent += this.starter.PendingModel;
             model.StartupModel(false);
             this.HashViewModels.Add(model);
         }
@@ -148,20 +144,6 @@ namespace HashCalculator
             }
         }
 
-        private void CanbeStartSubscriber(HashViewModel model)
-        {
-            if (!this.queue.Contains(model))
-            {
-                this.queue.Add(model);
-            }
-#if DEBUG
-            else
-            {
-                Console.WriteLine("当前队列已包含相同的元素");
-            }
-#endif
-        }
-
         private void DisplayModels(IEnumerable<ModelArg> args, CancellationToken token)
         {
             int argsCount, remainingArgsCount;
@@ -179,31 +161,13 @@ namespace HashCalculator
                         break;
                     }
                     --remainingArgsCount;
-                    AppDispatcher.Invoke(this.addModelToTable, arg);
+                    AppDispatcher.Invoke(this.modelToTable, arg);
                     Thread.Sleep(1);
                 }
             }
 #if DEBUG
             Console.WriteLine($"已添加哈希模型：{argsCount - remainingArgsCount}");
 #endif
-        }
-
-        private void HashModelMonitor(object obj)
-        {
-            HashViewModel m;
-            var ct = (CancellationToken)obj;
-            while (!ct.IsCancellationRequested)
-            {
-                try
-                {
-                    m = this.queue.Take(ct);
-                }
-                catch (OperationCanceledException)
-                {
-                    break;
-                }
-                m.ComputeManyHashValue();
-            }
         }
 
         private void DecreaseQueueTotal(int number)
@@ -251,23 +215,23 @@ namespace HashCalculator
             lock (serialNumberLock) { this.currentSerialNumber = 0; }
         }
 
-        public static void SetConcurrent(SimCalc num)
+        public void SetConcurrent(SimCalc num)
         {
             lock (concurrentLock)
             {
                 switch (num)
                 {
                     case SimCalc.One:
-                        queueCleaners.Adjust(1);
+                        this.starter.Adjust(1);
                         break;
                     case SimCalc.Two:
-                        queueCleaners.Adjust(2);
+                        this.starter.Adjust(2);
                         break;
                     case SimCalc.Four:
-                        queueCleaners.Adjust(4);
+                        this.starter.Adjust(4);
                         break;
                     case SimCalc.Eight:
-                        queueCleaners.Adjust(8);
+                        this.starter.Adjust(8);
                         break;
                 }
             }
@@ -294,8 +258,10 @@ namespace HashCalculator
 
         public void GenerateVerificationReport()
         {
-            int noresult, unrelated, matched, mismatch, uncertain, succeeded, canceled, hasFailed;
-            noresult = unrelated = matched = mismatch = uncertain = succeeded = canceled = hasFailed = 0;
+            int noresult, unrelated, matched, mismatch,
+                uncertain, succeeded, canceled, hasFailed;
+            noresult = unrelated = matched = mismatch =
+                uncertain = succeeded = canceled = hasFailed = 0;
             foreach (HashViewModel hm in this.HashViewModels)
             {
                 switch (hm.CmpResult)

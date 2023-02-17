@@ -46,9 +46,9 @@ namespace HashCalculator
                 this.Width = config.MainWindowWidth;
                 this.Height = config.MainWindowHeight;
             }
+            this.appViewModel.SetConcurrent(config.TaskLimit);
             this.appViewModel.SetColumnVisibility(
                 config.NoExportColumn, config.NoDurationColumn);
-            AppViewModel.SetConcurrent(config.TaskLimit);
         }
 
         private void Window_MainWindow_Closing(object sender, CancelEventArgs e)

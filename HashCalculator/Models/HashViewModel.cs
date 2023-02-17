@@ -70,7 +70,7 @@ namespace HashCalculator
             = new ManualResetEvent(true);
         private readonly object cmpResultLock = new object();
 
-        public event Action<HashViewModel> ModelCanbeStartEvent;
+        public event Action<HashViewModel> ModelCanbeStartedEvent;
         public event Action<int> ComputeFinishedEvent;
         public event Action<int> WaitingModelCanceledEvent;
         public event PropertyChangedEventHandler PropertyChanged;
@@ -439,7 +439,7 @@ namespace HashCalculator
                 {
                     this.ResetHashViewModel();
                     this.PrepareToken();
-                    this.ModelCanbeStartEvent(this);
+                    this.ModelCanbeStartedEvent(this);
                     return true;
                 }
                 return false;

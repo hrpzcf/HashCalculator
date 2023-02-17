@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -94,114 +95,6 @@ namespace HashCalculator
         }
     }
 
-    internal class TaskKeeper
-    {
-        private CancellationTokenSource tks;
-        private Task task;
-        private readonly Action<object> callback;
-
-        public TaskKeeper(Action<object> callback)
-        {
-            this.callback = callback;
-        }
-
-        public void Reset()
-        {
-            if (this.tks != null && this.task != null)
-                return;
-            this.tks = new CancellationTokenSource();
-            this.task = Task.Factory.StartNew(this.callback, this.tks.Token,
-                this.tks.Token, TaskCreationOptions.LongRunning,
-                TaskScheduler.Default);
-        }
-
-        public void Cancel()
-        {
-            if (this.tks == null || this.task == null)
-                return;
-            this.tks.Cancel();
-            this.task.Wait();
-            this.tks.Dispose();
-            this.tks = null;
-            this.task = null;
-        }
-
-        public bool IsAlive()
-        {
-            return (this.tks != null && this.task != null);
-        }
-    }
-
-    internal class TaskList
-    {
-        private readonly TaskKeeper[] keepers;
-        private readonly int length;
-
-        public TaskList(int length, Action<object> act)
-        {
-            this.length = length < 1 ? 1 : length;
-            this.keepers = new TaskKeeper[length];
-            for (int i = 0; i < length; ++i)
-            {
-                this.keepers[i] = new TaskKeeper(act);
-            }
-#if DEBUG
-            Task.Run(this.KeepShowAliveTasksCount);
-#endif
-        }
-
-#if DEBUG
-        private void KeepShowAliveTasksCount()
-        {
-            while (true)
-            {
-                Console.WriteLine($"存活任务数：{this.Count}");
-                Thread.Sleep(1000);
-            }
-        }
-#endif
-
-        public void Adjust(int number)
-        {
-            if (number < 1 || number > this.length)
-                return;
-            int count = this.Count;
-            if (count < number)
-            {
-                int remaining = number - count;
-                foreach (TaskKeeper tk in this.keepers)
-                {
-                    if (!tk.IsAlive())
-                    {
-                        tk.Reset();
-                        --remaining;
-                    }
-                    if (remaining <= 0)
-                        break;
-                }
-            }
-            else if (count > number)
-            {
-                int remaining = count - number;
-                foreach (TaskKeeper tk in this.keepers)
-                {
-                    if (tk.IsAlive())
-                    {
-                        tk.Cancel();
-                        --remaining;
-                    }
-                    if (remaining <= 0)
-                        break;
-                }
-            }
-        }
-
-        public int Count
-        {
-            get { return this.keepers.Count(i => i.IsAlive()); }
-        }
-    }
-
     internal class UnitCvt
     {
         private const double kb = 1024D;
@@ -221,6 +114,147 @@ namespace HashCalculator
             if (bytesto >= 1)
                 return $"{bytesto:f1}KB";
             return $"{bytes}B";
+        }
+    }
+
+    internal class TaskKeeper
+    {
+        private CancellationTokenSource source;
+        private Task task;
+        private readonly Action<CancellationToken> process;
+
+        public TaskKeeper(Action<CancellationToken> process)
+        {
+            this.process = process;
+        }
+
+        public void Reset()
+        {
+            if (this.IsAlive())
+                return;
+            this.source = new CancellationTokenSource();
+            this.task = Task.Factory.StartNew(
+                () => { this.process(this.source.Token); },
+                this.source.Token,
+                TaskCreationOptions.LongRunning,
+                TaskScheduler.Default);
+        }
+
+        public void Cancel()
+        {
+            if (this.source == null || this.task == null)
+                return;
+            this.source.Cancel();
+            this.task.Wait();
+            this.source.Dispose();
+            this.task = null;
+            this.source = null;
+        }
+
+        public bool IsAlive()
+        {
+            return this.source != null && this.task != null;
+        }
+    }
+
+    internal class ModelStarter
+    {
+        private readonly int maxLength;
+        private readonly BlockingCollection<HashViewModel> queue
+            = new BlockingCollection<HashViewModel>();
+        private readonly TaskKeeper[] keepers;
+
+        public ModelStarter(int maxLength)
+        {
+            this.maxLength = maxLength < 1 ? 1 : maxLength;
+            this.keepers = new TaskKeeper[maxLength];
+            for (int i = 0; i < maxLength; ++i)
+            {
+                this.keepers[i] = new TaskKeeper(this.ModelWatcher);
+            }
+#if DEBUG
+            Task.Run(this.ShowAliveTasksCount);
+#endif
+        }
+
+#if DEBUG
+        private void ShowAliveTasksCount()
+        {
+            while (true)
+            {
+                Console.WriteLine($"存活任务数：{this.Count}");
+                Thread.Sleep(1000);
+            }
+        }
+#endif
+
+        public void Adjust(int number)
+        {
+            if (number < 1 || number > this.maxLength)
+                return;
+            int count = this.Count;
+            if (count < number)
+            {
+                int remaining = number - count;
+                foreach (TaskKeeper tk in this.keepers)
+                {
+                    if (!tk.IsAlive())
+                    {
+                        tk.Reset();
+                        --remaining;
+                    }
+                    if (remaining <= 0) break;
+                }
+            }
+            else if (count > number)
+            {
+                int remaining = count - number;
+                foreach (TaskKeeper tk in this.keepers)
+                {
+                    if (tk.IsAlive())
+                    {
+                        tk.Cancel();
+                        --remaining;
+                    }
+                    if (remaining <= 0) break;
+                }
+            }
+        }
+
+        private void ModelWatcher(CancellationToken ct)
+        {
+            HashViewModel m;
+            while (!ct.IsCancellationRequested)
+            {
+                try
+                {
+                    m = this.queue.Take(ct);
+                }
+                catch (OperationCanceledException)
+                {
+                    break;
+                }
+                m.ComputeManyHashValue();
+            }
+        }
+
+        public void PendingModel(HashViewModel model)
+        {
+            if (!this.queue.Contains(model))
+            {
+                this.queue.Add(model);
+            }
+#if DEBUG
+            else
+            {
+                Console.WriteLine("当前队列已包含相同的元素");
+            }
+#endif
+        }
+
+        public int Count
+        {
+            get { return this.keepers.Count(i => i.IsAlive()); }
         }
     }
 }

@@ -51,7 +51,7 @@ namespace HashCalculator
             config.NoDurationColumn = this.uiCHeckBox_NoDurationColumn.IsChecked ?? false;
             AppViewModel.Instance.RefreshCmpResultDisplayStyle();
             AppViewModel.Instance.SetColumnVisibility(config.NoExportColumn, config.NoDurationColumn);
-            Task.Run(() => { AppViewModel.SetConcurrent(config.TaskLimit); });
+            Task.Run(() => { AppViewModel.Instance.SetConcurrent(config.TaskLimit); });
         }
 
         private void Button_Cancel_Click(object sender, RoutedEventArgs e)
