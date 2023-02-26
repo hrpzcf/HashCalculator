@@ -5,8 +5,6 @@ VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HashCalculator", "HashCalculator\HashCalculator.csproj", "{16B60D29-4D81-4360-814C-1A0FFFF5D75B}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "HashCalculatorSetup", "HashCalculatorSetup\HashCalculatorSetup.vdproj", "{E9A03744-472E-412D-BD05-D81FB8817103}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,8 +15,6 @@ Global
 		{16B60D29-4D81-4360-814C-1A0FFFF5D75B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{16B60D29-4D81-4360-814C-1A0FFFF5D75B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{16B60D29-4D81-4360-814C-1A0FFFF5D75B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E9A03744-472E-412D-BD05-D81FB8817103}.Debug|Any CPU.ActiveCfg = Debug
-		{E9A03744-472E-412D-BD05-D81FB8817103}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
