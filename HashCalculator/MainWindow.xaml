@@ -134,6 +134,8 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <Menu
                 VerticalAlignment="Center"
@@ -174,9 +176,26 @@
                 <ComboBoxItem Content="SHA512" />
                 <ComboBoxItem Content="MD5" />
             </ComboBox>
+            <TextBlock
+                Grid.Column="4"
+                VerticalAlignment="Center"
+                Text="输出方式：" />
+            <ComboBox
+                x:Name="uiComboBox_OutputFormat"
+                Grid.Column="5"
+                Width="100"
+                Margin="0,0,16,0"
+                Padding="6,3,6,3"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                SelectedIndex="0">
+                <ComboBoxItem Content="BASE64" />
+                <ComboBoxItem Content="十六进制大写" />
+                <ComboBoxItem Content="十六进制小写" />
+            </ComboBox>
             <Button
                 x:Name="uiButton_SelectFoldersToHash"
-                Grid.Column="4"
+                Grid.Column="6"
                 Margin="0,0,16,0"
                 Padding="12,1,12,1"
                 Click="Button_SelectFoldersToHash_Click"
@@ -184,7 +203,7 @@
                 ToolTip="也可以将文件和文件夹直接拖放到下方表格中。" />
             <Button
                 x:Name="uiButton_SelectFilesToHash"
-                Grid.Column="5"
+                Grid.Column="7"
                 Padding="12,1,12,1"
                 Click="Button_SelectFilesToHash_Click"
                 Content="选择文件"
@@ -228,6 +247,12 @@
                         Binding="{Binding Name}"
                         CellStyle="{StaticResource CellStyleFileName}"
                         Header="文件名"
+                        IsReadOnly="True" />
+                    <DataGridTextColumn
+                        MinWidth="120"
+                        Binding="{Binding FileSize}"
+                        CellStyle="{StaticResource CellStyleFileName}"
+                        Header="文件体积 (字节)"
                         IsReadOnly="True" />
                     <DataGridTemplateColumn
                         MinWidth="210"

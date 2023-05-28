@@ -66,26 +66,20 @@
                         <ComboBoxItem Content="不搜索该文件夹" />
                     </ComboBox>
                 </Grid>
-                <CheckBox
-                    x:Name="uiCheckBox_UseLowercaseHash"
-                    Grid.Row="3"
-                    Margin="0,0,0,4"
-                    Padding="4,0,0,0"
-                    Click="CheckBoxes_ActivateApplyButton_Click"
-                    Content="计算所得哈希值使用小写字母形式" />
                 <Grid
                     Grid.Row="4"
                     Margin="0,0,0,4">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="126.322" />
+                        <ColumnDefinition Width="41.678"/>
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <TextBlock
                         VerticalAlignment="Center"
-                        Text="同时计算多少个文件的哈希值：" />
+                        Text="同时计算多少个文件的哈希值：" Grid.ColumnSpan="2" />
                     <ComboBox
                         x:Name="uiComboBox_SimulCalculate"
-                        Grid.Column="1"
+                        Grid.Column="2"
                         SelectedIndex="2">
                         <ComboBoxItem Content="1 个 - 大多数文件很大" />
                         <ComboBoxItem Content="2 个 - 大多数文件较大" />

@@ -127,4 +127,13 @@ namespace HashCalculator
         MD5,
         Unknown = -1,
     }
+
+    [Serializable]
+    internal enum OutputType
+    {
+        BASE64,
+        BinaryUpper,
+        BinaryLower,
+        Unknown = -1,
+    }
 }

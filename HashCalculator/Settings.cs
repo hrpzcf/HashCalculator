@@ -98,6 +98,8 @@ namespace HashCalculator
 
         public AlgoType SelectedAlgo { get; set; }
 
+        public OutputType SelectedOutputType { get; set; }
+
         public bool MainWindowTopmost { get; set; }
 
         public double MainWindowWidth { get { return this.mainWindowWidth; } set { this.mainWindowWidth = value; } }
@@ -108,7 +110,6 @@ namespace HashCalculator
 
         public SearchPolicy QuickVerificationSearchPolicy { get; set; }
 
-        public bool UseLowercaseHash { get; set; }
 
         public bool RemMainWindowPosition { get; set; }
 

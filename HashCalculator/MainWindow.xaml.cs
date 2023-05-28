@@ -34,8 +34,11 @@ namespace HashCalculator
             this.Topmost = config.MainWindowTopmost;
             this.uiCheckBox_WindowTopMost.IsChecked = config.MainWindowTopmost;
             this.uiComboBox_HashAlgorithm.SelectedIndex = (int)config.SelectedAlgo;
+            this.uiComboBox_OutputFormat.SelectedIndex = (int)config.SelectedOutputType;
             this.uiComboBox_HashAlgorithm.SelectionChanged +=
                 this.ComboBox_HashAlgorithm_SelectionChanged;
+            this.uiComboBox_OutputFormat.SelectionChanged += 
+                this.UiComboBox_OutputFormat_SelectionChanged;
             if (config.RemMainWindowPosition)
             {
                 this.Top = config.MainWindowTop;
@@ -49,6 +52,12 @@ namespace HashCalculator
             this.appViewModel.SetConcurrent(config.TaskLimit);
             this.appViewModel.SetColumnVisibility(
                 config.NoExportColumn, config.NoDurationColumn);
+        }
+
+        private void UiComboBox_OutputFormat_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            lock (Locks.OutTypeSelectionLock)
+                Settings.Current.SelectedOutputType = (OutputType)this.uiComboBox_OutputFormat.SelectedIndex;
         }
 
         private void Window_MainWindow_Closing(object sender, CancelEventArgs e)
