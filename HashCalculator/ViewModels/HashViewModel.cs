@@ -47,7 +47,7 @@ namespace HashCalculator
         #region properties for binding
 
         private string _hashValue = "正在排队...";
-        private string _fileSize = "";
+        private long _fileSize = 0L;
         private bool _exportHash = false;
         private CmpRes _cmpResult = CmpRes.NoResult;
         private HashState _currentState = HashState.Waiting;
@@ -120,7 +120,7 @@ namespace HashCalculator
             set { this._hashValue = value; this.OnPropertyChanged(); }
         }
 
-        public string FileSize
+        public long FileSize
         {
             get { return this._fileSize; }
             set { this._fileSize = value; this.OnPropertyChanged(); }
@@ -313,13 +313,13 @@ namespace HashCalculator
                             case OutputType.BASE64:
                                 hashStr = Convert.ToBase64String(algoObject.Hash);
                                 break;
-
                         }
 
-                        AppDispatcher.Invoke(() => {
+                        AppDispatcher.Invoke(() =>
+                        {
                             this.Export = true;
                             this.Hash = hashStr;
-                            this.FileSize = fs.Length.ToString();
+                            this.FileSize = fs.Length;
                         });
 
                         if (this.expectedHash != null)
@@ -415,13 +415,13 @@ namespace HashCalculator
                         case OutputType.BASE64:
                             hashStr = Convert.ToBase64String(buffer, 0, outLength);
                             break;
-
                     }
 
-                    AppDispatcher.Invoke(() => {
-                        this.Export = true; 
+                    AppDispatcher.Invoke(() =>
+                    {
+                        this.Export = true;
                         this.Hash = hashStr;
-                        this.FileSize = fs.Length.ToString();
+                        this.FileSize = fs.Length;
                     });
 
                     if (this.expectedHash != null)
