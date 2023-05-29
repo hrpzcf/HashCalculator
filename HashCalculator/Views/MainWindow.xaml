@@ -298,11 +298,17 @@
                         Header="运行时长(秒)"
                         IsReadOnly="True"
                         Visibility="{Binding DataContext.NoDurationColumn, Converter={StaticResource NoColumnCvt}, Source={x:Reference dummyElement}}" />
-                    <DataGridCheckBoxColumn
-                        MinWidth="50"
-                        Binding="{Binding Export}"
+                    <DataGridTemplateColumn
                         Header="导出"
-                        Visibility="{Binding DataContext.NoExportColumn, Converter={StaticResource NoColumnCvt}, Source={x:Reference dummyElement}}" />
+                        Visibility="{Binding DataContext.NoExportColumn, Converter={StaticResource NoColumnCvt}, Source={x:Reference dummyElement}}">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox
+                                    HorizontalAlignment="Center"
+                                    IsChecked="{Binding Export, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                     <DataGridTemplateColumn
                         MinWidth="60"
                         Header="校验结果">
