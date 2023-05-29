@@ -10,6 +10,7 @@ namespace HashCalculator
     internal static class Locks
     {
         public static readonly object AlgoSelectionLock = new object();
+        public static readonly object OutTypeSelectionLock = new object();
     }
 
     /// <summary>

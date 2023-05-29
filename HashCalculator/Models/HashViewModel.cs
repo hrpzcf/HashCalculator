@@ -47,6 +47,7 @@ namespace HashCalculator
         #region properties for binding
 
         private string _hashValue = "正在排队...";
+        private string _fileSize = "";
         private bool _exportHash = false;
         private CmpRes _cmpResult = CmpRes.NoResult;
         private HashState _currentState = HashState.Waiting;
@@ -117,6 +118,12 @@ namespace HashCalculator
         {
             get { return this._hashValue; }
             set { this._hashValue = value; this.OnPropertyChanged(); }
+        }
+
+        public string FileSize
+        {
+            get { return this._fileSize; }
+            set { this._fileSize = value; this.OnPropertyChanged(); }
         }
 
         public AlgoType HashName
@@ -293,11 +300,28 @@ namespace HashCalculator
                             this.pauseManualResetEvent.WaitOne();
                         }
                         algoObject.TransformFinalBlock(buffer, 0, 0);
-                        string hashStr = BitConverter.ToString(algoObject.Hash).Replace("-", "");
-                        if (Settings.Current.UseLowercaseHash)
-                            hashStr = hashStr.ToLower();
-                        AppDispatcher.Invoke(
-                            () => { this.Export = true; this.Hash = hashStr; });
+                        string hashStr = "";
+
+                        switch (Settings.Current.SelectedOutputType)
+                        {
+                            case OutputType.BinaryUpper:
+                                hashStr = BitConverter.ToString(algoObject.Hash).Replace("-", "");
+                                break;
+                            case OutputType.BinaryLower:
+                                hashStr = BitConverter.ToString(algoObject.Hash).Replace("-", "").ToLower();
+                                break;
+                            case OutputType.BASE64:
+                                hashStr = Convert.ToBase64String(algoObject.Hash);
+                                break;
+
+                        }
+
+                        AppDispatcher.Invoke(() => {
+                            this.Export = true;
+                            this.Hash = hashStr;
+                            this.FileSize = fs.Length.ToString();
+                        });
+
                         if (this.expectedHash != null)
                         {
                             CmpRes result;
@@ -378,10 +402,28 @@ namespace HashCalculator
                         this.pauseManualResetEvent.WaitOne();
                     }
                     int outLength = algorithmHash.DoFinal(buffer, 0);
-                    string hashStr = BitConverter.ToString(buffer, 0, outLength).Replace("-", "");
-                    if (Settings.Current.UseLowercaseHash)
-                        hashStr = hashStr.ToLower();
-                    AppDispatcher.Invoke(() => { this.Export = true; this.Hash = hashStr; });
+                    string hashStr = "";
+
+                    switch (Settings.Current.SelectedOutputType)
+                    {
+                        case OutputType.BinaryUpper:
+                            hashStr = BitConverter.ToString(buffer, 0, outLength).Replace("-", "");
+                            break;
+                        case OutputType.BinaryLower:
+                            hashStr = BitConverter.ToString(buffer, 0, outLength).Replace("-", "").ToLower();
+                            break;
+                        case OutputType.BASE64:
+                            hashStr = Convert.ToBase64String(buffer, 0, outLength);
+                            break;
+
+                    }
+
+                    AppDispatcher.Invoke(() => {
+                        this.Export = true; 
+                        this.Hash = hashStr;
+                        this.FileSize = fs.Length.ToString();
+                    });
+
                     if (this.expectedHash != null)
                     {
                         CmpRes result;

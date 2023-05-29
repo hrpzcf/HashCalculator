@@ -22,7 +22,6 @@ namespace HashCalculator
         {
             this.uiCheckBox_RembMainSize.IsChecked = config.RembMainWindowSize;
             this.uiComboBox_SearchPolicy1.SelectedIndex = (int)config.DroppedSearchPolicy;
-            this.uiCheckBox_UseLowercaseHash.IsChecked = config.UseLowercaseHash;
             this.uiCheckBox_RemMainWinPos.IsChecked = config.RemMainWindowPosition;
             this.uiComboBox_SimulCalculate.SelectedIndex = (int)config.TaskLimit;
             this.uiComboBox_SearchPolicy2.SelectedIndex = (int)config.QuickVerificationSearchPolicy;
@@ -41,7 +40,6 @@ namespace HashCalculator
             Configure config = Settings.Current;
             config.RembMainWindowSize = this.uiCheckBox_RembMainSize.IsChecked ?? false;
             config.DroppedSearchPolicy = (SearchPolicy)this.uiComboBox_SearchPolicy1.SelectedIndex;
-            config.UseLowercaseHash = this.uiCheckBox_UseLowercaseHash.IsChecked ?? false;
             config.RemMainWindowPosition = this.uiCheckBox_RemMainWinPos.IsChecked ?? false;
             config.TaskLimit = (SimCalc)this.uiComboBox_SimulCalculate.SelectedIndex;
             config.QuickVerificationSearchPolicy = (SearchPolicy)this.uiComboBox_SearchPolicy2.SelectedIndex;
