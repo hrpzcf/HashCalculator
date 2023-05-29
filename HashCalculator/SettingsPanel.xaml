@@ -70,13 +70,12 @@
                     Grid.Row="4"
                     Margin="0,0,0,4">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="126.322" />
-                        <ColumnDefinition Width="41.678"/>
+                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <TextBlock
                         VerticalAlignment="Center"
-                        Text="同时计算多少个文件的哈希值：" Grid.ColumnSpan="2" />
+                        Text="同时计算多少个文件的哈希值：" />
                     <ComboBox
                         x:Name="uiComboBox_SimulCalculate"
                         Grid.Column="2"
