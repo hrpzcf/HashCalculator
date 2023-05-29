@@ -28,7 +28,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
@@ -43,15 +43,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BouncyCastle.Cryptography">
-      <HintPath>Asmbs\BouncyCastle.Cryptography.dll</HintPath>
+      <HintPath>Assembly\BouncyCastle.Cryptography.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.WindowsAPICodePack">
-      <HintPath>Asmbs\Microsoft.WindowsAPICodePack.dll</HintPath>
+      <HintPath>Assembly\Microsoft.WindowsAPICodePack.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.WindowsAPICodePack.Shell">
-      <HintPath>Asmbs\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
+      <HintPath>Assembly\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -71,44 +71,53 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppLoading.cs" />
-    <Compile Include="Models\AppViewModel.cs" />
-    <Compile Include="Converters.cs" />
-    <Compile Include="Enumerates.cs" />
-    <Compile Include="SettingsPanel.xaml.cs">
+    <Compile Include="ViewModels\AppViewModel.cs" />
+    <Compile Include="Others\Converters.cs" />
+    <Compile Include="Others\Enumerates.cs" />
+    <Compile Include="Views\SettingsPanel.xaml.cs">
       <DependentUpon>SettingsPanel.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Structurs.cs" />
-    <Compile Include="UsingHelp.xaml.cs">
-      <DependentUpon>UsingHelp.xaml</DependentUpon>
+    <Compile Include="Others\Structurs.cs" />
+    <Compile Include="Views\UsingHelpWnd.xaml.cs">
+      <DependentUpon>UsingHelpWnd.xaml</DependentUpon>
     </Compile>
-    <Page Include="MainWindow.xaml">
+    <Page Include="Resources\DataGridCellStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\ConverterResource.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\DataGridRowStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="CommonUtils.cs" />
+    <Compile Include="Others\Common.cs" />
     <Compile Include="Info.cs" />
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="SettingsPanel.xaml">
+    <Page Include="Views\SettingsPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UsingHelp.xaml">
+    <Page Include="Views\UsingHelpWnd.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Settings.cs" />
-    <Compile Include="Models\HashViewModel.cs" />
+    <Compile Include="ViewModels\HashViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\icon.png" />
@@ -117,11 +126,11 @@
     <Resource Include="Images\icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Pages\UsingHelp.html" />
+    <Resource Include="HtmlFiles\UsingHelp.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Asmbs\Microsoft.WindowsAPICodePack.dll" />
-    <EmbeddedResource Include="Asmbs\Microsoft.WindowsAPICodePack.Shell.dll" />
+    <EmbeddedResource Include="Assembly\Microsoft.WindowsAPICodePack.dll" />
+    <EmbeddedResource Include="Assembly\Microsoft.WindowsAPICodePack.Shell.dll" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\information.png" />
@@ -144,7 +153,10 @@
     <Resource Include="Images\refresh.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Asmbs\BouncyCastle.Cryptography.dll" />
+    <EmbeddedResource Include="Assembly\BouncyCastle.Cryptography.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Globals\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

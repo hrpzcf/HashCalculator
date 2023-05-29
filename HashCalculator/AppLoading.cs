@@ -6,8 +6,52 @@ using System.Windows.Threading;
 
 namespace HashCalculator
 {
-    internal class AppLoading : Application
+    public partial class AppLoading : Application
     {
+        [STAThread()]
+        public static void Main()
+        {
+            AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
+            AppLoading app = new AppLoading();
+            app.Exit += ApplicationExit;
+            app.Startup += ApplicationStartup;
+            app.RunApplication();
+        }
+
+        private static Assembly AssemblyResolve(object sender, ResolveEventArgs arg)
+        {
+            string asmbName = new AssemblyName(arg.Name).Name;
+            if (!(asmbName == "BouncyCastle.Cryptography" ||
+                asmbName == "Microsoft.WindowsAPICodePack") ||
+                asmbName == "Microsoft.WindowsAPICodePack.Shell")
+                return default;
+            Assembly asmb = Assembly.GetExecutingAssembly();
+            string resName = "HashCalculator.Assembly." + asmbName + ".dll";
+            if (!(asmb.GetManifestResourceStream(resName) is Stream stream))
+                return default;
+            byte[] assemblyData = new byte[stream.Length];
+            stream.Read(assemblyData, 0, assemblyData.Length);
+            stream.Close();
+            return Assembly.Load(assemblyData);
+        }
+
+        private static void ApplicationExit(object sender, ExitEventArgs e)
+        {
+
+        }
+
+        private static void ApplicationStartup(object sender, StartupEventArgs e)
+        {
+
+        }
+
+        private void RunApplication()
+        {
+            //this.DispatcherUnhandledException += this.UnhandledException;
+            this.StartupUri = new Uri("Views/MainWindow.xaml", UriKind.Relative);
+            this.Run();
+        }
+
         private void UnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             string excContent;
@@ -18,38 +62,6 @@ namespace HashCalculator
                 excContent = "意外的异常，可打开帮助页面末尾链接向开发者反馈";
             e.Handled = true;
             MessageBox.Show($"{excContent}：\n{e.Exception.Message}", "错误");
-        }
-
-        private void RunApplicationAfterInitialized()
-        {
-            //this.DispatcherUnhandledException += this.UnhandledException;
-            this.StartupUri = new Uri("MainWindow.xaml", UriKind.Relative);
-            this.Run();
-        }
-
-        private static Assembly ApplicationAssemblyResolve(object sender, ResolveEventArgs arg)
-        {
-            string asmbName = new AssemblyName(arg.Name).Name;
-            if (!(asmbName == "BouncyCastle.Cryptography" ||
-                asmbName == "Microsoft.WindowsAPICodePack.Shell" ||
-                asmbName == "Microsoft.WindowsAPICodePack"))
-                return default;
-            Assembly asmb = Assembly.GetExecutingAssembly();
-            string resName = "HashCalculator.Asmbs." + asmbName + ".dll";
-            if (!(asmb.GetManifestResourceStream(resName) is Stream stream))
-                return default;
-            byte[] assemblyData = new byte[stream.Length];
-            stream.Read(assemblyData, 0, assemblyData.Length);
-            stream.Close();
-            return Assembly.Load(assemblyData);
-        }
-
-        [STAThread()]
-        public static void Main()
-        {
-            AppDomain.CurrentDomain.AssemblyResolve += ApplicationAssemblyResolve;
-            AppLoading app = new AppLoading();
-            app.RunApplicationAfterInitialized();
         }
     }
 }

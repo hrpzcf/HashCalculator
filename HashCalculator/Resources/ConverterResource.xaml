@@ -1,0 +1,23 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:HashCalculator">
+    <local:AlgoTypeBgCvt x:Key="AlgoTypeBgCvt" />
+    <local:AlgoTypeNameCvt x:Key="AlgoTypeNameCvt" />
+    <local:CmpResFgCvt x:Key="CmpResFgCvt" />
+    <local:CmpResBgCvt x:Key="CmpResBgCvt" />
+    <local:CmpResTextCvt x:Key="CmpResTextCvt" />
+    <local:CmpResBorderCvt x:Key="CmpResBorderCvt" />
+    <local:VisibRunningCvt x:Key="VisibRunningCvt" />
+    <local:VisibNotCalcCvt x:Key="VisibNotCalcCvt" />
+    <local:VisibWaitingCvt x:Key="VisibWaitingCvt" />
+    <local:VisibSucceededCvt x:Key="VisibSucceededCvt" />
+    <local:VisibCanceledCvt x:Key="VisibCanceledCvt" />
+    <local:VisibTotalProgressCvt x:Key="VisibTotalProgressCvt" />
+    <local:ButtonEnableCvt x:Key="ButtonEnableCvt" />
+    <local:ButtonNotEnableCvt x:Key="ButtonNotEnableCvt" />
+    <local:NoColumnCvt x:Key="NoColumnCvt" />
+    <local:PauseBtnImgsrcCvt x:Key="PauseBtnImgsrcCvt" />
+    <local:PauseBtnTextCvt x:Key="PauseBtnTextCvt" />
+    <local:ProgressWidthCvt x:Key="ProgressWidthCvt" />
+</ResourceDictionary>

@@ -14,112 +14,13 @@
     SnapsToDevicePixels="True"
     mc:Ignorable="d">
     <Window.Resources>
-        <local:AlgoTypeBgCvt x:Key="AlgoTypeBgCvt" />
-        <local:AlgoTypeNameCvt x:Key="AlgoTypeNameCvt" />
-        <local:CmpResFgCvt x:Key="CmpResFgCvt" />
-        <local:CmpResBgCvt x:Key="CmpResBgCvt" />
-        <local:CmpResTextCvt x:Key="CmpResTextCvt" />
-        <local:CmpResBorderCvt x:Key="CmpResBorderCvt" />
-        <local:VisibRunningCvt x:Key="VisibRunningCvt" />
-        <local:VisibNotCalcCvt x:Key="VisibNotCalcCvt" />
-        <local:VisibWaitingCvt x:Key="VisibWaitingCvt" />
-        <local:VisibSucceededCvt x:Key="VisibSucceededCvt" />
-        <local:VisibCanceledCvt x:Key="VisibCanceledCvt" />
-        <local:VisibTotalProgressCvt x:Key="VisibTotalProgressCvt" />
-        <local:ButtonEnableCvt x:Key="ButtonEnableCvt" />
-        <local:ButtonNotEnableCvt x:Key="ButtonNotEnableCvt" />
-        <local:NoColumnCvt x:Key="NoColumnCvt" />
-        <local:PauseBtnImgsrcCvt x:Key="PauseBtnImgsrcCvt" />
-        <local:PauseBtnTextCvt x:Key="PauseBtnTextCvt" />
-        <local:ProgressWidthCvt x:Key="ProgressWidthCvt" />
-        <Style
-            x:Key="CellStyleNormal"
-            TargetType="{x:Type DataGridCell}">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type DataGridCell}">
-                        <Border
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            SnapsToDevicePixels="True">
-                            <ContentPresenter
-                                VerticalAlignment="Center"
-                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsSelected" Value="True">
-                    <Setter Property="Foreground" Value="Black" />
-                    <Setter Property="Background" Value="Transparent" />
-                    <Setter Property="BorderBrush" Value="Transparent" />
-                </Trigger>
-                <Trigger Property="IsKeyboardFocusWithin" Value="True">
-                    <Setter Property="Background" Value="#5000A6FF" />
-                    <Setter Property="BorderBrush" Value="Transparent" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-        <Style
-            x:Key="CellStyleFileName"
-            BasedOn="{StaticResource CellStyleNormal}"
-            TargetType="{x:Type DataGridCell}">
-            <Setter Property="ToolTip" Value="{Binding Path}" />
-            <Setter Property="ToolTipService.BetweenShowDelay" Value="0" />
-            <Setter Property="ToolTipService.InitialShowDelay" Value="0" />
-            <Setter Property="ToolTipService.ShowDuration" Value="6000" />
-        </Style>
-        <Style
-            x:Key="RowStyleNormal"
-            TargetType="{x:Type DataGridRow}">
-            <Setter Property="SnapsToDevicePixels" Value="true" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type DataGridRow}">
-                        <Border
-                            x:Name="DGR_Border"
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            SnapsToDevicePixels="True">
-                            <SelectiveScrollingGrid>
-                                <SelectiveScrollingGrid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                </SelectiveScrollingGrid.ColumnDefinitions>
-                                <SelectiveScrollingGrid.RowDefinitions>
-                                    <RowDefinition Height="*" />
-                                    <RowDefinition Height="Auto" />
-                                </SelectiveScrollingGrid.RowDefinitions>
-                                <DataGridCellsPresenter
-                                    Grid.Column="1"
-                                    ItemsPanel="{TemplateBinding ItemsPanel}"
-                                    SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-                                <DataGridDetailsPresenter
-                                    Grid.Row="1"
-                                    Grid.Column="1"
-                                    SelectiveScrollingGrid.SelectiveScrollingOrientation="{Binding AreRowDetailsFrozen, ConverterParameter={x:Static SelectiveScrollingOrientation.Vertical}, Converter={x:Static DataGrid.RowDetailsScrollingConverter}, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
-                                    Visibility="{TemplateBinding DetailsVisibility}" />
-                                <DataGridRowHeader
-                                    Grid.RowSpan="2"
-                                    SelectiveScrollingGrid.SelectiveScrollingOrientation="Vertical"
-                                    Visibility="{Binding HeadersVisibility, ConverterParameter={x:Static DataGridHeadersVisibility.Row}, Converter={x:Static DataGrid.HeadersVisibilityConverter}, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" />
-                            </SelectiveScrollingGrid>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsSelected" Value="True">
-                    <Setter Property="Background" Value="#64FFFF00" />
-                </Trigger>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#64FFFF00" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/ConverterResource.xaml" />
+                <ResourceDictionary Source="/Resources/DataGridCellStyles.xaml" />
+                <ResourceDictionary Source="/Resources/DataGridRowStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Window.Resources>
     <Grid Margin="4,4,4,0">
         <Grid.RowDefinitions>
