@@ -22,8 +22,8 @@ namespace HashCalculator
         {
             string asmbName = new AssemblyName(arg.Name).Name;
             if (!(asmbName == "BouncyCastle.Cryptography" ||
-                asmbName == "Microsoft.WindowsAPICodePack") ||
-                asmbName == "Microsoft.WindowsAPICodePack.Shell")
+                asmbName == "Microsoft.WindowsAPICodePack" ||
+                asmbName == "Microsoft.WindowsAPICodePack.Shell"))
                 return default;
             Assembly asmb = Assembly.GetExecutingAssembly();
             string resName = "HashCalculator.Assembly." + asmbName + ".dll";
