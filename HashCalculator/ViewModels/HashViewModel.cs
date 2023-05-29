@@ -98,8 +98,21 @@ namespace HashCalculator
 
         public bool Export
         {
-            get { return this._exportHash; }
-            set { this._exportHash = value; this.OnPropertyChanged(); }
+            get
+            {
+                lock (Locks.ExportActionLock)
+                {
+                    return this._exportHash;
+                }
+            }
+            set
+            {
+                lock (Locks.ExportActionLock)
+                {
+                    this._exportHash = value;
+                    this.OnPropertyChanged();
+                }
+            }
         }
 
         /// <summary>
