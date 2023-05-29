@@ -25,10 +25,6 @@
                 <Setter Property="Background" Value="Transparent" />
                 <Setter Property="BorderBrush" Value="Transparent" />
             </Trigger>
-            <Trigger Property="IsKeyboardFocusWithin" Value="True">
-                <Setter Property="Background" Value="#5000A6FF" />
-                <Setter Property="BorderBrush" Value="Transparent" />
-            </Trigger>
         </Style.Triggers>
     </Style>
     <Style

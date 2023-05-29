@@ -150,7 +150,6 @@
                         Header="文件名"
                         IsReadOnly="True" />
                     <DataGridTextColumn
-                        MinWidth="120"
                         Binding="{Binding FileSize}"
                         CellStyle="{StaticResource CellStyleFileName}"
                         Header="文件体积 (字节)"
@@ -197,7 +196,7 @@
                                         Value="{Binding Progress}" />
                                     <Button
                                         Grid.Column="2"
-                                        Padding="3,3,3,3"
+                                        Padding="4"
                                         Background="Transparent"
                                         BorderBrush="Transparent"
                                         BorderThickness="0"
@@ -212,7 +211,7 @@
                                     </Button>
                                     <Button
                                         Grid.Column="3"
-                                        Padding="3,3,3,3"
+                                        Padding="4"
                                         Background="Transparent"
                                         BorderBrush="Transparent"
                                         BorderThickness="0"
@@ -228,7 +227,7 @@
                                     <!--  正排队  -->
                                     <Button
                                         Grid.Column="3"
-                                        Padding="3,3,3,3"
+                                        Padding="4"
                                         Background="Transparent"
                                         BorderBrush="Transparent"
                                         BorderThickness="0"
@@ -244,7 +243,7 @@
                                     <!--  已成功  -->
                                     <Button
                                         Grid.Column="2"
-                                        Padding="3,3,3,3"
+                                        Padding="4"
                                         Background="Transparent"
                                         BorderBrush="Transparent"
                                         BorderThickness="0"
@@ -259,7 +258,7 @@
                                     </Button>
                                     <Button
                                         Grid.Column="3"
-                                        Padding="3,3,3,3"
+                                        Padding="4"
                                         Background="Transparent"
                                         BorderBrush="Transparent"
                                         BorderThickness="0"
@@ -275,7 +274,7 @@
                                     <!--  已取消  -->
                                     <Button
                                         Grid.Column="3"
-                                        Padding="3,3,3,3"
+                                        Padding="4"
                                         Background="Transparent"
                                         BorderBrush="Transparent"
                                         BorderThickness="0"

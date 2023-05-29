@@ -133,7 +133,6 @@
     <EmbeddedResource Include="Assembly\Microsoft.WindowsAPICodePack.Shell.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\information.png" />
     <Resource Include="Images\start.png" />
     <Resource Include="Images\stop.png" />
   </ItemGroup>

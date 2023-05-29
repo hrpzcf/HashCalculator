@@ -43,10 +43,10 @@
         </Setter>
         <Style.Triggers>
             <Trigger Property="IsSelected" Value="True">
-                <Setter Property="Background" Value="#64FFFF00" />
+                <Setter Property="Background" Value="#32FFFF00" />
             </Trigger>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="#64FFFF00" />
+                <Setter Property="Background" Value="#32FFFF00" />
             </Trigger>
         </Style.Triggers>
     </Style>
