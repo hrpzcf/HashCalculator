@@ -16,6 +16,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/ImageButtonStyles.xaml" />
                 <ResourceDictionary Source="/Resources/ConverterResource.xaml" />
                 <ResourceDictionary Source="/Resources/DataGridCellStyles.xaml" />
                 <ResourceDictionary Source="/Resources/DataGridRowStyles.xaml" />
@@ -197,13 +198,9 @@
                                     <Button
                                         Grid.Column="2"
                                         Padding="4"
-                                        Background="Transparent"
-                                        BorderBrush="Transparent"
-                                        BorderThickness="0"
                                         Click="Button_CancelHashModel_Click"
+                                        Style="{StaticResource ImageButtonStyle}"
                                         ToolTip="停止..."
-                                        ToolTipService.BetweenShowDelay="0"
-                                        ToolTipService.InitialShowDelay="0"
                                         Visibility="{Binding State, Converter={StaticResource VisibRunningCvt}}">
                                         <Image
                                             Source="/Images/stop.png"
@@ -212,13 +209,9 @@
                                     <Button
                                         Grid.Column="3"
                                         Padding="4"
-                                        Background="Transparent"
-                                        BorderBrush="Transparent"
-                                        BorderThickness="0"
                                         Click="Button_PauseHashModel_Click"
+                                        Style="{StaticResource ImageButtonStyle}"
                                         ToolTip="{Binding State, Converter={StaticResource PauseBtnTextCvt}}"
-                                        ToolTipService.BetweenShowDelay="0"
-                                        ToolTipService.InitialShowDelay="0"
                                         Visibility="{Binding State, Converter={StaticResource VisibRunningCvt}}">
                                         <Image
                                             Source="{Binding State, Converter={StaticResource PauseBtnImgsrcCvt}}"
@@ -228,13 +221,9 @@
                                     <Button
                                         Grid.Column="3"
                                         Padding="4"
-                                        Background="Transparent"
-                                        BorderBrush="Transparent"
-                                        BorderThickness="0"
                                         Click="Button_CancelHashModel_Click"
+                                        Style="{StaticResource ImageButtonStyle}"
                                         ToolTip="取消..."
-                                        ToolTipService.BetweenShowDelay="0"
-                                        ToolTipService.InitialShowDelay="0"
                                         Visibility="{Binding State, Converter={StaticResource VisibWaitingCvt}}">
                                         <Image
                                             Source="/Images/cancel.png"
@@ -244,13 +233,9 @@
                                     <Button
                                         Grid.Column="2"
                                         Padding="4"
-                                        Background="Transparent"
-                                        BorderBrush="Transparent"
-                                        BorderThickness="0"
                                         Click="Button_RestartHashModel_CLick"
+                                        Style="{StaticResource ImageButtonStyle}"
                                         ToolTip="刷新..."
-                                        ToolTipService.BetweenShowDelay="0"
-                                        ToolTipService.InitialShowDelay="0"
                                         Visibility="{Binding Result, Converter={StaticResource VisibSucceededCvt}}">
                                         <Image
                                             Source="/Images/refresh.png"
@@ -259,13 +244,9 @@
                                     <Button
                                         Grid.Column="3"
                                         Padding="4"
-                                        Background="Transparent"
-                                        BorderBrush="Transparent"
-                                        BorderThickness="0"
                                         Click="Button_CopyHashValue_Click"
+                                        Style="{StaticResource ImageButtonStyle}"
                                         ToolTip="复制..."
-                                        ToolTipService.BetweenShowDelay="0"
-                                        ToolTipService.InitialShowDelay="0"
                                         Visibility="{Binding Result, Converter={StaticResource VisibSucceededCvt}}">
                                         <Image
                                             Source="/Images/copy.png"
@@ -275,13 +256,9 @@
                                     <Button
                                         Grid.Column="3"
                                         Padding="4"
-                                        Background="Transparent"
-                                        BorderBrush="Transparent"
-                                        BorderThickness="0"
                                         Click="Button_RestartHashModel_CLick"
+                                        Style="{StaticResource ImageButtonStyle}"
                                         ToolTip="开始..."
-                                        ToolTipService.BetweenShowDelay="0"
-                                        ToolTipService.InitialShowDelay="0"
                                         Visibility="{Binding Result, Converter={StaticResource VisibCanceledCvt}}">
                                         <Image
                                             Source="/Images/start.png"

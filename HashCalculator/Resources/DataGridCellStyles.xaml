@@ -25,6 +25,9 @@
                 <Setter Property="Background" Value="Transparent" />
                 <Setter Property="BorderBrush" Value="Transparent" />
             </Trigger>
+            <Trigger Property="IsFocused" Value="True">
+                <Setter Property="BorderBrush" Value="Transparent"/>
+            </Trigger>
         </Style.Triggers>
     </Style>
     <Style
