@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
     <meta charset="UTF-8">
     <title>使用帮助</title>
@@ -8,8 +7,7 @@
         body {
             font-size: 14px;
             font-family: 'Microsoft YaHei UI';
-            color: #333;
-            background-color: snow;
+            color: #303030;
         }
 
         .title {
@@ -102,14 +100,14 @@
                 <div class="title2">批量计算文件哈希值</div>
                 <ol class="ordered">
                     <li><span class="steps">可选步骤：</span>在右上角的&quot;算法&quot;下拉选择框中选择您要计算的哈希值类型。</li>
-                    <li><span class="steps">必选步骤：</span>选定要计算哈希值的文件。将多个文件或文件夹拖入主界面的表格中，或者点击右上角&quot;选择文件&quot;按钮选择文件。
+                    <li>
+                        <span class="steps">必选步骤：</span>选定要计算哈希值的文件。将多个文件或文件夹拖入主界面的表格中，或者点击右上角&quot;选择文件&quot;按钮选择文件。
                     </li>
                     <li>
-                        <span
-                            class="steps">等待结果：</span>上一个步骤选择的文件会被自动添加到主界面的表格中等待被计算，计算完成后会在表格的&quot;哈希值&quot;列中显示计算的哈希值类型和结果。
+                        <span class="steps">等待结果：</span>上一个步骤选择的文件会被自动添加到主界面的表格中等待被计算，计算完成后会在表格的&quot;哈希值&quot;列中显示计算的哈希值类型和结果。
                     </li>
-                    <li><span
-                            class="steps">可选步骤：</span>点击&quot;导出结果&quot;按钮。完成全部文件的计算后，此按钮变为可用状态，点击后会弹出储存位置选择对话框，选择合适位置保存即可，表格中&quot;导出&quot;列被勾选的行的哈希值和文件名都将被导出到文本文件中。
+                    <li>
+                        <span class="steps">可选步骤：</span>点击&quot;导出结果&quot;按钮。完成全部文件的计算后，此按钮变为可用状态，点击后会弹出储存位置选择对话框，选择合适位置保存即可，表格中&quot;导出&quot;列被勾选的行的哈希值和文件名都将被导出到文本文件中。
                     </li>
                     <li>
                         <span>
@@ -118,26 +116,26 @@
                         </span>
                         <ul>
                             <li>
-                                <span
-                                    class="steps">对于单个文件：</span>复制网页上公布的哈希值，粘贴到本程序的&quot;校验依据&quot;输入框中，然后点击后面的&quot;校验&quot;按钮，表格中的&quot;校验结果列&quot;将会显示代表校验结果的颜色。
+                                <span class="steps">对于单个文件：</span>复制网页上公布的哈希值，粘贴到本程序的&quot;校验依据&quot;输入框中，然后点击后面的&quot;校验&quot;按钮，表格中的&quot;校验结果列&quot;将会显示代表校验结果的颜色。
                             </li>
                             <li>
-                                <span
-                                    class="steps">对于多个文件：</span>文件的发布者一般会随着文件发布一个包含文件哈希值和文件名的文本文件，点击&quot;校验依据&quot;后的&quot;...&quot;按钮，选择该哈希值文件，或将该哈希值文件直接拖入&quot;校验依据&quot;输入框，然后点击后面的&quot;校验&quot;按钮，表格中的&quot;校验结果列&quot;将会显示代表校验结果的颜色。更快速的多个文件校验方法：<a
-                                    href="#quick">快速批量校验文件哈希值</a>。
+                                <span class="steps">对于多个文件：</span>文件的发布者一般会随着文件发布一个包含文件哈希值和文件名的文本文件，点击&quot;校验依据&quot;后的&quot;...&quot;按钮，选择该哈希值文件，或将该哈希值文件直接拖入&quot;校验依据&quot;输入框，然后点击后面的&quot;校验&quot;按钮，表格中的&quot;校验结果列&quot;将会显示代表校验结果的颜色。更快速的多个文件校验方法：<a href="#quick">快速批量校验文件哈希值</a>。
                             </li>
                             <li>
                                 <span id="importance" class="notice">请注意！！！</span>
                                 该包含&quot;文件哈希值-文件名&quot;的文本文件内容必须是通用排版格式，即每行都是
-                                <span class="code">6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b
-                                    *文件名</span>
+                                <span class="code">
+                                    6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b
+                                    *文件名
+                                </span>
                                 这样的形式，否则本程序将无法解析该哈希值文件的内容并完成校验。其中哈希值不区分大小写，星号可有可无。
                             </li>
                         </ul>
                     <li>
                         <span class="steps">&quot;校验结果&quot;列显示的颜色的含义</span>
                         <ul>
-                            <li>校验结果显示<span class="result green"></span>色：该文件的哈希值与&quot;校验依据&quot;中的哈希值一致。
+                            <li>
+                                校验结果显示<span class="result green"></span>色：该文件的哈希值与&quot;校验依据&quot;中的哈希值一致。
                             </li>
                             <li>
                                 校验结果显示<span class="result red"></span>色：该文件的哈希值与&quot;校验依据&quot;中的哈希值不一致。
@@ -146,14 +144,14 @@
                                 校验结果显示<span class="result gray"></span>色：该文件与&quot;校验依据&quot;没有关联。
                             </li>
                             <li>
-                                校验结果显示<span
-                                    class="result black"></span>色：程序未能确认被校验文件的哈希值是否与校验依据中对应文件名指示的哈希值是否匹配。出现此结果的原因是校验依据文件中含有相同的文件名，且这些相同文件名指示的哈希值不一样。
+                                校验结果显示<span class="result black"></span>色：程序未能确认被校验文件的哈希值是否与校验依据中对应文件名指示的哈希值是否匹配。出现此结果的原因是校验依据文件中含有相同的文件名，且这些相同文件名指示的哈希值不一样。
                             </li>
                             <li>校验结果没有显示颜色：该行文件的哈希值结果还没有执行过校验操作。</li>
                         </ul>
                     </li>
-                    <li><span id="read_report"
-                            class="notice">查看校验报告：</span>完成文件的哈希值计算后或者点击&quot;校验&quot;按钮后，将鼠标悬停在任意一行的&quot;校验结果&quot;列上，就会显示本次校验结果的汇总报告。
+                    <li>
+                        <span id="read_report"
+                              class="notice">查看校验报告：</span>完成文件的哈希值计算后或者点击&quot;校验&quot;按钮后，将鼠标悬停在任意一行的&quot;校验结果&quot;列上，就会显示本次校验结果的汇总报告。
                     </li>
                 </ol>
                 <div class="tianchong"></div>
@@ -162,12 +160,15 @@
                 <div>
                     <div id="quick" class="title2">快速批量校验文件哈希值</div>
                 </div>
-                <span>当你需要批量校验已下载的一批文件的哈希值时，如果这些文件的发布者提供了包含这些文件哈希值的文本文件(下称 sums 文件)，且该哈希值文件是通用格式（参考以上<a
-                        href="#importance">请注意！！！</a>处的描述）的文本文件，则可以使用此功能。使用此功能需要保证面板为空，如果表格有内容，可以通过&quot;清空面板&quot;按钮清空表格。</span>
+                <span>
+                    当你需要批量校验已下载的一批文件的哈希值时，如果这些文件的发布者提供了包含这些文件哈希值的文本文件(下称 sums 文件)，且该哈希值文件是通用格式（参考以上<a href="#importance">请注意！！！</a>处的描述）的文本文件，则可以使用此功能。使用此功能需要保证面板为空，如果表格有内容，可以通过&quot;清空面板&quot;按钮清空表格。
+                </span>
                 <ol>
                     <li><span class="steps">可选步骤：</span>在右上角的&quot;算法&quot;下拉选择框中选择您要计算的哈希值类型。</li>
-                    <li><span class="steps">必选步骤：</span>将 sums 拖入&quot;校验依据&quot;输入框中，或者点击输入框后的&quot;...&quot;按钮选择
-                        sums 文件，然后点击&quot;校验&quot;按钮，程序会自动在 sums 文件同一目录下查找相应要被校验哈希值的文件，然后显示在表格中并完成计算、显示校验结果。</li>
+                    <li>
+                        <span class="steps">必选步骤：</span>将 sums 拖入&quot;校验依据&quot;输入框中，或者点击输入框后的&quot;...&quot;按钮选择
+                        sums 文件，然后点击&quot;校验&quot;按钮，程序会自动在 sums 文件同一目录下查找相应要被校验哈希值的文件，然后显示在表格中并完成计算、显示校验结果。
+                    </li>
                     <li><span class="notice">查看校验报告：</span>参考<a href="#read_report">查看校验报告</a>处的查看方法描述。</li>
                 </ol>
             </li>
@@ -180,32 +181,35 @@
                 <ol>
                     <li><span class="steps">菜单栏的&quot;设置&quot;菜单：</span>打开程序设置界面。</li>
                     <li><span class="steps">菜单栏的&quot;帮助&quot;菜单：</span>打开此帮助界面。</li>
-                    <li><span
-                            class="steps">菜单栏的&quot;窗口置顶&quot;复选框：</span>勾选则使程序窗口保持在其他窗口的上方，即使已经切换到其他程序，本程序窗口也不会被其他窗口遮挡。
+                    <li>
+                        <span class="steps">菜单栏的&quot;窗口置顶&quot;复选框：</span>勾选则使程序窗口保持在其他窗口的上方，即使已经切换到其他程序，本程序窗口也不会被其他窗口遮挡。
                     </li>
                     <li><span class="steps">菜单栏的&quot;算法&quot;下拉选择框：</span>要计算文件的哈希值类型。</li>
                     <li><span class="steps">菜单栏的&quot;选择文件夹&quot;按钮：</span>选择要被计算哈希值的一批文件所在的文件夹。</li>
                     <li><span class="steps">菜单栏的&quot;选择文件&quot;按钮：</span>选择要被计算哈希值的文件。</li>
                     <li><span class="steps">主界面下方的&quot;校验依据&quot;输入框：</span>用于输入要校验的哈希值或者 hashsums 文件的路径。</li>
-                    <li><span class="steps">主界面下方的&quot;...&quot;按钮：</span>选择 hashsums 文件并将路径显示在&quot;校验依据&quot;输入框。
+                    <li>
+                        <span class="steps">主界面下方的&quot;...&quot;按钮：</span>选择 hashsums 文件并将路径显示在&quot;校验依据&quot;输入框。
                     </li>
-                    <li><span class="steps">主界面下方的&quot;校验&quot;按钮：</span>以&quot;校验依据&quot;输入框的哈希值或 sums
-                        文件内的哈希值为准，与表格中的文件计算出来的哈希值对比并将结果显示在表格的&quot;校验结果&quot;列。</li>
-                    <li><span
-                            class="steps">主界面左下方的&quot;完成进度&quot;进度条：</span>正在计算文件哈希值时才会显示，表示已选择的所有文件的哈希值计算完成进度，此进度是以文件数为单位。
+                    <li>
+                        <span class="steps">主界面下方的&quot;校验&quot;按钮：</span>以&quot;校验依据&quot;输入框的哈希值或 sums
+                        文件内的哈希值为准，与表格中的文件计算出来的哈希值对比并将结果显示在表格的&quot;校验结果&quot;列。
+                    </li>
+                    <li>
+                        <span class="steps">主界面左下方的&quot;完成进度&quot;进度条：</span>正在计算文件哈希值时才会显示，表示已选择的所有文件的哈希值计算完成进度，此进度是以文件数为单位。
                     </li>
                     <li><span class="steps">主界面下方的&quot;清空面板&quot;按钮：</span>将表格中的所有计算结果清空。</li>
-                    <li><span
-                            class="steps">主界面下方的&quot;导出结果&quot;按钮：</span>将表格中所有&quot;导出&quot;列已勾选的行的哈希值和文件名导出为一个通用格式的文本文件。
+                    <li>
+                        <span class="steps">主界面下方的&quot;导出结果&quot;按钮：</span>将表格中所有&quot;导出&quot;列已勾选的行的哈希值和文件名导出为一个通用格式的文本文件。
                     </li>
-                    <li><span
-                            class="steps">主界面下方的&quot;取消任务&quot;按钮：</span>立即取消所有已添加到表格中的哈希值计算任务并停止向表格增加剩下的任务，已完成的任务不受影响。
+                    <li>
+                        <span class="steps">主界面下方的&quot;取消任务&quot;按钮：</span>立即取消所有已添加到表格中的哈希值计算任务并停止向表格增加剩下的任务，已完成的任务不受影响。
                     </li>
-                    <li><span
-                            class="steps">主界面下方的&quot;新行重算&quot;按钮：</span>以&quot;算法&quot;下拉选择框选择的算法为准，计算表格中所有文件的哈希值，但不清除原来的计算结果，而是增加新的行来显示结果。这对于需要对同一个文件计算多个类型的哈希值时很有用。
+                    <li>
+                        <span class="steps">主界面下方的&quot;新行重算&quot;按钮：</span>以&quot;算法&quot;下拉选择框选择的算法为准，计算表格中所有文件的哈希值，但不清除原来的计算结果，而是增加新的行来显示结果。这对于需要对同一个文件计算多个类型的哈希值时很有用。
                     </li>
-                    <li><span
-                            class="steps">主界面下方的&quot;原地重算&quot;按钮：</span>以&quot;算法&quot;下拉选择框选择的算法为准，清空表格内容并重新计算表格中所有文件的哈希值。
+                    <li>
+                        <span class="steps">主界面下方的&quot;原地重算&quot;按钮：</span>以&quot;算法&quot;下拉选择框选择的算法为准，清空表格内容并重新计算表格中所有文件的哈希值。
                     </li>
                 </ol>
                 <div class="tianchong"></div>
@@ -223,8 +227,8 @@
                             <li><span class="steps">不搜索该文件夹：</span>如果拖入面板的对象是个文件夹，则略过该拖入的文件夹。</li>
                         </ul>
                     </li>
-                    <li><span
-                            class="steps">计算所得哈希值使用小写字母形式：</span>主界面表格中的&quot;哈希值&quot;列显示的哈希值字母使用小写形式，否则使用大写形式（大小写不影响校验功能）。
+                    <li>
+                        <span class="steps">计算所得哈希值使用小写字母形式：</span>主界面表格中的&quot;哈希值&quot;列显示的哈希值字母使用小写形式，否则使用大写形式（大小写不影响校验功能）。
                     </li>
                     <li>
                         <span class="steps">同时计算多少个文件的哈希值：</span>选择合适的选项可以加快文件哈希值的计算速度，这里的&quot;大小&quot;是相对于硬盘的读取速度来说的。
@@ -252,17 +256,28 @@
         <div class="title">可能出现的异常的含义</div>
         <ul class="outter_ul">
             <li><span class="steps">复制哈希值时弹出窗口显示&quot;复制哈希值失败&quot;：</span>点击复制按钮过快或者偶发复制失败。</li>
-            <li><span class="steps">弹窗显示&quot;意外的异常，可打开帮助页面末尾链接向开发者反馈&quot;：</span>程序意料之外的异常，可以到
+            <li>
+                <span class="steps">弹窗显示&quot;意外的异常，可打开帮助页面末尾链接向开发者反馈&quot;：</span>程序意料之外的异常，可以到
                 <a href="https://gitee.com/hrpzcf/HashCalculator/issues" target="_blank">Gitee Issues</a> 或
                 <a href="https://github.com/hrpzcf/HashCalculator/issues" target="_blank">GitHub Issues</a> 或
                 <a href="https://www.52pojie.cn/thread-1671702-1-1.html" target="_blank">吾爱破解论坛</a> 向开发者反馈问题（需要登录）。
             </li>
-            <li><span class="steps">在依据所在文件夹中找不到依据中列出的文件：</span>请确认依据文件 sums 是否与要被计算哈希值的文件在同一个文件夹。如果要被计算哈希值的文件在比 sums
-                更深层的文件夹中，则请打开&quot;设置&quot;，检查&quot;当使用快速校验时&quot;是否选择了&quot;搜索依据所在目录的所有子文件&quot;选项。</li>
+            <li>
+                <span class="steps">在依据所在文件夹中找不到依据中列出的文件：</span>请确认依据文件 sums 是否与要被计算哈希值的文件在同一个文件夹。如果要被计算哈希值的文件在比 sums
+                更深层的文件夹中，则请打开&quot;设置&quot;，检查&quot;当使用快速校验时&quot;是否选择了&quot;搜索依据所在目录的所有子文件&quot;选项。
+            </li>
             <li><span class="steps">要计算哈希值的文件不存在或无法访问：</span>可能因为用户权限原因无法访问该要被计算哈希值的文件。</li>
             <li><span class="steps">读取要被计算哈希值的文件失败或计算出错：</span>打开要被计算哈希值的文件失败，或者计算该文件哈希值的过程中出现不可预料的错误。</li>
         </ul>
+        <div class="title">源代码贡献者（感谢所有贡献者）</div>
+        <ul>
+            <li>
+                <a href="https://github.com/hrpzcf" target="_blank">hrpzcf</a>
+            </li>
+            <li>
+                <a href="https://github.com/lujiaxing" target="_blank">lujiaxing 阿星～</a>
+            </li>
+        </ul>
     </div>
 </body>
-
 </html>
