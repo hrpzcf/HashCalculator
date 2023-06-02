@@ -11,10 +11,10 @@ namespace HashCalculator
         [STAThread()]
         public static void Main()
         {
-            AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
             AppLoading app = new AppLoading();
             app.Exit += ApplicationExit;
             app.Startup += ApplicationStartup;
+            AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
             app.RunApplication();
         }
 
@@ -37,17 +37,17 @@ namespace HashCalculator
 
         private static void ApplicationExit(object sender, ExitEventArgs e)
         {
-
+            Settings.SaveSettings();
         }
 
         private static void ApplicationStartup(object sender, StartupEventArgs e)
         {
-
+            Settings.LoadSettings();
         }
 
         private void RunApplication()
         {
-            //this.DispatcherUnhandledException += this.UnhandledException;
+            this.DispatcherUnhandledException += this.UnhandledException;
             this.StartupUri = new Uri("Views/MainWindow.xaml", UriKind.Relative);
             this.Run();
         }

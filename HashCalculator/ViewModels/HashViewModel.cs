@@ -66,10 +66,10 @@ namespace HashCalculator
         private const int blockSize = 2097152;
         private static readonly Dispatcher AppDispatcher
             = Application.Current.Dispatcher;
-        private readonly object manipulationLock = new object();
         private readonly ManualResetEvent pauseManualResetEvent
             = new ManualResetEvent(true);
         private readonly object cmpResultLock = new object();
+        private readonly object manipulationLock = new object();
 
         public event Action<HashViewModel> ModelCanbeStartedEvent;
         public event Action<int> ComputeFinishedEvent;
@@ -100,14 +100,14 @@ namespace HashCalculator
         {
             get
             {
-                lock (Locks.ExportActionLock)
+                lock (Locks.ExportOptionsLock)
                 {
                     return this._exportHash;
                 }
             }
             set
             {
-                lock (Locks.ExportActionLock)
+                lock (Locks.ExportOptionsLock)
                 {
                     this._exportHash = value;
                     this.OnPropertyChanged();
@@ -313,8 +313,7 @@ namespace HashCalculator
                             this.pauseManualResetEvent.WaitOne();
                         }
                         algoObject.TransformFinalBlock(buffer, 0, 0);
-                        string hashStr = "";
-
+                        string hashStr = string.Empty;
                         switch (Settings.Current.SelectedOutputType)
                         {
                             case OutputType.BinaryUpper:
@@ -327,14 +326,12 @@ namespace HashCalculator
                                 hashStr = Convert.ToBase64String(algoObject.Hash);
                                 break;
                         }
-
                         AppDispatcher.Invoke(() =>
                         {
                             this.Export = true;
                             this.Hash = hashStr;
                             this.FileSize = fs.Length;
                         });
-
                         if (this.expectedHash != null)
                         {
                             CmpRes result;
@@ -402,7 +399,7 @@ namespace HashCalculator
                         this.ProgressTotal = fileSize = fs.Length;
                     });
                     int readedSize = 0;
-                    Sha224Digest algorithmHash = new Sha224Digest();
+                    Sha224Digest algoObject = new Sha224Digest();
                     byte[] buffer = new byte[blockSize];
                     while (true)
                     {
@@ -411,12 +408,11 @@ namespace HashCalculator
                         readedSize = fs.Read(buffer, 0, blockSize);
                         if (readedSize <= 0) break;
                         AppDispatcher.Invoke(() => { this.Progress += readedSize; });
-                        algorithmHash.BlockUpdate(buffer, 0, readedSize);
+                        algoObject.BlockUpdate(buffer, 0, readedSize);
                         this.pauseManualResetEvent.WaitOne();
                     }
-                    int outLength = algorithmHash.DoFinal(buffer, 0);
-                    string hashStr = "";
-
+                    int outLength = algoObject.DoFinal(buffer, 0);
+                    string hashStr = string.Empty;
                     switch (Settings.Current.SelectedOutputType)
                     {
                         case OutputType.BinaryUpper:
@@ -429,14 +425,12 @@ namespace HashCalculator
                             hashStr = Convert.ToBase64String(buffer, 0, outLength);
                             break;
                     }
-
                     AppDispatcher.Invoke(() =>
                     {
                         this.Export = true;
                         this.Hash = hashStr;
                         this.FileSize = fs.Length;
                     });
-
                     if (this.expectedHash != null)
                     {
                         CmpRes result;

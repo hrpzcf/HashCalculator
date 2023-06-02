@@ -71,13 +71,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppLoading.cs" />
-    <Compile Include="ViewModels\AppViewModel.cs" />
+    <Compile Include="Globals\Settings.cs" />
+    <Compile Include="Others\BaseNotifiable.cs" />
+    <Compile Include="Others\ComboBoxItem.cs" />
+    <Compile Include="Others\RelayCommand.cs" />
+    <Compile Include="ViewModels\MainWndViewModel.cs" />
     <Compile Include="Others\Converters.cs" />
     <Compile Include="Others\Enumerates.cs" />
+    <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="Views\SettingsPanel.xaml.cs">
       <DependentUpon>SettingsPanel.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Others\Structurs.cs" />
+    <Compile Include="Others\ModelArg.cs" />
     <Compile Include="Views\UsingHelpWnd.xaml.cs">
       <DependentUpon>UsingHelpWnd.xaml</DependentUpon>
     </Compile>
@@ -117,7 +122,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Settings.cs" />
     <Compile Include="ViewModels\HashViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -158,8 +162,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Assembly\BouncyCastle.Cryptography.dll" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Globals\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

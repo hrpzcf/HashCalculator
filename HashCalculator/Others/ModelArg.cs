@@ -1,9 +1,9 @@
 ﻿namespace HashCalculator
 {
     /// <summary>
-    /// HashViewModel 的构造函数的参数，用于包装零散参数
+    /// HashViewModel 的构造函数的参数，用于打包零散参数
     /// </summary>
-    internal struct ModelArg
+    internal class ModelArg
     {
         public string filepath;
         public string expected;
@@ -17,7 +17,7 @@
         }
 
         /// <summary>
-        /// 约定：h 为空字符串则表示无法确定是否匹配
+        /// 约定：hash 为空字符串则表示无法确定是否匹配
         /// </summary>
         /// <param name="hash"></param>
         /// <param name="path"></param>

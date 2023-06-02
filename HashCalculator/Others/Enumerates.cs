@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace HashCalculator
+﻿namespace HashCalculator
 {
     /// <summary>
     /// 哈希计算任务模型的运行状态
@@ -44,7 +42,7 @@ namespace HashCalculator
     }
 
     /// <summary>
-    /// 哈希值计算队列任务的完成状态，用于 AppViewModel 类
+    /// 哈希值计算队列任务的完成状态，用于 MainWndViewModel 类
     /// </summary>
     internal enum QueueState
     {
@@ -93,8 +91,7 @@ namespace HashCalculator
     /// <summary>
     /// 对文件夹的搜索策略
     /// </summary>
-    [Serializable]
-    internal enum SearchPolicy
+    public enum SearchPolicy
     {
         Children,
         Descendants,
@@ -102,10 +99,9 @@ namespace HashCalculator
     }
 
     /// <summary>
-    /// 同时计算多少个文件的哈希值
+    /// 任务数量限制（同时计算多少个文件的哈希值）
     /// </summary>
-    [Serializable]
-    internal enum SimCalc
+    public enum TaskNum
     {
         One,
         Two,
@@ -114,10 +110,9 @@ namespace HashCalculator
     }
 
     /// <summary>
-    /// 哈希算法类型，Unknown 是创建 HashModule 实例时的默认值
+    /// 哈希算法类型，Unknown 是创建 HashViewModel 实例时的默认值
     /// </summary>
-    [Serializable]
-    internal enum AlgoType
+    public enum AlgoType
     {
         SHA256,
         SHA1,
@@ -128,8 +123,7 @@ namespace HashCalculator
         Unknown = -1,
     }
 
-    [Serializable]
-    internal enum OutputType
+    public enum OutputType
     {
         BASE64,
         BinaryUpper,

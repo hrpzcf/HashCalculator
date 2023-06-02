@@ -11,7 +11,7 @@ namespace HashCalculator
     {
         public static readonly object AlgoSelectionLock = new object();
         public static readonly object OutTypeSelectionLock = new object();
-        public static readonly object ExportActionLock = new object();
+        public static readonly object ExportOptionsLock = new object();
     }
 
     /// <summary>

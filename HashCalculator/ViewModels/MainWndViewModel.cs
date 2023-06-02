@@ -11,7 +11,7 @@ using System.Windows.Threading;
 
 namespace HashCalculator
 {
-    internal class AppViewModel : INotifyPropertyChanged
+    internal class MainWndViewModel : INotifyPropertyChanged
     {
         private readonly ModelStarter starter = new ModelStarter(8);
         private static readonly Dispatcher AppDispatcher
@@ -25,31 +25,17 @@ namespace HashCalculator
         private CancellationTokenSource cancellation;
         private List<ModelArg> droppedFiles = new List<ModelArg>();
         private string hashCheckReport = string.Empty;
-        private bool noExportColumn;
-        private bool noDurationColumn;
         private QueueState queueState = QueueState.None;
         private static readonly object changeQueueCountLock = new object();
         private static readonly object concurrentLock = new object();
         private static readonly object displayModelLock = new object();
         private static readonly object displayModelTaskLock = new object();
 
-        public static AppViewModel Instance;
+        public static MainWndViewModel Instance;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public ObservableCollection<HashViewModel> HashViewModels { get; }
             = new ObservableCollection<HashViewModel>();
-
-        public bool NoDurationColumn
-        {
-            get { return this.noDurationColumn; }
-            set { this.noDurationColumn = value; this.OnPropertyChanged(); }
-        }
-
-        public bool NoExportColumn
-        {
-            get { return this.noExportColumn; }
-            set { this.noExportColumn = value; this.OnPropertyChanged(); }
-        }
 
         public string Report
         {
@@ -61,9 +47,13 @@ namespace HashCalculator
             get
             {
                 if (this.hashCheckReport == string.Empty)
+                {
                     return "暂无校验报告...";
+                }
                 else
+                {
                     return this.hashCheckReport;
+                }
             }
         }
 
@@ -101,10 +91,22 @@ namespace HashCalculator
             set { this.finishedNumberInQueue = value; this.OnPropertyChanged(); }
         }
 
-        public AppViewModel()
+        public MainWndViewModel()
         {
-            this.modelToTable = new ModelToTableDelegate(this.ModelToTable);
             Instance = this;
+            Settings.Current.PropertyChanged += this.PropChangedAction;
+            this.modelToTable = new ModelToTableDelegate(this.ModelToTable);
+        }
+
+        private void PropChangedAction(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(Settings.Current.SelectedTaskNumberLimit))
+            {
+                Task.Run(() =>
+                {
+                    this.SetConcurrent(Settings.Current.SelectedTaskNumberLimit);
+                });
+            }
         }
 
         private void ModelToTable(ModelArg arg)
@@ -148,7 +150,11 @@ namespace HashCalculator
         {
             int argsCount, remainingArgsCount;
             argsCount = remainingArgsCount = args.Count();
-            if (argsCount == 0) return;
+            if (argsCount == 0)
+            {
+                return;
+            }
+
             AppDispatcher.Invoke(() => { this.IncreaseQueueTotal(argsCount); });
             lock (displayModelLock)
             {
@@ -174,7 +180,11 @@ namespace HashCalculator
         {
             lock (changeQueueCountLock)
             {
-                if (number < 0) number = 0;
+                if (number < 0)
+                {
+                    number = 0;
+                }
+
                 this.TotalNumberInQueue -= number;
                 this.QueueItemCountChanged();
             }
@@ -184,7 +194,11 @@ namespace HashCalculator
         {
             lock (changeQueueCountLock)
             {
-                if (number < 0) number = 0;
+                if (number < 0)
+                {
+                    number = 0;
+                }
+
                 this.TotalNumberInQueue += number;
                 this.QueueItemCountChanged();
             }
@@ -194,7 +208,11 @@ namespace HashCalculator
         {
             lock (changeQueueCountLock)
             {
-                if (number < 0) number = 0;
+                if (number < 0)
+                {
+                    number = 0;
+                }
+
                 this.FinishedInQueue += number;
                 this.QueueItemCountChanged();
             }
@@ -215,22 +233,22 @@ namespace HashCalculator
             lock (serialNumberLock) { this.currentSerialNumber = 0; }
         }
 
-        public void SetConcurrent(SimCalc num)
+        public void SetConcurrent(TaskNum num)
         {
             lock (concurrentLock)
             {
                 switch (num)
                 {
-                    case SimCalc.One:
+                    case TaskNum.One:
                         this.starter.Adjust(1);
                         break;
-                    case SimCalc.Two:
+                    case TaskNum.Two:
                         this.starter.Adjust(2);
                         break;
-                    case SimCalc.Four:
+                    case TaskNum.Four:
                         this.starter.Adjust(4);
                         break;
-                    case SimCalc.Eight:
+                    case TaskNum.Eight:
                         this.starter.Adjust(8);
                         break;
                 }
@@ -250,7 +268,10 @@ namespace HashCalculator
             {
                 this.droppedFiles.AddRange(args);
                 if (this.cancellation == null)
+                {
                     this.cancellation = GlobalCancellation.Handle;
+                }
+
                 CancellationToken token = this.cancellation.Token;
                 Task.Run(() => { this.DisplayModels(args, token); }, token);
             }
@@ -313,7 +334,10 @@ namespace HashCalculator
             {
                 this.cancellation?.Cancel();
                 foreach (var model in this.HashViewModels)
+                {
                     model.ShutdownModel();
+                }
+
                 this.cancellation?.Dispose();
                 this.cancellation = GlobalCancellation.Handle;
             }
@@ -327,13 +351,17 @@ namespace HashCalculator
         public void Models_ContinueAll()
         {
             foreach (var model in this.HashViewModels)
+            {
                 model.PauseOrContinueModel(PauseMode.Continue);
+            }
         }
 
         public void Models_PauseAll()
         {
             foreach (var model in this.HashViewModels)
+            {
                 model.PauseOrContinueModel(PauseMode.Pause);
+            }
         }
 
         public void Models_PauseOne(HashViewModel model)
@@ -341,23 +369,28 @@ namespace HashCalculator
             model.PauseOrContinueModel(PauseMode.Invert);
         }
 
+        // TODO 新建一个方法，使用 model.StartupModel(false)
         public void Models_Restart(bool newLines)
         {
             if (!newLines)
             {
-                bool force = !Settings.Current.RecalculateIncomplete;
                 int canbeStartModelCount = 0;
                 foreach (var model in this.HashViewModels)
                 {
-                    if (model.StartupModel(force))
+                    if (model.StartupModel(true))
+                    {
                         ++canbeStartModelCount;
+                    }
                 }
                 this.IncreaseQueueTotal(canbeStartModelCount);
             }
             else
             {
                 if (this.droppedFiles.Count <= 0)
+                {
                     return;
+                }
+
                 List<ModelArg> args = this.droppedFiles;
                 this.droppedFiles = new List<ModelArg>();
                 this.DisplayHashViewModelsTask(args);
@@ -370,16 +403,9 @@ namespace HashCalculator
             viewModel.StartupModel(true);
         }
 
-        public void RefreshCmpResultDisplayStyle()
-        {
-            foreach (var model in this.HashViewModels)
-                model.CmpResult = model.CmpResult;
-        }
-
-        public void SetColumnVisibility(bool noExportColumn, bool noDurationColumn)
-        {
-            this.NoExportColumn = noExportColumn;
-            this.NoDurationColumn = noDurationColumn;
-        }
+        public string StartCompareToolTip { get; } =
+            "当面板为空时，如果校验依据选择的是通用格式的哈希值文本文件，则：\n" +
+            "点击 [校验] 后程序会自动解析文件并在相同目录下寻找要计算哈希值的文件完成计算并显示校验结果。\n" +
+            "通用格式的哈希值文件请参考程序 [导出结果] 功能导出的文件的内容排布格式。";
     }
 }

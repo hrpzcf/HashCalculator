@@ -1,36 +1,41 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace HashCalculator
 {
-    internal class CmpResFgCvt : IValueConverter
+    internal class CmpResFgCvt : IMultiValueConverter
     {
-        public object Convert(object value, Type targetType, object param, CultureInfo culture)
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            if (!Settings.Current.ShowResultText)
-                return "Transparent";
-            switch ((CmpRes)value)
+            Debug.Assert(values.Length == 2);
+            if (!(bool)values[0])
+            {
+                return new SolidColorBrush(Colors.Transparent);
+            }
+            switch ((CmpRes)values[1])
             {
                 case CmpRes.Unrelated:
-                    return "Black";
+                    return new SolidColorBrush(Colors.Black);
                 case CmpRes.Matched:
-                    return "White";
+                    return new SolidColorBrush(Colors.White);
                 case CmpRes.Mismatch:
-                    return "White";
+                    return new SolidColorBrush(Colors.White);
                 case CmpRes.Uncertain:
-                    return "White";
+                    return new SolidColorBrush(Colors.White);
                 case CmpRes.NoResult:
                 default:
-                    return "Transparent";
+                    return new SolidColorBrush(Colors.Transparent);
             }
         }
 
-        public object ConvertBack(object value, Type targetType, object param, CultureInfo culture)
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
-            return CmpRes.Unrelated; // 此处未使用，只返回默认值
+            throw new NotImplementedException();
         }
     }
 
@@ -90,10 +95,14 @@ namespace HashCalculator
     {
         public object Convert(object value, Type targetType, object param, CultureInfo culture)
         {
-            if (Settings.Current.ShowResultText)
+            if ((bool)value)
+            {
                 return "0";
+            }
             else
+            {
                 return "3";
+            }
         }
 
         public object ConvertBack(object value, Type targetType, object param, CultureInfo culture)
@@ -136,7 +145,9 @@ namespace HashCalculator
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if ((AlgoType)value == AlgoType.Unknown)
+            {
                 return "待定";
+            }
             return value;
         }
 
@@ -152,9 +163,13 @@ namespace HashCalculator
         {
             HashState state = (HashState)value;
             if (state != HashState.Running && state != HashState.Paused)
+            {
                 return Visibility.Hidden;
+            }
             else
+            {
                 return Visibility.Visible;
+            }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -169,9 +184,13 @@ namespace HashCalculator
         {
             HashState state = (HashState)value;
             if (state == HashState.Running)
+            {
                 return "暂停...";
+            }
             else
+            {
                 return "继续...";
+            }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -191,9 +210,13 @@ namespace HashCalculator
         {
             HashState state = (HashState)value;
             if (state == HashState.Running)
-                return paused;
+            {
+                return this.paused;
+            }
             else
-                return noPaused;
+            {
+                return this.noPaused;
+            }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -208,9 +231,13 @@ namespace HashCalculator
         {
             HashState state = (HashState)value;
             if (state == HashState.Running || state == HashState.Paused)
+            {
                 return Visibility.Hidden;
+            }
             else
+            {
                 return Visibility.Visible;
+            }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -224,9 +251,13 @@ namespace HashCalculator
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if ((HashState)value != HashState.Waiting)
+            {
                 return Visibility.Hidden;
+            }
             else
+            {
                 return Visibility.Visible;
+            }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -240,9 +271,13 @@ namespace HashCalculator
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if ((HashResult)value != HashResult.Succeeded)
+            {
                 return Visibility.Hidden;
+            }
             else
+            {
                 return Visibility.Visible;
+            }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -256,9 +291,13 @@ namespace HashCalculator
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if ((HashResult)value != HashResult.Canceled)
+            {
                 return Visibility.Hidden;
+            }
             else
+            {
                 return Visibility.Visible;
+            }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -272,9 +311,13 @@ namespace HashCalculator
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if ((QueueState)value != QueueState.Started)
+            {
                 return Visibility.Hidden;
+            }
             else
+            {
                 return Visibility.Visible;
+            }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -288,9 +331,13 @@ namespace HashCalculator
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if ((QueueState)value != QueueState.Started)
+            {
                 return true;
+            }
             else
+            {
                 return false;
+            }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -304,9 +351,13 @@ namespace HashCalculator
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if ((QueueState)value == QueueState.Started)
+            {
                 return true;
+            }
             else
+            {
                 return false;
+            }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -320,9 +371,13 @@ namespace HashCalculator
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if ((bool)value)
+            {
                 return Visibility.Hidden;
+            }
             else
+            {
                 return Visibility.Visible;
+            }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
