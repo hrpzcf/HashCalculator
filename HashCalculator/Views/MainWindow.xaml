@@ -14,6 +14,7 @@
     SnapsToDevicePixels="True"
     Top="{Binding Source={x:Static local:Settings.Current}, Path=MainWindowTop, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     Topmost="{Binding Source={x:Static local:Settings.Current}, Path=MainWndTopmost}"
+    UseLayoutRounding="True"
     mc:Ignorable="d">
     <Window.Resources>
         <ResourceDictionary>
@@ -218,6 +219,35 @@
                 <Image Source="/Images/using_help_32.png" />
             </Button>
         </Grid>
+        <Border
+            Grid.Row="2"
+            Margin="0,4,0,0"
+            Panel.ZIndex="1"
+            Background="#50000000"
+            Visibility="{Binding AllowDrop, ElementName=uiDataGrid_HashFiles, Converter={StaticResource DataGridMaskVisibCvt}}">
+            <Border
+                Padding="8"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Background="Black"
+                CornerRadius="8">
+                <Border.Effect>
+                    <DropShadowEffect
+                        BlurRadius="20"
+                        Opacity="0.8"
+                        ShadowDepth="0"
+                        Color="Black" />
+                </Border.Effect>
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontFamily="YouYuan"
+                    FontSize="28"
+                    FontWeight="Bold"
+                    Foreground="White"
+                    Text="正在搜索文件，请稍后..." />
+            </Border>
+        </Border>
         <DataGrid
             x:Name="uiDataGrid_HashFiles"
             Grid.Row="2"
@@ -235,6 +265,11 @@
             RowStyle="{StaticResource RowStyleNormal}"
             SelectionMode="Single"
             VerticalGridLinesBrush="#FF969696">
+            <DataGrid.Effect>
+                <BlurEffect
+                    KernelType="Box"
+                    Radius="{Binding AllowDrop, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGrid}, AncestorLevel=1}, Converter={StaticResource DataGridBlurEffectCvt}}" />
+            </DataGrid.Effect>
             <DataGrid.Columns>
                 <DataGridTextColumn
                     Binding="{Binding Serial}"
