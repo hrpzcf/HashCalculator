@@ -245,7 +245,7 @@
                     FontSize="28"
                     FontWeight="Bold"
                     Foreground="White"
-                    Text="正在搜索文件，请稍后..." />
+                    Text="正在搜索文件，请稍候..." />
             </Border>
         </Border>
         <DataGrid

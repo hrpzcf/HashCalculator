@@ -85,14 +85,20 @@ namespace HashCalculator
             {
                 return;
             }
-            List<string> searchedPaths = new List<string>();
-            this.SearchUnderSpecifiedPolicy(data, searchedPaths);
-            if (searchedPaths.Count == 0)
+            this.AcceptNewFilePathsLockButtons();
+            new Thread(() =>
             {
-                return;
-            }
-            IEnumerable<ModelArg> modelArgs = searchedPaths.Select(s => new ModelArg(s));
-            this.viewModel.DisplayHashViewModelsTask(modelArgs);
+                List<string> searchedPaths = new List<string>();
+                this.SearchUnderSpecifiedPolicy(data, searchedPaths);
+                if (searchedPaths.Count == 0)
+                {
+                    return;
+                }
+                IEnumerable<ModelArg> modelArgs = searchedPaths.Select(s => new ModelArg(s));
+                this.viewModel.DisplayHashViewModelsTask(modelArgs);
+                this.AcceptNewFilePathsReleaseButtons();
+            })
+            { IsBackground = true }.Start();
         }
 
         private void Button_ClearFileList_Click(object sender, RoutedEventArgs e)
