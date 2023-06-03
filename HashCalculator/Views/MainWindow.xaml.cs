@@ -301,11 +301,8 @@ namespace HashCalculator
             Application.Current.Dispatcher.Invoke(() =>
             {
                 this.uiButton_SelectFilesToHash.IsEnabled = false;
-                this.uiButton_SelectFilesToHash.Content = "稍候...";
                 this.uiDataGrid_HashFiles.AllowDrop = false;
                 this.uiButton_SelectFoldersToHash.IsEnabled = false;
-                this.uiButton_SelectFoldersToHash.Content = "稍候...";
-                this.uiButton_StartCompare.Content = "稍候...";
             });
         }
 
@@ -314,11 +311,8 @@ namespace HashCalculator
             Application.Current.Dispatcher.Invoke(() =>
             {
                 this.uiButton_SelectFilesToHash.IsEnabled = true;
-                this.uiButton_SelectFilesToHash.Content = "选择文件";
                 this.uiDataGrid_HashFiles.AllowDrop = true;
                 this.uiButton_SelectFoldersToHash.IsEnabled = true;
-                this.uiButton_SelectFoldersToHash.Content = "选择文件夹";
-                this.uiButton_StartCompare.Content = "校验";
             });
         }
 
@@ -391,12 +385,17 @@ namespace HashCalculator
 
         private void Button_CopyRefreshHash_Click(object sender, RoutedEventArgs e)
         {
-            this.viewModel.Models_Restart(true);
+            this.viewModel.Models_Restart(true, false);
         }
 
         private void Button_RefreshCurrentHash_Click(object sender, RoutedEventArgs e)
         {
-            this.viewModel.Models_Restart(false);
+            this.viewModel.Models_Restart(false, false);
+        }
+
+        private void Button_RefreshCurrentHashForce_Click(object sender, RoutedEventArgs e)
+        {
+            this.viewModel.Models_Restart(false, true);
         }
 
         private void MenuItem_Settings_Click(object sender, RoutedEventArgs e)
@@ -534,6 +533,11 @@ namespace HashCalculator
         private void Button_ContinueAllTask_Click(object sender, RoutedEventArgs e)
         {
             this.viewModel.Models_ContinueAll();
+        }
+
+        private void Button_WindowTopmost_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.Current.MainWndTopmost = !Settings.Current.MainWndTopmost;
         }
     }
 }

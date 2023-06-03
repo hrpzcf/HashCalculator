@@ -20,4 +20,15 @@
     <local:PauseBtnImgsrcCvt x:Key="PauseBtnImgsrcCvt" />
     <local:PauseBtnTextCvt x:Key="PauseBtnTextCvt" />
     <local:ProgressWidthCvt x:Key="ProgressWidthCvt" />
+    <local:BtnCancelAllEnabledImgCvt x:Key="BtnCancelAllEnabledImgCvt" />
+    <local:BtnClearPanelEnabledImgCvt x:Key="BtnClearPanelEnabledImgCvt" />
+    <local:BtnContinueAllEnabledImgCvt x:Key="BtnContinueAllEnabledImgCvt" />
+    <local:BtnExportEnabledImgCvt x:Key="BtnExportEnabledImgCvt" />
+    <local:BtnNewLineEnabledImgCvt x:Key="BtnNewLineEnabledImgCvt" />
+    <local:BtnPauseAllEnabledImgCvt x:Key="BtnPauseAllEnabledImgCvt" />
+    <local:BtnRefreshEnabledImgCvt x:Key="BtnRefreshEnabledImgCvt" />
+    <local:BtnRefreshForceEnabledImgCvt x:Key="BtnRefreshForceEnabledImgCvt" />
+    <local:BtnSelectFileEnabledImgCvt x:Key="BtnSelectFileEnabledImgCvt" />
+    <local:BtnSelectFolderEnabledImgCvt x:Key="BtnSelectFolderEnabledImgCvt" />
+    <local:BtnTopmostEnabledImgCvt x:Key="BtnTopmostEnabledImgCvt" />
 </ResourceDictionary>

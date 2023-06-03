@@ -13,7 +13,7 @@
     Left="{Binding Source={x:Static local:Settings.Current}, Path=MainWindowLeft, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     SnapsToDevicePixels="True"
     Top="{Binding Source={x:Static local:Settings.Current}, Path=MainWindowTop, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-    Topmost="{Binding Source={x:Static local:Settings.Current}, Path=MainWndTopmost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+    Topmost="{Binding Source={x:Static local:Settings.Current}, Path=MainWndTopmost}"
     mc:Ignorable="d">
     <Window.Resources>
         <ResourceDictionary>
@@ -25,13 +25,32 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-    <Grid Margin="4,4,4,0">
+    <Grid Margin="8,0,8,8">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Grid>
+        <ProgressBar
+            Grid.Row="0"
+            Height="3"
+            VerticalAlignment="Center"
+            Background="Transparent"
+            BorderBrush="Transparent"
+            BorderThickness="0"
+            Foreground="#64008000"
+            Maximum="{Binding TotalNumberInQueue}"
+            Visibility="{Binding State, Converter={StaticResource VisibTotalProgressCvt}}"
+            Value="{Binding FinishedInQueue}" />
+        <Grid
+            Grid.Row="1"
+            Margin="0,2,0,0">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
@@ -40,434 +59,407 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <Menu
+            <Image
+                Grid.Column="0"
                 VerticalAlignment="Center"
-                Background="{x:Null}">
-                <MenuItem
-                    Click="MenuItem_Settings_Click"
-                    Header="设置" />
-                <MenuItem
-                    Click="MenuItem_UsingHelp_Click"
-                    Header="帮助" />
-            </Menu>
-            <CheckBox
+                Source="/Images/hash_algo_32.png"
+                ToolTip="选择哈希算法" />
+            <ComboBox
                 Grid.Column="1"
-                Margin="0,0,16,0"
-                Padding="4,0,0,0"
+                Width="100"
+                Margin="2,0,0,0"
                 VerticalAlignment="Center"
-                Background="Transparent"
-                Content="窗口置顶"
-                IsChecked="{Binding Source={x:Static local:Settings.Current}, Path=MainWndTopmost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-            <TextBlock
+                ItemsSource="{Binding Source={x:Static local:Settings.Current}, Path=AvailableAlgos}"
+                SelectedValue="{Binding Source={x:Static local:Settings.Current}, Path=SelectedAlgo}"
+                ToolTip="选择哈希算法" />
+            <Image
                 Grid.Column="2"
+                Margin="16,0,0,0"
                 VerticalAlignment="Center"
-                Text="算法：" />
+                Source="/Images/output_type_32.png"
+                ToolTip="选择哈希值输出方式" />
             <ComboBox
                 Grid.Column="3"
                 Width="100"
-                Margin="0,0,16,0"
-                Padding="6,3,6,3"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                ItemsSource="{Binding Source={x:Static local:Settings.Current}, Path=AvailableAlgos}"
-                SelectedValue="{Binding Source={x:Static local:Settings.Current}, Path=SelectedAlgo}" />
-            <TextBlock
-                Grid.Column="4"
-                VerticalAlignment="Center"
-                Text="输出方式：" />
-            <ComboBox
-                Grid.Column="5"
-                Width="100"
-                Margin="0,0,16,0"
-                Padding="6,3,6,3"
-                HorizontalAlignment="Center"
+                Margin="2,0,0,0"
                 VerticalAlignment="Center"
                 DisplayMemberPath="Display"
                 ItemsSource="{Binding Source={x:Static local:Settings.Current}, Path=AvailableOutputTypes}"
                 SelectedValue="{Binding Source={x:Static local:Settings.Current}, Path=SelectedOutputType}"
-                SelectedValuePath="ItemValue" />
+                SelectedValuePath="ItemValue"
+                ToolTip="选择哈希值输出方式" />
+            <Button
+                x:Name="uiButton_SelectFilesToHash"
+                Grid.Column="5"
+                Margin="28,0,0,0"
+                Click="Button_SelectFilesToHash_Click"
+                Style="{StaticResource ImageButtonStyle2}"
+                ToolTip="选择文件，也可以将文件、文件夹直接拖放到下方表格中">
+                <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnSelectFileEnabledImgCvt}}" />
+            </Button>
             <Button
                 x:Name="uiButton_SelectFoldersToHash"
                 Grid.Column="6"
-                Margin="0,0,16,0"
-                Padding="12,1,12,1"
+                Margin="4,0,0,0"
                 Click="Button_SelectFoldersToHash_Click"
-                Content="选择文件夹"
-                ToolTip="也可以将文件和文件夹直接拖放到下方表格中。" />
+                Style="{StaticResource ImageButtonStyle2}"
+                ToolTip="选择文件夹，也可以将文件和文件夹直接拖放到下方表格中">
+                <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnSelectFolderEnabledImgCvt}}" />
+            </Button>
             <Button
-                x:Name="uiButton_SelectFilesToHash"
+                x:Name="uiButton_ClearModels"
                 Grid.Column="7"
-                Padding="12,1,12,1"
-                Click="Button_SelectFilesToHash_Click"
-                Content="选择文件"
-                ToolTip="也可以将文件、文件夹直接拖放到下方表格中。" />
+                Margin="4,0,0,0"
+                Click="Button_ClearFileList_Click"
+                IsEnabled="{Binding State, Converter={StaticResource ButtonEnableCvt}}"
+                Style="{StaticResource ImageButtonStyle2}"
+                ToolTip="清空面板中显示的所有行">
+                <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnClearPanelEnabledImgCvt}}" />
+            </Button>
+            <Button
+                x:Name="uiButton_RefreshCopy"
+                Grid.Column="8"
+                Margin="28,0,0,0"
+                Click="Button_CopyRefreshHash_Click"
+                IsEnabled="{Binding State, Converter={StaticResource ButtonEnableCvt}}"
+                Style="{StaticResource ImageButtonStyle2}"
+                ToolTip="根据&quot;算法&quot;下拉选择框所选算法，计算表格中所有文件的哈希值，但不清除原来的计算结果，而是增加新的行来显示结果">
+                <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnNewLineEnabledImgCvt}}" />
+            </Button>
+            <Button
+                x:Name="uiButton_RefreshCurrentHash"
+                Grid.Column="9"
+                Margin="4,0,0,0"
+                Click="Button_RefreshCurrentHash_Click"
+                IsEnabled="{Binding State, Converter={StaticResource ButtonEnableCvt}}"
+                Style="{StaticResource ImageButtonStyle2}"
+                ToolTip="根据&quot;算法&quot;下拉选择框所选算法，重新计算表格中未完成计算的文件的哈希值">
+                <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnRefreshEnabledImgCvt}}" />
+            </Button>
+            <Button
+                x:Name="uiButton_RefreshCurrentHashForce"
+                Grid.Column="10"
+                Margin="4,0,0,0"
+                Click="Button_RefreshCurrentHashForce_Click"
+                IsEnabled="{Binding State, Converter={StaticResource ButtonEnableCvt}}"
+                Style="{StaticResource ImageButtonStyle2}"
+                ToolTip="根据&quot;算法&quot;下拉选择框所选算法，重新计算表格中所有文件的哈希值">
+                <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnRefreshForceEnabledImgCvt}}" />
+            </Button>
+            <Button
+                x:Name="uiButton_ExportAsText"
+                Grid.Column="11"
+                Margin="4,0,0,0"
+                Click="Button_ExportAsTextFile_Click"
+                IsEnabled="{Binding State, Converter={StaticResource ButtonEnableCvt}}"
+                Style="{StaticResource ImageButtonStyle2}"
+                ToolTip="导出面板中的计算结果（没有计算结果的行不会被导出，&quot;导出&quot;列没有勾选的行也不会被导出）">
+                <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnExportEnabledImgCvt}}" />
+            </Button>
+            <Button
+                x:Name="uiButton_ContinueAllTask"
+                Grid.Column="12"
+                Margin="28,0,0,0"
+                Click="Button_ContinueAllTask_Click"
+                IsEnabled="{Binding State, Converter={StaticResource ButtonNotEnableCvt}}"
+                Style="{StaticResource ImageButtonStyle2}"
+                ToolTip="启动全部已暂停的哈希值计算任务">
+                <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnContinueAllEnabledImgCvt}}" />
+            </Button>
+            <Button
+                x:Name="uiButton_PauseAllTask"
+                Grid.Column="13"
+                Margin="4,0,0,0"
+                Click="Button_PauseAllTask_Click"
+                IsEnabled="{Binding State, Converter={StaticResource ButtonNotEnableCvt}}"
+                Style="{StaticResource ImageButtonStyle2}"
+                ToolTip="暂停全部正在运行的哈希值计算任务（计算大量小文件时可能会暂停失败）">
+                <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnPauseAllEnabledImgCvt}}" />
+            </Button>
+            <Button
+                x:Name="uiButton_CancelAllTask"
+                Grid.Column="14"
+                Margin="4,0,0,0"
+                Click="Button_CancelAllTask_Click"
+                IsEnabled="{Binding State, Converter={StaticResource ButtonNotEnableCvt}}"
+                Style="{StaticResource ImageButtonStyle2}"
+                ToolTip="取消全部排队中、运行中和已暂停的哈希值计算任务">
+                <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnCancelAllEnabledImgCvt}}" />
+            </Button>
+            <Button
+                Grid.Column="15"
+                Margin="28,0,0,0"
+                Click="Button_WindowTopmost_Click"
+                Style="{StaticResource ImageButtonStyle2}"
+                ToolTip="主窗口置顶">
+                <Image Source="{Binding Source={x:Static local:Settings.Current}, Path=MainWndTopmost, Converter={StaticResource BtnTopmostEnabledImgCvt}}" />
+            </Button>
+            <Button
+                Grid.Column="16"
+                Margin="4,0,0,0"
+                Click="MenuItem_Settings_Click"
+                Style="{StaticResource ImageButtonStyle2}"
+                ToolTip="打开设置面板...">
+                <Image Source="/Images/settings_32.png" />
+            </Button>
+            <Button
+                Grid.Column="17"
+                Margin="4,0,0,0"
+                Click="MenuItem_UsingHelp_Click"
+                Style="{StaticResource ImageButtonStyle2}"
+                ToolTip="打开使用帮助...">
+                <Image Source="/Images/using_help_32.png" />
+            </Button>
         </Grid>
-        <Grid
-            Grid.Row="1"
-            Margin="0,4,0,0">
-            <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <DataGrid
-                x:Name="uiDataGrid_HashFiles"
-                AllowDrop="True"
-                AutoGenerateColumns="False"
-                Background="Transparent"
-                CellStyle="{StaticResource CellStyleNormal}"
-                Drop="DataGrid_FilesToCalculate_Drop"
-                HeadersVisibility="Column"
-                HorizontalGridLinesBrush="#FF969696"
-                ItemsSource="{Binding HashViewModels}"
-                PreviewKeyDown="DataGrid_HashFiles_PrevKeyDown"
-                RowHeight="28"
-                RowStyle="{StaticResource RowStyleNormal}"
-                SelectionMode="Single"
-                VerticalGridLinesBrush="#FF969696">
-                <DataGrid.Columns>
-                    <DataGridTextColumn
-                        Binding="{Binding Serial}"
-                        Header="序号"
-                        IsReadOnly="True" />
-                    <DataGridTextColumn
-                        MinWidth="180"
-                        Binding="{Binding Name}"
-                        CellStyle="{StaticResource CellStyleFileName}"
-                        Header="文件名"
-                        IsReadOnly="True" />
-                    <DataGridTextColumn
-                        Binding="{Binding FileSize}"
-                        CellStyle="{StaticResource CellStyleFileName}"
-                        Header="文件体积 (字节)"
-                        IsReadOnly="True"
-                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoFileSizeColumn, Converter={StaticResource NoColumnCvt}, Mode=OneWay}" />
-                    <DataGridTemplateColumn
-                        MinWidth="210"
-                        Header="哈希值">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Grid VerticalAlignment="Center">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition />
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock
-                                        Grid.Column="0"
-                                        Padding="4,2,4,2"
-                                        VerticalAlignment="Center"
-                                        Background="{Binding HashName, Converter={StaticResource AlgoTypeBgCvt}}"
-                                        Text="{Binding HashName, Converter={StaticResource AlgoTypeNameCvt}}" />
-                                    <!--  不在计算状态  -->
-                                    <TextBlock
-                                        Grid.Column="1"
-                                        Margin="4,0,4,0"
-                                        VerticalAlignment="Center"
-                                        Text="{Binding Hash}"
-                                        ToolTip="{Binding ModelDetails}"
-                                        ToolTipService.BetweenShowDelay="0"
-                                        ToolTipService.InitialShowDelay="0"
-                                        ToolTipService.ShowDuration="60000"
-                                        Visibility="{Binding State, Converter={StaticResource VisibNotCalcCvt}}" />
-                                    <!--  正在计算状态  -->
-                                    <ProgressBar
-                                        Grid.Column="1"
-                                        Width="{Binding HashName, Converter={StaticResource ProgressWidthCvt}}"
-                                        Height="6"
-                                        Margin="4"
-                                        HorizontalAlignment="Left"
-                                        Foreground="#8000B4E7"
-                                        Maximum="{Binding ProgressTotal}"
-                                        Visibility="{Binding State, Converter={StaticResource VisibRunningCvt}}"
-                                        Value="{Binding Progress}" />
-                                    <Button
-                                        Grid.Column="2"
-                                        Padding="4"
-                                        Click="Button_CancelHashModel_Click"
-                                        Style="{StaticResource ImageButtonStyle}"
-                                        ToolTip="停止..."
-                                        Visibility="{Binding State, Converter={StaticResource VisibRunningCvt}}">
-                                        <Image
-                                            Source="/Images/stop.png"
-                                            Stretch="None" />
-                                    </Button>
-                                    <Button
-                                        Grid.Column="3"
-                                        Padding="4"
-                                        Click="Button_PauseHashModel_Click"
-                                        Style="{StaticResource ImageButtonStyle}"
-                                        ToolTip="{Binding State, Converter={StaticResource PauseBtnTextCvt}}"
-                                        Visibility="{Binding State, Converter={StaticResource VisibRunningCvt}}">
-                                        <Image
-                                            Source="{Binding State, Converter={StaticResource PauseBtnImgsrcCvt}}"
-                                            Stretch="None" />
-                                    </Button>
-                                    <!--  正排队  -->
-                                    <Button
-                                        Grid.Column="3"
-                                        Padding="4"
-                                        Click="Button_CancelHashModel_Click"
-                                        Style="{StaticResource ImageButtonStyle}"
-                                        ToolTip="取消..."
-                                        Visibility="{Binding State, Converter={StaticResource VisibWaitingCvt}}">
-                                        <Image
-                                            Source="/Images/cancel.png"
-                                            Stretch="None" />
-                                    </Button>
-                                    <!--  已成功  -->
-                                    <Button
-                                        Grid.Column="2"
-                                        Padding="4"
-                                        Click="Button_RestartHashModel_CLick"
-                                        Style="{StaticResource ImageButtonStyle}"
-                                        ToolTip="刷新..."
-                                        Visibility="{Binding Result, Converter={StaticResource VisibSucceededCvt}}">
-                                        <Image
-                                            Source="/Images/refresh.png"
-                                            Stretch="None" />
-                                    </Button>
-                                    <Button
-                                        Grid.Column="3"
-                                        Padding="4"
-                                        Click="Button_CopyHashValue_Click"
-                                        Style="{StaticResource ImageButtonStyle}"
-                                        ToolTip="复制..."
-                                        Visibility="{Binding Result, Converter={StaticResource VisibSucceededCvt}}">
-                                        <Image
-                                            Source="/Images/copy.png"
-                                            Stretch="None" />
-                                    </Button>
-                                    <!--  已取消  -->
-                                    <Button
-                                        Grid.Column="3"
-                                        Padding="4"
-                                        Click="Button_RestartHashModel_CLick"
-                                        Style="{StaticResource ImageButtonStyle}"
-                                        ToolTip="开始..."
-                                        Visibility="{Binding Result, Converter={StaticResource VisibCanceledCvt}}">
-                                        <Image
-                                            Source="/Images/start.png"
-                                            Stretch="None" />
-                                    </Button>
-                                </Grid>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTextColumn
-                        MinWidth="80"
-                        Binding="{Binding DurationofTask}"
-                        Header="运行时长(秒)"
-                        IsReadOnly="True"
-                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoDurationColumn, Converter={StaticResource NoColumnCvt}, Mode=OneWay}" />
-                    <DataGridTemplateColumn
-                        Header="导出"
-                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoExportColumn, Converter={StaticResource NoColumnCvt}, Mode=OneWay}">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <CheckBox
-                                    HorizontalAlignment="Center"
-                                    IsChecked="{Binding Export, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTemplateColumn
-                        MinWidth="60"
-                        Header="校验结果">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Label
-                                    HorizontalContentAlignment="Center"
-                                    VerticalContentAlignment="Center"
-                                    Background="{Binding CmpResult, Converter={StaticResource CmpResBgCvt}}"
-                                    BorderBrush="Transparent"
-                                    BorderThickness="{Binding Source={x:Static local:Settings.Current}, Path=ShowResultText, Converter={StaticResource CmpResBorderCvt}}"
-                                    Content="{Binding CmpResult, Converter={StaticResource CmpResTextCvt}}"
-                                    FontSize="8pt"
-                                    ToolTip="{Binding DataContext.Report, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}, AncestorLevel=1}}"
+        <DataGrid
+            x:Name="uiDataGrid_HashFiles"
+            Grid.Row="2"
+            Margin="0,4,0,0"
+            AllowDrop="True"
+            AutoGenerateColumns="False"
+            Background="Transparent"
+            CellStyle="{StaticResource CellStyleNormal}"
+            Drop="DataGrid_FilesToCalculate_Drop"
+            HeadersVisibility="Column"
+            HorizontalGridLinesBrush="#FF969696"
+            ItemsSource="{Binding HashViewModels}"
+            PreviewKeyDown="DataGrid_HashFiles_PrevKeyDown"
+            RowHeight="28"
+            RowStyle="{StaticResource RowStyleNormal}"
+            SelectionMode="Single"
+            VerticalGridLinesBrush="#FF969696">
+            <DataGrid.Columns>
+                <DataGridTextColumn
+                    Binding="{Binding Serial}"
+                    Header="序号"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    MinWidth="180"
+                    Binding="{Binding Name}"
+                    CellStyle="{StaticResource CellStyleFileName}"
+                    Header="文件名"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding FileSize}"
+                    CellStyle="{StaticResource CellStyleFileName}"
+                    Header="文件体积 (字节)"
+                    IsReadOnly="True"
+                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoFileSizeColumn, Converter={StaticResource NoColumnCvt}, Mode=OneWay}" />
+                <DataGridTemplateColumn
+                    MinWidth="210"
+                    Header="哈希值">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid VerticalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Padding="4,2,4,2"
+                                    VerticalAlignment="Center"
+                                    Background="{Binding HashName, Converter={StaticResource AlgoTypeBgCvt}}"
+                                    Text="{Binding HashName, Converter={StaticResource AlgoTypeNameCvt}}" />
+                                <!--  不在计算状态  -->
+                                <TextBlock
+                                    Grid.Column="1"
+                                    Margin="4,0,4,0"
+                                    VerticalAlignment="Center"
+                                    Text="{Binding Hash}"
+                                    ToolTip="{Binding ModelDetails}"
                                     ToolTipService.BetweenShowDelay="0"
                                     ToolTipService.InitialShowDelay="0"
-                                    ToolTipService.ShowDuration="60000">
-                                    <Label.Foreground>
-                                        <MultiBinding Converter="{StaticResource CmpResFgCvt}">
-                                            <Binding
-                                                Path="ShowResultText"
-                                                Source="{x:Static local:Settings.Current}" />
-                                            <Binding Path="CmpResult" />
-                                        </MultiBinding>
-                                    </Label.Foreground>
-                                </Label>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                </DataGrid.Columns>
-            </DataGrid>
-            <Grid
-                Grid.Row="1"
-                Margin="0,4,0,0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <TextBlock
-                    VerticalAlignment="Center"
-                    Text="文件哈希值批量校验依据：" />
-                <ComboBox
-                    x:Name="uiComboBox_ComparisonMethod"
-                    Grid.Column="1"
-                    MinWidth="100"
-                    Padding="6,4,5,4"
-                    VerticalAlignment="Center"
-                    SelectedIndex="0">
-                    <ComboBoxItem Content="文本文件" />
-                    <ComboBoxItem Content="单个哈希值" />
-                </ComboBox>
-                <TextBox
-                    x:Name="uiTextBox_HashValueOrFilePath"
-                    Grid.Column="2"
-                    Margin="8,0,0,0"
-                    Padding="1,2,1,2"
-                    MaxLines="1"
-                    PreviewDragOver="TextBox_HashValueOrFilePath_PreviewDragOver"
-                    PreviewDrop="TextBox_HashValueOrFilePath_PreviewDrop"
-                    TextChanged="TextBox_HashValueOrFilePath_Changed" />
-                <Button
-                    Grid.Column="3"
-                    Margin="8,0,0,0"
-                    Padding="8,1,8,1"
-                    Click="Button_SelectHashSetFile_Click"
-                    Content="..." />
-                <Button
-                    x:Name="uiButton_StartCompare"
-                    Grid.Column="4"
-                    Margin="8,0,0,0"
-                    Padding="16,1,16,1"
-                    Click="Button_StartCompare_Click"
-                    Content="校验"
-                    IsEnabled="{Binding State, Converter={StaticResource ButtonEnableCvt}}"
-                    ToolTip="{Binding StartCompareToolTip}" />
-            </Grid>
-            <Grid Grid.Row="2">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <Grid Margin="0,0,8,0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="2*" />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-                    <Grid VerticalAlignment="Center">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock
-                            VerticalAlignment="Center"
-                            Text="完成进度："
-                            Visibility="{Binding State, Converter={StaticResource VisibTotalProgressCvt}}" />
-                        <TextBlock
-                            Grid.Column="1"
-                            VerticalAlignment="Center"
-                            Text="{Binding FinishedInQueue}"
-                            Visibility="{Binding State, Converter={StaticResource VisibTotalProgressCvt}}" />
-                        <TextBlock
-                            Grid.Column="2"
-                            VerticalAlignment="Center"
-                            Text=" / "
-                            Visibility="{Binding State, Converter={StaticResource VisibTotalProgressCvt}}" />
-                        <TextBlock
-                            Grid.Column="3"
-                            VerticalAlignment="Center"
-                            Text="{Binding TotalNumberInQueue}"
-                            Visibility="{Binding State, Converter={StaticResource VisibTotalProgressCvt}}" />
-                    </Grid>
-                    <ProgressBar
-                        Grid.Row="1"
-                        Height="8"
-                        Margin="0,0,0,8"
-                        VerticalAlignment="Center"
-                        Maximum="{Binding TotalNumberInQueue}"
-                        Visibility="{Binding State, Converter={StaticResource VisibTotalProgressCvt}}"
-                        Value="{Binding FinishedInQueue}" />
-                </Grid>
-                <Button
-                    x:Name="uiButton_ClearModels"
-                    Grid.Column="1"
-                    Margin="4,8,4,8"
-                    Padding="16,4,16,4"
-                    Click="Button_ClearFileList_Click"
-                    Content="清空面板"
-                    IsEnabled="{Binding State, Converter={StaticResource ButtonEnableCvt}}"
-                    ToolTip="清空面板中显示的所有的行。" />
-                <Button
-                    x:Name="uiButton_ExportAsText"
-                    Grid.Column="2"
-                    Margin="4,8,4,8"
-                    Padding="16,4,16,4"
-                    Click="Button_ExportAsTextFile_Click"
-                    Content="导出结果"
-                    IsEnabled="{Binding State, Converter={StaticResource ButtonEnableCvt}}"
-                    ToolTip="导出面板中的计算结果。没有计算结果的行不会被导出，&quot;导出&quot;列没有选中的也不会被导出。" />
-                <Button
-                    x:Name="uiButton_ContinueAllTask"
-                    Grid.Column="3"
-                    Margin="4,8,4,8"
-                    Padding="16,4,16,4"
-                    Click="Button_ContinueAllTask_Click"
-                    Content="继续"
-                    IsEnabled="{Binding State, Converter={StaticResource ButtonNotEnableCvt}}"
-                    ToolTip="继续全部已暂停的哈希值计算任务。" />
-                <Button
-                    x:Name="uiButton_PauseAllTask"
-                    Grid.Column="4"
-                    Margin="4,8,4,8"
-                    Padding="16,4,16,4"
-                    Click="Button_PauseAllTask_Click"
-                    Content="暂停"
-                    IsEnabled="{Binding State, Converter={StaticResource ButtonNotEnableCvt}}"
-                    ToolTip="暂停全部正在运行的哈希值计算任务。" />
-                <Button
-                    x:Name="uiButton_CancelAllTask"
-                    Grid.Column="5"
-                    Margin="4,8,4,8"
-                    Padding="16,4,16,4"
-                    Click="Button_CancelAllTask_Click"
-                    Content="取消"
-                    IsEnabled="{Binding State, Converter={StaticResource ButtonNotEnableCvt}}"
-                    ToolTip="取消全部排队中、运行中和已暂停的哈希值计算任务。" />
-                <Button
-                    x:Name="uiButton_RefreshCopy"
-                    Grid.Column="6"
-                    Margin="4,8,4,8"
-                    Padding="16,4,16,4"
-                    Click="Button_CopyRefreshHash_Click"
-                    Content="新行重算"
-                    IsEnabled="{Binding State, Converter={StaticResource ButtonEnableCvt}}"
-                    ToolTip="以&quot;算法&quot;下拉选择框选择的算法为准，计算表格中所有文件的哈希值，但不清除原来的计算结果，而是增加新的行来显示结果。" />
-                <Button
-                    x:Name="uiButton_RefreshCurrentHash"
-                    Grid.Column="7"
-                    Margin="4,8,0,8"
-                    Padding="16,4,16,4"
-                    Click="Button_RefreshCurrentHash_Click"
-                    Content="重新计算"
-                    IsEnabled="{Binding State, Converter={StaticResource ButtonEnableCvt}}"
-                    ToolTip="以&quot;算法&quot;下拉选择框选择的算法为准，重新计算表格中所有文件的哈希值或未完成计算的文件的哈希值。" />
-            </Grid>
+                                    ToolTipService.ShowDuration="60000"
+                                    Visibility="{Binding State, Converter={StaticResource VisibNotCalcCvt}}" />
+                                <!--  正在计算状态  -->
+                                <ProgressBar
+                                    Grid.Column="1"
+                                    Width="{Binding HashName, Converter={StaticResource ProgressWidthCvt}}"
+                                    Height="6"
+                                    Margin="4"
+                                    HorizontalAlignment="Left"
+                                    Foreground="#8000B4E7"
+                                    Maximum="{Binding ProgressTotal}"
+                                    Visibility="{Binding State, Converter={StaticResource VisibRunningCvt}}"
+                                    Value="{Binding Progress}" />
+                                <Button
+                                    Grid.Column="2"
+                                    Padding="4"
+                                    Click="Button_CancelHashModel_Click"
+                                    Style="{StaticResource ImageButtonStyle1}"
+                                    ToolTip="停止..."
+                                    Visibility="{Binding State, Converter={StaticResource VisibRunningCvt}}">
+                                    <Image
+                                        Source="/Images/stop.png"
+                                        Stretch="None" />
+                                </Button>
+                                <Button
+                                    Grid.Column="3"
+                                    Padding="4"
+                                    Click="Button_PauseHashModel_Click"
+                                    Style="{StaticResource ImageButtonStyle1}"
+                                    ToolTip="{Binding State, Converter={StaticResource PauseBtnTextCvt}}"
+                                    Visibility="{Binding State, Converter={StaticResource VisibRunningCvt}}">
+                                    <Image
+                                        Source="{Binding State, Converter={StaticResource PauseBtnImgsrcCvt}}"
+                                        Stretch="None" />
+                                </Button>
+                                <!--  正排队  -->
+                                <Button
+                                    Grid.Column="3"
+                                    Padding="4"
+                                    Click="Button_CancelHashModel_Click"
+                                    Style="{StaticResource ImageButtonStyle1}"
+                                    ToolTip="取消..."
+                                    Visibility="{Binding State, Converter={StaticResource VisibWaitingCvt}}">
+                                    <Image
+                                        Source="/Images/cancel.png"
+                                        Stretch="None" />
+                                </Button>
+                                <!--  已成功  -->
+                                <Button
+                                    Grid.Column="2"
+                                    Padding="4"
+                                    Click="Button_RestartHashModel_CLick"
+                                    Style="{StaticResource ImageButtonStyle1}"
+                                    ToolTip="刷新..."
+                                    Visibility="{Binding Result, Converter={StaticResource VisibSucceededCvt}}">
+                                    <Image
+                                        Source="/Images/refresh.png"
+                                        Stretch="None" />
+                                </Button>
+                                <Button
+                                    Grid.Column="3"
+                                    Padding="4"
+                                    Click="Button_CopyHashValue_Click"
+                                    Style="{StaticResource ImageButtonStyle1}"
+                                    ToolTip="复制..."
+                                    Visibility="{Binding Result, Converter={StaticResource VisibSucceededCvt}}">
+                                    <Image
+                                        Source="/Images/copy.png"
+                                        Stretch="None" />
+                                </Button>
+                                <!--  已取消  -->
+                                <Button
+                                    Grid.Column="3"
+                                    Padding="4"
+                                    Click="Button_RestartHashModel_CLick"
+                                    Style="{StaticResource ImageButtonStyle1}"
+                                    ToolTip="开始..."
+                                    Visibility="{Binding Result, Converter={StaticResource VisibCanceledCvt}}">
+                                    <Image
+                                        Source="/Images/start.png"
+                                        Stretch="None" />
+                                </Button>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn
+                    MinWidth="80"
+                    Binding="{Binding DurationofTask}"
+                    Header="运行时长(秒)"
+                    IsReadOnly="True"
+                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoDurationColumn, Converter={StaticResource NoColumnCvt}, Mode=OneWay}" />
+                <DataGridTemplateColumn
+                    Header="导出"
+                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoExportColumn, Converter={StaticResource NoColumnCvt}, Mode=OneWay}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox
+                                HorizontalAlignment="Center"
+                                IsChecked="{Binding Export, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn
+                    MinWidth="60"
+                    Header="校验结果">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Label
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center"
+                                Background="{Binding CmpResult, Converter={StaticResource CmpResBgCvt}}"
+                                BorderBrush="Transparent"
+                                BorderThickness="{Binding Source={x:Static local:Settings.Current}, Path=ShowResultText, Converter={StaticResource CmpResBorderCvt}}"
+                                Content="{Binding CmpResult, Converter={StaticResource CmpResTextCvt}}"
+                                FontSize="8pt"
+                                ToolTip="{Binding DataContext.Report, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}, AncestorLevel=1}}"
+                                ToolTipService.BetweenShowDelay="0"
+                                ToolTipService.InitialShowDelay="0"
+                                ToolTipService.ShowDuration="60000">
+                                <Label.Foreground>
+                                    <MultiBinding Converter="{StaticResource CmpResFgCvt}">
+                                        <Binding
+                                            Path="ShowResultText"
+                                            Source="{x:Static local:Settings.Current}" />
+                                        <Binding Path="CmpResult" />
+                                    </MultiBinding>
+                                </Label.Foreground>
+                            </Label>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Grid
+            Grid.Row="3"
+            Margin="0,8,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                VerticalAlignment="Center"
+                Text="文件哈希值批量校验依据：" />
+            <ComboBox
+                x:Name="uiComboBox_ComparisonMethod"
+                Grid.Column="1"
+                MinWidth="100"
+                Padding="6,4,5,4"
+                VerticalAlignment="Center"
+                SelectedIndex="0">
+                <ComboBoxItem Content="文本文件" />
+                <ComboBoxItem Content="单个哈希值" />
+            </ComboBox>
+            <TextBox
+                x:Name="uiTextBox_HashValueOrFilePath"
+                Grid.Column="2"
+                Margin="8,0,0,0"
+                Padding="1,2,1,2"
+                MaxLines="1"
+                PreviewDragOver="TextBox_HashValueOrFilePath_PreviewDragOver"
+                PreviewDrop="TextBox_HashValueOrFilePath_PreviewDrop"
+                TextChanged="TextBox_HashValueOrFilePath_Changed" />
+            <Button
+                Grid.Column="3"
+                Margin="8,0,0,0"
+                Padding="8,1,8,1"
+                Click="Button_SelectHashSetFile_Click"
+                Content="..." />
+            <Button
+                x:Name="uiButton_StartCompare"
+                Grid.Column="4"
+                Margin="8,0,0,0"
+                Padding="16,1,16,1"
+                Click="Button_StartCompare_Click"
+                Content="校验"
+                IsEnabled="{Binding State, Converter={StaticResource ButtonEnableCvt}}"
+                ToolTip="{Binding StartCompareToolTip}" />
         </Grid>
     </Grid>
 </Window>

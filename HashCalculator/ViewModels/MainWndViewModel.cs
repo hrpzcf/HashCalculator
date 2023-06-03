@@ -369,15 +369,14 @@ namespace HashCalculator
             model.PauseOrContinueModel(PauseMode.Invert);
         }
 
-        // TODO 新建一个方法，使用 model.StartupModel(false)
-        public void Models_Restart(bool newLines)
+        public void Models_Restart(bool newLines, bool force)
         {
             if (!newLines)
             {
                 int canbeStartModelCount = 0;
                 foreach (var model in this.HashViewModels)
                 {
-                    if (model.StartupModel(true))
+                    if (model.StartupModel(force))
                     {
                         ++canbeStartModelCount;
                     }
@@ -390,7 +389,6 @@ namespace HashCalculator
                 {
                     return;
                 }
-
                 List<ModelArg> args = this.droppedFiles;
                 this.droppedFiles = new List<ModelArg>();
                 this.DisplayHashViewModelsTask(args);

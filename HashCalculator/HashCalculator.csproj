@@ -162,6 +162,66 @@
   <ItemGroup>
     <EmbeddedResource Include="Assembly\BouncyCastle.Cryptography.dll" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Images\select_file_32.png" />
+    <Resource Include="Images\select_folder_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\settings_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\using_help_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\clear_panel_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\export_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\continue_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\pause_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\cancel_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\new_line_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\refresh_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\refresh_force_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\cancel_32_gray.png" />
+    <Resource Include="Images\clear_panel_32_gray.png" />
+    <Resource Include="Images\continue_32_gray.png" />
+    <Resource Include="Images\export_32_gray.png" />
+    <Resource Include="Images\new_line_32_gray.png" />
+    <Resource Include="Images\pause_32_gray.png" />
+    <Resource Include="Images\refresh_force_32_gray.png" />
+    <Resource Include="Images\refresh_32_gray.png" />
+    <Resource Include="Images\select_file_32_gray.png" />
+    <Resource Include="Images\select_folder_32_gray.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\topmost_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\topmost_32_gray.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\hash_algo_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\output_type_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\unable.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -414,4 +414,268 @@ namespace HashCalculator
             throw new NotImplementedException();
         }
     }
+
+    internal class BtnSelectFileEnabledImgCvt : IValueConverter
+    {
+        private static readonly BitmapImage enabled =
+            new BitmapImage(new Uri("/Images/select_file_32.png", UriKind.Relative));
+        private static readonly BitmapImage disabled =
+            new BitmapImage(new Uri("/Images/select_file_32_gray.png", UriKind.Relative));
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            switch ((bool)value)
+            {
+                case true:
+                    return enabled;
+                default:
+                    return disabled;
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class BtnSelectFolderEnabledImgCvt : IValueConverter
+    {
+        private static readonly BitmapImage enabled =
+            new BitmapImage(new Uri("/Images/select_folder_32.png", UriKind.Relative));
+        private static readonly BitmapImage disabled =
+            new BitmapImage(new Uri("/Images/select_folder_32_gray.png", UriKind.Relative));
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            switch ((bool)value)
+            {
+                case true:
+                    return enabled;
+                default:
+                    return disabled;
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class BtnClearPanelEnabledImgCvt : IValueConverter
+    {
+        private static readonly BitmapImage enabled =
+            new BitmapImage(new Uri("/Images/clear_panel_32.png", UriKind.Relative));
+        private static readonly BitmapImage disabled =
+            new BitmapImage(new Uri("/Images/clear_panel_32_gray.png", UriKind.Relative));
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            switch ((bool)value)
+            {
+                case true:
+                    return enabled;
+                default:
+                    return disabled;
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class BtnCancelAllEnabledImgCvt : IValueConverter
+    {
+        private static readonly BitmapImage enabled =
+            new BitmapImage(new Uri("/Images/cancel_32.png", UriKind.Relative));
+        private static readonly BitmapImage disabled =
+            new BitmapImage(new Uri("/Images/cancel_32_gray.png", UriKind.Relative));
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            switch ((bool)value)
+            {
+                case true:
+                    return enabled;
+                default:
+                    return disabled;
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class BtnContinueAllEnabledImgCvt : IValueConverter
+    {
+        private static readonly BitmapImage enabled =
+            new BitmapImage(new Uri("/Images/continue_32.png", UriKind.Relative));
+        private static readonly BitmapImage disabled =
+            new BitmapImage(new Uri("/Images/continue_32_gray.png", UriKind.Relative));
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            switch ((bool)value)
+            {
+                case true:
+                    return enabled;
+                default:
+                    return disabled;
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class BtnExportEnabledImgCvt : IValueConverter
+    {
+        private static readonly BitmapImage enabled =
+            new BitmapImage(new Uri("/Images/export_32.png", UriKind.Relative));
+        private static readonly BitmapImage disabled =
+            new BitmapImage(new Uri("/Images/export_32_gray.png", UriKind.Relative));
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            switch ((bool)value)
+            {
+                case true:
+                    return enabled;
+                default:
+                    return disabled;
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class BtnNewLineEnabledImgCvt : IValueConverter
+    {
+        private static readonly BitmapImage enabled =
+            new BitmapImage(new Uri("/Images/new_line_32.png", UriKind.Relative));
+        private static readonly BitmapImage disabled =
+            new BitmapImage(new Uri("/Images/new_line_32_gray.png", UriKind.Relative));
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            switch ((bool)value)
+            {
+                case true:
+                    return enabled;
+                default:
+                    return disabled;
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class BtnPauseAllEnabledImgCvt : IValueConverter
+    {
+        private static readonly BitmapImage enabled =
+            new BitmapImage(new Uri("/Images/pause_32.png", UriKind.Relative));
+        private static readonly BitmapImage disabled =
+            new BitmapImage(new Uri("/Images/pause_32_gray.png", UriKind.Relative));
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            switch ((bool)value)
+            {
+                case true:
+                    return enabled;
+                default:
+                    return disabled;
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class BtnRefreshEnabledImgCvt : IValueConverter
+    {
+        private static readonly BitmapImage enabled =
+            new BitmapImage(new Uri("/Images/refresh_32.png", UriKind.Relative));
+        private static readonly BitmapImage disabled =
+            new BitmapImage(new Uri("/Images/refresh_32_gray.png", UriKind.Relative));
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            switch ((bool)value)
+            {
+                case true:
+                    return enabled;
+                default:
+                    return disabled;
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class BtnRefreshForceEnabledImgCvt : IValueConverter
+    {
+        private static readonly BitmapImage enabled =
+            new BitmapImage(new Uri("/Images/refresh_force_32.png", UriKind.Relative));
+        private static readonly BitmapImage disabled =
+            new BitmapImage(new Uri("/Images/refresh_force_32_gray.png", UriKind.Relative));
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            switch ((bool)value)
+            {
+                case true:
+                    return enabled;
+                default:
+                    return disabled;
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class BtnTopmostEnabledImgCvt : IValueConverter
+    {
+        private static readonly BitmapImage enabled =
+            new BitmapImage(new Uri("/Images/topmost_32.png", UriKind.Relative));
+        private static readonly BitmapImage disabled =
+            new BitmapImage(new Uri("/Images/topmost_32_gray.png", UriKind.Relative));
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            switch ((bool)value)
+            {
+                case true:
+                    return enabled;
+                default:
+                    return disabled;
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }
