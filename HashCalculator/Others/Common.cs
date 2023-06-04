@@ -30,40 +30,63 @@ namespace HashCalculator
         public bool Add(string[] hashName)
         {
             if (hashName.Length < 2 || hashName[0] == null || hashName[1] == null)
+            {
                 return false;
+            }
             string hash = hashName[0].Trim().ToLower();
             // Windows 文件名不区分大小写
             string name = hashName[1].Trim(new char[] { '*', ' ', '\n' }).ToLower();
             if (this.nameHashs.ContainsKey(name))
+            {
                 this.nameHashs[name].Add(hash);
+            }
             else
+            {
                 this.nameHashs[name] = new List<string> { hash };
+            }
             return true;
         }
 
         public CmpRes Verify(string name, string hash)
         {
             if (hash == null || name == null || this.nameHashs.Count == 0)
+            {
                 return CmpRes.Unrelated;
+            }
             // Windows 文件名不区分大小写
             name = name.Trim(new char[] { '*', ' ', '\n' }).ToLower();
             hash = hash.Trim().ToLower();
             if (this.nameHashs.Keys.Count == 1
                 && this.nameHashs.Keys.Contains(string.Empty))
+            {
                 if (this.nameHashs[string.Empty].Contains(hash))
+                {
                     return CmpRes.Matched;
+                }
                 else
+                {
                     return CmpRes.Unrelated;
+                }
+            }
             if (!this.nameHashs.TryGetValue(name, out List<string> hashs))
+            {
                 return CmpRes.Unrelated;
-            if (hashs.Count == 0) return CmpRes.Uncertain;
+            }
+            if (hashs.Count == 0)
+            {
+                return CmpRes.Uncertain;
+            }
             if (hashs.Count > 1)
             {
                 string fst = hashs.First();
                 if (hashs.All(i => i == fst))
+                {
                     return fst == hash ? CmpRes.Matched : CmpRes.Mismatch;
+                }
                 else
+                {
                     return CmpRes.Uncertain;
+                }
             }
             return hashs.Contains(hash) ? CmpRes.Matched : CmpRes.Mismatch;
         }
@@ -89,8 +112,11 @@ namespace HashCalculator
             {
                 lock (_lock)
                 {
-                    if (cancellation == null || cancellation.IsCancellationRequested)
+                    if (cancellation == null ||
+                        cancellation.IsCancellationRequested)
+                    {
                         cancellation = new CancellationTokenSource();
+                    }
                     return cancellation;
                 }
             }
@@ -108,13 +134,19 @@ namespace HashCalculator
             double bytesto;
             bytesto = bytes / gb;
             if (bytesto >= 1)
+            {
                 return $"{bytesto:f1}GB";
+            }
             bytesto = bytes / mb;
             if (bytesto >= 1)
+            {
                 return $"{bytesto:f1}MB";
+            }
             bytesto = bytes / kb;
             if (bytesto >= 1)
+            {
                 return $"{bytesto:f1}KB";
+            }
             return $"{bytes}B";
         }
     }
@@ -133,7 +165,9 @@ namespace HashCalculator
         public void Reset()
         {
             if (this.IsAlive())
+            {
                 return;
+            }
             this.source = new CancellationTokenSource();
             this.task = Task.Factory.StartNew(
                 () => { this.process(this.source.Token); },
@@ -145,7 +179,9 @@ namespace HashCalculator
         public void Cancel()
         {
             if (this.source == null || this.task == null)
+            {
                 return;
+            }
             this.source.Cancel();
             this.task.Wait();
             this.source.Dispose();
@@ -193,7 +229,9 @@ namespace HashCalculator
         public void Adjust(int number)
         {
             if (number < 1 || number > this.maxLength)
+            {
                 return;
+            }
             int count = this.Count;
             if (count < number)
             {
@@ -205,7 +243,10 @@ namespace HashCalculator
                         tk.Reset();
                         --remaining;
                     }
-                    if (remaining <= 0) break;
+                    if (remaining <= 0)
+                    {
+                        break;
+                    }
                 }
             }
             else if (count > number)
@@ -218,7 +259,10 @@ namespace HashCalculator
                         tk.Cancel();
                         --remaining;
                     }
-                    if (remaining <= 0) break;
+                    if (remaining <= 0)
+                    {
+                        break;
+                    }
                 }
             }
         }

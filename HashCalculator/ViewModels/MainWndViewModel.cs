@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Threading;
 
 namespace HashCalculator
@@ -145,30 +144,37 @@ namespace HashCalculator
 
         private void DisplayModels(IEnumerable<ModelArg> args, CancellationToken token)
         {
-            int argsCount, remainingArgsCount;
-            argsCount = remainingArgsCount = args.Count();
+            int addedArgCount = 0;
+            int argsCount = args.Count();
             if (argsCount == 0)
             {
                 return;
             }
-            AppDispatcher.Invoke(() => { this.IncreaseQueueTotal(argsCount); });
+            AppDispatcher.Invoke(() =>
+            {
+                this.IncreaseQueueTotal(argsCount);
+            });
             lock (displayModelLock)
             {
                 foreach (ModelArg arg in args)
                 {
                     if (token.IsCancellationRequested)
                     {
-                        AppDispatcher.Invoke(
-                            () => { this.DecreaseQueueTotal(remainingArgsCount); });
+                        AppDispatcher.Invoke(() =>
+                        {
+                            this.DecreaseQueueTotal(argsCount - addedArgCount);
+                        });
                         break;
                     }
-                    --remainingArgsCount;
                     AppDispatcher.Invoke(this.modelToTable, arg);
-                    Thread.Sleep(1);
+                    if (++addedArgCount % 1000 == 0)
+                    {
+                        Thread.Sleep(1000);
+                    }
                 }
             }
 #if DEBUG
-            Console.WriteLine($"已添加哈希模型：{argsCount - remainingArgsCount}");
+            Console.WriteLine($"已添加哈希模型：{addedArgCount}");
 #endif
         }
 
@@ -180,7 +186,6 @@ namespace HashCalculator
                 {
                     number = 0;
                 }
-
                 this.TotalNumberInQueue -= number;
                 this.QueueItemCountChanged();
             }
@@ -194,7 +199,6 @@ namespace HashCalculator
                 {
                     number = 0;
                 }
-
                 this.TotalNumberInQueue += number;
                 this.QueueItemCountChanged();
             }
@@ -208,7 +212,6 @@ namespace HashCalculator
                 {
                     number = 0;
                 }
-
                 this.FinishedInQueue += number;
                 this.QueueItemCountChanged();
             }
@@ -327,7 +330,6 @@ namespace HashCalculator
                 {
                     model.ShutdownModel();
                 }
-
                 this.cancellation?.Dispose();
                 this.cancellation = GlobalCancellation.Handle;
             }
