@@ -2,30 +2,38 @@
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace HashCalculator
 {
     public partial class MainWindow : Window
     {
-        private readonly ObservableCollection<HashViewModel> hashViewModels;
         private readonly Basis VerificationBasis = new Basis();
         private readonly MainWndViewModel viewModel = new MainWndViewModel();
+
+        public static ScrollViewer DataGridScroll { get; set; }
 
         public MainWindow()
         {
             this.DataContext = this.viewModel;
-            this.hashViewModels = this.viewModel.HashViewModels;
+            this.Loaded += this.MainWindowLoaded;
             this.InitializeComponent();
             this.Title = $"{Info.Title} v{Info.Ver} by {Info.Author} @ {Info.Published}";
             this.viewModel.SetConcurrent(Settings.Current.SelectedTaskNumberLimit);
+        }
+
+        private void MainWindowLoaded(object sender, RoutedEventArgs e)
+        {
+            if (VisualTreeHelper.GetChild(this.uiDataGrid_HashFiles, 0) is Border border)
+            {
+                DataGridScroll = border.Child as ScrollViewer;
+            }
         }
 
         private void SearchUnderSpecifiedPolicy(IEnumerable<string> paths, List<string> outDataPaths)
@@ -108,7 +116,7 @@ namespace HashCalculator
 
         private void Button_ExportAsTextFile_Click(object sender, RoutedEventArgs e)
         {
-            if (this.hashViewModels.Count == 0)
+            if (this.viewModel.HashViewModels.Count == 0)
             {
                 MessageBox.Show("列表中没有任何需要导出的条目。", "提示");
                 return;
@@ -129,7 +137,7 @@ namespace HashCalculator
             {
                 using (StreamWriter sw = File.CreateText(sf.FileName))
                 {
-                    foreach (HashViewModel hm in this.hashViewModels)
+                    foreach (HashViewModel hm in this.viewModel.HashViewModels)
                     {
                         if (hm.IsSucceeded && hm.Export)
                         {
@@ -330,7 +338,7 @@ namespace HashCalculator
                 MessageBox.Show("未输入哈希值校验依据。", "提示");
                 return;
             }
-            if (this.hashViewModels.Count == 0 && File.Exists(pathOrHash))
+            if (this.viewModel.HashViewModels.Count == 0 && File.Exists(pathOrHash))
             {
                 this.AcceptNewFilePathsLockButtons();
                 new Thread(() =>
@@ -343,7 +351,7 @@ namespace HashCalculator
             else
             {
                 this.GlobalUpdateHashNameItems(pathOrHash);
-                foreach (HashViewModel hm in this.hashViewModels)
+                foreach (HashViewModel hm in this.viewModel.HashViewModels)
                 {
                     if (hm.IsSucceeded)
                     {

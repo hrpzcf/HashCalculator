@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Threading;
 
 namespace HashCalculator
 {
-    internal class MainWndViewModel : INotifyPropertyChanged
+    internal class MainWndViewModel : BaseNotifiable
     {
         private readonly ModelStarter starter = new ModelStarter(8);
         private static readonly Dispatcher AppDispatcher
@@ -31,22 +31,20 @@ namespace HashCalculator
         private static readonly object displayModelLock = new object();
         private static readonly object displayModelTaskLock = new object();
 
-        public static MainWndViewModel Instance;
-        public event PropertyChangedEventHandler PropertyChanged;
+        public MainWndViewModel()
+        {
+            Settings.Current.PropertyChanged += this.PropChangedAction;
+            this.modelToTable = new ModelToTableDelegate(this.ModelToTable);
+        }
 
         public ObservableCollection<HashViewModel> HashViewModels { get; }
             = new ObservableCollection<HashViewModel>();
 
         public string Report
         {
-            set
-            {
-                this.hashCheckReport = value;
-                this.OnPropertyChanged();
-            }
             get
             {
-                if (this.hashCheckReport == string.Empty)
+                if (string.IsNullOrEmpty(this.hashCheckReport))
                 {
                     return "暂无校验报告...";
                 }
@@ -55,11 +53,18 @@ namespace HashCalculator
                     return this.hashCheckReport;
                 }
             }
+            set
+            {
+                this.SetPropNotify(ref this.hashCheckReport, value);
+            }
         }
 
         public QueueState State
         {
-            get => this.queueState;
+            get
+            {
+                return this.queueState;
+            }
             set
             {
                 if ((this.queueState == QueueState.None
@@ -67,45 +72,37 @@ namespace HashCalculator
                     && value == QueueState.Started)
                 {
                     AppDispatcher.Invoke(() => { this.Report = string.Empty; });
-                    this.queueState = value;
-                    this.OnPropertyChanged();
+                    this.SetPropNotify(ref this.queueState, value);
                 }
                 else if (this.queueState == QueueState.Started && value == QueueState.Stopped)
                 {
                     this.GenerateVerificationReport();
-                    this.queueState = value;
-                    this.OnPropertyChanged();
+                    this.SetPropNotify(ref this.queueState, value);
                 }
             }
         }
 
         public int TotalNumberInQueue
         {
-            get { return this.totalNumberInQueue; }
-            set { this.totalNumberInQueue = value; this.OnPropertyChanged(); }
+            get
+            {
+                return this.totalNumberInQueue;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.totalNumberInQueue, value);
+            }
         }
 
         public int FinishedInQueue
         {
-            get { return this.finishedNumberInQueue; }
-            set { this.finishedNumberInQueue = value; this.OnPropertyChanged(); }
-        }
-
-        public MainWndViewModel()
-        {
-            Instance = this;
-            Settings.Current.PropertyChanged += this.PropChangedAction;
-            this.modelToTable = new ModelToTableDelegate(this.ModelToTable);
-        }
-
-        private void PropChangedAction(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(Settings.Current.SelectedTaskNumberLimit))
+            get
             {
-                Task.Run(() =>
-                {
-                    this.SetConcurrent(Settings.Current.SelectedTaskNumberLimit);
-                });
+                return this.finishedNumberInQueue;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.finishedNumberInQueue, value);
             }
         }
 
@@ -154,7 +151,6 @@ namespace HashCalculator
             {
                 return;
             }
-
             AppDispatcher.Invoke(() => { this.IncreaseQueueTotal(argsCount); });
             lock (displayModelLock)
             {
@@ -218,11 +214,6 @@ namespace HashCalculator
             }
         }
 
-        private void OnPropertyChanged([CallerMemberName] string name = null)
-        {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
-
         private int SerialGet()
         {
             lock (serialNumberLock) { return ++this.currentSerialNumber; }
@@ -271,7 +262,6 @@ namespace HashCalculator
                 {
                     this.cancellation = GlobalCancellation.Handle;
                 }
-
                 CancellationToken token = this.cancellation.Token;
                 Task.Run(() => { this.DisplayModels(args, token); }, token);
             }
@@ -399,6 +389,17 @@ namespace HashCalculator
         {
             this.IncreaseQueueTotal(1);
             viewModel.StartupModel(true);
+        }
+
+        private void PropChangedAction(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(Settings.Current.SelectedTaskNumberLimit))
+            {
+                Task.Run(() =>
+                {
+                    this.SetConcurrent(Settings.Current.SelectedTaskNumberLimit);
+                });
+            }
         }
 
         public string StartCompareToolTip { get; } =
