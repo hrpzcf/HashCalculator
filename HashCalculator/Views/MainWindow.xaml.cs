@@ -8,6 +8,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 
 namespace HashCalculator
@@ -17,9 +18,11 @@ namespace HashCalculator
         private readonly Basis VerificationBasis = new Basis();
         private readonly MainWndViewModel viewModel = new MainWndViewModel();
 
-        public static ScrollViewer DataGridScroll { get; set; }
-
         public static MainWindow This { get; private set; }
+
+        public static IntPtr WndHandle { get; private set; }
+
+        public static ScrollViewer DataGridScroll { get; private set; }
 
         public MainWindow()
         {
@@ -33,6 +36,7 @@ namespace HashCalculator
 
         private void MainWindowLoaded(object sender, RoutedEventArgs e)
         {
+            WndHandle = new WindowInteropHelper(this).Handle;
             if (VisualTreeHelper.GetChild(this.uiDataGrid_HashFiles, 0) is Border border)
             {
                 DataGridScroll = border.Child as ScrollViewer;

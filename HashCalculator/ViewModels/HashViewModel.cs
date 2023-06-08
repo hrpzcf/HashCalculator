@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Threading;
 using System.Windows;
@@ -56,6 +57,10 @@ namespace HashCalculator
         private string _modelDetails = "暂无详情...";
         private AlgoType _hashName = AlgoType.Unknown;
         private string durationofTask = string.Empty;
+        private RelayCommand copyModelHashValueCmd;
+        private RelayCommand openModelFilePathCmd;
+        private RelayCommand openFolderSelectItemCmd;
+        private RelayCommand openFilePropertiesCmd;
         #endregion
 
         private readonly string expectedHash;
@@ -70,18 +75,16 @@ namespace HashCalculator
         private readonly object cmpResultLock = new object();
         private readonly object manipulationLock = new object();
         private readonly object exportOptionLock = new object();
-        private RelayCommand copyViewModelHashValueCmd;
-        private RelayCommand openFolderSelectItemCmd;
 
-        public event Action<HashViewModel> ModelCanbeStartedEvent;
         public event Action<int> ComputeFinishedEvent;
         public event Action<int> WaitingModelCanceledEvent;
+        public event Action<HashViewModel> ModelCanbeStartedEvent;
 
         public HashViewModel(int serial, ModelArg arg)
         {
-            this.Path = new FileInfo(arg.filepath);
+            this.FileInfo = new FileInfo(arg.filepath);
             this.Serial = serial;
-            this.Name = this.Path.Name;
+            this.Name = this.FileInfo.Name;
             this.expectedHash = arg.expected?.ToLower();
             this.isDeprecated = arg.deprecated;
         }
@@ -90,7 +93,7 @@ namespace HashCalculator
 
         public string Name { get; set; }
 
-        public FileInfo Path { get; set; }
+        public FileInfo FileInfo { get; set; }
 
         public bool Export
         {
@@ -260,16 +263,16 @@ namespace HashCalculator
             }
         }
 
-        public ICommand CopyViewModelHashValueCmd
+        public ICommand CopyModelHashValueCmd
         {
             get
             {
-                if (this.copyViewModelHashValueCmd is null)
+                if (this.copyModelHashValueCmd is null)
                 {
-                    this.copyViewModelHashValueCmd =
+                    this.copyModelHashValueCmd =
                         new RelayCommand(this.CopyViewModelHashValueAction);
                 }
-                return this.copyViewModelHashValueCmd;
+                return this.copyModelHashValueCmd;
             }
         }
 
@@ -286,6 +289,32 @@ namespace HashCalculator
             }
         }
 
+        public ICommand OpenModelFilePathCmd
+        {
+            get
+            {
+                if (this.openModelFilePathCmd is null)
+                {
+                    this.openModelFilePathCmd =
+                        new RelayCommand(this.OpenModelFilePathAction);
+                }
+                return this.openModelFilePathCmd;
+            }
+        }
+
+        public ICommand OpenFilePropertiesCmd
+        {
+            get
+            {
+                if (this.openFilePropertiesCmd is null)
+                {
+                    this.openFilePropertiesCmd =
+                        new RelayCommand(this.OpenFilePropertiesAction);
+                }
+                return this.openFilePropertiesCmd;
+            }
+        }
+
         private void CopyViewModelHashValueAction(object param)
         {
             Clipboard.SetText(this.Hash);
@@ -293,7 +322,58 @@ namespace HashCalculator
 
         private void OpenFolderSelectItemAction(object param)
         {
-            CommonUtils.OpenFolderAndSelectItem(this.Path.FullName);
+            // 需要调用 FileInfo 的 Refresh 方法才能更新 FileInfo.Exists
+            if (File.Exists(this.FileInfo.FullName))
+            {
+                CommonUtils.OpenFolderAndSelectItem(this.FileInfo.FullName);
+            }
+            else
+            {
+                MessageBox.Show(MainWindow.This, $"文件不存在：\n{this.FileInfo.FullName}",
+                    "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void OpenModelFilePathAction(object param)
+        {
+            // 需要调用 FileInfo 的 Refresh 方法才能更新 FileInfo.Exists
+            if (File.Exists(this.FileInfo.FullName))
+            {
+                NativeFunctions.ShellExecuteW(
+                MainWindow.WndHandle,
+                "open",
+                this.FileInfo.FullName,
+                null,
+                System.IO.Path.GetDirectoryName(this.FileInfo.FullName),
+                ShowCmds.SW_SHOWNORMAL);
+            }
+            else
+            {
+                MessageBox.Show(MainWindow.This, $"文件不存在：\n{this.FileInfo.FullName}",
+                     "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void OpenFilePropertiesAction(object param)
+        {
+            // 需要调用 FileInfo 的 Refresh 方法才能更新 FileInfo.Exists
+            if (File.Exists(this.FileInfo.FullName))
+            {
+                var shellExecuteInfo = new SHELLEXECUTEINFOW();
+                shellExecuteInfo.cbSize = Marshal.SizeOf(shellExecuteInfo);
+                shellExecuteInfo.fMask = SEMaskFlags.SEE_MASK_INVOKEIDLIST;
+                shellExecuteInfo.hwnd = MainWindow.WndHandle;
+                shellExecuteInfo.lpVerb = "properties";
+                shellExecuteInfo.lpFile = this.FileInfo.FullName;
+                shellExecuteInfo.lpDirectory = this.FileInfo.DirectoryName;
+                shellExecuteInfo.nShow = ShowCmds.SW_SHOWNORMAL;
+                NativeFunctions.ShellExecuteExW(ref shellExecuteInfo);
+            }
+            else
+            {
+                MessageBox.Show(MainWindow.This, $"文件不存在：\n{this.FileInfo.FullName}",
+                     "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         public void HashViewModelCancelled()
@@ -359,7 +439,8 @@ namespace HashCalculator
                 });
                 goto TaskRunningEnds;
             }
-            else if (!this.Path.Exists)
+            // 需要调用 FileInfo 的 Refresh 方法才能更新 FileInfo.Exists
+            else if (!File.Exists(this.FileInfo.FullName))
             {
                 AppDispatcher.Invoke(() =>
                 {
@@ -370,7 +451,7 @@ namespace HashCalculator
             }
             try
             {
-                using (FileStream fs = File.OpenRead(this.Path.FullName))
+                using (FileStream fs = File.OpenRead(this.FileInfo.FullName))
                 {
                     AppDispatcher.Invoke(() =>
                     {
@@ -470,7 +551,8 @@ namespace HashCalculator
                 });
                 goto TaskRunningEnds;
             }
-            else if (!this.Path.Exists)
+            // 需要调用 FileInfo 的 Refresh 方法才能更新 FileInfo.Exists
+            else if (!File.Exists(this.FileInfo.FullName))
             {
                 AppDispatcher.Invoke(() =>
                 {
@@ -481,7 +563,7 @@ namespace HashCalculator
             }
             try
             {
-                using (FileStream fs = File.OpenRead(this.Path.FullName))
+                using (FileStream fs = File.OpenRead(this.FileInfo.FullName))
                 {
                     AppDispatcher.Invoke(() =>
                     {

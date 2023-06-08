@@ -277,12 +277,20 @@
                         <Setter.Value>
                             <ContextMenu>
                                 <MenuItem
-                                    Command="{Binding OpenFolderSelectItemCmd}"
-                                    Header="浏览文件" />
+                                    Command="{Binding OpenModelFilePathCmd}"
+                                    Header="打开文件" />
                                 <MenuItem
-                                    Command="{Binding CopyViewModelHashValueCmd}"
+                                    Command="{Binding OpenFolderSelectItemCmd}"
+                                    Header="打开位置" />
+                                <Separator />
+                                <MenuItem
+                                    Command="{Binding CopyModelHashValueCmd}"
                                     Header="复制哈希值"
                                     IsEnabled="{Binding Result, Converter={StaticResource MenuCopyHashEnabledCvt}}" />
+                                <Separator />
+                                <MenuItem
+                                    Command="{Binding OpenFilePropertiesCmd}"
+                                    Header="文件属性" />
                             </ContextMenu>
                         </Setter.Value>
                     </Setter>
@@ -296,12 +304,12 @@
                 <DataGridTextColumn
                     MinWidth="180"
                     Binding="{Binding Name}"
-                    CellStyle="{StaticResource CellStyleFileName}"
+                    CellStyle="{StaticResource CellStyleTipPath}"
                     Header="文件名"
                     IsReadOnly="True" />
                 <DataGridTextColumn
                     Binding="{Binding FileSize}"
-                    CellStyle="{StaticResource CellStyleFileName}"
+                    CellStyle="{StaticResource CellStyleTipPath}"
                     Header="文件体积 (字节)"
                     IsReadOnly="True"
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoFileSizeColumn, Converter={StaticResource NoColumnCvt}, Mode=OneWay}" />
@@ -394,7 +402,7 @@
                                 <Button
                                     Grid.Column="3"
                                     Padding="4"
-                                    Command="{Binding CopyViewModelHashValueCmd}"
+                                    Command="{Binding CopyModelHashValueCmd}"
                                     Style="{StaticResource ImageButtonStyle1}"
                                     ToolTip="复制..."
                                     Visibility="{Binding Result, Converter={StaticResource VisibSucceededCvt}}">
