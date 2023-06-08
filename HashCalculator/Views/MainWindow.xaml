@@ -9,7 +9,7 @@
     Width="{Binding Source={x:Static local:Settings.Current}, Path=MainWndWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     Height="{Binding Source={x:Static local:Settings.Current}, Path=MainWndHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     d:DataContext="{d:DesignInstance Type=local:MainWndViewModel}"
-    Icon="/Images/icon.png"
+    Icon="/Images/icon.ico"
     Left="{Binding Source={x:Static local:Settings.Current}, Path=MainWindowLeft, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     SnapsToDevicePixels="True"
     Top="{Binding Source={x:Static local:Settings.Current}, Path=MainWindowTop, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
