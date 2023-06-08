@@ -19,13 +19,16 @@ namespace HashCalculator
 
         public static ScrollViewer DataGridScroll { get; set; }
 
+        public static MainWindow This { get; private set; }
+
         public MainWindow()
         {
             this.DataContext = this.viewModel;
             this.Loaded += this.MainWindowLoaded;
             this.InitializeComponent();
             this.Title = $"{Info.Title} v{Info.Ver} by {Info.Author} @ {Info.Published}";
-            this.viewModel.SetConcurrent(Settings.Current.SelectedTaskNumberLimit);
+            this.viewModel.ChangeTaskNumber(Settings.Current.SelectedTaskNumberLimit);
+            This = this;
         }
 
         private void MainWindowLoaded(object sender, RoutedEventArgs e)
@@ -285,7 +288,6 @@ namespace HashCalculator
                         {
                             expectedHash = first;
                         }
-
                         foreach (string fullpath in nameFullName[pair.Key])
                         {
                             hashModelArgsList.Add(new ModelArg(expectedHash, fullpath));
@@ -388,13 +390,6 @@ namespace HashCalculator
         {
             this.uiComboBox_ComparisonMethod.SelectedIndex =
                 File.Exists(this.uiTextBox_HashValueOrFilePath.Text) ? 0 : 1;
-        }
-
-        private void Button_CopyHashValue_Click(object sender, RoutedEventArgs e)
-        {
-            Button button = sender as Button;
-            HashViewModel hashModel = button.DataContext as HashViewModel;
-            Clipboard.SetText(hashModel.Hash);
         }
 
         private void Button_CopyRefreshHash_Click(object sender, RoutedEventArgs e)

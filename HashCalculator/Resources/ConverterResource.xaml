@@ -33,4 +33,5 @@
     <local:BtnTopmostEnabledImgCvt x:Key="BtnTopmostEnabledImgCvt" />
     <local:DataGridMaskVisibCvt x:Key="DataGridMaskVisibCvt" />
     <local:DataGridBlurEffectCvt x:Key="DataGridBlurEffectCvt" />
+    <local:MenuCopyHashEnabledCvt x:Key="MenuCopyHashEnabledCvt" />
 </ResourceDictionary>

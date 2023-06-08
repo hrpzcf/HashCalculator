@@ -1,8 +1,8 @@
 ﻿namespace HashCalculator
 {
-    public class ComboBoxItem
+    public class ComboItem
     {
-        public ComboBoxItem(string name, object value)
+        public ComboItem(string name, object value)
         {
             this.Display = name;
             this.ItemValue = value;

@@ -262,7 +262,6 @@
             ItemsSource="{Binding HashViewModels}"
             PreviewKeyDown="DataGrid_HashFiles_PrevKeyDown"
             RowHeight="28"
-            RowStyle="{StaticResource RowStyleNormal}"
             SelectionMode="Single"
             VerticalGridLinesBrush="#FF969696">
             <DataGrid.Effect>
@@ -270,6 +269,25 @@
                     KernelType="Box"
                     Radius="{Binding AllowDrop, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGrid}, AncestorLevel=1}, Converter={StaticResource DataGridBlurEffectCvt}}" />
             </DataGrid.Effect>
+            <DataGrid.RowStyle>
+                <Style
+                    BasedOn="{StaticResource RowStyleNormal}"
+                    TargetType="{x:Type DataGridRow}">
+                    <Setter Property="ContextMenu">
+                        <Setter.Value>
+                            <ContextMenu>
+                                <MenuItem
+                                    Command="{Binding OpenFolderSelectItemCmd}"
+                                    Header="浏览文件" />
+                                <MenuItem
+                                    Command="{Binding CopyViewModelHashValueCmd}"
+                                    Header="复制哈希值"
+                                    IsEnabled="{Binding Result, Converter={StaticResource MenuCopyHashEnabledCvt}}" />
+                            </ContextMenu>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </DataGrid.RowStyle>
             <DataGrid.Columns>
                 <DataGridTextColumn
                     Binding="{Binding Serial}"
@@ -376,7 +394,7 @@
                                 <Button
                                     Grid.Column="3"
                                     Padding="4"
-                                    Click="Button_CopyHashValue_Click"
+                                    Command="{Binding CopyViewModelHashValueCmd}"
                                     Style="{StaticResource ImageButtonStyle1}"
                                     ToolTip="复制..."
                                     Visibility="{Binding Result, Converter={StaticResource VisibSucceededCvt}}">
@@ -446,6 +464,10 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
+                <DataGridTextColumn
+                    Width="*"
+                    CanUserSort="False"
+                    IsReadOnly="True" />
             </DataGrid.Columns>
         </DataGrid>
         <Grid

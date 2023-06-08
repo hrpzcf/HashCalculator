@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 
 namespace HashCalculator
 {
-    public class SettingsViewModel : BaseNotifiable
+    public class SettingsViewModel : NotifiableModel
     {
         private bool mainWndTopmost = false;
         private string lastUsedPath = string.Empty;
@@ -21,6 +21,8 @@ namespace HashCalculator
         private bool noExportColumn = false;
         private bool noDurationColumn = false;
         private bool noFileSizeColumn = false;
+        private readonly object algoSelectionLock = new object();
+        private readonly object outTypeSelectionLock = new object();
 
         public SettingsViewModel()
         {
@@ -128,14 +130,14 @@ namespace HashCalculator
         {
             get
             {
-                lock (Locks.AlgoSelectionLock)
+                lock (this.algoSelectionLock)
                 {
                     return this.selectedAlgorithm;
                 }
             }
             set
             {
-                lock (Locks.AlgoSelectionLock)
+                lock (this.algoSelectionLock)
                 {
                     this.selectedAlgorithm = value;
                 }
@@ -146,14 +148,14 @@ namespace HashCalculator
         {
             get
             {
-                lock (Locks.OutTypeSelectionLock)
+                lock (this.outTypeSelectionLock)
                 {
                     return this.selectedOutputType;
                 }
             }
             set
             {
-                lock (Locks.OutTypeSelectionLock)
+                lock (this.outTypeSelectionLock)
                 {
                     this.selectedOutputType = value;
                 }
@@ -252,20 +254,20 @@ namespace HashCalculator
         };
 
         [XmlIgnore]
-        public ComboBoxItem[] AvailableOutputTypes { get; } =
+        public ComboItem[] AvailableOutputTypes { get; } =
 {
-            new ComboBoxItem("Base64", OutputType.BASE64),
-            new ComboBoxItem("十六进制大写", OutputType.BinaryUpper),
-            new ComboBoxItem("十六进制小写", OutputType.BinaryLower),
+            new ComboItem("Base64", OutputType.BASE64),
+            new ComboItem("十六进制大写", OutputType.BinaryUpper),
+            new ComboItem("十六进制小写", OutputType.BinaryLower),
         };
 
         [XmlIgnore]
-        public ComboBoxItem[] AvailableTaskNumLimits { get; } =
+        public ComboItem[] AvailableTaskNumLimits { get; } =
 {
-            new ComboBoxItem("1 个：大多数文件很大", TaskNum.One),
-            new ComboBoxItem("2 个：大多数文件较大", TaskNum.Two),
-            new ComboBoxItem("4 个：大多数文件较小", TaskNum.Four),
-            new ComboBoxItem("8 个：大多数文件很小", TaskNum.Eight),
+            new ComboItem("1 个：大多数文件很大", TaskNum.One),
+            new ComboItem("2 个：大多数文件较大", TaskNum.Two),
+            new ComboItem("4 个：大多数文件较小", TaskNum.Four),
+            new ComboItem("8 个：大多数文件很小", TaskNum.Eight),
         };
 
         [XmlIgnore]
@@ -275,18 +277,18 @@ namespace HashCalculator
             "通用格式的哈希值文件请参考程序 [导出结果] 功能导出的文件的内容排布格式。";
 
         [XmlIgnore]
-        public ComboBoxItem[] AvailableDroppedSearchPolicies { get; } =
+        public ComboItem[] AvailableDroppedSearchPolicies { get; } =
         {
-            new ComboBoxItem("搜索一代子文件", SearchPolicy.Children),
-            new ComboBoxItem("搜索全部子文件", SearchPolicy.Descendants),
-            new ComboBoxItem("不搜索该文件夹", SearchPolicy.DontSearch),
+            new ComboItem("搜索一代子文件", SearchPolicy.Children),
+            new ComboItem("搜索全部子文件", SearchPolicy.Descendants),
+            new ComboItem("不搜索该文件夹", SearchPolicy.DontSearch),
         };
 
         [XmlIgnore]
-        public ComboBoxItem[] AvailableQVSearchPolicies { get; } =
+        public ComboItem[] AvailableQVSearchPolicies { get; } =
 {
-            new ComboBoxItem("搜索依据所在目录的一代子文件", SearchPolicy.Children),
-            new ComboBoxItem("搜索依据所在目录的所有子文件", SearchPolicy.Descendants),
+            new ComboItem("搜索依据所在目录的一代子文件", SearchPolicy.Children),
+            new ComboItem("搜索依据所在目录的所有子文件", SearchPolicy.Descendants),
         };
     }
 }

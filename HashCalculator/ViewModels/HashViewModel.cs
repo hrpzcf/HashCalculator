@@ -1,12 +1,11 @@
 ﻿using Org.BouncyCastle.Crypto.Digests;
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Threading;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Threading;
 
 namespace HashCalculator
@@ -42,7 +41,7 @@ namespace HashCalculator
         }
     }
 
-    internal class HashViewModel : INotifyPropertyChanged
+    internal class HashViewModel : NotifiableModel
     {
         #region properties for binding
 
@@ -70,11 +69,13 @@ namespace HashCalculator
             = new ManualResetEvent(true);
         private readonly object cmpResultLock = new object();
         private readonly object manipulationLock = new object();
+        private readonly object exportOptionLock = new object();
+        private RelayCommand copyViewModelHashValueCmd;
+        private RelayCommand openFolderSelectItemCmd;
 
         public event Action<HashViewModel> ModelCanbeStartedEvent;
         public event Action<int> ComputeFinishedEvent;
         public event Action<int> WaitingModelCanceledEvent;
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public HashViewModel(int serial, ModelArg arg)
         {
@@ -83,11 +84,6 @@ namespace HashCalculator
             this.Name = this.Path.Name;
             this.expectedHash = arg.expected?.ToLower();
             this.isDeprecated = arg.deprecated;
-        }
-
-        private void OnPropertyChanged([CallerMemberName] string name = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
         public int Serial { get; set; }
@@ -100,17 +96,16 @@ namespace HashCalculator
         {
             get
             {
-                lock (Locks.ExportOptionsLock)
+                lock (this.exportOptionLock)
                 {
                     return this._exportHash;
                 }
             }
             set
             {
-                lock (Locks.ExportOptionsLock)
+                lock (this.exportOptionLock)
                 {
-                    this._exportHash = value;
-                    this.OnPropertyChanged();
+                    this.SetPropNotify(ref this._exportHash, value);
                 }
             }
         }
@@ -129,42 +124,64 @@ namespace HashCalculator
 
         public string Hash
         {
-            get { return this._hashValue; }
-            set { this._hashValue = value; this.OnPropertyChanged(); }
+            get
+            {
+                return this._hashValue;
+            }
+            set
+            {
+                this.SetPropNotify(ref this._hashValue, value);
+            }
         }
 
         public long FileSize
         {
-            get { return this._fileSize; }
-            set { this._fileSize = value; this.OnPropertyChanged(); }
+            get
+            {
+                return this._fileSize;
+            }
+            set
+            {
+                this.SetPropNotify(ref this._fileSize, value);
+            }
         }
 
         public AlgoType HashName
         {
-            get { return this._hashName; }
-            set { this._hashName = value; this.OnPropertyChanged(); }
+            get
+            {
+                return this._hashName;
+            }
+            set
+            {
+                this.SetPropNotify(ref this._hashName, value);
+            }
         }
 
         public CmpRes CmpResult
         {
             get
             {
-                lock (cmpResultLock)
+                lock (this.cmpResultLock)
+                {
                     return this._cmpResult;
+                }
             }
             set
             {
-                lock (cmpResultLock)
+                lock (this.cmpResultLock)
                 {
-                    this._cmpResult = value;
-                    this.OnPropertyChanged();
+                    this.SetPropNotify(ref this._cmpResult, value);
                 }
             }
         }
 
         public HashState State
         {
-            get { return this._currentState; }
+            get
+            {
+                return this._currentState;
+            }
             set
             {
                 switch (value)
@@ -173,14 +190,16 @@ namespace HashCalculator
                         this.Hash = "正在排队...";
                         break;
                 }
-                this._currentState = value;
-                this.OnPropertyChanged();
+                this.SetPropNotify(ref this._currentState, value);
             }
         }
 
         public HashResult Result
         {
-            get { return this._currentResult; }
+            get
+            {
+                return this._currentResult;
+            }
             set
             {
                 switch (value)
@@ -189,39 +208,100 @@ namespace HashCalculator
                         this.Hash = "任务已被取消...";
                         break;
                 }
-                this._currentResult = value;
-                this.OnPropertyChanged();
+                this.SetPropNotify(ref this._currentResult, value);
             }
         }
 
         public long Progress
         {
-            get { return this._progress; }
-            set { this._progress = value; this.OnPropertyChanged(); }
+            get
+            {
+                return this._progress;
+            }
+            set
+            {
+                this.SetPropNotify(ref this._progress, value);
+            }
         }
 
         public long ProgressTotal
         {
-            get { return this._progressTotal; }
-            set { this._progressTotal = value; this.OnPropertyChanged(); }
+            get
+            {
+                return this._progressTotal;
+            }
+            set
+            {
+                this.SetPropNotify(ref this._progressTotal, value);
+            }
         }
 
         public string ModelDetails
         {
-            get { return this._modelDetails; }
-            set { this._modelDetails = value; this.OnPropertyChanged(); }
+            get
+            {
+                return this._modelDetails;
+            }
+            set
+            {
+                this.SetPropNotify(ref this._modelDetails, value);
+            }
         }
 
         public string DurationofTask
         {
-            get { return this.durationofTask; }
-            set { this.durationofTask = value; this.OnPropertyChanged(); }
+            get
+            {
+                return this.durationofTask;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.durationofTask, value);
+            }
+        }
+
+        public ICommand CopyViewModelHashValueCmd
+        {
+            get
+            {
+                if (this.copyViewModelHashValueCmd is null)
+                {
+                    this.copyViewModelHashValueCmd =
+                        new RelayCommand(this.CopyViewModelHashValueAction);
+                }
+                return this.copyViewModelHashValueCmd;
+            }
+        }
+
+        public ICommand OpenFolderSelectItemCmd
+        {
+            get
+            {
+                if (this.openFolderSelectItemCmd is null)
+                {
+                    this.openFolderSelectItemCmd =
+                        new RelayCommand(this.OpenFolderSelectItemAction);
+                }
+                return this.openFolderSelectItemCmd;
+            }
+        }
+
+        private void CopyViewModelHashValueAction(object param)
+        {
+            Clipboard.SetText(this.Hash);
+        }
+
+        private void OpenFolderSelectItemAction(object param)
+        {
+            CommonUtils.OpenFolderAndSelectItem(this.Path.FullName);
         }
 
         public void HashViewModelCancelled()
         {
             if (this.IsSucceeded)
+            {
                 return;
+            }
             AppDispatcher.Invoke(() =>
             {
                 this.HashName = AlgoType.Unknown;
@@ -235,18 +315,17 @@ namespace HashCalculator
             HashAlgorithm algoObject;
             AlgoType algoType;
             if (this.token.IsCancellationRequested)
+            {
                 return;
+            }
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
-            lock (Locks.AlgoSelectionLock)
+            algoType = Settings.Current.SelectedAlgo;
+            AppDispatcher.Invoke(() =>
             {
-                algoType = Settings.Current.SelectedAlgo;
-                AppDispatcher.Invoke(() =>
-                {
-                    this.HashName = algoType;
-                    this.State = HashState.Running;
-                });
-            }
+                this.HashName = algoType;
+                this.State = HashState.Running;
+            });
             switch (algoType)
             {
                 case AlgoType.SHA1:
@@ -305,9 +384,14 @@ namespace HashCalculator
                         while (true)
                         {
                             if (this.token.IsCancellationRequested)
+                            {
                                 goto TaskRunningEnds;
+                            }
                             readedSize = fs.Read(buffer, 0, buffer.Length);
-                            if (readedSize <= 0) break;
+                            if (readedSize <= 0)
+                            {
+                                break;
+                            }
                             AppDispatcher.Invoke(() => { this.Progress += readedSize; });
                             algoObject.TransformBlock(buffer, 0, readedSize, null, 0);
                             this.pauseManualResetEvent.WaitOne();
@@ -336,11 +420,17 @@ namespace HashCalculator
                         {
                             CmpRes result;
                             if (this.expectedHash == string.Empty)
+                            {
                                 result = CmpRes.Uncertain;
+                            }
                             else if (hashStr.ToLower() == this.expectedHash)
+                            {
                                 result = CmpRes.Matched;
+                            }
                             else
+                            {
                                 result = CmpRes.Mismatch;
+                            }
                             AppDispatcher.Invoke(() => { this.CmpResult = result; });
                         }
                     }
@@ -404,9 +494,14 @@ namespace HashCalculator
                     while (true)
                     {
                         if (this.token.IsCancellationRequested)
+                        {
                             goto TaskRunningEnds;
+                        }
                         readedSize = fs.Read(buffer, 0, blockSize);
-                        if (readedSize <= 0) break;
+                        if (readedSize <= 0)
+                        {
+                            break;
+                        }
                         AppDispatcher.Invoke(() => { this.Progress += readedSize; });
                         algoObject.BlockUpdate(buffer, 0, readedSize);
                         this.pauseManualResetEvent.WaitOne();
@@ -435,11 +530,17 @@ namespace HashCalculator
                     {
                         CmpRes result;
                         if (this.expectedHash == string.Empty)
+                        {
                             result = CmpRes.Uncertain;
+                        }
                         else if (hashStr.ToLower() == this.expectedHash)
+                        {
                             result = CmpRes.Matched;
+                        }
                         else
+                        {
                             result = CmpRes.Mismatch;
+                        }
                         AppDispatcher.Invoke(() => { this.CmpResult = result; });
                     }
                 }
@@ -479,7 +580,7 @@ namespace HashCalculator
 
         public bool StartupModel(bool force)
         {
-            lock (manipulationLock)
+            lock (this.manipulationLock)
             {
                 if (force ||
                     this.State == HashState.Waiting ||
@@ -519,18 +620,26 @@ namespace HashCalculator
 
         public bool PauseOrContinueModel(PauseMode mode)
         {
-            lock (manipulationLock)
+            lock (this.manipulationLock)
             {
                 if (mode == PauseMode.Pause)
+                {
                     return this.PauseModel();
+                }
                 else if (mode == PauseMode.Continue)
+                {
                     return this.ContinueModel();
+                }
                 else if (mode == PauseMode.Invert)
                 {
                     if (this.State == HashState.Running)
+                    {
                         return this.PauseModel();
+                    }
                     else if (this.State == HashState.Paused)
+                    {
                         return this.ContinueModel();
+                    }
                 }
                 return false;
             }
@@ -538,14 +647,18 @@ namespace HashCalculator
 
         public void ShutdownModel()
         {
-            lock (manipulationLock)
+            lock (this.manipulationLock)
             {
                 if (this.State == HashState.Finished)
+                {
                     return;
+                }
                 this.pauseManualResetEvent.Set();
                 if (this.tokenSource != null &&
                     !this.tokenSource.IsCancellationRequested)
+                {
                     this.tokenSource.Cancel();
+                }
                 if (this.State == HashState.Waiting)
                 {
                     this.State = HashState.Finished;
@@ -558,7 +671,9 @@ namespace HashCalculator
         private void PrepareToken()
         {
             if (this.tokenSource == null || this.tokenSource.IsCancellationRequested)
+            {
                 this.tokenSource = new CancellationTokenSource();
+            }
             this.token = this.tokenSource.Token;
             this.token.Register(this.HashViewModelCancelled);
         }
