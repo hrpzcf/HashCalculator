@@ -292,6 +292,9 @@
                                     Header="打开位置" />
                                 <Separator />
                                 <MenuItem
+                                    Command="{Binding CopyFileFullPathCmd}"
+                                    Header="复制路径" />
+                                <MenuItem
                                     Command="{Binding CopyModelHashValueCmd}"
                                     Header="复制哈希值"
                                     IsEnabled="{Binding Result, Converter={StaticResource MenuCopyHashEnabledCvt}}" />

@@ -58,6 +58,7 @@ namespace HashCalculator
         private AlgoType _hashName = AlgoType.Unknown;
         private string durationofTask = string.Empty;
         private RelayCommand copyModelHashValueCmd;
+        private RelayCommand copyFileFullPathCmd;
         private RelayCommand openModelFilePathCmd;
         private RelayCommand openFolderSelectItemCmd;
         private RelayCommand openFilePropertiesCmd;
@@ -276,6 +277,19 @@ namespace HashCalculator
             }
         }
 
+        public ICommand CopyFileFullPathCmd
+        {
+            get
+            {
+                if (this.copyFileFullPathCmd is null)
+                {
+                    this.copyFileFullPathCmd =
+                        new RelayCommand(this.CopyFileFullPathAction);
+                }
+                return this.copyFileFullPathCmd;
+            }
+        }
+
         public ICommand OpenFolderSelectItemCmd
         {
             get
@@ -318,6 +332,11 @@ namespace HashCalculator
         private void CopyViewModelHashValueAction(object param)
         {
             Clipboard.SetText(this.Hash);
+        }
+
+        private void CopyFileFullPathAction(object param)
+        {
+            Clipboard.SetText(this.FileInfo.FullName);
         }
 
         private void OpenFolderSelectItemAction(object param)
