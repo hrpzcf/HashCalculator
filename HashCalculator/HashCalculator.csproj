@@ -92,6 +92,10 @@
     <Compile Include="Views\UsingHelpWnd.xaml.cs">
       <DependentUpon>UsingHelpWnd.xaml</DependentUpon>
     </Compile>
+    <Page Include="Resources\ComboBoxStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Resources\DataGridCellStyles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

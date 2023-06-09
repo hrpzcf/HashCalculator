@@ -19,6 +19,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/ComboBoxStyles.xaml" />
                 <ResourceDictionary Source="/Resources/ImageButtonStyles.xaml" />
                 <ResourceDictionary Source="/Resources/ConverterResource.xaml" />
                 <ResourceDictionary Source="/Resources/DataGridCellStyles.xaml" />
@@ -79,6 +80,7 @@
                 VerticalAlignment="Center"
                 ItemsSource="{Binding Source={x:Static local:Settings.Current}, Path=AvailableAlgos}"
                 SelectedValue="{Binding Source={x:Static local:Settings.Current}, Path=SelectedAlgo}"
+                Style="{StaticResource ComboBoxStyle1}"
                 ToolTip="选择哈希算法" />
             <Image
                 Grid.Column="2"
@@ -88,13 +90,14 @@
                 ToolTip="选择哈希值输出方式" />
             <ComboBox
                 Grid.Column="3"
-                Width="100"
+                Width="110"
                 Margin="2,0,0,0"
                 VerticalAlignment="Center"
                 DisplayMemberPath="Display"
                 ItemsSource="{Binding Source={x:Static local:Settings.Current}, Path=AvailableOutputTypes}"
                 SelectedValue="{Binding Source={x:Static local:Settings.Current}, Path=SelectedOutputType}"
                 SelectedValuePath="ItemValue"
+                Style="{StaticResource ComboBoxStyle1}"
                 ToolTip="选择哈希值输出方式" />
             <Button
                 x:Name="uiButton_SelectFilesToHash"
