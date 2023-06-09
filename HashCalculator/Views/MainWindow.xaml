@@ -323,7 +323,9 @@
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoFileSizeColumn, Converter={StaticResource NoColumnCvt}, Mode=OneWay}" />
                 <DataGridTemplateColumn
                     MinWidth="210"
-                    Header="哈希值">
+                    CanUserSort="True"
+                    Header="哈希值"
+                    SortMemberPath="Hash">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid VerticalAlignment="Center">
