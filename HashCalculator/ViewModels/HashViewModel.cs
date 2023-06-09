@@ -672,6 +672,7 @@ namespace HashCalculator
 
         private void ResetHashViewModel()
         {
+            this.tokenSource?.Cancel();
             this.pauseManualResetEvent.Set();
             this.DurationofTask = string.Empty;
             this.CmpResult = CmpRes.NoResult;
@@ -756,18 +757,17 @@ namespace HashCalculator
                 {
                     return;
                 }
+                this.tokenSource?.Cancel();
                 this.pauseManualResetEvent.Set();
-                if (this.tokenSource != null &&
-                    !this.tokenSource.IsCancellationRequested)
-                {
-                    this.tokenSource.Cancel();
-                }
                 if (this.State == HashState.Waiting)
                 {
                     this.State = HashState.Finished;
                     this.WaitingModelCanceledEvent?.Invoke(1);
                 }
-                else { this.State = HashState.Finished; }
+                else
+                {
+                    this.State = HashState.Finished;
+                }
             }
         }
 

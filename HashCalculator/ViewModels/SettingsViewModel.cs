@@ -256,7 +256,7 @@ namespace HashCalculator
         [XmlIgnore]
         public ComboItem[] AvailableOutputTypes { get; } =
 {
-            new ComboItem("Base64", OutputType.BASE64),
+            new ComboItem("Base64 编码", OutputType.BASE64),
             new ComboItem("十六进制大写", OutputType.BinaryUpper),
             new ComboItem("十六进制小写", OutputType.BinaryLower),
         };
