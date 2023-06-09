@@ -262,11 +262,16 @@
             Drop="DataGrid_FilesToCalculate_Drop"
             HeadersVisibility="Column"
             HorizontalGridLinesBrush="#FF969696"
-            ItemsSource="{Binding HashViewModels}"
+            IsReadOnly="True"
+            ItemsSource="{Binding HashViewModels, IsAsync=True}"
             PreviewKeyDown="DataGrid_HashFiles_PrevKeyDown"
             RowHeight="28"
+            ScrollViewer.CanContentScroll="True"
             SelectionMode="Single"
-            VerticalGridLinesBrush="#FF969696">
+            VerticalGridLinesBrush="#FF969696"
+            VirtualizingPanel.IsContainerVirtualizable="True"
+            VirtualizingPanel.IsVirtualizing="True"
+            VirtualizingPanel.VirtualizationMode="Recycling">
             <DataGrid.Effect>
                 <BlurEffect
                     KernelType="Box"
@@ -302,19 +307,16 @@
             <DataGrid.Columns>
                 <DataGridTextColumn
                     Binding="{Binding Serial}"
-                    Header="序号"
-                    IsReadOnly="True" />
+                    Header="序号" />
                 <DataGridTextColumn
                     MinWidth="180"
                     Binding="{Binding Name}"
                     CellStyle="{StaticResource CellStyleTipPath}"
-                    Header="文件名"
-                    IsReadOnly="True" />
+                    Header="文件名" />
                 <DataGridTextColumn
                     Binding="{Binding FileSize}"
                     CellStyle="{StaticResource CellStyleTipPath}"
                     Header="文件体积 (字节)"
-                    IsReadOnly="True"
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoFileSizeColumn, Converter={StaticResource NoColumnCvt}, Mode=OneWay}" />
                 <DataGridTemplateColumn
                     MinWidth="210"
@@ -350,7 +352,7 @@
                                     Grid.Column="1"
                                     Width="{Binding HashName, Converter={StaticResource ProgressWidthCvt}}"
                                     Height="6"
-                                    Margin="4"
+                                    Margin="4,0,4,0"
                                     HorizontalAlignment="Left"
                                     Foreground="#8000B4E7"
                                     Maximum="{Binding ProgressTotal}"
@@ -433,7 +435,6 @@
                     MinWidth="80"
                     Binding="{Binding DurationofTask}"
                     Header="运行时长(秒)"
-                    IsReadOnly="True"
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoDurationColumn, Converter={StaticResource NoColumnCvt}, Mode=OneWay}" />
                 <DataGridTemplateColumn
                     Header="导出"
@@ -477,8 +478,7 @@
                 </DataGridTemplateColumn>
                 <DataGridTextColumn
                     Width="*"
-                    CanUserSort="False"
-                    IsReadOnly="True" />
+                    CanUserSort="False" />
             </DataGrid.Columns>
         </DataGrid>
         <Grid
