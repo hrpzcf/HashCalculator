@@ -203,7 +203,7 @@ namespace HashCalculator
     {
         private readonly BitmapImage paused =
             new BitmapImage(new Uri("/Images/pause.png", UriKind.Relative));
-        private readonly BitmapImage noPaused =
+        private readonly BitmapImage notPaused =
             new BitmapImage(new Uri("/Images/continue.png", UriKind.Relative));
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -215,7 +215,7 @@ namespace HashCalculator
             }
             else
             {
-                return this.noPaused;
+                return this.notPaused;
             }
         }
 

@@ -86,7 +86,7 @@ namespace HashCalculator
             this.FileInfo = new FileInfo(arg.filepath);
             this.Serial = serial;
             this.Name = this.FileInfo.Name;
-            this.expectedHash = arg.expected?.ToLower();
+            this.expectedHash = arg.expected;
             this.isDeprecated = arg.deprecated;
         }
 
@@ -523,7 +523,8 @@ namespace HashCalculator
                             {
                                 result = CmpRes.Uncertain;
                             }
-                            else if (hashStr.ToLower() == this.expectedHash)
+                            else if (hashStr.Equals(
+                                this.expectedHash, StringComparison.OrdinalIgnoreCase))
                             {
                                 result = CmpRes.Matched;
                             }
@@ -634,7 +635,8 @@ namespace HashCalculator
                         {
                             result = CmpRes.Uncertain;
                         }
-                        else if (hashStr.ToLower() == this.expectedHash)
+                        else if (hashStr.Equals(
+                            this.expectedHash, StringComparison.OrdinalIgnoreCase))
                         {
                             result = CmpRes.Matched;
                         }
