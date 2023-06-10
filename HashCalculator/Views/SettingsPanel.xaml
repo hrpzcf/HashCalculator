@@ -9,6 +9,7 @@
     Width="{Binding SettingsWndWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     Height="{Binding SettingsWndHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     d:DataContext="{d:DesignInstance Type=local:SettingsViewModel}"
+    UseLayoutRounding="True"
     WindowStartupLocation="CenterOwner"
     mc:Ignorable="d">
     <ScrollViewer
