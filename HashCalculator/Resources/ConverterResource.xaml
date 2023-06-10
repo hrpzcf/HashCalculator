@@ -13,7 +13,6 @@
     <local:SubBtnVisiblityWaitingCvt x:Key="SubBtnVisiblityWaitingCvt" />
     <local:SubBtnVisiblitySucceededCvt x:Key="SubBtnVisiblitySucceededCvt" />
     <local:SubBtnVisiblityCanceledCvt x:Key="SubBtnVisiblityCanceledCvt" />
-    <local:VisibTotalProgressCvt x:Key="VisibTotalProgressCvt" />
     <local:ButtonEnableCvt x:Key="ButtonEnableCvt" />
     <local:ButtonNotEnableCvt x:Key="ButtonNotEnableCvt" />
     <local:NoColumnCvt x:Key="NoColumnCvt" />

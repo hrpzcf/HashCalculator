@@ -30,24 +30,12 @@
     <Grid Margin="8,0,8,8">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <ProgressBar
-            Grid.Row="0"
-            Height="3"
-            VerticalAlignment="Center"
-            Background="Transparent"
-            BorderBrush="Transparent"
-            BorderThickness="0"
-            Foreground="#64008000"
-            Maximum="{Binding TotalNumberInQueue}"
-            Visibility="{Binding State, Converter={StaticResource VisibTotalProgressCvt}}"
-            Value="{Binding FinishedInQueue}" />
         <Grid
-            Grid.Row="1"
-            Margin="0,2,0,0">
+            Grid.Row="0"
+            Margin="0,4,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
@@ -223,7 +211,7 @@
             </Button>
         </Grid>
         <Border
-            Grid.Row="2"
+            Grid.Row="1"
             Margin="0,4,0,0"
             Panel.ZIndex="1"
             Background="#50000000"
@@ -253,7 +241,7 @@
         </Border>
         <DataGrid
             x:Name="uiDataGrid_HashFiles"
-            Grid.Row="2"
+            Grid.Row="1"
             Margin="0,4,0,0"
             AllowDrop="True"
             AutoGenerateColumns="False"
@@ -487,7 +475,7 @@
             </DataGrid.Columns>
         </DataGrid>
         <Grid
-            Grid.Row="3"
+            Grid.Row="2"
             Margin="0,8,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
