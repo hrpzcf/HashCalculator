@@ -17,19 +17,18 @@ namespace HashCalculator
             = Application.Current.Dispatcher;
         private delegate void ModelToTableDelegate(ModelArg arg);
         private readonly ModelToTableDelegate modelToTable;
-        private int currentSerialNumber = 0;
+        private volatile int serial = 0;
         private int finishedNumberInQueue = 0;
         private int totalNumberInQueue = 0;
         private CancellationTokenSource _cancellation = new CancellationTokenSource();
         private List<ModelArg> droppedFiles = new List<ModelArg>();
         private string hashCheckReport = string.Empty;
         private QueueState queueState = QueueState.None;
-        private readonly object serialNumberLock = new object();
         private readonly object changeQueueCountLock = new object();
         private readonly object changeTaskNumberLock = new object();
+        private readonly object cancellationLock = new object();
         private readonly object displayModelLock = new object();
         private readonly object displayModelTaskLock = new object();
-        private readonly object cancellationLock = new object();
 
         public MainWndViewModel()
         {
@@ -133,8 +132,8 @@ namespace HashCalculator
 
         private void ModelToTable(ModelArg arg)
         {
-            int modelSerial = this.SerialGet();
-            HashViewModel model = new HashViewModel(modelSerial, arg);
+            HashViewModel model = new HashViewModel(
+                Interlocked.Increment(ref this.serial), arg);
             model.ComputeFinishedEvent += this.IncreaseQueueFinished;
             model.WaitingModelCanceledEvent += this.DecreaseQueueTotal;
             model.ModelCanbeStartedEvent += this.starter.PendingModel;
@@ -243,22 +242,6 @@ namespace HashCalculator
             }
         }
 
-        private int SerialGet()
-        {
-            lock (this.serialNumberLock)
-            {
-                return ++this.currentSerialNumber;
-            }
-        }
-
-        private void SerialReset()
-        {
-            lock (this.serialNumberLock)
-            {
-                this.currentSerialNumber = 0;
-            }
-        }
-
         public void ChangeTaskNumber(TaskNum num)
         {
             lock (this.changeTaskNumberLock)
@@ -283,8 +266,8 @@ namespace HashCalculator
 
         public void ClearHashViewModels()
         {
+            this.serial = 0;
             this.droppedFiles.Clear();
-            this.SerialReset();
             this.HashViewModels.Clear();
         }
 
