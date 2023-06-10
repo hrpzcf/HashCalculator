@@ -351,17 +351,17 @@
                                     ToolTipService.BetweenShowDelay="0"
                                     ToolTipService.InitialShowDelay="0"
                                     ToolTipService.ShowDuration="60000"
-                                    Visibility="{Binding State, Converter={StaticResource VisibNotCalcCvt}}" />
+                                    Visibility="{Binding State, Converter={StaticResource SubBtnVisiblityFinishedCvt}}" />
                                 <!--  正在计算状态  -->
                                 <ProgressBar
                                     Grid.Column="1"
-                                    Width="{Binding HashName, Converter={StaticResource ProgressWidthCvt}}"
+                                    Width="{Binding HashName, Converter={StaticResource SubProgressWidthCvt}}"
                                     Height="6"
                                     Margin="4,0,4,0"
                                     HorizontalAlignment="Left"
                                     Foreground="#8000B4E7"
                                     Maximum="{Binding ProgressTotal}"
-                                    Visibility="{Binding State, Converter={StaticResource VisibRunningCvt}}"
+                                    Visibility="{Binding State, Converter={StaticResource SubBtnVisiblityRunningCvt}}"
                                     Value="{Binding Progress}" />
                                 <Button
                                     Grid.Column="2"
@@ -369,7 +369,7 @@
                                     Click="Button_CancelHashModel_Click"
                                     Style="{StaticResource ImageButtonStyle1}"
                                     ToolTip="停止..."
-                                    Visibility="{Binding State, Converter={StaticResource VisibRunningCvt}}">
+                                    Visibility="{Binding State, Converter={StaticResource SubBtnVisiblityRunningCvt}}">
                                     <Image
                                         Source="/Images/stop.png"
                                         Stretch="None" />
@@ -379,10 +379,10 @@
                                     Padding="4"
                                     Click="Button_PauseHashModel_Click"
                                     Style="{StaticResource ImageButtonStyle1}"
-                                    ToolTip="{Binding State, Converter={StaticResource PauseBtnTextCvt}}"
-                                    Visibility="{Binding State, Converter={StaticResource VisibRunningCvt}}">
+                                    ToolTip="{Binding State, Converter={StaticResource SubBtnPauseToolTipCvt}}"
+                                    Visibility="{Binding State, Converter={StaticResource SubBtnVisiblityRunningCvt}}">
                                     <Image
-                                        Source="{Binding State, Converter={StaticResource PauseBtnImgsrcCvt}}"
+                                        Source="{Binding State, Converter={StaticResource SubBtnPauseImageSrcCvt}}"
                                         Stretch="None" />
                                 </Button>
                                 <!--  正排队  -->
@@ -392,7 +392,7 @@
                                     Click="Button_CancelHashModel_Click"
                                     Style="{StaticResource ImageButtonStyle1}"
                                     ToolTip="取消..."
-                                    Visibility="{Binding State, Converter={StaticResource VisibWaitingCvt}}">
+                                    Visibility="{Binding State, Converter={StaticResource SubBtnVisiblityWaitingCvt}}">
                                     <Image
                                         Source="/Images/cancel.png"
                                         Stretch="None" />
@@ -404,7 +404,7 @@
                                     Click="Button_RestartHashModel_CLick"
                                     Style="{StaticResource ImageButtonStyle1}"
                                     ToolTip="刷新..."
-                                    Visibility="{Binding Result, Converter={StaticResource VisibSucceededCvt}}">
+                                    Visibility="{Binding Result, Converter={StaticResource SubBtnVisiblitySucceededCvt}}">
                                     <Image
                                         Source="/Images/refresh.png"
                                         Stretch="None" />
@@ -415,7 +415,7 @@
                                     Command="{Binding CopyModelHashValueCmd}"
                                     Style="{StaticResource ImageButtonStyle1}"
                                     ToolTip="复制..."
-                                    Visibility="{Binding Result, Converter={StaticResource VisibSucceededCvt}}">
+                                    Visibility="{Binding Result, Converter={StaticResource SubBtnVisiblitySucceededCvt}}">
                                     <Image
                                         Source="/Images/copy.png"
                                         Stretch="None" />
@@ -427,7 +427,7 @@
                                     Click="Button_RestartHashModel_CLick"
                                     Style="{StaticResource ImageButtonStyle1}"
                                     ToolTip="开始..."
-                                    Visibility="{Binding Result, Converter={StaticResource VisibCanceledCvt}}">
+                                    Visibility="{Binding Result, Converter={StaticResource SubBtnVisiblityCanceledCvt}}">
                                     <Image
                                         Source="/Images/start.png"
                                         Stretch="None" />

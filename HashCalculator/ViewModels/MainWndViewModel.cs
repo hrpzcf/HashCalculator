@@ -134,11 +134,21 @@ namespace HashCalculator
         {
             HashViewModel model = new HashViewModel(
                 Interlocked.Increment(ref this.serial), arg);
-            model.ComputeFinishedEvent += this.IncreaseQueueFinished;
-            model.WaitingModelCanceledEvent += this.DecreaseQueueTotal;
-            model.ModelCanbeStartedEvent += this.starter.PendingModel;
-            model.StartupModel(false);
+            model.ModelCapturedEvent += this.ModelCapturedAction;
+            model.ModelReleasedEvent += this.ModelReleasedAction;
             this.HashViewModels.Add(model);
+            model.StartupModel(false);
+        }
+
+        private void ModelCapturedAction(HashViewModel model)
+        {
+            this.IncreaseQueueTotal(1);
+            this.starter.PendingModel(model);
+        }
+
+        private void ModelReleasedAction(HashViewModel model)
+        {
+            this.IncreaseQueueFinished(1);
         }
 
         private void QueueItemCountChanged()
@@ -175,20 +185,12 @@ namespace HashCalculator
             {
                 return;
             }
-            AppDispatcher.Invoke(() =>
-            {
-                this.IncreaseQueueTotal(argsCount);
-            });
             lock (this.displayModelLock)
             {
                 foreach (ModelArg arg in args)
                 {
                     if (token.IsCancellationRequested)
                     {
-                        AppDispatcher.Invoke(() =>
-                        {
-                            this.DecreaseQueueTotal(argsCount - addedArgsCount);
-                        });
                         break;
                     }
                     AppDispatcher.Invoke(this.modelToTable, arg);
@@ -201,19 +203,6 @@ namespace HashCalculator
 #if DEBUG
             Console.WriteLine($"已添加哈希模型：{addedArgsCount}");
 #endif
-        }
-
-        private void DecreaseQueueTotal(int number)
-        {
-            lock (this.changeQueueCountLock)
-            {
-                if (number < 0)
-                {
-                    number = 0;
-                }
-                this.TotalNumberInQueue -= number;
-                this.QueueItemCountChanged();
-            }
         }
 
         private void IncreaseQueueTotal(int number)
@@ -309,14 +298,14 @@ namespace HashCalculator
                 }
                 switch (hm.Result)
                 {
-                    case HashResult.Succeeded:
-                        ++succeeded;
-                        break;
                     case HashResult.Canceled:
                         ++canceled;
                         break;
-                    case HashResult.HasFailed:
+                    case HashResult.Failed:
                         ++hasFailed;
+                        break;
+                    case HashResult.Succeeded:
+                        ++succeeded;
                         break;
                 }
             }
@@ -384,7 +373,6 @@ namespace HashCalculator
                         ++canbeStartModelCount;
                     }
                 }
-                this.IncreaseQueueTotal(canbeStartModelCount);
             }
             else
             {
@@ -400,7 +388,6 @@ namespace HashCalculator
 
         public void Models_StartOne(HashViewModel viewModel)
         {
-            this.IncreaseQueueTotal(1);
             viewModel.StartupModel(true);
         }
 

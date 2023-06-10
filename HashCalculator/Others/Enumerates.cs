@@ -17,9 +17,9 @@
     internal enum HashResult
     {
         NoResult,
-        Succeeded,
         Canceled,
-        HasFailed,
+        Failed,
+        Succeeded,
     }
 
     /// <summary>

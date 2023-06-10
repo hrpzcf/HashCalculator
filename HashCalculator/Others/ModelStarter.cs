@@ -65,21 +65,17 @@ namespace HashCalculator
             {
                 this.keepers[i] = new TaskKeeper(this.ModelWatcher);
             }
-#if DEBUG
-            Task.Run(this.ShowAliveTasksCount);
-#endif
+//#if DEBUG
+//            Task.Run(() =>
+//            {
+//                while (true)
+//                {
+//                    Console.WriteLine($"存活任务数：{this.Count}");
+//                    Thread.Sleep(1000);
+//                }
+//            });
+//#endif
         }
-
-#if DEBUG
-        private void ShowAliveTasksCount()
-        {
-            while (true)
-            {
-                Console.WriteLine($"存活任务数：{this.Count}");
-                Thread.Sleep(1000);
-            }
-        }
-#endif
 
         public void Adjust(int number)
         {

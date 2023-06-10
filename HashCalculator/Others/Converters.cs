@@ -157,7 +157,7 @@ namespace HashCalculator
         }
     }
 
-    internal class VisibRunningCvt : IValueConverter
+    internal class SubBtnVisiblityRunningCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -178,7 +178,7 @@ namespace HashCalculator
         }
     }
 
-    internal class PauseBtnTextCvt : IValueConverter
+    internal class SubBtnPauseToolTipCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -199,7 +199,7 @@ namespace HashCalculator
         }
     }
 
-    internal class PauseBtnImgsrcCvt : IValueConverter
+    internal class SubBtnPauseImageSrcCvt : IValueConverter
     {
         private readonly BitmapImage paused =
             new BitmapImage(new Uri("/Images/pause.png", UriKind.Relative));
@@ -225,7 +225,7 @@ namespace HashCalculator
         }
     }
 
-    internal class VisibNotCalcCvt : IValueConverter
+    internal class SubBtnVisiblityFinishedCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -246,7 +246,7 @@ namespace HashCalculator
         }
     }
 
-    internal class VisibWaitingCvt : IValueConverter
+    internal class SubBtnVisiblityWaitingCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -266,7 +266,7 @@ namespace HashCalculator
         }
     }
 
-    internal class VisibSucceededCvt : IValueConverter
+    internal class SubBtnVisiblitySucceededCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -306,7 +306,7 @@ namespace HashCalculator
         }
     }
 
-    internal class VisibCanceledCvt : IValueConverter
+    internal class SubBtnVisiblityCanceledCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -406,7 +406,7 @@ namespace HashCalculator
         }
     }
 
-    internal class ProgressWidthCvt : IValueConverter
+    internal class SubProgressWidthCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
