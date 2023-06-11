@@ -33,4 +33,5 @@
     <local:DataGridMaskVisibCvt x:Key="DataGridMaskVisibCvt" />
     <local:DataGridBlurEffectCvt x:Key="DataGridBlurEffectCvt" />
     <local:MenuCopyHashEnabledCvt x:Key="MenuCopyHashEnabledCvt" />
+    <local:TotalProgressVisiblityCvt x:Key="TotalProgressVisiblityCvt" />
 </ResourceDictionary>

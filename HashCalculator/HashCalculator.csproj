@@ -232,5 +232,14 @@
   <ItemGroup>
     <Resource Include="Images\unable.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\finished_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\totalnum_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\list_count_16.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
