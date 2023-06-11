@@ -109,8 +109,8 @@ namespace HashCalculator
                 {
                     return;
                 }
-                IEnumerable<ModelArg> modelArgs = searchedPaths.Select(s => new ModelArg(s));
-                this.viewModel.DisplayHashViewModelsTask(modelArgs);
+                IEnumerable<ModelArg> args = searchedPaths.Select(s => new ModelArg(s));
+                this.viewModel.BeginDisplayModels(args);
                 this.AcceptNewFilePathsReleaseButtons();
             })
             { IsBackground = true }.Start();
@@ -311,19 +311,16 @@ namespace HashCalculator
                         MessageBoxImage.Information);
                     return;
                 }
-                this.viewModel.DisplayHashViewModelsTask(hashModelArgsList);
+                this.viewModel.BeginDisplayModels(hashModelArgsList);
             }
             catch { return; }
         }
 
         private void AcceptNewFilePathsLockButtons()
         {
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                this.uiButton_SelectFilesToHash.IsEnabled = false;
-                this.uiDataGrid_HashFiles.AllowDrop = false;
-                this.uiButton_SelectFoldersToHash.IsEnabled = false;
-            });
+            this.uiButton_SelectFilesToHash.IsEnabled = false;
+            this.uiDataGrid_HashFiles.AllowDrop = false;
+            this.uiButton_SelectFoldersToHash.IsEnabled = false;
         }
 
         private void AcceptNewFilePathsReleaseButtons()
@@ -474,8 +471,8 @@ namespace HashCalculator
                 Settings.Current.LastUsedPath =
                     Path.GetDirectoryName(fileOpen.FileNames.ElementAt(0));
                 this.AcceptNewFilePathsLockButtons();
-                IEnumerable<ModelArg> modelArgs = fileOpen.FileNames.Select(s => new ModelArg(s));
-                this.viewModel.DisplayHashViewModelsTask(modelArgs);
+                IEnumerable<ModelArg> args = fileOpen.FileNames.Select(s => new ModelArg(s));
+                this.viewModel.BeginDisplayModels(args);
                 this.AcceptNewFilePathsReleaseButtons();
             }
         }
@@ -509,8 +506,8 @@ namespace HashCalculator
                 new Thread(() =>
                 {
                     this.SearchUnderSpecifiedPolicy(folderOpen.FileNames, folderPaths);
-                    IEnumerable<ModelArg> modelArgs = folderPaths.Select(s => new ModelArg(s));
-                    this.viewModel.DisplayHashViewModelsTask(modelArgs);
+                    IEnumerable<ModelArg> args = folderPaths.Select(s => new ModelArg(s));
+                    this.viewModel.BeginDisplayModels(args);
                     this.AcceptNewFilePathsReleaseButtons();
                 })
                 { IsBackground = true }.Start();

@@ -68,7 +68,7 @@ namespace HashCalculator
             = Application.Current.Dispatcher;
         private readonly ManualResetEvent manualPauseController = new ManualResetEvent(true);
         private readonly object cmpResultLock = new object();
-        private readonly object computeOperationLock = new object();
+        private readonly object hashComputeOperationLock = new object();
         private readonly object exportOptionLock = new object();
 
         /// <summary>
@@ -423,7 +423,7 @@ namespace HashCalculator
         public bool StartupModel(bool force)
         {
             bool result = false;
-            if (Monitor.TryEnter(this.computeOperationLock))
+            if (Monitor.TryEnter(this.hashComputeOperationLock))
             {
                 if (force
                     || this.State == HashState.Waiting
@@ -431,26 +431,26 @@ namespace HashCalculator
                     && this.Result != HashResult.Succeeded))
                 {
                     this.ResetHashViewModel();
-                    this.ModelCapturedEvent?.Invoke(this);
+                    this.ModelCapturedEvent?.InvokeAsync(this);
                     result = true;
                 }
-                Monitor.Exit(this.computeOperationLock);
+                Monitor.Exit(this.hashComputeOperationLock);
             }
             return result;
         }
 
         public void ShutdownModel()
         {
-            if (Monitor.TryEnter(this.computeOperationLock))
+            if (Monitor.TryEnter(this.hashComputeOperationLock))
             {
                 this.cancellation?.Cancel();
                 this.manualPauseController.Set();
                 if (this.State == HashState.Waiting)
                 {
                     this.State = HashState.Finished;
-                    this.ModelReleasedEvent?.Invoke(this);
+                    this.ModelReleasedEvent?.InvokeAsync(this);
                 }
-                Monitor.Exit(this.computeOperationLock);
+                Monitor.Exit(this.hashComputeOperationLock);
             }
             else
             {
@@ -507,10 +507,10 @@ namespace HashCalculator
 
         public void ComputeManyHashValue()
         {
-            Monitor.Enter(this.computeOperationLock);
+            Monitor.Enter(this.hashComputeOperationLock);
             if (this.cancellation.IsCancellationRequested)
             {
-                Monitor.Exit(this.computeOperationLock);
+                Monitor.Exit(this.hashComputeOperationLock);
                 return;
             }
             Stopwatch stopwatch = new Stopwatch();
@@ -651,8 +651,8 @@ namespace HashCalculator
                     + $"任务运行时长：{duration}秒";
                 this.State = HashState.Finished;
             });
-            this.ModelReleasedEvent?.Invoke(this);
-            Monitor.Exit(this.computeOperationLock);
+            this.ModelReleasedEvent?.InvokeAsync(this);
+            Monitor.Exit(this.hashComputeOperationLock);
         }
     }
 }

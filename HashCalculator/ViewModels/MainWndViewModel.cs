@@ -21,14 +21,13 @@ namespace HashCalculator
         private int finishedNumberInQueue = 0;
         private int totalNumberInQueue = 0;
         private CancellationTokenSource _cancellation = new CancellationTokenSource();
-        private List<ModelArg> droppedFiles = new List<ModelArg>();
+        private List<ModelArg> displayedFiles = new List<ModelArg>();
         private string hashCheckReport = string.Empty;
         private QueueState queueState = QueueState.None;
         private readonly object changeQueueCountLock = new object();
         private readonly object changeTaskNumberLock = new object();
-        private readonly object cancellationLock = new object();
-        private readonly object displayModelLock = new object();
-        private readonly object displayModelTaskLock = new object();
+        private readonly object displayingModelLock = new object();
+        private readonly object displayModelRequestLock = new object();
 
         public MainWndViewModel()
         {
@@ -109,23 +108,17 @@ namespace HashCalculator
         {
             get
             {
-                lock (this.cancellationLock)
-                {
-                    return this._cancellation;
-                }
+                return this._cancellation;
             }
             set
             {
-                lock (this.cancellationLock)
+                if (value is null)
                 {
-                    if (value is null)
-                    {
-                        this._cancellation = new CancellationTokenSource();
-                    }
-                    else
-                    {
-                        this._cancellation = value;
-                    }
+                    this._cancellation = new CancellationTokenSource();
+                }
+                else
+                {
+                    this._cancellation = value;
                 }
             }
         }
@@ -135,6 +128,7 @@ namespace HashCalculator
             HashViewModel model = new HashViewModel(
                 Interlocked.Increment(ref this.serial), arg);
             model.ModelCapturedEvent += this.ModelCapturedAction;
+            model.ModelCapturedEvent += this.starter.PendingModel;
             model.ModelReleasedEvent += this.ModelReleasedAction;
             this.HashViewModels.Add(model);
             model.StartupModel(false);
@@ -142,13 +136,20 @@ namespace HashCalculator
 
         private void ModelCapturedAction(HashViewModel model)
         {
-            this.IncreaseQueueTotal(1);
-            this.starter.PendingModel(model);
+            lock (this.changeQueueCountLock)
+            {
+                ++this.TotalNumberInQueue;
+                this.QueueItemCountChanged();
+            }
         }
 
         private void ModelReleasedAction(HashViewModel model)
         {
-            this.IncreaseQueueFinished(1);
+            lock (this.changeQueueCountLock)
+            {
+                ++this.FinishedInQueue;
+                this.QueueItemCountChanged();
+            }
         }
 
         private void QueueItemCountChanged()
@@ -177,60 +178,6 @@ namespace HashCalculator
             }
         }
 
-        private void DisplayModels(IEnumerable<ModelArg> args, CancellationToken token)
-        {
-            int addedArgsCount = 0;
-            int argsCount = args.Count();
-            if (argsCount == 0)
-            {
-                return;
-            }
-            lock (this.displayModelLock)
-            {
-                foreach (ModelArg arg in args)
-                {
-                    if (token.IsCancellationRequested)
-                    {
-                        break;
-                    }
-                    AppDispatcher.Invoke(this.modelToTable, arg);
-                    if (++addedArgsCount % 1000 == 0)
-                    {
-                        Thread.Sleep(1000);
-                    }
-                }
-            }
-#if DEBUG
-            Console.WriteLine($"已添加哈希模型：{addedArgsCount}");
-#endif
-        }
-
-        private void IncreaseQueueTotal(int number)
-        {
-            lock (this.changeQueueCountLock)
-            {
-                if (number < 0)
-                {
-                    number = 0;
-                }
-                this.TotalNumberInQueue += number;
-                this.QueueItemCountChanged();
-            }
-        }
-
-        private void IncreaseQueueFinished(int number)
-        {
-            lock (this.changeQueueCountLock)
-            {
-                if (number < 0)
-                {
-                    number = 0;
-                }
-                this.FinishedInQueue += number;
-                this.QueueItemCountChanged();
-            }
-        }
-
         public void ChangeTaskNumber(TaskNum num)
         {
             lock (this.changeTaskNumberLock)
@@ -256,18 +203,41 @@ namespace HashCalculator
         public void ClearHashViewModels()
         {
             this.serial = 0;
-            this.droppedFiles.Clear();
+            this.displayedFiles.Clear();
             this.HashViewModels.Clear();
         }
 
-        public void DisplayHashViewModelsTask(IEnumerable<ModelArg> args)
+        public async void BeginDisplayModels(IEnumerable<ModelArg> args)
         {
-            lock (this.displayModelTaskLock)
+            if (args.Count() == 0)
             {
-                this.droppedFiles.AddRange(args);
-                CancellationToken token = this.Cancellation.Token;
-                Task.Run(() => { this.DisplayModels(args, token); }, token);
+                return;
             }
+            CancellationToken token;
+            lock (this.displayModelRequestLock)
+            {
+                token = this.Cancellation.Token;
+            }
+            await Task.Run(() =>
+            {
+                lock (this.displayingModelLock)
+                {
+                    int addedArgsCount = 0;
+                    foreach (ModelArg arg in args)
+                    {
+                        if (token.IsCancellationRequested)
+                        {
+                            break;
+                        }
+                        this.displayedFiles.Add(arg);
+                        AppDispatcher.Invoke(this.modelToTable, arg);
+                        if (++addedArgsCount % 100 == 0)
+                        {
+                            Thread.Sleep(100);
+                        }
+                    }
+                }
+            }, token);
         }
 
         public void GenerateVerificationReport()
@@ -323,7 +293,7 @@ namespace HashCalculator
 
         public void Models_CancelAll()
         {
-            lock (this.displayModelTaskLock)
+            lock (this.displayModelRequestLock)
             {
                 this.Cancellation?.Cancel();
                 foreach (var model in this.HashViewModels)
@@ -365,24 +335,20 @@ namespace HashCalculator
         {
             if (!newLines)
             {
-                int canbeStartModelCount = 0;
                 foreach (var model in this.HashViewModels)
                 {
-                    if (model.StartupModel(force))
-                    {
-                        ++canbeStartModelCount;
-                    }
+                    model.StartupModel(force);
                 }
             }
             else
             {
-                if (this.droppedFiles.Count <= 0)
+                if (this.displayedFiles.Count <= 0)
                 {
                     return;
                 }
-                List<ModelArg> args = this.droppedFiles;
-                this.droppedFiles = new List<ModelArg>();
-                this.DisplayHashViewModelsTask(args);
+                List<ModelArg> args = this.displayedFiles;
+                this.displayedFiles = new List<ModelArg>();
+                this.BeginDisplayModels(args);
             }
         }
 
