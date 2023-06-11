@@ -108,27 +108,27 @@
                     Margin="8,0,0,0"
                     VerticalAlignment="Center"
                     Source="/Images/totalnum_16.png"
-                    ToolTip="待计算队列总数"
+                    ToolTip="待计算队列中的项目总数"
                     Visibility="{Binding State, Converter={StaticResource TotalProgressVisiblityCvt}}" />
                 <TextBlock
                     Margin="2,0,0,0"
                     VerticalAlignment="Center"
                     Foreground="Gray"
                     Text="{Binding TotalNumberInQueue}"
-                    ToolTip="待计算队列总数"
+                    ToolTip="待计算队列中的项目总数"
                     Visibility="{Binding State, Converter={StaticResource TotalProgressVisiblityCvt}}" />
                 <Image
                     Margin="8,0,0,0"
                     VerticalAlignment="Center"
                     Source="/Images/finished_16.png"
-                    ToolTip="待计算队列已完成数量"
+                    ToolTip="待计算队列已完成计算的项目数"
                     Visibility="{Binding State, Converter={StaticResource TotalProgressVisiblityCvt}}" />
                 <TextBlock
                     Margin="2,0,0,0"
                     VerticalAlignment="Center"
                     Foreground="Gray"
                     Text="{Binding FinishedInQueue}"
-                    ToolTip="待计算队列已完成数量"
+                    ToolTip="待计算队列已完成计算的项目数"
                     Visibility="{Binding State, Converter={StaticResource TotalProgressVisiblityCvt}}" />
             </StackPanel>
             <Button
