@@ -436,7 +436,7 @@
                 </DataGridTemplateColumn>
                 <DataGridTextColumn
                     MinWidth="80"
-                    Binding="{Binding DurationofTask}"
+                    Binding="{Binding DurationofTask, StringFormat=f2}"
                     Header="运行时长(秒)"
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoDurationColumn, Converter={StaticResource NoColumnCvt}, Mode=OneWay}" />
                 <DataGridTemplateColumn

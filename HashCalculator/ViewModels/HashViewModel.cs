@@ -42,10 +42,10 @@ namespace HashCalculator
     internal class HashViewModel : NotifiableModel
     {
         #region properties for binding
-        private string durationofTask = string.Empty;
         private string _hashValue = "正在排队...";
         private string _modelDetails = "暂无详情...";
         private bool _exportHash = false;
+        private double durationofTask = 0.0;
         private long _fileSize = 0L;
         private long _progress = 0L;
         private long _progressTotal = 0L;
@@ -252,7 +252,7 @@ namespace HashCalculator
             }
         }
 
-        public string DurationofTask
+        public double DurationofTask
         {
             get
             {
@@ -419,7 +419,7 @@ namespace HashCalculator
         {
             this.cancellation = new CancellationTokenSource();
             this.cancellation.Token.Register(this.ModelCancelled);
-            this.DurationofTask = string.Empty;
+            this.DurationofTask = 0.0;
             this.CmpResult = CmpRes.NoResult;
             this.Result = HashResult.NoResult;
             this.State = HashState.Waiting;
@@ -650,12 +650,12 @@ namespace HashCalculator
             }
         TaskRunningEnds:
             stopwatch.Stop();
-            string duration = $"{stopwatch.Elapsed.TotalSeconds:f2}";
+            double duration = stopwatch.Elapsed.TotalSeconds;
             AppDispatcher.Invoke(() =>
             {
                 this.DurationofTask = duration;
                 this.ModelDetails = $"文件名称：{this.Name}\n文件大小：{UnitCvt.FileSizeCvt(this.FileSize)}\n"
-                    + $"任务运行时长：{duration}秒";
+                    + $"任务运行时长：{duration:f2}秒";
                 this.State = HashState.Finished;
             });
             this.ModelReleasedEvent?.InvokeAsync(this);
