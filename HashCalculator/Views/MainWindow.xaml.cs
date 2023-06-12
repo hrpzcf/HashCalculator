@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -32,6 +31,7 @@ namespace HashCalculator
             this.Title = $"{Info.Title} v{Info.Ver} by {Info.Author} @ {Info.Published}";
             this.viewModel.ChangeTaskNumber(Settings.Current.SelectedTaskNumberLimit);
             This = this;
+            this.VerificationBasis.Parent = this;
         }
 
         private void MainWindowLoaded(object sender, RoutedEventArgs e)
@@ -43,77 +43,17 @@ namespace HashCalculator
             }
         }
 
-        private void SearchUnderSpecifiedPolicy(IEnumerable<string> paths, List<string> outDataPaths)
-        {
-            switch (Settings.Current.SelectedDroppedSearchPolicy)
-            {
-                default:
-                case SearchPolicy.Children:
-                    foreach (string p in paths)
-                    {
-                        if (Directory.Exists(p))
-                        {
-                            DirectoryInfo di = new DirectoryInfo(p);
-                            outDataPaths.AddRange(di.GetFiles().Select(i => i.FullName));
-                        }
-                        else if (File.Exists(p))
-                        {
-                            outDataPaths.Add(p);
-                        }
-                    }
-                    break;
-                case SearchPolicy.Descendants:
-                    foreach (string p in paths)
-                    {
-                        if (Directory.Exists(p))
-                        {
-                            DirectoryInfo di = new DirectoryInfo(p);
-                            outDataPaths.AddRange(
-                                di.GetFiles("*", SearchOption.AllDirectories).Select(i => i.FullName)
-                            );
-                        }
-                        else if (File.Exists(p))
-                        {
-                            outDataPaths.Add(p);
-                        }
-                    }
-                    break;
-                case SearchPolicy.DontSearch:
-                    foreach (string p in paths)
-                    {
-                        if (File.Exists(p))
-                        {
-                            outDataPaths.Add(p);
-                        }
-                    }
-                    break;
-            }
-        }
-
         private void DataGrid_FilesToCalculate_Drop(object sender, DragEventArgs e)
         {
             if (!e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 return;
             }
-            if (!(e.Data.GetData(DataFormats.FileDrop) is string[] data) || data.Length == 0)
+            if (!(e.Data.GetData(DataFormats.FileDrop) is string[] data) || !data.Any())
             {
                 return;
             }
-            this.AcceptNewFilePathsLockButtons();
-            new Thread(() =>
-            {
-                List<string> searchedPaths = new List<string>();
-                this.SearchUnderSpecifiedPolicy(data, searchedPaths);
-                if (searchedPaths.Count == 0)
-                {
-                    return;
-                }
-                IEnumerable<ModelArg> args = searchedPaths.Select(s => new ModelArg(s));
-                this.viewModel.BeginDisplayModels(args);
-                this.AcceptNewFilePathsReleaseButtons();
-            })
-            { IsBackground = true }.Start();
+            this.viewModel.BeginDisplayModels(new PathPackage(data, Settings.Current.SelectedSearchPolicy));
         }
 
         private void Button_ClearFileList_Click(object sender, RoutedEventArgs e)
@@ -123,9 +63,9 @@ namespace HashCalculator
 
         private void Button_ExportAsTextFile_Click(object sender, RoutedEventArgs e)
         {
-            if (this.viewModel.HashViewModels.Count == 0)
+            if (!this.viewModel.HashViewModels.Any())
             {
-                MessageBox.Show("列表中没有任何需要导出的条目。", "提示");
+                MessageBox.Show(this, "列表中没有任何可以导出的条目。", "提示");
                 return;
             }
             SaveFileDialog sf = new SaveFileDialog()
@@ -155,99 +95,17 @@ namespace HashCalculator
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"结果导出为文本文件失败：\n{ex.Message}", "错误");
+                MessageBox.Show(this, $"哈希值导出失败：\n{ex.Message}", "错误");
                 return;
             }
         }
 
-        private void GlobalUpdateHashNameItems(string pathOrHash)
+        private void ReadBasisFileAndSearchNames(string path)
         {
-            this.VerificationBasis.Clear();
-            if (this.uiComboBox_ComparisonMethod.SelectedIndex == 0)
-            {
-                if (!File.Exists(pathOrHash))
-                {
-                    MessageBox.Show("校验依据来源文件不存在。", "提示");
-                    return;
-                }
-                try
-                {
-                    foreach (string line in File.ReadAllLines(pathOrHash))
-                    {
-                        string[] items = line.Split(
-                            new char[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
-                        if (items.Length < 2)
-                        {
-                            if (MessageBox.Show(
-                                    "哈希值文件行读取错误，可能该行格式不正确，是否继续？",
-                                    "错误",
-                                    MessageBoxButton.YesNo) == MessageBoxResult.No)
-                            {
-                                return;
-                            }
-                            else
-                            {
-                                continue;
-                            }
-                        }
-                        this.VerificationBasis.Add(items);
-                    }
-                    return;
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"校验依据来源文件打开失败：\n{ex.Message}", "错误");
-                    return;
-                }
-            }
-            else
-            {
-                this.VerificationBasis.Add(new string[] { pathOrHash.Trim(), "" });
-            }
-        }
-
-        private void CheckWithExpectedHash(string path)
-        {
-            FileInfo[] infosInSameFolder;
-            string expectedHash;
-            FileInfo hashValueFileInfo = new FileInfo(path);
-            if (Settings.Current.SelectedQVSearchPolicy == SearchPolicy.Children)
-            {
-                infosInSameFolder = hashValueFileInfo.Directory.GetFiles();
-            }
-            else if (Settings.Current.SelectedQVSearchPolicy == SearchPolicy.Descendants)
-            {
-                infosInSameFolder = hashValueFileInfo.Directory.GetFiles(
-                    "*", SearchOption.AllDirectories);
-            }
-            else
-            {
-                MessageBox.Show(
-                    "设置项\"当使用快速校验时\"选择了不搜索文件夹，快速校验无法完成，请在设置面板选择合适选项。",
-                    "提示",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Information);
-                return;
-            }
-            Dictionary<string, List<string>>
-                nameFullName = new Dictionary<string, List<string>>();
-            foreach (FileInfo info in infosInSameFolder)
-            {
-                string keylower = info.Name.ToLower();
-                if (!nameFullName.ContainsKey(keylower))
-                {
-                    nameFullName[keylower] = new List<string> { info.FullName };
-                }
-                else
-                {
-                    nameFullName[keylower].Add(info.FullName);
-                }
-            }
             try
             {
                 Dictionary<string, List<string>> verificationBasis
                     = new Dictionary<string, List<string>>();
-                List<ModelArg> hashModelArgsList = new List<ModelArg>();
                 foreach (string line in File.ReadAllLines(path))
                 {
                     string[] hashfname = line.Split(
@@ -257,9 +115,11 @@ namespace HashCalculator
                     if (hashfname.Length < 2)
                     {
                         if (MessageBox.Show(
-                                "哈希值文件行读取错误，可能该行格式不正确，是否继续？",
-                                "错误",
-                                MessageBoxButton.YesNo) == MessageBoxResult.No)
+                            this,
+                            "读取哈希值文件时遇到格式不正确的行：\n" +
+                            "选择 [是] 忽略该行并从下一行开始读取，选择 [否] 放弃读取。",
+                            "错误",
+                            MessageBoxButton.YesNo) == MessageBoxResult.No)
                         {
                             return;
                         }
@@ -279,58 +139,11 @@ namespace HashCalculator
                         verificationBasis[namelower] = new List<string> { hashfname[0] };
                     }
                 }
-                foreach (KeyValuePair<string, List<string>> pair in verificationBasis)
-                {
-                    if (nameFullName.ContainsKey(pair.Key))
-                    {
-                        string first = pair.Value.First();
-                        if (pair.Value.Count > 1)
-                        {
-                            expectedHash = pair.Value.All(s => s == first) ? first : "";
-                        }
-                        else
-                        {
-                            expectedHash = first;
-                        }
-                        foreach (string fullpath in nameFullName[pair.Key])
-                        {
-                            hashModelArgsList.Add(new ModelArg(expectedHash, fullpath));
-                        }
-                    }
-                    else
-                    {
-                        hashModelArgsList.Add(new ModelArg(pair.Key, true));
-                    }
-                }
-                if (hashModelArgsList.Count == 0)
-                {
-                    MessageBox.Show(
-                        "校验依据内容为空或搜索到的文件数量为零，请检查设置面板中的\"当使用快速校验时\"选项。",
-                        "提示",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Information);
-                    return;
-                }
-                this.viewModel.BeginDisplayModels(hashModelArgsList);
+                this.viewModel.BeginDisplayModels(new PathPackage(
+                    new string[] { Path.GetDirectoryName(path) },
+                    Settings.Current.SelectedQVSPolicy, verificationBasis));
             }
-            catch { return; }
-        }
-
-        private void AcceptNewFilePathsLockButtons()
-        {
-            this.uiButton_SelectFilesToHash.IsEnabled = false;
-            this.uiDataGrid_HashFiles.AllowDrop = false;
-            this.uiButton_SelectFoldersToHash.IsEnabled = false;
-        }
-
-        private void AcceptNewFilePathsReleaseButtons()
-        {
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                this.uiButton_SelectFilesToHash.IsEnabled = true;
-                this.uiDataGrid_HashFiles.AllowDrop = true;
-                this.uiButton_SelectFoldersToHash.IsEnabled = true;
-            });
+            catch (Exception) { }
         }
 
         private void Button_StartCompare_Click(object sender, RoutedEventArgs e)
@@ -338,35 +151,50 @@ namespace HashCalculator
             string pathOrHash = this.uiTextBox_HashValueOrFilePath.Text;
             if (string.IsNullOrEmpty(pathOrHash))
             {
-                MessageBox.Show("未输入哈希值校验依据。", "提示");
+                MessageBox.Show(this, "没有输入哈希值校验依据。", "提示");
                 return;
             }
-            if (this.viewModel.HashViewModels.Count == 0 && File.Exists(pathOrHash))
+            bool updated = false;
+            if (this.uiComboBox_ComparisonMethod.SelectedIndex == 0)
             {
-                this.AcceptNewFilePathsLockButtons();
-                new Thread(() =>
+                if (!File.Exists(pathOrHash))
                 {
-                    this.CheckWithExpectedHash(pathOrHash);
-                    this.AcceptNewFilePathsReleaseButtons();
-                })
-                { IsBackground = true }.Start();
-            }
-            else
-            {
-                this.GlobalUpdateHashNameItems(pathOrHash);
-                foreach (HashViewModel hm in this.viewModel.HashViewModels)
+                    MessageBox.Show(this, "校验依据来源文件不存在。", "提示");
+                    return;
+                }
+                else
                 {
-                    if (hm.IsSucceeded)
+                    if (!this.viewModel.HashViewModels.Any())
                     {
-                        hm.CmpResult = this.VerificationBasis.Verify(hm.Name, hm.Hash);
+                        this.ReadBasisFileAndSearchNames(pathOrHash);
+                        return;
                     }
                     else
                     {
-                        hm.CmpResult = CmpRes.NoResult;
+                        updated = this.VerificationBasis.UpdateWithFile(pathOrHash);
                     }
                 }
-                this.viewModel.GenerateVerificationReport();
             }
+            else if (this.uiComboBox_ComparisonMethod.SelectedIndex == 1)
+            {
+                updated = this.VerificationBasis.UpdateWithHash(pathOrHash);
+            }
+            if (!updated)
+            {
+                return;
+            }
+            foreach (HashViewModel hm in this.viewModel.HashViewModels)
+            {
+                if (hm.IsSucceeded)
+                {
+                    hm.CmpResult = this.VerificationBasis.Verify(hm.Name, hm.Hash);
+                }
+                else
+                {
+                    hm.CmpResult = CmpRes.NoResult;
+                }
+            }
+            this.viewModel.GenerateVerificationReport();
         }
 
         private void TextBox_HashValueOrFilePath_PreviewDragOver(object sender, DragEventArgs e)
@@ -380,7 +208,7 @@ namespace HashCalculator
             {
                 return;
             }
-            if (!(e.Data.GetData(DataFormats.FileDrop) is string[] data) || data.Length == 0)
+            if (!(e.Data.GetData(DataFormats.FileDrop) is string[] data) || !data.Any())
             {
                 return;
             }
@@ -433,8 +261,6 @@ namespace HashCalculator
             {
                 Settings.Current.LastUsedPath = Path.GetDirectoryName(openFile.FileName);
                 this.uiTextBox_HashValueOrFilePath.Text = openFile.FileName;
-                // TextBox_HashValueOrFilePath_Changed 已实现
-                //this.uiComboBox_ComparisonMethod.SelectedIndex = 0;
             }
         }
 
@@ -461,30 +287,22 @@ namespace HashCalculator
                 Multiselect = true,
                 EnsureValidNames = true,
             };
-            if (fileOpen.ShowDialog() == CommonFileDialogResult.Ok)
+            if (fileOpen.ShowDialog() != CommonFileDialogResult.Ok)
             {
-                if (fileOpen.FileNames.Count() == 0)
-                {
-                    MessageBox.Show("没有选择任何文件", "提示");
-                    return;
-                }
-                Settings.Current.LastUsedPath =
-                    Path.GetDirectoryName(fileOpen.FileNames.ElementAt(0));
-                this.AcceptNewFilePathsLockButtons();
-                IEnumerable<ModelArg> args = fileOpen.FileNames.Select(s => new ModelArg(s));
-                this.viewModel.BeginDisplayModels(args);
-                this.AcceptNewFilePathsReleaseButtons();
+                return;
             }
+            Settings.Current.LastUsedPath =
+                    Path.GetDirectoryName(fileOpen.FileNames.ElementAt(0));
+            this.viewModel.BeginDisplayModels(
+                new PathPackage(fileOpen.FileNames, Settings.Current.SelectedSearchPolicy));
         }
 
         private void Button_SelectFoldersToHash_Click(object sender, RoutedEventArgs e)
         {
-            if (Settings.Current.SelectedDroppedSearchPolicy == SearchPolicy.DontSearch)
+            SearchPolicy policy = Settings.Current.SelectedSearchPolicy;
+            if (policy == SearchPolicy.DontSearch)
             {
-                MessageBox.Show(
-                    "当前设置中的文件夹搜索策略为\"不搜索该文件夹\"，此按钮无法获取文件夹下的文件，请更改为其他选项。",
-                    "提示");
-                return;
+                policy = SearchPolicy.Children;
             }
             CommonOpenFileDialog folderOpen = new CommonOpenFileDialog()
             {
@@ -493,25 +311,12 @@ namespace HashCalculator
                 Multiselect = true,
                 EnsureValidNames = true,
             };
-            if (folderOpen.ShowDialog() == CommonFileDialogResult.Ok)
+            if (folderOpen.ShowDialog() != CommonFileDialogResult.Ok)
             {
-                if (folderOpen.FileNames.Count() == 0)
-                {
-                    MessageBox.Show("没有选择任何文件夹", "提示");
-                    return;
-                }
-                Settings.Current.LastUsedPath = folderOpen.FileNames.ElementAt(0);
-                List<string> folderPaths = new List<string>();
-                this.AcceptNewFilePathsLockButtons();
-                new Thread(() =>
-                {
-                    this.SearchUnderSpecifiedPolicy(folderOpen.FileNames, folderPaths);
-                    IEnumerable<ModelArg> args = folderPaths.Select(s => new ModelArg(s));
-                    this.viewModel.BeginDisplayModels(args);
-                    this.AcceptNewFilePathsReleaseButtons();
-                })
-                { IsBackground = true }.Start();
+                return;
             }
+            Settings.Current.LastUsedPath = folderOpen.FileNames.ElementAt(0);
+            this.viewModel.BeginDisplayModels(new PathPackage(folderOpen.FileNames, policy));
         }
 
         private void Button_CancelHashModel_Click(object sender, RoutedEventArgs e)

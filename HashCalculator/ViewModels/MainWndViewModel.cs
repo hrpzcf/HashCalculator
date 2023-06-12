@@ -209,10 +209,6 @@ namespace HashCalculator
 
         public async void BeginDisplayModels(IEnumerable<ModelArg> args)
         {
-            if (args.Count() == 0)
-            {
-                return;
-            }
             CancellationToken token;
             lock (this.displayModelRequestLock)
             {
@@ -222,7 +218,6 @@ namespace HashCalculator
             {
                 lock (this.displayingModelLock)
                 {
-                    int addedArgsCount = 0;
                     foreach (ModelArg arg in args)
                     {
                         if (token.IsCancellationRequested)
@@ -231,11 +226,34 @@ namespace HashCalculator
                         }
                         this.displayedFiles.Add(arg);
                         AppDispatcher.Invoke(this.modelToTable, arg);
-                        if (++addedArgsCount % 100 == 0)
-                        {
-                            Thread.Sleep(100);
-                        }
+                        Thread.Yield();
                     }
+                }
+            }, token);
+        }
+
+        public async void BeginDisplayModels(PathPackage package)
+        {
+            CancellationToken token;
+            lock (this.displayModelRequestLock)
+            {
+                token = this.Cancellation.Token;
+            }
+            await Task.Run(() =>
+            {
+                lock (this.displayingModelLock)
+                {
+                    foreach (ModelArg arg in package)
+                    {
+                        if (token.IsCancellationRequested)
+                        {
+                            break;
+                        }
+                        this.displayedFiles.Add(arg);
+                        AppDispatcher.Invoke(this.modelToTable, arg);
+                        Thread.Yield();
+                    }
+
                 }
             }, token);
         }
@@ -280,15 +298,10 @@ namespace HashCalculator
                 }
             }
             this.Report
-                = $"校验报告：\n\n已匹配：{matched}\n"
-                + $"不匹配：{mismatch}\n"
-                + $"不确定：{uncertain}\n"
-                + $"无关联：{unrelated}\n"
-                + $"未校验：{noresult} \n\n"
-                + $"队列总数：{this.HashViewModels.Count}\n"
-                + $"已成功：{succeeded}\n"
-                + $"已失败：{hasFailed}\n"
-                + $"已取消：{canceled}";
+                = $"总项数：{this.HashViewModels.Count}\n已成功：{succeeded}\n"
+                + $"已失败：{hasFailed}\n已取消：{canceled}\n\n"
+                + $"校验汇总：\n已匹配：{matched}\n不匹配：{mismatch}\n"
+                + $"不确定：{uncertain}\n无关联：{unrelated}\n未校验：{noresult}";
         }
 
         public void Models_CancelAll()

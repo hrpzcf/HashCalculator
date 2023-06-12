@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace HashCalculator
@@ -46,7 +47,7 @@ namespace HashCalculator
 #endif
                 return false;
             }
-            if (files == null || files.Length == 0)
+            if (files == null || !files.Any())
             {
                 int res1 = NativeFunctions.SHOpenFolderAndSelectItems(folderID, 0U, null, 0U);
                 Marshal.FreeCoTaskMem(folderID);

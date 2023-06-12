@@ -679,44 +679,6 @@ namespace HashCalculator
         }
     }
 
-    internal class DataGridMaskVisibCvt : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            switch ((bool)value)
-            {
-                case true:
-                    return Visibility.Hidden;
-                default:
-                    return Visibility.Visible;
-            }
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    internal class DataGridBlurEffectCvt : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            switch ((bool)value)
-            {
-                case true:
-                    return 0;
-                default:
-                    return 2;
-            }
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
     internal class TotalProgressVisiblityCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

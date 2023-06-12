@@ -162,9 +162,9 @@ namespace HashCalculator
             }
         }
 
-        public SearchPolicy SelectedQVSearchPolicy { get; set; }
+        public SearchPolicy SelectedQVSPolicy { get; set; }
 
-        public SearchPolicy SelectedDroppedSearchPolicy { get; set; }
+        public SearchPolicy SelectedSearchPolicy { get; set; }
 
         public TaskNum SelectedTaskNumberLimit
         {

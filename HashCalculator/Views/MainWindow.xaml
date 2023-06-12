@@ -254,35 +254,6 @@
                 <Image Source="/Images/using_help_32.png" />
             </Button>
         </Grid>
-        <Border
-            Grid.Row="1"
-            Margin="0,4,0,0"
-            Panel.ZIndex="1"
-            Background="#50000000"
-            Visibility="{Binding AllowDrop, ElementName=uiDataGrid_HashFiles, Converter={StaticResource DataGridMaskVisibCvt}}">
-            <Border
-                Padding="8"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Background="Black"
-                CornerRadius="8">
-                <Border.Effect>
-                    <DropShadowEffect
-                        BlurRadius="20"
-                        Opacity="0.8"
-                        ShadowDepth="0"
-                        Color="Black" />
-                </Border.Effect>
-                <TextBlock
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    FontFamily="YouYuan"
-                    FontSize="28"
-                    FontWeight="Bold"
-                    Foreground="White"
-                    Text="正在搜索文件，请稍候..." />
-            </Border>
-        </Border>
         <DataGrid
             x:Name="uiDataGrid_HashFiles"
             Grid.Row="1"
@@ -304,11 +275,6 @@
             VirtualizingPanel.IsContainerVirtualizable="True"
             VirtualizingPanel.IsVirtualizing="True"
             VirtualizingPanel.VirtualizationMode="Recycling">
-            <DataGrid.Effect>
-                <BlurEffect
-                    KernelType="Box"
-                    Radius="{Binding AllowDrop, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGrid}, AncestorLevel=1}, Converter={StaticResource DataGridBlurEffectCvt}}" />
-            </DataGrid.Effect>
             <DataGrid.RowStyle>
                 <Style
                     BasedOn="{StaticResource RowStyleNormal}"

@@ -55,7 +55,7 @@
                     Grid.Column="1"
                     DisplayMemberPath="Display"
                     ItemsSource="{Binding AvailableDroppedSearchPolicies}"
-                    SelectedValue="{Binding SelectedDroppedSearchPolicy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    SelectedValue="{Binding SelectedSearchPolicy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     SelectedValuePath="ItemValue" />
             </Grid>
             <Grid
@@ -90,7 +90,7 @@
                     Grid.Column="1"
                     DisplayMemberPath="Display"
                     ItemsSource="{Binding AvailableQVSearchPolicies}"
-                    SelectedValue="{Binding SelectedQVSearchPolicy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    SelectedValue="{Binding SelectedQVSPolicy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     SelectedValuePath="ItemValue"
                     ToolTip="{Binding TaskNumLimitsToolTip}" />
             </Grid>

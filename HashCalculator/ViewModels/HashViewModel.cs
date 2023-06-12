@@ -336,7 +336,14 @@ namespace HashCalculator
 
         private void CopyFileFullPathAction(object param)
         {
-            Clipboard.SetText(this.FileInfo.FullName);
+            if (File.Exists(this.FileInfo.FullName))
+            {
+                Clipboard.SetText(this.FileInfo.FullName);
+            }
+            else
+            {
+                Clipboard.SetText(this.FileInfo.Name);
+            }
         }
 
         private void OpenFolderSelectItemAction(object param)
