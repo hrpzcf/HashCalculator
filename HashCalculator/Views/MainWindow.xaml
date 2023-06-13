@@ -154,7 +154,7 @@
                 Click="Button_ClearFileList_Click"
                 IsEnabled="{Binding State, Converter={StaticResource ButtonEnableCvt}}"
                 Style="{StaticResource ImageButtonStyle2}"
-                ToolTip="清空全部内容：清空表格中显示的所有行">
+                ToolTip="清空所有内容：清空表格中显示的所有行">
                 <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnClearPanelEnabledImgCvt}}" />
             </Button>
             <Button
