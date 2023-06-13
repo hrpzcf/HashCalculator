@@ -202,7 +202,7 @@
                 Margin="4,0,0,0"
                 Command="{Binding RefreshAllOutputTypeCmd}"
                 Style="{StaticResource ImageButtonStyle2}"
-                ToolTip="刷新输出方式：以 [默认输出方式] 下拉列表选择的输出方式更新列表内所有文件的哈希值显示方式">
+                ToolTip="刷新输出方式：以 [默认输出方式] 下拉列表选择的输出方式更新表格内所有文件的哈希值显示方式">
                 <Image Source="/Images/refresh_output_32.png" />
             </Button>
             <Button
