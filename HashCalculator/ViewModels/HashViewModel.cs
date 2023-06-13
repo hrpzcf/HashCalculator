@@ -147,15 +147,13 @@ namespace HashCalculator
             }
         }
 
-        // 将来可能会增加单个任务的哈希类型手动更改
-        // Xaml 绑定会更改此值，不使用 private set
         public AlgoType HashName
         {
             get
             {
                 return this._hashName;
             }
-            set
+            private set
             {
                 this.SetPropNotify(ref this._hashName, value);
             }
