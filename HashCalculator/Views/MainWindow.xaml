@@ -158,17 +158,9 @@
                 <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnClearPanelEnabledImgCvt}}" />
             </Button>
             <Button
+                x:Name="uiButton_RefreshCopy"
                 Grid.Column="9"
                 Margin="28,0,0,0"
-                Command="{Binding RefreshAllOutputTypeCmd}"
-                Style="{StaticResource ImageButtonStyle2}"
-                ToolTip="刷新输出方式：以 [默认输出方式] 下拉列表选择的输出方式更新列表内所有文件的哈希值显示方式">
-                <Image Source="/Images/refresh_output_32.png" />
-            </Button>
-            <Button
-                x:Name="uiButton_RefreshCopy"
-                Grid.Column="10"
-                Margin="4,0,0,0"
                 Click="Button_CopyRefreshHash_Click"
                 IsEnabled="{Binding State, Converter={StaticResource ButtonEnableCvt}}"
                 Style="{StaticResource ImageButtonStyle2}"
@@ -177,7 +169,7 @@
             </Button>
             <Button
                 x:Name="uiButton_RefreshCurrentHash"
-                Grid.Column="11"
+                Grid.Column="10"
                 Margin="4,0,0,0"
                 Click="Button_RefreshCurrentHash_Click"
                 IsEnabled="{Binding State, Converter={StaticResource ButtonEnableCvt}}"
@@ -187,7 +179,7 @@
             </Button>
             <Button
                 x:Name="uiButton_RefreshCurrentHashForce"
-                Grid.Column="12"
+                Grid.Column="11"
                 Margin="4,0,0,0"
                 Click="Button_RefreshCurrentHashForce_Click"
                 IsEnabled="{Binding State, Converter={StaticResource ButtonEnableCvt}}"
@@ -197,13 +189,21 @@
             </Button>
             <Button
                 x:Name="uiButton_ExportAsText"
-                Grid.Column="13"
+                Grid.Column="12"
                 Margin="4,0,0,0"
                 Click="Button_ExportAsTextFile_Click"
                 IsEnabled="{Binding State, Converter={StaticResource ButtonEnableCvt}}"
                 Style="{StaticResource ImageButtonStyle2}"
                 ToolTip="导出哈希值：将表格中所有文件的哈希计算结果导出为文本文件&#10;导出的内容使用的输出方式受到 [默认输出方式] 的控制而不受各文件自己的 [输出方式] 的控制&#10;没有计算结果的行不会被导出，[导出] 列没有勾选的行也不会被导出">
                 <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnExportEnabledImgCvt}}" />
+            </Button>
+            <Button
+                Grid.Column="13"
+                Margin="4,0,0,0"
+                Command="{Binding RefreshAllOutputTypeCmd}"
+                Style="{StaticResource ImageButtonStyle2}"
+                ToolTip="刷新输出方式：以 [默认输出方式] 下拉列表选择的输出方式更新列表内所有文件的哈希值显示方式">
+                <Image Source="/Images/refresh_output_32.png" />
             </Button>
             <Button
                 x:Name="uiButton_ContinueAllTask"
