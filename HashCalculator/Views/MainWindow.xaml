@@ -455,7 +455,10 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="输出方式">
+                <DataGridTemplateColumn
+                    CanUserSort="True"
+                    Header="输出方式"
+                    SortMemberPath="SelectedOutputType">
                     <DataGridTemplateColumn.HeaderStyle>
                         <Style TargetType="{x:Type DataGridColumnHeader}">
                             <Setter Property="HorizontalContentAlignment" Value="Center" />
@@ -481,7 +484,9 @@
                     Header="运行时长(秒)"
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoDurationColumn, Converter={StaticResource NoColumnCvt}, Mode=OneWay}" />
                 <DataGridTemplateColumn
+                    CanUserSort="True"
                     Header="导出"
+                    SortMemberPath="Export"
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoExportColumn, Converter={StaticResource NoColumnCvt}, Mode=OneWay}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -493,7 +498,9 @@
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn
                     MinWidth="60"
-                    Header="校验结果">
+                    CanUserSort="True"
+                    Header="校验结果"
+                    SortMemberPath="CmpResult">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Label
