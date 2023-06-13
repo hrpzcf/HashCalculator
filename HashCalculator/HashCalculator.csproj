@@ -81,7 +81,6 @@
     <Compile Include="Others\PathPackage.cs" />
     <Compile Include="Others\RelayCommand.cs" />
     <Compile Include="Others\CommonUtils.cs" />
-    <Compile Include="Others\UnitCvt.cs" />
     <Compile Include="ViewModels\MainWndViewModel.cs" />
     <Compile Include="Others\Converters.cs" />
     <Compile Include="Others\Enumerates.cs" />
@@ -93,7 +92,11 @@
     <Compile Include="Views\UsingHelpWnd.xaml.cs">
       <DependentUpon>UsingHelpWnd.xaml</DependentUpon>
     </Compile>
-    <Page Include="Resources\ComboBoxStyles.xaml">
+    <Page Include="Resources\ComboBoxStyle1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\ComboBoxStyle2.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -138,9 +141,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\icon.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\icon.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -165,9 +165,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\continue.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\refresh.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Assembly\BouncyCastle.Cryptography.dll" />
@@ -231,9 +228,6 @@
     <Resource Include="Images\output_type_32.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\unable.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\finished_16.png" />
   </ItemGroup>
   <ItemGroup>
@@ -241,6 +235,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\list_count_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\refresh_output_32.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

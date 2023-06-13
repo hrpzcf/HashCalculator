@@ -19,7 +19,8 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Resources/ComboBoxStyles.xaml" />
+                <ResourceDictionary Source="/Resources/ComboBoxStyle1.xaml" />
+                <ResourceDictionary Source="/Resources/ComboBoxStyle2.xaml" />
                 <ResourceDictionary Source="/Resources/ImageButtonStyles.xaml" />
                 <ResourceDictionary Source="/Resources/ConverterResource.xaml" />
                 <ResourceDictionary Source="/Resources/DataGridCellStyles.xaml" />
@@ -56,38 +57,35 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <Image
+            <Label
                 Grid.Column="0"
-                VerticalAlignment="Center"
-                Source="/Images/hash_algo_32.png"
-                ToolTip="选择哈希算法" />
+                VerticalContentAlignment="Center"
+                Content="默认哈希算法:" />
             <ComboBox
                 Grid.Column="1"
-                Width="100"
-                Margin="2,0,0,0"
+                Width="80"
                 VerticalAlignment="Center"
                 ItemsSource="{Binding Source={x:Static local:Settings.Current}, Path=AvailableAlgos}"
                 SelectedValue="{Binding Source={x:Static local:Settings.Current}, Path=SelectedAlgo}"
                 Style="{StaticResource ComboBoxStyle1}"
-                ToolTip="选择哈希算法" />
-            <Image
+                ToolTip="此选项影响新加入的文件、[新增哈希计算] 按钮、[计算未完成项] 按钮、[全部重新计算] 按钮的结果" />
+            <Label
                 Grid.Column="2"
                 Margin="16,0,0,0"
-                VerticalAlignment="Center"
-                Source="/Images/output_type_32.png"
-                ToolTip="选择哈希值输出方式" />
+                VerticalContentAlignment="Center"
+                Content="默认输出方式:" />
             <ComboBox
                 Grid.Column="3"
-                Width="110"
-                Margin="2,0,0,0"
+                Width="106"
                 VerticalAlignment="Center"
                 DisplayMemberPath="Display"
                 ItemsSource="{Binding Source={x:Static local:Settings.Current}, Path=AvailableOutputTypes}"
                 SelectedValue="{Binding Source={x:Static local:Settings.Current}, Path=SelectedOutputType}"
                 SelectedValuePath="ItemValue"
                 Style="{StaticResource ComboBoxStyle1}"
-                ToolTip="选择哈希值输出方式" />
+                ToolTip="此选项影响新加入的文件、[刷新输出方式] 按钮、[导出哈希值] 按钮的结果&#10;Base64 编码：以 Base64 字符显示计算结果，某些软件配置需要此格式&#10;十六进制大写：常用的显示方式，以十六进制大写字母方式显示计算结果&#10;十六进制小写：常用的显示方式，以十六进制小写字母方式显示计算结果" />
             <StackPanel
                 Grid.Column="4"
                 Margin="16,0,0,0"
@@ -97,38 +95,38 @@
                 <Image
                     VerticalAlignment="Center"
                     Source="/Images/list_count_16.png"
-                    ToolTip="列表中的项目总数" />
+                    ToolTip="表格中的项目总数" />
                 <TextBlock
                     Margin="2,0,0,0"
                     VerticalAlignment="Center"
                     Foreground="Gray"
                     Text="{Binding HashViewModels.Count}"
-                    ToolTip="列表中的项目总数" />
+                    ToolTip="表格中的项目总数" />
                 <Image
                     Margin="8,0,0,0"
                     VerticalAlignment="Center"
                     Source="/Images/totalnum_16.png"
-                    ToolTip="待计算队列中的项目总数"
+                    ToolTip="本次待计算队列中的项目总数"
                     Visibility="{Binding State, Converter={StaticResource TotalProgressVisiblityCvt}}" />
                 <TextBlock
                     Margin="2,0,0,0"
                     VerticalAlignment="Center"
                     Foreground="Gray"
                     Text="{Binding TotalNumberInQueue}"
-                    ToolTip="待计算队列中的项目总数"
+                    ToolTip="本次待计算队列中的项目总数"
                     Visibility="{Binding State, Converter={StaticResource TotalProgressVisiblityCvt}}" />
                 <Image
                     Margin="8,0,0,0"
                     VerticalAlignment="Center"
                     Source="/Images/finished_16.png"
-                    ToolTip="待计算队列已完成计算的项目数"
+                    ToolTip="本次待计算队列已完成的项目数"
                     Visibility="{Binding State, Converter={StaticResource TotalProgressVisiblityCvt}}" />
                 <TextBlock
                     Margin="2,0,0,0"
                     VerticalAlignment="Center"
                     Foreground="Gray"
                     Text="{Binding FinishedInQueue}"
-                    ToolTip="待计算队列已完成计算的项目数"
+                    ToolTip="本次待计算队列已完成的项目数"
                     Visibility="{Binding State, Converter={StaticResource TotalProgressVisiblityCvt}}" />
             </StackPanel>
             <Button
@@ -137,7 +135,7 @@
                 Margin="28,0,0,0"
                 Click="Button_SelectFilesToHash_Click"
                 Style="{StaticResource ImageButtonStyle2}"
-                ToolTip="选择文件，也可以将文件、文件夹直接拖放到下方表格中">
+                ToolTip="选择文件：添加所选的文件并开始计算，也可以将文件、文件夹直接拖放到下方表格中">
                 <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnSelectFileEnabledImgCvt}}" />
             </Button>
             <Button
@@ -146,7 +144,7 @@
                 Margin="4,0,0,0"
                 Click="Button_SelectFoldersToHash_Click"
                 Style="{StaticResource ImageButtonStyle2}"
-                ToolTip="选择文件夹，也可以将文件和文件夹直接拖放到下方表格中">
+                ToolTip="选择文件夹：搜索文件夹内的文件并开始计算，也可以将文件和文件夹直接拖放到表格中">
                 <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnSelectFolderEnabledImgCvt}}" />
             </Button>
             <Button
@@ -156,89 +154,97 @@
                 Click="Button_ClearFileList_Click"
                 IsEnabled="{Binding State, Converter={StaticResource ButtonEnableCvt}}"
                 Style="{StaticResource ImageButtonStyle2}"
-                ToolTip="清空面板中显示的所有行">
+                ToolTip="清空全部内容：清空表格中显示的所有行">
                 <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnClearPanelEnabledImgCvt}}" />
             </Button>
             <Button
-                x:Name="uiButton_RefreshCopy"
                 Grid.Column="9"
                 Margin="28,0,0,0"
+                Command="{Binding RefreshAllOutputTypeCmd}"
+                Style="{StaticResource ImageButtonStyle2}"
+                ToolTip="刷新输出方式：以 [默认输出方式] 下拉列表选择的输出方式更新列表内所有文件的哈希值显示方式">
+                <Image Source="/Images/refresh_output_32.png" />
+            </Button>
+            <Button
+                x:Name="uiButton_RefreshCopy"
+                Grid.Column="10"
+                Margin="4,0,0,0"
                 Click="Button_CopyRefreshHash_Click"
                 IsEnabled="{Binding State, Converter={StaticResource ButtonEnableCvt}}"
                 Style="{StaticResource ImageButtonStyle2}"
-                ToolTip="根据&quot;算法&quot;下拉选择框所选算法，计算表格中所有文件的哈希值，但不清除原来的计算结果，而是增加新的行来显示结果">
+                ToolTip="新增哈希计算：根据 [默认哈希算法] 下拉列表所选算法，计算表格中所有文件的哈希值，但不清除原来的计算结果，而是增加新的行来显示结果">
                 <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnNewLineEnabledImgCvt}}" />
             </Button>
             <Button
                 x:Name="uiButton_RefreshCurrentHash"
-                Grid.Column="10"
+                Grid.Column="11"
                 Margin="4,0,0,0"
                 Click="Button_RefreshCurrentHash_Click"
                 IsEnabled="{Binding State, Converter={StaticResource ButtonEnableCvt}}"
                 Style="{StaticResource ImageButtonStyle2}"
-                ToolTip="根据&quot;算法&quot;下拉选择框所选算法，重新计算表格中未完成计算的文件的哈希值">
+                ToolTip="计算未完成项：根据 [默认哈希算法] 下拉列表所选算法，重新计算表格中未完成计算的文件的哈希值">
                 <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnRefreshEnabledImgCvt}}" />
             </Button>
             <Button
                 x:Name="uiButton_RefreshCurrentHashForce"
-                Grid.Column="11"
+                Grid.Column="12"
                 Margin="4,0,0,0"
                 Click="Button_RefreshCurrentHashForce_Click"
                 IsEnabled="{Binding State, Converter={StaticResource ButtonEnableCvt}}"
                 Style="{StaticResource ImageButtonStyle2}"
-                ToolTip="根据&quot;算法&quot;下拉选择框所选算法，重新计算表格中所有文件的哈希值">
+                ToolTip="全部重新计算：根据 [默认哈希算法] 下拉列表所选算法，重新计算表格中所有文件的哈希值">
                 <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnRefreshForceEnabledImgCvt}}" />
             </Button>
             <Button
                 x:Name="uiButton_ExportAsText"
-                Grid.Column="12"
+                Grid.Column="13"
                 Margin="4,0,0,0"
                 Click="Button_ExportAsTextFile_Click"
                 IsEnabled="{Binding State, Converter={StaticResource ButtonEnableCvt}}"
                 Style="{StaticResource ImageButtonStyle2}"
-                ToolTip="导出面板中的计算结果（没有计算结果的行不会被导出，&quot;导出&quot;列没有勾选的行也不会被导出）">
+                ToolTip="导出哈希值：将表格中所有文件的哈希计算结果导出为文本文件&#10;导出的内容使用的输出方式受到 [默认输出方式] 的控制而不受各文件自己的 [输出方式] 的控制&#10;没有计算结果的行不会被导出，[导出] 列没有勾选的行也不会被导出">
                 <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnExportEnabledImgCvt}}" />
             </Button>
             <Button
                 x:Name="uiButton_ContinueAllTask"
-                Grid.Column="13"
+                Grid.Column="14"
                 Margin="28,0,0,0"
                 Click="Button_ContinueAllTask_Click"
                 IsEnabled="{Binding State, Converter={StaticResource ButtonNotEnableCvt}}"
                 Style="{StaticResource ImageButtonStyle2}"
-                ToolTip="启动全部已暂停的哈希值计算任务">
+                ToolTip="继续所有任务：启动全部已暂停的哈希值计算任务">
                 <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnContinueAllEnabledImgCvt}}" />
             </Button>
             <Button
                 x:Name="uiButton_PauseAllTask"
-                Grid.Column="14"
+                Grid.Column="15"
                 Margin="4,0,0,0"
                 Click="Button_PauseAllTask_Click"
                 IsEnabled="{Binding State, Converter={StaticResource ButtonNotEnableCvt}}"
                 Style="{StaticResource ImageButtonStyle2}"
-                ToolTip="暂停全部正在运行的哈希值计算任务（计算大量小文件时可能会暂停失败）">
+                ToolTip="暂停所有任务：暂停全部正在运行的哈希值计算任务（计算大量小文件时可能会暂停失败，需要多次点击）">
                 <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnPauseAllEnabledImgCvt}}" />
             </Button>
             <Button
                 x:Name="uiButton_CancelAllTask"
-                Grid.Column="15"
+                Grid.Column="16"
                 Margin="4,0,0,0"
                 Click="Button_CancelAllTask_Click"
                 IsEnabled="{Binding State, Converter={StaticResource ButtonNotEnableCvt}}"
                 Style="{StaticResource ImageButtonStyle2}"
-                ToolTip="取消全部排队中、运行中和已暂停的哈希值计算任务">
+                ToolTip="取消所有任务：取消全部排队中、运行中和已暂停的哈希值计算任务">
                 <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnCancelAllEnabledImgCvt}}" />
             </Button>
             <Button
-                Grid.Column="16"
+                Grid.Column="17"
                 Margin="28,0,0,0"
                 Click="Button_WindowTopmost_Click"
                 Style="{StaticResource ImageButtonStyle2}"
-                ToolTip="主窗口置顶">
+                ToolTip="置顶/取消置顶主窗口">
                 <Image Source="{Binding Source={x:Static local:Settings.Current}, Path=MainWndTopmost, Converter={StaticResource BtnTopmostEnabledImgCvt}}" />
             </Button>
             <Button
-                Grid.Column="17"
+                Grid.Column="18"
                 Margin="4,0,0,0"
                 Click="MenuItem_Settings_Click"
                 Style="{StaticResource ImageButtonStyle2}"
@@ -246,7 +252,7 @@
                 <Image Source="/Images/settings_32.png" />
             </Button>
             <Button
-                Grid.Column="18"
+                Grid.Column="19"
                 Margin="4,0,0,0"
                 Click="MenuItem_UsingHelp_Click"
                 Style="{StaticResource ImageButtonStyle2}"
@@ -311,19 +317,28 @@
                     Header="序号" />
                 <DataGridTextColumn
                     MinWidth="180"
-                    Binding="{Binding Name}"
-                    CellStyle="{StaticResource CellStyleTipPath}"
-                    Header="文件名" />
+                    Binding="{Binding FileName}"
+                    Header="文件名">
+                    <DataGridTextColumn.CellStyle>
+                        <Style
+                            BasedOn="{StaticResource CellStyleNormal}"
+                            TargetType="{x:Type DataGridCell}">
+                            <Setter Property="ToolTip" Value="{Binding FileInfo}" />
+                            <Setter Property="ToolTipService.ShowDuration" Value="6000" />
+                            <Setter Property="ToolTipService.BetweenShowDelay" Value="0" />
+                            <Setter Property="ToolTipService.InitialShowDelay" Value="0" />
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
                 <DataGridTextColumn
                     Binding="{Binding FileSize}"
-                    CellStyle="{StaticResource CellStyleTipPath}"
                     Header="文件体积 (字节)"
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoFileSizeColumn, Converter={StaticResource NoColumnCvt}, Mode=OneWay}" />
                 <DataGridTemplateColumn
                     MinWidth="210"
                     CanUserSort="True"
                     Header="哈希值"
-                    SortMemberPath="Hash">
+                    SortMemberPath="HashString">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid VerticalAlignment="Center">
@@ -333,24 +348,28 @@
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock
+                                <Label
                                     Grid.Column="0"
+                                    Margin="2"
                                     Padding="4,2,4,2"
-                                    VerticalAlignment="Center"
+                                    VerticalContentAlignment="Center"
                                     Background="{Binding HashName, Converter={StaticResource AlgoTypeBgCvt}}"
-                                    Text="{Binding HashName, Converter={StaticResource AlgoTypeNameCvt}}" />
+                                    BorderBrush="#FF0091FF"
+                                    BorderThickness="1"
+                                    Content="{Binding HashName, Converter={StaticResource AlgoTypeNameCvt}}" />
                                 <!--  不在计算状态  -->
                                 <TextBlock
                                     Grid.Column="1"
                                     Margin="4,0,4,0"
                                     VerticalAlignment="Center"
-                                    Text="{Binding Hash}"
+                                    Text="{Binding HashString}"
                                     ToolTip="{Binding ModelDetails}"
                                     ToolTipService.BetweenShowDelay="0"
                                     ToolTipService.InitialShowDelay="0"
                                     ToolTipService.ShowDuration="60000"
                                     Visibility="{Binding State, Converter={StaticResource SubBtnVisiblityFinishedCvt}}" />
                                 <!--  正在计算状态  -->
+                                <!--  ProgressBar的Value绑定需是OneWay，因为默认TwoWay和private set的Progress无法成功绑定  -->
                                 <ProgressBar
                                     Grid.Column="1"
                                     Width="{Binding HashName, Converter={StaticResource SubProgressWidthCvt}}"
@@ -360,7 +379,7 @@
                                     Foreground="#8000B4E7"
                                     Maximum="{Binding ProgressTotal}"
                                     Visibility="{Binding State, Converter={StaticResource SubBtnVisiblityRunningCvt}}"
-                                    Value="{Binding Progress}" />
+                                    Value="{Binding Progress, Mode=OneWay}" />
                                 <Button
                                     Grid.Column="2"
                                     Padding="4"
@@ -397,17 +416,6 @@
                                 </Button>
                                 <!--  已成功  -->
                                 <Button
-                                    Grid.Column="2"
-                                    Padding="4"
-                                    Click="Button_RestartHashModel_CLick"
-                                    Style="{StaticResource ImageButtonStyle1}"
-                                    ToolTip="刷新..."
-                                    Visibility="{Binding Result, Converter={StaticResource SubBtnVisiblitySucceededCvt}}">
-                                    <Image
-                                        Source="/Images/refresh.png"
-                                        Stretch="None" />
-                                </Button>
-                                <Button
                                     Grid.Column="3"
                                     Padding="4"
                                     Command="{Binding CopyModelHashValueCmd}"
@@ -431,6 +439,26 @@
                                         Stretch="None" />
                                 </Button>
                             </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="输出方式">
+                    <DataGridTemplateColumn.HeaderStyle>
+                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="HorizontalContentAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTemplateColumn.HeaderStyle>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox
+                                Margin="2"
+                                VerticalAlignment="Center"
+                                DisplayMemberPath="Display"
+                                ItemsSource="{Binding AvailableOutputTypes}"
+                                SelectedValue="{Binding SelectedOutputType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                SelectedValuePath="ItemValue"
+                                Style="{StaticResource ComboBoxStyle2}"
+                                ToolTip="指定计算哈希结果的显示方式：&#10;Base64：以 Base64 字符显示计算结果，某些软件配置需要此格式&#10;Hex大写：常用的显示方式，以十六进制大写字母方式显示计算结果&#10;Hex小写：常用的显示方式，以十六进制小写字母方式显示计算结果" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

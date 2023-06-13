@@ -47,7 +47,7 @@ namespace HashCalculator
 
         private void RunApplication()
         {
-            this.DispatcherUnhandledException += this.UnhandledException;
+            //this.DispatcherUnhandledException += this.UnhandledException;
             this.StartupUri = new Uri("Views/MainWindow.xaml", UriKind.Relative);
             this.Run();
         }

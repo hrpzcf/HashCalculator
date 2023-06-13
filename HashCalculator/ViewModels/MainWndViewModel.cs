@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Threading;
 
 namespace HashCalculator
@@ -28,6 +28,7 @@ namespace HashCalculator
         private readonly object changeTaskNumberLock = new object();
         private readonly object displayingModelLock = new object();
         private readonly object displayModelRequestLock = new object();
+        private RelayCommand refreshAllOutputTypeCmd;
 
         public MainWndViewModel()
         {
@@ -104,6 +105,19 @@ namespace HashCalculator
             }
         }
 
+        public ICommand RefreshAllOutputTypeCmd
+        {
+            get
+            {
+                if (this.refreshAllOutputTypeCmd is null)
+                {
+                    this.refreshAllOutputTypeCmd =
+                        new RelayCommand(this.RefreshAllOutputTypeAction);
+                }
+                return this.refreshAllOutputTypeCmd;
+            }
+        }
+
         private CancellationTokenSource Cancellation
         {
             get
@@ -119,6 +133,17 @@ namespace HashCalculator
                 else
                 {
                     this._cancellation = value;
+                }
+            }
+        }
+
+        private void RefreshAllOutputTypeAction(object param)
+        {
+            foreach (HashViewModel model in this.HashViewModels)
+            {
+                if (model.HasBeenRun)
+                {
+                    model.SelectedOutputType = Settings.Current.SelectedOutputType;
                 }
             }
         }
@@ -367,7 +392,7 @@ namespace HashCalculator
 
         public void Models_StartOne(HashViewModel viewModel)
         {
-            viewModel.StartupModel(true);
+            viewModel.StartupModel(false);
         }
 
         private void PropChangedAction(object sender, PropertyChangedEventArgs e)

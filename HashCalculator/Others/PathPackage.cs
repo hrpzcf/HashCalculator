@@ -8,9 +8,9 @@ namespace HashCalculator
 {
     internal class PathPackage : IEnumerable<ModelArg>
     {
+        private readonly Basis hashBasis = null;
         private readonly IEnumerable<string> anyPaths;
         private readonly SearchPolicy searchPolicy;
-        private readonly Dictionary<string, List<string>> hashBasis = null;
 
         public PathPackage(IEnumerable<string> paths, SearchPolicy policy)
         {
@@ -18,8 +18,7 @@ namespace HashCalculator
             this.searchPolicy = policy;
         }
 
-        public PathPackage(
-            IEnumerable<string> paths, SearchPolicy policy, Dictionary<string, List<string>> basis)
+        public PathPackage(IEnumerable<string> paths, SearchPolicy policy, Basis basis)
         {
             this.anyPaths = paths;
             this.searchPolicy = policy;
@@ -34,27 +33,6 @@ namespace HashCalculator
         public IEnumerator<ModelArg> GetEnumerator()
         {
             return this.EnumerateModelArgs();
-        }
-
-        private bool ExpectedFileHash(string fname, out string hash)
-        {
-            foreach (KeyValuePair<string, List<string>> pair in this.hashBasis)
-            {
-                if (fname.Equals(pair.Key, StringComparison.OrdinalIgnoreCase))
-                {
-                    this.hashBasis[pair.Key] = null;
-                    string first = pair.Value.FirstOrDefault();
-                    if (first != null && pair.Value.All(s => s == first))
-                    {
-                        hash = first;
-                        return true;
-                    }
-                    hash = string.Empty;
-                    return true;
-                }
-            }
-            hash = default;
-            return false;
         }
 
         private IEnumerator<ModelArg> EnumerateModelArgs()
@@ -94,14 +72,14 @@ namespace HashCalculator
                         {
                             foreach (FileInfo fileInfo in fInfos)
                             {
-                                if (this.ExpectedFileHash(fileInfo.Name, out string hash))
+                                if (this.hashBasis.IsExpectedFileHash(fileInfo.Name, out byte[] hash))
                                 {
                                     yield return new ModelArg(hash, fileInfo.FullName);
                                 }
                             }
-                            foreach (string fname in this.hashBasis.Keys)
+                            foreach (string fname in this.hashBasis.NameHashMap.Keys)
                             {
-                                if (this.hashBasis[fname] != null)
+                                if (!this.hashBasis.NameHashMap[fname].IsExplored)
                                 {
                                     yield return new ModelArg(fname, true);
                                 }
@@ -118,7 +96,7 @@ namespace HashCalculator
                     }
                     else
                     {
-                        if (this.ExpectedFileHash(Path.GetFileName(path), out string hash))
+                        if (this.hashBasis.IsExpectedFileHash(Path.GetFileName(path), out byte[] hash))
                         {
                             yield return new ModelArg(hash, path);
                         }

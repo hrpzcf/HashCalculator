@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
@@ -146,7 +147,7 @@ namespace HashCalculator
         {
             if ((AlgoType)value == AlgoType.Unknown)
             {
-                return "待定";
+                return "-N/A-";
             }
             return value;
         }
@@ -693,6 +694,40 @@ namespace HashCalculator
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class HashBytesOutputTypeCvt : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            Debug.Assert(values.Length == 2);
+            return Convert(values[0], values[1]);
+        }
+
+        internal static object Convert(object bytes, object outputType)
+        {
+            if (!(bytes is byte[] hashBytes) || !hashBytes.Any())
+            {
+                return string.Empty; // 返回值可能被复制所以不返回 null，下同
+            }
+            switch ((OutputType)outputType)
+            {
+                default:
+                case OutputType.BinaryUpper:
+                    return CommonUtils.ToHexString(hashBytes);
+                case OutputType.BinaryLower:
+                    return CommonUtils.ToHexString(hashBytes).ToLower();
+                case OutputType.BASE64:
+                    return System.Convert.ToBase64String(hashBytes);
+                case OutputType.Unknown:
+                    return string.Empty;
+            }
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }

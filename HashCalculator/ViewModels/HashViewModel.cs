@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Threading;
@@ -42,7 +43,7 @@ namespace HashCalculator
     internal class HashViewModel : NotifiableModel
     {
         #region properties for binding
-        private string _hashValue = "正在排队...";
+        private string _hashString = string.Empty;
         private string _modelDetails = "暂无详情...";
         private bool _exportHash = false;
         private double durationofTask = 0.0;
@@ -53,6 +54,7 @@ namespace HashCalculator
         private CmpRes _cmpResult = CmpRes.NoResult;
         private HashState _currentState = HashState.Waiting;
         private HashResult _currentResult = HashResult.NoResult;
+        private OutputType selectedOutputType = OutputType.Unknown;
         private RelayCommand copyModelHashValueCmd;
         private RelayCommand copyFileFullPathCmd;
         private RelayCommand openFilePropertiesCmd;
@@ -60,16 +62,14 @@ namespace HashCalculator
         private RelayCommand openFolderSelectItemCmd;
         #endregion
 
-        private readonly string expectedHash;
+        private readonly byte[] expectedHash;
         private CancellationTokenSource cancellation;
         private readonly bool isDeprecated;
         private const int blockSize = 2097152;
         private static readonly Dispatcher AppDispatcher
             = Application.Current.Dispatcher;
         private readonly ManualResetEvent manualPauseController = new ManualResetEvent(true);
-        private readonly object cmpResultLock = new object();
         private readonly object hashComputeOperationLock = new object();
-        private readonly object exportOptionLock = new object();
 
         /// <summary>
         /// 调用 StartupModel 方法且满足相关条件则触发此事件
@@ -83,34 +83,29 @@ namespace HashCalculator
 
         public HashViewModel(int serial, ModelArg arg)
         {
-            this.FileInfo = new FileInfo(arg.filepath);
             this.Serial = serial;
-            this.Name = this.FileInfo.Name;
+            this.FileInfo = new FileInfo(arg.filepath);
+            this.FileName = this.FileInfo.Name;
             this.expectedHash = arg.expected;
             this.isDeprecated = arg.deprecated;
         }
 
-        public int Serial { get; set; }
+        public int Serial { get; private set; }
 
-        public string Name { get; set; }
+        public string FileName { get; private set; }
 
-        public FileInfo FileInfo { get; set; }
+        public FileInfo FileInfo { get; private set; }
 
+        // Xaml 绑定会更改此值，不使用 private set
         public bool Export
         {
             get
             {
-                lock (this.exportOptionLock)
-                {
-                    return this._exportHash;
-                }
+                return this._exportHash;
             }
             set
             {
-                lock (this.exportOptionLock)
-                {
-                    this.SetPropNotify(ref this._exportHash, value);
-                }
+                this.SetPropNotify(ref this._exportHash, value);
             }
         }
 
@@ -126,15 +121,17 @@ namespace HashCalculator
             }
         }
 
-        public string Hash
+        public byte[] Hash { get; private set; }
+
+        public string HashString
         {
             get
             {
-                return this._hashValue;
+                return this._hashString;
             }
-            set
+            private set
             {
-                this.SetPropNotify(ref this._hashValue, value);
+                this.SetPropNotify(ref this._hashString, value);
             }
         }
 
@@ -144,12 +141,14 @@ namespace HashCalculator
             {
                 return this._fileSize;
             }
-            set
+            private set
             {
                 this.SetPropNotify(ref this._fileSize, value);
             }
         }
 
+        // 将来可能会增加单个任务的哈希类型手动更改
+        // Xaml 绑定会更改此值，不使用 private set
         public AlgoType HashName
         {
             get
@@ -162,21 +161,16 @@ namespace HashCalculator
             }
         }
 
+        // 校验哈希值时外部会更改此值，不使用 private set
         public CmpRes CmpResult
         {
             get
             {
-                lock (this.cmpResultLock)
-                {
-                    return this._cmpResult;
-                }
+                return this._cmpResult;
             }
             set
             {
-                lock (this.cmpResultLock)
-                {
-                    this.SetPropNotify(ref this._cmpResult, value);
-                }
+                this.SetPropNotify(ref this._cmpResult, value);
             }
         }
 
@@ -186,12 +180,12 @@ namespace HashCalculator
             {
                 return this._currentState;
             }
-            set
+            private set
             {
                 switch (value)
                 {
                     case HashState.Waiting:
-                        this.Hash = "正在排队...";
+                        this.HashString = "任务排队中...";
                         break;
                 }
                 this.SetPropNotify(ref this._currentState, value);
@@ -204,12 +198,12 @@ namespace HashCalculator
             {
                 return this._currentResult;
             }
-            set
+            private set
             {
                 switch (value)
                 {
                     case HashResult.Canceled:
-                        this.Hash = "任务已被取消...";
+                        this.HashString = "任务已取消...";
                         break;
                 }
                 this.SetPropNotify(ref this._currentResult, value);
@@ -222,7 +216,7 @@ namespace HashCalculator
             {
                 return this._progress;
             }
-            set
+            private set
             {
                 this.SetPropNotify(ref this._progress, value);
             }
@@ -234,7 +228,7 @@ namespace HashCalculator
             {
                 return this._progressTotal;
             }
-            set
+            private set
             {
                 this.SetPropNotify(ref this._progressTotal, value);
             }
@@ -246,7 +240,7 @@ namespace HashCalculator
             {
                 return this._modelDetails;
             }
-            set
+            private set
             {
                 this.SetPropNotify(ref this._modelDetails, value);
             }
@@ -258,7 +252,7 @@ namespace HashCalculator
             {
                 return this.durationofTask;
             }
-            set
+            private set
             {
                 this.SetPropNotify(ref this.durationofTask, value);
             }
@@ -329,9 +323,40 @@ namespace HashCalculator
             }
         }
 
+        // Xaml 绑定会更改此值，不使用 private set
+        public OutputType SelectedOutputType
+        {
+            get
+            {
+                return this.selectedOutputType;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.selectedOutputType, value);
+                if (this.Hash != null)
+                {
+                    this.HashString = (string)HashBytesOutputTypeCvt.Convert(this.Hash, value);
+                }
+            }
+        }
+
+        public bool HasBeenRun { get; private set; }
+
+        public ComboItem[] AvailableOutputTypes { get; } =
+        {
+            new ComboItem("没有指定", OutputType.Unknown),
+            new ComboItem("Base64", OutputType.BASE64),
+            new ComboItem("Hex 大写", OutputType.BinaryUpper),
+            new ComboItem("Hex 小写", OutputType.BinaryLower),
+        };
+
         private void CopyModelHashValueAction(object param)
         {
-            Clipboard.SetText(this.Hash);
+            if (this.SelectedOutputType == OutputType.Unknown || this.HashString is null)
+            {
+                this.SelectedOutputType = Settings.Current.SelectedOutputType;
+            }
+            Clipboard.SetText(this.HashString);
         }
 
         private void CopyFileFullPathAction(object param)
@@ -402,17 +427,12 @@ namespace HashCalculator
             }
         }
 
-        public void ModelCancelled()
+        private void ModelCancelled()
         {
-            if (this.IsSucceeded)
+            if (!this.IsSucceeded)
             {
-                return;
-            }
-            AppDispatcher.Invoke(() =>
-            {
-                this.HashName = AlgoType.Unknown;
                 this.Result = HashResult.Canceled;
-            });
+            }
         }
 
         private void ResetHashViewModel()
@@ -423,6 +443,7 @@ namespace HashCalculator
             this.CmpResult = CmpRes.NoResult;
             this.Result = HashResult.NoResult;
             this.State = HashState.Waiting;
+            this.Hash = null;
             this.Progress = this.ProgressTotal = 0;
             this.HashName = AlgoType.Unknown;
         }
@@ -432,8 +453,11 @@ namespace HashCalculator
             bool result = false;
             if (Monitor.TryEnter(this.hashComputeOperationLock))
             {
-                if (force
-                    || this.State == HashState.Waiting
+                if (force)
+                {
+                    this.SelectedOutputType = OutputType.Unknown;
+                }
+                if (force || this.State == HashState.Waiting
                     || (this.State == HashState.Finished
                     && this.Result != HashResult.Succeeded))
                 {
@@ -520,6 +544,7 @@ namespace HashCalculator
                 Monitor.Exit(this.hashComputeOperationLock);
                 return;
             }
+            this.HasBeenRun = true;
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             AlgoType algoType = Settings.Current.SelectedAlgo;
@@ -556,7 +581,7 @@ namespace HashCalculator
                 AppDispatcher.Invoke(() =>
                 {
                     this.Result = HashResult.Failed;
-                    this.Hash = "在依据所在文件夹中找不到此文件";
+                    this.HashString = "在依据所在文件夹中找不到此文件...";
                 });
                 goto TaskRunningEnds;
             }
@@ -566,7 +591,7 @@ namespace HashCalculator
                 AppDispatcher.Invoke(() =>
                 {
                     this.Result = HashResult.Failed;
-                    this.Hash = "要计算哈希值的文件不存在或无法访问";
+                    this.HashString = "要计算哈希值的文件不存在或无法访问...";
                 });
                 goto TaskRunningEnds;
             }
@@ -599,40 +624,38 @@ namespace HashCalculator
                             this.manualPauseController.WaitOne();
                         }
                         algoObject.TransformFinalBlock(buffer, 0, 0);
-                        string hashStr = string.Empty;
-                        switch (Settings.Current.SelectedOutputType)
-                        {
-                            case OutputType.BinaryUpper:
-                                hashStr = BitConverter.ToString(algoObject.Hash).Replace("-", "");
-                                break;
-                            case OutputType.BinaryLower:
-                                hashStr = BitConverter.ToString(algoObject.Hash).Replace("-", "").ToLower();
-                                break;
-                            case OutputType.BASE64:
-                                hashStr = Convert.ToBase64String(algoObject.Hash);
-                                break;
-                        }
                         AppDispatcher.Invoke(() =>
                         {
+                            this.Hash = algoObject.Hash;
+                            if (this.SelectedOutputType != OutputType.Unknown)
+                            {
+                                // 用于触发刷新 this.HashString
+                                this.SelectedOutputType = this.SelectedOutputType;
+                            }
+                            else
+                            {
+                                this.SelectedOutputType = Settings.Current.SelectedOutputType;
+                            }
                             this.Export = true;
-                            this.Hash = hashStr;
                             this.FileSize = fs.Length;
                         });
                         if (this.expectedHash != null)
                         {
                             CmpRes result;
-                            if (this.expectedHash == string.Empty)
+                            if (!this.expectedHash.Any())
                             {
                                 result = CmpRes.Uncertain;
                             }
-                            else if (hashStr.Equals(
-                                this.expectedHash, StringComparison.OrdinalIgnoreCase))
-                            {
-                                result = CmpRes.Matched;
-                            }
                             else
                             {
-                                result = CmpRes.Mismatch;
+                                if (this.expectedHash.SequenceEqual(this.Hash))
+                                {
+                                    result = CmpRes.Matched;
+                                }
+                                else
+                                {
+                                    result = CmpRes.Mismatch;
+                                }
                             }
                             AppDispatcher.Invoke(() => { this.CmpResult = result; });
                         }
@@ -645,7 +668,7 @@ namespace HashCalculator
                 AppDispatcher.Invoke(() =>
                 {
                     this.Result = HashResult.Failed;
-                    this.Hash = "读取文件失败或哈希值计算出错";
+                    this.HashString = "读取文件失败或哈希值计算出错...";
                 });
             }
         TaskRunningEnds:
@@ -654,7 +677,7 @@ namespace HashCalculator
             AppDispatcher.Invoke(() =>
             {
                 this.DurationofTask = duration;
-                this.ModelDetails = $"文件名称：{this.Name}\n文件大小：{UnitCvt.FileSizeCvt(this.FileSize)}\n"
+                this.ModelDetails = $"文件名称：{this.FileName}\n文件大小：{CommonUtils.FileSizeCvt(this.FileSize)}\n"
                     + $"任务运行时长：{duration:f2}秒";
                 this.State = HashState.Finished;
             });

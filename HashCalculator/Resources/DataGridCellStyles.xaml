@@ -31,13 +31,4 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    <Style
-        x:Key="CellStyleTipPath"
-        BasedOn="{StaticResource CellStyleNormal}"
-        TargetType="{x:Type DataGridCell}">
-        <Setter Property="ToolTip" Value="{Binding FileInfo}" />
-        <Setter Property="ToolTipService.ShowDuration" Value="6000" />
-        <Setter Property="ToolTipService.BetweenShowDelay" Value="0" />
-        <Setter Property="ToolTipService.InitialShowDelay" Value="0" />
-    </Style>
 </ResourceDictionary>

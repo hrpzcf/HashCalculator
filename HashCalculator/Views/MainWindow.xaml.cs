@@ -1,7 +1,6 @@
 ﻿using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -88,7 +87,9 @@ namespace HashCalculator
                     {
                         if (hm.IsSucceeded && hm.Export)
                         {
-                            sw.WriteLine($"{hm.Hash} *{hm.Name}");
+                            string hash = HashBytesOutputTypeCvt.Convert(
+                                hm.Hash, Settings.Current.SelectedOutputType) as string;
+                            sw.WriteLine($"{hash} *{hm.FileName}");
                         }
                     }
                 }
@@ -98,52 +99,6 @@ namespace HashCalculator
                 MessageBox.Show(this, $"哈希值导出失败：\n{ex.Message}", "错误");
                 return;
             }
-        }
-
-        private void ReadBasisFileAndSearchNames(string path)
-        {
-            try
-            {
-                Dictionary<string, List<string>> verificationBasis
-                    = new Dictionary<string, List<string>>();
-                foreach (string line in File.ReadAllLines(path))
-                {
-                    string[] hashfname = line.Split(
-                            new char[] { ' ' },
-                            2,
-                            StringSplitOptions.RemoveEmptyEntries);
-                    if (hashfname.Length < 2)
-                    {
-                        if (MessageBox.Show(
-                            this,
-                            "读取哈希值文件时遇到格式不正确的行：\n" +
-                            "选择 [是] 忽略该行并从下一行开始读取，选择 [否] 放弃读取。",
-                            "错误",
-                            MessageBoxButton.YesNo) == MessageBoxResult.No)
-                        {
-                            return;
-                        }
-                        else
-                        {
-                            continue;
-                        }
-                    }
-                    hashfname[1] = hashfname[1].Trim(new char[] { '*', ' ', '\n' });
-                    string namelower = hashfname[1].ToLower();
-                    if (verificationBasis.ContainsKey(namelower))
-                    {
-                        verificationBasis[namelower].Add(hashfname[0]);
-                    }
-                    else
-                    {
-                        verificationBasis[namelower] = new List<string> { hashfname[0] };
-                    }
-                }
-                this.viewModel.BeginDisplayModels(new PathPackage(
-                    new string[] { Path.GetDirectoryName(path) },
-                    Settings.Current.SelectedQVSPolicy, verificationBasis));
-            }
-            catch (Exception) { }
         }
 
         private void Button_StartCompare_Click(object sender, RoutedEventArgs e)
@@ -166,7 +121,10 @@ namespace HashCalculator
                 {
                     if (!this.viewModel.HashViewModels.Any())
                     {
-                        this.ReadBasisFileAndSearchNames(pathOrHash);
+                        Basis verificationBasis = new Basis(pathOrHash);
+                        this.viewModel.BeginDisplayModels(
+                            new PathPackage(new string[] { Path.GetDirectoryName(pathOrHash) },
+                                Settings.Current.SelectedQVSPolicy, verificationBasis));
                         return;
                     }
                     else
@@ -187,7 +145,7 @@ namespace HashCalculator
             {
                 if (hm.IsSucceeded)
                 {
-                    hm.CmpResult = this.VerificationBasis.Verify(hm.Name, hm.Hash);
+                    hm.CmpResult = this.VerificationBasis.Verify(hm.FileName, hm.Hash);
                 }
                 else
                 {

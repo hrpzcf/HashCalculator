@@ -6,19 +6,75 @@ using System.Windows;
 
 namespace HashCalculator
 {
+    internal class BasisDictValue
+    {
+        public BasisDictValue() { }
+
+        public BasisDictValue(byte[] initHash)
+        {
+            this.HashList.Add(initHash);
+        }
+
+        public bool IsExplored { get; set; }
+
+        public List<byte[]> HashList { get; } = new List<byte[]>();
+
+        public bool ContainsHash(byte[] hash)
+        {
+            for (int i = 0; i < this.HashList.Count; ++i)
+            {
+                if (this.HashList[i].SequenceEqual(hash))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public CmpRes CompareHash(byte[] hash)
+        {
+            if (!this.HashList.Any())
+            {
+                return CmpRes.Uncertain;
+            }
+            else if (this.HashList.Count == 1)
+            {
+                return this.ContainsHash(hash)
+                    ? CmpRes.Matched : CmpRes.Mismatch;
+            }
+            byte[] first = this.HashList.First();
+            if (!this.HashList.Skip(1).All(i => i.SequenceEqual(first)))
+            {
+                return CmpRes.Uncertain;
+            }
+            else
+            {
+                return first.SequenceEqual(hash)
+                    ? CmpRes.Matched : CmpRes.Mismatch;
+            }
+        }
+    }
+
     /// <summary>
     /// 文件哈希值校验的校验工具
     /// </summary>
     internal class Basis
     {
-        private readonly Dictionary<string, List<string>> nameHashsMap
-            = new Dictionary<string, List<string>>();
+        public Basis(string filePath)
+        {
+            this.UpdateWithFile(filePath);
+        }
+
+        public Basis() { }
 
         public Window Parent { get; set; }
 
+        public Dictionary<string, BasisDictValue> NameHashMap { get; }
+            = new Dictionary<string, BasisDictValue>();
+
         public bool UpdateWithFile(string filePath)
         {
-            this.nameHashsMap.Clear();
+            this.NameHashMap.Clear();
             try
             {
                 foreach (string line in File.ReadAllLines(filePath))
@@ -31,7 +87,8 @@ namespace HashCalculator
                     {
                         if (MessageBox.Show(
                             this.Parent,
-                            "哈希值文件行读取错误，可能该行格式不正确，继续？",
+                            "读取哈希值文件时遇到格式不正确的行：\n" +
+                            "选择 [是] 忽略该行并从下一行开始读取，选择 [否] 放弃读取。",
                             "错误",
                             MessageBoxButton.YesNo) == MessageBoxResult.No)
                         {
@@ -49,51 +106,53 @@ namespace HashCalculator
             catch (Exception ex)
             {
                 MessageBox.Show(
-                    this.Parent, $"校验依据来源文件打开失败：\n{ex.Message}", "错误");
+                    this.Parent, $"校验依据文件打开失败：\n{ex.Message}", "错误");
             }
             return false;
         }
 
         public bool UpdateWithHash(string hash)
         {
-            this.nameHashsMap.Clear();
+            this.NameHashMap.Clear();
             this.AddHashAndName(new string[] { hash.Trim(), string.Empty });
             return true;
         }
 
-        private bool AddHashAndName(string[] hashName)
+        private bool AddHashAndName(string[] hashAndName)
         {
-            if (hashName.Length < 2 || hashName[0] == null || hashName[1] == null)
+            if (hashAndName.Length < 2 || hashAndName.Any(i => i is null))
             {
                 return false;
             }
-            string hash = hashName[0].Trim().ToLower();
-            // Windows 文件名不区分大小写
-            string name = hashName[1].Trim(new char[] { '*', ' ', '\n' }).ToLower();
-            if (this.nameHashsMap.ContainsKey(name))
+            if (CommonUtils.GuessFromAnyHashString(hashAndName[0]) is byte[] hash)
             {
-                this.nameHashsMap[name].Add(hash);
+                // Windows 文件名不区分大小写
+                string name = hashAndName[1].Trim(new char[] { '*', ' ', '\n' }).ToLower();
+                if (this.NameHashMap.ContainsKey(name))
+                {
+                    this.NameHashMap[name].HashList.Add(hash);
+                }
+                else
+                {
+                    this.NameHashMap[name] = new BasisDictValue(hash);
+                }
+                return true;
             }
-            else
-            {
-                this.nameHashsMap[name] = new List<string> { hash };
-            }
-            return true;
+            return false;
         }
 
-        public CmpRes Verify(string name, string hash)
+        public CmpRes Verify(string name, byte[] hash)
         {
-            if (hash == null || name == null || !this.nameHashsMap.Any())
+            if (hash is null || name is null || !this.NameHashMap.Any())
             {
                 return CmpRes.Unrelated;
             }
             // Windows 文件名不区分大小写
             name = name.Trim(new char[] { '*', ' ', '\n' }).ToLower();
-            hash = hash.Trim().ToLower();
-            if (this.nameHashsMap.Keys.Count == 1
-                && this.nameHashsMap.Keys.Contains(string.Empty))
+            if (this.NameHashMap.Keys.Count == 1 &&
+                this.NameHashMap.Keys.Contains(string.Empty))
             {
-                if (this.nameHashsMap[string.Empty].Contains(hash))
+                if (this.NameHashMap[string.Empty].ContainsHash(hash))
                 {
                     return CmpRes.Matched;
                 }
@@ -102,27 +161,49 @@ namespace HashCalculator
                     return CmpRes.Unrelated;
                 }
             }
-            if (!this.nameHashsMap.TryGetValue(name, out List<string> hashs))
+            if (!this.NameHashMap.TryGetValue(name, out BasisDictValue basisValue))
             {
                 return CmpRes.Unrelated;
             }
-            if (!hashs.Any())
+            return basisValue.CompareHash(hash);
+        }
+
+        public bool IsExpectedFileHash(string name, out byte[] outputHash)
+        {
+            string matchedName = null;
+            foreach (string nameInMap in this.NameHashMap.Keys)
             {
-                return CmpRes.Uncertain;
-            }
-            if (hashs.Count > 1)
-            {
-                string fst = hashs.First();
-                if (hashs.All(i => i == fst))
+                if (nameInMap.Equals(name, StringComparison.OrdinalIgnoreCase))
                 {
-                    return fst == hash ? CmpRes.Matched : CmpRes.Mismatch;
-                }
-                else
-                {
-                    return CmpRes.Uncertain;
+                    matchedName = nameInMap;
+                    break;
                 }
             }
-            return hashs.Contains(hash) ? CmpRes.Matched : CmpRes.Mismatch;
+            if (matchedName == null)
+            {
+                outputHash = default;
+                return false;
+            }
+            BasisDictValue basisDictValue = this.NameHashMap[matchedName];
+            basisDictValue.IsExplored = true;
+            if (!basisDictValue.HashList.Any())
+            {
+                outputHash = new byte[0];
+                return true;
+            }
+            if (basisDictValue.HashList.Count == 1)
+            {
+                outputHash = basisDictValue.HashList[0];
+                return true;
+            }
+            byte[] first = basisDictValue.HashList.First();
+            if (!basisDictValue.HashList.Skip(1).All(i => i.SequenceEqual(first)))
+            {
+                outputHash = new byte[0];
+                return true;
+            }
+            outputHash = first;
+            return true;
         }
     }
 }

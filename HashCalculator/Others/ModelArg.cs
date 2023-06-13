@@ -5,23 +5,16 @@
     /// </summary>
     internal class ModelArg
     {
-        public string filepath;
-        public string expected;
-        public bool deprecated;
-
-        public ModelArg(string[] hashpath)
-        {
-            this.filepath = hashpath[1];
-            this.expected = hashpath[0];
-            this.deprecated = false;
-        }
+        public readonly string filepath;
+        public readonly byte[] expected;
+        public readonly bool deprecated;
 
         /// <summary>
         /// 约定：hash 为空字符串则表示无法确定是否匹配
         /// </summary>
         /// <param name="hash"></param>
         /// <param name="path"></param>
-        public ModelArg(string hash, string path)
+        public ModelArg(byte[] hash, string path)
         {
             this.filepath = path;
             this.expected = hash;

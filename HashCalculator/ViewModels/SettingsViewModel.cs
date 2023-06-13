@@ -255,7 +255,7 @@ namespace HashCalculator
 
         [XmlIgnore]
         public ComboItem[] AvailableOutputTypes { get; } =
-{
+        {
             new ComboItem("Base64 编码", OutputType.BASE64),
             new ComboItem("十六进制大写", OutputType.BinaryUpper),
             new ComboItem("十六进制小写", OutputType.BinaryLower),
@@ -263,7 +263,7 @@ namespace HashCalculator
 
         [XmlIgnore]
         public ComboItem[] AvailableTaskNumLimits { get; } =
-{
+        {
             new ComboItem("1 个：大多数文件很大", TaskNum.One),
             new ComboItem("2 个：大多数文件较大", TaskNum.Two),
             new ComboItem("4 个：大多数文件较小", TaskNum.Four),
@@ -286,7 +286,7 @@ namespace HashCalculator
 
         [XmlIgnore]
         public ComboItem[] AvailableQVSearchPolicies { get; } =
-{
+        {
             new ComboItem("搜索依据所在目录的一代子文件", SearchPolicy.Children),
             new ComboItem("搜索依据所在目录的所有子文件", SearchPolicy.Descendants),
         };

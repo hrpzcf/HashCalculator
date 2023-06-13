@@ -32,4 +32,5 @@
     <local:BtnTopmostEnabledImgCvt x:Key="BtnTopmostEnabledImgCvt" />
     <local:MenuCopyHashEnabledCvt x:Key="MenuCopyHashEnabledCvt" />
     <local:TotalProgressVisiblityCvt x:Key="TotalProgressVisiblityCvt" />
+    <local:HashBytesOutputTypeCvt x:Key="HashBytesOutputTypeCvt" />
 </ResourceDictionary>
