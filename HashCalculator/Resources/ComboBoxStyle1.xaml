@@ -134,7 +134,7 @@
                         Background="{StaticResource ComboBox.Static.Background}"
                         BorderBrush="{StaticResource ComboBox.Static.Border}"
                         BorderThickness="2"
-                        CornerRadius="3"
+                        CornerRadius="2"
                         SnapsToDevicePixels="true">
                         <Border
                             x:Name="splitBorder"
@@ -356,7 +356,7 @@
                     Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                     BorderBrush="{StaticResource ComboBox.Static.Border}"
                     BorderThickness="2"
-                    CornerRadius="3">
+                    CornerRadius="2">
                     <ScrollViewer x:Name="DropDownScrollViewer">
                         <Grid
                             x:Name="grid"
