@@ -34,13 +34,6 @@ namespace HashCalculator
         private readonly object changeTaskNumberLock = new object();
         private readonly object displayingModelLock = new object();
         private readonly object displayModelRequestLock = new object();
-        private RelayCommand copyModelsHashValueCmd;
-        private RelayCommand copyFilesFullPathCmd;
-        private RelayCommand openFilesPropertyCmd;
-        private RelayCommand openModelsFilePathCmd;
-        private RelayCommand openFolderSelectItemsCmd;
-        private RelayCommand refreshAllOutputTypeCmd;
-        private RelayCommand removeSelectedModelsCmd;
 
         public MainWndViewModel()
         {
@@ -124,96 +117,29 @@ namespace HashCalculator
             new ControlItem("十六进制小写", new RelayCommand(CopyModelsHashBinLowerAction)),
         };
 
-        public ICommand CopyModelsHashValueCmd
-        {
-            get
-            {
-                if (this.copyModelsHashValueCmd is null)
-                {
-                    this.copyModelsHashValueCmd =
-                        new RelayCommand(CopyModelsHashStringAction);
-                }
-                return this.copyModelsHashValueCmd;
-            }
-        }
+        public ICommand CopyModelsHashValueCmd { get; } =
+            new RelayCommand(CopyModelsHashStringAction);
 
-        public ICommand CopyFilesFullPathCmd
-        {
-            get
-            {
-                if (this.copyFilesFullPathCmd is null)
-                {
-                    this.copyFilesFullPathCmd =
-                        new RelayCommand(this.CopyFilesFullPathAction);
-                }
-                return this.copyFilesFullPathCmd;
-            }
-        }
+        public ICommand CopyFilesFullPathCmd { get; } =
+            new RelayCommand(CopyFilesFullPathAction);
 
-        public ICommand OpenFolderSelectItemsCmd
-        {
-            get
-            {
-                if (this.openFolderSelectItemsCmd is null)
-                {
-                    this.openFolderSelectItemsCmd =
-                        new RelayCommand(this.OpenFolderSelectItemsAction);
-                }
-                return this.openFolderSelectItemsCmd;
-            }
-        }
+        public ICommand OpenFolderSelectItemsCmd { get; } =
+            new RelayCommand(OpenFolderSelectItemsAction);
 
-        public ICommand OpenModelsFilePathCmd
-        {
-            get
-            {
-                if (this.openModelsFilePathCmd is null)
-                {
-                    this.openModelsFilePathCmd =
-                        new RelayCommand(this.OpenModelsFilePathAction);
-                }
-                return this.openModelsFilePathCmd;
-            }
-        }
+        public ICommand OpenModelsFilePathCmd { get; } =
+            new RelayCommand(OpenModelsFilePathAction);
 
-        public ICommand OpenFilesPropertyCmd
-        {
-            get
-            {
-                if (this.openFilesPropertyCmd is null)
-                {
-                    this.openFilesPropertyCmd =
-                        new RelayCommand(this.OpenFilesPropertyAction);
-                }
-                return this.openFilesPropertyCmd;
-            }
-        }
+        public ICommand OpenFilesPropertyCmd { get; } =
+            new RelayCommand(OpenFilesPropertyAction);
 
-        public ICommand RefreshAllOutputTypeCmd
-        {
-            get
-            {
-                if (this.refreshAllOutputTypeCmd is null)
-                {
-                    this.refreshAllOutputTypeCmd =
-                        new RelayCommand(this.RefreshAllOutputTypeAction);
-                }
-                return this.refreshAllOutputTypeCmd;
-            }
-        }
+        public ICommand RefreshAllOutputTypeCmd { get; } =
+            new RelayCommand(RefreshAllOutputTypeAction);
 
-        public ICommand RemoveSelectedModelsCmd
-        {
-            get
-            {
-                if (this.removeSelectedModelsCmd is null)
-                {
-                    this.removeSelectedModelsCmd =
-                        new RelayCommand(this.RemoveSelectedModelsAction);
-                }
-                return this.removeSelectedModelsCmd;
-            }
-        }
+        public ICommand DeleteSelectedModelsFileCmd { get; } =
+            new RelayCommand(DeleteSelectedModelsFileAction);
+
+        public ICommand RemoveSelectedModelsCmd { get; } =
+             new RelayCommand(RemoveSelectedModelsAction);
 
         private CancellationTokenSource Cancellation
         {
@@ -295,7 +221,7 @@ namespace HashCalculator
             }
         }
 
-        private void CopyFilesFullPathAction(object param)
+        private static void CopyFilesFullPathAction(object param)
         {
             if (param is IList selectedModels)
             {
@@ -324,7 +250,7 @@ namespace HashCalculator
             }
         }
 
-        private void OpenFolderSelectItemsAction(object param)
+        private static void OpenFolderSelectItemsAction(object param)
         {
             if (param is IList selectedModels)
             {
@@ -361,7 +287,7 @@ namespace HashCalculator
             }
         }
 
-        private void OpenModelsFilePathAction(object param)
+        private static void OpenModelsFilePathAction(object param)
         {
             if (param is IList selectedModels)
             {
@@ -382,7 +308,7 @@ namespace HashCalculator
             }
         }
 
-        private void OpenFilesPropertyAction(object param)
+        private static void OpenFilesPropertyAction(object param)
         {
             if (param is IList selectedModels)
             {
@@ -407,7 +333,7 @@ namespace HashCalculator
             }
         }
 
-        private void RefreshAllOutputTypeAction(object param)
+        private static void RefreshAllOutputTypeAction(object param)
         {
             foreach (HashViewModel model in HashViewModels)
             {
@@ -418,7 +344,41 @@ namespace HashCalculator
             }
         }
 
-        private void RemoveSelectedModelsAction(object param)
+        private static void DeleteModelFileCallback(HashViewModel model)
+        {
+            try
+            {
+                model.FileInfo.Delete();
+            }
+            finally { }
+        }
+
+        public static void DeleteSelectedModelsFileAction(object param)
+        {
+            if (param is IList selectedModels)
+            {
+                int count = selectedModels.Count;
+                if (MessageBox.Show(
+                    MainWindow.This,
+                    $"确定删除选中的 {count} 个文件吗？",
+                    "提示",
+                    MessageBoxButton.OKCancel,
+                    MessageBoxImage.Exclamation) != MessageBoxResult.OK)
+                {
+                    return;
+                }
+                HashViewModel[] models = selectedModels.Cast<HashViewModel>().ToArray();
+                foreach (HashViewModel model in models)
+                {
+                    model.ModelShutdownEvent += DeleteModelFileCallback;
+                    // 对 HashViewModels 的增删操作必定是在主线程上的，不用加锁
+                    model.ShutdownModel();
+                    HashViewModels.Remove(model);
+                }
+            }
+        }
+
+        private static void RemoveSelectedModelsAction(object param)
         {
             if (param is IList selectedModels)
             {
@@ -426,7 +386,7 @@ namespace HashCalculator
                 foreach (HashViewModel model in models)
                 {
                     model.ShutdownModel();
-                    // 对HashViewModels的增删操作必是在UI线程(主线程)的，不用加锁
+                    // 对 HashViewModels 的增删操作必定是在主线程上的，不用加锁
                     HashViewModels.Remove(model);
                 }
             }

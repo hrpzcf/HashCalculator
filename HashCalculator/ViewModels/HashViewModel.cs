@@ -68,14 +68,25 @@ namespace HashCalculator
         private readonly object hashComputeOperationLock = new object();
 
         /// <summary>
-        /// 调用 StartupModel 方法且满足相关条件则触发此事件
+        /// 调用 StartupModel 方法且满足相关条件则触发此事件，
+        /// 表示可以外部调用此事件发出的 HashViewModel 的 ComputeManyHashValue 方法。<br/>
+        /// 此事件是异步事件。
         /// </summary>
         public event Action<HashViewModel> ModelCapturedEvent;
 
         /// <summary>
-        /// 调用 ShutdownModel 方法或哈希值计算完成则触发此事件
+        /// 调用 ShutdownModel 方法时如果 State 是 Waitting，则退出时会触发此事件。
+        /// 或者 HashViewModel 的 State 由 Running 变为 Finished 后触发也会触发此事件。<br/>
+        /// 此事件是异步事件。
         /// </summary>
         public event Action<HashViewModel> ModelReleasedEvent;
+
+        /// <summary>
+        /// 调用 ShutdownModel 方法时如果 State 是非 Running 则触发此事件后退出，
+        /// 如果 State 是 Running 则由 Running 变为 Finished 后触发。<br/>
+        /// 此事件是同步事件，可以保证在触发期间 HashViewModel 不会被成功 StartupModel 和 ComputeManyHashValue。
+        /// </summary>
+        public event Action<HashViewModel> ModelShutdownEvent;
 
         public HashViewModel(int serial, ModelArg arg)
         {
@@ -363,6 +374,7 @@ namespace HashCalculator
                     this.State = HashState.Finished;
                     this.ModelReleasedEvent?.InvokeAsync(this);
                 }
+                this.ModelShutdownEvent?.Invoke(this);
                 Monitor.Exit(this.hashComputeOperationLock);
             }
             else
@@ -426,38 +438,15 @@ namespace HashCalculator
                 Monitor.Exit(this.hashComputeOperationLock);
                 return;
             }
-            this.HasBeenRun = true;
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
+            this.HasBeenRun = true;
             AlgoType algoType = Settings.Current.SelectedAlgo;
             AppDispatcher.Invoke(() =>
             {
                 this.HashName = algoType;
                 this.State = HashState.Running;
             });
-            HashAlgorithm algoObject;
-            switch (algoType)
-            {
-                case AlgoType.SHA1:
-                    algoObject = new SHA1Cng();
-                    break;
-                case AlgoType.SHA384:
-                    algoObject = new SHA384Cng();
-                    break;
-                case AlgoType.SHA512:
-                    algoObject = new SHA512Cng();
-                    break;
-                case AlgoType.MD5:
-                    algoObject = new MD5Cng();
-                    break;
-                case AlgoType.SHA224:
-                    algoObject = new BouncyCastSha224();
-                    break;
-                case AlgoType.SHA256:
-                default:
-                    algoObject = new SHA256Cng();
-                    break;
-            }
             if (this.isDeprecated)
             {
                 AppDispatcher.Invoke(() =>
@@ -486,6 +475,29 @@ namespace HashCalculator
                         this.Progress = 0L;
                         this.ProgressTotal = fs.Length;
                     });
+                    HashAlgorithm algoObject;
+                    switch (algoType)
+                    {
+                        case AlgoType.SHA1:
+                            algoObject = new SHA1Cng();
+                            break;
+                        case AlgoType.SHA384:
+                            algoObject = new SHA384Cng();
+                            break;
+                        case AlgoType.SHA512:
+                            algoObject = new SHA512Cng();
+                            break;
+                        case AlgoType.MD5:
+                            algoObject = new MD5Cng();
+                            break;
+                        case AlgoType.SHA224:
+                            algoObject = new BouncyCastSha224();
+                            break;
+                        case AlgoType.SHA256:
+                        default:
+                            algoObject = new SHA256Cng();
+                            break;
+                    }
                     using (algoObject)
                     {
                         int readedSize = 0;
@@ -564,6 +576,7 @@ namespace HashCalculator
                 this.State = HashState.Finished;
             });
             this.ModelReleasedEvent?.InvokeAsync(this);
+            this.ModelShutdownEvent?.Invoke(this);
             Monitor.Exit(this.hashComputeOperationLock);
         }
     }

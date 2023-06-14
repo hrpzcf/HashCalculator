@@ -341,6 +341,11 @@
                     </MenuItem>
                     <Separator />
                     <MenuItem
+                        Command="{Binding DeleteSelectedModelsFileCmd}"
+                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
+                        Header="删除文件"
+                        IsEnabled="{Binding Source={x:Static local:MainWndViewModel.HashViewModels}, Path=Count, Converter={StaticResource QuantityBasedEnabledMenuCvt}}" />
+                    <MenuItem
                         Command="{Binding RemoveSelectedModelsCmd}"
                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
                         Header="移除所选项"
