@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32.SafeHandles;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -45,9 +46,6 @@ namespace HashCalculator
                 path, IntPtr.Zero, out IntPtr nativePath, 0U, out _);
             if (nativePath == IntPtr.Zero)
             {
-#if DEBUG
-                Console.WriteLine("OpenFolderAndSelectItem failed");
-#endif
                 return false;
             }
             int res = NativeFunctions.SHOpenFolderAndSelectItems(nativePath, 0U, null, 0U);
@@ -55,7 +53,7 @@ namespace HashCalculator
             return res == 0;
         }
 
-        public static bool OpenFolderAndSelectItems(string folderPath, string[] files)
+        public static bool OpenFolderAndSelectItems(string folderPath, IEnumerable<string> files)
         {
             if (string.IsNullOrEmpty(folderPath)
                 || !Path.IsPathRooted(folderPath)
@@ -68,9 +66,6 @@ namespace HashCalculator
                 folderPath, IntPtr.Zero, out IntPtr folderID, 0U, out _);
             if (folderID == IntPtr.Zero)
             {
-#if DEBUG
-                Console.WriteLine("OpenFolderAndSelectItem failed");
-#endif
                 return false;
             }
             if (files == null || !files.Any())
@@ -103,6 +98,47 @@ namespace HashCalculator
             }
             return res2 == 0;
         }
+
+        //public static bool IsSameFile(string path1, string path2)
+        //{
+        //    if (path1 is null || path2 is null)
+        //    {
+        //        return false;
+        //    }
+        //    using (SafeFileHandle handle1 = NativeFunctions.CreateFileW(
+        //        path1, FileAccess.Read,
+        //        FileShare.ReadWrite, IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero))
+        //    {
+        //        if (handle1.IsInvalid)
+        //        {
+        //            return false;
+        //        }
+        //        using (SafeFileHandle handle2 = NativeFunctions.CreateFileW(
+        //            path2, FileAccess.Read,
+        //            FileShare.ReadWrite, IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero))
+        //        {
+        //            if (handle2.IsInvalid)
+        //            {
+        //                return false;
+        //            }
+        //            bool result1 = NativeFunctions.GetFileInformationByHandle(
+        //                handle1, out BY_HANDLE_FILE_INFORMATION information1);
+        //            if (!result1)
+        //            {
+        //                return result1;
+        //            }
+        //            bool result2 = NativeFunctions.GetFileInformationByHandle(
+        //                handle2, out BY_HANDLE_FILE_INFORMATION information2);
+        //            if (!result2)
+        //            {
+        //                return result2;
+        //            }
+        //            return information1.VolumeSerialNumber == information2.VolumeSerialNumber
+        //                && information1.FileIndexLow == information2.FileIndexLow
+        //                && information1.FileIndexHigh == information2.FileIndexHigh;
+        //        }
+        //    }
+        //}
 
         public static string ToBase64String(byte[] inputBytes)
         {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -725,6 +726,53 @@ namespace HashCalculator
                 case OutputType.Unknown:
                     return string.Empty;
             }
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class QuantityBasedEnabledMenuCvt : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            switch ((int)value)
+            {
+                case 0:
+                    return false;
+                default:
+                    return true;
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class CopyModelsHashMenuEnabledCvt : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            Debug.Assert(values.Length == 2);
+            if ((int)values[0] == 0)
+            {
+                return false;
+            }
+            if (values[1] is IList selectedItems)
+            {
+                foreach (HashViewModel model in selectedItems.OfType<HashViewModel>())
+                {
+                    if (model.Result != HashResult.Succeeded)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

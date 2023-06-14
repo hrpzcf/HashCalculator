@@ -254,20 +254,20 @@ namespace HashCalculator
         };
 
         [XmlIgnore]
-        public ComboItem[] AvailableOutputTypes { get; } =
+        public ControlItem[] AvailableOutputTypes { get; } =
         {
-            new ComboItem("Base64 编码", OutputType.BASE64),
-            new ComboItem("十六进制大写", OutputType.BinaryUpper),
-            new ComboItem("十六进制小写", OutputType.BinaryLower),
+            new ControlItem("Base64 格式", OutputType.BASE64),
+            new ControlItem("十六进制大写", OutputType.BinaryUpper),
+            new ControlItem("十六进制小写", OutputType.BinaryLower),
         };
 
         [XmlIgnore]
-        public ComboItem[] AvailableTaskNumLimits { get; } =
+        public ControlItem[] AvailableTaskNumLimits { get; } =
         {
-            new ComboItem("1 个：大多数文件很大", TaskNum.One),
-            new ComboItem("2 个：大多数文件较大", TaskNum.Two),
-            new ComboItem("4 个：大多数文件较小", TaskNum.Four),
-            new ComboItem("8 个：大多数文件很小", TaskNum.Eight),
+            new ControlItem("1 个：大多数文件很大", TaskNum.One),
+            new ControlItem("2 个：大多数文件较大", TaskNum.Two),
+            new ControlItem("4 个：大多数文件较小", TaskNum.Four),
+            new ControlItem("8 个：大多数文件很小", TaskNum.Eight),
         };
 
         [XmlIgnore]
@@ -277,18 +277,18 @@ namespace HashCalculator
             "通用格式的哈希值文件请参考程序 [导出结果] 功能导出的文件的内容排布格式。";
 
         [XmlIgnore]
-        public ComboItem[] AvailableDroppedSearchPolicies { get; } =
+        public ControlItem[] AvailableDroppedSearchPolicies { get; } =
         {
-            new ComboItem("搜索一代子文件", SearchPolicy.Children),
-            new ComboItem("搜索全部子文件", SearchPolicy.Descendants),
-            new ComboItem("不搜索该文件夹", SearchPolicy.DontSearch),
+            new ControlItem("搜索一代子文件", SearchPolicy.Children),
+            new ControlItem("搜索全部子文件", SearchPolicy.Descendants),
+            new ControlItem("不搜索该文件夹", SearchPolicy.DontSearch),
         };
 
         [XmlIgnore]
-        public ComboItem[] AvailableQVSearchPolicies { get; } =
+        public ControlItem[] AvailableQVSearchPolicies { get; } =
         {
-            new ComboItem("搜索依据所在目录的一代子文件", SearchPolicy.Children),
-            new ComboItem("搜索依据所在目录的所有子文件", SearchPolicy.Descendants),
+            new ControlItem("搜索依据所在目录的一代子文件", SearchPolicy.Children),
+            new ControlItem("搜索依据所在目录的所有子文件", SearchPolicy.Descendants),
         };
     }
 }

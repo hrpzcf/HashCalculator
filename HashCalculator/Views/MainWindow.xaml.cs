@@ -62,7 +62,7 @@ namespace HashCalculator
 
         private void Button_ExportAsTextFile_Click(object sender, RoutedEventArgs e)
         {
-            if (!this.viewModel.HashViewModels.Any())
+            if (!MainWndViewModel.HashViewModels.Any())
             {
                 MessageBox.Show(this, "列表中没有任何可以导出的条目。", "提示");
                 return;
@@ -83,7 +83,7 @@ namespace HashCalculator
             {
                 using (StreamWriter sw = File.CreateText(sf.FileName))
                 {
-                    foreach (HashViewModel hm in this.viewModel.HashViewModels)
+                    foreach (HashViewModel hm in MainWndViewModel.HashViewModels)
                     {
                         if (hm.IsSucceeded && hm.Export)
                         {
@@ -119,7 +119,7 @@ namespace HashCalculator
                 }
                 else
                 {
-                    if (!this.viewModel.HashViewModels.Any())
+                    if (!MainWndViewModel.HashViewModels.Any())
                     {
                         Basis verificationBasis = new Basis(pathOrHash);
                         this.viewModel.BeginDisplayModels(
@@ -141,7 +141,7 @@ namespace HashCalculator
             {
                 return;
             }
-            foreach (HashViewModel hm in this.viewModel.HashViewModels)
+            foreach (HashViewModel hm in MainWndViewModel.HashViewModels)
             {
                 if (hm.IsSucceeded)
                 {

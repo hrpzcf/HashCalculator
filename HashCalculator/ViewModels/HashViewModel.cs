@@ -55,11 +55,7 @@ namespace HashCalculator
         private HashState _currentState = HashState.Waiting;
         private HashResult _currentResult = HashResult.NoResult;
         private OutputType selectedOutputType = OutputType.Unknown;
-        private RelayCommand copyModelHashValueCmd;
-        private RelayCommand copyFileFullPathCmd;
-        private RelayCommand openFilePropertiesCmd;
-        private RelayCommand openModelFilePathCmd;
-        private RelayCommand openFolderSelectItemCmd;
+        private RelayCommand copyOneModelHashValueCmd;
         #endregion
 
         private readonly byte[] expectedHash;
@@ -256,71 +252,6 @@ namespace HashCalculator
             }
         }
 
-        public ICommand CopyModelHashValueCmd
-        {
-            get
-            {
-                if (this.copyModelHashValueCmd is null)
-                {
-                    this.copyModelHashValueCmd =
-                        new RelayCommand(this.CopyModelHashValueAction);
-                }
-                return this.copyModelHashValueCmd;
-            }
-        }
-
-        public ICommand CopyFileFullPathCmd
-        {
-            get
-            {
-                if (this.copyFileFullPathCmd is null)
-                {
-                    this.copyFileFullPathCmd =
-                        new RelayCommand(this.CopyFileFullPathAction);
-                }
-                return this.copyFileFullPathCmd;
-            }
-        }
-
-        public ICommand OpenFolderSelectItemCmd
-        {
-            get
-            {
-                if (this.openFolderSelectItemCmd is null)
-                {
-                    this.openFolderSelectItemCmd =
-                        new RelayCommand(this.OpenFolderSelectItemAction);
-                }
-                return this.openFolderSelectItemCmd;
-            }
-        }
-
-        public ICommand OpenModelFilePathCmd
-        {
-            get
-            {
-                if (this.openModelFilePathCmd is null)
-                {
-                    this.openModelFilePathCmd =
-                        new RelayCommand(this.OpenModelFilePathAction);
-                }
-                return this.openModelFilePathCmd;
-            }
-        }
-
-        public ICommand OpenFilePropertiesCmd
-        {
-            get
-            {
-                if (this.openFilePropertiesCmd is null)
-                {
-                    this.openFilePropertiesCmd =
-                        new RelayCommand(this.OpenFilePropertiesAction);
-                }
-                return this.openFilePropertiesCmd;
-            }
-        }
-
         // Xaml 绑定会更改此值，不使用 private set
         public OutputType SelectedOutputType
         {
@@ -338,90 +269,43 @@ namespace HashCalculator
             }
         }
 
+        public ICommand CopyOneModelHashValueCmd
+        {
+            get
+            {
+                if (this.copyOneModelHashValueCmd is null)
+                {
+                    this.copyOneModelHashValueCmd =
+                        new RelayCommand(this.CopyOneModelHashValueAction);
+                }
+                return this.copyOneModelHashValueCmd;
+            }
+        }
+
         public bool HasBeenRun { get; private set; }
 
-        public ComboItem[] AvailableOutputTypes { get; } =
+        public ControlItem[] AvailableOutputTypes { get; } =
         {
-            new ComboItem("没有指定", OutputType.Unknown),
-            new ComboItem("Base64", OutputType.BASE64),
-            new ComboItem("Hex 大写", OutputType.BinaryUpper),
-            new ComboItem("Hex 小写", OutputType.BinaryLower),
+            new ControlItem("没有指定", OutputType.Unknown),
+            new ControlItem("Base64", OutputType.BASE64),
+            new ControlItem("Hex大写", OutputType.BinaryUpper),
+            new ControlItem("Hex小写", OutputType.BinaryLower),
         };
 
-        private void CopyModelHashValueAction(object param)
+        private void CopyOneModelHashValueAction(object param)
         {
-            if (this.SelectedOutputType == OutputType.Unknown || this.HashString is null)
+            if (this.Result != HashResult.Succeeded)
             {
-                this.SelectedOutputType = Settings.Current.SelectedOutputType;
+                return;
             }
-            Clipboard.SetText(this.HashString);
-        }
-
-        private void CopyFileFullPathAction(object param)
-        {
-            if (File.Exists(this.FileInfo.FullName))
+            if (this.SelectedOutputType != OutputType.Unknown)
             {
-                Clipboard.SetText(this.FileInfo.FullName);
+                Clipboard.SetText(this.HashString);
             }
             else
             {
-                Clipboard.SetText(this.FileInfo.Name);
-            }
-        }
-
-        private void OpenFolderSelectItemAction(object param)
-        {
-            // 需要调用 FileInfo 的 Refresh 方法才能更新 FileInfo.Exists
-            if (File.Exists(this.FileInfo.FullName))
-            {
-                CommonUtils.OpenFolderAndSelectItem(this.FileInfo.FullName);
-            }
-            else
-            {
-                MessageBox.Show(MainWindow.This, $"文件不存在：\n{this.FileInfo.FullName}",
-                    "错误", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        private void OpenModelFilePathAction(object param)
-        {
-            // 需要调用 FileInfo 的 Refresh 方法才能更新 FileInfo.Exists
-            if (File.Exists(this.FileInfo.FullName))
-            {
-                NativeFunctions.ShellExecuteW(
-                MainWindow.WndHandle,
-                "open",
-                this.FileInfo.FullName,
-                null,
-                Path.GetDirectoryName(this.FileInfo.FullName),
-                ShowCmds.SW_SHOWNORMAL);
-            }
-            else
-            {
-                MessageBox.Show(MainWindow.This, $"文件不存在：\n{this.FileInfo.FullName}",
-                     "错误", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        private void OpenFilePropertiesAction(object param)
-        {
-            // 需要调用 FileInfo 的 Refresh 方法才能更新 FileInfo.Exists
-            if (File.Exists(this.FileInfo.FullName))
-            {
-                var shellExecuteInfo = new SHELLEXECUTEINFOW();
-                shellExecuteInfo.cbSize = Marshal.SizeOf(shellExecuteInfo);
-                shellExecuteInfo.fMask = SEMaskFlags.SEE_MASK_INVOKEIDLIST;
-                shellExecuteInfo.hwnd = MainWindow.WndHandle;
-                shellExecuteInfo.lpVerb = "properties";
-                shellExecuteInfo.lpFile = this.FileInfo.FullName;
-                shellExecuteInfo.lpDirectory = this.FileInfo.DirectoryName;
-                shellExecuteInfo.nShow = ShowCmds.SW_SHOWNORMAL;
-                NativeFunctions.ShellExecuteExW(ref shellExecuteInfo);
-            }
-            else
-            {
-                MessageBox.Show(MainWindow.This, $"文件不存在：\n{this.FileInfo.FullName}",
-                     "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                Clipboard.SetText((string)HashBytesOutputTypeCvt.Convert(
+                    this.Hash, Settings.Current.SelectedOutputType));
             }
         }
 

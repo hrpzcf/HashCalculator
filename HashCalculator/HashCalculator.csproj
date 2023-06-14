@@ -72,11 +72,11 @@
   <ItemGroup>
     <Compile Include="AppLoading.cs" />
     <Compile Include="Globals\Settings.cs" />
-    <Compile Include="Others\ModelEventExt.cs" />
+    <Compile Include="Others\CommonExts.cs" />
     <Compile Include="Others\NativeFunctions.cs" />
     <Compile Include="Others\NotifiableModel.cs" />
     <Compile Include="Others\Basis.cs" />
-    <Compile Include="Others\ComboItem.cs" />
+    <Compile Include="Others\ControlItem.cs" />
     <Compile Include="Others\ModelStarter.cs" />
     <Compile Include="Others\PathPackage.cs" />
     <Compile Include="Others\RelayCommand.cs" />

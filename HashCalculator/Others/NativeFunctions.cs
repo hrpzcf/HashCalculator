@@ -75,6 +75,43 @@ namespace HashCalculator
         public IntPtr hProcess;
     }
 
+    ///// <summary>
+    ///// https://learn.microsoft.com/en-us/windows/win32/api/fileapi/ns-fileapi-by_handle_file_information
+    ///// </summary>
+    //[StructLayout(LayoutKind.Explicit)]
+    //public struct BY_HANDLE_FILE_INFORMATION
+    //{
+    //    [FieldOffset(0)]
+    //    public uint FileAttributes;
+
+    //    [FieldOffset(4)]
+    //    public System.Runtime.InteropServices.ComTypes.FILETIME CreationTime;
+
+    //    [FieldOffset(12)]
+    //    public System.Runtime.InteropServices.ComTypes.FILETIME LastAccessTime;
+
+    //    [FieldOffset(20)]
+    //    public System.Runtime.InteropServices.ComTypes.FILETIME LastWriteTime;
+
+    //    [FieldOffset(28)]
+    //    public uint VolumeSerialNumber;
+
+    //    [FieldOffset(32)]
+    //    public uint FileSizeHigh;
+
+    //    [FieldOffset(36)]
+    //    public uint FileSizeLow;
+
+    //    [FieldOffset(40)]
+    //    public uint NumberOfLinks;
+
+    //    [FieldOffset(44)]
+    //    public uint FileIndexHigh;
+
+    //    [FieldOffset(48)]
+    //    public uint FileIndexLow;
+    //}
+
     internal static class NativeFunctions
     {
         /// <summary>
@@ -125,5 +162,35 @@ namespace HashCalculator
         /// <returns></returns>
         [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
         public static extern bool ShellExecuteExW(ref SHELLEXECUTEINFOW lpExecInfo);
+
+        ///// <summary>
+        ///// https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfileinformationbyhandle
+        ///// </summary>
+        ///// <param name="hFile"></param>
+        ///// <param name="lpFileInformation"></param>
+        ///// <returns></returns>
+        //[DllImport("kernel32.dll")]
+        //public static extern bool GetFileInformationByHandle(SafeFileHandle hFile, out BY_HANDLE_FILE_INFORMATION lpFileInformation);
+
+        ///// <summary>
+        ///// https://learn.microsoft.com/en-US/windows/win32/api/fileapi/nf-fileapi-createfilew
+        ///// </summary>
+        ///// <param name="filename"></param>
+        ///// <param name="access"></param>
+        ///// <param name="share"></param>
+        ///// <param name="securityAttributes"></param>
+        ///// <param name="creationDisposition"></param>
+        ///// <param name="flagsAndAttributes"></param>
+        ///// <param name="templateFile"></param>
+        ///// <returns></returns>
+        //[DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        //public static extern SafeFileHandle CreateFileW(
+        //    [MarshalAs(UnmanagedType.LPWStr)] string filename,
+        //    [MarshalAs(UnmanagedType.U4)] FileAccess access,
+        //    [MarshalAs(UnmanagedType.U4)] FileShare share,
+        //    IntPtr securityAttributes,
+        //    [MarshalAs(UnmanagedType.U4)] FileMode creationDisposition,
+        //    [MarshalAs(UnmanagedType.U4)] FileAttributes flagsAndAttributes,
+        //    IntPtr templateFile);
     }
 }
