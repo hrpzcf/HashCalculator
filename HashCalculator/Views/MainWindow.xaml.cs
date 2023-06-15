@@ -1,13 +1,16 @@
 ﻿using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
+using System.Windows.Resources;
 
 namespace HashCalculator
 {
@@ -224,11 +227,27 @@ namespace HashCalculator
 
         private void MenuItem_UsingHelp_Click(object sender, RoutedEventArgs e)
         {
-            Window usingHelpWindow = new UsingHelpWindow()
+            try
             {
-                Owner = this,
-            };
-            usingHelpWindow.ShowDialog();
+                StreamResourceInfo sri = Application.GetResourceStream(
+                    new Uri("WebPages/Help.html", UriKind.Relative));
+                using (sri.Stream)
+                {
+                    string htmlPath = Path.ChangeExtension(Path.GetTempFileName(), "html");
+                    using (Stream fs = File.OpenWrite(htmlPath))
+                    {
+                        byte[] streamBuffer = new byte[sri.Stream.Length];
+                        sri.Stream.Read(streamBuffer, 0, streamBuffer.Length);
+                        fs.Write(streamBuffer, 0, streamBuffer.Length);
+                        NativeFunctions.ShellExecuteW(WndHandle, "open", htmlPath, null, null, ShowCmds.SW_NORMAL);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show(this, "打开帮助页面失败~", "提示",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+            }
         }
 
         private void Button_CancelAllTask_Click(object sender, RoutedEventArgs e)

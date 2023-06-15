@@ -89,9 +89,6 @@
       <DependentUpon>SettingsPanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="Others\ModelArg.cs" />
-    <Compile Include="Views\UsingHelpWnd.xaml.cs">
-      <DependentUpon>UsingHelpWnd.xaml</DependentUpon>
-    </Compile>
     <Page Include="Resources\ComboBoxStyle1.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -126,10 +123,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\SettingsPanel.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\UsingHelpWnd.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
