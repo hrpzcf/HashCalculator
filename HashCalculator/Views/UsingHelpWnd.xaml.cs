@@ -10,7 +10,7 @@ namespace HashCalculator
         {
             this.InitializeComponent();
             StreamResourceInfo stream = Application.GetResourceStream(
-                new Uri("HtmlFiles/UsingHelp.html", UriKind.Relative));
+                new Uri("WebPages/Help.html", UriKind.Relative));
             this.uiWebBrowser_ShowUsingHelp.NavigateToStream(stream.Stream);
         }
     }

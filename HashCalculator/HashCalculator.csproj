@@ -144,7 +144,7 @@
     <Resource Include="Images\icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="HtmlFiles\UsingHelp.html" />
+    <Resource Include="WebPages\Help.html" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Assembly\Microsoft.WindowsAPICodePack.dll" />

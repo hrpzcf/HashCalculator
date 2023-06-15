@@ -212,7 +212,7 @@
                 Click="Button_ContinueAllTask_Click"
                 IsEnabled="{Binding State, Converter={StaticResource ButtonNotEnableCvt}}"
                 Style="{StaticResource ImageButtonStyle2}"
-                ToolTip="继续所有任务：启动全部已暂停的哈希值计算任务">
+                ToolTip="继续所有任务：继续所有已暂停的哈希值计算任务">
                 <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnContinueAllEnabledImgCvt}}" />
             </Button>
             <Button
@@ -222,7 +222,7 @@
                 Click="Button_PauseAllTask_Click"
                 IsEnabled="{Binding State, Converter={StaticResource ButtonNotEnableCvt}}"
                 Style="{StaticResource ImageButtonStyle2}"
-                ToolTip="暂停所有任务：暂停全部正在运行的哈希值计算任务（计算大量小文件时可能会暂停失败，需要多次点击）">
+                ToolTip="暂停所有任务：暂停所有正在运行的哈希值计算任务（计算大量小文件时可能会暂停不成功，需要多次点击）">
                 <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnPauseAllEnabledImgCvt}}" />
             </Button>
             <Button
@@ -232,7 +232,7 @@
                 Click="Button_CancelAllTask_Click"
                 IsEnabled="{Binding State, Converter={StaticResource ButtonNotEnableCvt}}"
                 Style="{StaticResource ImageButtonStyle2}"
-                ToolTip="取消所有任务：取消全部排队中、运行中和已暂停的哈希值计算任务">
+                ToolTip="取消所有任务：取消所有排队中、运行中和已暂停的哈希值计算任务">
                 <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnCancelAllEnabledImgCvt}}" />
             </Button>
             <Button
@@ -240,7 +240,7 @@
                 Margin="28,0,0,0"
                 Click="Button_WindowTopmost_Click"
                 Style="{StaticResource ImageButtonStyle2}"
-                ToolTip="置顶/取消置顶主窗口">
+                ToolTip="切换窗口置顶：点击在 [置顶/非置顶] 之间切换主窗口置顶状态">
                 <Image Source="{Binding Source={x:Static local:Settings.Current}, Path=MainWndTopmost, Converter={StaticResource BtnTopmostEnabledImgCvt}}" />
             </Button>
             <Button
