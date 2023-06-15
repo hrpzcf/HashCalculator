@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using Microsoft.WindowsAPICodePack.Dialogs;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,18 +13,19 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Resources;
 using System.Windows.Threading;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 
 namespace HashCalculator
 {
     internal class MainWndViewModel : NotifiableModel
     {
+        private readonly Basis MainBasis = new Basis();
         private readonly ModelStarter starter = new ModelStarter(8);
         private static readonly Dispatcher AppDispatcher
             = Application.Current.Dispatcher;
-        private delegate void ModelToTableDelegate(ModelArg arg);
-        private readonly ModelToTableDelegate modelToTable;
+        private delegate void AddModelDelegate(ModelArg arg);
+        private readonly AddModelDelegate addModelAction;
         private volatile int serial = 0;
         private int finishedNumberInQueue = 0;
         private int totalNumberInQueue = 0;
@@ -34,12 +37,38 @@ namespace HashCalculator
         private readonly object changeTaskNumberLock = new object();
         private readonly object displayingModelLock = new object();
         private readonly object displayModelRequestLock = new object();
+        private RelayCommand mainWindowTopmostCmd;
+        private RelayCommand clearAllTableLinesCmd;
+        private RelayCommand exportAsTextFileCmd;
+        private RelayCommand refreshHashNewLinesCmd;
+        private RelayCommand refreshCurrentHashCmd;
+        private RelayCommand refreshCurHashForceCmd;
+        private RelayCommand startVerifyHashValueCmd;
+        private RelayCommand openSettingsPanelCmd;
+        private RelayCommand openHelpBrowserWndCmd;
+        private RelayCommand selectFilesToHashCmd;
+        private RelayCommand selectFolderToHashCmd;
+        private RelayCommand cancelDisplayedModelsCmd;
+        private RelayCommand pauseDisplayedModelsCmd;
+        private RelayCommand continueDisplayedModelsCmd;
+        private RelayCommand copyModelsHashStringCmd;
+        private RelayCommand copyFilesFullPathCmd;
+        private RelayCommand openFolderSelectItemsCmd;
+        private RelayCommand openModelsFilePathCmd;
+        private RelayCommand openFilesPropertyCmd;
+        private RelayCommand refreshAllOutputTypeCmd;
+        private RelayCommand deleteSelectedModelsFileCmd;
+        private RelayCommand removeSelectedModelsCmd;
+        private ControlItem[] copyModelsHashMenuCmds;
 
         public MainWndViewModel()
         {
             Settings.Current.PropertyChanged += this.PropChangedAction;
-            this.modelToTable = new ModelToTableDelegate(this.ModelToTable);
+            this.addModelAction = new AddModelDelegate(this.AddModelAction);
+            this.MainBasis.Parent = MainWindow.This;
         }
+
+        public Window Host { get; set; }
 
         public static ObservableCollection<HashViewModel> HashViewModels { get; }
             = new ObservableCollection<HashViewModel>();
@@ -110,37 +139,6 @@ namespace HashCalculator
             }
         }
 
-        public ControlItem[] CopyModelsHashMenuItems { get; } =
-        {
-            new ControlItem("Base64 格式", new RelayCommand(CopyModelsHashBase64Action)),
-            new ControlItem("十六进制大写", new RelayCommand(CopyModelsHashBinUpperAction)),
-            new ControlItem("十六进制小写", new RelayCommand(CopyModelsHashBinLowerAction)),
-        };
-
-        public ICommand CopyModelsHashValueCmd { get; } =
-            new RelayCommand(CopyModelsHashStringAction);
-
-        public ICommand CopyFilesFullPathCmd { get; } =
-            new RelayCommand(CopyFilesFullPathAction);
-
-        public ICommand OpenFolderSelectItemsCmd { get; } =
-            new RelayCommand(OpenFolderSelectItemsAction);
-
-        public ICommand OpenModelsFilePathCmd { get; } =
-            new RelayCommand(OpenModelsFilePathAction);
-
-        public ICommand OpenFilesPropertyCmd { get; } =
-            new RelayCommand(OpenFilesPropertyAction);
-
-        public ICommand RefreshAllOutputTypeCmd { get; } =
-            new RelayCommand(RefreshAllOutputTypeAction);
-
-        public ICommand DeleteSelectedModelsFileCmd { get; } =
-            new RelayCommand(DeleteSelectedModelsFileAction);
-
-        public ICommand RemoveSelectedModelsCmd { get; } =
-             new RelayCommand(RemoveSelectedModelsAction);
-
         private CancellationTokenSource Cancellation
         {
             get
@@ -160,239 +158,7 @@ namespace HashCalculator
             }
         }
 
-        private static void CopyModelsHashBase64Action(object param)
-        {
-            CopyModelsHashValueAction(param, OutputType.BASE64);
-        }
-
-        private static void CopyModelsHashBinUpperAction(object param)
-        {
-            CopyModelsHashValueAction(param, OutputType.BinaryUpper);
-        }
-
-        private static void CopyModelsHashBinLowerAction(object param)
-        {
-            CopyModelsHashValueAction(param, OutputType.BinaryLower);
-        }
-
-        private static void CopyModelsHashStringAction(object param)
-        {
-            CopyModelsHashValueAction(param, OutputType.Unknown);
-        }
-
-        private static void CopyModelsHashValueAction(object param, OutputType output)
-        {
-            if (param is IList selectedModels)
-            {
-                int count = selectedModels.Count;
-                if (count == 0)
-                {
-                    return;
-                }
-                StringBuilder stringBuilder = new StringBuilder();
-                for (int i = 0; i < count; ++i)
-                {
-                    HashViewModel model = (HashViewModel)selectedModels[i];
-                    string formatedHashValue;
-                    if (output != OutputType.Unknown)
-                    {
-                        formatedHashValue = (string)HashBytesOutputTypeCvt.Convert(model.Hash,
-                            output);
-                    }
-                    else if (model.SelectedOutputType == OutputType.Unknown)
-                    {
-                        formatedHashValue = (string)HashBytesOutputTypeCvt.Convert(model.Hash,
-                            Settings.Current.SelectedOutputType);
-                    }
-                    else
-                    {
-                        formatedHashValue = model.HashString;
-                    }
-                    if (i != 0)
-                    {
-                        stringBuilder.AppendLine();
-                    }
-                    stringBuilder.Append(formatedHashValue);
-                }
-                if (stringBuilder.Length != 0)
-                {
-                    Clipboard.SetText(stringBuilder.ToString());
-                }
-            }
-        }
-
-        private static void CopyFilesFullPathAction(object param)
-        {
-            if (param is IList selectedModels)
-            {
-                int count = selectedModels.Count;
-                if (count == 0)
-                {
-                    return;
-                }
-                StringBuilder stringBuilder = new StringBuilder();
-                for (int i = 0; i < count; ++i)
-                {
-                    HashViewModel model = (HashViewModel)selectedModels[i];
-                    if (File.Exists(model.FileInfo.FullName))
-                    {
-                        if (i != 0)
-                        {
-                            stringBuilder.AppendLine();
-                        }
-                        stringBuilder.Append(model.FileInfo.FullName);
-                    }
-                }
-                if (stringBuilder.Length != 0)
-                {
-                    Clipboard.SetText(stringBuilder.ToString());
-                }
-            }
-        }
-
-        private static void OpenFolderSelectItemsAction(object param)
-        {
-            if (param is IList selectedModels)
-            {
-                Dictionary<string, List<string>> groupByDir =
-                    new Dictionary<string, List<string>>();
-                int count = selectedModels.Count;
-                for (int i = 0; i < count; ++i)
-                {
-                    bool isMatched = false;
-                    HashViewModel model = (HashViewModel)selectedModels[i];
-                    foreach (string key in groupByDir.Keys)
-                    {
-                        if (model.FileInfo.ParentSameWith(key))
-                        {
-                            isMatched = true;
-                            groupByDir[key].Add(model.FileInfo.Name);
-                            break;
-                        }
-                    }
-                    if (!isMatched)
-                    {
-                        groupByDir[model.FileInfo.DirectoryName] = new List<string> {
-                            model.FileInfo.Name };
-                    }
-                }
-                if (groupByDir.Any())
-                {
-                    foreach (string folderFullPath in groupByDir.Keys)
-                    {
-                        CommonUtils.OpenFolderAndSelectItems(
-                            folderFullPath, groupByDir[folderFullPath]);
-                    }
-                }
-            }
-        }
-
-        private static void OpenModelsFilePathAction(object param)
-        {
-            if (param is IList selectedModels)
-            {
-                int count = selectedModels.Count;
-                for (int i = 0; i < count; ++i)
-                {
-                    var model = (HashViewModel)selectedModels[i];
-                    if (!File.Exists(model.FileInfo.FullName))
-                    {
-                        continue;
-                    }
-                    NativeFunctions.ShellExecuteW(
-                        MainWindow.WndHandle, "open",
-                        model.FileInfo.FullName, null,
-                        Path.GetDirectoryName(model.FileInfo.FullName),
-                        ShowCmds.SW_SHOWNORMAL);
-                }
-            }
-        }
-
-        private static void OpenFilesPropertyAction(object param)
-        {
-            if (param is IList selectedModels)
-            {
-                int count = selectedModels.Count;
-                for (int i = 0; i < count; ++i)
-                {
-                    HashViewModel model = (HashViewModel)selectedModels[i];
-                    if (!File.Exists(model.FileInfo.FullName))
-                    {
-                        continue;
-                    }
-                    var shellExecuteInfo = new SHELLEXECUTEINFOW();
-                    shellExecuteInfo.cbSize = Marshal.SizeOf(shellExecuteInfo);
-                    shellExecuteInfo.fMask = SEMaskFlags.SEE_MASK_INVOKEIDLIST;
-                    shellExecuteInfo.hwnd = MainWindow.WndHandle;
-                    shellExecuteInfo.lpVerb = "properties";
-                    shellExecuteInfo.lpFile = model.FileInfo.FullName;
-                    shellExecuteInfo.lpDirectory = model.FileInfo.DirectoryName;
-                    shellExecuteInfo.nShow = ShowCmds.SW_SHOWNORMAL;
-                    NativeFunctions.ShellExecuteExW(ref shellExecuteInfo);
-                }
-            }
-        }
-
-        private static void RefreshAllOutputTypeAction(object param)
-        {
-            foreach (HashViewModel model in HashViewModels)
-            {
-                if (model.HasBeenRun)
-                {
-                    model.SelectedOutputType = Settings.Current.SelectedOutputType;
-                }
-            }
-        }
-
-        private static void DeleteModelFileCallback(HashViewModel model)
-        {
-            try
-            {
-                model.FileInfo.Delete();
-            }
-            finally { }
-        }
-
-        public static void DeleteSelectedModelsFileAction(object param)
-        {
-            if (param is IList selectedModels)
-            {
-                int count = selectedModels.Count;
-                if (MessageBox.Show(
-                    MainWindow.This,
-                    $"确定删除选中的 {count} 个文件吗？",
-                    "提示",
-                    MessageBoxButton.OKCancel,
-                    MessageBoxImage.Exclamation) != MessageBoxResult.OK)
-                {
-                    return;
-                }
-                HashViewModel[] models = selectedModels.Cast<HashViewModel>().ToArray();
-                foreach (HashViewModel model in models)
-                {
-                    model.ModelShutdownEvent += DeleteModelFileCallback;
-                    // 对 HashViewModels 的增删操作必定是在主线程上的，不用加锁
-                    model.ShutdownModel();
-                    HashViewModels.Remove(model);
-                }
-            }
-        }
-
-        private static void RemoveSelectedModelsAction(object param)
-        {
-            if (param is IList selectedModels)
-            {
-                HashViewModel[] models = selectedModels.Cast<HashViewModel>().ToArray();
-                foreach (HashViewModel model in models)
-                {
-                    model.ShutdownModel();
-                    // 对 HashViewModels 的增删操作必定是在主线程上的，不用加锁
-                    HashViewModels.Remove(model);
-                }
-            }
-        }
-
-        private void ModelToTable(ModelArg arg)
+        private void AddModelAction(ModelArg arg)
         {
             HashViewModel model = new HashViewModel(
                 Interlocked.Increment(ref this.serial), arg);
@@ -469,13 +235,6 @@ namespace HashCalculator
             }
         }
 
-        public void ClearHashViewModels()
-        {
-            this.serial = 0;
-            this.displayedFiles.Clear();
-            HashViewModels.Clear();
-        }
-
         public async void BeginDisplayModels(IEnumerable<ModelArg> args)
         {
             CancellationToken token;
@@ -494,7 +253,7 @@ namespace HashCalculator
                             break;
                         }
                         this.displayedFiles.Add(arg);
-                        AppDispatcher.Invoke(this.modelToTable, arg);
+                        AppDispatcher.Invoke(this.addModelAction, arg);
                         Thread.Yield();
                     }
                 }
@@ -519,7 +278,7 @@ namespace HashCalculator
                             break;
                         }
                         this.displayedFiles.Add(arg);
-                        AppDispatcher.Invoke(this.modelToTable, arg);
+                        AppDispatcher.Invoke(this.addModelAction, arg);
                         Thread.Yield();
                     }
 
@@ -573,47 +332,459 @@ namespace HashCalculator
                 + $"不确定：{uncertain}\n无关联：{unrelated}\n未校验：{noresult}";
         }
 
-        public void Models_CancelAll()
+        private void PropChangedAction(object sender, PropertyChangedEventArgs e)
         {
-            lock (this.displayModelRequestLock)
+            if (e.PropertyName == nameof(Settings.Current.SelectedTaskNumberLimit))
             {
-                this.Cancellation?.Cancel();
-                foreach (HashViewModel model in HashViewModels)
+                Task.Run(() =>
+                {
+                    this.ChangeTaskNumber(Settings.Current.SelectedTaskNumberLimit);
+                });
+            }
+        }
+
+        public string StartVerifyToolTip { get; } =
+            "当面板为空时，如果校验依据选择的是通用格式的哈希值文本文件，则：\n" +
+            "点击 [校验] 后程序会自动解析文件并在相同目录下寻找要计算哈希值的文件完成计算并显示校验结果。\n" +
+            "通用格式的哈希值文件请参考程序 [导出结果] 功能导出的文件的内容排布格式。";
+
+        private void CopyModelsHashBase64Action(object param)
+        {
+            this.CopyModelsHashValueAction(param, OutputType.BASE64);
+        }
+
+        private void CopyModelsHashBinUpperAction(object param)
+        {
+            this.CopyModelsHashValueAction(param, OutputType.BinaryUpper);
+        }
+
+        private void CopyModelsHashBinLowerAction(object param)
+        {
+            this.CopyModelsHashValueAction(param, OutputType.BinaryLower);
+        }
+
+        private void CopyModelsHashValueAction(object param, OutputType output)
+        {
+            if (param is IList selectedModels)
+            {
+                int count = selectedModels.Count;
+                if (count == 0)
+                {
+                    return;
+                }
+                StringBuilder hashValueStringBuilder = new StringBuilder();
+                for (int i = 0; i < count; ++i)
+                {
+                    HashViewModel model = (HashViewModel)selectedModels[i];
+                    string formatedHashValue;
+                    if (output != OutputType.Unknown)
+                    {
+                        formatedHashValue =
+                            (string)HashBytesOutputTypeCvt.Convert(
+                                model.Hash, output);
+                    }
+                    else if (model.SelectedOutputType == OutputType.Unknown)
+                    {
+                        formatedHashValue =
+                            (string)HashBytesOutputTypeCvt.Convert(
+                                model.Hash, Settings.Current.SelectedOutputType);
+                    }
+                    else
+                    {
+                        formatedHashValue = model.HashString;
+                    }
+                    if (i != 0)
+                    {
+                        hashValueStringBuilder.AppendLine();
+                    }
+                    hashValueStringBuilder.Append(formatedHashValue);
+                }
+                if (hashValueStringBuilder.Length != 0)
+                {
+                    Clipboard.SetText(hashValueStringBuilder.ToString());
+                }
+            }
+        }
+
+        public ControlItem[] CopyModelsHashMenuCmds
+        {
+            get
+            {
+                if (this.copyModelsHashMenuCmds is null)
+                {
+                    this.copyModelsHashMenuCmds = new ControlItem[] {
+                        new ControlItem("Base64 格式", new RelayCommand(this.CopyModelsHashBase64Action)),
+                        new ControlItem("十六进制大写", new RelayCommand(this.CopyModelsHashBinUpperAction)),
+                        new ControlItem("十六进制小写", new RelayCommand(this.CopyModelsHashBinLowerAction)),
+                    };
+                }
+                return this.copyModelsHashMenuCmds;
+            }
+        }
+
+        private void CopyModelsHashStringAction(object param)
+        {
+            this.CopyModelsHashValueAction(param, OutputType.Unknown);
+        }
+
+        public ICommand CopyModelsHashStringCmd
+        {
+            get
+            {
+                if (this.copyModelsHashStringCmd is null)
+                {
+                    this.copyModelsHashStringCmd = new RelayCommand(this.CopyModelsHashStringAction);
+                }
+                return this.copyModelsHashStringCmd;
+            }
+        }
+
+        private void CopyFilesFullPathAction(object param)
+        {
+            if (param is IList selectedModels)
+            {
+                int count = selectedModels.Count;
+                if (count == 0)
+                {
+                    return;
+                }
+                StringBuilder stringBuilder = new StringBuilder();
+                for (int i = 0; i < count; ++i)
+                {
+                    HashViewModel model = (HashViewModel)selectedModels[i];
+                    if (File.Exists(model.FileInfo.FullName))
+                    {
+                        if (i != 0)
+                        {
+                            stringBuilder.AppendLine();
+                        }
+                        stringBuilder.Append(model.FileInfo.FullName);
+                    }
+                }
+                if (stringBuilder.Length != 0)
+                {
+                    Clipboard.SetText(stringBuilder.ToString());
+                }
+            }
+        }
+
+        public ICommand CopyFilesFullPathCmd
+        {
+            get
+            {
+                if (this.copyFilesFullPathCmd is null)
+                {
+                    this.copyFilesFullPathCmd = new RelayCommand(this.CopyFilesFullPathAction);
+                }
+                return this.copyFilesFullPathCmd;
+            }
+        }
+
+        private void OpenFolderSelectItemsAction(object param)
+        {
+            if (param is IList selectedModels)
+            {
+                Dictionary<string, List<string>> groupByDir =
+                    new Dictionary<string, List<string>>();
+                int count = selectedModels.Count;
+                for (int i = 0; i < count; ++i)
+                {
+                    bool isMatched = false;
+                    HashViewModel model = (HashViewModel)selectedModels[i];
+                    foreach (string key in groupByDir.Keys)
+                    {
+                        if (model.FileInfo.ParentSameWith(key))
+                        {
+                            isMatched = true;
+                            groupByDir[key].Add(model.FileInfo.Name);
+                            break;
+                        }
+                    }
+                    if (!isMatched)
+                    {
+                        groupByDir[model.FileInfo.DirectoryName] = new List<string> {
+                            model.FileInfo.Name };
+                    }
+                }
+                if (groupByDir.Any())
+                {
+                    foreach (string folderFullPath in groupByDir.Keys)
+                    {
+                        CommonUtils.OpenFolderAndSelectItems(
+                            folderFullPath, groupByDir[folderFullPath]);
+                    }
+                }
+            }
+        }
+
+        public ICommand OpenFolderSelectItemsCmd
+        {
+            get
+            {
+                if (this.openFolderSelectItemsCmd is null)
+                {
+                    this.openFolderSelectItemsCmd = new RelayCommand(this.OpenFolderSelectItemsAction);
+                }
+                return this.openFolderSelectItemsCmd;
+            }
+        }
+
+        private void OpenModelsFilePathAction(object param)
+        {
+            if (param is IList selectedModels)
+            {
+                int count = selectedModels.Count;
+                for (int i = 0; i < count; ++i)
+                {
+                    var model = (HashViewModel)selectedModels[i];
+                    if (!File.Exists(model.FileInfo.FullName))
+                    {
+                        continue;
+                    }
+                    NativeFunctions.ShellExecuteW(
+                        MainWindow.WndHandle, "open",
+                        model.FileInfo.FullName, null,
+                        Path.GetDirectoryName(model.FileInfo.FullName),
+                        ShowCmds.SW_SHOWNORMAL);
+                }
+            }
+        }
+
+        public ICommand OpenModelsFilePathCmd
+        {
+            get
+            {
+                if (this.openModelsFilePathCmd is null)
+                {
+                    this.openModelsFilePathCmd = new RelayCommand(this.OpenModelsFilePathAction);
+                }
+                return this.openModelsFilePathCmd;
+            }
+        }
+
+        private void OpenFilesPropertyAction(object param)
+        {
+            if (param is IList selectedModels)
+            {
+                int count = selectedModels.Count;
+                for (int i = 0; i < count; ++i)
+                {
+                    HashViewModel model = (HashViewModel)selectedModels[i];
+                    if (!File.Exists(model.FileInfo.FullName))
+                    {
+                        continue;
+                    }
+                    var shellExecuteInfo = new SHELLEXECUTEINFOW();
+                    shellExecuteInfo.cbSize = Marshal.SizeOf(shellExecuteInfo);
+                    shellExecuteInfo.fMask = SEMaskFlags.SEE_MASK_INVOKEIDLIST;
+                    shellExecuteInfo.hwnd = MainWindow.WndHandle;
+                    shellExecuteInfo.lpVerb = "properties";
+                    shellExecuteInfo.lpFile = model.FileInfo.FullName;
+                    shellExecuteInfo.lpDirectory = model.FileInfo.DirectoryName;
+                    shellExecuteInfo.nShow = ShowCmds.SW_SHOWNORMAL;
+                    NativeFunctions.ShellExecuteExW(ref shellExecuteInfo);
+                }
+            }
+        }
+
+        public ICommand OpenFilesPropertyCmd
+        {
+            get
+            {
+                if (this.openFilesPropertyCmd is null)
+                {
+                    this.openFilesPropertyCmd = new RelayCommand(this.OpenFilesPropertyAction);
+                }
+                return this.openFilesPropertyCmd;
+            }
+        }
+
+        private void RefreshAllOutputTypeAction(object param)
+        {
+            foreach (HashViewModel model in HashViewModels)
+            {
+                if (model.HasBeenRun)
+                {
+                    model.SelectedOutputType = Settings.Current.SelectedOutputType;
+                }
+            }
+        }
+
+        public ICommand RefreshAllOutputTypeCmd
+        {
+            get
+            {
+                if (this.refreshAllOutputTypeCmd is null)
+                {
+                    this.refreshAllOutputTypeCmd = new RelayCommand(this.RefreshAllOutputTypeAction);
+                }
+                return this.refreshAllOutputTypeCmd;
+            }
+        }
+
+        private static void DeleteModelFileCallback(HashViewModel model)
+        {
+            try
+            {
+                model.FileInfo.Delete();
+            }
+            finally { }
+        }
+
+        private void DeleteSelectedModelsFileAction(object param)
+        {
+            if (param is IList selectedModels)
+            {
+                int count = selectedModels.Count;
+                if (MessageBox.Show(
+                    this.Host,
+                    $"确定删除选中的 {count} 个文件吗？",
+                    "提示",
+                    MessageBoxButton.OKCancel,
+                    MessageBoxImage.Exclamation) != MessageBoxResult.OK)
+                {
+                    return;
+                }
+                HashViewModel[] models = selectedModels.Cast<HashViewModel>().ToArray();
+                foreach (HashViewModel model in models)
+                {
+                    model.ModelShutdownEvent += DeleteModelFileCallback;
+                    // 对 HashViewModels 的增删操作必定是在主线程上的，不用加锁
+                    model.ShutdownModel();
+                    HashViewModels.Remove(model);
+                }
+            }
+        }
+
+        public ICommand DeleteSelectedModelsFileCmd
+        {
+            get
+            {
+                if (this.deleteSelectedModelsFileCmd is null)
+                {
+                    this.deleteSelectedModelsFileCmd = new RelayCommand(this.DeleteSelectedModelsFileAction);
+                }
+                return this.deleteSelectedModelsFileCmd;
+            }
+        }
+
+        private void RemoveSelectedModelsAction(object param)
+        {
+            if (param is IList selectedModels)
+            {
+                HashViewModel[] models = selectedModels.Cast<HashViewModel>().ToArray();
+                foreach (HashViewModel model in models)
                 {
                     model.ShutdownModel();
+                    // 对 HashViewModels 的增删操作必定是在主线程上的，不用加锁
+                    HashViewModels.Remove(model);
                 }
-                this.Cancellation?.Dispose();
-                this.Cancellation = new CancellationTokenSource();
             }
         }
 
-        public void Models_CancelOne(HashViewModel model)
+        public ICommand RemoveSelectedModelsCmd
         {
-            model.ShutdownModel();
-        }
-
-        public void Models_ContinueAll()
-        {
-            foreach (HashViewModel model in HashViewModels)
+            get
             {
-                model.PauseOrContinueModel(PauseMode.Continue);
+                if (this.removeSelectedModelsCmd is null)
+                {
+                    this.removeSelectedModelsCmd = new RelayCommand(this.RemoveSelectedModelsAction);
+                }
+                return this.removeSelectedModelsCmd;
             }
         }
 
-        public void Models_PauseAll()
+        private void MainWindowTopmostAction(object param)
         {
-            foreach (HashViewModel model in HashViewModels)
+            Settings.Current.MainWndTopmost = !Settings.Current.MainWndTopmost;
+        }
+
+        public ICommand MainWindowTopmostCmd
+        {
+            get
             {
-                model.PauseOrContinueModel(PauseMode.Pause);
+                if (this.mainWindowTopmostCmd is null)
+                {
+                    this.mainWindowTopmostCmd = new RelayCommand(this.MainWindowTopmostAction);
+                }
+                return this.mainWindowTopmostCmd;
             }
         }
 
-        public void Models_PauseOne(HashViewModel model)
+        private void ClearAllTableLinesAction(object param)
         {
-            model.PauseOrContinueModel(PauseMode.Invert);
+            this.serial = 0;
+            this.displayedFiles.Clear();
+            HashViewModels.Clear();
         }
 
-        public void Models_Restart(bool newLines, bool force)
+        public ICommand ClearAllTableLinesCmd
+        {
+            get
+            {
+                if (this.clearAllTableLinesCmd is null)
+                {
+                    this.clearAllTableLinesCmd = new RelayCommand(this.ClearAllTableLinesAction);
+                }
+                return this.clearAllTableLinesCmd;
+            }
+        }
+
+        private void ExportAsTextFileAction(object param)
+        {
+            if (!HashViewModels.Any())
+            {
+                MessageBox.Show(this.Host, "列表中没有任何可以导出的条目。", "提示");
+                return;
+            }
+            SaveFileDialog sf = new SaveFileDialog()
+            {
+                ValidateNames = true,
+                Filter = "文本文件|*.txt|所有文件|*.*",
+                FileName = "hashsums.txt",
+                InitialDirectory = Settings.Current.LastUsedPath,
+            };
+            if (sf.ShowDialog() != true)
+            {
+                return;
+            }
+            Settings.Current.LastUsedPath = Path.GetDirectoryName(sf.FileName);
+            try
+            {
+                using (StreamWriter sw = File.CreateText(sf.FileName))
+                {
+                    foreach (HashViewModel hm in HashViewModels)
+                    {
+                        if (hm.IsSucceeded && hm.Export)
+                        {
+                            string hash = HashBytesOutputTypeCvt.Convert(
+                                hm.Hash, Settings.Current.SelectedOutputType) as string;
+                            sw.WriteLine($"{hash} *{hm.FileName}");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this.Host, $"哈希值导出失败：\n{ex.Message}", "错误",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+        }
+
+        public ICommand ExportAsTextFileCmd
+        {
+            get
+            {
+                if (this.exportAsTextFileCmd is null)
+                {
+                    this.exportAsTextFileCmd = new RelayCommand(this.ExportAsTextFileAction);
+                }
+                return this.exportAsTextFileCmd;
+            }
+        }
+
+        public void RestartModels(bool newLines, bool force)
         {
             if (!newLines)
             {
@@ -634,25 +805,298 @@ namespace HashCalculator
             }
         }
 
-        public void Models_StartOne(HashViewModel viewModel)
+        private void RefreshHashNewLinesAction(object param)
         {
-            viewModel.StartupModel(false);
+            this.RestartModels(true, false);
         }
 
-        private void PropChangedAction(object sender, PropertyChangedEventArgs e)
+        public ICommand RefreshHashNewLinesCmd
         {
-            if (e.PropertyName == nameof(Settings.Current.SelectedTaskNumberLimit))
+            get
             {
-                Task.Run(() =>
+                if (this.refreshHashNewLinesCmd is null)
                 {
-                    this.ChangeTaskNumber(Settings.Current.SelectedTaskNumberLimit);
-                });
+                    this.refreshHashNewLinesCmd = new RelayCommand(this.RefreshHashNewLinesAction);
+                }
+                return this.refreshHashNewLinesCmd;
             }
         }
 
-        public string StartCompareToolTip { get; } =
-            "当面板为空时，如果校验依据选择的是通用格式的哈希值文本文件，则：\n" +
-            "点击 [校验] 后程序会自动解析文件并在相同目录下寻找要计算哈希值的文件完成计算并显示校验结果。\n" +
-            "通用格式的哈希值文件请参考程序 [导出结果] 功能导出的文件的内容排布格式。";
+        private void RefreshCurrentHashAction(object param)
+        {
+            this.RestartModels(false, false);
+        }
+
+        public ICommand RefreshCurrentHashCmd
+        {
+            get
+            {
+                if (this.refreshCurrentHashCmd is null)
+                {
+                    this.refreshCurrentHashCmd = new RelayCommand(this.RefreshCurrentHashAction);
+                }
+                return this.refreshCurrentHashCmd;
+            }
+        }
+
+        private void RefreshCurHashForceAction(object param)
+        {
+            this.RestartModels(false, true);
+        }
+
+        public ICommand RefreshCurHashForceCmd
+        {
+            get
+            {
+                if (this.refreshCurHashForceCmd is null)
+                {
+                    this.refreshCurHashForceCmd = new RelayCommand(this.RefreshCurHashForceAction);
+                }
+                return this.refreshCurHashForceCmd;
+            }
+        }
+
+        private void StartVerificationAction(object param)
+        {
+            string pathOrHash = param as string;
+            if (string.IsNullOrEmpty(pathOrHash))
+            {
+                MessageBox.Show(this.Host, "没有输入哈希值校验依据。", "提示");
+                return;
+            }
+            bool basisUpdated = false;
+            if (!File.Exists(pathOrHash))
+            {
+                basisUpdated = this.MainBasis.UpdateWithHash(pathOrHash);
+            }
+            else
+            {
+                if (HashViewModels.Any())
+                {
+                    basisUpdated = this.MainBasis.UpdateWithFile(pathOrHash);
+                }
+                else
+                {
+                    Basis newBasis = new Basis(pathOrHash);
+                    this.BeginDisplayModels(
+                        new PathPackage(new string[] { Path.GetDirectoryName(pathOrHash) },
+                            Settings.Current.SelectedQVSPolicy, newBasis));
+                }
+            }
+            if (basisUpdated)
+            {
+                foreach (HashViewModel hm in HashViewModels)
+                {
+                    if (!hm.IsSucceeded)
+                    {
+                        hm.CmpResult = CmpRes.NoResult;
+                    }
+                    else
+                    {
+                        hm.CmpResult = this.MainBasis.Verify(hm.FileName, hm.Hash);
+                    }
+                }
+                this.GenerateVerificationReport();
+            }
+        }
+
+        public ICommand StartVerifyHashValueCmd
+        {
+            get
+            {
+                if (this.startVerifyHashValueCmd is null)
+                {
+                    this.startVerifyHashValueCmd = new RelayCommand(this.StartVerificationAction);
+                }
+                return this.startVerifyHashValueCmd;
+            }
+        }
+
+        private void OpenSettingsPanelAction(object param)
+        {
+            Window settingsWindow = new SettingsPanel() { Owner = this.Host };
+            settingsWindow.ShowDialog();
+        }
+
+        public ICommand OpenSettingsPanelCmd
+        {
+            get
+            {
+                if (this.openSettingsPanelCmd is null)
+                {
+                    this.openSettingsPanelCmd = new RelayCommand(this.OpenSettingsPanelAction);
+                }
+                return this.openSettingsPanelCmd;
+            }
+        }
+
+        private void OpenHelpBrowserWndAction(object param)
+        {
+            try
+            {
+                StreamResourceInfo sri = Application.GetResourceStream(
+                    new Uri("WebPages/Help.html", UriKind.Relative));
+                using (sri.Stream)
+                {
+                    string htmlPath = Path.ChangeExtension(Path.GetTempFileName(), "html");
+                    using (Stream fs = File.OpenWrite(htmlPath))
+                    {
+                        byte[] streamBuffer = new byte[sri.Stream.Length];
+                        sri.Stream.Read(streamBuffer, 0, streamBuffer.Length);
+                        fs.Write(streamBuffer, 0, streamBuffer.Length);
+                        NativeFunctions.ShellExecuteW(
+                            MainWindow.WndHandle, "open", htmlPath, null, null, ShowCmds.SW_NORMAL);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show(this.Host, "打开帮助页面失败~", "提示",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+        public ICommand OpenHelpBrowserWndCmd
+        {
+            get
+            {
+                if (this.openHelpBrowserWndCmd is null)
+                {
+                    this.openHelpBrowserWndCmd = new RelayCommand(this.OpenHelpBrowserWndAction);
+                }
+                return this.openHelpBrowserWndCmd;
+            }
+        }
+
+        private void SelectFilesToHashAction(object param)
+        {
+            CommonOpenFileDialog fileOpen = new CommonOpenFileDialog
+            {
+                Title = "选择文件",
+                InitialDirectory = Settings.Current.LastUsedPath,
+                Multiselect = true,
+                EnsureValidNames = true,
+            };
+            if (fileOpen.ShowDialog() != CommonFileDialogResult.Ok)
+            {
+                return;
+            }
+            Settings.Current.LastUsedPath =
+                    Path.GetDirectoryName(fileOpen.FileNames.ElementAt(0));
+            this.BeginDisplayModels(
+                new PathPackage(fileOpen.FileNames, Settings.Current.SelectedSearchPolicy));
+        }
+
+        public ICommand SelectFilesToHashCmd
+        {
+            get
+            {
+                if (this.selectFilesToHashCmd is null)
+                {
+                    this.selectFilesToHashCmd = new RelayCommand(this.SelectFilesToHashAction);
+                }
+                return this.selectFilesToHashCmd;
+            }
+        }
+
+        private void SelectFolderToHashAction(object param)
+        {
+            SearchPolicy policy = Settings.Current.SelectedSearchPolicy;
+            if (policy == SearchPolicy.DontSearch)
+            {
+                policy = SearchPolicy.Children;
+            }
+            CommonOpenFileDialog folderOpen = new CommonOpenFileDialog()
+            {
+                IsFolderPicker = true,
+                InitialDirectory = Settings.Current.LastUsedPath,
+                Multiselect = true,
+                EnsureValidNames = true,
+            };
+            if (folderOpen.ShowDialog() != CommonFileDialogResult.Ok)
+            {
+                return;
+            }
+            Settings.Current.LastUsedPath = folderOpen.FileNames.ElementAt(0);
+            this.BeginDisplayModels(new PathPackage(folderOpen.FileNames, policy));
+        }
+
+        public ICommand SelectFolderToHashCmd
+        {
+            get
+            {
+                if (this.selectFolderToHashCmd is null)
+                {
+                    this.selectFolderToHashCmd = new RelayCommand(this.SelectFolderToHashAction);
+                }
+                return this.selectFolderToHashCmd;
+            }
+        }
+
+        private void CancelDisplayedModelsAction(object param)
+        {
+            lock (this.displayModelRequestLock)
+            {
+                this.Cancellation?.Cancel();
+                foreach (HashViewModel model in HashViewModels)
+                {
+                    model.ShutdownModel();
+                }
+                this.Cancellation?.Dispose();
+                this.Cancellation = new CancellationTokenSource();
+            }
+        }
+
+        public ICommand CancelDisplayedModelsCmd
+        {
+            get
+            {
+                if (this.cancelDisplayedModelsCmd is null)
+                {
+                    this.cancelDisplayedModelsCmd = new RelayCommand(this.CancelDisplayedModelsAction);
+                }
+                return this.cancelDisplayedModelsCmd;
+            }
+        }
+
+        private void PauseDisplayedModelsAction(object param)
+        {
+            foreach (HashViewModel model in HashViewModels)
+            {
+                model.PauseOrContinueModel(PauseMode.Pause);
+            }
+        }
+
+        public ICommand PauseDisplayedModelsCmd
+        {
+            get
+            {
+                if (this.pauseDisplayedModelsCmd is null)
+                {
+                    this.pauseDisplayedModelsCmd = new RelayCommand(this.PauseDisplayedModelsAction);
+                }
+                return this.pauseDisplayedModelsCmd;
+            }
+        }
+
+        private void ContinueDisplayedModelsAction(object param)
+        {
+            foreach (HashViewModel model in HashViewModels)
+            {
+                model.PauseOrContinueModel(PauseMode.Continue);
+            }
+        }
+
+        public ICommand ContinueDisplayedModelsCmd
+        {
+            get
+            {
+                if (this.continueDisplayedModelsCmd is null)
+                {
+                    this.continueDisplayedModelsCmd = new RelayCommand(this.ContinueDisplayedModelsAction);
+                }
+                return this.continueDisplayedModelsCmd;
+            }
+        }
     }
 }

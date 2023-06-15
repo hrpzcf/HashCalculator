@@ -3,7 +3,6 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Threading;
 using System.Windows;
@@ -55,6 +54,9 @@ namespace HashCalculator
         private HashState _currentState = HashState.Waiting;
         private HashResult _currentResult = HashResult.NoResult;
         private OutputType selectedOutputType = OutputType.Unknown;
+        private RelayCommand shutdownModelSelfCmd;
+        private RelayCommand restartModelSelfCmd;
+        private RelayCommand pauseOrContinueModelSelfCmd;
         private RelayCommand copyOneModelHashValueCmd;
         #endregion
 
@@ -280,29 +282,6 @@ namespace HashCalculator
             }
         }
 
-        public ICommand CopyOneModelHashValueCmd
-        {
-            get
-            {
-                if (this.copyOneModelHashValueCmd is null)
-                {
-                    this.copyOneModelHashValueCmd =
-                        new RelayCommand(this.CopyOneModelHashValueAction);
-                }
-                return this.copyOneModelHashValueCmd;
-            }
-        }
-
-        public bool HasBeenRun { get; private set; }
-
-        public ControlItem[] AvailableOutputTypes { get; } =
-        {
-            new ControlItem("没有指定", OutputType.Unknown),
-            new ControlItem("Base64", OutputType.BASE64),
-            new ControlItem("Hex大写", OutputType.BinaryUpper),
-            new ControlItem("Hex小写", OutputType.BinaryLower),
-        };
-
         private void CopyOneModelHashValueAction(object param)
         {
             if (this.Result != HashResult.Succeeded)
@@ -319,6 +298,83 @@ namespace HashCalculator
                     this.Hash, Settings.Current.SelectedOutputType));
             }
         }
+
+        public ICommand CopyOneModelHashValueCmd
+        {
+            get
+            {
+                if (this.copyOneModelHashValueCmd is null)
+                {
+                    this.copyOneModelHashValueCmd =
+                        new RelayCommand(this.CopyOneModelHashValueAction);
+                }
+                return this.copyOneModelHashValueCmd;
+            }
+        }
+
+        private void ShutdownModelSelfAction(object param)
+        {
+            this.ShutdownModel();
+        }
+
+        public ICommand ShutdownModelSelfCmd
+        {
+            get
+            {
+                if (this.shutdownModelSelfCmd is null)
+                {
+                    this.shutdownModelSelfCmd =
+                        new RelayCommand(this.ShutdownModelSelfAction);
+                }
+                return this.shutdownModelSelfCmd;
+            }
+        }
+
+        private void RestartModelSelfAction(object param)
+        {
+            this.StartupModel(false);
+        }
+
+        public ICommand RestartModelSelfCmd
+        {
+            get
+            {
+                if (this.restartModelSelfCmd is null)
+                {
+                    this.restartModelSelfCmd = 
+                        new RelayCommand(this.RestartModelSelfAction);
+                }
+                return this.restartModelSelfCmd;
+            }
+        }
+
+        private void PauseOrContinueModelSelfAction(object param)
+        {
+            this.PauseOrContinueModel(PauseMode.Invert);
+        }
+
+        public ICommand PauseOrContinueModelSelfCmd
+        {
+            get
+            {
+                if (this.pauseOrContinueModelSelfCmd is null)
+                {
+                    this.pauseOrContinueModelSelfCmd = 
+                        new RelayCommand(this.PauseOrContinueModelSelfAction);
+                }
+                return this.pauseOrContinueModelSelfCmd;
+            }
+        }
+
+        public bool HasBeenRun { get; private set; }
+
+        public ControlItem[] AvailableOutputTypes { get; } =
+        {
+            new ControlItem("没有指定", OutputType.Unknown),
+            new ControlItem("Base64", OutputType.BASE64),
+            new ControlItem("Hex大写", OutputType.BinaryUpper),
+            new ControlItem("Hex小写", OutputType.BinaryLower),
+        };
 
         private void ModelCancelled()
         {

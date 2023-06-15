@@ -42,7 +42,6 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
@@ -86,119 +85,69 @@
                 SelectedValuePath="ItemValue"
                 Style="{StaticResource ComboBoxStyle1}"
                 ToolTip="此选项影响新加入的文件、[刷新输出方式] 按钮、[导出哈希值] 按钮的结果&#10;Base64 格式：以 Base64 编码字符显示计算结果，某些软件配置需要此格式&#10;十六进制大写：常用的显示方式，以十六进制大写字母方式显示计算结果&#10;十六进制小写：常用的显示方式，以十六进制小写字母方式显示计算结果" />
-            <StackPanel
-                Grid.Column="4"
-                Margin="16,0,0,0"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Orientation="Horizontal">
-                <Image
-                    VerticalAlignment="Center"
-                    Source="/Images/list_count_16.png"
-                    ToolTip="表格中的项目总数" />
-                <TextBlock
-                    Margin="2,0,0,0"
-                    VerticalAlignment="Center"
-                    Foreground="Gray"
-                    Text="{Binding Source={x:Static local:MainWndViewModel.HashViewModels}, Path=Count}"
-                    ToolTip="表格中的项目总数" />
-                <Image
-                    Margin="8,0,0,0"
-                    VerticalAlignment="Center"
-                    Source="/Images/totalnum_16.png"
-                    ToolTip="本次待计算队列中的项目总数"
-                    Visibility="{Binding State, Converter={StaticResource TotalProgressVisiblityCvt}}" />
-                <TextBlock
-                    Margin="2,0,0,0"
-                    VerticalAlignment="Center"
-                    Foreground="Gray"
-                    Text="{Binding TotalNumberInQueue}"
-                    ToolTip="本次待计算队列中的项目总数"
-                    Visibility="{Binding State, Converter={StaticResource TotalProgressVisiblityCvt}}" />
-                <Image
-                    Margin="8,0,0,0"
-                    VerticalAlignment="Center"
-                    Source="/Images/finished_16.png"
-                    ToolTip="本次待计算队列已完成的项目数"
-                    Visibility="{Binding State, Converter={StaticResource TotalProgressVisiblityCvt}}" />
-                <TextBlock
-                    Margin="2,0,0,0"
-                    VerticalAlignment="Center"
-                    Foreground="Gray"
-                    Text="{Binding FinishedInQueue}"
-                    ToolTip="本次待计算队列已完成的项目数"
-                    Visibility="{Binding State, Converter={StaticResource TotalProgressVisiblityCvt}}" />
-            </StackPanel>
             <Button
-                x:Name="uiButton_SelectFilesToHash"
-                Grid.Column="6"
+                Grid.Column="5"
                 Margin="28,0,0,0"
-                Click="Button_SelectFilesToHash_Click"
+                Command="{Binding SelectFilesToHashCmd}"
                 Style="{StaticResource ImageButtonStyle2}"
                 ToolTip="选择文件：添加所选的文件并开始计算，也可以将文件、文件夹直接拖放到下方表格中">
                 <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnSelectFileEnabledImgCvt}}" />
             </Button>
             <Button
-                x:Name="uiButton_SelectFoldersToHash"
-                Grid.Column="7"
+                Grid.Column="6"
                 Margin="4,0,0,0"
-                Click="Button_SelectFoldersToHash_Click"
+                Command="{Binding SelectFolderToHashCmd}"
                 Style="{StaticResource ImageButtonStyle2}"
                 ToolTip="选择文件夹：搜索文件夹内的文件并开始计算，也可以将文件和文件夹直接拖放到表格中">
                 <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnSelectFolderEnabledImgCvt}}" />
             </Button>
             <Button
-                x:Name="uiButton_ClearModels"
-                Grid.Column="8"
+                Grid.Column="7"
                 Margin="4,0,0,0"
-                Click="Button_ClearFileList_Click"
+                Command="{Binding ClearAllTableLinesCmd}"
                 IsEnabled="{Binding State, Converter={StaticResource ButtonEnableCvt}}"
                 Style="{StaticResource ImageButtonStyle2}"
                 ToolTip="清空所有内容：清空表格中显示的所有行">
                 <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnClearPanelEnabledImgCvt}}" />
             </Button>
             <Button
-                x:Name="uiButton_RefreshCopy"
-                Grid.Column="9"
+                Grid.Column="8"
                 Margin="28,0,0,0"
-                Click="Button_CopyRefreshHash_Click"
+                Command="{Binding RefreshHashNewLinesCmd}"
                 IsEnabled="{Binding State, Converter={StaticResource ButtonEnableCvt}}"
                 Style="{StaticResource ImageButtonStyle2}"
                 ToolTip="新增哈希计算：根据 [默认哈希算法] 下拉列表所选算法，计算表格中所有文件的哈希值，但不清除原来的计算结果，而是增加新的行来显示结果">
                 <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnNewLineEnabledImgCvt}}" />
             </Button>
             <Button
-                x:Name="uiButton_RefreshCurrentHash"
-                Grid.Column="10"
+                Grid.Column="9"
                 Margin="4,0,0,0"
-                Click="Button_RefreshCurrentHash_Click"
+                Command="{Binding RefreshCurrentHashCmd}"
                 IsEnabled="{Binding State, Converter={StaticResource ButtonEnableCvt}}"
                 Style="{StaticResource ImageButtonStyle2}"
                 ToolTip="计算未完成项：根据 [默认哈希算法] 下拉列表所选算法，重新计算表格中未完成计算的文件的哈希值">
                 <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnRefreshEnabledImgCvt}}" />
             </Button>
             <Button
-                x:Name="uiButton_RefreshCurrentHashForce"
-                Grid.Column="11"
+                Grid.Column="10"
                 Margin="4,0,0,0"
-                Click="Button_RefreshCurrentHashForce_Click"
+                Command="{Binding RefreshCurHashForceCmd}"
                 IsEnabled="{Binding State, Converter={StaticResource ButtonEnableCvt}}"
                 Style="{StaticResource ImageButtonStyle2}"
                 ToolTip="全部重新计算：根据 [默认哈希算法] 下拉列表所选算法，重新计算表格中所有文件的哈希值">
                 <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnRefreshForceEnabledImgCvt}}" />
             </Button>
             <Button
-                x:Name="uiButton_ExportAsText"
-                Grid.Column="12"
+                Grid.Column="11"
                 Margin="4,0,0,0"
-                Click="Button_ExportAsTextFile_Click"
+                Command="{Binding ExportAsTextFileCmd}"
                 IsEnabled="{Binding State, Converter={StaticResource ButtonEnableCvt}}"
                 Style="{StaticResource ImageButtonStyle2}"
                 ToolTip="导出哈希值：将表格中所有文件的哈希计算结果导出为文本文件&#10;导出的内容使用的输出方式受到 [默认输出方式] 的控制而不受各文件自己的 [输出方式] 的控制&#10;没有计算结果的行不会被导出，[导出] 列没有勾选的行也不会被导出">
                 <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnExportEnabledImgCvt}}" />
             </Button>
             <Button
-                Grid.Column="13"
+                Grid.Column="12"
                 Margin="4,0,0,0"
                 Command="{Binding RefreshAllOutputTypeCmd}"
                 Style="{StaticResource ImageButtonStyle2}"
@@ -206,55 +155,52 @@
                 <Image Source="/Images/refresh_output_32.png" />
             </Button>
             <Button
-                x:Name="uiButton_ContinueAllTask"
-                Grid.Column="14"
+                Grid.Column="13"
                 Margin="28,0,0,0"
-                Click="Button_ContinueAllTask_Click"
+                Command="{Binding ContinueDisplayedModelsCmd}"
                 IsEnabled="{Binding State, Converter={StaticResource ButtonNotEnableCvt}}"
                 Style="{StaticResource ImageButtonStyle2}"
                 ToolTip="继续所有任务：继续所有已暂停的哈希值计算任务">
                 <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnContinueAllEnabledImgCvt}}" />
             </Button>
             <Button
-                x:Name="uiButton_PauseAllTask"
-                Grid.Column="15"
+                Grid.Column="14"
                 Margin="4,0,0,0"
-                Click="Button_PauseAllTask_Click"
+                Command="{Binding PauseDisplayedModelsCmd}"
                 IsEnabled="{Binding State, Converter={StaticResource ButtonNotEnableCvt}}"
                 Style="{StaticResource ImageButtonStyle2}"
                 ToolTip="暂停所有任务：暂停所有正在运行的哈希值计算任务（计算大量小文件时可能会暂停不成功，需要多次点击）">
                 <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnPauseAllEnabledImgCvt}}" />
             </Button>
             <Button
-                x:Name="uiButton_CancelAllTask"
-                Grid.Column="16"
+                Grid.Column="15"
                 Margin="4,0,0,0"
-                Click="Button_CancelAllTask_Click"
+                Command="{Binding CancelDisplayedModelsCmd}"
                 IsEnabled="{Binding State, Converter={StaticResource ButtonNotEnableCvt}}"
                 Style="{StaticResource ImageButtonStyle2}"
                 ToolTip="取消所有任务：取消所有排队中、运行中和已暂停的哈希值计算任务">
                 <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnCancelAllEnabledImgCvt}}" />
             </Button>
             <Button
-                Grid.Column="17"
+                Grid.Column="16"
                 Margin="28,0,0,0"
-                Click="Button_WindowTopmost_Click"
+                Command="{Binding MainWindowTopmostCmd}"
                 Style="{StaticResource ImageButtonStyle2}"
                 ToolTip="切换窗口置顶：点击在 [置顶/非置顶] 之间切换主窗口置顶状态">
                 <Image Source="{Binding Source={x:Static local:Settings.Current}, Path=MainWndTopmost, Converter={StaticResource BtnTopmostEnabledImgCvt}}" />
             </Button>
             <Button
-                Grid.Column="18"
+                Grid.Column="17"
                 Margin="4,0,0,0"
-                Click="MenuItem_Settings_Click"
+                Command="{Binding OpenSettingsPanelCmd}"
                 Style="{StaticResource ImageButtonStyle2}"
                 ToolTip="打开设置面板...">
                 <Image Source="/Images/settings_32.png" />
             </Button>
             <Button
-                Grid.Column="19"
+                Grid.Column="18"
                 Margin="4,0,0,0"
-                Click="MenuItem_UsingHelp_Click"
+                Command="{Binding OpenHelpBrowserWndCmd}"
                 Style="{StaticResource ImageButtonStyle2}"
                 ToolTip="打开使用帮助...">
                 <Image Source="/Images/using_help_32.png" />
@@ -302,7 +248,7 @@
                         IsEnabled="{Binding Source={x:Static local:MainWndViewModel.HashViewModels}, Path=Count, Converter={StaticResource QuantityBasedEnabledMenuCvt}}" />
                     <MenuItem
                         Header="复制哈希值"
-                        ItemsSource="{Binding CopyModelsHashMenuItems}">
+                        ItemsSource="{Binding CopyModelsHashMenuCmds}">
                         <MenuItem.IsEnabled>
                             <MultiBinding Converter="{StaticResource CopyModelsHashMenuEnabledCvt}">
                                 <Binding
@@ -323,7 +269,7 @@
                         </MenuItem.ItemContainerStyle>
                     </MenuItem>
                     <MenuItem
-                        Command="{Binding CopyModelsHashValueCmd}"
+                        Command="{Binding CopyModelsHashStringCmd}"
                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
                         Header="复制哈希值">
                         <MenuItem.IsEnabled>
@@ -443,7 +389,7 @@
                                 <Button
                                     Grid.Column="1"
                                     Padding="4"
-                                    Click="Button_CancelHashModel_Click"
+                                    Command="{Binding ShutdownModelSelfCmd}"
                                     Style="{StaticResource ImageButtonStyle1}"
                                     ToolTip="停止..."
                                     Visibility="{Binding State, Converter={StaticResource SubBtnVisiblityRunningCvt}}">
@@ -454,7 +400,7 @@
                                 <Button
                                     Grid.Column="2"
                                     Padding="4"
-                                    Click="Button_PauseHashModel_Click"
+                                    Command="{Binding PauseOrContinueModelSelfCmd}"
                                     Style="{StaticResource ImageButtonStyle1}"
                                     ToolTip="{Binding State, Converter={StaticResource SubBtnPauseToolTipCvt}}"
                                     Visibility="{Binding State, Converter={StaticResource SubBtnVisiblityRunningCvt}}">
@@ -466,7 +412,7 @@
                                 <Button
                                     Grid.Column="2"
                                     Padding="4"
-                                    Click="Button_CancelHashModel_Click"
+                                    Command="{Binding ShutdownModelSelfCmd}"
                                     Style="{StaticResource ImageButtonStyle1}"
                                     ToolTip="取消..."
                                     Visibility="{Binding State, Converter={StaticResource SubBtnVisiblityWaitingCvt}}">
@@ -490,7 +436,7 @@
                                 <Button
                                     Grid.Column="2"
                                     Padding="4"
-                                    Click="Button_RestartHashModel_CLick"
+                                    Command="{Binding RestartModelSelfCmd}"
                                     Style="{StaticResource ImageButtonStyle1}"
                                     ToolTip="开始..."
                                     Visibility="{Binding Result, Converter={StaticResource SubBtnVisiblityCanceledCvt}}">
@@ -589,43 +535,71 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
+            <StackPanel
+                Grid.Column="0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Orientation="Horizontal">
+                <Image
+                    VerticalAlignment="Center"
+                    Source="/Images/list_count_16.png"
+                    ToolTip="表格中的项目总数" />
+                <TextBlock
+                    Margin="4,0,0,0"
+                    VerticalAlignment="Center"
+                    Foreground="Gray"
+                    Text="{Binding Source={x:Static local:MainWndViewModel.HashViewModels}, Path=Count}"
+                    ToolTip="表格中的项目总数" />
+                <Image
+                    Margin="12,0,0,0"
+                    VerticalAlignment="Center"
+                    Source="/Images/totalnum_16.png"
+                    ToolTip="本次待计算队列中的项目总数" />
+                <TextBlock
+                    Margin="4,0,0,0"
+                    VerticalAlignment="Center"
+                    Foreground="Gray"
+                    Text="{Binding TotalNumberInQueue}"
+                    ToolTip="本次待计算队列中的项目总数" />
+                <Image
+                    Margin="12,0,0,0"
+                    VerticalAlignment="Center"
+                    Source="/Images/finished_16.png"
+                    ToolTip="本次待计算队列已完成的项目数" />
+                <TextBlock
+                    Margin="4,0,0,0"
+                    VerticalAlignment="Center"
+                    Foreground="Gray"
+                    Text="{Binding FinishedInQueue}"
+                    ToolTip="本次待计算队列已完成的项目数" />
+            </StackPanel>
             <TextBlock
+                Grid.Column="1"
+                Margin="28,0,0,0"
                 VerticalAlignment="Center"
                 Text="文件哈希值批量校验依据：" />
-            <ComboBox
-                x:Name="uiComboBox_ComparisonMethod"
-                Grid.Column="1"
-                MinWidth="100"
-                Padding="6,4,5,4"
-                VerticalAlignment="Center"
-                SelectedIndex="0">
-                <ComboBoxItem Content="文本文件" />
-                <ComboBoxItem Content="单个哈希值" />
-            </ComboBox>
             <TextBox
                 x:Name="uiTextBox_HashValueOrFilePath"
                 Grid.Column="2"
-                Margin="8,0,0,0"
-                Padding="1,2,1,2"
+                Padding="2"
                 MaxLines="1"
                 PreviewDragOver="TextBox_HashValueOrFilePath_PreviewDragOver"
-                PreviewDrop="TextBox_HashValueOrFilePath_PreviewDrop"
-                TextChanged="TextBox_HashValueOrFilePath_Changed" />
+                PreviewDrop="TextBox_HashOrFilePath_PreviewDrop" />
             <Button
                 Grid.Column="3"
                 Margin="8,0,0,0"
                 Padding="8,1,8,1"
-                Click="Button_SelectHashSetFile_Click"
+                Click="Button_SelectBasisFileSetPath_Click"
                 Content="..." />
             <Button
-                x:Name="uiButton_StartCompare"
                 Grid.Column="4"
                 Margin="8,0,0,0"
                 Padding="16,1,16,1"
-                Click="Button_StartCompare_Click"
+                Command="{Binding StartVerifyHashValueCmd}"
+                CommandParameter="{Binding ElementName=uiTextBox_HashValueOrFilePath, Path=Text}"
                 Content="校验"
                 IsEnabled="{Binding State, Converter={StaticResource ButtonEnableCvt}}"
-                ToolTip="{Binding StartCompareToolTip}" />
+                ToolTip="{Binding StartVerifyToolTip}" />
         </Grid>
     </Grid>
 </Window>
