@@ -67,8 +67,6 @@ namespace HashCalculator
 
         public Basis() { }
 
-        public Window Parent { get; set; }
-
         public Dictionary<string, BasisDictValue> NameHashMap { get; }
             = new Dictionary<string, BasisDictValue>();
 
@@ -86,7 +84,6 @@ namespace HashCalculator
                     if (items.Length < 2)
                     {
                         if (MessageBox.Show(
-                            this.Parent,
                             "读取哈希值文件时遇到格式不正确的行：\n" +
                             "选择 [是] 忽略该行并从下一行开始读取，选择 [否] 放弃读取。",
                             "错误",
@@ -105,8 +102,7 @@ namespace HashCalculator
             }
             catch (Exception ex)
             {
-                MessageBox.Show(
-                    this.Parent, $"校验依据文件打开失败：\n{ex.Message}", "错误");
+                MessageBox.Show($"校验依据文件打开失败：\n{ex.Message}", "错误");
             }
             return false;
         }

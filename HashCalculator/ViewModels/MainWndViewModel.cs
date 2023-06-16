@@ -65,7 +65,6 @@ namespace HashCalculator
         {
             Settings.Current.PropertyChanged += this.PropChangedAction;
             this.addModelAction = new AddModelDelegate(this.AddModelAction);
-            this.MainBasis.Parent = MainWindow.This;
         }
 
         public Window Parent { get; set; }
