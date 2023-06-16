@@ -226,6 +226,8 @@ namespace HashCalculator
             }
         }
 
+        public bool PermanentlyDeleteFiles { get; set; }
+
         public string LastUsedPath
         {
             get

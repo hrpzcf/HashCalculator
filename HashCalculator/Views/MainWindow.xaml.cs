@@ -23,7 +23,7 @@ namespace HashCalculator
         public MainWindow()
         {
             This = this;
-            this.viewModel.Host = this;
+            this.viewModel.Parent = this;
             this.DataContext = this.viewModel;
             this.Loaded += this.MainWindowLoaded;
             this.viewModel.ChangeTaskNumber(Settings.Current.SelectedTaskNumberLimit);

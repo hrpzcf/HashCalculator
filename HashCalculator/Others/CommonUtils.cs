@@ -212,5 +212,40 @@ namespace HashCalculator
             }
             return default;
         }
+
+        public static bool SendToRecycleBin(
+            IntPtr hParent, string path, bool silent = true)
+        {
+            FILEOP_FLAGS flags = FILEOP_FLAGS.FOF_ALLOWUNDO;
+            if (silent)
+            {
+                flags |= FILEOP_FLAGS.FOF_SILENT;
+                flags |= FILEOP_FLAGS.FOF_NOCONFIRMATION;
+            }
+            int result;
+            if (IntPtr.Size == 4)
+            {
+                SHFILEOPSTRUCTW32 data = new SHFILEOPSTRUCTW32
+                {
+                    hwnd = hParent,
+                    wFunc = (uint)FileFuncFlags.FO_DELETE,
+                    pFrom = path + '\0',
+                    fFlags = (ushort)flags,
+                };
+                result = NativeFunctions.SHFileOperationW32(ref data);
+            }
+            else
+            {
+                SHFILEOPSTRUCTW64 data = new SHFILEOPSTRUCTW64
+                {
+                    hwnd = hParent,
+                    wFunc = (uint)FileFuncFlags.FO_DELETE,
+                    pFrom = path + '\0',
+                    fFlags = (ushort)flags,
+                };
+                result = NativeFunctions.SHFileOperationW64(ref data);
+            }
+            return result == 0;
+        }
     }
 }

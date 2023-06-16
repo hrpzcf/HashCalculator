@@ -68,7 +68,7 @@ namespace HashCalculator
             this.MainBasis.Parent = MainWindow.This;
         }
 
-        public Window Host { get; set; }
+        public Window Parent { get; set; }
 
         public static ObservableCollection<HashViewModel> HashViewModels { get; }
             = new ObservableCollection<HashViewModel>();
@@ -622,13 +622,31 @@ namespace HashCalculator
             }
         }
 
-        private static void DeleteModelFileCallback(HashViewModel model)
+        private void DeleteModelFileAction(HashViewModel model)
         {
-            try
+            if (Settings.Current.PermanentlyDeleteFiles)
             {
-                model.FileInfo.Delete();
+                try
+                {
+                    model.FileInfo.Delete();
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show(this.Parent,
+                        $"文件删除失败：\n{model.FileInfo.FullName}", "错误",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
-            finally { }
+            else
+            {
+                if (!CommonUtils.SendToRecycleBin(
+                        MainWindow.WndHandle, model.FileInfo.FullName))
+                {
+                    MessageBox.Show(this.Parent,
+                        $"文件移动到回收站失败：\n{model.FileInfo.FullName}", "错误",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
         }
 
         private void DeleteSelectedModelsFileAction(object param)
@@ -636,10 +654,17 @@ namespace HashCalculator
             if (param is IList selectedModels)
             {
                 int count = selectedModels.Count;
+                string deleteFileTip;
+                if (Settings.Current.PermanentlyDeleteFiles)
+                {
+                    deleteFileTip = $"确定永久删除选中的 {count} 个文件吗？";
+                }
+                else
+                {
+                    deleteFileTip = $"确定把选中的 {count} 个文件移动到回收站吗？";
+                }
                 if (MessageBox.Show(
-                    this.Host,
-                    $"确定删除选中的 {count} 个文件吗？",
-                    "提示",
+                    this.Parent, deleteFileTip, "提示",
                     MessageBoxButton.OKCancel,
                     MessageBoxImage.Exclamation,
                     MessageBoxResult.Cancel) != MessageBoxResult.OK)
@@ -649,7 +674,7 @@ namespace HashCalculator
                 HashViewModel[] models = selectedModels.Cast<HashViewModel>().ToArray();
                 foreach (HashViewModel model in models)
                 {
-                    model.ModelShutdownEvent += DeleteModelFileCallback;
+                    model.ModelShutdownEvent += this.DeleteModelFileAction;
                     // 对 HashViewModels 的增删操作必定是在主线程上的，不用加锁
                     model.ShutdownModel();
                     HashViewModels.Remove(model);
@@ -735,7 +760,7 @@ namespace HashCalculator
         {
             if (!HashViewModels.Any())
             {
-                MessageBox.Show(this.Host, "列表中没有任何可以导出的条目。", "提示");
+                MessageBox.Show(this.Parent, "列表中没有任何可以导出的条目。", "提示");
                 return;
             }
             SaveFileDialog sf = new SaveFileDialog()
@@ -767,7 +792,7 @@ namespace HashCalculator
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this.Host, $"哈希值导出失败：\n{ex.Message}", "错误",
+                MessageBox.Show(this.Parent, $"哈希值导出失败：\n{ex.Message}", "错误",
                     MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
@@ -862,7 +887,7 @@ namespace HashCalculator
             string pathOrHash = param as string;
             if (string.IsNullOrEmpty(pathOrHash))
             {
-                MessageBox.Show(this.Host, "没有输入哈希值校验依据。", "提示");
+                MessageBox.Show(this.Parent, "没有输入哈希值校验依据。", "提示");
                 return;
             }
             bool basisUpdated = false;
@@ -915,7 +940,7 @@ namespace HashCalculator
 
         private void OpenSettingsPanelAction(object param)
         {
-            Window settingsWindow = new SettingsPanel() { Owner = this.Host };
+            Window settingsWindow = new SettingsPanel() { Owner = this.Parent };
             settingsWindow.ShowDialog();
         }
 
@@ -952,7 +977,8 @@ namespace HashCalculator
             }
             catch (Exception)
             {
-                MessageBox.Show(this.Host, "打开帮助页面失败~", "提示",
+                MessageBox.Show(
+                    this.Parent, "打开帮助页面失败~", "提示",
                     MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
