@@ -135,6 +135,12 @@
 
 <br/>
 
+# 更新日志
+
+[更新日志](CHANGELOG.md)
+
+<br/>
+
 # 源代码贡献者（感谢所有贡献者）
 
 +   [hrpzcf](https://github.com/hrpzcf)
