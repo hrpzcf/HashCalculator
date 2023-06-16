@@ -577,14 +577,26 @@
                 Grid.Column="1"
                 Margin="28,0,0,0"
                 VerticalAlignment="Center"
-                Text="文件哈希值批量校验依据：" />
-            <TextBox
-                x:Name="uiTextBox_HashValueOrFilePath"
-                Grid.Column="2"
-                Padding="2"
-                MaxLines="1"
-                PreviewDragOver="TextBox_HashValueOrFilePath_PreviewDragOver"
-                PreviewDrop="TextBox_HashOrFilePath_PreviewDrop" />
+                Text="哈希值校验依据：" />
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Label
+                    VerticalContentAlignment="Center"
+                    Panel.ZIndex="0"
+                    Content="粘贴单个哈希值，或选择/粘贴哈希值校验依据文件的路径"
+                    FontSize="8pt"
+                    Foreground="#A0808080"
+                    Visibility="{Binding ElementName=uiTextBox_HashValueOrFilePath, Path=Text, Converter={StaticResource HashOrPathPlaceHolderVisibCvt}}" />
+                <TextBox
+                    x:Name="uiTextBox_HashValueOrFilePath"
+                    Panel.ZIndex="1"
+                    Background="Transparent"
+                    MaxLines="1"
+                    PreviewDragOver="TextBox_HashValueOrFilePath_PreviewDragOver"
+                    PreviewDrop="TextBox_HashOrFilePath_PreviewDrop" />
+            </Grid>
             <Button
                 Grid.Column="3"
                 Margin="8,0,0,0"
