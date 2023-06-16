@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>使用帮助</title>
+    <title>文件哈希值批量计算器(HashCalculator)使用帮助</title>
     <style>
         body {
             font-size: 14px;
@@ -87,15 +87,20 @@
 
 <body>
     <div class="outerbox">
-        <div class="title">主要功能介绍</div>
+        <div class="title">文件哈希值批量计算器</div>
         <div class="jieshao">
-            此程序主要是为了大批量计算、批量校验文件的哈希值而设计，支持计算文件的 SHA1、SHA224、SHA256、SHA384、SHA512、MD5 哈希值，哈希值的输出方式可选择 Base64、16 进制大小写。
+            本软件是开源软件，遵守<a href="https://github.com/hrpzcf/HashCalculator/blob/main/LICENSE.txt" target="_blank"
+                rel="noreferrer noopener"> GNU General Public License v3.0 </a>开源协议，源代码托管在 <a
+                href="https://github.com/hrpzcf/HashCalculator" target="_blank" rel="noreferrer noopener">GitHub</a> 和
+            <a href="https://gitee.com/hrpzcf/HashCalculator" target="_blank" rel="noreferrer noopener">Gitee</a> 上。
+            <br />本软件主要是为了大批量计算、批量校验文件的哈希值而设计，支持计算文件的 SHA1、SHA224、SHA256、SHA384、SHA512、MD5 哈希值，哈希值的输出方式可选择 Base64、16
+            进制大小写。
             <br />
             <h5>适用用户：</h5>
             <ul>
+                <li>需要对文件夹下大量文件名混乱的文件计算哈希值以找出相同文件的用户</li>
                 <li>需要快速对一批文件生成哈希值并发布的用户</li>
                 <li>需要快速校验一批文件的哈希值是否与文件发布者公布的哈希值一致的用户</li>
-                <li>需要对文件夹下大量文件名混乱的文件计算哈希值以找出相同文件的用户</li>
                 <li>等等...</li>
             </ul>
         </div>
@@ -137,12 +142,9 @@
                             </li>
                             <li>
                                 <span id="importance" class="notice">请注意！！！</span>
-                                该包含&quot;文件哈希值-文件名&quot;的文本文件内容必须是通用排版格式，即每行都是
-                                <span class="code">
-                                    6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b
-                                    *文件名
-                                </span>
-                                这样的形式，否则本程序将无法解析该哈希值文件的内容并完成校验。其中哈希值不区分大小写，星号可有可无。
+                                该包含&quot;文件哈希值-文件名&quot;的文本文件内容必须是通用排版格式，即每行都是<span
+                                    class="code">6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b
+                                    *文件名</span>这样的形式，且文件编码是 UTF-8，否则本程序将无法解析该哈希值文件的内容并完成校验。其中哈希值不区分大小写，星号可有可无。
                             </li>
                         </ul>
                     <li>
@@ -213,8 +215,7 @@
                             class="steps">&quot;计算未完成项&quot;按钮：</span>根据&quot;默认哈希算法&quot;下拉列表所选算法，清空表格内容并重新计算表格中所有文件的哈希值。
                     </li>
                     <li>
-                        <span
-                            class="steps">&quot;全部重新计算&quot;按钮：</span>根据&quot;默认哈希算法&quot;下拉列表所选算法，重新计算表格中所有文件的哈希值。
+                        <span class="steps">&quot;全部重新计算&quot;按钮：</span>根据&quot;默认哈希算法&quot;下拉列表所选算法，重新计算表格中所有文件的哈希值。
                     </li>
                     <li>
                         <span
@@ -225,33 +226,33 @@
                             class="steps">&quot;刷新输出方式&quot;按钮：</span>以&quot;默认输出方式&quot;下拉列表选择的输出方式更新表格内所有行的&quot;输出方式&quot;列的哈希值显示方式。
                     </li>
                     <li>
-                        <span
-                            class="steps">&quot;继续所有任务&quot;按钮：</span>继续所有已暂停的哈希值计算任务。
+                        <span class="steps">&quot;继续所有任务&quot;按钮：</span>继续所有已暂停的哈希值计算任务。
                     </li>
                     <li>
-                        <span
-                            class="steps">&quot;暂停所有任务&quot;按钮：</span>暂停所有正在运行的哈希值计算任务（计算大量小文件时可能会暂停不成功，需要多次点击）。
+                        <span class="steps">&quot;暂停所有任务&quot;按钮：</span>暂停所有正在运行的哈希值计算任务（计算大量小文件时可能会暂停不成功，需要多次点击）。
                     </li>
                     <li>
-                        <span
-                            class="steps">&quot;取消所有任务&quot;按钮：</span>取消所有排队中、运行中和已暂停的哈希值计算任务。
+                        <span class="steps">&quot;取消所有任务&quot;按钮：</span>取消所有排队中、运行中和已暂停的哈希值计算任务。
                     </li>
                     <li>
-                        <span
-                            class="steps">&quot;切换窗口置顶&quot;按钮：</span>点击在 [置顶/非置顶] 之间切换主窗口置顶状态。
+                        <span class="steps">&quot;切换窗口置顶&quot;按钮：</span>点击以在 [置顶/非置顶] 之间切换主窗口置顶状态。
                     </li>
                     <li>
-                        <span
-                            class="steps">&quot;打开设置面板&quot;按钮：</span>点击打开设置面板...
+                        <span class="steps">&quot;打开设置面板&quot;按钮：</span>点击打开设置面板...
                     </li>
                     <li>
-                        <span
-                            class="steps">&quot;打开使用帮助&quot;按钮：</span>点击打开使用帮助页面...
+                        <span class="steps">&quot;打开使用帮助&quot;按钮：</span>点击打开使用帮助页面...
                     </li>
                     <li><span class="steps">主界面底部的&quot;表格中的项目总数&quot;图标：</span>紧跟的数字代表显示在表格中的文件总数量。</li>
-                    <li><span class="steps">主界面底部的&quot;本次待计算队列中的项目总数&quot;图标：</span>紧跟的数字代表选择或拖入文件/文件夹后计划运行的任务总数，包括排队中、正在计算、已成功、已取消、已失败的任务。</li>
-                    <li><span class="steps">主界面底部的&quot;本次待计算队列已完成的项目数&quot;图标：</span>紧跟的数字代表选择或拖入文件/文件夹后已结束的任务数，包括已成功、已取消、已失败的任务。</li>
-                    <li><span class="steps">主界面底部的&quot;校验依据类型&quot;下拉列表：</span>选择合适选项以指定&quot;校验依据&quot;输入框内的内容是单个哈希值还是校验依据文件的路径。</li>
+                    <li><span
+                            class="steps">主界面底部的&quot;本次待计算队列中的项目总数&quot;图标：</span>紧跟的数字代表选择或拖入文件/文件夹后计划运行的任务总数，包括排队中、正在计算、已成功、已取消、已失败的任务。
+                    </li>
+                    <li><span
+                            class="steps">主界面底部的&quot;本次待计算队列已完成的项目数&quot;图标：</span>紧跟的数字代表选择或拖入文件/文件夹后已结束的任务数，包括已成功、已取消、已失败的任务。
+                    </li>
+                    <li><span
+                            class="steps">主界面底部的&quot;校验依据类型&quot;下拉列表：</span>选择合适选项以指定&quot;校验依据&quot;输入框内的内容是单个哈希值还是校验依据文件的路径。
+                    </li>
                     <li><span class="steps">主界面底部的&quot;校验依据&quot;输入框：</span>用于输入要校验的哈希值或者 hashsums 校验依据文件的路径。</li>
                     <li>
                         <span class="steps">主界面底部的&quot;...&quot;按钮：</span>选择 hashsums 文件并将路径显示在&quot;校验依据&quot;输入框内。
@@ -260,6 +261,28 @@
                         <span class="steps">主界面底部的&quot;校验&quot;按钮：</span>以&quot;校验依据&quot;输入框的单个哈希值或 hashsums
                         文件内的哈希值为准，与表格中的文件计算出来的哈希值对比并将对比结果显示在表格中的&quot;校验结果&quot;列。
                     </li>
+                </ol>
+                <div class="tianchong"></div>
+            </li>
+            <li>
+                <div class="title2">右键菜单各个选项</div>
+                <ol>
+                    <li><span class="steps">打开文件：</span>以系统关联的打开方式打开选中的所有行对应的文件。</li>
+                    <li><span class="steps">打开位置：</span>打开资源管理器并在资源管理器中选择所有选中行对应的文件。</li>
+                    <li><span class="steps">复制路径：</span>将所有选中行对应的文件完整路径复制到剪贴板，复制后的格式是每行一个路径。</li>
+                    <li><span class="steps">复制哈希值</span>
+                        <ul>
+                            <li>Base64：将所有选中行的哈希结果复制为 Base64 字符串格式。</li>
+                            <li>十六进制大写： 将所有选中行的哈希结果复制为十六进制字符串格式，字母大写。</li>
+                            <li>十六进制小写： 将所有选中行的哈希结果复制为十六进制字符串格式，字母小写。</li>
+                        </ul>
+                    </li>
+                    <li><span class="steps">复制哈希值</span>将所有选中行的哈希结果复制为各行 <b>输出方式</b> 列指定的字符串格式，如果 <b>输出方式</b> 是
+                        <b>没有指定</b> 则复制为 <b>默认输出方式</b> 指定的格式。
+                    </li>
+                    <li><span class="steps">删除文件</span>将所有选中的行从表格移除并永久删除对应的文件，删除文件前会显示确认删除对话框。</li>
+                    <li><span class="steps">移除所选项</span>将所有选中的行从表格移除，此选项不会影响实际的文件。</li>
+                    <li><span class="steps">文件属性</span>分别打开所有选中文件的系统 <b>文件属性</b> 对话框，请勿选中过多数量，否则将打开大量文件属性对话框。</li>
                 </ol>
                 <div class="tianchong"></div>
             </li>
@@ -288,11 +311,13 @@
                     <li>
                         <span class="steps">使用快速校验时：</span>
                         <ul>
-                            <li><span class="steps">搜索依据所在目录的一代子文件：</span>只搜索与 hashsums 文件同级文件夹的文件。</li>
-                            <li><span class="steps">搜索依据所在目录的全部子文件：</span>搜索 hashsums 文件所在文件夹下所有层级的文件。</li>
+                            <li><span class="steps">搜索依据所在目录的一代子文件：</span>只搜索 hashsums 文件所在文件夹的直接子文件。</li>
+                            <li><span class="steps">搜索依据所在目录的全部子文件：</span>搜索 hashsums 文件所在文件夹下所有子孙文件夹的文件。</li>
                         </ul>
                     </li>
-                    <li><span class="steps">&quot;在校验结果的色块中显示文字描述&quot;：</span>读取默认设置并将设置面板各项设置重置为默认选项，但设置并不会生效。</li>
+                    <li><span
+                            class="steps">&quot;在校验结果的色块中显示文字描述&quot;：</span>在表格的&quot;校验结果列&quot;列的色块中显示不同颜色代表的含义的文字描述。
+                    </li>
                     <li><span class="steps">&quot;不显示“导出”列&quot;：</span>隐藏表格中的“导出”列以节省表格横向空间。</li>
                     <li><span class="steps">&quot;不显示“运行时长”列&quot;：</span>隐藏表格中的“运行时长”列以节省表格横向空间。</li>
                     <li><span class="steps">&quot;不显示“文件体积”列&quot;：</span>隐藏表格中的“文件体积”列以节省表格横向空间。</li>
@@ -310,7 +335,8 @@
                 <a href="https://www.52pojie.cn/thread-1671702-1-1.html" target="_blank">吾爱破解论坛</a> 向开发者反馈问题（需要登录）。
             </li>
             <li>
-                <span class="steps">在依据所在文件夹中找不到依据中列出的文件：</span>请确认依据文件 hashsums 是否与要被计算哈希值的文件在同一个文件夹。如果要被计算哈希值的文件在比 hashsums
+                <span class="steps">在依据所在文件夹中找不到依据中列出的文件：</span>请确认依据文件 hashsums 是否与要被计算哈希值的文件在同一个文件夹。如果要被计算哈希值的文件在比
+                hashsums
                 更深层的文件夹中，则请打开&quot;设置&quot;，检查&quot;当使用快速校验时&quot;是否选择了&quot;搜索依据所在目录的所有子文件&quot;选项。
             </li>
             <li><span class="steps">要计算哈希值的文件不存在或无法访问：</span>可能因为用户权限原因无法访问该要被计算哈希值的文件。</li>
@@ -319,10 +345,10 @@
         <div class="title">源代码贡献者（感谢所有贡献者）</div>
         <ul>
             <li>
-                <a href="https://github.com/hrpzcf" target="_blank">hrpzcf</a>
+                <a href="https://github.com/hrpzcf" target="_blank" rel="noreferrer noopener">hrpzcf</a>
             </li>
             <li>
-                <a href="https://github.com/lujiaxing" target="_blank">lujiaxing 阿星～</a>
+                <a href="https://github.com/lujiaxing" target="_blank" rel="noreferrer noopener">lujiaxing 阿星～</a>
             </li>
         </ul>
     </div>
