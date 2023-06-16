@@ -641,7 +641,8 @@ namespace HashCalculator
                     $"确定删除选中的 {count} 个文件吗？",
                     "提示",
                     MessageBoxButton.OKCancel,
-                    MessageBoxImage.Exclamation) != MessageBoxResult.OK)
+                    MessageBoxImage.Exclamation,
+                    MessageBoxResult.Cancel) != MessageBoxResult.OK)
                 {
                     return;
                 }
