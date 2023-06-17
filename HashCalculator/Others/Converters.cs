@@ -119,20 +119,36 @@ namespace HashCalculator
         {
             switch ((AlgoType)value)
             {
-                case AlgoType.SHA256:
-                    return "#640066FF";
                 case AlgoType.SHA1:
-                    return "#64FF0071";
-                case AlgoType.SHA224:
-                    return "#64331772";
-                case AlgoType.SHA384:
-                    return "#64FFBB33";
-                case AlgoType.SHA512:
-                    return "#64008B73";
-                case AlgoType.MD5:
-                    return "#64799B00";
-                default:
                     return "#64FF0000";
+                case AlgoType.SHA224:
+                    return "#64ff5900";
+                case AlgoType.SHA256:
+                    return "#64ff8900";
+                case AlgoType.SHA384:
+                    return "#64ffaa00";
+                case AlgoType.SHA512:
+                    return "#64ffc600";
+                case AlgoType.SHA3_224:
+                    return "#64ffe100";
+                case AlgoType.SHA3_256:
+                    return "#64ffff00";
+                case AlgoType.SHA3_384:
+                    return "#64bdf400";
+                case AlgoType.SHA3_512:
+                    return "#647ce700";
+                case AlgoType.MD5:
+                    return "#6400cc00";
+                case AlgoType.BLAKE2s:
+                    return "#642618b1";
+                case AlgoType.BLAKE2b:
+                    return "#641240ab";
+                case AlgoType.BLAKE3:
+                    return "#647109aa";
+                case AlgoType.Whirlpool:
+                    return "#6400a876";
+                default:
+                    return "#64A0A0A0";
             }
         }
 
@@ -146,11 +162,7 @@ namespace HashCalculator
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if ((AlgoType)value == AlgoType.Unknown)
-            {
-                return "-N/A-";
-            }
-            return value;
+            return AlgoMap.GetAlgoName((AlgoType)value);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -395,19 +407,27 @@ namespace HashCalculator
             AlgoType algoType = (AlgoType)value;
             switch (algoType)
             {
-                case AlgoType.SHA1:
-                    return 270D;
-                case AlgoType.SHA224:
-                    return 380D;
-                case AlgoType.SHA256:
-                    return 430D;
-                case AlgoType.SHA384:
-                    return 650D;
-                case AlgoType.SHA512:
-                    return 860D;
                 default:
                 case AlgoType.MD5:
-                    return 210D;
+                    return 220.0;
+                case AlgoType.SHA1:
+                    return 280.0;
+                case AlgoType.SHA224:
+                case AlgoType.SHA3_224:
+                    return 380.0;
+                case AlgoType.BLAKE2s:
+                case AlgoType.BLAKE3:
+                case AlgoType.SHA256:
+                case AlgoType.SHA3_256:
+                    return 440.0;
+                case AlgoType.SHA384:
+                case AlgoType.SHA3_384:
+                    return 660.0;
+                case AlgoType.BLAKE2b:
+                case AlgoType.SHA512:
+                case AlgoType.SHA3_512:
+                case AlgoType.Whirlpool:
+                    return 860.0;
             }
         }
 

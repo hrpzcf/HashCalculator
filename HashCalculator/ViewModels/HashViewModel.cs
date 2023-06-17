@@ -11,34 +11,6 @@ using System.Windows.Threading;
 
 namespace HashCalculator
 {
-    internal class BouncyCastSha224 : HashAlgorithm
-    {
-        private readonly Sha224Digest sha224digest;
-
-        public BouncyCastSha224()
-        {
-            this.sha224digest = new Sha224Digest();
-        }
-
-        public override void Initialize()
-        {
-            this.sha224digest?.Reset();
-        }
-
-        protected override void HashCore(byte[] array, int ibStart, int cbSize)
-        {
-            this.sha224digest.BlockUpdate(array, ibStart, cbSize);
-        }
-
-        protected override byte[] HashFinal()
-        {
-            int size = this.sha224digest.GetDigestSize();
-            byte[] sha224ComputeResult = new byte[size];
-            this.sha224digest.DoFinal(sha224ComputeResult, 0);
-            return sha224ComputeResult;
-        }
-    }
-
     internal class HashViewModel : NotifiableModel
     {
         #region properties for binding
@@ -49,7 +21,7 @@ namespace HashCalculator
         private long _fileSize = 0L;
         private long _progress = 0L;
         private long _progressTotal = 0L;
-        private AlgoType _hashName = AlgoType.Unknown;
+        private AlgoType _hashAlgoType = AlgoType.Unknown;
         private CmpRes _cmpResult = CmpRes.NoResult;
         private HashState _currentState = HashState.Waiting;
         private HashResult _currentResult = HashResult.NoResult;
@@ -156,15 +128,15 @@ namespace HashCalculator
             }
         }
 
-        public AlgoType HashName
+        public AlgoType HashAlgoType
         {
             get
             {
-                return this._hashName;
+                return this._hashAlgoType;
             }
             private set
             {
-                this.SetPropNotify(ref this._hashName, value);
+                this.SetPropNotify(ref this._hashAlgoType, value);
             }
         }
 
@@ -341,7 +313,7 @@ namespace HashCalculator
             {
                 if (this.restartModelSelfCmd is null)
                 {
-                    this.restartModelSelfCmd = 
+                    this.restartModelSelfCmd =
                         new RelayCommand(this.RestartModelSelfAction);
                 }
                 return this.restartModelSelfCmd;
@@ -359,7 +331,7 @@ namespace HashCalculator
             {
                 if (this.pauseOrContinueModelSelfCmd is null)
                 {
-                    this.pauseOrContinueModelSelfCmd = 
+                    this.pauseOrContinueModelSelfCmd =
                         new RelayCommand(this.PauseOrContinueModelSelfAction);
                 }
                 return this.pauseOrContinueModelSelfCmd;
@@ -394,7 +366,7 @@ namespace HashCalculator
             this.State = HashState.Waiting;
             this.Hash = null;
             this.Progress = this.ProgressTotal = 0;
-            this.HashName = AlgoType.Unknown;
+            this.HashAlgoType = AlgoType.Unknown;
         }
 
         public bool StartupModel(bool force)
@@ -500,7 +472,7 @@ namespace HashCalculator
             AlgoType algoType = Settings.Current.SelectedAlgo;
             AppDispatcher.Invoke(() =>
             {
-                this.HashName = algoType;
+                this.HashAlgoType = algoType;
                 this.State = HashState.Running;
             });
             if (this.isDeprecated)
@@ -537,21 +509,45 @@ namespace HashCalculator
                         case AlgoType.SHA1:
                             algoObject = new SHA1Cng();
                             break;
+                        case AlgoType.SHA224:
+                            algoObject = new BouncyCastleSha224Digest();
+                            break;
+                        default:
+                        case AlgoType.SHA256:
+                            algoObject = new SHA256Cng();
+                            break;
                         case AlgoType.SHA384:
                             algoObject = new SHA384Cng();
                             break;
                         case AlgoType.SHA512:
                             algoObject = new SHA512Cng();
                             break;
+                        case AlgoType.SHA3_224:
+                            algoObject = new BouncyCastleSha3Digest(224);
+                            break;
+                        case AlgoType.SHA3_256:
+                            algoObject = new BouncyCastleSha3Digest(256);
+                            break;
+                        case AlgoType.SHA3_384:
+                            algoObject = new BouncyCastleSha3Digest(384);
+                            break;
+                        case AlgoType.SHA3_512:
+                            algoObject = new BouncyCastleSha3Digest(512);
+                            break;
                         case AlgoType.MD5:
                             algoObject = new MD5Cng();
                             break;
-                        case AlgoType.SHA224:
-                            algoObject = new BouncyCastSha224();
+                        case AlgoType.BLAKE2s:
+                            algoObject = new BouncyCastleIDigest<Blake2sDigest>();
                             break;
-                        case AlgoType.SHA256:
-                        default:
-                            algoObject = new SHA256Cng();
+                        case AlgoType.BLAKE2b:
+                            algoObject = new BouncyCastleIDigest<Blake2bDigest>();
+                            break;
+                        case AlgoType.BLAKE3:
+                            algoObject = new BouncyCastleIDigest<Blake3Digest>();
+                            break;
+                        case AlgoType.Whirlpool:
+                            algoObject = new BouncyCastleIDigest<WhirlpoolDigest>();
                             break;
                     }
                     using (algoObject)

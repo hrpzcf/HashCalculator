@@ -8,8 +8,8 @@ namespace HashCalculator
     {
         private bool mainWndTopmost = false;
         private string lastUsedPath = string.Empty;
-        private double mainWndWidth = 800.0;
-        private double mainWndHeight = 600.0;
+        private double mainWndWidth = 1280.0;
+        private double mainWndHeight = 800.0;
         private double mainWndTop = double.NaN;
         private double mainWndLeft = double.NaN;
         private double settingsWndWidth = 400.0;
@@ -21,8 +21,6 @@ namespace HashCalculator
         private bool noExportColumn = false;
         private bool noDurationColumn = false;
         private bool noFileSizeColumn = false;
-        private readonly object algoSelectionLock = new object();
-        private readonly object outTypeSelectionLock = new object();
 
         public SettingsViewModel()
         {
@@ -130,17 +128,11 @@ namespace HashCalculator
         {
             get
             {
-                lock (this.algoSelectionLock)
-                {
-                    return this.selectedAlgorithm;
-                }
+                return this.selectedAlgorithm;
             }
             set
             {
-                lock (this.algoSelectionLock)
-                {
-                    this.selectedAlgorithm = value;
-                }
+                this.selectedAlgorithm = value;
             }
         }
 
@@ -148,17 +140,11 @@ namespace HashCalculator
         {
             get
             {
-                lock (this.outTypeSelectionLock)
-                {
-                    return this.selectedOutputType;
-                }
+                return this.selectedOutputType;
             }
             set
             {
-                lock (this.outTypeSelectionLock)
-                {
-                    this.selectedOutputType = value;
-                }
+                this.selectedOutputType = value;
             }
         }
 
@@ -245,14 +231,22 @@ namespace HashCalculator
         }
 
         [XmlIgnore]
-        public AlgoType[] AvailableAlgos { get; } =
+        public ControlItem[] AvailableAlgos { get; } =
         {
-            AlgoType.SHA1,
-            AlgoType.SHA224,
-            AlgoType.SHA256,
-            AlgoType.SHA384,
-            AlgoType.SHA512,
-            AlgoType.MD5,
+            new ControlItem(AlgoMap.GetAlgoName(AlgoType.SHA1), AlgoType.SHA1),
+            new ControlItem(AlgoMap.GetAlgoName(AlgoType.SHA224), AlgoType.SHA224),
+            new ControlItem(AlgoMap.GetAlgoName(AlgoType.SHA256), AlgoType.SHA256),
+            new ControlItem(AlgoMap.GetAlgoName(AlgoType.SHA384), AlgoType.SHA384),
+            new ControlItem(AlgoMap.GetAlgoName(AlgoType.SHA512), AlgoType.SHA512),
+            new ControlItem(AlgoMap.GetAlgoName(AlgoType.SHA3_224), AlgoType.SHA3_224),
+            new ControlItem(AlgoMap.GetAlgoName(AlgoType.SHA3_256), AlgoType.SHA3_256),
+            new ControlItem(AlgoMap.GetAlgoName(AlgoType.SHA3_384), AlgoType.SHA3_384),
+            new ControlItem(AlgoMap.GetAlgoName(AlgoType.SHA3_512), AlgoType.SHA3_512),
+            new ControlItem(AlgoMap.GetAlgoName(AlgoType.MD5), AlgoType.MD5),
+            new ControlItem(AlgoMap.GetAlgoName(AlgoType.BLAKE2s), AlgoType.BLAKE2s),
+            new ControlItem(AlgoMap.GetAlgoName(AlgoType.BLAKE2b), AlgoType.BLAKE2b),
+            new ControlItem(AlgoMap.GetAlgoName(AlgoType.BLAKE3), AlgoType.BLAKE3),
+            new ControlItem(AlgoMap.GetAlgoName(AlgoType.Whirlpool), AlgoType.Whirlpool),
         };
 
         [XmlIgnore]

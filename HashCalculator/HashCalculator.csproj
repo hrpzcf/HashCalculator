@@ -70,6 +70,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppLoading.cs" />
+    <Compile Include="Globals\AlgoMap.cs" />
+    <Compile Include="HashAlgos\BouncyCastleBlake2S.cs" />
+    <Compile Include="HashAlgos\BouncyCastleBlake2B.cs" />
+    <Compile Include="HashAlgos\BouncyCastleBlake3.cs" />
+    <Compile Include="HashAlgos\BouncyCastleIDigest.cs" />
     <Compile Include="Globals\Settings.cs" />
     <Compile Include="Others\CommonExts.cs" />
     <Compile Include="Others\NativeFunctions.cs" />
@@ -80,6 +85,8 @@
     <Compile Include="Others\PathPackage.cs" />
     <Compile Include="Others\RelayCommand.cs" />
     <Compile Include="Others\CommonUtils.cs" />
+    <Compile Include="HashAlgos\BouncyCastleSha3Digest.cs" />
+    <Compile Include="HashAlgos\BouncyCastleSha224Digest.cs" />
     <Compile Include="ViewModels\MainWndViewModel.cs" />
     <Compile Include="Others\Converters.cs" />
     <Compile Include="Others\Enumerates.cs" />

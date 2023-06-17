@@ -114,12 +114,20 @@
     /// </summary>
     public enum AlgoType
     {
-        SHA256,
         SHA1,
         SHA224,
+        SHA256,
         SHA384,
         SHA512,
+        SHA3_224,
+        SHA3_256,
+        SHA3_384,
+        SHA3_512,
         MD5,
+        BLAKE2s,
+        BLAKE2b,
+        BLAKE3,
+        Whirlpool,
         Unknown = -1,
     }
 

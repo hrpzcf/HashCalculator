@@ -64,10 +64,12 @@
                 Content="默认哈希算法:" />
             <ComboBox
                 Grid.Column="1"
-                Width="80"
+                Width="100"
                 VerticalAlignment="Center"
+                DisplayMemberPath="Display"
                 ItemsSource="{Binding Source={x:Static local:Settings.Current}, Path=AvailableAlgos}"
                 SelectedValue="{Binding Source={x:Static local:Settings.Current}, Path=SelectedAlgo}"
+                SelectedValuePath="ItemValue"
                 Style="{StaticResource ComboBoxStyle1}"
                 ToolTip="此选项影响新加入的文件、[新增哈希计算] 按钮、[计算未完成项] 按钮、[全部重新计算] 按钮的结果" />
             <Label
@@ -77,7 +79,7 @@
                 Content="默认输出方式:" />
             <ComboBox
                 Grid.Column="3"
-                Width="106"
+                Width="110"
                 VerticalAlignment="Center"
                 DisplayMemberPath="Display"
                 ItemsSource="{Binding Source={x:Static local:Settings.Current}, Path=AvailableOutputTypes}"
@@ -330,7 +332,7 @@
                 <DataGridTemplateColumn
                     CanUserSort="True"
                     Header="算法"
-                    SortMemberPath="HashName">
+                    SortMemberPath="HashAlgoType">
                     <DataGridTemplateColumn.HeaderStyle>
                         <Style TargetType="{x:Type DataGridColumnHeader}">
                             <Setter Property="HorizontalContentAlignment" Value="Center" />
@@ -343,10 +345,10 @@
                                 Padding="4,2,4,2"
                                 HorizontalContentAlignment="Center"
                                 VerticalContentAlignment="Center"
-                                Background="{Binding HashName, Converter={StaticResource AlgoTypeBgCvt}}"
+                                Background="{Binding HashAlgoType, Converter={StaticResource AlgoTypeBgCvt}}"
                                 BorderBrush="#FF0091FF"
                                 BorderThickness="1"
-                                Content="{Binding HashName, Converter={StaticResource AlgoTypeNameCvt}}" />
+                                Content="{Binding HashAlgoType, Converter={StaticResource AlgoTypeNameCvt}}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -378,7 +380,7 @@
                                 <!--  ProgressBar的Value绑定需是OneWay，因为默认TwoWay和private set的Progress无法成功绑定  -->
                                 <ProgressBar
                                     Grid.Column="0"
-                                    Width="{Binding HashName, Converter={StaticResource SubProgressWidthCvt}}"
+                                    Width="{Binding HashAlgoType, Converter={StaticResource SubProgressWidthCvt}}"
                                     Height="6"
                                     Margin="4,0,4,0"
                                     HorizontalAlignment="Left"
