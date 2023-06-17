@@ -21,7 +21,7 @@ namespace HashCalculator
                 { AlgoType.BLAKE2s, "BLAKE2s"},
                 { AlgoType.BLAKE3, "BLAKE3"},
                 { AlgoType.Whirlpool, "Whirlpool"},
-                { AlgoType.Unknown, "- N/A -"},
+                { AlgoType.Unknown, "-N/A-"},
             };
 
         public static string GetAlgoName(AlgoType algoType)

@@ -780,12 +780,13 @@ namespace HashCalculator
                 {
                     foreach (HashViewModel hm in HashViewModels)
                     {
-                        if (hm.IsSucceeded && hm.Export)
+                        if (!(hm.IsSucceeded && hm.Export))
                         {
-                            string hash = HashBytesOutputTypeCvt.Convert(
-                                hm.Hash, Settings.Current.SelectedOutputType) as string;
-                            sw.WriteLine($"{hash} *{hm.FileName}");
+                            continue;
                         }
+                        string hash = HashBytesOutputTypeCvt.Convert(
+                                hm.Hash, Settings.Current.SelectedOutputType) as string;
+                        sw.WriteLine($"#{AlgoMap.GetAlgoName(hm.HashAlgoType)} *{hash} *{hm.FileName}");
                     }
                 }
             }
