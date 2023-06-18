@@ -1,5 +1,12 @@
 # 【文件哈希值批量计算器】更新日志
 
+# 版本：v4.1.0，2023/6/18
+1. 添加算法选项：SHA3 系列、BLAKE2s(256bit)、BLAKE2b(512bit)、BLAKE3(256bit)、Whirlpool
+2. 导出哈希值文本格式更改：每行前增加算法名称，如：`#SHA-1 *hash-string *file-name`
+3. 校验依据文件读取逻辑更新：同时支持旧版和新版导出格式的文件
+    - 旧版依据文件行格式：hash-string *file-name
+    - 新版依据文件行格式：#SHA-1 *hash-string *file-name
+
 # 版本：v4.0.0，2023/6/16
 1. 添加 "输出方式" 下拉框; 在 Grid 中添加 "文件体积" 列; 删除设置界面的 "大小写" 设置 [@lujiaxing](https://github.com/lujiaxing)
 2. 优化“导出”列的复选框总是需要点击两次才能更改选中状态的问题
