@@ -332,9 +332,6 @@
                             BasedOn="{StaticResource CellStyleNormal}"
                             TargetType="{x:Type DataGridCell}">
                             <Setter Property="ToolTip" Value="{Binding FileInfo}" />
-                            <Setter Property="ToolTipService.ShowDuration" Value="6000" />
-                            <Setter Property="ToolTipService.BetweenShowDelay" Value="0" />
-                            <Setter Property="ToolTipService.InitialShowDelay" Value="0" />
                         </Style>
                     </DataGridTextColumn.CellStyle>
                 </DataGridTextColumn>
@@ -385,9 +382,6 @@
                                     VerticalAlignment="Center"
                                     Text="{Binding HashString}"
                                     ToolTip="{Binding ModelDetails}"
-                                    ToolTipService.BetweenShowDelay="0"
-                                    ToolTipService.InitialShowDelay="0"
-                                    ToolTipService.ShowDuration="60000"
                                     Visibility="{Binding State, Converter={StaticResource SubBtnVisiblityFinishedCvt}}" />
                                 <!--  正在计算状态  -->
                                 <!--  ProgressBar的Value绑定需是OneWay，因为默认TwoWay和private set的Progress无法成功绑定  -->
