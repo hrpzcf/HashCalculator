@@ -732,19 +732,19 @@ namespace HashCalculator
         {
             if (!(bytes is byte[] hashBytes) || !hashBytes.Any())
             {
-                return string.Empty; // 返回值可能被复制所以不返回 null，下同
+                return string.Empty;
             }
             switch ((OutputType)outputType)
             {
                 default:
                 case OutputType.BinaryUpper:
-                    return CommonUtils.ToHexString(hashBytes);
+                    return CommonUtils.ToHexStringUpper(hashBytes);
                 case OutputType.BinaryLower:
-                    return CommonUtils.ToHexString(hashBytes).ToLower();
+                    return CommonUtils.ToHexStringLower(hashBytes);
                 case OutputType.BASE64:
                     return System.Convert.ToBase64String(hashBytes);
                 case OutputType.Unknown:
-                    return string.Empty;
+                    return string.Empty;  // 返回值可能被复制所以不返回 null，上同
             }
         }
 

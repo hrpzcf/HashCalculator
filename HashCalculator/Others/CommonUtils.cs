@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -140,13 +141,13 @@ namespace HashCalculator
         //    }
         //}
 
-        public static string ToBase64String(byte[] inputBytes)
+        public static string ToBase64String(byte[] bytesPassedIn)
         {
-            if (inputBytes is null)
+            if (bytesPassedIn is null)
             {
                 return default;
             }
-            return Convert.ToBase64String(inputBytes);
+            return Convert.ToBase64String(bytesPassedIn);
         }
 
         public static byte[] FromBase64String(string base64String)
@@ -165,16 +166,27 @@ namespace HashCalculator
             }
         }
 
-        public static string ToHexString(byte[] inputBytes)
+        public static string ToHexStringUpper(byte[] bytesPassedIn)
         {
-            if (inputBytes is null)
+            return ToHexString(bytesPassedIn, "X2");
+        }
+
+        public static string ToHexStringLower(byte[] bytesPassedIn)
+        {
+            return ToHexString(bytesPassedIn, "x2");
+        }
+
+        private static string ToHexString(byte[] bytesPassedIn, string format)
+        {
+            Debug.Assert(new string[] { "x2", "X2"}.Contains(format));
+            if (bytesPassedIn is null)
             {
                 return default;
             }
-            StringBuilder stringBuilder = new StringBuilder(inputBytes.Length * 2);
-            for (int i = 0; i < inputBytes.Length; ++i)
+            StringBuilder stringBuilder = new StringBuilder(bytesPassedIn.Length * 2);
+            for (int i = 0; i < bytesPassedIn.Length; ++i)
             {
-                stringBuilder.Append(inputBytes[i].ToString("X2"));
+                stringBuilder.Append(bytesPassedIn[i].ToString(format));
             }
             return stringBuilder.ToString();
         }
@@ -200,7 +212,7 @@ namespace HashCalculator
             return resultBytes;
         }
 
-        public static byte[] GuessFromAnyHashString(string hashString)
+        public static byte[] HashFromAnyString(string hashString)
         {
             if (FromHexString(hashString) is byte[] bytesGuessFromHex)
             {

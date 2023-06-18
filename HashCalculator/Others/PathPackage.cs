@@ -77,9 +77,9 @@ namespace HashCalculator
                                     yield return new ModelArg(hash, fileInfo.FullName);
                                 }
                             }
-                            foreach (string fname in this.hashBasis.NameHashMap.Keys)
+                            foreach (string fname in this.hashBasis.FileHashDict.Keys)
                             {
-                                if (!this.hashBasis.NameHashMap[fname].IsExplored)
+                                if (!this.hashBasis.FileHashDict[fname].IsExplored)
                                 {
                                     yield return new ModelArg(fname, true);
                                 }
