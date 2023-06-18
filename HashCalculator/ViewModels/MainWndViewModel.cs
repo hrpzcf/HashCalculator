@@ -60,6 +60,7 @@ namespace HashCalculator
         private RelayCommand deleteSelectedModelsFileCmd;
         private RelayCommand removeSelectedModelsCmd;
         private ControlItem[] copyModelsHashMenuCmds;
+        private ControlItem[] hashModelTasksCtrlCmds;
 
         public MainWndViewModel()
         {
@@ -1123,6 +1124,55 @@ namespace HashCalculator
                     this.continueDisplayedModelsCmd = new RelayCommand(this.ContinueDisplayedModelsAction);
                 }
                 return this.continueDisplayedModelsCmd;
+            }
+        }
+
+        private void PauseSelectedModelsAction(object param)
+        {
+            if (param is IList selectedModels)
+            {
+                foreach (HashViewModel model in selectedModels)
+                {
+                    model.PauseOrContinueModel(PauseMode.Pause);
+                }
+            }
+        }
+
+        private void CancelSelectedModelsAction(object param)
+        {
+            if (param is IList selectedModels)
+            {
+                foreach (HashViewModel model in selectedModels)
+                {
+                    model.ShutdownModel();
+                }
+            }
+        }
+
+        private void ContinueSelectedModelsAction(object param)
+        {
+            if (param is IList selectedModels)
+            {
+                foreach (HashViewModel model in selectedModels)
+                {
+                    model.PauseOrContinueModel(PauseMode.Continue);
+                }
+            }
+        }
+
+        public ControlItem[] HashModelTasksCtrlCmds
+        {
+            get
+            {
+                if (this.hashModelTasksCtrlCmds is null)
+                {
+                    this.hashModelTasksCtrlCmds = new ControlItem[] {
+                        new ControlItem("继续", new RelayCommand(this.ContinueSelectedModelsAction)),
+                        new ControlItem("暂停", new RelayCommand(this.PauseSelectedModelsAction)),
+                        new ControlItem("取消", new RelayCommand(this.CancelSelectedModelsAction)),
+                    };
+                }
+                return this.hashModelTasksCtrlCmds;
             }
         }
     }
