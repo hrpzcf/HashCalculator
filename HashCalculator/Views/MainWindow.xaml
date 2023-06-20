@@ -564,35 +564,24 @@
                 <Image
                     VerticalAlignment="Center"
                     Source="/Images/list_count_16.png"
-                    ToolTip="表格中的项目总数" />
+                    ToolTip="表格中的总行数" />
                 <TextBlock
                     Margin="4,0,0,0"
                     VerticalAlignment="Center"
                     Foreground="Gray"
                     Text="{Binding Source={x:Static local:MainWndViewModel.HashViewModels}, Path=Count}"
-                    ToolTip="表格中的项目总数" />
+                    ToolTip="表格中的总行数" />
                 <Image
                     Margin="12,0,0,0"
                     VerticalAlignment="Center"
-                    Source="/Images/totalnum_16.png"
-                    ToolTip="本次待计算队列中的项目总数" />
+                    Source="/Images/remaining_16.png"
+                    ToolTip="剩余哈希计算任务数" />
                 <TextBlock
                     Margin="4,0,0,0"
                     VerticalAlignment="Center"
                     Foreground="Gray"
-                    Text="{Binding TotalNumberInQueue}"
-                    ToolTip="本次待计算队列中的项目总数" />
-                <Image
-                    Margin="12,0,0,0"
-                    VerticalAlignment="Center"
-                    Source="/Images/finished_16.png"
-                    ToolTip="本次待计算队列已完成的项目数" />
-                <TextBlock
-                    Margin="4,0,0,0"
-                    VerticalAlignment="Center"
-                    Foreground="Gray"
-                    Text="{Binding FinishedInQueue}"
-                    ToolTip="本次待计算队列已完成的项目数" />
+                    Text="{Binding TobeComputedModelsCount}"
+                    ToolTip="剩余哈希计算任务数" />
             </StackPanel>
             <TextBlock
                 Grid.Column="1"

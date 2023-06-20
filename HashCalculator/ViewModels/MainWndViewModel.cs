@@ -27,16 +27,15 @@ namespace HashCalculator
         private delegate void AddModelDelegate(ModelArg arg);
         private readonly AddModelDelegate addModelAction;
         private volatile int serial = 0;
-        private int finishedNumberInQueue = 0;
-        private int totalNumberInQueue = 0;
+        private int tobeComputedModelsCount = 0;
         private CancellationTokenSource _cancellation = new CancellationTokenSource();
         private List<ModelArg> displayedFiles = new List<ModelArg>();
         private string hashCheckReport = string.Empty;
         private QueueState queueState = QueueState.None;
-        private readonly object changeQueueCountLock = new object();
         private readonly object changeTaskNumberLock = new object();
         private readonly object displayingModelLock = new object();
         private readonly object displayModelRequestLock = new object();
+        private readonly object tobeComputedModelsCountLock = new object();
         private RelayCommand mainWindowTopmostCmd;
         private RelayCommand clearAllTableLinesCmd;
         private RelayCommand exportAsTextFileCmd;
@@ -116,27 +115,15 @@ namespace HashCalculator
             }
         }
 
-        public int TotalNumberInQueue
+        public int TobeComputedModelsCount
         {
             get
             {
-                return this.totalNumberInQueue;
+                return this.tobeComputedModelsCount;
             }
             set
             {
-                this.SetPropNotify(ref this.totalNumberInQueue, value);
-            }
-        }
-
-        public int FinishedInQueue
-        {
-            get
-            {
-                return this.finishedNumberInQueue;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.finishedNumberInQueue, value);
+                this.SetPropNotify(ref this.tobeComputedModelsCount, value);
             }
         }
 
@@ -172,40 +159,25 @@ namespace HashCalculator
 
         private void ModelCapturedAction(HashViewModel model)
         {
-            lock (this.changeQueueCountLock)
+            lock (this.tobeComputedModelsCountLock)
             {
-                ++this.TotalNumberInQueue;
-                this.QueueItemCountChanged();
+                if (this.TobeComputedModelsCount++ != 0)
+                {
+                    return;
+                }
+                synchronization.Invoke(() => { this.State = QueueState.Started; });
             }
         }
 
         private void ModelReleasedAction(HashViewModel model)
         {
-            lock (this.changeQueueCountLock)
+            lock (this.tobeComputedModelsCountLock)
             {
-                ++this.FinishedInQueue;
-                this.QueueItemCountChanged();
-            }
-        }
-
-        private void QueueItemCountChanged()
-        {
-            if (this.FinishedInQueue != this.TotalNumberInQueue
-                && this.State != QueueState.Started)
-            {
-                synchronization.Invoke(() =>
+                if (--this.TobeComputedModelsCount != 0)
                 {
-                    this.State = QueueState.Started;
-                });
-            }
-            else if (this.FinishedInQueue == this.TotalNumberInQueue
-                && this.State != QueueState.Stopped)
-            {
-                synchronization.Invoke(() =>
-                {
-                    this.FinishedInQueue = this.TotalNumberInQueue = 0;
-                    this.State = QueueState.Stopped;
-                });
+                    return;
+                }
+                synchronization.Invoke(() => { this.State = QueueState.Stopped; });
             }
         }
 

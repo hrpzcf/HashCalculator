@@ -227,16 +227,13 @@
     <Resource Include="Images\output_type_32.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\finished_16.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\totalnum_16.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\list_count_16.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\refresh_output_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\remaining_16.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
