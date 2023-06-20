@@ -18,7 +18,7 @@ namespace HashCalculator
 
         public static IntPtr WndHandle { get; private set; }
 
-        public static ScrollViewer DataGridScroll { get; private set; }
+        //public static ScrollViewer DataGridScroll { get; private set; }
 
         public MainWindow()
         {
@@ -26,7 +26,6 @@ namespace HashCalculator
             this.viewModel.Parent = this;
             this.DataContext = this.viewModel;
             this.Loaded += this.MainWindowLoaded;
-            this.viewModel.ChangeTaskNumber(Settings.Current.SelectedTaskNumberLimit);
             this.InitializeComponent();
             this.Title = $"{Info.Title} v{Info.Ver} by {Info.Author} @ {Info.Published}";
         }
@@ -34,10 +33,10 @@ namespace HashCalculator
         private void MainWindowLoaded(object sender, RoutedEventArgs e)
         {
             WndHandle = new WindowInteropHelper(this).Handle;
-            if (VisualTreeHelper.GetChild(this.uiDataGrid_HashFiles, 0) is Border border)
-            {
-                DataGridScroll = border.Child as ScrollViewer;
-            }
+            //if (VisualTreeHelper.GetChild(this.uiDataGrid_HashFiles, 0) is Border border)
+            //{
+            //    DataGridScroll = border.Child as ScrollViewer;
+            //}
         }
 
         private void DataGrid_FilesToCalculate_Drop(object sender, DragEventArgs e)

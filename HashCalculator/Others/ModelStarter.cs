@@ -6,123 +6,96 @@ using System.Threading.Tasks;
 
 namespace HashCalculator
 {
-    internal class TaskKeeper
-    {
-        private CancellationTokenSource source;
-        private Task task;
-        private readonly Action<CancellationToken> process;
+    internal delegate bool RefMethod(ref CancellationToken token);
 
-        public TaskKeeper(Action<CancellationToken> process)
+    internal class HashTask
+    {
+        public HashTask(Action<CancellationToken, RefMethod> process)
         {
             this.process = process;
         }
 
-        public void Reset()
+        private bool Refresh(ref CancellationToken token)
         {
-            if (this.IsAlive())
-            {
-                return;
-            }
-            this.source = new CancellationTokenSource();
-            this.task = Task.Factory.StartNew(
-                () => { this.process(this.source.Token); },
-                this.source.Token,
-                TaskCreationOptions.LongRunning,
-                TaskScheduler.Default);
+            this.tokenSource = new CancellationTokenSource();
+            token = this.tokenSource.Token;
+            return true;
         }
 
-        public void Cancel()
+        public void Startup()
         {
-            if (this.source == null || this.task == null)
-            {
-                return;
-            }
-            this.source.Cancel();
-            this.task.Wait();
-            this.source.Dispose();
-            this.task = null;
-            this.source = null;
+            this.tokenSource = new CancellationTokenSource();
+            Task.Factory.StartNew(() =>
+                {
+                    this.process(
+                        this.tokenSource.Token, this.Refresh);
+                },
+                this.tokenSource.Token,
+                TaskCreationOptions.LongRunning, TaskScheduler.Default);
+        }
+
+        public void Shutdown()
+        {
+            this.tokenSource?.Cancel();
         }
 
         public bool IsAlive()
         {
-            return this.source != null && this.task != null;
+            return this.tokenSource != null && !this.tokenSource.IsCancellationRequested;
         }
+
+        private CancellationTokenSource tokenSource;
+        private readonly Action<CancellationToken, RefMethod> process;
     }
 
     internal class ModelStarter
     {
-        private readonly int maxLength;
-        private readonly BlockingCollection<HashViewModel> queue
-            = new BlockingCollection<HashViewModel>();
-        private readonly TaskKeeper[] keepers;
-
-        public ModelStarter(int maxLength)
+        public ModelStarter(int initCount, int maxCount)
         {
-            this.maxLength = maxLength < 1 ? 1 : maxLength;
-            this.keepers = new TaskKeeper[maxLength];
-            for (int i = 0; i < maxLength; ++i)
+            this.maxCount = maxCount < 1 ? 1 : maxCount;
+            this.hashTasks = new HashTask[maxCount];
+            for (int i = 0; i < maxCount; ++i)
             {
-                this.keepers[i] = new TaskKeeper(this.ModelWatcher);
+                this.hashTasks[i] = new HashTask(this.HashProcess);
             }
+            this.BeginAdjust(initCount);
         }
 
-        public void Adjust(int number)
+        public async void BeginAdjust(int count)
         {
-            if (number < 1 || number > this.maxLength)
+            await Task.Run(() =>
             {
-                return;
-            }
-            int count = this.Count;
-            if (count < number)
-            {
-                int remaining = number - count;
-                foreach (TaskKeeper tk in this.keepers)
+                if (count < 1 || count > this.maxCount)
                 {
-                    if (!tk.IsAlive())
-                    {
-                        tk.Reset();
-                        --remaining;
-                    }
-                    if (remaining <= 0)
-                    {
-                        break;
-                    }
+                    return;
                 }
-            }
-            else if (count > number)
-            {
-                int remaining = count - number;
-                foreach (TaskKeeper tk in this.keepers)
+                Monitor.Enter(this.changeCountLock);
+                this.targetCount = count;
+                if (this.taskCount < this.targetCount)
                 {
-                    if (tk.IsAlive())
+                    int remaining = this.targetCount - this.taskCount;
+                    foreach (HashTask mt in this.hashTasks)
                     {
-                        tk.Cancel();
-                        --remaining;
-                    }
-                    if (remaining <= 0)
-                    {
-                        break;
+                        if (mt.IsAlive())
+                        {
+                            continue;
+                        }
+                        mt.Startup();
+                        if (--remaining <= 0)
+                        {
+                            break;
+                        }
                     }
                 }
-            }
-        }
-
-        private void ModelWatcher(CancellationToken ct)
-        {
-            HashViewModel m;
-            while (!ct.IsCancellationRequested)
-            {
-                try
+                else if (this.taskCount > this.targetCount)
                 {
-                    m = this.queue.Take(ct);
+                    foreach (HashTask mt in this.hashTasks)
+                    {
+                        mt.Shutdown();
+                    }
                 }
-                catch (OperationCanceledException)
-                {
-                    break;
-                }
-                m.ComputeManyHashValue();
-            }
+                Monitor.Exit(this.changeCountLock);
+            });
         }
 
         public void PendingModel(HashViewModel model)
@@ -138,9 +111,37 @@ namespace HashCalculator
             this.queue.Add(model);
         }
 
-        public int Count
+        private void HashProcess(CancellationToken token, RefMethod refreshCancellationToken)
         {
-            get { return this.keepers.Count(i => i.IsAlive()); }
+            ++this.taskCount;
+            while (true)
+            {
+                Monitor.Enter(this.changeCountLock);
+                if (this.targetCount < this.taskCount)
+                {
+                    --this.taskCount;
+                    Monitor.Exit(this.changeCountLock);
+                    break;
+                }
+                else if (token.IsCancellationRequested)
+                {
+                    refreshCancellationToken(ref token);
+                }
+                Monitor.Exit(this.changeCountLock);
+                try
+                {
+                    HashViewModel mmodel = this.queue.Take(token);
+                    mmodel.ComputeManyHashValue();
+                }
+                catch (OperationCanceledException) { }
+            }
         }
+
+        private readonly int maxCount;
+        private int taskCount = 0;
+        private int targetCount = 0;
+        private readonly object changeCountLock = new object();
+        private readonly HashTask[] hashTasks;
+        private readonly BlockingCollection<HashViewModel> queue = new BlockingCollection<HashViewModel>();
     }
 }

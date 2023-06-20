@@ -104,10 +104,10 @@
     /// </summary>
     public enum TaskNum
     {
-        One,
-        Two,
-        Four,
-        Eight,
+        One = 1,
+        Two = 2,
+        Four = 4,
+        Eight = 8,
     }
 
     /// <summary>

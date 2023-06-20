@@ -21,7 +21,8 @@ namespace HashCalculator
     internal class MainWndViewModel : NotifiableModel
     {
         private readonly Basis MainBasis = new Basis();
-        private readonly ModelStarter starter = new ModelStarter(8);
+        private readonly ModelStarter starter =
+            new ModelStarter((int)Settings.Current.SelectedTaskNumberLimit, 8);
         private static readonly Dispatcher synchronization =
             Application.Current.Dispatcher;
         private delegate void AddModelDelegate(ModelArg arg);
@@ -32,7 +33,6 @@ namespace HashCalculator
         private List<ModelArg> displayedFiles = new List<ModelArg>();
         private string hashCheckReport = string.Empty;
         private QueueState queueState = QueueState.None;
-        private readonly object changeTaskNumberLock = new object();
         private readonly object displayingModelLock = new object();
         private readonly object displayModelRequestLock = new object();
         private readonly object tobeComputedModelsCountLock = new object();
@@ -181,28 +181,6 @@ namespace HashCalculator
             }
         }
 
-        public void ChangeTaskNumber(TaskNum num)
-        {
-            lock (this.changeTaskNumberLock)
-            {
-                switch (num)
-                {
-                    case TaskNum.One:
-                        this.starter.Adjust(1);
-                        break;
-                    case TaskNum.Two:
-                        this.starter.Adjust(2);
-                        break;
-                    case TaskNum.Four:
-                        this.starter.Adjust(4);
-                        break;
-                    case TaskNum.Eight:
-                        this.starter.Adjust(8);
-                        break;
-                }
-            }
-        }
-
         public async void BeginDisplayModels(IEnumerable<ModelArg> args)
         {
             CancellationToken token;
@@ -304,10 +282,7 @@ namespace HashCalculator
         {
             if (e.PropertyName == nameof(Settings.Current.SelectedTaskNumberLimit))
             {
-                Task.Run(() =>
-                {
-                    this.ChangeTaskNumber(Settings.Current.SelectedTaskNumberLimit);
-                });
+                this.starter.BeginAdjust((int)Settings.Current.SelectedTaskNumberLimit);
             }
         }
 
