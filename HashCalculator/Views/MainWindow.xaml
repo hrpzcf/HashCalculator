@@ -255,6 +255,18 @@
                             </Style>
                         </MenuItem.ItemContainerStyle>
                     </MenuItem>
+                    <MenuItem
+                        Header="计算控制"
+                        IsEnabled="{Binding Source={x:Static local:MainWndViewModel.HashViewModels}, Path=Count, Converter={StaticResource QuantityBasedEnabledMenuCvt}}"
+                        ItemsSource="{Binding HashModelsCalculationCmds}">
+                        <MenuItem.ItemContainerStyle>
+                            <Style TargetType="MenuItem">
+                                <Setter Property="Header" Value="{Binding Display}" />
+                                <Setter Property="Command" Value="{Binding ItemValue}" />
+                                <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}" />
+                            </Style>
+                        </MenuItem.ItemContainerStyle>
+                    </MenuItem>
                     <Separator />
                     <MenuItem
                         Command="{Binding CopyFilesFullPathCmd}"

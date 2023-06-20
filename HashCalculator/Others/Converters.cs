@@ -196,8 +196,7 @@ namespace HashCalculator
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            HashState state = (HashState)value;
-            if (state == HashState.Running)
+            if ((HashState)value == HashState.Running)
             {
                 return "暂停...";
             }
@@ -222,8 +221,7 @@ namespace HashCalculator
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            HashState state = (HashState)value;
-            if (state == HashState.Running)
+            if ((HashState)value == HashState.Running)
             {
                 return this.paused;
             }

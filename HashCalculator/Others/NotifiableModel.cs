@@ -7,10 +7,12 @@ namespace HashCalculator
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public void SetPropNotify<T>(
-            ref T property,
-            T value,
-            [CallerMemberName] string name = null)
+        public void NotifyPropertyChanged([CallerMemberName] string name = null)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+        public void SetPropNotify<T>(ref T property, T value, [CallerMemberName] string name = null)
         {
             property = value;
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));

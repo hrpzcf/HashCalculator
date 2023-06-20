@@ -22,8 +22,8 @@ namespace HashCalculator
     {
         private readonly Basis MainBasis = new Basis();
         private readonly ModelStarter starter = new ModelStarter(8);
-        private static readonly Dispatcher AppDispatcher
-            = Application.Current.Dispatcher;
+        private static readonly Dispatcher synchronization =
+            Application.Current.Dispatcher;
         private delegate void AddModelDelegate(ModelArg arg);
         private readonly AddModelDelegate addModelAction;
         private volatile int serial = 0;
@@ -61,6 +61,7 @@ namespace HashCalculator
         private RelayCommand removeSelectedModelsCmd;
         private ControlItem[] copyModelsHashMenuCmds;
         private ControlItem[] hashModelTasksCtrlCmds;
+        private ControlItem[] hashModelsCalculationCmds;
 
         public MainWndViewModel()
         {
@@ -104,7 +105,7 @@ namespace HashCalculator
                     || this.queueState == QueueState.Stopped)
                     && value == QueueState.Started)
                 {
-                    AppDispatcher.Invoke(() => { this.Report = string.Empty; });
+                    synchronization.Invoke(() => { this.Report = string.Empty; });
                     this.SetPropNotify(ref this.queueState, value);
                 }
                 else if (this.queueState == QueueState.Started && value == QueueState.Stopped)
@@ -189,15 +190,10 @@ namespace HashCalculator
 
         private void QueueItemCountChanged()
         {
-#if DEBUG
-            Console.WriteLine(
-                $"已完成任务：{this.FinishedInQueue}，"
-                + $"总数：{this.TotalNumberInQueue}");
-#endif
             if (this.FinishedInQueue != this.TotalNumberInQueue
                 && this.State != QueueState.Started)
             {
-                AppDispatcher.Invoke(() =>
+                synchronization.Invoke(() =>
                 {
                     this.State = QueueState.Started;
                 });
@@ -205,7 +201,7 @@ namespace HashCalculator
             else if (this.FinishedInQueue == this.TotalNumberInQueue
                 && this.State != QueueState.Stopped)
             {
-                AppDispatcher.Invoke(() =>
+                synchronization.Invoke(() =>
                 {
                     this.FinishedInQueue = this.TotalNumberInQueue = 0;
                     this.State = QueueState.Stopped;
@@ -253,7 +249,7 @@ namespace HashCalculator
                             break;
                         }
                         this.displayedFiles.Add(arg);
-                        AppDispatcher.Invoke(this.addModelAction, arg);
+                        synchronization.Invoke(this.addModelAction, arg);
                         Thread.Yield();
                     }
                 }
@@ -278,7 +274,7 @@ namespace HashCalculator
                             break;
                         }
                         this.displayedFiles.Add(arg);
-                        AppDispatcher.Invoke(this.addModelAction, arg);
+                        synchronization.Invoke(this.addModelAction, arg);
                         Thread.Yield();
                     }
 
@@ -1167,12 +1163,59 @@ namespace HashCalculator
                 if (this.hashModelTasksCtrlCmds is null)
                 {
                     this.hashModelTasksCtrlCmds = new ControlItem[] {
-                        new ControlItem("继续", new RelayCommand(this.ContinueSelectedModelsAction)),
                         new ControlItem("暂停", new RelayCommand(this.PauseSelectedModelsAction)),
+                        new ControlItem("继续", new RelayCommand(this.ContinueSelectedModelsAction)),
                         new ControlItem("取消", new RelayCommand(this.CancelSelectedModelsAction)),
                     };
                 }
                 return this.hashModelTasksCtrlCmds;
+            }
+        }
+
+        private void RestartSelectedModelsForceAction(object param)
+        {
+            if (param is IList selectedModels)
+            {
+                foreach (HashViewModel model in selectedModels)
+                {
+                    model.StartupModel(true);
+                }
+            }
+        }
+
+        private void RestartSelectedUnsucceededModelsAction(object param)
+        {
+            if (param is IList selectedModels)
+            {
+                foreach (HashViewModel model in selectedModels)
+                {
+                    model.StartupModel(false);
+                }
+            }
+        }
+
+        private void RestartSelectedModelsNewLineAction(object param)
+        {
+            if (param is IList selectedModels)
+            {
+                IEnumerable<ModelArg> args = selectedModels.Cast<HashViewModel>().Select(i => i.ModelArg);
+                this.BeginDisplayModels(args);
+            }
+        }
+
+        public ControlItem[] HashModelsCalculationCmds
+        {
+            get
+            {
+                if (this.hashModelsCalculationCmds is null)
+                {
+                    this.hashModelsCalculationCmds = new ControlItem[] {
+                        new ControlItem("新增计算", new RelayCommand(this.RestartSelectedModelsNewLineAction)),
+                        new ControlItem("启动未成功项", new RelayCommand(this.RestartSelectedUnsucceededModelsAction)),
+                        new ControlItem("重新计算", new RelayCommand(this.RestartSelectedModelsForceAction)),
+                    };
+                }
+                return this.hashModelsCalculationCmds;
             }
         }
     }

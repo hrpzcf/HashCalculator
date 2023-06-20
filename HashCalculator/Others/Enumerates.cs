@@ -5,6 +5,7 @@
     /// </summary>
     internal enum HashState
     {
+        NoState,
         Waiting,
         Running,
         Paused,

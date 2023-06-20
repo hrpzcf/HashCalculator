@@ -65,16 +65,6 @@ namespace HashCalculator
             {
                 this.keepers[i] = new TaskKeeper(this.ModelWatcher);
             }
-//#if DEBUG
-//            Task.Run(() =>
-//            {
-//                while (true)
-//                {
-//                    Console.WriteLine($"存活任务数：{this.Count}");
-//                    Thread.Sleep(1000);
-//                }
-//            });
-//#endif
         }
 
         public void Adjust(int number)
@@ -137,16 +127,15 @@ namespace HashCalculator
 
         public void PendingModel(HashViewModel model)
         {
-            if (!this.queue.Contains(model))
+            model.State = HashState.Waiting;
+            if (this.queue.Contains(model))
             {
-                this.queue.Add(model);
-            }
 #if DEBUG
-            else
-            {
-                Console.WriteLine("当前队列已包含相同的元素");
-            }
+                Console.WriteLine("队列中已包含相同的元素...");
 #endif
+                return;
+            }
+            this.queue.Add(model);
         }
 
         public int Count
