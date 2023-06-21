@@ -36,9 +36,9 @@ namespace HashCalculator
         private CancellationTokenSource cancellation;
         private readonly bool isDeprecated;
         private const int blockSize = 2097152;
-        private static readonly Dispatcher synchronization = 
+        private static readonly Dispatcher synchronization =
             Application.Current.Dispatcher;
-        private readonly ManualResetEvent manualPauseController = 
+        private readonly ManualResetEvent manualPauseController =
             new ManualResetEvent(true);
         private readonly object hashComputeOperationLock = new object();
 
@@ -515,6 +515,7 @@ namespace HashCalculator
                     {
                         this.Progress = 0L;
                         this.ProgressTotal = fs.Length;
+                        this.FileSize = fs.Length;
                     });
                     HashAlgorithm algoObject;
                     switch (algoType)
@@ -606,7 +607,6 @@ namespace HashCalculator
                         synchronization.Invoke(() =>
                         {
                             this.Export = true;
-                            this.FileSize = fs.Length;
                             if (this.SelectedOutputType != OutputType.Unknown)
                             {
                                 // 用于触发刷新 this.HashString
