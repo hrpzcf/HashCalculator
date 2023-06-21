@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0"
+  xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -140,69 +141,33 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\icon.ico" />
+    <EmbeddedResource Include="Assembly\BouncyCastle.Cryptography.dll" />
+    <EmbeddedResource Include="Assembly\Microsoft.WindowsAPICodePack.dll" />
+    <EmbeddedResource Include="Assembly\Microsoft.WindowsAPICodePack.Shell.dll" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="WebPages\Help.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Assembly\Microsoft.WindowsAPICodePack.dll" />
-    <EmbeddedResource Include="Assembly\Microsoft.WindowsAPICodePack.Shell.dll" />
-  </ItemGroup>
-  <ItemGroup>
+    <Resource Include="Images\icon.ico" />
     <Resource Include="Images\start.png" />
     <Resource Include="Images\stop.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\cancel.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\copy.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\pause.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\continue.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Assembly\BouncyCastle.Cryptography.dll" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\select_file_32.png" />
     <Resource Include="Images\select_folder_32.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\settings_32.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\using_help_32.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\clear_panel_32.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\export_32.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\continue_32.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\pause_32.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\cancel_32.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\new_line_32.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\refresh_32.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\refresh_force_32.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\cancel_32_gray.png" />
     <Resource Include="Images\clear_panel_32_gray.png" />
     <Resource Include="Images\continue_32_gray.png" />
@@ -213,27 +178,14 @@
     <Resource Include="Images\refresh_32_gray.png" />
     <Resource Include="Images\select_file_32_gray.png" />
     <Resource Include="Images\select_folder_32_gray.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\topmost_32.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\topmost_32_gray.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\hash_algo_32.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\output_type_32.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\list_count_16.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\refresh_output_32.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\remaining_16.png" />
+    <Resource Include="Images\finished_16.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

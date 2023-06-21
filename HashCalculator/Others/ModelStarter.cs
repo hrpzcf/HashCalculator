@@ -65,15 +65,22 @@ namespace HashCalculator
         {
             await Task.Run(() =>
             {
-                if (count < 1 || count > this.maxCount)
-                {
-                    return;
-                }
                 Monitor.Enter(this.changeCountLock);
-                this.targetCount = count;
-                if (this.taskCount < this.targetCount)
+                if (count < 1)
                 {
-                    int remaining = this.targetCount - this.taskCount;
+                    this.targetCount = 1;
+                }
+                else if (count > this.maxCount)
+                {
+                    this.targetCount = this.maxCount;
+                }
+                else
+                {
+                    this.targetCount = count;
+                }
+                if (this.currentCount < this.targetCount)
+                {
+                    int remaining = this.targetCount - this.currentCount;
                     foreach (HashTask mt in this.hashTasks)
                     {
                         if (mt.IsAlive())
@@ -87,7 +94,7 @@ namespace HashCalculator
                         }
                     }
                 }
-                else if (this.taskCount > this.targetCount)
+                else if (this.currentCount > this.targetCount)
                 {
                     foreach (HashTask mt in this.hashTasks)
                     {
@@ -113,13 +120,13 @@ namespace HashCalculator
 
         private void HashProcess(CancellationToken token, RefMethod refreshCancellationToken)
         {
-            ++this.taskCount;
+            ++this.currentCount;
             while (true)
             {
                 Monitor.Enter(this.changeCountLock);
-                if (this.targetCount < this.taskCount)
+                if (this.targetCount < this.currentCount)
                 {
-                    --this.taskCount;
+                    --this.currentCount;
                     Monitor.Exit(this.changeCountLock);
                     break;
                 }
@@ -138,8 +145,8 @@ namespace HashCalculator
         }
 
         private readonly int maxCount;
-        private int taskCount = 0;
         private int targetCount = 0;
+        private int currentCount = 0;
         private readonly object changeCountLock = new object();
         private readonly HashTask[] hashTasks;
         private readonly BlockingCollection<HashViewModel> queue = new BlockingCollection<HashViewModel>();
