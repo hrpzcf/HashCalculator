@@ -35,7 +35,6 @@ namespace HashCalculator
         private readonly byte[] expectedHash;
         private CancellationTokenSource cancellation;
         private readonly bool isDeprecated;
-        private const int blockSize = 2097152;
         private static readonly Dispatcher synchronization =
             Application.Current.Dispatcher;
         private readonly ManualResetEvent manualPauseController =
@@ -513,9 +512,9 @@ namespace HashCalculator
                 {
                     synchronization.Invoke(() =>
                     {
-                        this.Progress = 0L;
-                        this.ProgressTotal = fs.Length;
                         this.FileSize = fs.Length;
+                        this.Progress = 0L;
+                        this.ProgressTotal = this.FileSize;
                     });
                     HashAlgorithm algoObject;
                     switch (algoType)
@@ -567,7 +566,7 @@ namespace HashCalculator
                     using (algoObject)
                     {
                         int readedSize = 0;
-                        byte[] buffer = new byte[blockSize];
+                        byte[] buffer = new byte[BufferSize.Suggest(this.FileSize)];
                         while (true)
                         {
                             if (this.cancellation.IsCancellationRequested)
