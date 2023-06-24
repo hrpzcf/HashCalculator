@@ -390,6 +390,8 @@ namespace HashCalculator
                 }
                 else
                 {
+                    // 右键选择任务控制时有可能尝试启动 State 为 Waiting 的 HashViewModel
+                    // 但 Waiting 的 HashViewModel 不该被再次启动，因为 Waiting 代表已排队待计算
                     conditionMatched = this.State == HashState.NoState ||
                         (this.State == HashState.Finished && this.Result != HashResult.Succeeded);
                 }
@@ -492,7 +494,7 @@ namespace HashCalculator
                 synchronization.Invoke(() =>
                 {
                     this.Result = HashResult.Failed;
-                    this.HashString = "在依据所在文件夹中找不到此文件...";
+                    this.HashString = "搜索不到此文件...";
                 });
                 goto FinishingTouchesBeforeExiting;
             }
@@ -502,7 +504,7 @@ namespace HashCalculator
                 synchronization.Invoke(() =>
                 {
                     this.Result = HashResult.Failed;
-                    this.HashString = "要计算哈希值的文件不存在或无法访问...";
+                    this.HashString = "此文件不存在或无法访问...";
                 });
                 goto FinishingTouchesBeforeExiting;
             }
@@ -626,7 +628,7 @@ namespace HashCalculator
                 synchronization.Invoke(() =>
                 {
                     this.Result = HashResult.Failed;
-                    this.HashString = "读取文件失败或哈希值计算出错...";
+                    this.HashString = "此文件读取失败或计算出错...";
                 });
             }
         FinishingTouchesBeforeExiting:

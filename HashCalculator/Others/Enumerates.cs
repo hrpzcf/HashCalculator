@@ -5,10 +5,29 @@
     /// </summary>
     internal enum HashState
     {
+        /// <summary>
+        /// HashViewModel 初始状态
+        /// </summary>
         NoState,
+
+        /// <summary>
+        /// HashViewModel 已被加入待计算队列
+        /// </summary>
         Waiting,
+
+        /// <summary>
+        /// HashViewModel 正在进行哈希值计算
+        /// </summary>
         Running,
+
+        /// <summary>
+        /// HashViewModel 正进行的哈希计算已暂停
+        /// </summary>
         Paused,
+
+        /// <summary>
+        /// HashViewModel 已结束哈希值的计算
+        /// </summary>
         Finished,
     }
 

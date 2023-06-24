@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace HashCalculator
 {
@@ -107,7 +108,10 @@ namespace HashCalculator
 
         public void PendingModel(HashViewModel model)
         {
-            model.State = HashState.Waiting;
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                model.State = HashState.Waiting;
+            });
             if (this.queue.Contains(model))
             {
 #if DEBUG
