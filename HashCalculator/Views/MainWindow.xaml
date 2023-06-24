@@ -204,7 +204,7 @@
                 Margin="4,0,0,0"
                 Command="{Binding OpenHelpBrowserWndCmd}"
                 Style="{StaticResource ImageButtonStyle2}"
-                ToolTip="打开使用帮助...">
+                ToolTip="使用浏览器打开离线帮助页面...">
                 <Image Source="/Images/using_help_32.png" />
             </Button>
         </Grid>
