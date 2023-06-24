@@ -622,6 +622,7 @@ namespace HashCalculator
                     model.ShutdownModel();
                     HashViewModels.Remove(model);
                 }
+                this.GenerateVerificationReport();
             }
         }
 
@@ -648,6 +649,7 @@ namespace HashCalculator
                     // 对 HashViewModels 的增删操作必定是在主线程上的，不用加锁
                     HashViewModels.Remove(model);
                 }
+                this.GenerateVerificationReport();
             }
         }
 
