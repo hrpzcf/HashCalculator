@@ -24,11 +24,15 @@ namespace HashCalculator
             if (!(asmbName == "BouncyCastle.Cryptography" ||
                 asmbName == "Microsoft.WindowsAPICodePack" ||
                 asmbName == "Microsoft.WindowsAPICodePack.Shell"))
+            {
                 return default;
-            Assembly asmb = Assembly.GetExecutingAssembly();
+            }
+            Assembly executingAsmb = Assembly.GetExecutingAssembly();
             string resName = "HashCalculator.Assembly." + asmbName + ".dll";
-            if (!(asmb.GetManifestResourceStream(resName) is Stream stream))
+            if (!(executingAsmb.GetManifestResourceStream(resName) is Stream stream))
+            {
                 return default;
+            }
             byte[] assemblyData = new byte[stream.Length];
             stream.Read(assemblyData, 0, assemblyData.Length);
             stream.Close();
@@ -57,9 +61,13 @@ namespace HashCalculator
             string excContent;
             // 剪贴板无法打开(CLIPBRD_E_CANT_OPEN)错误代码：0x800401D0
             if ((uint)e.Exception.HResult == 0x800401D0)
+            {
                 excContent = "复制哈希值失败";
+            }
             else
+            {
                 excContent = "意外的异常，可打开帮助页面末尾链接向开发者反馈";
+            }
             e.Handled = true;
             MessageBox.Show($"{excContent}：\n{e.Exception.Message}", "错误");
         }
