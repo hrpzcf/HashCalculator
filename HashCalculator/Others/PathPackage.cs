@@ -2,25 +2,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using System.Threading;
 
 namespace HashCalculator
 {
     internal class PathPackage : IEnumerable<ModelArg>
     {
-        private readonly Basis hashBasis = null;
-        private readonly IEnumerable<string> anyPaths;
-        private readonly SearchPolicy searchPolicy;
-
         public PathPackage(IEnumerable<string> paths, SearchPolicy policy)
         {
-            this.anyPaths = paths;
+            this.paths = paths;
             this.searchPolicy = policy;
         }
 
         public PathPackage(IEnumerable<string> paths, SearchPolicy policy, Basis basis)
         {
-            this.anyPaths = paths;
+            this.paths = paths;
             this.searchPolicy = policy;
             this.hashBasis = basis;
         }
@@ -37,12 +33,13 @@ namespace HashCalculator
 
         private IEnumerator<ModelArg> EnumerateModelArgs()
         {
-            if (this.anyPaths is null)
+            foreach (string path in this.paths ?? Array.Empty<string>())
             {
-                yield break;
-            }
-            foreach (string path in this.anyPaths)
-            {
+                if (this.StopSearchingToken != null &&
+                    this.StopSearchingToken.IsCancellationRequested)
+                {
+                    yield break;
+                }
                 if (Directory.Exists(path))
                 {
                     try
@@ -66,6 +63,11 @@ namespace HashCalculator
                             foreach (FileInfo fileInfo in fInfos)
                             {
                                 yield return new ModelArg(fileInfo.FullName);
+                                if (this.StopSearchingToken != null &&
+                                    this.StopSearchingToken.IsCancellationRequested)
+                                {
+                                    yield break;
+                                }
                             }
                         }
                         else
@@ -75,6 +77,11 @@ namespace HashCalculator
                                 if (this.hashBasis.IsExpectedFileHash(fileInfo.Name, out byte[] hash))
                                 {
                                     yield return new ModelArg(hash, fileInfo.FullName);
+                                }
+                                if (this.StopSearchingToken != null &&
+                                    this.StopSearchingToken.IsCancellationRequested)
+                                {
+                                    yield break;
                                 }
                             }
                             foreach (string fname in this.hashBasis.FileHashDict.Keys)
@@ -104,5 +111,11 @@ namespace HashCalculator
                 }
             }
         }
+
+        private readonly Basis hashBasis = null;
+        private readonly IEnumerable<string> paths;
+        private readonly SearchPolicy searchPolicy;
+
+        public CancellationToken StopSearchingToken { get; set; }
     }
 }

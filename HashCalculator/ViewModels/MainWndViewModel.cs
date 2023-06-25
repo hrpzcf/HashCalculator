@@ -30,6 +30,7 @@ namespace HashCalculator
         private volatile int serial = 0;
         private int tobeComputedModelsCount = 0;
         private CancellationTokenSource _cancellation = new CancellationTokenSource();
+        private CancellationTokenSource searchCancellation = new CancellationTokenSource();
         private List<ModelArg> displayedFiles = new List<ModelArg>();
         private string hashCheckReport = string.Empty;
         private QueueState queueState = QueueState.None;
@@ -58,6 +59,7 @@ namespace HashCalculator
         private RelayCommand refreshAllOutputTypeCmd;
         private RelayCommand deleteSelectedModelsFileCmd;
         private RelayCommand removeSelectedModelsCmd;
+        private RelayCommand stopEnumeratingPackageCmd;
         private ControlItem[] copyModelsHashMenuCmds;
         private ControlItem[] hashModelTasksCtrlCmds;
         private ControlItem[] hashModelsCalculationCmds;
@@ -146,17 +148,6 @@ namespace HashCalculator
             }
         }
 
-        private void AddModelAction(ModelArg arg)
-        {
-            HashViewModel model = new HashViewModel(
-                Interlocked.Increment(ref this.serial), arg);
-            model.ModelCapturedEvent += this.ModelCapturedAction;
-            model.ModelCapturedEvent += this.starter.PendingModel;
-            model.ModelReleasedEvent += this.ModelReleasedAction;
-            model.StartupModel(false);
-            HashViewModels.Add(model);
-        }
-
         private void ModelCapturedAction(HashViewModel model)
         {
             lock (this.tobeComputedModelsCountLock)
@@ -181,6 +172,43 @@ namespace HashCalculator
             }
         }
 
+        private void AddModelAction(ModelArg arg)
+        {
+            HashViewModel model = new HashViewModel(
+                Interlocked.Increment(ref this.serial), arg);
+            model.ModelCapturedEvent += this.ModelCapturedAction;
+            model.ModelCapturedEvent += this.starter.PendingModel;
+            model.ModelReleasedEvent += this.ModelReleasedAction;
+            model.StartupModel(false);
+            HashViewModels.Add(model);
+        }
+
+        public async void BeginDisplayModels(PathPackage package)
+        {
+            CancellationToken token;
+            lock (this.displayModelRequestLock)
+            {
+                token = this.Cancellation.Token;
+            }
+            package.StopSearchingToken = this.searchCancellation.Token;
+            await Task.Run(() =>
+            {
+                lock (this.displayingModelLock)
+                {
+                    foreach (ModelArg arg in package)
+                    {
+                        if (token.IsCancellationRequested)
+                        {
+                            break;
+                        }
+                        this.displayedFiles.Add(arg);
+                        synchronization.Invoke(this.addModelAction, arg);
+                        Thread.Yield();
+                    }
+                }
+            }, token);
+        }
+
         public async void BeginDisplayModels(IEnumerable<ModelArg> args)
         {
             CancellationToken token;
@@ -202,32 +230,6 @@ namespace HashCalculator
                         synchronization.Invoke(this.addModelAction, arg);
                         Thread.Yield();
                     }
-                }
-            }, token);
-        }
-
-        public async void BeginDisplayModels(PathPackage package)
-        {
-            CancellationToken token;
-            lock (this.displayModelRequestLock)
-            {
-                token = this.Cancellation.Token;
-            }
-            await Task.Run(() =>
-            {
-                lock (this.displayingModelLock)
-                {
-                    foreach (ModelArg arg in package)
-                    {
-                        if (token.IsCancellationRequested)
-                        {
-                            break;
-                        }
-                        this.displayedFiles.Add(arg);
-                        synchronization.Invoke(this.addModelAction, arg);
-                        Thread.Yield();
-                    }
-
                 }
             }, token);
         }
@@ -1165,6 +1167,25 @@ namespace HashCalculator
                     };
                 }
                 return this.hashModelsCalculationCmds;
+            }
+        }
+
+        private void StopEnumeratingPackageAction(object param)
+        {
+            this.searchCancellation.Cancel();
+            this.searchCancellation.Dispose();
+            this.searchCancellation = new CancellationTokenSource();
+        }
+
+        public ICommand StopEnumeratingPackageCmd
+        {
+            get
+            {
+                if (this.stopEnumeratingPackageCmd is null)
+                {
+                    this.stopEnumeratingPackageCmd = new RelayCommand(this.StopEnumeratingPackageAction);
+                }
+                return this.stopEnumeratingPackageCmd;
             }
         }
     }
