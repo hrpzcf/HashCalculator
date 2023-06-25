@@ -93,7 +93,9 @@
                 rel="noreferrer noopener"> GNU General Public License v3.0 </a>开源协议，源代码托管在 <a
                 href="https://github.com/hrpzcf/HashCalculator" target="_blank" rel="noreferrer noopener">GitHub</a> 和
             <a href="https://gitee.com/hrpzcf/HashCalculator" target="_blank" rel="noreferrer noopener">Gitee</a> 上。
-            <br />本软件主要是为了大批量计算、批量校验文件的哈希值而设计，支持计算文件的 SHA1、SHA224、SHA256、SHA384、SHA512、MD5 哈希值，哈希值的输出方式可选择 Base64、16
+            <br />本软件主要是为了大批量计算、批量校验文件的哈希值而设计，支持的哈希值算法有
+            MD5、SHA1、SHA224、SHA256、SHA384、SHA512、SHA3-224、SHA3-256、SHA3-384、SHA3-512、Blake2b、Blake2s、Blake3、Whirlpool
+            等，哈希值的输出方式可选择 Base64、16
             进制大小写。
             <br />
             <h5>适用用户：</h5>
@@ -206,6 +208,7 @@
                     <li><span class="steps">&quot;选择文件&quot;按钮：</span>选择或多选要计算其哈希值的文件。</li>
                     <li><span class="steps">&quot;选择文件夹&quot;按钮：</span>选择要计算其哈希值的一批文件所在的文件夹。</li>
                     <li><span class="steps">&quot;清空所有内容&quot;按钮：</span>清空表格中显示的所有计算结果。</li>
+                    <li><span class="steps">&quot;停止搜索文件&quot;按钮：</span>如果表格正持续增加新文件，则立即停止向表格添加新文件，但不停止哈希值计算。</li>
                     <li>
                         <span
                             class="steps">&quot;新增哈希计算&quot;按钮：</span>根据&quot;默认哈希算法&quot;下拉列表所选算法，计算表格中所有文件的哈希值，但不清除原来的计算结果，而是增加新的行来显示结果。这对于需要对同一个文件计算多个类型的哈希值时很有用。
