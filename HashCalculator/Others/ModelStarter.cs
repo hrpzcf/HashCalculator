@@ -108,18 +108,10 @@ namespace HashCalculator
 
         public void PendingModel(HashViewModel model)
         {
-            Application.Current.Dispatcher.Invoke(() =>
+            if (model.MarkAsWaiting(this.queue.Contains(model)))
             {
-                model.State = HashState.Waiting;
-            });
-            if (this.queue.Contains(model))
-            {
-#if DEBUG
-                Console.WriteLine("队列中已包含相同的元素...");
-#endif
-                return;
+                this.queue.Add(model);
             }
-            this.queue.Add(model);
         }
 
         private void HashProcess(CancellationToken token, RefMethod refreshCancellationToken)

@@ -153,8 +153,8 @@ namespace HashCalculator
             model.ModelCapturedEvent += this.ModelCapturedAction;
             model.ModelCapturedEvent += this.starter.PendingModel;
             model.ModelReleasedEvent += this.ModelReleasedAction;
-            HashViewModels.Add(model);
             model.StartupModel(false);
+            HashViewModels.Add(model);
         }
 
         private void ModelCapturedAction(HashViewModel model)

@@ -162,7 +162,7 @@ namespace HashCalculator
             {
                 return this._currentState;
             }
-            set
+            private set
             {
                 this._currentState = value;
                 switch (value)
@@ -470,6 +470,35 @@ namespace HashCalculator
                 }
             }
             return false;
+        }
+
+        private bool MarkAsWaiting()
+        {
+            // StartupModel 时已经重置了 State 和 Result，为什么这里还要判断？
+            // 因为 StartupModel 里 ModelCapturedEvent 是异步调用的，有可能发生：
+            // StartupModel 后 ShutdownModel 使状态变化才执行 MarkAsWaiting
+            if (this.State == HashState.NoState && this.Result != HashResult.Canceled)
+            {
+                this.State = HashState.Waiting;
+                return true;
+            }
+            return false;
+        }
+
+        public bool MarkAsWaiting(bool queueContainsThis)
+        {
+            if (queueContainsThis)
+            {
+                synchronization.Invoke(() => { this.State = HashState.Waiting; });
+                return false;
+            }
+            // 增加一个 private bool MarkAsWaiting 方法的原因是：
+            // ModelCapturedEvent 是异步调用，所以调用链中的本函数是在子线程中执行，
+            // State = HashState.Waiting 要在 synchronization 中执行以使界面及时变化，
+            // 判断语句也放在 synchronization 执行的原因是：
+            // 不会发生执行判断语句后、等待 synchronization.Invoke 前，主线程 ShutdownModel 使 State 和 Result 状态改变，
+            // 因为 synchronization.Invoke 也是在主线程执行的，不会和主线程 ShutdownModel 同时发生
+            return synchronization.Invoke(this.MarkAsWaiting);
         }
 
         public void ComputeManyHashValue()
