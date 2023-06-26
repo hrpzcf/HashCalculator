@@ -106,7 +106,7 @@ namespace HashCalculator
                     || this.queueState == QueueState.Stopped)
                     && value == QueueState.Started)
                 {
-                    synchronization.Invoke(() => { this.Report = string.Empty; });
+                    this.Report = string.Empty;
                     this.SetPropNotify(ref this.queueState, value);
                 }
                 else if (this.queueState == QueueState.Started && value == QueueState.Stopped)
@@ -156,7 +156,8 @@ namespace HashCalculator
                 {
                     return;
                 }
-                synchronization.Invoke(() => { this.State = QueueState.Started; });
+                synchronization.Invoke(
+                    () => { this.State = QueueState.Started; }, DispatcherPriority.Background);
             }
         }
 
@@ -168,7 +169,8 @@ namespace HashCalculator
                 {
                     return;
                 }
-                synchronization.Invoke(() => { this.State = QueueState.Stopped; });
+                synchronization.Invoke(
+                    () => { this.State = QueueState.Stopped; }, DispatcherPriority.Background);
             }
         }
 
@@ -202,7 +204,8 @@ namespace HashCalculator
                             break;
                         }
                         this.displayedFiles.Add(arg);
-                        synchronization.Invoke(this.addModelAction, arg);
+                        synchronization.Invoke(
+                            this.addModelAction, DispatcherPriority.Background, arg);
                         Thread.Yield();
                     }
                 }
@@ -227,7 +230,8 @@ namespace HashCalculator
                             break;
                         }
                         this.displayedFiles.Add(arg);
-                        synchronization.Invoke(this.addModelAction, arg);
+                        synchronization.Invoke(
+                            this.addModelAction, DispatcherPriority.Background, arg);
                         Thread.Yield();
                     }
                 }

@@ -610,7 +610,8 @@ namespace HashCalculator
                                 break;
                             }
                             algoObject.TransformBlock(buffer, 0, readedSize, null, 0);
-                            synchronization.Invoke(() => { this.Progress += readedSize; });
+                            synchronization.Invoke(
+                                () => { this.Progress += readedSize; }, DispatcherPriority.Background);
                             this.manualPauseController.WaitOne();
                         }
                         algoObject.TransformFinalBlock(buffer, 0, 0);
