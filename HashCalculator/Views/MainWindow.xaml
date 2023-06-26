@@ -34,189 +34,193 @@
             <RowDefinition />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Grid
+        <ScrollViewer
             Grid.Row="0"
-            Margin="0,4,0,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <Label
-                Grid.Column="0"
-                VerticalContentAlignment="Center"
-                Content="默认哈希算法:" />
-            <ComboBox
-                Grid.Column="1"
-                Width="100"
-                VerticalAlignment="Center"
-                DisplayMemberPath="Display"
-                ItemsSource="{Binding Source={x:Static local:Settings.Current}, Path=AvailableAlgos}"
-                SelectedValue="{Binding Source={x:Static local:Settings.Current}, Path=SelectedAlgo}"
-                SelectedValuePath="ItemValue"
-                Style="{StaticResource ComboBoxStyle1}"
-                ToolTip="此选项影响新加入的文件、[新增哈希计算] 按钮、[计算未完成项] 按钮、[全部重新计算] 按钮的结果" />
-            <Label
-                Grid.Column="2"
-                Margin="16,0,0,0"
-                VerticalContentAlignment="Center"
-                Content="默认输出方式:" />
-            <ComboBox
-                Grid.Column="3"
-                Width="110"
-                VerticalAlignment="Center"
-                DisplayMemberPath="Display"
-                ItemsSource="{Binding Source={x:Static local:Settings.Current}, Path=AvailableOutputTypes}"
-                SelectedValue="{Binding Source={x:Static local:Settings.Current}, Path=SelectedOutputType}"
-                SelectedValuePath="ItemValue"
-                Style="{StaticResource ComboBoxStyle1}"
-                ToolTip="此选项影响新加入的文件、[刷新输出方式] 按钮、[导出哈希值] 按钮的结果&#10;Base64 格式：以 Base64 编码字符显示计算结果，某些软件配置需要此格式&#10;十六进制大写：常用的显示方式，以十六进制大写字母方式显示计算结果&#10;十六进制小写：常用的显示方式，以十六进制小写字母方式显示计算结果" />
-            <Button
-                Grid.Column="5"
-                Margin="28,0,0,0"
-                Command="{Binding SelectFilesToHashCmd}"
-                Style="{StaticResource ImageButtonStyle2}"
-                ToolTip="选择文件：添加所选的文件并开始计算，也可以将文件、文件夹直接拖放到下方表格中">
-                <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnSelectFileEnabledImgCvt}}" />
-            </Button>
-            <Button
-                Grid.Column="6"
-                Margin="4,0,0,0"
-                Command="{Binding SelectFolderToHashCmd}"
-                Style="{StaticResource ImageButtonStyle2}"
-                ToolTip="选择文件夹：搜索文件夹内的文件并开始计算，也可以将文件和文件夹直接拖放到表格中">
-                <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnSelectFolderEnabledImgCvt}}" />
-            </Button>
-            <Button
-                Grid.Column="7"
-                Margin="4,0,0,0"
-                Command="{Binding ClearAllTableLinesCmd}"
-                IsEnabled="{Binding State, Converter={StaticResource ButtonEnableCvt}}"
-                Style="{StaticResource ImageButtonStyle2}"
-                ToolTip="清空所有内容：清空表格中显示的所有行">
-                <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnClearPanelEnabledImgCvt}}" />
-            </Button>
-            <Button
-                Grid.Column="8"
-                Margin="4,0,0,0"
-                Command="{Binding StopEnumeratingPackageCmd}"
-                Style="{StaticResource ImageButtonStyle2}"
-                ToolTip="停止搜索文件：如果表格正持续增加新文件，则立即停止向表格添加新文件，但不停止哈希值计算。">
-                <Image Source="/Images/search_files_32.png" />
-            </Button>
-            <Button
-                Grid.Column="9"
-                Margin="28,0,0,0"
-                Command="{Binding RefreshHashNewLinesCmd}"
-                IsEnabled="{Binding State, Converter={StaticResource ButtonEnableCvt}}"
-                Style="{StaticResource ImageButtonStyle2}"
-                ToolTip="新增哈希计算：根据 [默认哈希算法] 下拉列表所选算法，计算表格中所有文件的哈希值，但不清除原来的计算结果，而是增加新的行来显示结果">
-                <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnNewLineEnabledImgCvt}}" />
-            </Button>
-            <Button
-                Grid.Column="10"
-                Margin="4,0,0,0"
-                Command="{Binding RefreshCurrentHashCmd}"
-                IsEnabled="{Binding State, Converter={StaticResource ButtonEnableCvt}}"
-                Style="{StaticResource ImageButtonStyle2}"
-                ToolTip="计算未完成项：根据 [默认哈希算法] 下拉列表所选算法，重新计算表格中未完成计算的文件的哈希值">
-                <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnRefreshEnabledImgCvt}}" />
-            </Button>
-            <Button
-                Grid.Column="11"
-                Margin="4,0,0,0"
-                Command="{Binding RefreshCurHashForceCmd}"
-                IsEnabled="{Binding State, Converter={StaticResource ButtonEnableCvt}}"
-                Style="{StaticResource ImageButtonStyle2}"
-                ToolTip="全部重新计算：根据 [默认哈希算法] 下拉列表所选算法，重新计算表格中所有文件的哈希值">
-                <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnRefreshForceEnabledImgCvt}}" />
-            </Button>
-            <Button
-                Grid.Column="12"
-                Margin="4,0,0,0"
-                Command="{Binding ExportAsTextFileCmd}"
-                IsEnabled="{Binding State, Converter={StaticResource ButtonEnableCvt}}"
-                Style="{StaticResource ImageButtonStyle2}"
-                ToolTip="导出哈希值：将表格中所有文件的哈希计算结果导出为文本文件&#10;导出的内容使用的输出方式受到 [默认输出方式] 的控制而不受各文件自己的 [输出方式] 的控制&#10;没有计算结果的行不会被导出，[导出] 列没有勾选的行也不会被导出">
-                <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnExportEnabledImgCvt}}" />
-            </Button>
-            <Button
-                Grid.Column="13"
-                Margin="4,0,0,0"
-                Command="{Binding RefreshAllOutputTypeCmd}"
-                Style="{StaticResource ImageButtonStyle2}"
-                ToolTip="刷新输出方式：以 [默认输出方式] 下拉列表选择的输出方式更新表格内所有文件的哈希值显示方式">
-                <Image Source="/Images/refresh_output_32.png" />
-            </Button>
-            <Button
-                Grid.Column="14"
-                Margin="28,0,0,0"
-                Command="{Binding ContinueDisplayedModelsCmd}"
-                IsEnabled="{Binding State, Converter={StaticResource ButtonNotEnableCvt}}"
-                Style="{StaticResource ImageButtonStyle2}"
-                ToolTip="继续所有任务：继续所有已暂停的哈希值计算任务">
-                <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnContinueAllEnabledImgCvt}}" />
-            </Button>
-            <Button
-                Grid.Column="15"
-                Margin="4,0,0,0"
-                Command="{Binding PauseDisplayedModelsCmd}"
-                IsEnabled="{Binding State, Converter={StaticResource ButtonNotEnableCvt}}"
-                Style="{StaticResource ImageButtonStyle2}"
-                ToolTip="暂停所有任务：暂停所有正在运行的哈希值计算任务（计算大量小文件时可能会暂停不成功，需要多次点击）">
-                <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnPauseAllEnabledImgCvt}}" />
-            </Button>
-            <Button
-                Grid.Column="16"
-                Margin="4,0,0,0"
-                Command="{Binding CancelDisplayedModelsCmd}"
-                IsEnabled="{Binding State, Converter={StaticResource ButtonNotEnableCvt}}"
-                Style="{StaticResource ImageButtonStyle2}"
-                ToolTip="取消所有任务：取消所有排队中、运行中和已暂停的哈希值计算任务">
-                <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnCancelAllEnabledImgCvt}}" />
-            </Button>
-            <Button
-                Grid.Column="17"
-                Margin="28,0,0,0"
-                Command="{Binding MainWindowTopmostCmd}"
-                Style="{StaticResource ImageButtonStyle2}"
-                ToolTip="切换窗口置顶：点击在 [置顶/非置顶] 之间切换主窗口置顶状态">
-                <Image Source="{Binding Source={x:Static local:Settings.Current}, Path=MainWndTopmost, Converter={StaticResource BtnTopmostEnabledImgCvt}}" />
-            </Button>
-            <Button
-                Grid.Column="18"
-                Margin="4,0,0,0"
-                Command="{Binding OpenSettingsPanelCmd}"
-                Style="{StaticResource ImageButtonStyle2}"
-                ToolTip="打开设置面板...">
-                <Image Source="/Images/settings_32.png" />
-            </Button>
-            <Button
-                Grid.Column="19"
-                Margin="4,0,0,0"
-                Command="{Binding OpenHelpBrowserWndCmd}"
-                Style="{StaticResource ImageButtonStyle2}"
-                ToolTip="使用浏览器打开离线帮助页面...">
-                <Image Source="/Images/using_help_32.png" />
-            </Button>
-        </Grid>
+            Margin="0,4,0,0"
+            HorizontalScrollBarVisibility="Auto"
+            VerticalScrollBarVisibility="Disabled">
+            <Grid Margin="0,0,0,2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Label
+                    Grid.Column="0"
+                    VerticalContentAlignment="Center"
+                    Content="默认哈希算法:" />
+                <ComboBox
+                    Grid.Column="1"
+                    Width="100"
+                    VerticalAlignment="Center"
+                    DisplayMemberPath="Display"
+                    ItemsSource="{Binding Source={x:Static local:Settings.Current}, Path=AvailableAlgos}"
+                    SelectedValue="{Binding Source={x:Static local:Settings.Current}, Path=SelectedAlgo}"
+                    SelectedValuePath="ItemValue"
+                    Style="{StaticResource ComboBoxStyle1}"
+                    ToolTip="此选项影响新加入的文件、[新增哈希计算] 按钮、[计算未完成项] 按钮、[全部重新计算] 按钮的结果" />
+                <Label
+                    Grid.Column="2"
+                    Margin="16,0,0,0"
+                    VerticalContentAlignment="Center"
+                    Content="默认输出方式:" />
+                <ComboBox
+                    Grid.Column="3"
+                    Width="110"
+                    VerticalAlignment="Center"
+                    DisplayMemberPath="Display"
+                    ItemsSource="{Binding Source={x:Static local:Settings.Current}, Path=AvailableOutputTypes}"
+                    SelectedValue="{Binding Source={x:Static local:Settings.Current}, Path=SelectedOutputType}"
+                    SelectedValuePath="ItemValue"
+                    Style="{StaticResource ComboBoxStyle1}"
+                    ToolTip="此选项影响新加入的文件、[刷新输出方式] 按钮、[导出哈希值] 按钮的结果&#10;Base64 格式：以 Base64 编码字符显示计算结果，某些软件配置需要此格式&#10;十六进制大写：常用的显示方式，以十六进制大写字母方式显示计算结果&#10;十六进制小写：常用的显示方式，以十六进制小写字母方式显示计算结果" />
+                <Button
+                    Grid.Column="5"
+                    Margin="28,0,0,0"
+                    Command="{Binding SelectFilesToHashCmd}"
+                    Style="{StaticResource ImageButtonStyle2}"
+                    ToolTip="选择文件：添加所选的文件并开始计算，也可以将文件、文件夹直接拖放到下方表格中">
+                    <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnSelectFileEnabledImgCvt}}" />
+                </Button>
+                <Button
+                    Grid.Column="6"
+                    Margin="4,0,0,0"
+                    Command="{Binding SelectFolderToHashCmd}"
+                    Style="{StaticResource ImageButtonStyle2}"
+                    ToolTip="选择文件夹：搜索文件夹内的文件并开始计算，也可以将文件和文件夹直接拖放到表格中">
+                    <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnSelectFolderEnabledImgCvt}}" />
+                </Button>
+                <Button
+                    Grid.Column="7"
+                    Margin="4,0,0,0"
+                    Command="{Binding ClearAllTableLinesCmd}"
+                    IsEnabled="{Binding State, Converter={StaticResource ButtonEnableCvt}}"
+                    Style="{StaticResource ImageButtonStyle2}"
+                    ToolTip="清空所有内容：清空表格中显示的所有行">
+                    <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnClearPanelEnabledImgCvt}}" />
+                </Button>
+                <Button
+                    Grid.Column="8"
+                    Margin="4,0,0,0"
+                    Command="{Binding StopEnumeratingPackageCmd}"
+                    Style="{StaticResource ImageButtonStyle2}"
+                    ToolTip="停止搜索文件：如果表格正持续增加新文件，则立即停止向表格添加新文件，但不停止哈希值计算。">
+                    <Image Source="/Images/search_files_32.png" />
+                </Button>
+                <Button
+                    Grid.Column="9"
+                    Margin="28,0,0,0"
+                    Command="{Binding RefreshHashNewLinesCmd}"
+                    IsEnabled="{Binding State, Converter={StaticResource ButtonEnableCvt}}"
+                    Style="{StaticResource ImageButtonStyle2}"
+                    ToolTip="新增哈希计算：根据 [默认哈希算法] 下拉列表所选算法，计算表格中所有文件的哈希值，但不清除原来的计算结果，而是增加新的行来显示结果">
+                    <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnNewLineEnabledImgCvt}}" />
+                </Button>
+                <Button
+                    Grid.Column="10"
+                    Margin="4,0,0,0"
+                    Command="{Binding RefreshCurrentHashCmd}"
+                    IsEnabled="{Binding State, Converter={StaticResource ButtonEnableCvt}}"
+                    Style="{StaticResource ImageButtonStyle2}"
+                    ToolTip="计算未完成项：根据 [默认哈希算法] 下拉列表所选算法，重新计算表格中未完成计算的文件的哈希值">
+                    <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnRefreshEnabledImgCvt}}" />
+                </Button>
+                <Button
+                    Grid.Column="11"
+                    Margin="4,0,0,0"
+                    Command="{Binding RefreshCurHashForceCmd}"
+                    IsEnabled="{Binding State, Converter={StaticResource ButtonEnableCvt}}"
+                    Style="{StaticResource ImageButtonStyle2}"
+                    ToolTip="全部重新计算：根据 [默认哈希算法] 下拉列表所选算法，重新计算表格中所有文件的哈希值">
+                    <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnRefreshForceEnabledImgCvt}}" />
+                </Button>
+                <Button
+                    Grid.Column="12"
+                    Margin="4,0,0,0"
+                    Command="{Binding ExportAsTextFileCmd}"
+                    IsEnabled="{Binding State, Converter={StaticResource ButtonEnableCvt}}"
+                    Style="{StaticResource ImageButtonStyle2}"
+                    ToolTip="导出哈希值：将表格中所有文件的哈希计算结果导出为文本文件&#10;导出的内容使用的输出方式受到 [默认输出方式] 的控制而不受各文件自己的 [输出方式] 的控制&#10;没有计算结果的行不会被导出，[导出] 列没有勾选的行也不会被导出">
+                    <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnExportEnabledImgCvt}}" />
+                </Button>
+                <Button
+                    Grid.Column="13"
+                    Margin="4,0,0,0"
+                    Command="{Binding RefreshAllOutputTypeCmd}"
+                    Style="{StaticResource ImageButtonStyle2}"
+                    ToolTip="刷新输出方式：以 [默认输出方式] 下拉列表选择的输出方式更新表格内所有文件的哈希值显示方式">
+                    <Image Source="/Images/refresh_output_32.png" />
+                </Button>
+                <Button
+                    Grid.Column="14"
+                    Margin="28,0,0,0"
+                    Command="{Binding ContinueDisplayedModelsCmd}"
+                    IsEnabled="{Binding State, Converter={StaticResource ButtonNotEnableCvt}}"
+                    Style="{StaticResource ImageButtonStyle2}"
+                    ToolTip="继续所有任务：继续所有已暂停的哈希值计算任务">
+                    <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnContinueAllEnabledImgCvt}}" />
+                </Button>
+                <Button
+                    Grid.Column="15"
+                    Margin="4,0,0,0"
+                    Command="{Binding PauseDisplayedModelsCmd}"
+                    IsEnabled="{Binding State, Converter={StaticResource ButtonNotEnableCvt}}"
+                    Style="{StaticResource ImageButtonStyle2}"
+                    ToolTip="暂停所有任务：暂停所有正在运行的哈希值计算任务（计算大量小文件时可能会暂停不成功，需要多次点击）">
+                    <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnPauseAllEnabledImgCvt}}" />
+                </Button>
+                <Button
+                    Grid.Column="16"
+                    Margin="4,0,0,0"
+                    Command="{Binding CancelDisplayedModelsCmd}"
+                    IsEnabled="{Binding State, Converter={StaticResource ButtonNotEnableCvt}}"
+                    Style="{StaticResource ImageButtonStyle2}"
+                    ToolTip="取消所有任务：取消所有排队中、运行中和已暂停的哈希值计算任务">
+                    <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnCancelAllEnabledImgCvt}}" />
+                </Button>
+                <Button
+                    Grid.Column="17"
+                    Margin="28,0,0,0"
+                    Command="{Binding MainWindowTopmostCmd}"
+                    Style="{StaticResource ImageButtonStyle2}"
+                    ToolTip="切换窗口置顶：点击在 [置顶/非置顶] 之间切换主窗口置顶状态">
+                    <Image Source="{Binding Source={x:Static local:Settings.Current}, Path=MainWndTopmost, Converter={StaticResource BtnTopmostEnabledImgCvt}}" />
+                </Button>
+                <Button
+                    Grid.Column="18"
+                    Margin="4,0,0,0"
+                    Command="{Binding OpenSettingsPanelCmd}"
+                    Style="{StaticResource ImageButtonStyle2}"
+                    ToolTip="打开设置面板...">
+                    <Image Source="/Images/settings_32.png" />
+                </Button>
+                <Button
+                    Grid.Column="19"
+                    Margin="4,0,0,0"
+                    Command="{Binding OpenHelpBrowserWndCmd}"
+                    Style="{StaticResource ImageButtonStyle2}"
+                    ToolTip="使用浏览器打开离线帮助页面...">
+                    <Image Source="/Images/using_help_32.png" />
+                </Button>
+            </Grid>
+        </ScrollViewer>
         <DataGrid
             x:Name="uiDataGrid_HashFiles"
             Grid.Row="1"
