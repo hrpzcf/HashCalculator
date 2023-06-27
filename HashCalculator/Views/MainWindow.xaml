@@ -268,6 +268,10 @@
                     </MenuItem>
                     <Separator />
                     <MenuItem
+                        Command="{Binding CopyFilesNameCmd}"
+                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
+                        Header="复制文件名" />
+                    <MenuItem
                         Command="{Binding CopyFilesFullPathCmd}"
                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
                         Header="复制路径" />

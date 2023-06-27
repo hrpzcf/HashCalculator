@@ -52,6 +52,7 @@ namespace HashCalculator
         private RelayCommand pauseDisplayedModelsCmd;
         private RelayCommand continueDisplayedModelsCmd;
         private RelayCommand copyModelsHashStringCmd;
+        private RelayCommand copyFilesNameCmd;
         private RelayCommand copyFilesFullPathCmd;
         private RelayCommand openFolderSelectItemsCmd;
         private RelayCommand openModelsFilePathCmd;
@@ -387,7 +388,7 @@ namespace HashCalculator
             }
         }
 
-        private void CopyFilesFullPathAction(object param)
+        private void CopyFilesNameOrPathAction(object param, bool copyName)
         {
             if (param is IList selectedModels)
             {
@@ -406,7 +407,14 @@ namespace HashCalculator
                         {
                             stringBuilder.AppendLine();
                         }
-                        stringBuilder.Append(model.FileInfo.FullName);
+                        if (copyName)
+                        {
+                            stringBuilder.Append(model.FileInfo.Name);
+                        }
+                        else
+                        {
+                            stringBuilder.Append(model.FileInfo.FullName);
+                        }
                     }
                 }
                 if (stringBuilder.Length != 0)
@@ -416,13 +424,35 @@ namespace HashCalculator
             }
         }
 
+        private void CopyFilesNameAction(object param)
+        {
+            this.CopyFilesNameOrPathAction(param, true);
+        }
+
+        public ICommand CopyFilesNameCmd
+        {
+            get
+            {
+                if (this.copyFilesNameCmd is null)
+                {
+                    this.copyFilesNameCmd = new RelayCommand(this.CopyFilesNameAction);
+                }
+                return this.copyFilesNameCmd;
+            }
+        }
+
+        private void CopyFilesPathAction(object param)
+        {
+            this.CopyFilesNameOrPathAction(param, false);
+        }
+
         public ICommand CopyFilesFullPathCmd
         {
             get
             {
                 if (this.copyFilesFullPathCmd is null)
                 {
-                    this.copyFilesFullPathCmd = new RelayCommand(this.CopyFilesFullPathAction);
+                    this.copyFilesFullPathCmd = new RelayCommand(this.CopyFilesPathAction);
                 }
                 return this.copyFilesFullPathCmd;
             }
