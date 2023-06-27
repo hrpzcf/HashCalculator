@@ -3,10 +3,8 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
-using System.Windows.Media;
 
 namespace HashCalculator
 {
@@ -53,24 +51,6 @@ namespace HashCalculator
                 new PathPackage(data, Settings.Current.SelectedSearchPolicy));
         }
 
-        private void TextBox_HashValueOrFilePath_PreviewDragOver(object sender, DragEventArgs e)
-        {
-            e.Handled = true;
-        }
-
-        private void TextBox_HashOrFilePath_PreviewDrop(object sender, DragEventArgs e)
-        {
-            if (!e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                return;
-            }
-            if (!(e.Data.GetData(DataFormats.FileDrop) is string[] data) || !data.Any())
-            {
-                return;
-            }
-            this.uiTextBox_HashValueOrFilePath.Text = data[0];
-        }
-
         private void DataGrid_HashFiles_PrevKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Escape)
@@ -91,6 +71,24 @@ namespace HashCalculator
                 Settings.Current.LastUsedPath = Path.GetDirectoryName(openFile.FileName);
                 this.uiTextBox_HashValueOrFilePath.Text = openFile.FileName;
             }
+        }
+
+        private void TextBox_HashOrFilePath_PreviewDrop(object sender, DragEventArgs e)
+        {
+            if (!e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                return;
+            }
+            if (!(e.Data.GetData(DataFormats.FileDrop) is string[] data) || !data.Any())
+            {
+                return;
+            }
+            this.uiTextBox_HashValueOrFilePath.Text = data[0];
+        }
+
+        private void TextBox_HashValueOrFilePath_PreviewDragOver(object sender, DragEventArgs e)
+        {
+            e.Handled = true;
         }
     }
 }
