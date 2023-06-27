@@ -602,6 +602,10 @@ namespace HashCalculator
             if (param is IList selectedModels)
             {
                 int count = selectedModels.Count;
+                if (count == 0)
+                {
+                    return;
+                }
                 string deleteFileTip;
                 if (Settings.Current.PermanentlyDeleteFiles)
                 {

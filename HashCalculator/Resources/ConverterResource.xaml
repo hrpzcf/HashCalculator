@@ -33,7 +33,6 @@
     <local:MenuCopyHashEnabledCvt x:Key="MenuCopyHashEnabledCvt" />
     <local:TotalProgressVisiblityCvt x:Key="TotalProgressVisiblityCvt" />
     <local:HashBytesOutputTypeCvt x:Key="HashBytesOutputTypeCvt" />
-    <local:QuantityBasedEnabledMenuCvt x:Key="QuantityBasedEnabledMenuCvt" />
     <local:CopyModelsHashMenuEnabledCvt x:Key="CopyModelsHashMenuEnabledCvt" />
     <local:HashOrPathPlaceHolderVisibCvt x:Key="HashOrPathPlaceHolderVisibCvt" />
 </ResourceDictionary>

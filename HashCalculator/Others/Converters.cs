@@ -752,36 +752,16 @@ namespace HashCalculator
         }
     }
 
-    internal class QuantityBasedEnabledMenuCvt : IValueConverter
+    internal class CopyModelsHashMenuEnabledCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            switch ((int)value)
+            if (value is IList selectedItems)
             {
-                case 0:
+                if (!selectedItems.AnyItem())
+                {
                     return false;
-                default:
-                    return true;
-            }
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    internal class CopyModelsHashMenuEnabledCvt : IMultiValueConverter
-    {
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
-        {
-            Debug.Assert(values.Length == 2);
-            if ((int)values[0] == 0)
-            {
-                return false;
-            }
-            if (values[1] is IList selectedItems)
-            {
+                }
                 foreach (HashViewModel model in selectedItems.OfType<HashViewModel>())
                 {
                     if (model.Result != HashResult.Succeeded)
@@ -789,11 +769,12 @@ namespace HashCalculator
                         return false;
                     }
                 }
+                return true;
             }
-            return true;
+            return false;
         }
 
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }

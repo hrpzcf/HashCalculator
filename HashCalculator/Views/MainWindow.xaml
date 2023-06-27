@@ -248,17 +248,14 @@
                     <MenuItem
                         Command="{Binding OpenModelsFilePathCmd}"
                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
-                        Header="打开文件"
-                        IsEnabled="{Binding Source={x:Static local:MainWndViewModel.HashViewModels}, Path=Count, Converter={StaticResource QuantityBasedEnabledMenuCvt}}" />
+                        Header="打开文件" />
                     <MenuItem
                         Command="{Binding OpenFolderSelectItemsCmd}"
                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
-                        Header="打开位置"
-                        IsEnabled="{Binding Source={x:Static local:MainWndViewModel.HashViewModels}, Path=Count, Converter={StaticResource QuantityBasedEnabledMenuCvt}}" />
+                        Header="打开位置" />
                     <Separator />
                     <MenuItem
                         Header="任务控制"
-                        IsEnabled="{Binding Source={x:Static local:MainWndViewModel.HashViewModels}, Path=Count, Converter={StaticResource QuantityBasedEnabledMenuCvt}}"
                         ItemsSource="{Binding HashModelTasksCtrlCmds}">
                         <MenuItem.ItemContainerStyle>
                             <Style TargetType="MenuItem">
@@ -272,22 +269,11 @@
                     <MenuItem
                         Command="{Binding CopyFilesFullPathCmd}"
                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
-                        Header="复制路径"
-                        IsEnabled="{Binding Source={x:Static local:MainWndViewModel.HashViewModels}, Path=Count, Converter={StaticResource QuantityBasedEnabledMenuCvt}}" />
+                        Header="复制路径" />
                     <MenuItem
                         Header="复制哈希值"
+                        IsEnabled="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems, Converter={StaticResource CopyModelsHashMenuEnabledCvt}}"
                         ItemsSource="{Binding CopyModelsHashMenuCmds}">
-                        <MenuItem.IsEnabled>
-                            <MultiBinding Converter="{StaticResource CopyModelsHashMenuEnabledCvt}">
-                                <Binding
-                                    Path="Count"
-                                    Source="{x:Static local:MainWndViewModel.HashViewModels}" />
-                                <Binding
-                                    Path="PlacementTarget.SelectedItems"
-                                    RelativeSource="{RelativeSource Mode=FindAncestor,
-                                                                    AncestorType={x:Type ContextMenu}}" />
-                            </MultiBinding>
-                        </MenuItem.IsEnabled>
                         <MenuItem.ItemContainerStyle>
                             <Style TargetType="MenuItem">
                                 <Setter Property="Header" Value="{Binding Display}" />
@@ -299,37 +285,22 @@
                     <MenuItem
                         Command="{Binding CopyModelsHashStringCmd}"
                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
-                        Header="复制哈希值">
-                        <MenuItem.IsEnabled>
-                            <MultiBinding Converter="{StaticResource CopyModelsHashMenuEnabledCvt}">
-                                <Binding
-                                    Path="Count"
-                                    Source="{x:Static local:MainWndViewModel.HashViewModels}" />
-                                <Binding
-                                    Path="PlacementTarget.SelectedItems"
-                                    RelativeSource="{RelativeSource Mode=FindAncestor,
-                                                                    AncestorType={x:Type ContextMenu},
-                                                                    AncestorLevel=1}" />
-                            </MultiBinding>
-                        </MenuItem.IsEnabled>
-                    </MenuItem>
+                        Header="复制哈希值"
+                        IsEnabled="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems, Converter={StaticResource CopyModelsHashMenuEnabledCvt}}" />
                     <Separator />
                     <MenuItem
                         Command="{Binding DeleteSelectedModelsFileCmd}"
                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
-                        Header="删除文件"
-                        IsEnabled="{Binding Source={x:Static local:MainWndViewModel.HashViewModels}, Path=Count, Converter={StaticResource QuantityBasedEnabledMenuCvt}}" />
+                        Header="删除文件" />
                     <MenuItem
                         Command="{Binding RemoveSelectedModelsCmd}"
                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
-                        Header="移除所选项"
-                        IsEnabled="{Binding Source={x:Static local:MainWndViewModel.HashViewModels}, Path=Count, Converter={StaticResource QuantityBasedEnabledMenuCvt}}" />
+                        Header="移除所选项" />
                     <Separator />
                     <MenuItem
                         Command="{Binding OpenFilesPropertyCmd}"
                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
-                        Header="文件属性"
-                        IsEnabled="{Binding Source={x:Static local:MainWndViewModel.HashViewModels}, Path=Count, Converter={StaticResource QuantityBasedEnabledMenuCvt}}" />
+                        Header="文件属性" />
                 </ContextMenu>
             </DataGrid.ContextMenu>
             <DataGrid.Columns>
