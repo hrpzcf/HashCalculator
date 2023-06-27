@@ -36,10 +36,9 @@
         </Grid.RowDefinitions>
         <ScrollViewer
             Grid.Row="0"
-            Margin="0,4,0,0"
             HorizontalScrollBarVisibility="Auto"
             VerticalScrollBarVisibility="Disabled">
-            <Grid Margin="0,0,0,2">
+            <Grid Margin="0,4,0,2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
@@ -64,8 +63,9 @@
                 </Grid.ColumnDefinitions>
                 <Label
                     Grid.Column="0"
+                    Padding="0"
                     VerticalContentAlignment="Center"
-                    Content="默认哈希算法:" />
+                    Content="默认哈希算法：" />
                 <ComboBox
                     Grid.Column="1"
                     Width="100"
@@ -79,8 +79,9 @@
                 <Label
                     Grid.Column="2"
                     Margin="16,0,0,0"
+                    Padding="0"
                     VerticalContentAlignment="Center"
-                    Content="默认输出方式:" />
+                    Content="默认输出方式：" />
                 <ComboBox
                     Grid.Column="3"
                     Width="110"

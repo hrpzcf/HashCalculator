@@ -90,7 +90,7 @@
                             <Setter Property="Effect">
                                 <Setter.Value>
                                     <DropShadowEffect
-                                        BlurRadius="10"
+                                        BlurRadius="8"
                                         Opacity="0.7"
                                         ShadowDepth="0"
                                         Color="Red" />
