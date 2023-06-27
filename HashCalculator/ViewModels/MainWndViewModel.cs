@@ -62,7 +62,6 @@ namespace HashCalculator
         private RelayCommand stopEnumeratingPackageCmd;
         private ControlItem[] copyModelsHashMenuCmds;
         private ControlItem[] hashModelTasksCtrlCmds;
-        private ControlItem[] hashModelsCalculationCmds;
 
         public MainWndViewModel()
         {
@@ -1111,22 +1110,6 @@ namespace HashCalculator
             }
         }
 
-        public ControlItem[] HashModelTasksCtrlCmds
-        {
-            get
-            {
-                if (this.hashModelTasksCtrlCmds is null)
-                {
-                    this.hashModelTasksCtrlCmds = new ControlItem[] {
-                        new ControlItem("暂停", new RelayCommand(this.PauseSelectedModelsAction)),
-                        new ControlItem("继续", new RelayCommand(this.ContinueSelectedModelsAction)),
-                        new ControlItem("取消", new RelayCommand(this.CancelSelectedModelsAction)),
-                    };
-                }
-                return this.hashModelTasksCtrlCmds;
-            }
-        }
-
         private void RestartSelectedModelsForceAction(object param)
         {
             if (param is IList selectedModels)
@@ -1158,19 +1141,22 @@ namespace HashCalculator
             }
         }
 
-        public ControlItem[] HashModelsCalculationCmds
+        public ControlItem[] HashModelTasksCtrlCmds
         {
             get
             {
-                if (this.hashModelsCalculationCmds is null)
+                if (this.hashModelTasksCtrlCmds is null)
                 {
-                    this.hashModelsCalculationCmds = new ControlItem[] {
+                    this.hashModelTasksCtrlCmds = new ControlItem[] {
+                        new ControlItem("暂停任务", new RelayCommand(this.PauseSelectedModelsAction)),
+                        new ControlItem("继续任务", new RelayCommand(this.ContinueSelectedModelsAction)),
+                        new ControlItem("取消任务", new RelayCommand(this.CancelSelectedModelsAction)),
                         new ControlItem("新增计算", new RelayCommand(this.RestartSelectedModelsNewLineAction)),
                         new ControlItem("启动未成功项", new RelayCommand(this.RestartSelectedUnsucceededModelsAction)),
                         new ControlItem("重新计算", new RelayCommand(this.RestartSelectedModelsForceAction)),
                     };
                 }
-                return this.hashModelsCalculationCmds;
+                return this.hashModelTasksCtrlCmds;
             }
         }
 
