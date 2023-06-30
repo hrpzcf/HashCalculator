@@ -368,6 +368,8 @@ namespace HashCalculator
             this.cancellation = new CancellationTokenSource();
             this.cancellation.Token.Register(this.ModelCancelled);
             this.Hash = null;
+            this.Export = false;
+            this.FileSize = 0;
             this.DurationofTask = 0.0;
             this.Progress = 0;
             this.ProgressTotal = 0;
