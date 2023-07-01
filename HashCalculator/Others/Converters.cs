@@ -338,7 +338,7 @@ namespace HashCalculator
         }
     }
 
-    internal class ButtonEnableCvt : IValueConverter
+    internal class ButtonEnabledCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -358,7 +358,7 @@ namespace HashCalculator
         }
     }
 
-    internal class ButtonNotEnableCvt : IValueConverter
+    internal class ButtonNotEnabledCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -699,16 +699,17 @@ namespace HashCalculator
         }
     }
 
-    internal class TotalProgressVisiblityCvt : IValueConverter
+    internal class LoadingImageVisiblityCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            switch ((QueueState)value)
+            if ((QueueState)value == QueueState.Started)
             {
-                case QueueState.Started:
-                    return Visibility.Visible;
-                default:
-                    return Visibility.Hidden;
+                return Visibility.Visible;
+            }
+            else
+            {
+                return Visibility.Collapsed;
             }
         }
 

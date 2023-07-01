@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0"
+  xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -52,6 +53,10 @@
     </Reference>
     <Reference Include="Microsoft.WindowsAPICodePack.Shell">
       <HintPath>Assembly\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="XamlAnimatedGif">
+      <HintPath>Assembly\XamlAnimatedGif.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -144,6 +149,7 @@
     <EmbeddedResource Include="Assembly\BouncyCastle.Cryptography.dll" />
     <EmbeddedResource Include="Assembly\Microsoft.WindowsAPICodePack.dll" />
     <EmbeddedResource Include="Assembly\Microsoft.WindowsAPICodePack.Shell.dll" />
+    <EmbeddedResource Include="Assembly\XamlAnimatedGif.dll" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="WebPages\Help.html" />
@@ -186,8 +192,7 @@
     <Resource Include="Images\refresh_output_32.png" />
     <Resource Include="Images\remaining_16.png" />
     <Resource Include="Images\finished_16.png" />
-  </ItemGroup>
-  <ItemGroup>
+    <Resource Include="Images\loading.gif" />
     <Resource Include="Images\search_files_32.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

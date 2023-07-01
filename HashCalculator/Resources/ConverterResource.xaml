@@ -13,8 +13,8 @@
     <local:SubBtnVisiblityWaitingCvt x:Key="SubBtnVisiblityWaitingCvt" />
     <local:SubBtnVisiblitySucceededCvt x:Key="SubBtnVisiblitySucceededCvt" />
     <local:SubBtnVisiblityCanceledCvt x:Key="SubBtnVisiblityCanceledCvt" />
-    <local:ButtonEnableCvt x:Key="ButtonEnableCvt" />
-    <local:ButtonNotEnableCvt x:Key="ButtonNotEnableCvt" />
+    <local:ButtonEnabledCvt x:Key="ButtonEnabledCvt" />
+    <local:ButtonNotEnabledCvt x:Key="ButtonNotEnabledCvt" />
     <local:NoColumnCvt x:Key="NoColumnCvt" />
     <local:SubBtnPauseImageSrcCvt x:Key="SubBtnPauseImageSrcCvt" />
     <local:SubBtnPauseToolTipCvt x:Key="SubBtnPauseToolTipCvt" />
@@ -31,7 +31,7 @@
     <local:BtnSelectFolderEnabledImgCvt x:Key="BtnSelectFolderEnabledImgCvt" />
     <local:BtnTopmostEnabledImgCvt x:Key="BtnTopmostEnabledImgCvt" />
     <local:MenuCopyHashEnabledCvt x:Key="MenuCopyHashEnabledCvt" />
-    <local:TotalProgressVisiblityCvt x:Key="TotalProgressVisiblityCvt" />
+    <local:LoadingImageVisiblityCvt x:Key="LoadingImageVisiblityCvt" />
     <local:HashBytesOutputTypeCvt x:Key="HashBytesOutputTypeCvt" />
     <local:CopyModelsHashMenuEnabledCvt x:Key="CopyModelsHashMenuEnabledCvt" />
     <local:HashOrPathPlaceHolderVisibCvt x:Key="HashOrPathPlaceHolderVisibCvt" />

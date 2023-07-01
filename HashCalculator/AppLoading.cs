@@ -23,7 +23,8 @@ namespace HashCalculator
             string asmbName = new AssemblyName(arg.Name).Name;
             if (!(asmbName == "BouncyCastle.Cryptography" ||
                 asmbName == "Microsoft.WindowsAPICodePack" ||
-                asmbName == "Microsoft.WindowsAPICodePack.Shell"))
+                asmbName == "Microsoft.WindowsAPICodePack.Shell" ||
+                asmbName == "XamlAnimatedGif"))
             {
                 return default;
             }

@@ -156,8 +156,7 @@ namespace HashCalculator
                 {
                     return;
                 }
-                synchronization.Invoke(
-                    () => { this.State = QueueState.Started; }, DispatcherPriority.Background);
+                synchronization.Invoke(() => { this.State = QueueState.Started; });
             }
         }
 
@@ -169,8 +168,7 @@ namespace HashCalculator
                 {
                     return;
                 }
-                synchronization.Invoke(
-                    () => { this.State = QueueState.Stopped; }, DispatcherPriority.Background);
+                synchronization.Invoke(() => { this.State = QueueState.Stopped; });
             }
         }
 
