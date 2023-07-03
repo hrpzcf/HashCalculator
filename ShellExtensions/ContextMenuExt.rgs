@@ -1,0 +1,49 @@
+HKCR
+{
+	NoRemove CLSID
+	{
+		ForceRemove {de95cac8-90d1-4c55-b81d-d7f6d527606c} = s 'HashCalculator'
+		{
+			ForceRemove Programmable
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			TypeLib = s '{18d6b7f2-f466-481f-adfc-849b5f9fbd0b}'
+			Version = s '1.0'
+		}
+	}
+
+	NoRemove *
+	{
+		NoRemove shellex
+		{
+			NoRemove ContextMenuHandlers
+			{
+				ForceRemove HashCalculator = s '{de95cac8-90d1-4c55-b81d-d7f6d527606c}'
+			}
+		}
+	}
+
+	NoRemove Directory
+	{
+		NoRemove shellex
+		{
+			NoRemove ContextMenuHandlers
+			{
+				ForceRemove HashCalculator = s '{de95cac8-90d1-4c55-b81d-d7f6d527606c}'
+			}
+		}
+
+		NoRemove Background
+		{
+			NoRemove shellex
+			{
+				NoRemove ContextMenuHandlers
+				{
+					ForceRemove HashCalculator = s '{de95cac8-90d1-4c55-b81d-d7f6d527606c}'
+				}
+			}
+		}
+	}
+}
