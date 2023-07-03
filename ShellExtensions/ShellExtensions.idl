@@ -1,0 +1,36 @@
+﻿// ShellExtensions.idl: ShellExtensions 的 IDL 源
+//
+
+// 此文件将由 MIDL 工具处理以
+// 生成类型库(ShellExtensions.tlb)和封送处理代码。
+
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+	object,
+	uuid(57b88730-55b6-479a-b0cd-738a32db4a3e),
+	dual,
+	nonextensible,
+	pointer_default(unique)
+]
+interface IContextMenuExt : IDispatch
+{
+};
+[
+	uuid(18d6b7f2-f466-481f-adfc-849b5f9fbd0b),
+	version(1.0),
+]
+library ShellExtensionsLib
+{
+	importlib("stdole2.tlb");
+	[
+		uuid(de95cac8-90d1-4c55-b81d-d7f6d527606c)
+	]
+	coclass ContextMenuExt
+	{
+		[default] interface IContextMenuExt;
+	};
+};
+
+import "shobjidl.idl";
