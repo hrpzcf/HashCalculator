@@ -721,6 +721,7 @@ namespace HashCalculator
 
         private void ClearAllTableLinesAction(object param)
         {
+            this.CancelDisplayedModelsAction(null);
             this.serial = 0;
             this.displayedFiles.Clear();
             HashViewModels.Clear();

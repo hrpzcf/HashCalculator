@@ -18,13 +18,10 @@
     <local:SubBtnPauseImageSrcCvt x:Key="SubBtnPauseImageSrcCvt" />
     <local:SubBtnPauseToolTipCvt x:Key="SubBtnPauseToolTipCvt" />
     <local:SubProgressWidthCvt x:Key="SubProgressWidthCvt" />
-    <local:BtnClearPanelEnabledImgCvt x:Key="BtnClearPanelEnabledImgCvt" />
     <local:BtnExportEnabledImgCvt x:Key="BtnExportEnabledImgCvt" />
     <local:BtnNewLineEnabledImgCvt x:Key="BtnNewLineEnabledImgCvt" />
     <local:BtnRefreshEnabledImgCvt x:Key="BtnRefreshEnabledImgCvt" />
     <local:BtnRefreshForceEnabledImgCvt x:Key="BtnRefreshForceEnabledImgCvt" />
-    <local:BtnSelectFileEnabledImgCvt x:Key="BtnSelectFileEnabledImgCvt" />
-    <local:BtnSelectFolderEnabledImgCvt x:Key="BtnSelectFolderEnabledImgCvt" />
     <local:BtnTopmostEnabledImgCvt x:Key="BtnTopmostEnabledImgCvt" />
     <local:MenuCopyHashEnabledCvt x:Key="MenuCopyHashEnabledCvt" />
     <local:LoadingImageVisiblityCvt x:Key="LoadingImageVisiblityCvt" />

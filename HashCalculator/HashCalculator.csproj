@@ -179,13 +179,10 @@
     <Resource Include="Images\new_line_32.png" />
     <Resource Include="Images\refresh_32.png" />
     <Resource Include="Images\refresh_force_32.png" />
-    <Resource Include="Images\clear_panel_32_gray.png" />
     <Resource Include="Images\export_32_gray.png" />
     <Resource Include="Images\new_line_32_gray.png" />
     <Resource Include="Images\refresh_force_32_gray.png" />
     <Resource Include="Images\refresh_32_gray.png" />
-    <Resource Include="Images\select_file_32_gray.png" />
-    <Resource Include="Images\select_folder_32_gray.png" />
     <Resource Include="Images\topmost_32.png" />
     <Resource Include="Images\topmost_32_gray.png" />
     <Resource Include="Images\hash_algo_32.png" />

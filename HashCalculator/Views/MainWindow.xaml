@@ -99,7 +99,7 @@
                     Command="{Binding SelectFilesToHashCmd}"
                     Style="{StaticResource ImageButtonStyle2}"
                     ToolTip="选择文件：添加所选的文件并开始计算，也可以将文件、文件夹直接拖放到下方表格中">
-                    <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnSelectFileEnabledImgCvt}}" />
+                    <Image Source="/Images/select_file_32.png" />
                 </Button>
                 <Button
                     Grid.Column="6"
@@ -107,16 +107,15 @@
                     Command="{Binding SelectFolderToHashCmd}"
                     Style="{StaticResource ImageButtonStyle2}"
                     ToolTip="选择文件夹：搜索文件夹内的文件并开始计算，也可以将文件和文件夹直接拖放到表格中">
-                    <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnSelectFolderEnabledImgCvt}}" />
+                    <Image Source="/Images/select_folder_32.png" />
                 </Button>
                 <Button
                     Grid.Column="7"
                     Margin="4,0,0,0"
                     Command="{Binding ClearAllTableLinesCmd}"
-                    IsEnabled="{Binding State, Converter={StaticResource ButtonEnabledCvt}}"
                     Style="{StaticResource ImageButtonStyle2}"
                     ToolTip="清空所有内容：清空表格中显示的所有行">
-                    <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnClearPanelEnabledImgCvt}}" />
+                    <Image Source="/Images/clear_panel_32.png" />
                 </Button>
                 <Button
                     Grid.Column="8"
