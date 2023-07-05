@@ -359,7 +359,7 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 
-# Fody - auto-generated XML schema
-FodyWeavers.xsd
-/Binarys/bccrypto-csharp-1.9.0-bin.zip
-/Binarys/bccrypto-csharp-1.9.0-src.zip
+# Others
+Binary/
+/ShellExtensions/ShellExtensions_i.c
+/ShellExtensions/ShellExtensions_i.h

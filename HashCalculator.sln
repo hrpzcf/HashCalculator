@@ -18,6 +18,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "解决方案项", "解决�
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ShellExtensions", "ShellExtensions\ShellExtensions.vcxproj", "{4DB70050-30FF-487A-AD55-C3E663CD0329}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SetupProject_x86", "SetupProject_x86\SetupProject_x86.vdproj", "{DAB2A39A-72CE-4393-8992-FBA806A3C79D}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SetupProject_x64", "SetupProject_x64\SetupProject_x64.vdproj", "{D92A1A23-F377-4A4B-9F30-FB5322FBA83C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -52,6 +56,18 @@ Global
 		{4DB70050-30FF-487A-AD55-C3E663CD0329}.Release|x64.Build.0 = Release|x64
 		{4DB70050-30FF-487A-AD55-C3E663CD0329}.Release|x86.ActiveCfg = Release|Win32
 		{4DB70050-30FF-487A-AD55-C3E663CD0329}.Release|x86.Build.0 = Release|Win32
+		{DAB2A39A-72CE-4393-8992-FBA806A3C79D}.Debug|Any CPU.ActiveCfg = Debug
+		{DAB2A39A-72CE-4393-8992-FBA806A3C79D}.Debug|x64.ActiveCfg = Debug
+		{DAB2A39A-72CE-4393-8992-FBA806A3C79D}.Debug|x86.ActiveCfg = Debug
+		{DAB2A39A-72CE-4393-8992-FBA806A3C79D}.Release|Any CPU.ActiveCfg = Release
+		{DAB2A39A-72CE-4393-8992-FBA806A3C79D}.Release|x64.ActiveCfg = Release
+		{DAB2A39A-72CE-4393-8992-FBA806A3C79D}.Release|x86.ActiveCfg = Release
+		{D92A1A23-F377-4A4B-9F30-FB5322FBA83C}.Debug|Any CPU.ActiveCfg = Debug
+		{D92A1A23-F377-4A4B-9F30-FB5322FBA83C}.Debug|x64.ActiveCfg = Debug
+		{D92A1A23-F377-4A4B-9F30-FB5322FBA83C}.Debug|x86.ActiveCfg = Debug
+		{D92A1A23-F377-4A4B-9F30-FB5322FBA83C}.Release|Any CPU.ActiveCfg = Release
+		{D92A1A23-F377-4A4B-9F30-FB5322FBA83C}.Release|x64.ActiveCfg = Release
+		{D92A1A23-F377-4A4B-9F30-FB5322FBA83C}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
