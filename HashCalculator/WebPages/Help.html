@@ -68,6 +68,11 @@
             font-weight: bold;
         }
 
+        .description {
+            color: green;
+            font-weight: bold;
+        }
+
         .code {
             color: #555;
             background-color: #eee;
@@ -106,7 +111,7 @@
                 <li>等等...</li>
             </ul>
         </div>
-        <br>
+        <br />
         <div class="title">常用功能使用方法</div>
         <ul class="outter_ul">
             <li>
@@ -195,7 +200,7 @@
                 </ol>
             </li>
         </ul>
-        <br>
+        <br />
         <div class="title">各按钮及设置项的功能描述</div>
         <ul class="outter_ul">
             <li>
@@ -327,7 +332,7 @@
                 </ol>
             </li>
         </ul>
-        <br>
+        <br />
         <div class="title">可能出现的异常的含义</div>
         <ul class="outter_ul">
             <li><span class="steps">复制哈希值时弹出窗口显示&quot;复制哈希值失败&quot;：</span>点击复制按钮过快或者偶发复制失败。</li>
@@ -345,6 +350,24 @@
             <li><span class="steps">要计算哈希值的文件不存在或无法访问：</span>可能因为用户权限原因无法访问该要被计算哈希值的文件。</li>
             <li><span class="steps">读取要被计算哈希值的文件失败或计算出错：</span>打开要被计算哈希值的文件失败，或者计算该文件哈希值的过程中出现不可预料的错误。</li>
         </ul>
+        <br />
+        <div class="title">安装、卸载方面的疑难杂症</div>
+        <ul class="outter_ul">
+            <li><span class="steps">安装 HashCalculator 时提示&quot;已经安装了本产品...&quot;：</span>请到系统设置面板👉程序👉安装的程序中找到
+                HashCalculator
+                选择卸载后再安装新版本。</li>
+            <li><span class="steps">安装新版本时出现&quot;修复/删除&quot;对话框：</span>请勿选择修复或删除，先关闭对话框，然后右键点击 .msi
+                文件选择&quot;卸载&quot;（或到系统设置面板👉程序👉安装的程序中找到 HashCalculator
+                选择卸载），卸载过程会提示关闭资源管理器，请选择&quot;是&quot;，卸载完成后再安装新版本。</li>
+            <span class="description">不建议手动删除 HashCalculator 的原因是 HashCalculator 集成了系统右键菜单，使用过 HashCalculator
+                右键菜单以后系统资源管理器会一直占用右键菜单扩展对应的 dll
+                文件，手动删除安装的文件时并不能成功删除，如果通过暴力手段删除/粉碎安装的文件，则会遗留注册表项并可能出现其他不可预知的问题，所以</span><span
+                class="notice">请勿暴力删除/粉碎</span><span class="description">安装文件，而是应该在系统设置面板👉程序👉安装的程序中正常卸载
+                HashCalculator。</span>
+            <div>其他解决办法包括使用 regsvr32 命令对 HashCalculator 安装目录下的 ShellExtensions_[x86|x64].dll 文件进行反注册后重启资源管理器即可删除 .dll
+                文件，此方法仅供专业人员使用，不过多描述。</div>
+        </ul>
+        <br />
         <div class="title">源代码贡献者（感谢所有贡献者）</div>
         <ul>
             <li>
