@@ -139,13 +139,13 @@ namespace HashCalculator
                     return "#647ce700";
                 case AlgoType.MD5:
                     return "#6400cc00";
-                case AlgoType.BLAKE2s:
+                case AlgoType.BLAKE2S:
                     return "#642618b1";
-                case AlgoType.BLAKE2b:
+                case AlgoType.BLAKE2B:
                     return "#641240ab";
                 case AlgoType.BLAKE3:
                     return "#647109aa";
-                case AlgoType.Whirlpool:
+                case AlgoType.WHIRLPOOL:
                     return "#6400a876";
                 default:
                     return "#64A0A0A0";
@@ -413,7 +413,7 @@ namespace HashCalculator
                 case AlgoType.SHA224:
                 case AlgoType.SHA3_224:
                     return 380.0;
-                case AlgoType.BLAKE2s:
+                case AlgoType.BLAKE2S:
                 case AlgoType.BLAKE3:
                 case AlgoType.SHA256:
                 case AlgoType.SHA3_256:
@@ -421,10 +421,10 @@ namespace HashCalculator
                 case AlgoType.SHA384:
                 case AlgoType.SHA3_384:
                     return 660.0;
-                case AlgoType.BLAKE2b:
+                case AlgoType.BLAKE2B:
                 case AlgoType.SHA512:
                 case AlgoType.SHA3_512:
-                case AlgoType.Whirlpool:
+                case AlgoType.WHIRLPOOL:
                     return 860.0;
             }
         }

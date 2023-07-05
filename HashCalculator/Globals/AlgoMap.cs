@@ -17,10 +17,10 @@ namespace HashCalculator
                 { AlgoType.SHA3_384, "SHA3-384"},
                 { AlgoType.SHA3_512, "SHA3-512"},
                 { AlgoType.MD5, "MD5"},
-                { AlgoType.BLAKE2b, "BLAKE2b"},
-                { AlgoType.BLAKE2s, "BLAKE2s"},
+                { AlgoType.BLAKE2B, "BLAKE2b"},
+                { AlgoType.BLAKE2S, "BLAKE2s"},
                 { AlgoType.BLAKE3, "BLAKE3"},
-                { AlgoType.Whirlpool, "Whirlpool"},
+                { AlgoType.WHIRLPOOL, "Whirlpool"},
                 { AlgoType.Unknown, "-N/A-"},
             };
 

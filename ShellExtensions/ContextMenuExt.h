@@ -15,6 +15,7 @@
 #error "Windows CE 平台(如不提供完全 DCOM 支持的 Windows Mobile 平台)上无法正确支持单线程 COM 对象。定义 _CE_ALLOW_SINGLE_THREADED_OBJECTS_IN_MTA 可强制 ATL 支持创建单线程 COM 对象实现并允许使用其单线程 COM 对象实现。rgs 文件中的线程模型已被设置为“Free”，原因是该模型是非 DCOM Windows CE 平台支持的唯一线程模型。"
 #endif
 
+using namespace std;
 using namespace ATL;
 
 class ATL_NO_VTABLE CContextMenuExt :
@@ -26,7 +27,7 @@ class ATL_NO_VTABLE CContextMenuExt :
 {
 public:
     CContextMenuExt() {
-        InitializeMenuIcon();
+        InitializeModule();
     }
 
     DECLARE_REGISTRY_RESOURCEID(106)
@@ -53,11 +54,13 @@ public:
     STDMETHOD(GetCommandString)(UINT_PTR, UINT, UINT*, CHAR*, UINT);
 
 private:
-    HBITMAP hbmMenuIcon = nullptr;
+    WCHAR* moduleDir = nullptr;
+    HBITMAP hBitmapMenu1 = nullptr;
+    HBITMAP hBitmapMenu2 = nullptr;
     INT uFilesCount = 0;
-    std::vector<std::wstring> vwFileNames;
-    VOID InitializeMenuIcon();
-    VOID CreateComputeHashProcess();
+    vector<wstring> vwFileNames;
+    VOID InitializeModule();
+    VOID CreateGUIProcessComputeHash(const WCHAR*);
 };
 
 OBJECT_ENTRY_AUTO(__uuidof(ContextMenuExt), CContextMenuExt)

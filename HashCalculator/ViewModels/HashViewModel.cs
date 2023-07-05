@@ -583,16 +583,16 @@ namespace HashCalculator
                         case AlgoType.MD5:
                             algoObject = new MD5Cng();
                             break;
-                        case AlgoType.BLAKE2s:
+                        case AlgoType.BLAKE2S:
                             algoObject = new BouncyCastleIDigest<Blake2sDigest>();
                             break;
-                        case AlgoType.BLAKE2b:
+                        case AlgoType.BLAKE2B:
                             algoObject = new BouncyCastleIDigest<Blake2bDigest>();
                             break;
                         case AlgoType.BLAKE3:
                             algoObject = new BouncyCastleIDigest<Blake3Digest>();
                             break;
-                        case AlgoType.Whirlpool:
+                        case AlgoType.WHIRLPOOL:
                             algoObject = new BouncyCastleIDigest<WhirlpoolDigest>();
                             break;
                     }

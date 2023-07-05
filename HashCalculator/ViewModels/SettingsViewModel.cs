@@ -243,10 +243,10 @@ namespace HashCalculator
             new ControlItem(AlgoMap.GetAlgoName(AlgoType.SHA3_384), AlgoType.SHA3_384),
             new ControlItem(AlgoMap.GetAlgoName(AlgoType.SHA3_512), AlgoType.SHA3_512),
             new ControlItem(AlgoMap.GetAlgoName(AlgoType.MD5), AlgoType.MD5),
-            new ControlItem(AlgoMap.GetAlgoName(AlgoType.BLAKE2s), AlgoType.BLAKE2s),
-            new ControlItem(AlgoMap.GetAlgoName(AlgoType.BLAKE2b), AlgoType.BLAKE2b),
+            new ControlItem(AlgoMap.GetAlgoName(AlgoType.BLAKE2S), AlgoType.BLAKE2S),
+            new ControlItem(AlgoMap.GetAlgoName(AlgoType.BLAKE2B), AlgoType.BLAKE2B),
             new ControlItem(AlgoMap.GetAlgoName(AlgoType.BLAKE3), AlgoType.BLAKE3),
-            new ControlItem(AlgoMap.GetAlgoName(AlgoType.Whirlpool), AlgoType.Whirlpool),
+            new ControlItem(AlgoMap.GetAlgoName(AlgoType.WHIRLPOOL), AlgoType.WHIRLPOOL),
         };
 
         [XmlIgnore]
