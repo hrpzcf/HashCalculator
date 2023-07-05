@@ -149,9 +149,10 @@
                             </li>
                             <li>
                                 <span id="importance" class="notice">请注意！！！</span>
-                                该包含&quot;文件哈希值-文件名&quot;的文本文件内容必须是通用排版格式，即每行都是<span
-                                    class="code">6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b
-                                    *文件名</span>这样的形式，且文件编码是 UTF-8，否则本程序将无法解析该哈希值文件的内容并完成校验。其中哈希值不区分大小写，星号可有可无。
+                                该包含&quot;文件哈希值-文件名&quot;的文本文件内容必须是通用排版格式，即每行都是像<span class="code">#SHA1
+                                    *6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b
+                                    *文件名</span>这样的格式，否则本程序将无法解析该哈希值文件的内容并完成校验。其中哈希值不区分输出格式(比如 Base64
+                                格式和十六进制大写/小写格式)，星号可有可无。
                             </li>
                         </ul>
                     <li>
@@ -353,9 +354,12 @@
         <br />
         <div class="title">安装、卸载方面的疑难杂症</div>
         <ul class="outter_ul">
+            <li><span class="steps">安装完成后系统右键菜单没有出现计算文件哈希值选项：</span>目前 HashCalculator
+                仅支持选中这些文件类型后右击会出现计算哈希值菜单：文件、文件夹、文件夹背景。如果右击这些类型也没有出现计算哈希值菜单，那么有可能你安装了不正确的版本，32 位系统请安装
+                HashCalculator_xxx_x86.msi，64 位系统请安装 HashCalculator_xxx_x64.msi，如果还是没有出现计算哈希值菜单，有可能右键菜单扩展被意外清除，请重新安装。
+            </li>
             <li><span class="steps">安装 HashCalculator 时提示&quot;已经安装了本产品...&quot;：</span>请到系统设置面板👉程序👉安装的程序中找到
-                HashCalculator
-                选择卸载后再安装新版本。</li>
+                HashCalculator 选择卸载后再安装新版本。</li>
             <li><span class="steps">安装新版本时出现&quot;修复/删除&quot;对话框：</span>请勿选择修复或删除，先关闭对话框，然后右键点击 .msi
                 文件选择&quot;卸载&quot;（或到系统设置面板👉程序👉安装的程序中找到 HashCalculator
                 选择卸载），卸载过程会提示关闭资源管理器，请选择&quot;是&quot;，卸载完成后再安装新版本。</li>
@@ -368,7 +372,7 @@
                 文件，此方法仅供专业人员使用，不过多描述。</div>
         </ul>
         <br />
-        <div class="title">源代码贡献者（感谢所有贡献者）</div>
+        <div class="title">源代码贡献者 (感谢所有贡献者)</div>
         <ul>
             <li>
                 <a href="https://github.com/hrpzcf" target="_blank" rel="noreferrer noopener">hrpzcf</a>
