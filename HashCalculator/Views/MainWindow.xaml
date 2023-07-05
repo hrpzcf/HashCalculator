@@ -112,48 +112,21 @@
                 <Button
                     Grid.Column="7"
                     Margin="4,0,0,0"
-                    Command="{Binding ClearAllTableLinesCmd}"
-                    Style="{StaticResource ImageButtonStyle2}"
-                    ToolTip="清空所有内容：清空表格中显示的所有行">
-                    <Image Source="/Images/clear_panel_32.png" />
-                </Button>
-                <Button
-                    Grid.Column="8"
-                    Margin="4,0,0,0"
                     Command="{Binding StopEnumeratingPackageCmd}"
                     Style="{StaticResource ImageButtonStyle2}"
                     ToolTip="停止搜索文件：如果表格正持续增加新文件，则立即停止向表格添加新文件，但不停止哈希值计算。">
                     <Image Source="/Images/search_files_32.png" />
                 </Button>
                 <Button
-                    Grid.Column="9"
+                    Grid.Column="8"
                     Margin="28,0,0,0"
-                    Command="{Binding RefreshHashNewLinesCmd}"
-                    IsEnabled="{Binding State, Converter={StaticResource ButtonEnabledCvt}}"
+                    Command="{Binding RefreshAllOutputTypeCmd}"
                     Style="{StaticResource ImageButtonStyle2}"
-                    ToolTip="新增哈希计算：根据 [默认哈希算法] 下拉列表所选算法，计算表格中所有文件的哈希值，但不清除原来的计算结果，而是增加新的行来显示结果">
-                    <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnNewLineEnabledImgCvt}}" />
+                    ToolTip="刷新输出方式：以 [默认输出方式] 下拉列表选择的输出方式更新表格内所有文件的哈希值显示方式">
+                    <Image Source="/Images/refresh_output_32.png" />
                 </Button>
                 <Button
-                    Grid.Column="10"
-                    Margin="4,0,0,0"
-                    Command="{Binding RefreshCurrentHashCmd}"
-                    IsEnabled="{Binding State, Converter={StaticResource ButtonEnabledCvt}}"
-                    Style="{StaticResource ImageButtonStyle2}"
-                    ToolTip="计算未完成项：根据 [默认哈希算法] 下拉列表所选算法，重新计算表格中未完成计算的文件的哈希值">
-                    <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnRefreshEnabledImgCvt}}" />
-                </Button>
-                <Button
-                    Grid.Column="11"
-                    Margin="4,0,0,0"
-                    Command="{Binding RefreshCurHashForceCmd}"
-                    IsEnabled="{Binding State, Converter={StaticResource ButtonEnabledCvt}}"
-                    Style="{StaticResource ImageButtonStyle2}"
-                    ToolTip="全部重新计算：根据 [默认哈希算法] 下拉列表所选算法，重新计算表格中所有文件的哈希值">
-                    <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnRefreshForceEnabledImgCvt}}" />
-                </Button>
-                <Button
-                    Grid.Column="12"
+                    Grid.Column="9"
                     Margin="4,0,0,0"
                     Command="{Binding ExportAsTextFileCmd}"
                     IsEnabled="{Binding State, Converter={StaticResource ButtonEnabledCvt}}"
@@ -162,12 +135,39 @@
                     <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnExportEnabledImgCvt}}" />
                 </Button>
                 <Button
+                    Grid.Column="10"
+                    Margin="4,0,0,0"
+                    Command="{Binding RefreshHashNewLinesCmd}"
+                    IsEnabled="{Binding State, Converter={StaticResource ButtonEnabledCvt}}"
+                    Style="{StaticResource ImageButtonStyle2}"
+                    ToolTip="新增哈希计算：根据 [默认哈希算法] 下拉列表所选算法，计算表格中所有文件的哈希值，但不清除原来的计算结果，而是增加新的行来显示结果">
+                    <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnNewLineEnabledImgCvt}}" />
+                </Button>
+                <Button
+                    Grid.Column="11"
+                    Margin="4,0,0,0"
+                    Command="{Binding RefreshCurrentHashCmd}"
+                    IsEnabled="{Binding State, Converter={StaticResource ButtonEnabledCvt}}"
+                    Style="{StaticResource ImageButtonStyle2}"
+                    ToolTip="计算未完成项：根据 [默认哈希算法] 下拉列表所选算法，重新计算表格中未完成计算的文件的哈希值">
+                    <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnRefreshEnabledImgCvt}}" />
+                </Button>
+                <Button
+                    Grid.Column="12"
+                    Margin="4,0,0,0"
+                    Command="{Binding RefreshCurHashForceCmd}"
+                    IsEnabled="{Binding State, Converter={StaticResource ButtonEnabledCvt}}"
+                    Style="{StaticResource ImageButtonStyle2}"
+                    ToolTip="全部重新计算：根据 [默认哈希算法] 下拉列表所选算法，重新计算表格中所有文件的哈希值">
+                    <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnRefreshForceEnabledImgCvt}}" />
+                </Button>
+                <Button
                     Grid.Column="13"
                     Margin="4,0,0,0"
-                    Command="{Binding RefreshAllOutputTypeCmd}"
+                    Command="{Binding ClearAllTableLinesCmd}"
                     Style="{StaticResource ImageButtonStyle2}"
-                    ToolTip="刷新输出方式：以 [默认输出方式] 下拉列表选择的输出方式更新表格内所有文件的哈希值显示方式">
-                    <Image Source="/Images/refresh_output_32.png" />
+                    ToolTip="清空所有内容：清空表格中显示的所有行">
+                    <Image Source="/Images/clear_panel_32.png" />
                 </Button>
                 <Button
                     Grid.Column="14"
