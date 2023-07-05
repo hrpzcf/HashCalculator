@@ -1,5 +1,6 @@
 ﻿using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -16,7 +17,7 @@ namespace HashCalculator
 
         public static IntPtr WndHandle { get; private set; }
 
-        //public static ScrollViewer DataGridScroll { get; private set; }
+        public static IEnumerable<string> PathsFromStartupArgs { get; set; }
 
         public MainWindow()
         {
@@ -31,10 +32,12 @@ namespace HashCalculator
         private void MainWindowLoaded(object sender, RoutedEventArgs e)
         {
             WndHandle = new WindowInteropHelper(this).Handle;
-            //if (VisualTreeHelper.GetChild(this.uiDataGrid_HashFiles, 0) is Border border)
-            //{
-            //    DataGridScroll = border.Child as ScrollViewer;
-            //}
+            if (PathsFromStartupArgs != null)
+            {
+                this.viewModel.BeginDisplayModels(
+                    new PathPackage(PathsFromStartupArgs, Settings.Current.SelectedSearchPolicy));
+                PathsFromStartupArgs = default;
+            }
         }
 
         private void DataGrid_FilesToCalculate_Drop(object sender, DragEventArgs e)

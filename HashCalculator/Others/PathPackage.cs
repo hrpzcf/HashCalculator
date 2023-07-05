@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Threading;
 
 namespace HashCalculator
@@ -45,48 +46,56 @@ namespace HashCalculator
                     try
                     {
                         DirectoryInfo dInfo = new DirectoryInfo(path);
-                        IEnumerable<FileInfo> fInfos;
+                        IEnumerator<FileInfo> fiEnum;
                         switch (this.searchPolicy)
                         {
                             default:
                             case SearchPolicy.Children:
-                                fInfos = dInfo.EnumerateFiles();
+                                fiEnum = dInfo.EnumerateFiles().GetEnumerator();
                                 break;
                             case SearchPolicy.Descendants:
-                                fInfos = dInfo.EnumerateFiles("*", SearchOption.AllDirectories);
+                                fiEnum = dInfo.EnumerateFiles("*", SearchOption.AllDirectories).GetEnumerator();
                                 break;
                             case SearchPolicy.DontSearch:
                                 continue;
                         }
-                        if (this.hashBasis is null)
+                        // 不直接 foreach 遍历 EnumerateFiles 返回的 IEnumerable 的原因：
+                        // 遍历过程中捕捉不到 UnauthorizedAccessException 异常(?)
+                        while (true)
                         {
-                            foreach (FileInfo fileInfo in fInfos)
+                            try
                             {
-                                yield return new ModelArg(fileInfo.FullName);
-                                if (this.StopSearchingToken != null &&
-                                    this.StopSearchingToken.IsCancellationRequested)
+                                if (!fiEnum.MoveNext())
                                 {
-                                    yield break;
+                                    break;
                                 }
+                            }
+                            catch (Exception)
+                            {
+                                // 不使用 continue 而使用 break 的原因：
+                                // 如果因权限等问题导致 MoveNext 抛出异常，
+                                // 那么下次 MoveNext 结果肯定是 false(?)，使用 continue 没有意义
+                                break;
+                            }
+                            if (this.hashBasis is null)
+                            {
+                                yield return new ModelArg(fiEnum.Current.FullName);
+                            }
+                            else if (this.hashBasis.IsExpectedFileHash(fiEnum.Current.Name, out byte[] hash))
+                            {
+                                yield return new ModelArg(hash, fiEnum.Current.FullName);
+                            }
+                            if (this.StopSearchingToken != null &&
+                                this.StopSearchingToken.IsCancellationRequested)
+                            {
+                                yield break;
                             }
                         }
-                        else
+                        if (this.hashBasis != null)
                         {
-                            foreach (FileInfo fileInfo in fInfos)
-                            {
-                                if (this.hashBasis.IsExpectedFileHash(fileInfo.Name, out byte[] hash))
-                                {
-                                    yield return new ModelArg(hash, fileInfo.FullName);
-                                }
-                                if (this.StopSearchingToken != null &&
-                                    this.StopSearchingToken.IsCancellationRequested)
-                                {
-                                    yield break;
-                                }
-                            }
                             foreach (string fname in this.hashBasis.FileHashDict.Keys)
                             {
-                                if (!this.hashBasis.FileHashDict[fname].IsExplored)
+                                if (!this.hashBasis.FileHashDict[fname].HasBeenChecked)
                                 {
                                     yield return new ModelArg(fname, true);
                                 }
@@ -101,12 +110,9 @@ namespace HashCalculator
                     {
                         yield return new ModelArg(path);
                     }
-                    else
+                    else if (this.hashBasis.IsExpectedFileHash(Path.GetFileName(path), out byte[] hash))
                     {
-                        if (this.hashBasis.IsExpectedFileHash(Path.GetFileName(path), out byte[] hash))
-                        {
-                            yield return new ModelArg(hash, path);
-                        }
+                        yield return new ModelArg(hash, path);
                     }
                 }
             }

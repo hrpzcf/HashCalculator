@@ -80,7 +80,10 @@
     </Midl>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\HashCalculator\Images\icon.png">
+    <Image Include="icon_1.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="icon_2.bmp">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>

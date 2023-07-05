@@ -15,7 +15,7 @@ namespace HashCalculator
             this.HashList.Add(initHash);
         }
 
-        public bool IsExplored { get; set; }
+        public bool HasBeenChecked { get; set; }
 
         public List<byte[]> HashList { get; } = new List<byte[]>();
 
@@ -188,20 +188,20 @@ namespace HashCalculator
                 outputHash = default;
                 return false;
             }
-            BasisDictValueWrapper basisDictValue = this.FileHashDict[matchedName];
-            basisDictValue.IsExplored = true;
-            if (!basisDictValue.HashList.Any())
+            BasisDictValueWrapper dictValue = this.FileHashDict[matchedName];
+            dictValue.HasBeenChecked = true;
+            if (!dictValue.HashList.Any())
             {
                 outputHash = new byte[0];
                 return true;
             }
-            if (basisDictValue.HashList.Count == 1)
+            if (dictValue.HashList.Count == 1)
             {
-                outputHash = basisDictValue.HashList[0];
+                outputHash = dictValue.HashList[0];
                 return true;
             }
-            byte[] first = basisDictValue.HashList.First();
-            if (!basisDictValue.HashList.Skip(1).All(i => i.SequenceEqual(first)))
+            byte[] first = dictValue.HashList.First();
+            if (!dictValue.HashList.Skip(1).All(i => i.SequenceEqual(first)))
             {
                 outputHash = new byte[0];
                 return true;

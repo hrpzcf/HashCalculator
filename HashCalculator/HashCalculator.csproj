@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0"
-  xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -45,6 +44,11 @@
   <ItemGroup>
     <Reference Include="BouncyCastle.Cryptography">
       <HintPath>Assembly\BouncyCastle.Cryptography.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="CommandLine, Version=2.9.1.0, Culture=neutral, PublicKeyToken=5a870481e358d379, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Assembly\CommandLine.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.WindowsAPICodePack">
@@ -147,6 +151,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Assembly\BouncyCastle.Cryptography.dll" />
+    <EmbeddedResource Include="Assembly\CommandLine.dll" />
     <EmbeddedResource Include="Assembly\Microsoft.WindowsAPICodePack.dll" />
     <EmbeddedResource Include="Assembly\Microsoft.WindowsAPICodePack.Shell.dll" />
     <EmbeddedResource Include="Assembly\XamlAnimatedGif.dll" />

@@ -9,8 +9,9 @@ namespace HashCalculator
     public partial class AppLoading : Application
     {
         [STAThread()]
-        public static void Main()
+        public static void Main(string[] args)
         {
+            Settings.StartupArgs = args;
             AppLoading app = new AppLoading();
             app.Exit += ApplicationExit;
             app.Startup += ApplicationStartup;
@@ -21,10 +22,11 @@ namespace HashCalculator
         private static Assembly AssemblyResolve(object sender, ResolveEventArgs arg)
         {
             string asmbName = new AssemblyName(arg.Name).Name;
-            if (!(asmbName == "BouncyCastle.Cryptography" ||
+            if (!(asmbName == "XamlAnimatedGif" ||
+                asmbName == "CommandLine" ||
+                asmbName == "BouncyCastle.Cryptography" ||
                 asmbName == "Microsoft.WindowsAPICodePack" ||
-                asmbName == "Microsoft.WindowsAPICodePack.Shell" ||
-                asmbName == "XamlAnimatedGif"))
+                asmbName == "Microsoft.WindowsAPICodePack.Shell"))
             {
                 return default;
             }

@@ -144,10 +144,10 @@
         SHA3_384,
         SHA3_512,
         MD5,
-        BLAKE2s,
-        BLAKE2b,
+        BLAKE2S,
+        BLAKE2B,
         BLAKE3,
-        Whirlpool,
+        WHIRLPOOL,
         Unknown = -1,
     }
 
