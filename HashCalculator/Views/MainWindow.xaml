@@ -389,9 +389,7 @@
                                     Style="{StaticResource ImageButtonStyle1}"
                                     ToolTip="停止..."
                                     Visibility="{Binding State, Converter={StaticResource SubBtnVisiblityRunningCvt}}">
-                                    <Image
-                                        Source="/Images/stop.png"
-                                        Stretch="None" />
+                                    <Image Source="/Images/stop.png" />
                                 </Button>
                                 <Button
                                     Grid.Column="2"
@@ -400,9 +398,7 @@
                                     Style="{StaticResource ImageButtonStyle1}"
                                     ToolTip="{Binding State, Converter={StaticResource SubBtnPauseToolTipCvt}}"
                                     Visibility="{Binding State, Converter={StaticResource SubBtnVisiblityRunningCvt}}">
-                                    <Image
-                                        Source="{Binding State, Converter={StaticResource SubBtnPauseImageSrcCvt}}"
-                                        Stretch="None" />
+                                    <Image Source="{Binding State, Converter={StaticResource SubBtnPauseImageSrcCvt}}" />
                                 </Button>
                                 <!--  正排队  -->
                                 <Button
@@ -412,9 +408,7 @@
                                     Style="{StaticResource ImageButtonStyle1}"
                                     ToolTip="取消..."
                                     Visibility="{Binding State, Converter={StaticResource SubBtnVisiblityWaitingCvt}}">
-                                    <Image
-                                        Source="/Images/cancel.png"
-                                        Stretch="None" />
+                                    <Image Source="/Images/cancel.png" />
                                 </Button>
                                 <!--  已成功  -->
                                 <Button
@@ -424,9 +418,7 @@
                                     Style="{StaticResource ImageButtonStyle1}"
                                     ToolTip="复制..."
                                     Visibility="{Binding Result, Converter={StaticResource SubBtnVisiblitySucceededCvt}}">
-                                    <Image
-                                        Source="/Images/copy.png"
-                                        Stretch="None" />
+                                    <Image Source="/Images/copy.png" />
                                 </Button>
                                 <!--  未成功  -->
                                 <Button
@@ -436,9 +428,7 @@
                                     Style="{StaticResource ImageButtonStyle1}"
                                     ToolTip="开始..."
                                     Visibility="{Binding Result, Converter={StaticResource SubBtnVisiblityUnsuccessfulCvt}}">
-                                    <Image
-                                        Source="/Images/start.png"
-                                        Stretch="None" />
+                                    <Image Source="/Images/start.png" />
                                 </Button>
                             </Grid>
                         </DataTemplate>
