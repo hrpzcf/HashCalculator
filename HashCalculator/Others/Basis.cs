@@ -6,11 +6,11 @@ using System.Windows;
 
 namespace HashCalculator
 {
-    internal class BasisDictValueWrapper
+    internal class HashBasisDictValue
     {
-        public BasisDictValueWrapper() { }
+        public HashBasisDictValue() { }
 
-        public BasisDictValueWrapper(byte[] initHash)
+        public HashBasisDictValue(byte[] initHash)
         {
             this.HashList.Add(initHash);
         }
@@ -65,8 +65,8 @@ namespace HashCalculator
 
         public Basis() { }
 
-        public Dictionary<string, BasisDictValueWrapper> FileHashDict { get; }
-            = new Dictionary<string, BasisDictValueWrapper>();
+        public Dictionary<string, HashBasisDictValue> FileHashDict { get; }
+            = new Dictionary<string, HashBasisDictValue>();
 
         private bool AddHashAndName(string hashString, string name)
         {
@@ -84,7 +84,7 @@ namespace HashCalculator
                 }
                 else
                 {
-                    this.FileHashDict[name] = new BasisDictValueWrapper(hash);
+                    this.FileHashDict[name] = new HashBasisDictValue(hash);
                 }
                 return true;
             }
@@ -165,7 +165,7 @@ namespace HashCalculator
                     return CmpRes.Unrelated;
                 }
             }
-            if (!this.FileHashDict.TryGetValue(name, out BasisDictValueWrapper basisValue))
+            if (!this.FileHashDict.TryGetValue(name, out HashBasisDictValue basisValue))
             {
                 return CmpRes.Unrelated;
             }
@@ -188,7 +188,7 @@ namespace HashCalculator
                 outputHash = default;
                 return false;
             }
-            BasisDictValueWrapper dictValue = this.FileHashDict[matchedName];
+            HashBasisDictValue dictValue = this.FileHashDict[matchedName];
             dictValue.HasBeenChecked = true;
             if (!dictValue.HashList.Any())
             {

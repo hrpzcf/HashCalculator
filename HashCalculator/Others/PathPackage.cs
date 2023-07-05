@@ -93,11 +93,16 @@ namespace HashCalculator
                         }
                         if (this.hashBasis != null)
                         {
-                            foreach (string fname in this.hashBasis.FileHashDict.Keys)
+                            foreach (KeyValuePair<string, HashBasisDictValue> kv in this.hashBasis.FileHashDict)
                             {
-                                if (!this.hashBasis.FileHashDict[fname].HasBeenChecked)
+                                if (!kv.Value.HasBeenChecked)
                                 {
-                                    yield return new ModelArg(fname, true);
+                                    yield return new ModelArg(kv.Key, true);
+                                }
+                                if (this.StopSearchingToken != null &&
+                                    this.StopSearchingToken.IsCancellationRequested)
+                                {
+                                    yield break;
                                 }
                             }
                         }
