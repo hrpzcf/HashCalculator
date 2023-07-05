@@ -358,26 +358,6 @@ namespace HashCalculator
         }
     }
 
-    internal class ButtonNotEnabledCvt : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if ((QueueState)value == QueueState.Started)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
     internal class NoColumnCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -507,54 +487,6 @@ namespace HashCalculator
         }
     }
 
-    internal class BtnCancelAllEnabledImgCvt : IValueConverter
-    {
-        private static readonly BitmapImage enabled =
-            new BitmapImage(new Uri("/Images/cancel_32.png", UriKind.Relative));
-        private static readonly BitmapImage disabled =
-            new BitmapImage(new Uri("/Images/cancel_32_gray.png", UriKind.Relative));
-
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            switch ((bool)value)
-            {
-                case true:
-                    return enabled;
-                default:
-                    return disabled;
-            }
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    internal class BtnContinueAllEnabledImgCvt : IValueConverter
-    {
-        private static readonly BitmapImage enabled =
-            new BitmapImage(new Uri("/Images/continue_32.png", UriKind.Relative));
-        private static readonly BitmapImage disabled =
-            new BitmapImage(new Uri("/Images/continue_32_gray.png", UriKind.Relative));
-
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            switch ((bool)value)
-            {
-                case true:
-                    return enabled;
-                default:
-                    return disabled;
-            }
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
     internal class BtnExportEnabledImgCvt : IValueConverter
     {
         private static readonly BitmapImage enabled =
@@ -585,30 +517,6 @@ namespace HashCalculator
             new BitmapImage(new Uri("/Images/new_line_32.png", UriKind.Relative));
         private static readonly BitmapImage disabled =
             new BitmapImage(new Uri("/Images/new_line_32_gray.png", UriKind.Relative));
-
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            switch ((bool)value)
-            {
-                case true:
-                    return enabled;
-                default:
-                    return disabled;
-            }
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    internal class BtnPauseAllEnabledImgCvt : IValueConverter
-    {
-        private static readonly BitmapImage enabled =
-            new BitmapImage(new Uri("/Images/pause_32.png", UriKind.Relative));
-        private static readonly BitmapImage disabled =
-            new BitmapImage(new Uri("/Images/pause_32_gray.png", UriKind.Relative));
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

@@ -14,17 +14,13 @@
     <local:SubBtnVisiblitySucceededCvt x:Key="SubBtnVisiblitySucceededCvt" />
     <local:SubBtnVisiblityCanceledCvt x:Key="SubBtnVisiblityCanceledCvt" />
     <local:ButtonEnabledCvt x:Key="ButtonEnabledCvt" />
-    <local:ButtonNotEnabledCvt x:Key="ButtonNotEnabledCvt" />
     <local:NoColumnCvt x:Key="NoColumnCvt" />
     <local:SubBtnPauseImageSrcCvt x:Key="SubBtnPauseImageSrcCvt" />
     <local:SubBtnPauseToolTipCvt x:Key="SubBtnPauseToolTipCvt" />
     <local:SubProgressWidthCvt x:Key="SubProgressWidthCvt" />
-    <local:BtnCancelAllEnabledImgCvt x:Key="BtnCancelAllEnabledImgCvt" />
     <local:BtnClearPanelEnabledImgCvt x:Key="BtnClearPanelEnabledImgCvt" />
-    <local:BtnContinueAllEnabledImgCvt x:Key="BtnContinueAllEnabledImgCvt" />
     <local:BtnExportEnabledImgCvt x:Key="BtnExportEnabledImgCvt" />
     <local:BtnNewLineEnabledImgCvt x:Key="BtnNewLineEnabledImgCvt" />
-    <local:BtnPauseAllEnabledImgCvt x:Key="BtnPauseAllEnabledImgCvt" />
     <local:BtnRefreshEnabledImgCvt x:Key="BtnRefreshEnabledImgCvt" />
     <local:BtnRefreshForceEnabledImgCvt x:Key="BtnRefreshForceEnabledImgCvt" />
     <local:BtnSelectFileEnabledImgCvt x:Key="BtnSelectFileEnabledImgCvt" />

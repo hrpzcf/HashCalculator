@@ -174,28 +174,25 @@
                     Grid.Column="14"
                     Margin="28,0,0,0"
                     Command="{Binding ContinueDisplayedModelsCmd}"
-                    IsEnabled="{Binding State, Converter={StaticResource ButtonNotEnabledCvt}}"
                     Style="{StaticResource ImageButtonStyle2}"
                     ToolTip="继续所有任务：继续所有已暂停的哈希值计算任务">
-                    <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnContinueAllEnabledImgCvt}}" />
+                    <Image Source="/Images/continue_32.png" />
                 </Button>
                 <Button
                     Grid.Column="15"
                     Margin="4,0,0,0"
                     Command="{Binding PauseDisplayedModelsCmd}"
-                    IsEnabled="{Binding State, Converter={StaticResource ButtonNotEnabledCvt}}"
                     Style="{StaticResource ImageButtonStyle2}"
                     ToolTip="暂停所有任务：暂停所有正在运行的哈希值计算任务（计算大量小文件时可能会暂停不成功，需要多次点击）">
-                    <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnPauseAllEnabledImgCvt}}" />
+                    <Image Source="/Images/pause_32.png" />
                 </Button>
                 <Button
                     Grid.Column="16"
                     Margin="4,0,0,0"
                     Command="{Binding CancelDisplayedModelsCmd}"
-                    IsEnabled="{Binding State, Converter={StaticResource ButtonNotEnabledCvt}}"
                     Style="{StaticResource ImageButtonStyle2}"
                     ToolTip="取消所有任务：取消所有排队中、运行中和已暂停的哈希值计算任务">
-                    <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnCancelAllEnabledImgCvt}}" />
+                    <Image Source="/Images/cancel_32.png" />
                 </Button>
                 <Button
                     Grid.Column="17"
