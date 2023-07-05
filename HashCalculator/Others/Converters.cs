@@ -237,7 +237,7 @@ namespace HashCalculator
         }
     }
 
-    internal class SubBtnVisiblityFinishedCvt : IValueConverter
+    internal class FinishedVisiblityCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -318,11 +318,12 @@ namespace HashCalculator
         }
     }
 
-    internal class SubBtnVisiblityCanceledCvt : IValueConverter
+    internal class SubBtnVisiblityUnsuccessfulCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if ((HashResult)value != HashResult.Canceled)
+            HashResult hashResult = (HashResult)value;
+            if (hashResult != HashResult.Canceled && hashResult != HashResult.Failed)
             {
                 return Visibility.Hidden;
             }

@@ -93,18 +93,6 @@ namespace HashCalculator
             }
         }
 
-        /// <summary>
-        /// 如果计算未完成，即使“导出”（Export）被用户勾上也不会被导出。
-        /// 因为计算未完成时 IsSucceeded 为 false，导出结果时同时验证 IsSucceeded 和 Export。
-        /// </summary>
-        public bool IsSucceeded
-        {
-            get
-            {
-                return this.Result == HashResult.Succeeded;
-            }
-        }
-
         public byte[] Hash { get; private set; }
 
         public string HashString
@@ -355,18 +343,8 @@ namespace HashCalculator
             new ControlItem("Hex小写", OutputType.BinaryLower),
         };
 
-        private void ModelCancelled()
-        {
-            if (!this.IsSucceeded)
-            {
-                this.Result = HashResult.Canceled;
-            }
-        }
-
         public void ResetHashViewModel()
         {
-            this.cancellation = new CancellationTokenSource();
-            this.cancellation.Token.Register(this.ModelCancelled);
             this.Hash = null;
             this.Export = false;
             this.FileSize = 0;
@@ -377,6 +355,14 @@ namespace HashCalculator
             this.Result = HashResult.NoResult;
             this.CmpResult = CmpRes.NoResult;
             this.HashAlgoType = AlgoType.Unknown;
+            this.cancellation = new CancellationTokenSource();
+            this.cancellation.Token.Register(() =>
+            {
+                if (this.Result == HashResult.NoResult)
+                {
+                    this.Result = HashResult.Canceled;
+                }
+            });
         }
 
         public bool StartupModel(bool force)

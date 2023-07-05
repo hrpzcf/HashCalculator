@@ -9,10 +9,10 @@
     <local:CmpResTextCvt x:Key="CmpResTextCvt" />
     <local:CmpResBorderCvt x:Key="CmpResBorderCvt" />
     <local:SubBtnVisiblityRunningCvt x:Key="SubBtnVisiblityRunningCvt" />
-    <local:SubBtnVisiblityFinishedCvt x:Key="SubBtnVisiblityFinishedCvt" />
+    <local:FinishedVisiblityCvt x:Key="FinishedVisiblityCvt" />
     <local:SubBtnVisiblityWaitingCvt x:Key="SubBtnVisiblityWaitingCvt" />
     <local:SubBtnVisiblitySucceededCvt x:Key="SubBtnVisiblitySucceededCvt" />
-    <local:SubBtnVisiblityCanceledCvt x:Key="SubBtnVisiblityCanceledCvt" />
+    <local:SubBtnVisiblityUnsuccessfulCvt x:Key="SubBtnVisiblityUnsuccessfulCvt" />
     <local:ButtonEnabledCvt x:Key="ButtonEnabledCvt" />
     <local:NoColumnCvt x:Key="NoColumnCvt" />
     <local:SubBtnPauseImageSrcCvt x:Key="SubBtnPauseImageSrcCvt" />

@@ -763,7 +763,7 @@ namespace HashCalculator
                 {
                     foreach (HashViewModel hm in HashViewModels)
                     {
-                        if (!(hm.IsSucceeded && hm.Export))
+                        if (hm.Result != HashResult.Succeeded || !hm.Export)
                         {
                             continue;
                         }
@@ -896,7 +896,7 @@ namespace HashCalculator
             {
                 foreach (HashViewModel hm in HashViewModels)
                 {
-                    if (!hm.IsSucceeded)
+                    if (hm.Result != HashResult.Succeeded)
                     {
                         hm.CmpResult = CmpRes.NoResult;
                     }

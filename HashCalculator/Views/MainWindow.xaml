@@ -369,7 +369,7 @@
                                     VerticalAlignment="Center"
                                     Text="{Binding HashString}"
                                     ToolTip="{Binding ModelDetails}"
-                                    Visibility="{Binding State, Converter={StaticResource SubBtnVisiblityFinishedCvt}}" />
+                                    Visibility="{Binding State, Converter={StaticResource FinishedVisiblityCvt}}" />
                                 <!--  正在计算状态  -->
                                 <!--  ProgressBar的Value绑定需是OneWay，因为默认TwoWay和private set的Progress无法成功绑定  -->
                                 <ProgressBar
@@ -428,14 +428,14 @@
                                         Source="/Images/copy.png"
                                         Stretch="None" />
                                 </Button>
-                                <!--  已取消  -->
+                                <!--  未成功  -->
                                 <Button
                                     Grid.Column="2"
                                     Padding="4"
                                     Command="{Binding RestartModelSelfCmd}"
                                     Style="{StaticResource ImageButtonStyle1}"
                                     ToolTip="开始..."
-                                    Visibility="{Binding Result, Converter={StaticResource SubBtnVisiblityCanceledCvt}}">
+                                    Visibility="{Binding Result, Converter={StaticResource SubBtnVisiblityUnsuccessfulCvt}}">
                                     <Image
                                         Source="/Images/start.png"
                                         Stretch="None" />
