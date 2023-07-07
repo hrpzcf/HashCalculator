@@ -233,7 +233,8 @@
     <ClInclude Include="dllmain.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="Resource.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="ResourceStr.h" />
     <ClInclude Include="ShellExtensions_i.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>

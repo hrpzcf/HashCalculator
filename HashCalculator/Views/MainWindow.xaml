@@ -539,7 +539,7 @@
                     Foreground="Gray"
                     ToolTip="表格中的总行数" />
                 <Image
-                    Margin="2,0,0,0"
+                    Margin="6,0,0,0"
                     VerticalAlignment="Center"
                     Source="/Images/remaining_16.png"
                     ToolTip="哈希值计算任务数" />

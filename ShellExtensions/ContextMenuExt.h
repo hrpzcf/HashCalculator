@@ -15,8 +15,9 @@
 #error "Windows CE 平台(如不提供完全 DCOM 支持的 Windows Mobile 平台)上无法正确支持单线程 COM 对象。定义 _CE_ALLOW_SINGLE_THREADED_OBJECTS_IN_MTA 可强制 ATL 支持创建单线程 COM 对象实现并允许使用其单线程 COM 对象实现。rgs 文件中的线程模型已被设置为“Free”，原因是该模型是非 DCOM Windows CE 平台支持的唯一线程模型。"
 #endif
 
-using namespace std;
 using namespace ATL;
+using std::vector;
+using std::wstring;
 
 class ATL_NO_VTABLE CContextMenuExt :
     public CComObjectRootEx<CComSingleThreadModel>,
@@ -25,12 +26,18 @@ class ATL_NO_VTABLE CContextMenuExt :
     public IShellExtInit,
     public IContextMenu
 {
-public:
-    CContextMenuExt() {
-        InitializeModule();
-    }
+    HBITMAP bitmap_menu1 = nullptr;
+    HBITMAP bitmap_menu2 = nullptr;
+    vector<wstring> filepath_list;
+    LPWSTR module_dirpath = nullptr;
+    HINSTANCE module_inst = nullptr;
+    VOID CreateGUIProcessComputeHash(LPCWSTR);
 
-    DECLARE_REGISTRY_RESOURCEID(106)
+public:
+    CContextMenuExt();
+    ~CContextMenuExt();
+
+    DECLARE_REGISTRY_RESOURCEID(IDR_CONTEXTMENUEXT)
 
     BEGIN_COM_MAP(CContextMenuExt)
         COM_INTERFACE_ENTRY(IContextMenuExt)
@@ -39,28 +46,14 @@ public:
         COM_INTERFACE_ENTRY(IContextMenu)
     END_COM_MAP()
 
-    DECLARE_PROTECT_FINAL_CONSTRUCT()
-        HRESULT FinalConstruct()
-    {
-        return S_OK;
-    }
+    DECLARE_PROTECT_FINAL_CONSTRUCT();
 
-    void FinalRelease() { }
-
-public:
+    HRESULT FinalConstruct() { return S_OK; }
+    VOID FinalRelease() { }
     STDMETHOD(Initialize)(PCIDLIST_ABSOLUTE, IDataObject*, HKEY);
     STDMETHOD(QueryContextMenu)(HMENU, UINT, UINT, UINT, UINT);
     STDMETHOD(InvokeCommand)(CMINVOKECOMMANDINFO*);
     STDMETHOD(GetCommandString)(UINT_PTR, UINT, UINT*, CHAR*, UINT);
-
-private:
-    WCHAR* moduleDir = nullptr;
-    HBITMAP hBitmapMenu1 = nullptr;
-    HBITMAP hBitmapMenu2 = nullptr;
-    INT uFilesCount = 0;
-    vector<wstring> vwFileNames;
-    VOID InitializeModule();
-    VOID CreateGUIProcessComputeHash(const WCHAR*);
 };
 
 OBJECT_ENTRY_AUTO(__uuidof(ContextMenuExt), CContextMenuExt)

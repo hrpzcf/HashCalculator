@@ -25,7 +25,7 @@
     <ClInclude Include="targetver.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Resource.h">
+    <ClInclude Include="resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="dllmain.h">
@@ -38,6 +38,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="ContextMenuExt.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceStr.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
