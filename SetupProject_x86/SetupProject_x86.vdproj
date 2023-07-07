@@ -76,12 +76,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_F88285D3D23446849D09193BCF98342C"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_E0C485077CD44DCC8C939460BEA8FB9D"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -113,6 +107,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_EA316B3C42DEC7EBF4179F9E66D56E3C"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_F88285D3D23446849D09193BCF98342C"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -483,15 +483,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:HashCalculator"
-        "ProductCode" = "8:{B2E9DCCA-7C11-4A27-8DDF-3B731C1A72BA}"
-        "PackageCode" = "8:{3BDB24AF-2FF8-4A60-BC5A-5E73DBBB55FA}"
+        "ProductCode" = "8:{C1DEF82F-0623-4157-AF1B-3940E26C36EF}"
+        "PackageCode" = "8:{F056389D-4834-42A7-93A7-288B772353AA}"
         "UpgradeCode" = "8:{82113E07-1025-46C6-8B7B-EE4940A4555C}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:FALSE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:4.2.0"
+        "ProductVersion" = "8:4.3.0"
         "Manufacturer" = "8:hrpzcf"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
