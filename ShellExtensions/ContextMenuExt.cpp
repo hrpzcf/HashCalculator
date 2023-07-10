@@ -8,7 +8,7 @@
 #include <shlobj_core.h>
 #include "ResourceStr.h"
 
-const wstring exec_name = L"HashCalculator.exe";
+const wstring exec_name(L"HashCalculator.exe");
 constexpr auto IDM_COMPUTE_HASH = 0;
 constexpr auto IDM_COMPUTE_SHA1 = 1;
 constexpr auto IDM_COMPUTE_SHA224 = 2;
@@ -33,12 +33,15 @@ VOID CContextMenuExt::CreateGUIProcessComputeHash(LPCWSTR algo) {
         MessageBoxW(nullptr, text.String(), title.String(), MB_TOPMOST | MB_ICONERROR);
         return;
     }
-    wstring executable_path = wstring(this->module_dirpath) + L"\\" + exec_name;
-    wstring arguments = L"compute";
+    wstring executable_path(wstring(this->module_dirpath) + L"\\" + exec_name);
+    wstring arguments(L"compute");
     if (nullptr != algo) {
         arguments += wstring(L" --algo ") + algo;
     }
     for (SIZE_T i = 0; i < this->filepath_list.size(); ++i) {
+        if (this->filepath_list[i][this->filepath_list[i].size() - 1] == L'\\') {
+            this->filepath_list[i] += L'\\';
+        }
         arguments += L" \"" + this->filepath_list[i] + L"\"";
     }
     SIZE_T args_wchar_count = arguments.size() + 1;

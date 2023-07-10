@@ -1,36 +1,12 @@
-﻿using CommandLine;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
 using System.Windows;
 using System.Xml.Serialization;
 
 namespace HashCalculator
 {
-    [Verb("compute")]
-    internal class ComputeHash
-    {
-        [Option("algo")]
-        public string Algo { get; set; }
-
-        [Value(0)]
-        public IEnumerable<string> FilePaths { get; set; }
-    }
-
-    [Verb("verify")]
-    internal class VerifyHash
-    {
-        [Option("algo", Default = -1)]
-        public int AlgoEnum { get; set; }
-
-        [Option("basis", Required = true)]
-        public int BasisPath { get; set; }
-    }
-
     internal static class Settings
     {
-        private static readonly int maxAlgoEnumInt =
-            Enum.GetNames(typeof(AlgoType)).Length - 2;
         private static readonly XmlSerializer serializer =
             new XmlSerializer(typeof(SettingsViewModel));
         private static readonly string appBaseDataPath = Environment.GetFolderPath(
@@ -89,30 +65,6 @@ namespace HashCalculator
                     }
                 }
                 catch (Exception) { }
-            }
-            if (StartupArgs.Length > 0)
-            {
-                Parser.Default.ParseArguments<ComputeHash>(StartupArgs).WithParsed(option =>
-                {
-                    if (option.FilePaths != null)
-                    {
-                        MainWindow.PathsFromStartupArgs = option.FilePaths;
-                    }
-                    if (!string.IsNullOrEmpty(option.Algo))
-                    {
-                        if (int.TryParse(option.Algo, out int algo))
-                        {
-                            if (algo >= 0 && algo <= maxAlgoEnumInt)
-                            {
-                                Current.SelectedAlgo = (AlgoType)algo;
-                            }
-                        }
-                        else if (Enum.TryParse(option.Algo.ToUpper(), out AlgoType algoType))
-                        {
-                            Current.SelectedAlgo = algoType;
-                        }
-                    }
-                });
             }
             return executeResult;
         }

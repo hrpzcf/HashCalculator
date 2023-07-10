@@ -1,8 +1,9 @@
-﻿using Microsoft.WindowsAPICodePack.Dialogs;
+﻿using CommandLine;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
@@ -12,12 +13,13 @@ namespace HashCalculator
     public partial class MainWindow : Window
     {
         private readonly MainWndViewModel viewModel = new MainWndViewModel();
+        private static readonly int maxAlgoEnumInt = Enum.GetNames(typeof(AlgoType)).Length - 2;
 
         public static MainWindow This { get; private set; }
 
         public static IntPtr WndHandle { get; private set; }
 
-        public static IEnumerable<string> PathsFromStartupArgs { get; set; }
+        public static bool FlagComputeInProcessFiles { get; set; }
 
         public MainWindow()
         {
@@ -29,14 +31,75 @@ namespace HashCalculator
             this.Title = $"{Info.Title} v{Info.Ver} by {Info.Author} @ {Info.Published}";
         }
 
+        private void InternalParseArguments(string[] args)
+        {
+            Parser.Default.ParseArguments<ComputeHash>(args).WithParsed(option =>
+            {
+                if (option.FilePaths != null)
+                {
+                    PathPackage package = new PathPackage(
+                        option.FilePaths, Settings.Current.SelectedSearchPolicy);
+                    // 更改 package.PresetAlgoType 而不是 Settings.Current.SelectedAlgoType
+                    // 是因为 Settings.Current.SelectedAlgoType 是全局生效的
+                    // 如果更改 Settings.Current.SelectedAlgoType 则当前未完成的任务都会受影响
+                    // 例如从系统右键选择特定算法启动计算，当前未完成的任务立即会改变算法
+                    // 如果再次从系统右键选择不同算法启动计算且前次选择特定算法启动计算的任务未开始
+                    // 则前一次选择的算法就被第二次选择的算法覆盖了，这不是我们想要的行为
+                    // 当然了以上问题仅限于程序在单实例模式下，程序在多实例模式下没有这个问题
+                    if (!string.IsNullOrEmpty(option.Algo))
+                    {
+                        if (int.TryParse(option.Algo, out int algo))
+                        {
+                            if (algo >= 0 && algo <= maxAlgoEnumInt)
+                            {
+                                package.PresetAlgoType = (AlgoType)algo;
+                            }
+                        }
+                        else if (Enum.TryParse(option.Algo.ToUpper(), out AlgoType algoType))
+                        {
+                            package.PresetAlgoType = algoType;
+                        }
+                    }
+                    this.viewModel.BeginDisplayModels(package);
+                }
+            });
+        }
+
+        /// <summary>
+        /// 多实例模式启动使用此方法处理不同进程传入的待处理的文件、目录路径
+        /// </summary>
+        private void ComputeInProcessFiles()
+        {
+            this.InternalParseArguments(Settings.StartupArgs);
+        }
+
+        /// <summary>
+        /// 单实例模式启动使用此方法处理不同进程传入的待处理的文件、目录路径
+        /// </summary>
+        private void ComputeCrossProcessFilesProc()
+        {
+            MappedFiler.ProcFlagCrossProcess = true;
+            while (true)
+            {
+                MappedFiler.Synchronizer.Wait();
+                // ToArray 能避免 GetArgs 方法在 ParseArguments 内接连被执行多次
+                string[] args = MappedFiler.GetArgs().ToArray();
+                this.InternalParseArguments(args);
+            }
+        }
+
         private void MainWindowLoaded(object sender, RoutedEventArgs e)
         {
             WndHandle = new WindowInteropHelper(this).Handle;
-            if (PathsFromStartupArgs != null)
+            if (FlagComputeInProcessFiles)
             {
-                this.viewModel.BeginDisplayModels(
-                    new PathPackage(PathsFromStartupArgs, Settings.Current.SelectedSearchPolicy));
-                PathsFromStartupArgs = default;
+                this.ComputeInProcessFiles();
+            }
+            else if (!MappedFiler.ProcFlagCrossProcess)
+            {
+                Thread thread = new Thread(this.ComputeCrossProcessFilesProc);
+                thread.IsBackground = true;
+                thread.Start();
             }
         }
 

@@ -50,6 +50,7 @@ namespace HashCalculator
         private static void ApplicationStartup(object sender, StartupEventArgs e)
         {
             Settings.LoadSettings();
+            MappedFiler.PushArgs(Settings.StartupArgs);
         }
 
         private void RunApplication()

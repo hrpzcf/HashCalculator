@@ -158,4 +158,23 @@
         BinaryLower,
         Unknown = -1,
     }
+
+    /// <summary>
+    /// 约定的 MemoryMappedFile 内容排布方案版本
+    /// 默认约定：MemoryMappedFile 内的前 4 个字节总是代表内容排布方案版本，转为 int 值后强转为此枚举
+    /// </summary>
+    internal enum MappedVer
+    {
+        /// <summary>
+        /// 未知版本，不读取 MemoryMappedFile 的内容
+        /// </summary>
+        Unknown,
+        /// <summary>
+        /// 版本 1，按版本 1 的规则读取 MemoryMappedFile 内容
+        ///  0~3 字节：MemoryMappedFile 内容排布方案版本
+        ///  4~7 字节：MemoryMappedFile 内容条目数量
+        /// 8~11 字节：第一个条目的字节数；12~n 字节：第一个条目的内容，n 是 8~11 字节代表的 int 大小 + 11
+        /// </summary>
+        Version1,
+    }
 }

@@ -21,6 +21,7 @@ namespace HashCalculator
         private bool noExportColumn = false;
         private bool noDurationColumn = false;
         private bool noFileSizeColumn = false;
+        private bool runInMultiInstanceMode = false;
 
         public SettingsViewModel()
         {
@@ -132,7 +133,7 @@ namespace HashCalculator
             }
             set
             {
-                this.selectedAlgorithm = value;
+                this.SetPropNotify(ref this.selectedAlgorithm, value);
             }
         }
 
@@ -144,7 +145,7 @@ namespace HashCalculator
             }
             set
             {
-                this.selectedOutputType = value;
+                this.SetPropNotify(ref this.selectedOutputType, value);
             }
         }
 
@@ -213,6 +214,18 @@ namespace HashCalculator
         }
 
         public bool PermanentlyDeleteFiles { get; set; }
+
+        public bool RunInMultiInstanceMode
+        {
+            get
+            {
+                return this.runInMultiInstanceMode;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.runInMultiInstanceMode, value);
+            }
+        }
 
         public string LastUsedPath
         {

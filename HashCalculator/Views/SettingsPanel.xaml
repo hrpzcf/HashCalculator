@@ -29,6 +29,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition />
             </Grid.RowDefinitions>
             <CheckBox
@@ -125,6 +126,12 @@
                 Padding="4,0,0,0"
                 Content="不显示“文件体积”列"
                 IsChecked="{Binding NoFileSizeColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <CheckBox
+                Grid.Row="11"
+                Margin="0,0,0,4"
+                Padding="4,0,0,0"
+                Content="允许启动多个窗口（包括从系统右键菜单启动）"
+                IsChecked="{Binding RunInMultiInstanceMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         </Grid>
     </ScrollViewer>
 </Window>

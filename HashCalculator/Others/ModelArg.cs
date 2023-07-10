@@ -8,31 +8,33 @@
         public readonly string filepath;
         public readonly byte[] expected;
         public readonly bool deprecated;
+        public readonly AlgoType algoType;
 
         /// <summary>
-        /// 约定：hash 为空字符串则表示无法确定是否匹配
+        /// 约定：hash 长度 0 表示无法确定是否匹配
         /// </summary>
-        /// <param name="hash"></param>
-        /// <param name="path"></param>
-        public ModelArg(byte[] hash, string path)
+        public ModelArg(byte[] hash, string path, AlgoType algo)
         {
             this.filepath = path;
             this.expected = hash;
             this.deprecated = false;
+            this.algoType = algo;
         }
 
-        public ModelArg(string path)
+        public ModelArg(string path, AlgoType algo)
         {
             this.filepath = path;
             this.expected = null;
             this.deprecated = false;
+            this.algoType = algo;
         }
 
-        public ModelArg(string path, bool deprecated)
+        public ModelArg(string path, bool deprecated, AlgoType algo)
         {
             this.filepath = path;
             this.expected = null;
             this.deprecated = deprecated;
+            this.algoType = algo;
         }
     }
 }

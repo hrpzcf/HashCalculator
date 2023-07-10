@@ -78,11 +78,11 @@ namespace HashCalculator
                             }
                             if (this.hashBasis is null)
                             {
-                                yield return new ModelArg(fiEnum.Current.FullName);
+                                yield return new ModelArg(fiEnum.Current.FullName, this.PresetAlgoType);
                             }
                             else if (this.hashBasis.IsExpectedFileHash(fiEnum.Current.Name, out byte[] hash))
                             {
-                                yield return new ModelArg(hash, fiEnum.Current.FullName);
+                                yield return new ModelArg(hash, fiEnum.Current.FullName, this.PresetAlgoType);
                             }
                             if (this.StopSearchingToken != null &&
                                 this.StopSearchingToken.IsCancellationRequested)
@@ -96,10 +96,9 @@ namespace HashCalculator
                             {
                                 if (!kv.Value.HasBeenChecked)
                                 {
-                                    yield return new ModelArg(kv.Key, true);
+                                    yield return new ModelArg(kv.Key, true, this.PresetAlgoType);
                                 }
-                                if (this.StopSearchingToken != null &&
-                                    this.StopSearchingToken.IsCancellationRequested)
+                                if (this.StopSearchingToken != null && this.StopSearchingToken.IsCancellationRequested)
                                 {
                                     yield break;
                                 }
@@ -112,11 +111,11 @@ namespace HashCalculator
                 {
                     if (this.hashBasis is null)
                     {
-                        yield return new ModelArg(path);
+                        yield return new ModelArg(path, this.PresetAlgoType);
                     }
                     else if (this.hashBasis.IsExpectedFileHash(Path.GetFileName(path), out byte[] hash))
                     {
-                        yield return new ModelArg(hash, path);
+                        yield return new ModelArg(hash, path, this.PresetAlgoType);
                     }
                 }
             }
@@ -127,5 +126,7 @@ namespace HashCalculator
         private readonly SearchPolicy searchPolicy;
 
         public CancellationToken StopSearchingToken { get; set; }
+
+        public AlgoType PresetAlgoType { get; set; } = AlgoType.Unknown;
     }
 }

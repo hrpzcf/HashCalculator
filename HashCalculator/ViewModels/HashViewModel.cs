@@ -33,13 +33,13 @@ namespace HashCalculator
         #endregion
 
         private readonly byte[] expectedHash;
-        private CancellationTokenSource cancellation;
         private readonly bool isDeprecated;
         private static readonly Dispatcher synchronization =
             Application.Current.Dispatcher;
         private readonly ManualResetEvent manualPauseController =
             new ManualResetEvent(true);
         private readonly object hashComputeOperationLock = new object();
+        private CancellationTokenSource cancellation;
 
         /// <summary>
         /// 调用 StartupModel 方法且满足相关条件则触发此事件，
@@ -64,8 +64,9 @@ namespace HashCalculator
 
         public HashViewModel(int serial, ModelArg arg)
         {
-            this.Serial = serial;
             this.ModelArg = arg;
+            this.HashAlgoType = arg.algoType;
+            this.Serial = serial;
             this.FileInfo = new FileInfo(arg.filepath);
             this.FileName = this.FileInfo.Name;
             this.expectedHash = arg.expected;
@@ -354,7 +355,6 @@ namespace HashCalculator
             this.State = HashState.NoState;
             this.Result = HashResult.NoResult;
             this.CmpResult = CmpRes.NoResult;
-            this.HashAlgoType = AlgoType.Unknown;
             this.cancellation = new CancellationTokenSource();
             this.cancellation.Token.Register(() =>
             {
@@ -370,18 +370,29 @@ namespace HashCalculator
             bool startupModelResult = false;
             if (Monitor.TryEnter(this.hashComputeOperationLock))
             {
-                bool conditionMatched;
+                bool conditionMatched = false;
                 if (force)
                 {
                     this.SelectedOutputType = OutputType.Unknown;
+                    this.HashAlgoType = AlgoType.Unknown;
                     conditionMatched = this.State == HashState.Finished;
                 }
                 else
                 {
-                    // 右键选择任务控制时有可能尝试启动 State 为 Waiting 的 HashViewModel
+                    // 程序内右键选择任务控制时有可能尝试启动 State 为 Waiting 的本类实例
                     // 但 Waiting 的 HashViewModel 不该被再次启动，因为 Waiting 代表已排队待计算
-                    conditionMatched = this.State == HashState.NoState ||
-                        (this.State == HashState.Finished && this.Result != HashResult.Succeeded);
+                    if (this.State == HashState.NoState)
+                    {
+                        // 此处不重置 HashAlgoType 属性是因为首次启动可能已经预置了此属性
+                        // 例如从系统右键选择特定的哈希值启动计算，此类实例就预置了 HashAlgoType 属性
+                        // 而 State == HashState.NoState 就代表是任务的首次启动
+                        conditionMatched = true;
+                    }
+                    else if (this.State == HashState.Finished && this.Result != HashResult.Succeeded)
+                    {
+                        conditionMatched = true;
+                        this.HashAlgoType = AlgoType.Unknown;
+                    }
                 }
                 if (conditionMatched)
                 {
@@ -500,11 +511,13 @@ namespace HashCalculator
             this.HasBeenRun = true;
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
-            AlgoType algoType = Settings.Current.SelectedAlgo;
             synchronization.Invoke(() =>
             {
-                this.HashAlgoType = algoType;
                 this.State = HashState.Running;
+                if (this._hashAlgoType == AlgoType.Unknown)
+                {
+                    this.HashAlgoType = Settings.Current.SelectedAlgo;
+                }
             });
             if (this.isDeprecated)
             {
@@ -536,7 +549,7 @@ namespace HashCalculator
                         this.ProgressTotal = this.FileSize;
                     });
                     HashAlgorithm algoObject;
-                    switch (algoType)
+                    switch (this._hashAlgoType)
                     {
                         case AlgoType.SHA1:
                             algoObject = new SHA1Cng();

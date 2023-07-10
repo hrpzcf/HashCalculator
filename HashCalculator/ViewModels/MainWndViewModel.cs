@@ -282,11 +282,18 @@ namespace HashCalculator
                 + $"不确定：{uncertain}\n无关联：{unrelated}\n未校验：{noresult}";
         }
 
+        /// <summary>
+        /// 需要立即响应的设置变更
+        /// </summary>
         private void PropChangedAction(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(Settings.Current.SelectedTaskNumberLimit))
             {
                 this.starter.BeginAdjust((int)Settings.Current.SelectedTaskNumberLimit);
+            }
+            else if (e.PropertyName == nameof(Settings.Current.RunInMultiInstanceMode))
+            {
+                Settings.SaveSettings();
             }
         }
 
