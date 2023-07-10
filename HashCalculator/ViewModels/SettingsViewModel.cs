@@ -12,6 +12,7 @@ namespace HashCalculator
         private double mainWndHeight = 800.0;
         private double mainWndTop = double.NaN;
         private double mainWndLeft = double.NaN;
+        private WindowState mainWindowState = WindowState.Normal;
         private double settingsWndWidth = 400.0;
         private double settingsWndHeight = 280.0;
         private AlgoType selectedAlgorithm = AlgoType.SHA1;
@@ -36,10 +37,6 @@ namespace HashCalculator
                     - this.mainWndHeight) / 2;
             }
         }
-
-        public bool RememberMainWndPos { get; set; } = true;
-
-        public bool RememberMainWndSize { get; set; } = true;
 
         public bool MainWndTopmost
         {
@@ -98,6 +95,18 @@ namespace HashCalculator
             set
             {
                 this.SetPropNotify(ref this.mainWndHeight, value);
+            }
+        }
+
+        public WindowState MainWindowState
+        {
+            get
+            {
+                return this.mainWindowState;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.mainWindowState, value);
             }
         }
 

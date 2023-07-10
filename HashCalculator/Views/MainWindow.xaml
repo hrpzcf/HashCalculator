@@ -16,6 +16,7 @@
     Top="{Binding Source={x:Static local:Settings.Current}, Path=MainWindowTop, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     Topmost="{Binding Source={x:Static local:Settings.Current}, Path=MainWndTopmost}"
     UseLayoutRounding="True"
+    WindowState="{Binding Source={x:Static local:Settings.Current}, Path=MainWindowState, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     mc:Ignorable="d">
     <Window.Resources>
         <ResourceDictionary>

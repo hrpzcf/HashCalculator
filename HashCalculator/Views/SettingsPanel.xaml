@@ -28,40 +28,10 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <CheckBox
-                Margin="0,0,0,4"
-                Padding="4,0,0,0"
-                Content="主窗口关闭时记住窗口的位置"
-                IsChecked="{Binding RememberMainWndPos, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-            <CheckBox
-                Grid.Row="1"
-                Margin="0,0,0,4"
-                Padding="4,0,0,0"
-                Content="主窗口关闭时记住窗口的大小"
-                IsChecked="{Binding RememberMainWndSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             <Grid
-                Grid.Row="2"
-                Margin="0,0,0,4">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <TextBlock
-                    VerticalAlignment="Center"
-                    Text="当选择的计算对象中包含文件夹时：" />
-                <ComboBox
-                    Grid.Column="1"
-                    DisplayMemberPath="Display"
-                    ItemsSource="{Binding AvailableDroppedSearchPolicies}"
-                    SelectedValue="{Binding SelectedSearchPolicy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                    SelectedValuePath="ItemValue" />
-            </Grid>
-            <Grid
-                Grid.Row="4"
+                Grid.Row="0"
                 Margin="0,0,0,4">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -78,7 +48,24 @@
                     SelectedValuePath="ItemValue" />
             </Grid>
             <Grid
-                Grid.Row="5"
+                Grid.Row="1"
+                Margin="0,0,0,4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <TextBlock
+                    VerticalAlignment="Center"
+                    Text="当选择的计算对象中包含文件夹时：" />
+                <ComboBox
+                    Grid.Column="1"
+                    DisplayMemberPath="Display"
+                    ItemsSource="{Binding AvailableDroppedSearchPolicies}"
+                    SelectedValue="{Binding SelectedSearchPolicy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    SelectedValuePath="ItemValue" />
+            </Grid>
+            <Grid
+                Grid.Row="2"
                 Margin="0,0,0,4">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -97,37 +84,37 @@
                     ToolTip="{Binding TaskNumLimitsToolTip}" />
             </Grid>
             <CheckBox
-                Grid.Row="6"
+                Grid.Row="3"
                 Margin="0,0,0,4"
                 Padding="4,0,0,0"
                 Content="在校验结果的色块中显示文字描述"
                 IsChecked="{Binding ShowResultText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             <CheckBox
-                Grid.Row="7"
+                Grid.Row="4"
                 Margin="0,0,0,4"
                 Padding="4,0,0,0"
                 Content="右键选择删除文件时永久删除而不是移动到回收站"
                 IsChecked="{Binding PermanentlyDeleteFiles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             <CheckBox
-                Grid.Row="8"
+                Grid.Row="5"
                 Margin="0,0,0,4"
                 Padding="4,0,0,0"
                 Content="不显示“导出”列"
                 IsChecked="{Binding NoExportColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             <CheckBox
-                Grid.Row="9"
+                Grid.Row="6"
                 Margin="0,0,0,4"
                 Padding="4,0,0,0"
                 Content="不显示“运行时长”列"
                 IsChecked="{Binding NoDurationColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             <CheckBox
-                Grid.Row="10"
+                Grid.Row="7"
                 Margin="0,0,0,4"
                 Padding="4,0,0,0"
                 Content="不显示“文件体积”列"
                 IsChecked="{Binding NoFileSizeColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             <CheckBox
-                Grid.Row="11"
+                Grid.Row="8"
                 Margin="0,0,0,4"
                 Padding="4,0,0,0"
                 Content="允许启动多个窗口（包括从系统右键菜单启动）"
