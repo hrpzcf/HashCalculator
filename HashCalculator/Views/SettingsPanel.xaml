@@ -118,7 +118,7 @@
                 Margin="0,0,0,4"
                 Padding="4,0,0,0"
                 Content="允许启动多个窗口（包括从系统右键菜单启动）"
-                IsChecked="{Binding RunInMultiInstanceMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                IsChecked="{Binding RunInMultiInstMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         </Grid>
     </ScrollViewer>
 </Window>

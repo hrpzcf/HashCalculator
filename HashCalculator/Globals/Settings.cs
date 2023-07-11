@@ -18,6 +18,7 @@ namespace HashCalculator
         private static readonly string configFile =
             Path.Combine(configDir.FullName, "settings.xml");
 
+        // TODO 单实例模式下，再次启动则把原窗口切换到前台
         public static string[] StartupArgs { get; set; }
 
         public static SettingsViewModel Current { get; private set; }

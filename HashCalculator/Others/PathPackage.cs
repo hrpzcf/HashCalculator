@@ -14,7 +14,7 @@ namespace HashCalculator
             this.searchPolicy = policy;
         }
 
-        public PathPackage(IEnumerable<string> paths, SearchPolicy policy, Basis basis)
+        public PathPackage(IEnumerable<string> paths, SearchPolicy policy, HashBasis basis)
         {
             this.paths = paths;
             this.searchPolicy = policy;
@@ -121,9 +121,9 @@ namespace HashCalculator
             }
         }
 
-        private readonly Basis hashBasis = null;
         private readonly IEnumerable<string> paths;
         private readonly SearchPolicy searchPolicy;
+        private readonly HashBasis hashBasis = null;
 
         public CancellationToken StopSearchingToken { get; set; }
 

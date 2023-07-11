@@ -1,6 +1,7 @@
 ﻿using CommandLine;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -14,18 +15,21 @@ namespace HashCalculator
     {
         private readonly MainWndViewModel viewModel = new MainWndViewModel();
         private static readonly int maxAlgoEnumInt = Enum.GetNames(typeof(AlgoType)).Length - 2;
+        private static string[] startupArgs = null;
+        private static readonly int curProcId = Process.GetCurrentProcess().Id;
+
+        private bool ProcIdMonitorFlag { get; set; } = true;
 
         public static MainWindow This { get; private set; }
 
         public static IntPtr WndHandle { get; private set; }
-
-        public static bool FlagComputeInProcessFiles { get; set; }
 
         public MainWindow()
         {
             This = this;
             this.viewModel.Parent = this;
             this.DataContext = this.viewModel;
+            this.Closed += this.MainWindowClosed;
             this.Loaded += this.MainWindowLoaded;
             this.InitializeComponent();
             this.Title = $"{Info.Title} v{Info.Ver} by {Info.Author} @ {Info.Published}";
@@ -65,42 +69,66 @@ namespace HashCalculator
             });
         }
 
+        public static void PushStartupArgs(string[] args)
+        {
+            startupArgs = args;
+        }
+
         /// <summary>
         /// 多实例模式启动使用此方法处理不同进程传入的待处理的文件、目录路径
         /// </summary>
-        private void ComputeInProcessFiles()
+        private void ComputeInProcessFiles(string[] args)
         {
-            this.InternalParseArguments(Settings.StartupArgs);
+            this.InternalParseArguments(args);
         }
 
         /// <summary>
         /// 单实例模式启动使用此方法处理不同进程传入的待处理的文件、目录路径
         /// </summary>
-        private void ComputeCrossProcessFilesProc()
+        private void ComputeCrossProcessFiles()
         {
-            MappedFiler.ProcFlagCrossProcess = true;
+            MappedFiler.ExistingProcessId = curProcId;
             while (true)
             {
                 MappedFiler.Synchronizer.Wait();
-                // ToArray 能避免 GetArgs 方法在 ParseArguments 内接连被执行多次
+                // ToArray 能避免 GetArgs 方法在 ParseArguments 内被执行多次
                 string[] args = MappedFiler.GetArgs().ToArray();
                 this.InternalParseArguments(args);
             }
         }
 
-        private void MainWindowLoaded(object sender, RoutedEventArgs e)
+        private void ProcessIdMonitorProc()
         {
-            WndHandle = new WindowInteropHelper(this).Handle;
-            if (FlagComputeInProcessFiles)
+            while (true)
             {
-                this.ComputeInProcessFiles();
-            }
-            else if (!MappedFiler.ProcFlagCrossProcess)
-            {
-                Thread thread = new Thread(this.ComputeCrossProcessFilesProc);
+                MappedFiler.ProcIdSynchronizer.Wait();
+                if (!this.ProcIdMonitorFlag)
+                {
+                    MappedFiler.ProcIdSynchronizer.Set();
+                    break;
+                }
+                Thread thread = new Thread(this.ComputeCrossProcessFiles);
                 thread.IsBackground = true;
                 thread.Start();
             }
+        }
+
+        private void MainWindowClosed(object sender, EventArgs e)
+        {
+            this.ProcIdMonitorFlag = false;
+            MappedFiler.ProcIdSynchronizer.Set();
+        }
+
+        private void MainWindowLoaded(object sender, RoutedEventArgs e)
+        {
+            WndHandle = new WindowInteropHelper(this).Handle;
+            if (startupArgs != null)
+            {
+                this.ComputeInProcessFiles(startupArgs);
+            }
+            Thread thread = new Thread(this.ProcessIdMonitorProc);
+            thread.IsBackground = true;
+            thread.Start();
         }
 
         private void DataGrid_FilesToCalculate_Drop(object sender, DragEventArgs e)

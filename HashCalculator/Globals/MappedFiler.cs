@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO.MemoryMappedFiles;
-using System.Linq;
 using System.Windows;
 
 namespace HashCalculator
@@ -14,34 +14,26 @@ namespace HashCalculator
             {
                 Synchronizer =
                     new ProcSynchronizer(Info.AppGuid, false, out newSync);
+                ProcIdSynchronizer = new ProcSynchronizer(Info.ProcIdGuid, false);
+                if (newSync)
+                {
+                    MappedFile = MemoryMappedFile.CreateNew(
+                        Info.MappedGuid, maxLength, MemoryMappedFileAccess.ReadWrite);
+                }
+                else
+                {
+                    MappedFile = MemoryMappedFile.OpenExisting(
+                        Info.MappedGuid, MemoryMappedFileRights.ReadWrite);
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(
-                    $"创建互斥锁失败，程序将退出：\n{ex.Message}", "错误",
-                    MessageBoxButton.OK, MessageBoxImage.Error,
-                    MessageBoxResult.OK, MessageBoxOptions.ServiceNotification);
-                Environment.Exit(1);
-            }
-            try
-            {
-                MappedFile = MemoryMappedFile.CreateOrOpen(
-                    Info.MappedGuid, maxLength, MemoryMappedFileAccess.ReadWrite);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    $"创建共享内存失败，程序将退出：\n{ex.Message}", "错误",
+                    $"初始化失败，程序将退出：\n{ex.Message}", "错误",
                     MessageBoxButton.OK, MessageBoxImage.Error,
                     MessageBoxResult.OK, MessageBoxOptions.ServiceNotification);
                 Environment.Exit(2);
             }
-        }
-
-        public static bool ProcFlagCrossProcess
-        {
-            get => GetCrossProcessProcFlag();
-            set => SetCrossProcessProcFlag(value);
         }
 
         public static IEnumerable<string> GetArgs()
@@ -60,56 +52,113 @@ namespace HashCalculator
 
         public static void PushArgs(string[] args)
         {
+            if (newSync)
+            {
+                RunMultiMode = Settings.Current.RunInMultiInstMode;
+                ProcIdSynchronizer.Set();
+            }
+            else
+            {
+                Settings.Current.RunInMultiInstMode = RunMultiMode;
+            }
             if (args != null && args.Length > 0)
             {
-                if (!Settings.Current.RunInMultiInstanceMode)
+                if (!Settings.Current.RunInMultiInstMode)
                 {
                     InternalPushArgs(args);
                     Synchronizer.Set();
                 }
                 else
                 {
-                    MainWindow.FlagComputeInProcessFiles = true;
+                    MainWindow.PushStartupArgs(args);
                 }
             }
-            if (!newSync && !Settings.Current.RunInMultiInstanceMode)
+            if (!newSync && !Settings.Current.RunInMultiInstMode)
             {
-                if (MappedFiler.ProcFlagCrossProcess)
+                int processId = ExistingProcessId;
+                if (processId != default)
                 {
-                    Environment.Exit(0);
+                    try
+                    {
+                        Process process = Process.GetProcessById(processId);
+                        IntPtr mainWndHandle = process.MainWindowHandle;
+                        if (NativeFunctions.IsWindowVisible(mainWndHandle))
+                        {
+                            if (NativeFunctions.IsIconic(mainWndHandle))
+                            {
+                                NativeFunctions.ShowWindow(mainWndHandle, 9); // 9: SW_RESTORE
+                            }
+                            else
+                            {
+                                NativeFunctions.SetForegroundWindow(mainWndHandle);
+                            }
+                        }
+                        else
+                        {
+                            NativeFunctions.ShowWindow(mainWndHandle, 5); // 5: SW_SHOW
+                        }
+                    }
+                    catch (Exception) { }
                 }
+                Environment.Exit(0);
             }
         }
 
-        private static bool GetCrossProcessProcFlag()
-        {
-            using (MemoryMappedViewStream mmvs = MappedFile.CreateViewStream())
-            {
-                using (MappedReader reader = new MappedReader(mmvs))
-                {
-                    return reader.ReadProcFlag();
-                }
-            }
-        }
-
-        private static void SetCrossProcessProcFlag(bool exists)
+        private static void InternalPushArgs(string[] args)
         {
             using (MemoryMappedViewStream mmvs = MappedFile.CreateViewStream())
             {
                 using (MappedWriter writer = new MappedWriter(mmvs))
                 {
-                    writer.WriteProcFlag(exists);
+                    writer.WriteLines(args);
                 }
             }
         }
 
-        private static void InternalPushArgs(IEnumerable<string> args)
+        public static int ExistingProcessId
         {
-            using (MemoryMappedViewStream mmvs = MappedFile.CreateViewStream())
+            get
             {
-                using (MappedWriter writer = new MappedWriter(mmvs))
+                using (MemoryMappedViewStream mmvs = MappedFile.CreateViewStream())
                 {
-                    writer.WriteLines(args.ToArray());
+                    using (MappedReader reader = new MappedReader(mmvs))
+                    {
+                        return reader.ReadProcessId();
+                    }
+                }
+            }
+            set
+            {
+                using (MemoryMappedViewStream mmvs = MappedFile.CreateViewStream())
+                {
+                    using (MappedWriter writer = new MappedWriter(mmvs))
+                    {
+                        writer.WriteProcessId(value);
+                    }
+                }
+            }
+        }
+
+        public static bool RunMultiMode
+        {
+            get
+            {
+                using (MemoryMappedViewStream mmvs = MappedFile.CreateViewStream())
+                {
+                    using (MappedReader reader = new MappedReader(mmvs))
+                    {
+                        return reader.ReadRunMulti();
+                    }
+                }
+            }
+            set
+            {
+                using (MemoryMappedViewStream mmvs = MappedFile.CreateViewStream())
+                {
+                    using (MappedWriter writer = new MappedWriter(mmvs))
+                    {
+                        writer.WriteRunMulti(value);
+                    }
                 }
             }
         }
@@ -120,5 +169,7 @@ namespace HashCalculator
         public static MemoryMappedFile MappedFile { get; private set; }
 
         public static ProcSynchronizer Synchronizer { get; private set; }
+
+        public static ProcSynchronizer ProcIdSynchronizer { get; private set; }
     }
 }

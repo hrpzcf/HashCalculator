@@ -224,7 +224,7 @@ namespace HashCalculator
 
         public bool PermanentlyDeleteFiles { get; set; }
 
-        public bool RunInMultiInstanceMode
+        public bool RunInMultiInstMode
         {
             get
             {

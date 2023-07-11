@@ -293,12 +293,41 @@ namespace HashCalculator
         //    IntPtr templateFile);
 
         /// <summary>
-        /// https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shfileoperationw
+        /// https://learn.microsoft.com/zh-cn/windows/win32/api/winuser/nf-winuser-setwindowpos
         /// </summary>
-        /// <param name="lpFileOp"></param>
-        /// <returns></returns>
-        [DllImport("shell32.dll", EntryPoint = "SHFileOperationW", CharSet = CharSet.Unicode)]
-        public static extern int SHFileOperationW32(ref SHFILEOPSTRUCTW32 lpFileOp);
+        [DllImport("user32.dll")]
+        internal static extern bool SetWindowPos(
+            IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+
+        /// <summary>
+        /// https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-isiconic
+        /// </summary>
+        [DllImport("user32.dll")]
+        internal static extern bool IsIconic(IntPtr hWnd);
+
+        /// <summary>
+        /// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-iszoomed
+        /// </summary>
+        [DllImport("user32.dll")]
+        internal static extern bool IsZoomed(IntPtr hWnd);
+
+        /// <summary>
+        /// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setforegroundwindow
+        /// </summary>
+        [DllImport("user32.dll")]
+        internal static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        /// <summary>
+        /// https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showwindow
+        /// </summary>
+        [DllImport("user32.dll")]
+        internal static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+        /// <summary>
+        /// https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-iswindowvisible
+        /// </summary>
+        [DllImport("user32.dll")]
+        internal static extern bool IsWindowVisible(IntPtr hWnd);
 
         /// <summary>
         /// https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shfileoperationw
@@ -306,6 +335,14 @@ namespace HashCalculator
         /// <param name="lpFileOp"></param>
         /// <returns></returns>
         [DllImport("shell32.dll", EntryPoint = "SHFileOperationW", CharSet = CharSet.Unicode)]
-        public static extern int SHFileOperationW64(ref SHFILEOPSTRUCTW64 lpFileOp);
+        internal static extern int SHFileOperationW32(ref SHFILEOPSTRUCTW32 lpFileOp);
+
+        /// <summary>
+        /// https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shfileoperationw
+        /// </summary>
+        /// <param name="lpFileOp"></param>
+        /// <returns></returns>
+        [DllImport("shell32.dll", EntryPoint = "SHFileOperationW", CharSet = CharSet.Unicode)]
+        internal static extern int SHFileOperationW64(ref SHFILEOPSTRUCTW64 lpFileOp);
     }
 }

@@ -56,14 +56,14 @@ namespace HashCalculator
     /// <summary>
     /// 文件哈希值校验的校验工具
     /// </summary>
-    internal class Basis
+    internal class HashBasis
     {
-        public Basis(string filePath)
+        public HashBasis(string filePath)
         {
             this.UpdateWithFile(filePath);
         }
 
-        public Basis() { }
+        public HashBasis() { }
 
         public Dictionary<string, HashBasisDictValue> FileHashDict { get; }
             = new Dictionary<string, HashBasisDictValue>();

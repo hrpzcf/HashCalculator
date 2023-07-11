@@ -7,12 +7,8 @@ namespace HashCalculator
 {
     internal class MappedReader : IDisposable
     {
-        private readonly long _prevPosition;
         private readonly Stream _stream;
-        private const int numofVersionBytes = sizeof(int);
-        private const int numofItemCountBytes = sizeof(int);
-        private const int numofItemLengthBytes = sizeof(int);
-        private const int numofProcFlagBytes = sizeof(bool);
+        private readonly long _prevPosition;
 
         public MappedReader(Stream stream)
         {
@@ -34,17 +30,18 @@ namespace HashCalculator
             {
                 int bufferSize = 4096;
                 byte[] buffer = new byte[bufferSize];
-                this._stream.Position = numofVersionBytes + numofProcFlagBytes;
-                int readed = this._stream.Read(buffer, 0, numofItemCountBytes);
-                if (readed != numofItemCountBytes)
+                this._stream.Position = MappedStart.ItemCount;
+                int readed = this._stream.Read(buffer, 0, MappedBytes.ItemCount);
+                if (readed != MappedBytes.ItemCount)
                 {
                     yield break;
                 }
                 int itemCount = BitConverter.ToInt32(buffer, 0);
+                this._stream.Position = MappedStart.FirstItem;
                 for (int i = 0; i < itemCount; ++i)
                 {
-                    readed = this._stream.Read(buffer, 0, numofItemLengthBytes);
-                    if (readed != numofItemLengthBytes)
+                    readed = this._stream.Read(buffer, 0, MappedBytes.ItemLength);
+                    if (readed != MappedBytes.ItemLength)
                     {
                         yield break;
                     }
@@ -72,14 +69,33 @@ namespace HashCalculator
             }
         }
 
-        public bool ReadProcFlag()
+        public int ReadProcessId()
         {
             try
             {
-                byte[] flagBuffer = new byte[numofProcFlagBytes];
-                this._stream.Position = numofVersionBytes;
-                this._stream.Read(flagBuffer, 0, numofProcFlagBytes);
-                return BitConverter.ToBoolean(flagBuffer, 0);
+                byte[] buffer = new byte[MappedBytes.ProcessId];
+                this._stream.Position = MappedStart.ProcessId;
+                this._stream.Read(buffer, 0, MappedBytes.ProcessId);
+                return BitConverter.ToInt32(buffer, 0);
+            }
+            catch (Exception)
+            {
+                return default;
+            }
+            finally
+            {
+                this._stream.Position = this._prevPosition;
+            }
+        }
+
+        public bool ReadRunMulti()
+        {
+            try
+            {
+                byte[] buffer = new byte[MappedBytes.RunMulti];
+                this._stream.Position = MappedStart.RunMulti;
+                this._stream.Read(buffer, 0, MappedBytes.RunMulti);
+                return BitConverter.ToBoolean(buffer, 0);
             }
             catch (Exception)
             {
@@ -118,13 +134,13 @@ namespace HashCalculator
             try
             {
                 // 前 4 字节为默认约定的内容排布方案版本
-                if (this._stream.Length < numofVersionBytes)
+                if (this._stream.Length < MappedBytes.Version)
                 {
                     return MappedVer.Unknown;
                 }
-                byte[] buffer = new byte[numofVersionBytes];
-                this._stream.Seek(0, SeekOrigin.Begin);
-                if (this._stream.Read(buffer, 0, numofVersionBytes) != numofVersionBytes)
+                byte[] buffer = new byte[MappedBytes.Version];
+                this._stream.Position = MappedStart.Version;
+                if (this._stream.Read(buffer, 0, MappedBytes.Version) != MappedBytes.Version)
                 {
                     return MappedVer.Unknown;
                 }

@@ -6,6 +6,7 @@ namespace HashCalculator
     {
         public SettingsPanel()
         {
+            Settings.Current.RunInMultiInstMode = MappedFiler.RunMultiMode;
             this.DataContext = Settings.Current;
             this.InitializeComponent();
         }

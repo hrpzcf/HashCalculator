@@ -11,38 +11,48 @@ namespace HashCalculator
         private const int ERROR_INVALID_HANDLE = 0x00000006;
         private const int WAIT_FAILED = unchecked((int)0xFFFFFFFF);
 
-        private readonly string eventName;
-        private readonly IntPtr eventHandle;
+        private readonly string _eventName;
+        private readonly IntPtr _eventHandle;
 
-        public string Name => this.eventName;
+        public string Name => this._eventName;
+
+        public ProcSynchronizer(string name, bool state)
+        {
+            this._eventName = name;
+            this._eventHandle = CreateEventW(IntPtr.Zero, false, state, name);
+            if (IntPtr.Zero == this._eventHandle)
+            {
+                Marshal.ThrowExceptionForHR(Marshal.GetHRForLastWin32Error());
+            }
+        }
 
         /// <summary>
         /// 行为类似 AutoResetEvent，但可以跨进程使用
         /// </summary>
         /// <param name="name">本内核对象的名称，想要跨进程使用则必须指定相同的名称</param>
-        /// <param name="initState">内本核对象的初始状态，true 是有信号，false 是无信号，有信号则 Wait 方法释放线程</param>
+        /// <param name="state">内本核对象的初始状态，true 是有信号，false 是无信号，有信号则 Wait 方法释放线程</param>
         /// <param name="createdNew">类似 Mutex，指示是否创建了新的内核对象</param>
-        public ProcSynchronizer(string name, bool initState, out bool createdNew)
+        public ProcSynchronizer(string name, bool state, out bool createdNew)
         {
-            this.eventName = name;
-            this.eventHandle = CreateEventW(IntPtr.Zero, false, initState, name);
-            if (IntPtr.Zero == this.eventHandle)
+            this._eventName = name;
+            this._eventHandle = CreateEventW(IntPtr.Zero, false, state, name);
+            if (IntPtr.Zero == this._eventHandle)
             {
-                Marshal.ThrowExceptionForHR(Marshal.GetLastWin32Error());
+                Marshal.ThrowExceptionForHR(Marshal.GetHRForLastWin32Error());
             }
             createdNew = Marshal.GetLastWin32Error() != ERROR_ALREADY_EXISTS;
         }
 
-        ~ProcSynchronizer() { CloseHandle(this.eventHandle); }
+        ~ProcSynchronizer() { CloseHandle(this._eventHandle); }
 
         public bool Wait(int milliseconds = INFINITE)
         {
-            return WaitForSingleObject(this.eventHandle, milliseconds) != WAIT_FAILED;
+            return WaitForSingleObject(this._eventHandle, milliseconds) != WAIT_FAILED;
         }
 
         public bool Set()
         {
-            return SetEvent(this.eventHandle);
+            return SetEvent(this._eventHandle);
         }
 
         /// <summary>

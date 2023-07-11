@@ -6,12 +6,8 @@ namespace HashCalculator
 {
     internal class MappedWriter : IDisposable
     {
-        private readonly long _prevPosition;
         private readonly Stream _stream;
-        private const int numofVersionBytes = sizeof(int);
-        private const int numofItemCountBytes = sizeof(int);
-        private const int numofItemLengthBytes = sizeof(int);
-        private const int numofProcFlagBytes = sizeof(bool);
+        private readonly long _prevPosition;
 
         public MappedWriter(Stream stream)
         {
@@ -27,13 +23,45 @@ namespace HashCalculator
             this._prevPosition = stream.Position;
         }
 
-        public void WriteProcFlag(bool exists)
+        public bool WriteProcessId(int processId)
         {
             try
             {
-                byte[] existsBytes = BitConverter.GetBytes(exists);
-                this._stream.Position = numofVersionBytes;
-                this._stream.Write(existsBytes, 0, existsBytes.Length);
+                byte[] bytes = BitConverter.GetBytes(processId);
+                if (bytes.Length != MappedBytes.ProcessId)
+                {
+                    return false;
+                }
+                this._stream.Position = MappedStart.ProcessId;
+                this._stream.Write(bytes, 0, MappedBytes.ProcessId);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            finally
+            {
+                this._stream.Position = this._prevPosition;
+            }
+        }
+
+        public bool WriteRunMulti(bool runMulti)
+        {
+            try
+            {
+                byte[] bytes = BitConverter.GetBytes(runMulti);
+                if (bytes.Length != MappedBytes.RunMulti)
+                {
+                    return false;
+                }
+                this._stream.Position = MappedStart.RunMulti;
+                this._stream.Write(bytes, 0, MappedBytes.RunMulti);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
             }
             finally
             {
@@ -45,29 +73,30 @@ namespace HashCalculator
         {
             try
             {
-                byte[] verBytes = BitConverter.GetBytes((int)MappedVer.Version1);
-                if (verBytes.Length != numofVersionBytes)
+                byte[] vBytes = BitConverter.GetBytes((int)MappedVer.Version1);
+                if (vBytes.Length != MappedBytes.Version)
                 {
                     return false;
                 }
-                this._stream.Seek(0, SeekOrigin.Begin);
-                this._stream.Write(verBytes, 0, verBytes.Length);
+                this._stream.Position = MappedStart.Version;
+                this._stream.Write(vBytes, 0, vBytes.Length);
                 byte[] itemCountBytes = BitConverter.GetBytes(lines.Length);
-                if (itemCountBytes.Length != numofItemCountBytes)
+                if (itemCountBytes.Length != MappedBytes.ItemCount)
                 {
                     return false;
                 }
-                this._stream.Seek(numofProcFlagBytes, SeekOrigin.Current);
-                this._stream.Write(itemCountBytes, 0, numofItemCountBytes);
+                this._stream.Position = MappedStart.ItemCount;
+                this._stream.Write(itemCountBytes, 0, MappedBytes.ItemCount);
+                this._stream.Position = MappedStart.FirstItem;
                 foreach (string item in lines)
                 {
                     byte[] stringItemBytes = Encoding.Unicode.GetBytes(item);
                     byte[] itemLengthBytes = BitConverter.GetBytes(stringItemBytes.Length);
-                    if (itemLengthBytes.Length != numofItemLengthBytes)
+                    if (itemLengthBytes.Length != MappedBytes.ItemLength)
                     {
                         return false;
                     }
-                    this._stream.Write(itemLengthBytes, 0, numofItemLengthBytes);
+                    this._stream.Write(itemLengthBytes, 0, MappedBytes.ItemLength);
                     this._stream.Write(stringItemBytes, 0, stringItemBytes.Length);
                 }
                 return true;

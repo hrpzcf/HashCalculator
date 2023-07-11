@@ -44,6 +44,7 @@ namespace HashCalculator
 
         private static void ApplicationExit(object sender, ExitEventArgs e)
         {
+            Settings.Current.RunInMultiInstMode = MappedFiler.RunMultiMode;
             Settings.SaveSettings();
         }
 

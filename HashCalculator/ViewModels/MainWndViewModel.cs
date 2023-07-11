@@ -20,7 +20,7 @@ namespace HashCalculator
 {
     internal class MainWndViewModel : NotifiableModel
     {
-        private readonly Basis MainBasis = new Basis();
+        private readonly HashBasis MainBasis = new HashBasis();
         private readonly ModelStarter starter =
             new ModelStarter((int)Settings.Current.SelectedTaskNumberLimit, 8);
         private static readonly Dispatcher synchronization =
@@ -291,9 +291,9 @@ namespace HashCalculator
             {
                 this.starter.BeginAdjust((int)Settings.Current.SelectedTaskNumberLimit);
             }
-            else if (e.PropertyName == nameof(Settings.Current.RunInMultiInstanceMode))
+            else if (e.PropertyName == nameof(Settings.Current.RunInMultiInstMode))
             {
-                Settings.SaveSettings();
+                MappedFiler.RunMultiMode = Settings.Current.RunInMultiInstMode;
             }
         }
 
@@ -894,7 +894,7 @@ namespace HashCalculator
                 }
                 else
                 {
-                    Basis newBasis = new Basis(pathOrHash);
+                    HashBasis newBasis = new HashBasis(pathOrHash);
                     this.BeginDisplayModels(
                         new PathPackage(new string[] { Path.GetDirectoryName(pathOrHash) },
                             Settings.Current.SelectedQVSPolicy, newBasis));

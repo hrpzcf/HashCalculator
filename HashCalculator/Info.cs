@@ -10,6 +10,7 @@ namespace HashCalculator
         private static readonly Version v = assembly.Version;
 
         public const string AppGuid = "{8CD5CD37-5AA1-492A-A208-7E9BBDDC88CC}";
+        public const string ProcIdGuid = "{DA4EEDE8-5767-472F-9A40-1B90D7097953}";
         public const string MappedGuid = "{EF36065E-10F3-4ABA-A66F-E68A42A8DA7D}";
         public static readonly string AppName = assembly.Name;
         public static readonly string Ver = $"{v.Major}.{v.Minor}.{v.Build}";
