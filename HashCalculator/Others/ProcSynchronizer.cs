@@ -16,6 +16,11 @@ namespace HashCalculator
 
         public string Name => this._eventName;
 
+        /// <summary>
+        /// 行为类似 AutoResetEvent，但可以跨进程使用
+        /// </summary>
+        /// <param name="name">本内核对象的名称，想要跨进程使用则必须指定相同的名称</param>
+        /// <param name="state">内本核对象的初始状态，true 是有信号，false 是无信号，有信号则 Wait 方法释放线程</param>
         public ProcSynchronizer(string name, bool state)
         {
             this._eventName = name;
