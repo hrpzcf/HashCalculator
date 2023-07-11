@@ -199,5 +199,17 @@
     <Resource Include="Images\loading.gif" />
     <Resource Include="Images\search_files_32.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Assembly\BouncyCastle.CryptographyLicense.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Assembly\CommandLineParserLicense.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Assembly\WindowsAPICodePackLicense.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Assembly\XamlAnimatedGifLicense.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
