@@ -9,14 +9,11 @@ namespace HashCalculator
     {
         private static readonly XmlSerializer serializer =
             new XmlSerializer(typeof(SettingsViewModel));
-        private static readonly string appBaseDataPath = Environment.GetFolderPath(
-            Environment.SpecialFolder.LocalApplicationData
-        );
-        private static readonly DirectoryInfo configDir = new DirectoryInfo(
-            Path.Combine(appBaseDataPath, "HashCalculator")
-        );
-        private static readonly string configFile =
-            Path.Combine(configDir.FullName, "settings.xml");
+        private static readonly string appBaseDataPath =
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        public static readonly DirectoryInfo ConfigDir =
+            new DirectoryInfo(Path.Combine(appBaseDataPath, "HashCalculator"));
+        private static readonly string configFile = Path.Combine(ConfigDir.FullName, "settings.xml");
 
         // TODO 单实例模式下，再次启动则把原窗口切换到前台
         public static string[] StartupArgs { get; set; }
@@ -28,9 +25,9 @@ namespace HashCalculator
         {
             try
             {
-                if (!configDir.Exists)
+                if (!ConfigDir.Exists)
                 {
-                    configDir.Create();
+                    ConfigDir.Create();
                 }
                 using (FileStream fs = File.Create(configFile))
                 {

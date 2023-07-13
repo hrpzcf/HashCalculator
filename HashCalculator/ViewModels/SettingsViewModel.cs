@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Input;
 using System.Xml.Serialization;
 
 namespace HashCalculator
@@ -23,6 +24,9 @@ namespace HashCalculator
         private bool noDurationColumn = false;
         private bool noFileSizeColumn = false;
         private bool runInMultiInstanceMode = false;
+        private bool notProcessingContextMenu = true;
+        private RelayCommand installContextMenuCmd;
+        private RelayCommand unInstallContextMenuCmd;
 
         public SettingsViewModel()
         {
@@ -249,6 +253,101 @@ namespace HashCalculator
             set
             {
                 this.lastUsedPath = value;
+            }
+        }
+
+        [XmlIgnore]
+        public bool NotProcessingContextMenu
+        {
+            get
+            {
+                return this.notProcessingContextMenu;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.notProcessingContextMenu, value);
+            }
+        }
+
+        private async void InstallContextMenuAction(object param)
+        {
+            if (MessageBox.Show(
+                SettingsPanel.This,
+                "安装右键菜单扩展可能需要重启资源管理器，确定现在安装吗？",
+                "询问",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question,
+                MessageBoxResult.No) == MessageBoxResult.No)
+            {
+                return;
+            }
+            this.NotProcessingContextMenu = false;
+            if (await ShellExtHelper.SetContextMenuAsync() is Exception exception)
+            {
+                MessageBox.Show(
+                    SettingsPanel.This, $"安装右键菜单扩展失败：\n{exception.Message}", "提示",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+            else
+            {
+                MessageBox.Show(
+                    SettingsPanel.This, $"右键菜单扩展安装成功！", "提示", MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+            }
+            this.NotProcessingContextMenu = true;
+        }
+
+        [XmlIgnore]
+        public ICommand InstallContextMenuCmd
+        {
+            get
+            {
+                if (this.installContextMenuCmd == null)
+                {
+                    this.installContextMenuCmd = new RelayCommand(this.InstallContextMenuAction);
+                }
+                return this.installContextMenuCmd;
+            }
+        }
+
+        private async void UnInstallContextMenuAction(object param)
+        {
+            if (MessageBox.Show(
+                SettingsPanel.This,
+                "卸载右键菜单扩展可能需要重启资源管理器，确定现在卸载吗？",
+                "询问",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question,
+                MessageBoxResult.No) == MessageBoxResult.No)
+            {
+                return;
+            }
+            this.NotProcessingContextMenu = false;
+            if (await ShellExtHelper.DelContextMenuAsync() is Exception exception)
+            {
+                MessageBox.Show(
+                    SettingsPanel.This, $"卸载右键菜单扩展失败：\n{exception.Message}", "提示",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+            else
+            {
+                MessageBox.Show(
+                    SettingsPanel.This, $"右键菜单扩展卸载成功！", "提示", MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+            }
+            this.NotProcessingContextMenu = true;
+        }
+
+        [XmlIgnore]
+        public ICommand UnInstallContextMenuCmd
+        {
+            get
+            {
+                if (this.unInstallContextMenuCmd == null)
+                {
+                    this.unInstallContextMenuCmd = new RelayCommand(this.UnInstallContextMenuAction);
+                }
+                return this.unInstallContextMenuCmd;
             }
         }
 

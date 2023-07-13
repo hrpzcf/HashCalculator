@@ -9,6 +9,7 @@
     Width="{Binding SettingsWndWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     Height="{Binding SettingsWndHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     d:DataContext="{d:DesignInstance Type=local:SettingsViewModel}"
+    Closing="SettingsPanelClosing"
     UseLayoutRounding="True"
     WindowStartupLocation="CenterOwner"
     mc:Ignorable="d">
@@ -119,6 +120,48 @@
                 Padding="4,0,0,0"
                 Content="允许启动多个窗口（包括从系统右键菜单启动）"
                 IsChecked="{Binding RunInMultiInstMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <GroupBox
+                Grid.Row="9"
+                Margin="0,20,0,4"
+                Padding="4"
+                Header="系统右键菜单选项">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Button
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Margin="0,0,8,0"
+                        Padding="8,3"
+                        Background="{x:Null}"
+                        Command="{Binding InstallContextMenuCmd}"
+                        Content="安装右键菜单(用户)"
+                        IsEnabled="{Binding NotProcessingContextMenu}" />
+                    <Button
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Margin="8,0,0,0"
+                        Padding="8,3"
+                        Background="{x:Null}"
+                        Command="{Binding UnInstallContextMenuCmd}"
+                        Content="卸载右键菜单(用户)"
+                        IsEnabled="{Binding NotProcessingContextMenu}" />
+                    <TextBlock
+                        Grid.Row="1"
+                        Grid.ColumnSpan="2"
+                        Margin="0,4,0,0"
+                        FontSize="8pt"
+                        Foreground="Gray"
+                        Text="1. 安装右键菜单扩展后，程序会在同目录下释放菜单扩展模块 (HashCalculator[32].dll 文件)&#10;2. 不可删除 HashCalculator[32].dll 文件，否则右键菜单将失效&#10;3. 不可重命名 HashCalculator.exe 文件，否则将无法被右键菜单唤起&#10;4. 安装右键扩展菜单后不能移动 HashCalculator.exe，否则无法被右键菜单唤起&#10;5. 移动或删除 HashCalculator.exe 前建议先卸载右键菜单，程序会清理注册表并删除菜单扩展模块"
+                        TextWrapping="Wrap" />
+                </Grid>
+            </GroupBox>
         </Grid>
     </ScrollViewer>
 </Window>
