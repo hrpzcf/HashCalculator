@@ -148,7 +148,7 @@ STDMETHODIMP CContextMenuExt::QueryContextMenu(
     HMENU hmenu, UINT indexMenu, UINT idCmdFirst, UINT idCmdLast, UINT uFlags) {
     if (uFlags & CMF_DEFAULTONLY)
     {
-        return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, USHORT(0));
+        return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, 0);
     }
     CResStrW resource = CResStrW(this->module_inst, IDS_COMPUTE_MENU);
     InsertMenuW(hmenu, indexMenu, MF_BYPOSITION | MF_STRING | MF_POPUP,
@@ -173,7 +173,7 @@ STDMETHODIMP CContextMenuExt::QueryContextMenu(
     AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_BLAKE3, L"BLAKE3");
     AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_WHIRLPOOL, L"Whirlpool");
     // 方法退出后 compute_hash_res 会被析构，compute_hash_text 会被 delete
-    // menu_info.dwTypeData = compute_hash_text 是否安全？InsertMenuItemW 是否复制数据？
+    // menu_info.dwTypeData = compute_hash_text 安全? InsertMenuItemW 是否复制数据?
     CResStrW compute_hash_res = CResStrW(this->module_inst, IDS_COMPUTE_HASH_MENU);
     LPWSTR compute_hash_text = compute_hash_res.String();
     MENUITEMINFOW menu_info = { 0 };
@@ -190,7 +190,7 @@ STDMETHODIMP CContextMenuExt::QueryContextMenu(
         menu_info.hbmpUnchecked = this->bitmap_menu2;
     }
     InsertMenuItemW(hmenu, indexMenu + 1, true, &menu_info);
-    return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, USHORT(IDM_SUBMENUS_PARENT + 1));
+    return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, IDM_SUBMENUS_PARENT + 1);
 }
 
 STDMETHODIMP CContextMenuExt::InvokeCommand(CMINVOKECOMMANDINFO* pici) {

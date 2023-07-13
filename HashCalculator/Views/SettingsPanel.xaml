@@ -123,8 +123,8 @@
             <GroupBox
                 Grid.Row="9"
                 Margin="0,20,0,4"
-                Padding="4"
-                Header="系统右键菜单选项">
+                Padding="4,8,4,0"
+                Header="扩展系统右键菜单">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition />
@@ -138,7 +138,7 @@
                         Grid.Row="0"
                         Grid.Column="0"
                         Margin="0,0,8,0"
-                        Padding="8,3"
+                        Padding="8,4"
                         Background="{x:Null}"
                         Command="{Binding InstallContextMenuCmd}"
                         Content="安装右键菜单(用户)"
@@ -147,7 +147,7 @@
                         Grid.Row="0"
                         Grid.Column="1"
                         Margin="8,0,0,0"
-                        Padding="8,3"
+                        Padding="8,4"
                         Background="{x:Null}"
                         Command="{Binding UnInstallContextMenuCmd}"
                         Content="卸载右键菜单(用户)"
@@ -155,10 +155,11 @@
                     <TextBlock
                         Grid.Row="1"
                         Grid.ColumnSpan="2"
-                        Margin="0,4,0,0"
+                        Margin="0,8,0,0"
+                        VerticalAlignment="Center"
                         FontSize="8pt"
-                        Foreground="Gray"
-                        Text="1. 安装右键菜单扩展后，程序会在同目录下释放菜单扩展模块 (HashCalculator[32].dll 文件)&#10;2. 不可删除 HashCalculator[32].dll 文件，否则右键菜单将失效&#10;3. 不可重命名 HashCalculator.exe 文件，否则将无法被右键菜单唤起&#10;4. 安装右键扩展菜单后不能移动 HashCalculator.exe，否则无法被右键菜单唤起&#10;5. 移动或删除 HashCalculator.exe 前建议先卸载右键菜单，程序会清理注册表并删除菜单扩展模块"
+                        Foreground="#AAAAAA"
+                        Text="1. 安装右键菜单扩展后，程序会在同目录下释放菜单扩展模块 (HashCalculator[32].dll 文件)&#10;2. 不可移动、删除、重命名 HashCalculator[32].dll 文件，否则右键菜单将失效&#10;3. 不可重命名 HashCalculator.exe 文件，否则将无法被右键菜单唤起&#10;4. 安装右键扩展菜单后不能移动 HashCalculator.exe，否则将无法被右键菜单唤起&#10;5. 移动或删除 HashCalculator.exe 前先卸载右键菜单，程序会清理注册表并删除菜单扩展模块"
                         TextWrapping="Wrap" />
                 </Grid>
             </GroupBox>
