@@ -101,10 +101,10 @@ namespace HashCalculator
         {
             while (true)
             {
-                MappedFiler.ProcIdSynchronizer.Wait();
+                MappedFiler.PIdSynchronizer.Wait();
                 if (!this.ProcIdMonitorFlag)
                 {
-                    MappedFiler.ProcIdSynchronizer.Set();
+                    MappedFiler.PIdSynchronizer.Set();
                     break;
                 }
                 Thread thread = new Thread(this.ComputeCrossProcessFiles);
@@ -116,7 +116,7 @@ namespace HashCalculator
         private void MainWindowClosed(object sender, EventArgs e)
         {
             this.ProcIdMonitorFlag = false;
-            MappedFiler.ProcIdSynchronizer.Set();
+            MappedFiler.PIdSynchronizer.Set();
         }
 
         private void MainWindowLoaded(object sender, RoutedEventArgs e)

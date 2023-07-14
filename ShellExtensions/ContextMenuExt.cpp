@@ -8,7 +8,9 @@
 #include <shlobj_core.h>
 #include "ResourceStr.h"
 
-const wstring exec_name(L"HashCalculator.exe");
+LPCWSTR executable = L"HashCalculator.exe";
+constexpr SIZE_T MAX_CMD_CHARACTERS = 32767;
+
 constexpr auto IDM_COMPUTE_HASH = 0;
 constexpr auto IDM_COMPUTE_SHA1 = 1;
 constexpr auto IDM_COMPUTE_SHA224 = 2;
@@ -27,39 +29,57 @@ constexpr auto IDM_COMPUTE_WHIRLPOOL = 14;
 constexpr auto IDM_SUBMENUS_PARENT = 15;
 
 VOID CContextMenuExt::CreateGUIProcessComputeHash(LPCWSTR algo) {
-    if (nullptr == this->module_dirpath) {
+    if (nullptr == this->executable_path) {
         CResStrW title = CResStrW(this->module_inst, IDS_TITLE_ERROR);
-        CResStrW text = CResStrW(this->module_inst, IDS_NO_MODULE_DIRPATH);
+        CResStrW text = CResStrW(this->module_inst, IDS_NO_EXECUTABLE_PATH);
         MessageBoxW(nullptr, text.String(), title.String(), MB_TOPMOST | MB_ICONERROR);
         return;
     }
-    wstring executable_path(wstring(this->module_dirpath) + L"\\" + exec_name);
-    wstring arguments(L"compute");
+    wstring command_line(L"compute");
     if (nullptr != algo) {
-        arguments += wstring(L" --algo ") + algo;
+        command_line += wstring(L" --algo ") + algo;
     }
+    SIZE_T cmd_characters = command_line.length() + 1;
     for (SIZE_T i = 0; i < this->filepath_list.size(); ++i) {
-        if (this->filepath_list[i][this->filepath_list[i].size() - 1] == L'\\') {
+        if (this->filepath_list[i][this->filepath_list[i].length() - 1] == L'\\') {
             this->filepath_list[i] += L'\\';
         }
-        arguments += L" \"" + this->filepath_list[i] + L"\"";
+        wstring current_cmd = L" \"" + this->filepath_list[i] + L"\"";
+        SIZE_T cmd_characters_temp = cmd_characters + current_cmd.length();
+        if (cmd_characters_temp < MAX_CMD_CHARACTERS)
+        {
+            command_line += current_cmd;
+            cmd_characters = cmd_characters_temp;
+        }
+        else if (cmd_characters_temp > MAX_CMD_CHARACTERS) {
+            break;
+        }
+        else if (cmd_characters_temp == MAX_CMD_CHARACTERS) {
+            command_line += current_cmd;
+            cmd_characters = cmd_characters_temp;
+            break;
+        }
     }
-    SIZE_T args_wchar_count = arguments.size() + 1;
-    LPWSTR arguments_buffer = new WCHAR[args_wchar_count];
-    if (nullptr == arguments_buffer) {
+    LPWSTR commandline_buffer;
+    try
+    {
+        commandline_buffer = new WCHAR[cmd_characters];
+    }
+    catch (const std::bad_alloc&)
+    {
         return;
     }
-    StringCchCopyW(arguments_buffer, args_wchar_count, arguments.c_str());
+    StringCchCopyW(commandline_buffer, cmd_characters, command_line.c_str());
     STARTUPINFO startup_info = { 0 };
     startup_info.cb = sizeof(startup_info);
     PROCESS_INFORMATION proc_info = { 0 };
-    if (CreateProcessW(executable_path.c_str(), arguments_buffer, NULL, NULL, FALSE, NORMAL_PRIORITY_CLASS,
+    if (CreateProcessW(this->executable_path, commandline_buffer, NULL, NULL, FALSE, NORMAL_PRIORITY_CLASS,
         NULL, NULL, &startup_info, &proc_info))
     {
         CloseHandle(proc_info.hThread);
         CloseHandle(proc_info.hProcess);
     }
-    delete[] arguments_buffer;
+    delete[] commandline_buffer;
 }
 
 CContextMenuExt::CContextMenuExt() {
@@ -67,29 +87,40 @@ CContextMenuExt::CContextMenuExt() {
     try
     {
         DWORD bufsize = MAX_PATH;
-        this->module_dirpath = new WCHAR[bufsize];
+        LPWSTR  module_dirpath = new WCHAR[bufsize];
         while (true)
         {
-            DWORD size = GetModuleFileNameW(module_inst, this->module_dirpath, bufsize);
-            if (size == bufsize || GetLastError() & ERROR_INSUFFICIENT_BUFFER)
-            {
-                delete[] this->module_dirpath;
-                this->module_dirpath = nullptr;
+            DWORD size = GetModuleFileNameW(module_inst, module_dirpath, bufsize);
+            if (GetLastError() == ERROR_INSUFFICIENT_BUFFER) {
+                delete[]  module_dirpath;
                 bufsize += MAX_PATH;
-                this->module_dirpath = new WCHAR[bufsize];
+                module_dirpath = new WCHAR[bufsize];
                 continue;
             }
-            PathRemoveFileSpecW(this->module_dirpath);
+            if (!PathRemoveFileSpecW(module_dirpath)) {
+                break;
+            }
+            SIZE_T moduledir_chars = wcslen(module_dirpath);
+            if (moduledir_chars == 0) {
+                break;
+            }
+            SIZE_T exec_total_chars = moduledir_chars + 2 + wcslen(executable);
+            this->executable_path = new WCHAR[exec_total_chars]();
+            StringCchCatW(this->executable_path, exec_total_chars, module_dirpath);
+            StringCchCatW(this->executable_path, exec_total_chars, L"\\");
+            StringCchCatW(this->executable_path, exec_total_chars, executable);
             break;
         }
+        delete[] module_dirpath;
     }
-    catch (const std::bad_alloc&) {}
+    catch (const std::bad_alloc&) {
+    }
     this->bitmap_menu1 = LoadBitmapW(module_inst, MAKEINTRESOURCEW(IDB_BITMAP_MENU1));
     this->bitmap_menu2 = LoadBitmapW(module_inst, MAKEINTRESOURCEW(IDB_BITMAP_MENU2));
 }
 
 CContextMenuExt::~CContextMenuExt() {
-    delete[] this->module_dirpath;
+    delete[] this->executable_path;
     DeleteObject(this->bitmap_menu1);
     DeleteObject(this->bitmap_menu2);
 }

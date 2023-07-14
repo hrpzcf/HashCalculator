@@ -29,7 +29,7 @@ class ATL_NO_VTABLE CContextMenuExt :
     HBITMAP bitmap_menu1 = nullptr;
     HBITMAP bitmap_menu2 = nullptr;
     vector<wstring> filepath_list;
-    LPWSTR module_dirpath = nullptr;
+    LPWSTR executable_path = nullptr;
     HINSTANCE module_inst = nullptr;
     VOID CreateGUIProcessComputeHash(LPCWSTR);
 

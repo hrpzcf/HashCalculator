@@ -14,11 +14,11 @@ namespace HashCalculator
             {
                 Synchronizer =
                     new ProcSynchronizer(Info.AppGuid, false, out newSync);
-                ProcIdSynchronizer = new ProcSynchronizer(Info.ProcIdGuid, false);
+                PIdSynchronizer = new ProcSynchronizer(Info.ProcIdGuid, false);
                 if (newSync)
                 {
                     MappedFile = MemoryMappedFile.CreateNew(
-                        Info.MappedGuid, maxLength, MemoryMappedFileAccess.ReadWrite);
+                        Info.MappedGuid, MappedBytes.MaxLength, MemoryMappedFileAccess.ReadWrite);
                 }
                 else
                 {
@@ -55,7 +55,7 @@ namespace HashCalculator
             if (newSync)
             {
                 RunMultiMode = Settings.Current.RunInMultiInstMode;
-                ProcIdSynchronizer.Set();
+                PIdSynchronizer.Set();
             }
             else
             {
@@ -163,13 +163,12 @@ namespace HashCalculator
             }
         }
 
-        private const long maxLength = 4194304L;
         private static readonly bool newSync = false;
 
         public static MemoryMappedFile MappedFile { get; private set; }
 
         public static ProcSynchronizer Synchronizer { get; private set; }
 
-        public static ProcSynchronizer ProcIdSynchronizer { get; private set; }
+        public static ProcSynchronizer PIdSynchronizer { get; private set; }
     }
 }

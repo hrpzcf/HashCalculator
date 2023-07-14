@@ -7,7 +7,7 @@
 #define IDS_COMPUTE_MENU                102
 #define IDS_COMPUTE_HASH_MENU           103
 #define IDR_CONTEXTMENUEXT              104
-#define IDS_NO_MODULE_DIRPATH           105
+#define IDS_NO_EXECUTABLE_PATH          105
 #define IDS_TITLE_ERROR                 106
 
 #define IDB_BITMAP_MENU1                201
