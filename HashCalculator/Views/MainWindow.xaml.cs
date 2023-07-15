@@ -14,7 +14,8 @@ namespace HashCalculator
     public partial class MainWindow : Window
     {
         private readonly MainWndViewModel viewModel = new MainWndViewModel();
-        private static readonly int maxAlgoEnumInt = Enum.GetNames(typeof(AlgoType)).Length - 2;
+        private static readonly int maxAlgoEnumInt =
+            Enum.GetNames(typeof(AlgoType)).Length - 1;
         private static string[] startupArgs = null;
         private static readonly int curProcId = Process.GetCurrentProcess().Id;
 
@@ -37,36 +38,31 @@ namespace HashCalculator
 
         private void InternalParseArguments(string[] args)
         {
-            Parser.Default.ParseArguments<ComputeHash>(args).WithParsed(option =>
-            {
-                if (option.FilePaths != null)
+            Parser.Default.ParseArguments<ComputeHash, VerifyHash>(args)
+                .WithParsed<ComputeHash>(option =>
                 {
-                    PathPackage package = new PathPackage(
-                        option.FilePaths, Settings.Current.SelectedSearchPolicy);
-                    // 更改 package.PresetAlgoType 而不是 Settings.Current.SelectedAlgoType
-                    // 是因为 Settings.Current.SelectedAlgoType 是全局生效的
-                    // 如果更改 Settings.Current.SelectedAlgoType 则当前未完成的任务都会受影响
-                    // 例如从系统右键选择特定算法启动计算，当前未完成的任务立即会改变算法
-                    // 如果再次从系统右键选择不同算法启动计算且前次选择特定算法启动计算的任务未开始
-                    // 则前一次选择的算法就被第二次选择的算法覆盖了，这不是我们想要的行为
-                    // 当然了以上问题仅限于程序在单实例模式下，程序在多实例模式下没有这个问题
-                    if (!string.IsNullOrEmpty(option.Algo))
+                    if (option.FilePaths != null)
                     {
-                        if (int.TryParse(option.Algo, out int algo))
+                        PathPackage package = new PathPackage(
+                            option.FilePaths, Settings.Current.SelectedSearchPolicy);
+                        if (!string.IsNullOrEmpty(option.Algo))
                         {
-                            if (algo >= 0 && algo <= maxAlgoEnumInt)
+                            if (int.TryParse(option.Algo, out int algo))
                             {
-                                package.PresetAlgoType = (AlgoType)algo;
+                                if (algo > 0 && algo <= maxAlgoEnumInt)
+                                {
+                                    package.PresetAlgoType = (AlgoType)(algo - 1);
+                                }
+                            }
+                            else if (Enum.TryParse(option.Algo.ToUpper(), out AlgoType algoType))
+                            {
+                                package.PresetAlgoType = algoType;
                             }
                         }
-                        else if (Enum.TryParse(option.Algo.ToUpper(), out AlgoType algoType))
-                        {
-                            package.PresetAlgoType = algoType;
-                        }
+                        this.viewModel.BeginDisplayModels(package);
                     }
-                    this.viewModel.BeginDisplayModels(package);
-                }
-            });
+                })
+                .WithParsed<VerifyHash>(option => { });
         }
 
         public static void PushStartupArgs(string[] args)
