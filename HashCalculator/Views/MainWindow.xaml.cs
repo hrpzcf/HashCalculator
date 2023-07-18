@@ -62,7 +62,16 @@ namespace HashCalculator
                         this.viewModel.BeginDisplayModels(package);
                     }
                 })
-                .WithParsed<VerifyHash>(option => { });
+                .WithParsed<VerifyHash>(option =>
+                {
+                    if (File.Exists(option.BasisPath))
+                    {
+                        HashBasis newBasis = new HashBasis(option.BasisPath);
+                        this.viewModel.BeginDisplayModels(
+                            new PathPackage(new string[] { Path.GetDirectoryName(option.BasisPath) },
+                                Settings.Current.SelectedQVSPolicy, newBasis));
+                    }
+                });
         }
 
         public static void PushStartupArgs(string[] args)

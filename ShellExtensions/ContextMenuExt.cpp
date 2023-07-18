@@ -35,7 +35,8 @@ VOID CContextMenuExt::CreateGUIProcessComputeHash(LPCWSTR algo) {
         MessageBoxW(nullptr, text.String(), title.String(), MB_TOPMOST | MB_ICONERROR);
         return;
     }
-    wstring command_line(L"compute");
+    wstring command_line = wstring(executable);
+    command_line += L" compute";
     if (nullptr != algo) {
         command_line += wstring(L" --algo ") + algo;
     }

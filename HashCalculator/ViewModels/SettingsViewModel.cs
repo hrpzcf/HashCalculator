@@ -282,7 +282,7 @@ namespace HashCalculator
                 return;
             }
             this.NotProcessingContextMenu = false;
-            if (await ShellExtHelper.SetContextMenuAsync() is Exception exception)
+            if (await ShellExtHelper.InstallContextMenu() is Exception exception)
             {
                 MessageBox.Show(
                     SettingsPanel.This, $"安装右键菜单扩展失败：\n{exception.Message}", "提示",
@@ -323,7 +323,7 @@ namespace HashCalculator
                 return;
             }
             this.NotProcessingContextMenu = false;
-            if (await ShellExtHelper.DelContextMenuAsync() is Exception exception)
+            if (await ShellExtHelper.UninstallContextMenu() is Exception exception)
             {
                 MessageBox.Show(
                     SettingsPanel.This, $"卸载右键菜单扩展失败：\n{exception.Message}", "提示",

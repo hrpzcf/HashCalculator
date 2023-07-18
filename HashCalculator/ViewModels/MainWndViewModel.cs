@@ -756,7 +756,7 @@ namespace HashCalculator
             SaveFileDialog sf = new SaveFileDialog()
             {
                 ValidateNames = true,
-                Filter = "文本文件|*.txt|HashCalculator 校验依据|*.hcb|所有文件|*.*",
+                Filter = "文本文件|*.txt|哈希值校验依据|*.hcb|所有文件|*.*",
                 FileName = "hashsums.txt",
                 InitialDirectory = Settings.Current.LastUsedPath,
             };

@@ -71,13 +71,13 @@
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
     <LinkIncremental>true</LinkIncremental>
     <TargetName>HashCalculator</TargetName>
-    <OutDir>$(SolutionDir)ShellExtBinDebug\$(PlatformName)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)HashCalculator\ShellExt\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
     <LinkIncremental>true</LinkIncremental>
     <TargetName>HashCalculator32</TargetName>
-    <OutDir>$(SolutionDir)ShellExtBinDebug\$(PlatformName)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)HashCalculator\ShellExt\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -290,6 +290,7 @@
     <Midl Include="ShellExtensions.idl" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="file_icon.ico" />
     <Image Include="icon_1.bmp" />
     <Image Include="icon_2.bmp" />
   </ItemGroup>

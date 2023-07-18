@@ -20,6 +20,6 @@ namespace HashCalculator
         public string Algo { get; set; }
 
         [Option('b', "basis", Required = true)]
-        public int BasisPath { get; set; }
+        public string BasisPath { get; set; }
     }
 }

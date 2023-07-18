@@ -99,6 +99,8 @@
     <Compile Include="Others\ModelStarter.cs" />
     <Compile Include="Others\PathPackage.cs" />
     <Compile Include="Others\ProcSynchronizer.cs" />
+    <Compile Include="Others\RegNode.cs" />
+    <Compile Include="Others\RegValue.cs" />
     <Compile Include="Others\RelayCommand.cs" />
     <Compile Include="Others\CommonUtils.cs" />
     <Compile Include="HashAlgos\BouncyCastleSha3Digest.cs" />
