@@ -19,7 +19,7 @@ namespace HashCalculator
 
         private void SettingsPanelClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            e.Cancel = !this.viewModel.NotProcessingContextMenu;
+            e.Cancel = !this.viewModel.NotSettingShellExtension;
         }
     }
 }

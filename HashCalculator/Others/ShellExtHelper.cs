@@ -33,11 +33,11 @@ namespace HashCalculator
                     }
                 }
             };
-            fileExtNode = new RegNode(fileExt)
+            basisSuffixNode = new RegNode(basisFileSuffix)
             {
                 Values = new RegValue[]
                 {
-                    new RegValue("", progId, RegistryValueKind.String)
+                    new RegValue("", programId, RegistryValueKind.String)
                 }
             };
             appPathsNode = new RegNode(executableName)
@@ -52,7 +52,7 @@ namespace HashCalculator
             {
                 Nodes = new RegNode[] { shellOpenCmdNode }
             };
-            progIdNode = new RegNode(progId)
+            progIdNode = new RegNode(programId)
             {
                 Nodes = new RegNode[]
                 {
@@ -123,18 +123,10 @@ namespace HashCalculator
                     }
                     if (File.Exists(shellExtensionPath))
                     {
-                        try
-                        {
-                            File.Delete(shellExtensionPath);
-                        }
-                        catch (Exception e) when (e is IOException || e is UnauthorizedAccessException)
-                        {
-                            TerminateAndRestartExplorer();
-                        }
+                        Exception exception = await UninstallContextMenu();
                     }
-                    string uri = "HashCalculator.ShellExt." + shellExtensionName;
                     Assembly executing = Assembly.GetExecutingAssembly();
-                    if (executing.GetManifestResourceStream(uri) is Stream stream)
+                    if (executing.GetManifestResourceStream(embeddedResourcePath) is Stream stream)
                     {
                         using (stream)
                         {
@@ -219,7 +211,7 @@ namespace HashCalculator
                             bool fileExtExists = false;
                             foreach (string keyName in keyNames)
                             {
-                                if (fileExt.Equals(keyName, StringComparison.OrdinalIgnoreCase))
+                                if (basisFileSuffix.Equals(keyName, StringComparison.OrdinalIgnoreCase))
                                 {
                                     fileExtExists = true;
                                     break;
@@ -227,25 +219,25 @@ namespace HashCalculator
                             }
                             if (fileExtExists)
                             {
-                                using (RegistryKey fileExtKey = classes.OpenSubKey(fileExt, true))
+                                using (RegistryKey fileExtKey = classes.OpenSubKey(basisFileSuffix, true))
                                 {
                                     if (fileExtKey != null)
                                     {
                                         if (fileExtKey.GetValue("") is string defaultVal &&
-                                            !defaultVal.Equals(progId, StringComparison.OrdinalIgnoreCase))
+                                            !defaultVal.Equals(programId, StringComparison.OrdinalIgnoreCase))
                                         {
                                             using (RegistryKey progIdsKey = fileExtKey.CreateSubKey(regPathOpenWithProgIds, true))
                                             {
                                                 progIdsKey?.SetValue(defaultVal, string.Empty);
                                             }
-                                            fileExtKey.SetValue(string.Empty, progId, RegistryValueKind.String);
+                                            fileExtKey.SetValue(string.Empty, programId, RegistryValueKind.String);
                                         }
                                     }
                                 }
                             }
                             else
                             {
-                                if (!RegNode.WriteRegNode(classes, fileExtNode))
+                                if (!RegNode.WriteRegNode(classes, basisSuffixNode))
                                 {
                                     return new Exception("新建注册表 .hcb 后缀名项失败");
                                 }
@@ -277,10 +269,10 @@ namespace HashCalculator
                     {
                         if (root != null)
                         {
-                            string[] keyNames = root.GetSubKeyNames();
-                            foreach (string keyName in keyNames)
+                            string[] subKeyNames = root.GetSubKeyNames();
+                            foreach (string keyName in subKeyNames)
                             {
-                                if (keyName.Equals(progId, StringComparison.OrdinalIgnoreCase))
+                                if (keyName.Equals(programId, StringComparison.OrdinalIgnoreCase))
                                 {
                                     root.DeleteSubKeyTree(keyName);
                                     NativeFunctions.SHChangeNotify(
@@ -376,8 +368,9 @@ namespace HashCalculator
             return await DeleteRegNodeFromRegPath(regPathApplications, applicationNode);
         }
 
-        private const string progId = "HashCalculator.Basis";
-        private const string fileExt = ".hcb";
+        private const string programId = "HashCalculator.Basis";
+        private const string basisFileSuffix = ".hcb";
+        private const string executableName = "HashCalculator.exe";
         private const string regPathSoftClasses = "Software\\Classes";
         private static readonly string regPathApplications = $"{regPathSoftClasses}\\Applications";
         private const string regPathAppPaths = "Software\\Microsoft\\Windows\\CurrentVersion\\App Paths";
@@ -385,13 +378,12 @@ namespace HashCalculator
         private static readonly RegNode appPathsNode;
         private static readonly RegNode applicationNode;
         private static readonly RegNode progIdNode;
-        private static readonly RegNode fileExtNode;
+        private static readonly RegNode basisSuffixNode;
         private static readonly string executablePath = Assembly.GetExecutingAssembly().Location;
         private static readonly string executableFolder = Path.GetDirectoryName(executablePath);
         private static readonly string shellExtensionName = Environment.Is64BitOperatingSystem ?
             "HashCalculator.dll" : "HashCalculator32.dll";
+        private static readonly string embeddedResourcePath = $"HashCalculator.ShellExt.{shellExtensionName}";
         private static readonly string shellExtensionPath = Path.Combine(executableFolder, shellExtensionName);
-        private const string executableName = "HashCalculator.exe";
-        private const string menuExtGuid = "{de95cac8-90d1-4c55-b81d-d7f6d527606c}";
     }
 }

@@ -74,15 +74,14 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock
                     VerticalAlignment="Center"
-                    Text="使用快速校验时："
-                    ToolTip="{Binding TaskNumLimitsToolTip}" />
+                    Text="直接选择校验依据进行校验时：" />
                 <ComboBox
                     Grid.Column="1"
                     DisplayMemberPath="Display"
                     ItemsSource="{Binding AvailableQVSearchPolicies}"
                     SelectedValue="{Binding SelectedQVSPolicy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     SelectedValuePath="ItemValue"
-                    ToolTip="{Binding TaskNumLimitsToolTip}" />
+                    ToolTip="当表格为空时，如果校验依据选择的是通用格式的哈希值文本文件，则：&#10;点击 [校验] 后程序会自动解析文件并在相同目录下寻找要计算哈希值的文件完成计算并显示校验结果。&#10;通用格式的哈希值文件请参考程序 [导出结果] 功能导出的文件的内容排布格式。" />
             </Grid>
             <CheckBox
                 Grid.Row="3"
@@ -142,7 +141,7 @@
                         Background="{x:Null}"
                         Command="{Binding InstallContextMenuCmd}"
                         Content="安装右键菜单(用户)"
-                        IsEnabled="{Binding NotProcessingContextMenu}" />
+                        IsEnabled="{Binding NotSettingShellExtension}" />
                     <Button
                         Grid.Row="0"
                         Grid.Column="1"
@@ -151,7 +150,7 @@
                         Background="{x:Null}"
                         Command="{Binding UnInstallContextMenuCmd}"
                         Content="卸载右键菜单(用户)"
-                        IsEnabled="{Binding NotProcessingContextMenu}" />
+                        IsEnabled="{Binding NotSettingShellExtension}" />
                     <TextBlock
                         Grid.Row="1"
                         Grid.ColumnSpan="2"

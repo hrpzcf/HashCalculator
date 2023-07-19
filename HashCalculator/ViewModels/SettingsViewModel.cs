@@ -24,7 +24,7 @@ namespace HashCalculator
         private bool noDurationColumn = false;
         private bool noFileSizeColumn = false;
         private bool runInMultiInstanceMode = false;
-        private bool notProcessingContextMenu = true;
+        private bool notSettingShellExtension = true;
         private RelayCommand installContextMenuCmd;
         private RelayCommand unInstallContextMenuCmd;
 
@@ -257,15 +257,15 @@ namespace HashCalculator
         }
 
         [XmlIgnore]
-        public bool NotProcessingContextMenu
+        public bool NotSettingShellExtension
         {
             get
             {
-                return this.notProcessingContextMenu;
+                return this.notSettingShellExtension;
             }
             set
             {
-                this.SetPropNotify(ref this.notProcessingContextMenu, value);
+                this.SetPropNotify(ref this.notSettingShellExtension, value);
             }
         }
 
@@ -281,7 +281,7 @@ namespace HashCalculator
             {
                 return;
             }
-            this.NotProcessingContextMenu = false;
+            this.NotSettingShellExtension = false;
             if (await ShellExtHelper.InstallContextMenu() is Exception exception)
             {
                 MessageBox.Show(
@@ -294,7 +294,7 @@ namespace HashCalculator
                     SettingsPanel.This, $"右键菜单扩展安装成功！", "提示", MessageBoxButton.OK,
                     MessageBoxImage.Information);
             }
-            this.NotProcessingContextMenu = true;
+            this.NotSettingShellExtension = true;
         }
 
         [XmlIgnore]
@@ -322,7 +322,7 @@ namespace HashCalculator
             {
                 return;
             }
-            this.NotProcessingContextMenu = false;
+            this.NotSettingShellExtension = false;
             if (await ShellExtHelper.UninstallContextMenu() is Exception exception)
             {
                 MessageBox.Show(
@@ -335,7 +335,7 @@ namespace HashCalculator
                     SettingsPanel.This, $"右键菜单扩展卸载成功！", "提示", MessageBoxButton.OK,
                     MessageBoxImage.Information);
             }
-            this.NotProcessingContextMenu = true;
+            this.NotSettingShellExtension = true;
         }
 
         [XmlIgnore]
@@ -386,12 +386,6 @@ namespace HashCalculator
             new ControlItem("4 个：大多数文件较小", TaskNum.Four),
             new ControlItem("8 个：大多数文件很小", TaskNum.Eight),
         };
-
-        [XmlIgnore]
-        public string TaskNumLimitsToolTip { get; } =
-            "当面板为空时，如果校验依据选择的是通用格式的哈希值文本文件，则：\n" +
-            "点击 [校验] 后程序会自动解析文件并在相同目录下寻找要计算哈希值的文件完成计算并显示校验结果。\n" +
-            "通用格式的哈希值文件请参考程序 [导出结果] 功能导出的文件的内容排布格式。";
 
         [XmlIgnore]
         public ControlItem[] AvailableDroppedSearchPolicies { get; } =
