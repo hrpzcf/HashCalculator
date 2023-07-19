@@ -278,18 +278,38 @@
                 <ol>
                     <li><span class="steps">打开文件：</span>以系统关联的打开方式打开选中的所有行对应的文件。</li>
                     <li><span class="steps">打开位置：</span>打开资源管理器并在资源管理器中选择所有选中行对应的文件。</li>
+                    <li>
+                        <span class="steps">任务控制：</span>
+                        <ul>
+                            <li><span class="steps">暂停任务：</span>暂停所有已选中的、正在运行的任务</li>
+                            <li><span class="steps">继续任务：</span>启动所有已选中的、已被暂停的任务</li>
+                            <li><span class="steps">取消任务：</span>取消所有已选中的、排队中或运行中或暂停中的任务</li>
+                            <li><span
+                                    class="steps">新增计算：</span>复制所有已选中的行到新行并启动，新任务开始运行时将以&quot;默认哈希算法&quot;下拉列表所选的算法进行计算
+                            </li>
+                            <li><span
+                                    class="steps">启动未成功项：</span>重新启动所有已选中的任务中未运行的、非成功的任务，任务开始运行时将以&quot;默认哈希算法&quot;下拉列表所选的算法进行计算
+                            </li>
+                            <li><span
+                                    class="steps">重新计算：</span>重新启动所有已选中的任务中已取消或已成功的任务，任务开始运行时将以&quot;默认哈希算法&quot;下拉列表所选的算法进行计算
+                            </li>
+                        </ul>
+                    </li>
+                    <li><span class="steps">复制文件名：</span>将所有选中行对应的文件名复制到剪贴板，复制后的格式是每行一个文件名。</li>
                     <li><span class="steps">复制路径：</span>将所有选中行对应的文件完整路径复制到剪贴板，复制后的格式是每行一个路径。</li>
                     <li><span class="steps">复制哈希值</span>
                         <ul>
-                            <li>Base64：将所有选中行的哈希结果复制为 Base64 字符串格式。</li>
-                            <li>十六进制大写： 将所有选中行的哈希结果复制为十六进制字符串格式，字母大写。</li>
-                            <li>十六进制小写： 将所有选中行的哈希结果复制为十六进制字符串格式，字母小写。</li>
+                            <li><span class="steps">Base64：</span>将所有选中行的哈希结果复制为 Base64 字符串格式。</li>
+                            <li><span class="steps">十六进制大写：</span>将所有选中行的哈希结果复制为十六进制字符串格式，字母大写。</li>
+                            <li><span class="steps">十六进制小写：</span>将所有选中行的哈希结果复制为十六进制字符串格式，字母小写。</li>
                         </ul>
                     </li>
                     <li><span class="steps">复制哈希值</span>将所有选中行的哈希结果复制为各行 <b>输出方式</b> 列指定的字符串格式，如果 <b>输出方式</b> 是
                         <b>没有指定</b> 则复制为 <b>默认输出方式</b> 指定的格式。
                     </li>
-                    <li><span class="steps">删除文件</span>将所有选中的行从表格移除并永久删除对应的文件，删除文件前会显示确认删除对话框。</li>
+                    <li><span
+                            class="steps">删除文件</span>将所有选中的行从表格移除，永久删除对应的文件或移动到回收站(取决于设置面板<b>右键选择删除文件时永久删除而不是移动到回收站</b>项的设置)，删除文件前会显示确认对话框。
+                    </li>
                     <li><span class="steps">移除所选项</span>将所有选中的行从表格移除，此选项不会影响实际的文件。</li>
                     <li><span class="steps">文件属性</span>分别打开所有选中文件的系统 <b>文件属性</b> 对话框，请勿选中过多数量，否则将打开大量文件属性对话框。</li>
                 </ol>
@@ -298,18 +318,8 @@
             <li>
                 <div class="title2">设置面板各项作用</div>
                 <ol>
-                    <li><span class="steps">主窗口关闭时记住窗口位置：</span>下次打开程序时从上次关闭时的位置显示窗口。</li>
-                    <li><span class="steps">主窗口关闭时记住窗口大小：</span>下次打开程序时以上次关闭时的大小显示窗口。</li>
                     <li>
-                        <span class="steps">当拖入面板的对象包含文件夹时：</span>拖入面板的对象包含文件也包含文件夹时，正常计算文件的哈希值，文件夹则使用以下规则：
-                        <ul>
-                            <li><span class="steps">搜索一代子文件：</span>对于拖入面板的文件夹，只搜索其直接子文件，而不搜索该文件夹内的文件夹。</li>
-                            <li><span class="steps">搜索全部子文件：</span>对于拖入面板的文件夹，深入搜索其内的所有层级文件夹，获取其内的所有文件。</li>
-                            <li><span class="steps">不搜索该文件夹：</span>如果拖入面板的对象是个文件夹，则略过该拖入的文件夹。</li>
-                        </ul>
-                    </li>
-                    <li>
-                        <span class="steps">同时计算多少个文件的哈希值：</span>选择合适的选项可以加快文件哈希值的计算速度，这里的&quot;大小&quot;是相对于硬盘的读取速度来说的。
+                        <span class="steps">同时计算多少个文件的哈希值：</span>选择合适的选项可以加快文件哈希值的计算速度。
                         <ul>
                             <li><span class="steps">1 个 - 大多数文件很大：</span>当大多数拖入面板或选择的文件都很大时使用此选项。</li>
                             <li><span class="steps">2 个 - 大多数文件较大：</span>当大多数拖入面板或选择的文件都较大时使用此选项。</li>
@@ -317,8 +327,15 @@
                             <li><span class="steps">8 个 - 大多数文件很小：</span>当大多数拖入面板或选择的文件都很小时使用此选项。</li>
                         </ul>
                     </li>
+                    <li><span class="steps">当拖入面板的对象包含文件夹时：</span>拖入面板的对象包含文件也包含文件夹时，对文件夹则使用以下规则：
+                        <ul>
+                            <li><span class="steps">搜索一代子文件：</span>对于拖入面板的文件夹，只搜索其直接子文件，而不搜索该文件夹内的文件夹。</li>
+                            <li><span class="steps">搜索全部子文件：</span>对于拖入面板的文件夹，深入搜索其内的所有层级文件夹，获取其内的所有文件。</li>
+                            <li><span class="steps">不搜索该文件夹：</span>如果拖入面板的对象是个文件夹，则略过该拖入的文件夹。</li>
+                        </ul>
+                    </li>
                     <li>
-                        <span class="steps">使用快速校验时：</span>
+                        <span class="steps">直接选择校验依据进行校验时：</span>
                         <ul>
                             <li><span class="steps">搜索依据所在目录的一代子文件：</span>只搜索 hashsums 文件所在文件夹的直接子文件。</li>
                             <li><span class="steps">搜索依据所在目录的全部子文件：</span>搜索 hashsums 文件所在文件夹下所有子孙文件夹的文件。</li>
@@ -326,6 +343,9 @@
                     </li>
                     <li><span
                             class="steps">&quot;在校验结果的色块中显示文字描述&quot;：</span>在表格的&quot;校验结果列&quot;列的色块中显示不同颜色代表的含义的文字描述。
+                    </li>
+                    <li><span
+                            class="steps">&quot;右键选择删除文件时永久删除而不是移动到回收站&quot;：</span>在表格中对选中的行点击右键选择&quot;删除文件&quot;时直接删除所选的文件而不是移动到回收站，无法恢复删除的文件。
                     </li>
                     <li><span class="steps">&quot;不显示“导出”列&quot;：</span>隐藏表格中的“导出”列以节省表格横向空间。</li>
                     <li><span class="steps">&quot;不显示“运行时长”列&quot;：</span>隐藏表格中的“运行时长”列以节省表格横向空间。</li>
@@ -346,30 +366,10 @@
             <li>
                 <span class="steps">在依据所在文件夹中找不到依据中列出的文件：</span>请确认依据文件 hashsums 是否与要被计算哈希值的文件在同一个文件夹。如果要被计算哈希值的文件在比
                 hashsums
-                更深层的文件夹中，则请打开&quot;设置&quot;，检查&quot;当使用快速校验时&quot;是否选择了&quot;搜索依据所在目录的所有子文件&quot;选项。
+                更深层的文件夹中，则请打开&quot;设置&quot;，检查&quot;直接选择校验依据进行校验时&quot;设置项是否选择了&quot;搜索依据所在目录的所有子文件&quot;选项。
             </li>
             <li><span class="steps">要计算哈希值的文件不存在或无法访问：</span>可能因为用户权限原因无法访问该要被计算哈希值的文件。</li>
             <li><span class="steps">读取要被计算哈希值的文件失败或计算出错：</span>打开要被计算哈希值的文件失败，或者计算该文件哈希值的过程中出现不可预料的错误。</li>
-        </ul>
-        <br />
-        <div class="title">安装、卸载方面的疑难杂症</div>
-        <ul class="outter_ul">
-            <li><span class="steps">安装完成后系统右键菜单没有出现计算文件哈希值选项：</span>目前 HashCalculator
-                仅支持选中这些文件类型后右击会出现计算哈希值菜单：文件、文件夹、文件夹背景。如果右击这些类型也没有出现计算哈希值菜单，那么有可能你安装了不正确的版本，32 位系统请安装
-                HashCalculator_xxx_x86.msi，64 位系统请安装 HashCalculator_xxx_x64.msi，如果还是没有出现计算哈希值菜单，有可能右键菜单扩展被意外清除，请重新安装。
-            </li>
-            <li><span class="steps">安装 HashCalculator 时提示&quot;已经安装了本产品...&quot;：</span>请到系统设置面板👉程序👉安装的程序中找到
-                HashCalculator 选择卸载后再安装新版本。</li>
-            <li><span class="steps">安装新版本时出现&quot;修复/删除&quot;对话框：</span>请勿选择修复或删除，先关闭对话框，然后右键点击 .msi
-                文件选择&quot;卸载&quot;（或到系统设置面板👉程序👉安装的程序中找到 HashCalculator
-                选择卸载），卸载过程会提示关闭资源管理器，请选择&quot;是&quot;，卸载完成后再安装新版本。</li>
-            <span class="description">不建议手动删除 HashCalculator 的原因是 HashCalculator 集成了系统右键菜单，使用过 HashCalculator
-                右键菜单以后系统资源管理器会一直占用右键菜单扩展对应的 dll
-                文件，手动删除安装的文件时并不能成功删除，如果通过暴力手段删除/粉碎安装的文件，则会遗留注册表项并可能出现其他不可预知的问题，所以</span><span
-                class="notice">请勿暴力删除/粉碎</span><span class="description">安装文件，而是应该在系统设置面板👉程序👉安装的程序中正常卸载
-                HashCalculator。</span>
-            <div>其他解决办法包括使用 regsvr32 命令对 HashCalculator 安装目录下的 ShellExtensions_[x86|x64].dll 文件进行反注册后重启资源管理器即可删除 .dll
-                文件，此方法仅供专业人员使用，不过多描述。</div>
         </ul>
         <br />
         <div class="title">源代码贡献者 (感谢所有贡献者)</div>
