@@ -14,8 +14,8 @@ namespace HashCalculator
         private double mainWndTop = double.NaN;
         private double mainWndLeft = double.NaN;
         private WindowState mainWindowState = WindowState.Normal;
-        private double settingsWndWidth = 400.0;
-        private double settingsWndHeight = 280.0;
+        private double settingsWndWidth = 530.0;
+        private double settingsWndHeight = 450.0;
         private AlgoType selectedAlgorithm = AlgoType.SHA1;
         private OutputType selectedOutputType = OutputType.BinaryUpper;
         private TaskNum selectedTaskNumberLimit = TaskNum.Two;
@@ -25,8 +25,8 @@ namespace HashCalculator
         private bool noFileSizeColumn = false;
         private bool runInMultiInstanceMode = false;
         private bool notSettingShellExtension = true;
-        private RelayCommand installContextMenuCmd;
-        private RelayCommand unInstallContextMenuCmd;
+        private RelayCommand installShellExtCmd;
+        private RelayCommand unInstallShellExtCmd;
 
         public SettingsViewModel()
         {
@@ -269,11 +269,11 @@ namespace HashCalculator
             }
         }
 
-        private async void InstallContextMenuAction(object param)
+        private async void InstallShellExtAction(object param)
         {
             if (MessageBox.Show(
                 SettingsPanel.This,
-                "安装右键菜单扩展可能需要重启资源管理器，确定现在安装吗？",
+                "安装 Shell 扩展可能需要重启资源管理器，确定现在安装吗？",
                 "询问",
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Question,
@@ -282,39 +282,39 @@ namespace HashCalculator
                 return;
             }
             this.NotSettingShellExtension = false;
-            if (await ShellExtHelper.InstallContextMenu() is Exception exception)
+            if (await ShellExtHelper.InstallShellExtension() is Exception exception)
             {
                 MessageBox.Show(
-                    SettingsPanel.This, $"安装右键菜单扩展失败：\n{exception.Message}", "提示",
+                    SettingsPanel.This, $"安装 Shell 扩展失败：\n{exception.Message}", "提示",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
             }
             else
             {
                 MessageBox.Show(
-                    SettingsPanel.This, $"右键菜单扩展安装成功！", "提示", MessageBoxButton.OK,
+                    SettingsPanel.This, $"安装 Shell 扩展成功！", "提示", MessageBoxButton.OK,
                     MessageBoxImage.Information);
             }
             this.NotSettingShellExtension = true;
         }
 
         [XmlIgnore]
-        public ICommand InstallContextMenuCmd
+        public ICommand InstallShellExtCmd
         {
             get
             {
-                if (this.installContextMenuCmd == null)
+                if (this.installShellExtCmd == null)
                 {
-                    this.installContextMenuCmd = new RelayCommand(this.InstallContextMenuAction);
+                    this.installShellExtCmd = new RelayCommand(this.InstallShellExtAction);
                 }
-                return this.installContextMenuCmd;
+                return this.installShellExtCmd;
             }
         }
 
-        private async void UnInstallContextMenuAction(object param)
+        private async void UnInstallShellExtAction(object param)
         {
             if (MessageBox.Show(
                 SettingsPanel.This,
-                "卸载右键菜单扩展可能需要重启资源管理器，确定现在卸载吗？",
+                "卸载 Shell 扩展可能需要重启资源管理器，确定现在卸载吗？",
                 "询问",
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Question,
@@ -323,31 +323,31 @@ namespace HashCalculator
                 return;
             }
             this.NotSettingShellExtension = false;
-            if (await ShellExtHelper.UninstallContextMenu() is Exception exception)
+            if (await ShellExtHelper.UninstallShellExtension() is Exception exception)
             {
                 MessageBox.Show(
-                    SettingsPanel.This, $"卸载右键菜单扩展失败：\n{exception.Message}", "提示",
+                    SettingsPanel.This, $"卸载 Shell 扩展失败：\n{exception.Message}", "提示",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
             }
             else
             {
                 MessageBox.Show(
-                    SettingsPanel.This, $"右键菜单扩展卸载成功！", "提示", MessageBoxButton.OK,
+                    SettingsPanel.This, $"卸载 Shell 扩展成功！", "提示", MessageBoxButton.OK,
                     MessageBoxImage.Information);
             }
             this.NotSettingShellExtension = true;
         }
 
         [XmlIgnore]
-        public ICommand UnInstallContextMenuCmd
+        public ICommand UnInstallShellExtCmd
         {
             get
             {
-                if (this.unInstallContextMenuCmd == null)
+                if (this.unInstallShellExtCmd == null)
                 {
-                    this.unInstallContextMenuCmd = new RelayCommand(this.UnInstallContextMenuAction);
+                    this.unInstallShellExtCmd = new RelayCommand(this.UnInstallShellExtAction);
                 }
-                return this.unInstallContextMenuCmd;
+                return this.unInstallShellExtCmd;
             }
         }
 

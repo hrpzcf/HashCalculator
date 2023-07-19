@@ -13,26 +13,6 @@ namespace HashCalculator
     {
         static ShellExtHelper()
         {
-            RegNode shellOpenCmdNode = new RegNode("shell")
-            {
-                Nodes = new RegNode[]
-                {
-                    new RegNode("open")
-                    {
-                        Nodes = new RegNode[]
-                        {
-                            new RegNode("command")
-                            {
-                                Values = new RegValue[]
-                                {
-                                    new RegValue("", $"{executableName} verify -b \"%1\"",
-                                        RegistryValueKind.String)
-                                }
-                            }
-                        }
-                    }
-                }
-            };
             basisSuffixNode = new RegNode(basisFileSuffix)
             {
                 Values = new RegValue[]
@@ -40,34 +20,54 @@ namespace HashCalculator
                     new RegValue("", programId, RegistryValueKind.String)
                 }
             };
-            appPathsNode = new RegNode(executableName)
-            {
-                Values = new RegValue[]
-                {
-                    new RegValue("", executablePath, RegistryValueKind.String),
-                    new RegValue("Path", executableFolder, RegistryValueKind.String)
-                }
-            };
-            applicationNode = new RegNode(executableName)
-            {
-                Nodes = new RegNode[] { shellOpenCmdNode }
-            };
             progIdNode = new RegNode(programId)
             {
                 Nodes = new RegNode[]
                 {
+                    new RegNode("shell")
+                    {
+                        Nodes = new RegNode[]
+                        {
+                            new RegNode("open")
+                            {
+                                Nodes = new RegNode[]
+                                {
+                                    new RegNode("command")
+                                    {
+                                        Values = new RegValue[]
+                                        {
+                                            new RegValue("", $"{executableName} verify -b \"%1\"",
+                                                RegistryValueKind.String)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
                     new RegNode("DefaultIcon")
                     {
                         Values = new RegValue[]
                         {
                             new RegValue("", $"{shellExtensionPath},-203", RegistryValueKind.String)
                         }
-                    },
-                    shellOpenCmdNode
+                    }
                 },
                 Values = new RegValue[]
                 {
-                    new RegValue("FriendlyTypeName", $@"@{shellExtensionPath},-107", RegistryValueKind.String)
+                    new RegValue("FriendlyTypeName", $"@{shellExtensionPath},-107", RegistryValueKind.String)
+                }
+            };
+            applicationNode = new RegNode(executableName)
+            {
+                Nodes = progIdNode.Nodes,
+                Values = progIdNode.Values
+            };
+            appPathsNode = new RegNode(executableName)
+            {
+                Values = new RegValue[]
+                {
+                    new RegValue("", executablePath, RegistryValueKind.String),
+                    new RegValue("Path", executableFolder, RegistryValueKind.String)
                 }
             };
         }
@@ -85,7 +85,7 @@ namespace HashCalculator
                 process.StartInfo = startInfo;
                 process.Start();
                 process.WaitForExit();
-                return process.ExitCode == 0 ? null : new Exception("注册或反注册右键菜单扩展失败(regsvr32)");
+                return process.ExitCode == 0 ? null : new Exception("注册或反注册 Shell 扩展失败(regsvr32)");
             }
             catch (Exception exception)
             {
@@ -111,7 +111,7 @@ namespace HashCalculator
             }
         }
 
-        public static async Task<Exception> InstallContextMenu()
+        public static async Task<Exception> InstallShellExtension()
         {
             return await Task.Run(async () =>
             {
@@ -123,7 +123,7 @@ namespace HashCalculator
                     }
                     if (File.Exists(shellExtensionPath))
                     {
-                        Exception exception = await UninstallContextMenu();
+                        await UninstallShellExtension();
                     }
                     Assembly executing = Assembly.GetExecutingAssembly();
                     if (executing.GetManifestResourceStream(embeddedResourcePath) is Stream stream)
@@ -137,12 +137,12 @@ namespace HashCalculator
                                 fs.Write(shellExtBuffer, 0, shellExtBuffer.Length);
                             }
                         }
-                        return RegisterShellExtDll(shellExtensionPath, true) ??
-                            await CreateProgIdAndFileType(true) ?? await CreateAppPath() ?? await CreateApplication();
+                        return RegisterShellExtDll(shellExtensionPath, true) ?? await CreateAppPath() ??
+                            await CreateApplication() ?? await CreateProgIdAndFileType(true);
                     }
                     else
                     {
-                        return new MissingManifestResourceException("找不到内嵌的右键菜单扩展模块");
+                        return new MissingManifestResourceException("找不到内嵌的 Shell 扩展模块资源");
                     }
                 }
                 catch (Exception exception)
@@ -152,7 +152,7 @@ namespace HashCalculator
             });
         }
 
-        public static async Task<Exception> UninstallContextMenu()
+        public static async Task<Exception> UninstallShellExtension()
         {
             return await Task.Run(async () =>
             {
@@ -161,28 +161,25 @@ namespace HashCalculator
                     if (File.Exists(shellExtensionPath))
                     {
                         Exception exception = RegisterShellExtDll(shellExtensionPath, false);
-                        if (exception == null)
+                        if (exception != null)
                         {
-                            try
-                            {
-                                File.Delete(shellExtensionPath);
-                            }
-                            catch (Exception e) when (e is IOException || e is UnauthorizedAccessException)
-                            {
-                                TerminateAndRestartExplorer();
-                                File.Delete(shellExtensionPath);
-                            }
-                            if ((exception = await DeleteProgIdButNotFileType() ??
-                                await DeleteAppPath() ?? await DeleteApplication()) == null)
-                            {
-                                return null;
-                            }
+                            return exception;
                         }
-                        return exception;
+                        try
+                        {
+                            File.Delete(shellExtensionPath);
+                        }
+                        catch (Exception e) when (e is IOException || e is UnauthorizedAccessException)
+                        {
+                            TerminateAndRestartExplorer();
+                            File.Delete(shellExtensionPath);
+                        }
+                        return await DeleteProgIdButNotFileType() ??
+                            await DeleteApplication() ?? await DeleteAppPath();
                     }
                     else
                     {
-                        return new FileNotFoundException("没有在程序所在目录找到右键菜单扩展模块");
+                        return new FileNotFoundException("没有在程序所在目录找到 Shell 扩展模块");
                     }
                 }
                 catch (Exception exception)
@@ -239,7 +236,7 @@ namespace HashCalculator
                             {
                                 if (!RegNode.WriteRegNode(classes, basisSuffixNode))
                                 {
-                                    return new Exception("新建注册表 .hcb 后缀名项失败");
+                                    return new Exception($"写入注册表子键失败：{basisSuffixNode.Name}");
                                 }
                             }
                             NativeFunctions.SHChangeNotify(

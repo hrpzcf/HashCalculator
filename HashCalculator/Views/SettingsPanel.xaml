@@ -14,10 +14,10 @@
     WindowStartupLocation="CenterOwner"
     mc:Ignorable="d">
     <ScrollViewer
-        Margin="16,8,16,8"
+        Margin="4"
         HorizontalScrollBarVisibility="Auto"
         VerticalScrollBarVisibility="Auto">
-        <Grid>
+        <Grid Margin="12,4,12,4">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -123,43 +123,74 @@
                 Grid.Row="9"
                 Margin="0,20,0,4"
                 Padding="4,8,4,0"
-                Header="扩展系统右键菜单">
-                <Grid>
+                Header="扩展系统右键菜单和关联 .hcb 文件">
+                <Grid Grid.IsSharedSizeScope="True">
                     <Grid.RowDefinitions>
                         <RowDefinition />
                         <RowDefinition />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition />
+                        <ColumnDefinition SharedSizeGroup="button" />
+                        <ColumnDefinition SharedSizeGroup="button" />
                     </Grid.ColumnDefinitions>
                     <Button
                         Grid.Row="0"
                         Grid.Column="0"
                         Margin="0,0,8,0"
-                        Padding="8,4"
+                        Padding="8,8"
                         Background="{x:Null}"
-                        Command="{Binding InstallContextMenuCmd}"
-                        Content="安装右键菜单(用户)"
+                        Command="{Binding InstallShellExtCmd}"
+                        Content="安装右键菜单并关联文件(用户)"
                         IsEnabled="{Binding NotSettingShellExtension}" />
                     <Button
                         Grid.Row="0"
                         Grid.Column="1"
                         Margin="8,0,0,0"
-                        Padding="8,4"
+                        Padding="8,8"
                         Background="{x:Null}"
-                        Command="{Binding UnInstallContextMenuCmd}"
-                        Content="卸载右键菜单(用户)"
+                        Command="{Binding UnInstallShellExtCmd}"
+                        Content="卸载右键菜单并取消关联(用户)"
                         IsEnabled="{Binding NotSettingShellExtension}" />
-                    <TextBlock
+                    <StackPanel
                         Grid.Row="1"
                         Grid.ColumnSpan="2"
-                        Margin="0,8,0,0"
-                        VerticalAlignment="Center"
-                        FontSize="8pt"
-                        Foreground="#AAAAAA"
-                        Text="1. 安装右键菜单扩展后，程序会在同目录下释放菜单扩展模块 (HashCalculator[32].dll 文件)&#10;2. 不可移动、删除、重命名 HashCalculator[32].dll 文件，否则右键菜单将失效&#10;3. 不可重命名 HashCalculator.exe 文件，否则将无法被右键菜单唤起&#10;4. 安装右键扩展菜单后不能移动 HashCalculator.exe，否则将无法被右键菜单唤起&#10;5. 移动或删除 HashCalculator.exe 前先卸载右键菜单，程序会清理注册表并删除菜单扩展模块"
-                        TextWrapping="Wrap" />
+                        Margin="0,8,0,0">
+                        <TextBlock
+                            FontSize="8pt"
+                            Foreground="#A6A6A6"
+                            Text="1. 安装右键菜单扩展后，程序会在同目录下释放菜单扩展模块 (HashCalculator[32].dll 文件)"
+                            TextWrapping="Wrap" />
+                        <TextBlock
+                            Margin="0,2,0,0"
+                            FontSize="8pt"
+                            Foreground="#A6A6A6"
+                            Text="2. 不可移动、删除、重命名 HashCalculator[32].dll 文件，否则右键菜单将失效"
+                            TextWrapping="Wrap" />
+                        <TextBlock
+                            Margin="0,2,0,0"
+                            FontSize="8pt"
+                            Foreground="#A6A6A6"
+                            Text="3. 不可重命名 HashCalculator.exe 文件，否则将无法被右键菜单唤起"
+                            TextWrapping="Wrap" />
+                        <TextBlock
+                            Margin="0,2,0,0"
+                            FontSize="8pt"
+                            Foreground="#A6A6A6"
+                            Text="4. 安装右键扩展菜单后不能移动 HashCalculator.exe，否则将无法被右键菜单唤起"
+                            TextWrapping="Wrap" />
+                        <TextBlock
+                            Margin="0,2,0,0"
+                            FontSize="8pt"
+                            Foreground="#A6A6A6"
+                            Text="5. 移动或删除 HashCalculator.exe 前先卸载右键菜单，程序会清理注册表并删除菜单扩展模块"
+                            TextWrapping="Wrap" />
+                        <TextBlock
+                            Margin="0,2,0,0"
+                            FontSize="8pt"
+                            Foreground="MediumVioletRed"
+                            Text="6. 下载新版本后先在旧版本上卸载右键菜单再打开新版本安装右键菜单以避免出现兼容问题"
+                            TextWrapping="Wrap" />
+                    </StackPanel>
                 </Grid>
             </GroupBox>
         </Grid>
