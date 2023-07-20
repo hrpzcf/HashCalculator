@@ -524,7 +524,7 @@ namespace HashCalculator
                 synchronization.Invoke(() =>
                 {
                     this.Result = HashResult.Failed;
-                    this.HashString = "搜索不到此文件...";
+                    this.HashString = "未搜索到文件，请检查搜索策略后重新添加...";
                 });
                 goto FinishingTouchesBeforeExiting;
             }
