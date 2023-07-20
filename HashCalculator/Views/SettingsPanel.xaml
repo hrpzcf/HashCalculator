@@ -111,7 +111,7 @@
                 Grid.Row="7"
                 Margin="0,0,0,4"
                 Padding="4,0,0,0"
-                Content="不显示“文件体积”列"
+                Content="不显示“文件大小”列"
                 IsChecked="{Binding NoFileSizeColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             <CheckBox
                 Grid.Row="8"

@@ -324,7 +324,7 @@
                 </DataGridTextColumn>
                 <DataGridTextColumn
                     Binding="{Binding FileSize}"
-                    Header="文件体积 (字节)"
+                    Header="文件大小 (字节)"
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoFileSizeColumn, Converter={StaticResource NoColumnCvt}, Mode=OneWay}" />
                 <DataGridTemplateColumn
                     CanUserSort="True"
