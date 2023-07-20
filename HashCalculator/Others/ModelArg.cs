@@ -8,7 +8,8 @@
         public readonly string filepath;
         public readonly byte[] expected;
         public readonly bool deprecated;
-        public readonly AlgoType algoType;
+
+        public AlgoType PresetAlgo { get; set; }
 
         /// <summary>
         /// 约定：hash 长度 0 表示无法确定是否匹配
@@ -18,7 +19,7 @@
             this.filepath = path;
             this.expected = hash;
             this.deprecated = false;
-            this.algoType = algo;
+            this.PresetAlgo = algo;
         }
 
         public ModelArg(string path, AlgoType algo)
@@ -26,7 +27,7 @@
             this.filepath = path;
             this.expected = null;
             this.deprecated = false;
-            this.algoType = algo;
+            this.PresetAlgo = algo;
         }
 
         public ModelArg(string path, bool deprecated, AlgoType algo)
@@ -34,7 +35,7 @@
             this.filepath = path;
             this.expected = null;
             this.deprecated = deprecated;
-            this.algoType = algo;
+            this.PresetAlgo = algo;
         }
     }
 }

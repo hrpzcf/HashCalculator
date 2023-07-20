@@ -65,7 +65,7 @@ namespace HashCalculator
         public HashViewModel(int serial, ModelArg arg)
         {
             this.ModelArg = arg;
-            this.HashAlgoType = arg.algoType;
+            this.HashAlgoType = arg.PresetAlgo;
             this.Serial = serial;
             this.FileInfo = new FileInfo(arg.filepath);
             this.FileName = this.FileInfo.Name;

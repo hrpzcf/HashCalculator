@@ -210,7 +210,7 @@ namespace HashCalculator
             }, token);
         }
 
-        public async void BeginDisplayModels(IEnumerable<ModelArg> args)
+        public async void BeginDisplayModels(IEnumerable<ModelArg> args, bool reset)
         {
             CancellationToken token;
             lock (this.displayModelRequestLock)
@@ -226,6 +226,10 @@ namespace HashCalculator
                         if (token.IsCancellationRequested)
                         {
                             break;
+                        }
+                        if (reset)
+                        {
+                            arg.PresetAlgo = AlgoType.Unknown;
                         }
                         this.displayedFiles.Add(arg);
                         synchronization.Invoke(
@@ -818,7 +822,7 @@ namespace HashCalculator
                 }
                 List<ModelArg> args = this.displayedFiles;
                 this.displayedFiles = new List<ModelArg>();
-                this.BeginDisplayModels(args);
+                this.BeginDisplayModels(args, true);
             }
         }
 
@@ -1177,7 +1181,7 @@ namespace HashCalculator
             if (param is IList selectedModels)
             {
                 IEnumerable<ModelArg> args = selectedModels.Cast<HashViewModel>().Select(i => i.ModelArg);
-                this.BeginDisplayModels(args);
+                this.BeginDisplayModels(args, true);
             }
         }
 
