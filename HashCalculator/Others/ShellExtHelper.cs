@@ -17,7 +17,9 @@ namespace HashCalculator
             {
                 Values = new RegValue[]
                 {
-                    new RegValue("", programId, RegistryValueKind.String)
+                    new RegValue("", programId),
+                    new RegValue("Content Type", "text/plain"),
+                    new RegValue("PerceivedType", "text")
                 }
             };
             progIdNode = new RegNode(programId)
@@ -220,14 +222,21 @@ namespace HashCalculator
                                 {
                                     if (fileExtKey != null)
                                     {
-                                        if (fileExtKey.GetValue("") is string defaultVal &&
-                                            !defaultVal.Equals(programId, StringComparison.OrdinalIgnoreCase))
+                                        if (fileExtKey.GetValue("") is string prevDefaultVal &&
+                                            !prevDefaultVal.Equals(programId, StringComparison.OrdinalIgnoreCase))
                                         {
-                                            using (RegistryKey progIdsKey = fileExtKey.CreateSubKey(regPathOpenWithProgIds, true))
+                                            using (RegistryKey progIdsKey = fileExtKey.CreateSubKey(regPathOpenWith, true))
                                             {
-                                                progIdsKey?.SetValue(defaultVal, string.Empty);
+                                                progIdsKey?.SetValue(prevDefaultVal, string.Empty);
                                             }
                                             fileExtKey.SetValue(string.Empty, programId, RegistryValueKind.String);
+                                        }
+                                        foreach (RegValue entryItem in basisSuffixNode.Values)
+                                        {
+                                            if (entryItem.Name != string.Empty)
+                                            {
+                                                fileExtKey.SetValue(entryItem.Name, entryItem.Data, entryItem.Kind);
+                                            }
                                         }
                                     }
                                 }
@@ -369,9 +378,9 @@ namespace HashCalculator
         private const string basisFileSuffix = ".hcb";
         private const string executableName = "HashCalculator.exe";
         private const string regPathSoftClasses = "Software\\Classes";
+        private const string regPathOpenWith = "OpenWithProgids";
         private static readonly string regPathApplications = $"{regPathSoftClasses}\\Applications";
         private const string regPathAppPaths = "Software\\Microsoft\\Windows\\CurrentVersion\\App Paths";
-        private const string regPathOpenWithProgIds = "OpenWithProgids";
         private static readonly RegNode appPathsNode;
         private static readonly RegNode applicationNode;
         private static readonly RegNode progIdNode;
