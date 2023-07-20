@@ -124,14 +124,14 @@
                 Margin="0,20,0,4"
                 Padding="4,8,4,0"
                 Header="扩展系统右键菜单和关联 .hcb 文件">
-                <Grid Grid.IsSharedSizeScope="True">
+                <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition />
                         <RowDefinition />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition SharedSizeGroup="button" />
-                        <ColumnDefinition SharedSizeGroup="button" />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <Button
                         Grid.Row="0"
