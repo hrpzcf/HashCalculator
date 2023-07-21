@@ -234,7 +234,6 @@
             IsReadOnly="True"
             ItemsSource="{Binding Source={x:Static local:MainWndViewModel.HashViewModels}, IsAsync=True}"
             PreviewKeyDown="DataGrid_HashFiles_PrevKeyDown"
-            RowHeight="28"
             RowStyle="{StaticResource RowStyleNormal}"
             ScrollViewer.CanContentScroll="True"
             SelectionMode="Extended"
@@ -483,13 +482,14 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Label
+                                Margin="2"
+                                Padding="4,2,4,2"
                                 HorizontalContentAlignment="Center"
                                 VerticalContentAlignment="Center"
                                 Background="{Binding CmpResult, Converter={StaticResource CmpResBgCvt}}"
-                                BorderBrush="Transparent"
-                                BorderThickness="{Binding Source={x:Static local:Settings.Current}, Path=ShowResultText, Converter={StaticResource CmpResBorderCvt}}"
+                                BorderBrush="{Binding CmpResult, Converter={StaticResource CmpResBorderBrushCvt}}"
+                                BorderThickness="1"
                                 Content="{Binding CmpResult, Converter={StaticResource CmpResTextCvt}}"
-                                FontSize="8pt"
                                 ToolTip="{Binding DataContext.Report, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}, AncestorLevel=1}}"
                                 ToolTipService.BetweenShowDelay="0"
                                 ToolTipService.InitialShowDelay="0"

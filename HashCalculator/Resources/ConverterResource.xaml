@@ -7,7 +7,7 @@
     <local:CmpResFgCvt x:Key="CmpResFgCvt" />
     <local:CmpResBgCvt x:Key="CmpResBgCvt" />
     <local:CmpResTextCvt x:Key="CmpResTextCvt" />
-    <local:CmpResBorderCvt x:Key="CmpResBorderCvt" />
+    <local:CmpResBorderBrushCvt x:Key="CmpResBorderBrushCvt" />
     <local:SubBtnVisiblityRunningCvt x:Key="SubBtnVisiblityRunningCvt" />
     <local:FinishedVisiblityCvt x:Key="FinishedVisiblityCvt" />
     <local:SubBtnVisiblityWaitingCvt x:Key="SubBtnVisiblityWaitingCvt" />

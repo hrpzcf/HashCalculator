@@ -93,23 +93,23 @@ namespace HashCalculator
         }
     }
 
-    internal class CmpResBorderCvt : IValueConverter
+    internal class CmpResBorderBrushCvt : IValueConverter
     {
-        public object Convert(object value, Type targetType, object param, CultureInfo culture)
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if ((bool)value)
+            if ((CmpRes)value == CmpRes.NoResult)
             {
-                return "0";
+                return new SolidColorBrush(Colors.Transparent);
             }
             else
             {
-                return "3";
+                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF0091FF"));
             }
         }
 
-        public object ConvertBack(object value, Type targetType, object param, CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return CmpRes.NoResult; // 此处未使用，只返回默认值
+            throw new NotImplementedException();
         }
     }
 
