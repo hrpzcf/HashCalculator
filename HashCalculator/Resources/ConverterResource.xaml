@@ -28,4 +28,6 @@
     <local:HashBytesOutputTypeCvt x:Key="HashBytesOutputTypeCvt" />
     <local:CopyModelsHashMenuEnabledCvt x:Key="CopyModelsHashMenuEnabledCvt" />
     <local:HashOrPathPlaceHolderVisibCvt x:Key="HashOrPathPlaceHolderVisibCvt" />
+    <local:RadioExportAsTxtFileCvt x:Key="RadioExportAsTxtFileCvt" />
+    <local:RadioExportAsHcbFileCvt x:Key="RadioExportAsHcbFileCvt" />
 </ResourceDictionary>

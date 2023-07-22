@@ -129,7 +129,7 @@
                 <Button
                     Grid.Column="9"
                     Margin="4,0,0,0"
-                    Command="{Binding ExportAsTextFileCmd}"
+                    Command="{Binding ExportHashResultCmd}"
                     IsEnabled="{Binding State, Converter={StaticResource ButtonEnabledCvt}}"
                     Style="{StaticResource ImageButtonStyle2}"
                     ToolTip="导出哈希值：将表格中所有文件的哈希计算结果导出为文本文件&#10;导出的内容使用的输出方式受到 [默认输出方式] 的控制而不受各文件自己的 [输出方式] 的控制&#10;没有计算结果的行不会被导出，[导出] 列没有勾选的行也不会被导出">

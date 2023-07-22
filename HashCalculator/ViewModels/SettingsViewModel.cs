@@ -18,6 +18,7 @@ namespace HashCalculator
         private double settingsWndHeight = 450.0;
         private AlgoType selectedAlgorithm = AlgoType.SHA1;
         private OutputType selectedOutputType = OutputType.BinaryUpper;
+        private ExportType resultFileTypeExportAs = ExportType.TxtFile;
         private TaskNum selectedTaskNumberLimit = TaskNum.Two;
         private bool showResultText = false;
         private bool noExportColumn = false;
@@ -237,6 +238,18 @@ namespace HashCalculator
             set
             {
                 this.SetPropNotify(ref this.runInMultiInstanceMode, value);
+            }
+        }
+
+        public ExportType ResultFileTypeExportAs
+        {
+            get
+            {
+                return this.resultFileTypeExportAs;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.resultFileTypeExportAs, value);
             }
         }
 

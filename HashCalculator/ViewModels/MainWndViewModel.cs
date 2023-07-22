@@ -39,7 +39,7 @@ namespace HashCalculator
         private readonly object tobeComputedModelsCountLock = new object();
         private RelayCommand mainWindowTopmostCmd;
         private RelayCommand clearAllTableLinesCmd;
-        private RelayCommand exportAsTextFileCmd;
+        private RelayCommand exportHashResultCmd;
         private RelayCommand refreshHashNewLinesCmd;
         private RelayCommand refreshCurrentHashCmd;
         private RelayCommand refreshCurHashForceCmd;
@@ -750,18 +750,30 @@ namespace HashCalculator
             }
         }
 
-        private void ExportAsTextFileAction(object param)
+        private void ExporHashResultAction(object param)
         {
             if (!HashViewModels.Any())
             {
                 MessageBox.Show(this.Parent, "列表中没有任何可以导出的条目。", "提示");
                 return;
             }
+            string fileName = "hashsums.txt";
+            string filter = "文本文件|*.txt|哈希值校验依据|*.hcb|所有文件|*.*";
+            switch (Settings.Current.ResultFileTypeExportAs)
+            {
+                default:
+                case ExportType.TxtFile:
+                    break;
+                case ExportType.HcbFile:
+                    fileName = "hashsums.hcb";
+                    filter = "哈希值校验依据|*.hcb|文本文件|*.txt|所有文件|*.*";
+                    break;
+            }
             SaveFileDialog sf = new SaveFileDialog()
             {
                 ValidateNames = true,
-                Filter = "文本文件|*.txt|哈希值校验依据|*.hcb|所有文件|*.*",
-                FileName = "hashsums.txt",
+                Filter = filter,
+                FileName = fileName,
                 InitialDirectory = Settings.Current.LastUsedPath,
             };
             if (sf.ShowDialog() != true)
@@ -793,15 +805,15 @@ namespace HashCalculator
             }
         }
 
-        public ICommand ExportAsTextFileCmd
+        public ICommand ExportHashResultCmd
         {
             get
             {
-                if (this.exportAsTextFileCmd is null)
+                if (this.exportHashResultCmd is null)
                 {
-                    this.exportAsTextFileCmd = new RelayCommand(this.ExportAsTextFileAction);
+                    this.exportHashResultCmd = new RelayCommand(this.ExporHashResultAction);
                 }
-                return this.exportAsTextFileCmd;
+                return this.exportHashResultCmd;
             }
         }
 
