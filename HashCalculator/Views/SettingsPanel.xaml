@@ -225,8 +225,7 @@
                         <Border
                             Padding="4"
                             BorderBrush="LightGray"
-                            BorderThickness="1"
-                            CornerRadius="3">
+                            BorderThickness="1">
                             <RadioButton
                                 HorizontalContentAlignment="Stretch"
                                 VerticalContentAlignment="Center"
@@ -245,8 +244,7 @@
                             Margin="0,8,0,0"
                             Padding="4"
                             BorderBrush="LightGray"
-                            BorderThickness="1"
-                            CornerRadius="3">
+                            BorderThickness="1">
                             <RadioButton
                                 HorizontalContentAlignment="Stretch"
                                 VerticalContentAlignment="Center"
