@@ -2,7 +2,7 @@
 #include <strsafe.h>
 #include <Windows.h>
 
-class CResStrW
+class CResStringW
 {
     LPWSTR resource_str = nullptr;
 public:
@@ -10,7 +10,7 @@ public:
         return this->resource_str;
     }
 
-    CResStrW(HMODULE h_module, UINT res_id) {
+    CResStringW(HMODULE h_module, UINT res_id) {
         LPWSTR message = nullptr;
         int length = LoadStringW(h_module, res_id, (LPWSTR)&message, 0);
         if (0 == length) {
@@ -27,7 +27,7 @@ public:
         }
     }
 
-    ~CResStrW() {
+    ~CResStringW() {
         delete[] this->resource_str;
     }
 };

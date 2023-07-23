@@ -1,12 +1,7 @@
-﻿// 菜单扩展实现方式参考：
-// https://gitee.com/peterxiang/template_IContextMenuExt
-// https://blog.csdn.net/u012741077/article/details/50642895
-
-// ContextMenuExt.h: CContextMenuExt 的声明
+﻿// OpenAsBasis.h: COpenAsBasis 的声明
 
 #pragma once
 #include "resource.h"       // 主符号
-
 #include "ShellExtensions_i.h"
 #include <vector>
 #include <string>
@@ -19,28 +14,26 @@ using namespace ATL;
 using std::vector;
 using std::wstring;
 
-class ATL_NO_VTABLE CContextMenuExt :
+class ATL_NO_VTABLE COpenAsBasis :
     public CComObjectRootEx<CComSingleThreadModel>,
-    public CComCoClass<CContextMenuExt, &CLSID_ContextMenuExt>,
-    public IDispatchImpl<IContextMenuExt, &IID_IContextMenuExt, &LIBID_ShellExtensionsLib, /*wMajor =*/ 1, /*wMinor =*/ 0>,
+    public CComCoClass<COpenAsBasis, &CLSID_OpenAsBasis>,
+    public IDispatchImpl<IOpenAsBasis, &IID_IOpenAsBasis, &LIBID_ShellExtensionsLib, /*wMajor =*/ 1, /*wMinor =*/ 0>,
     public IShellExtInit,
     public IContextMenu
 {
-    HBITMAP bitmap_menu1 = nullptr;
-    HBITMAP bitmap_menu2 = nullptr;
-    vector<wstring> filepath_list;
+    HBITMAP bitmap_menu = nullptr;
+    LPWSTR basis_path = nullptr;
     LPWSTR executable_path = nullptr;
     HINSTANCE module_inst = nullptr;
-    VOID CreateGUIProcessComputeHash(LPCWSTR);
-
+    VOID CreateGUIProcessVerifyHash();
 public:
-    CContextMenuExt();
-    ~CContextMenuExt();
+    COpenAsBasis();
+    ~COpenAsBasis();
 
-    DECLARE_REGISTRY_RESOURCEID(IDR_CONTEXTMENUEXT)
+    DECLARE_REGISTRY_RESOURCEID(IDR_OPENASBASIS)
 
-    BEGIN_COM_MAP(CContextMenuExt)
-        COM_INTERFACE_ENTRY(IContextMenuExt)
+    BEGIN_COM_MAP(COpenAsBasis)
+        COM_INTERFACE_ENTRY(IOpenAsBasis)
         COM_INTERFACE_ENTRY(IDispatch)
         COM_INTERFACE_ENTRY(IShellExtInit)
         COM_INTERFACE_ENTRY(IContextMenu)
@@ -49,11 +42,11 @@ public:
     DECLARE_PROTECT_FINAL_CONSTRUCT();
 
     HRESULT FinalConstruct() { return S_OK; }
-    VOID FinalRelease() { }
+    void FinalRelease() {  }
     STDMETHOD(Initialize)(PCIDLIST_ABSOLUTE, IDataObject*, HKEY);
     STDMETHOD(QueryContextMenu)(HMENU, UINT, UINT, UINT, UINT);
     STDMETHOD(InvokeCommand)(CMINVOKECOMMANDINFO*);
     STDMETHOD(GetCommandString)(UINT_PTR, UINT, UINT*, CHAR*, UINT);
 };
 
-OBJECT_ENTRY_AUTO(__uuidof(ContextMenuExt), CContextMenuExt)
+OBJECT_ENTRY_AUTO(__uuidof(OpenAsBasis), COpenAsBasis)

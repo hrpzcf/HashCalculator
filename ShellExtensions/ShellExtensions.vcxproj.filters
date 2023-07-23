@@ -37,10 +37,16 @@
     <ClInclude Include="pch.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="ContextMenuExt.h">
+    <ClInclude Include="ResString.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="ResourceStr.h">
+    <ClInclude Include="OpenAsBasis.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="commons.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ComputeHash.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -57,7 +63,10 @@
     <ClCompile Include="pch.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="ContextMenuExt.cpp">
+    <ClCompile Include="OpenAsBasis.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ComputeHash.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -73,7 +82,10 @@
     <None Include="ShellExtensions.def">
       <Filter>源文件</Filter>
     </None>
-    <None Include="ContextMenuExt.rgs">
+    <None Include="OpenAsBasis.rgs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="ComputeHash.rgs">
       <Filter>资源文件</Filter>
     </None>
   </ItemGroup>
@@ -90,6 +102,9 @@
       <Filter>资源文件</Filter>
     </Image>
     <Image Include="file_icon.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="icon_3.bmp">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>

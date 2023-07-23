@@ -3,13 +3,14 @@
 // https://blog.csdn.net/u012741077/article/details/50642895
 
 #include "pch.h"
-#include "ContextMenuExt.h"
-#include <strsafe.h>
 #include <shlobj_core.h>
-#include "ResourceStr.h"
+#include <strsafe.h>
+#include "commons.h"
+#include "ComputeHash.h"
+#include "ResString.h"
 
-LPCWSTR executable = L"HashCalculator.exe";
-constexpr SIZE_T MAX_CMD_CHARACTERS = 32767;
+CONST SIZE_T MAX_CMD_CHARS = 32767;
+LPCWSTR EXECUTABLE = L"HashCalculator.exe";
 
 constexpr auto IDM_COMPUTE_HASH = 0;
 constexpr auto IDM_COMPUTE_SHA1 = 1;
@@ -28,14 +29,14 @@ constexpr auto IDM_COMPUTE_BLAKE3 = 13;
 constexpr auto IDM_COMPUTE_WHIRLPOOL = 14;
 constexpr auto IDM_SUBMENUS_PARENT = 15;
 
-VOID CContextMenuExt::CreateGUIProcessComputeHash(LPCWSTR algo) {
+VOID CComputeHash::CreateGUIProcessComputeHash(LPCWSTR algo) {
     if (nullptr == this->executable_path) {
-        CResStrW title = CResStrW(this->module_inst, IDS_TITLE_ERROR);
-        CResStrW text = CResStrW(this->module_inst, IDS_NO_EXECUTABLE_PATH);
+        CResStringW title = CResStringW(this->module_inst, IDS_TITLE_ERROR);
+        CResStringW text = CResStringW(this->module_inst, IDS_NO_EXECUTABLE_PATH);
         MessageBoxW(nullptr, text.String(), title.String(), MB_TOPMOST | MB_ICONERROR);
         return;
     }
-    wstring command_line = wstring(executable);
+    wstring command_line = wstring(EXECUTABLE);
     command_line += L" compute";
     if (nullptr != algo) {
         command_line += wstring(L" --algo ") + algo;
@@ -47,15 +48,15 @@ VOID CContextMenuExt::CreateGUIProcessComputeHash(LPCWSTR algo) {
         }
         wstring current_cmd = L" \"" + this->filepath_list[i] + L"\"";
         SIZE_T cmd_characters_temp = cmd_characters + current_cmd.length();
-        if (cmd_characters_temp < MAX_CMD_CHARACTERS)
+        if (cmd_characters_temp < MAX_CMD_CHARS)
         {
             command_line += current_cmd;
             cmd_characters = cmd_characters_temp;
         }
-        else if (cmd_characters_temp > MAX_CMD_CHARACTERS) {
+        else if (cmd_characters_temp > MAX_CMD_CHARS) {
             break;
         }
-        else if (cmd_characters_temp == MAX_CMD_CHARACTERS) {
+        else if (cmd_characters_temp == MAX_CMD_CHARS) {
             command_line += current_cmd;
             cmd_characters = cmd_characters_temp;
             break;
@@ -83,7 +84,7 @@ VOID CContextMenuExt::CreateGUIProcessComputeHash(LPCWSTR algo) {
     delete[] commandline_buffer;
 }
 
-CContextMenuExt::CContextMenuExt() {
+CComputeHash::CComputeHash() {
     this->module_inst = _AtlBaseModule.GetModuleInstance();
     try
     {
@@ -105,11 +106,11 @@ CContextMenuExt::CContextMenuExt() {
             if (moduledir_chars == 0) {
                 break;
             }
-            SIZE_T exec_total_chars = moduledir_chars + 2 + wcslen(executable);
+            SIZE_T exec_total_chars = moduledir_chars + 2 + wcslen(EXECUTABLE);
             this->executable_path = new WCHAR[exec_total_chars]();
             StringCchCatW(this->executable_path, exec_total_chars, module_dirpath);
             StringCchCatW(this->executable_path, exec_total_chars, L"\\");
-            StringCchCatW(this->executable_path, exec_total_chars, executable);
+            StringCchCatW(this->executable_path, exec_total_chars, EXECUTABLE);
             break;
         }
         delete[] module_dirpath;
@@ -120,13 +121,13 @@ CContextMenuExt::CContextMenuExt() {
     this->bitmap_menu2 = LoadBitmapW(module_inst, MAKEINTRESOURCEW(IDB_BITMAP_MENU2));
 }
 
-CContextMenuExt::~CContextMenuExt() {
+CComputeHash::~CComputeHash() {
     delete[] this->executable_path;
     DeleteObject(this->bitmap_menu1);
     DeleteObject(this->bitmap_menu2);
 }
 
-STDMETHODIMP CContextMenuExt::Initialize(
+STDMETHODIMP CComputeHash::Initialize(
     PCIDLIST_ABSOLUTE pidlFolder, IDataObject* pdtobj, HKEY hkeyProgID) {
     WCHAR filepath_buffer[MAX_PATH];
     this->filepath_list.clear();
@@ -176,13 +177,14 @@ STDMETHODIMP CContextMenuExt::Initialize(
     ReleaseStgMedium(&stg);
     return S_OK;
 }
-STDMETHODIMP CContextMenuExt::QueryContextMenu(
+
+STDMETHODIMP CComputeHash::QueryContextMenu(
     HMENU hmenu, UINT indexMenu, UINT idCmdFirst, UINT idCmdLast, UINT uFlags) {
     if (uFlags & CMF_DEFAULTONLY)
     {
         return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, 0);
     }
-    CResStrW resource = CResStrW(this->module_inst, IDS_COMPUTE_MENU);
+    CResStringW resource = CResStringW(this->module_inst, IDS_MENU_COMPUTE);
     InsertMenuW(hmenu, indexMenu, MF_BYPOSITION | MF_STRING | MF_POPUP,
         idCmdFirst + IDM_COMPUTE_HASH, resource.String());
     if (this->bitmap_menu1 != nullptr) {
@@ -206,7 +208,7 @@ STDMETHODIMP CContextMenuExt::QueryContextMenu(
     AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_WHIRLPOOL, L"Whirlpool");
     // 方法退出后 compute_hash_res 会被析构，compute_hash_text 会被 delete
     // menu_info.dwTypeData = compute_hash_text 安全? InsertMenuItemW 是否复制数据?
-    CResStrW compute_hash_res = CResStrW(this->module_inst, IDS_COMPUTE_HASH_MENU);
+    CResStringW compute_hash_res = CResStringW(this->module_inst, IDS_MENU_COMPUTE_HASH);
     LPWSTR compute_hash_text = compute_hash_res.String();
     MENUITEMINFOW menu_info = { 0 };
     menu_info.cbSize = sizeof(MENUITEMINFOW);
@@ -225,7 +227,7 @@ STDMETHODIMP CContextMenuExt::QueryContextMenu(
     return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, IDM_SUBMENUS_PARENT + 1);
 }
 
-STDMETHODIMP CContextMenuExt::InvokeCommand(CMINVOKECOMMANDINFO* pici) {
+STDMETHODIMP CComputeHash::InvokeCommand(CMINVOKECOMMANDINFO* pici) {
     if (0 != HIWORD(pici->lpVerb))
     {
         return E_INVALIDARG;
@@ -280,11 +282,11 @@ STDMETHODIMP CContextMenuExt::InvokeCommand(CMINVOKECOMMANDINFO* pici) {
     default:
         return E_INVALIDARG;
     }
-    CreateGUIProcessComputeHash(algo);
+    this->CreateGUIProcessComputeHash(algo);
     return S_OK;
 }
 
-STDMETHODIMP CContextMenuExt::GetCommandString(
+STDMETHODIMP CComputeHash::GetCommandString(
     UINT_PTR idCmd,
     UINT uType,
     UINT* pReserved,

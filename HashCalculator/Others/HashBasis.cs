@@ -126,7 +126,7 @@ namespace HashCalculator
                             else
                             {
                                 if (MessageBox.Show(
-                                        "读取哈希值文件时遇到格式不正确的行：\n选择 [是] 忽略该行并从下一行开始读取，选择 [否] 全部放弃。",
+                                        "读取校验依据时遇到格式不正确的行：\n选择 [是] 忽略该行并从下一行开始读取，选择 [否] 全部放弃。",
                                         "错误",
                                         MessageBoxButton.YesNo) == MessageBoxResult.No)
                                 {
