@@ -232,7 +232,7 @@
             HeadersVisibility="Column"
             HorizontalGridLinesBrush="#FF969696"
             IsReadOnly="True"
-            ItemsSource="{Binding Source={x:Static local:MainWndViewModel.HashViewModels}, IsAsync=True}"
+            ItemsSource="{Binding Source={x:Static local:MainWndViewModel.HashViewModels}}"
             PreviewKeyDown="DataGrid_HashFiles_PrevKeyDown"
             RowStyle="{StaticResource RowStyleNormal}"
             ScrollViewer.CanContentScroll="True"
@@ -252,9 +252,7 @@
                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
                         Header="打开位置" />
                     <Separator />
-                    <MenuItem
-                        Header="任务控制"
-                        ItemsSource="{Binding HashModelTasksCtrlCmds}">
+                    <MenuItem Header="任务控制" ItemsSource="{Binding HashModelTasksCtrlCmds}">
                         <MenuItem.ItemContainerStyle>
                             <Style TargetType="MenuItem">
                                 <Setter Property="Header" Value="{Binding Display}" />
@@ -306,17 +304,13 @@
                 </ContextMenu>
             </DataGrid.ContextMenu>
             <DataGrid.Columns>
-                <DataGridTextColumn
-                    Binding="{Binding Serial}"
-                    Header="序号" />
+                <DataGridTextColumn Binding="{Binding Serial}" Header="序号" />
                 <DataGridTextColumn
                     MinWidth="180"
                     Binding="{Binding FileName}"
                     Header="文件名">
                     <DataGridTextColumn.CellStyle>
-                        <Style
-                            BasedOn="{StaticResource CellStyleNormal}"
-                            TargetType="{x:Type DataGridCell}">
+                        <Style BasedOn="{StaticResource CellStyleNormal}" TargetType="{x:Type DataGridCell}">
                             <Setter Property="ToolTip" Value="{Binding FileInfo}" />
                         </Style>
                     </DataGridTextColumn.CellStyle>
@@ -363,6 +357,7 @@
                                 </Grid.ColumnDefinitions>
                                 <!--  不在计算状态  -->
                                 <TextBlock
+                                    x:Name="hashValueTextBlock"
                                     Grid.Column="0"
                                     Margin="4,0,4,0"
                                     VerticalAlignment="Center"
@@ -373,7 +368,7 @@
                                 <!--  ProgressBar的Value绑定需是OneWay，因为默认TwoWay和private set的Progress无法成功绑定  -->
                                 <ProgressBar
                                     Grid.Column="0"
-                                    Width="{Binding HashAlgoType, Converter={StaticResource SubProgressWidthCvt}}"
+                                    Width="{Binding ElementName=hashValueTextBlock, Path=ActualWidth}"
                                     Height="6"
                                     Margin="4,0,4,0"
                                     HorizontalAlignment="Left"
@@ -468,9 +463,7 @@
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoExportColumn, Converter={StaticResource NoColumnCvt}, Mode=OneWay}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <CheckBox
-                                HorizontalAlignment="Center"
-                                IsChecked="{Binding Export, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <CheckBox HorizontalAlignment="Center" IsChecked="{Binding Export, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -496,9 +489,7 @@
                                 ToolTipService.ShowDuration="60000">
                                 <Label.Foreground>
                                     <MultiBinding Converter="{StaticResource CmpResFgCvt}">
-                                        <Binding
-                                            Path="ShowResultText"
-                                            Source="{x:Static local:Settings.Current}" />
+                                        <Binding Path="ShowResultText" Source="{x:Static local:Settings.Current}" />
                                         <Binding Path="CmpResult" />
                                     </MultiBinding>
                                 </Label.Foreground>
@@ -506,23 +497,17 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn
-                    Width="*"
-                    CanUserSort="False" />
+                <DataGridTextColumn Width="*" CanUserSort="False" />
             </DataGrid.Columns>
         </DataGrid>
-        <Grid
-            Grid.Row="2"
-            Margin="0,8,0,0">
+        <Grid Grid.Row="2" Margin="0,8,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <StackPanel
-                Grid.Column="0"
-                Orientation="Horizontal">
+            <StackPanel Grid.Column="0" Orientation="Horizontal">
                 <Image
                     Width="20"
                     Height="20"
@@ -550,9 +535,7 @@
                     Foreground="Gray"
                     ToolTip="哈希值计算任务数" />
             </StackPanel>
-            <Grid
-                Grid.Column="1"
-                Margin="8,0,0,0">
+            <Grid Grid.Column="1" Margin="8,0,0,0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>

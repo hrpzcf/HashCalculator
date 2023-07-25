@@ -17,7 +17,6 @@
     <local:NoColumnCvt x:Key="NoColumnCvt" />
     <local:SubBtnPauseImageSrcCvt x:Key="SubBtnPauseImageSrcCvt" />
     <local:SubBtnPauseToolTipCvt x:Key="SubBtnPauseToolTipCvt" />
-    <local:SubProgressWidthCvt x:Key="SubProgressWidthCvt" />
     <local:BtnExportEnabledImgCvt x:Key="BtnExportEnabledImgCvt" />
     <local:BtnNewLineEnabledImgCvt x:Key="BtnNewLineEnabledImgCvt" />
     <local:BtnRefreshEnabledImgCvt x:Key="BtnRefreshEnabledImgCvt" />

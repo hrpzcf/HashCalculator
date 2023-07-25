@@ -1,21 +1,13 @@
-﻿<ResourceDictionary
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <SolidColorBrush
-        x:Key="TabItem.Selected.Background"
-        Color="#FFFFFF" />
-    <SolidColorBrush
-        x:Key="TabItem.Selected.Border"
-        Color="#ACACAC" />
+    <SolidColorBrush x:Key="TabItem.Selected.Background" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="TabItem.Selected.Border" Color="#ACACAC" />
     <LinearGradientBrush x:Key="HeaderPanel.Background" StartPoint="0,0" EndPoint="0,1">
         <GradientStop Offset="0.0" Color="#EFEFEF" />
         <GradientStop Offset="1.0" Color="#DFDFDF" />
     </LinearGradientBrush>
 
-    <Style
-        x:Key="TabControlStyle1"
-        TargetType="{x:Type TabControl}">
+    <Style x:Key="TabControlStyle1" TargetType="{x:Type TabControl}">
         <Setter Property="Padding" Value="2" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
@@ -33,17 +25,11 @@
                         SnapsToDevicePixels="true">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition x:Name="ColumnDefinition0" />
-                            <ColumnDefinition
-                                x:Name="ColumnDefinition1"
-                                Width="0" />
+                            <ColumnDefinition x:Name="ColumnDefinition1" Width="0" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition
-                                x:Name="RowDefinition0"
-                                Height="Auto" />
-                            <RowDefinition
-                                x:Name="RowDefinition1"
-                                Height="*" />
+                            <RowDefinition x:Name="RowDefinition0" Height="Auto" />
+                            <RowDefinition x:Name="RowDefinition1" Height="*" />
                         </Grid.RowDefinitions>
                         <Border
                             Margin="0,0,4,0"

@@ -34,9 +34,7 @@
             Padding="8"
             Header="常规设置"
             Style="{StaticResource TabItemStyle1}">
-            <ScrollViewer
-                HorizontalScrollBarVisibility="Auto"
-                VerticalScrollBarVisibility="Auto">
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                 <Grid Margin="4">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -54,9 +52,7 @@
                         Grid.Row="0"
                         Margin="0,0,0,4"
                         Orientation="Horizontal">
-                        <TextBlock
-                            VerticalAlignment="Center"
-                            Text="同时计算多少个文件的哈希值：" />
+                        <TextBlock VerticalAlignment="Center" Text="同时计算多少个文件的哈希值：" />
                         <ComboBox
                             Grid.Column="2"
                             DisplayMemberPath="Display"
@@ -68,9 +64,7 @@
                         Grid.Row="1"
                         Margin="0,0,0,4"
                         Orientation="Horizontal">
-                        <TextBlock
-                            VerticalAlignment="Center"
-                            Text="当选择的计算对象中包含文件夹时：" />
+                        <TextBlock VerticalAlignment="Center" Text="当选择的计算对象中包含文件夹时：" />
                         <ComboBox
                             Grid.Column="1"
                             DisplayMemberPath="Display"
@@ -82,9 +76,7 @@
                         Grid.Row="2"
                         Margin="0,0,0,4"
                         Orientation="Horizontal">
-                        <TextBlock
-                            VerticalAlignment="Center"
-                            Text="直接使用校验依据进行校验时：" />
+                        <TextBlock VerticalAlignment="Center" Text="直接使用校验依据进行校验时：" />
                         <ComboBox
                             Grid.Column="1"
                             DisplayMemberPath="Display"

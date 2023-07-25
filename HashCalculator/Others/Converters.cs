@@ -379,43 +379,6 @@ namespace HashCalculator
         }
     }
 
-    internal class SubProgressWidthCvt : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            AlgoType algoType = (AlgoType)value;
-            switch (algoType)
-            {
-                default:
-                case AlgoType.MD5:
-                    return 220.0;
-                case AlgoType.SHA1:
-                    return 280.0;
-                case AlgoType.SHA224:
-                case AlgoType.SHA3_224:
-                    return 380.0;
-                case AlgoType.BLAKE2S:
-                case AlgoType.BLAKE3:
-                case AlgoType.SHA256:
-                case AlgoType.SHA3_256:
-                    return 440.0;
-                case AlgoType.SHA384:
-                case AlgoType.SHA3_384:
-                    return 660.0;
-                case AlgoType.BLAKE2B:
-                case AlgoType.SHA512:
-                case AlgoType.SHA3_512:
-                case AlgoType.WHIRLPOOL:
-                    return 860.0;
-            }
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
     internal class BtnExportEnabledImgCvt : IValueConverter
     {
         private static readonly BitmapImage enabled =
