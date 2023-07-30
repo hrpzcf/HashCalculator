@@ -897,26 +897,31 @@ namespace HashCalculator
                 MessageBox.Show(this.Parent, "没有输入哈希值校验依据。", "提示");
                 return;
             }
-            bool basisUpdated = false;
+            string basisUpdated;
             if (!File.Exists(pathOrHash))
             {
                 basisUpdated = this.MainBasis.UpdateWithHash(pathOrHash);
             }
+            else if (HashViewModels.Any())
+            {
+                basisUpdated = this.MainBasis.UpdateWithFile(pathOrHash);
+            }
             else
             {
-                if (HashViewModels.Any())
+                HashBasis newBasis = new HashBasis(pathOrHash);
+                if (newBasis.ReasonForFailure == null)
                 {
-                    basisUpdated = this.MainBasis.UpdateWithFile(pathOrHash);
+                    this.BeginDisplayModels(new PathPackage(Path.GetDirectoryName(pathOrHash),
+                        Settings.Current.SelectedQVSPolicy, newBasis));
                 }
                 else
                 {
-                    HashBasis newBasis = new HashBasis(pathOrHash);
-                    this.BeginDisplayModels(
-                        new PathPackage(new string[] { Path.GetDirectoryName(pathOrHash) },
-                            Settings.Current.SelectedQVSPolicy, newBasis));
+                    MessageBox.Show(MainWindow.This, newBasis.ReasonForFailure, "错误",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
                 }
+                return;
             }
-            if (basisUpdated)
+            if (basisUpdated == null)
             {
                 foreach (HashViewModel hm in HashViewModels)
                 {
@@ -930,6 +935,11 @@ namespace HashCalculator
                     }
                 }
                 this.GenerateVerificationReport();
+            }
+            else
+            {
+                MessageBox.Show(MainWindow.This, basisUpdated, "错误", MessageBoxButton.OK,
+                    MessageBoxImage.Error);
             }
         }
 

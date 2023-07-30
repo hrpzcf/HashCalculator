@@ -67,9 +67,20 @@ namespace HashCalculator
                     if (File.Exists(option.BasisPath))
                     {
                         HashBasis newBasis = new HashBasis(option.BasisPath);
-                        this.viewModel.BeginDisplayModels(
-                            new PathPackage(new string[] { Path.GetDirectoryName(option.BasisPath) },
-                                Settings.Current.SelectedQVSPolicy, newBasis));
+                        if (newBasis.ReasonForFailure == null)
+                        {
+                            this.viewModel.BeginDisplayModels(
+                                new PathPackage(Path.GetDirectoryName(option.BasisPath),
+                                    Settings.Current.SelectedQVSPolicy, newBasis));
+                        }
+                        else
+                        {
+                            Application.Current.Dispatcher.Invoke(() =>
+                            {
+                                MessageBox.Show(this, newBasis.ReasonForFailure, "错误",
+                                    MessageBoxButton.OK, MessageBoxImage.Error);
+                            });
+                        }
                     }
                 });
         }

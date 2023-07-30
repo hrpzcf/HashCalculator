@@ -14,6 +14,13 @@ namespace HashCalculator
             this.searchPolicy = policy;
         }
 
+        public PathPackage(string path, SearchPolicy policy, HashBasis basis)
+        {
+            this.paths = new string[] { path };
+            this.searchPolicy = policy;
+            this.hashBasis = basis;
+        }
+
         public PathPackage(IEnumerable<string> paths, SearchPolicy policy, HashBasis basis)
         {
             this.paths = paths;

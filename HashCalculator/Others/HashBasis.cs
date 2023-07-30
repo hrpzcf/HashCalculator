@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Windows;
 
 namespace HashCalculator
 {
@@ -53,9 +52,6 @@ namespace HashCalculator
         }
     }
 
-    /// <summary>
-    /// 文件哈希值校验的校验工具
-    /// </summary>
     internal class HashBasis
     {
         public HashBasis(string filePath)
@@ -64,9 +60,6 @@ namespace HashCalculator
         }
 
         public HashBasis() { }
-
-        public Dictionary<string, HashBasisDictValue> FileHashDict { get; }
-            = new Dictionary<string, HashBasisDictValue>();
 
         private bool AddHashAndName(string hashString, string name)
         {
@@ -91,85 +84,68 @@ namespace HashCalculator
             return false;
         }
 
-        public bool UpdateWithHash(string hash)
+        private bool AddOnlyHashString(string hashString)
         {
-            this.FileHashDict.Clear();
-            this.AddHashAndName(hash.Trim(), string.Empty);
-            return true;
+            return this.AddHashAndName(hashString, string.Empty);
         }
 
-        public bool UpdateWithFile(string filePath)
+        public string UpdateWithFile(string filePath)
         {
             this.FileHashDict.Clear();
+            this.ReasonForFailure = null;
             try
             {
-                using (FileStream fs = File.OpenRead(filePath))
+                using (FileStream fileStream = File.OpenRead(filePath))
                 {
-                    using (StreamReader reader = new StreamReader(fs))
+                    using (StreamReader reader = new StreamReader(fileStream))
                     {
                         string hashLine;
+                        int readedLineCount = 0;
                         while ((hashLine = reader.ReadLine()) != null)
                         {
                             string[] items = hashLine.Split(
                                 new char[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
                             if (items.Length == 2)
                             {
-                                // 旧导出格式：hash-string *file-name
-                                this.AddHashAndName(items[0], items[1]);
+                                // 对应格式：hash-string *file-name
+                                if (this.AddHashAndName(items[0], items[1]))
+                                {
+                                    ++readedLineCount;
+                                }
                             }
                             else if (items.Length == 3)
                             {
-                                // 新导出格式：#SHA-1 *hash-string *file-name
-                                string hashString = items[1].Trim(new char[] { '*' });
-                                this.AddHashAndName(hashString, items[2]);
+                                // 对应格式：#hash-name *hash-string *file-name
+                                if (this.AddHashAndName(items[1].Trim(new char[] { ' ', '*' }), items[2]))
+                                {
+                                    ++readedLineCount;
+                                }
                             }
                             else
                             {
-                                if (MessageBox.Show(
-                                        "读取校验依据时遇到格式不正确的行：\n选择 [是] 忽略该行并从下一行开始读取，选择 [否] 全部放弃。",
-                                        "错误",
-                                        MessageBoxButton.YesNo) == MessageBoxResult.No)
-                                {
-                                    return false;
-                                }
+                                break;
                             }
                         }
-                        return true;
+                        if (readedLineCount <= 0)
+                        {
+                            this.ReasonForFailure = "没有收集到任何校验依据，请检查校验依据文件内容";
+                        }
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"校验依据文件打开或读取失败：\n{ex.Message}", "错误");
+                this.ReasonForFailure = $"异常导致收集校验依据失败：\n{ex.Message}";
             }
-            return false;
+            return this.ReasonForFailure;
         }
 
-        public CmpRes Verify(string name, byte[] hash)
+        public string UpdateWithHash(string hash)
         {
-            if (hash is null || name is null || !this.FileHashDict.Any())
-            {
-                return CmpRes.Unrelated;
-            }
-            // Windows 文件名不区分大小写
-            name = name.Trim(new char[] { '*', ' ', '\n' }).ToLower();
-            if (this.FileHashDict.Keys.Count == 1 &&
-                this.FileHashDict.Keys.Contains(string.Empty))
-            {
-                if (this.FileHashDict[string.Empty].ContainsHash(hash))
-                {
-                    return CmpRes.Matched;
-                }
-                else
-                {
-                    return CmpRes.Unrelated;
-                }
-            }
-            if (!this.FileHashDict.TryGetValue(name, out HashBasisDictValue basisValue))
-            {
-                return CmpRes.Unrelated;
-            }
-            return basisValue.CompareHash(hash);
+            this.FileHashDict.Clear();
+            this.ReasonForFailure = this.AddOnlyHashString(hash.Trim()) ?
+                null : "收集校验依据失败，可能哈希值格式不正确";
+            return this.ReasonForFailure;
         }
 
         public bool IsExpectedFileHash(string name, out byte[] outputHash)
@@ -209,5 +185,37 @@ namespace HashCalculator
             outputHash = first;
             return true;
         }
+
+        public CmpRes Verify(string name, byte[] hash)
+        {
+            if (hash is null || name is null || !this.FileHashDict.Any())
+            {
+                return CmpRes.Unrelated;
+            }
+            // Windows 文件名不区分大小写
+            name = name.Trim(new char[] { '*', ' ', '\n' }).ToLower();
+            if (this.FileHashDict.Keys.Count == 1 &&
+                this.FileHashDict.Keys.Contains(string.Empty))
+            {
+                if (this.FileHashDict[string.Empty].ContainsHash(hash))
+                {
+                    return CmpRes.Matched;
+                }
+                else
+                {
+                    return CmpRes.Unrelated;
+                }
+            }
+            if (!this.FileHashDict.TryGetValue(name, out HashBasisDictValue basisValue))
+            {
+                return CmpRes.Unrelated;
+            }
+            return basisValue.CompareHash(hash);
+        }
+
+        public string ReasonForFailure { get; private set; }
+
+        public Dictionary<string, HashBasisDictValue> FileHashDict { get; }
+            = new Dictionary<string, HashBasisDictValue>();
     }
 }
