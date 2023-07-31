@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HashCalculator", "HashCalculator\HashCalculator.csproj", "{16B60D29-4D81-4360-814C-1A0FFFF5D75B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4DB70050-30FF-487A-AD55-C3E663CD0329} = {4DB70050-30FF-487A-AD55-C3E663CD0329}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "解决方案项", "解决方案项", "{3D318F1A-748B-4730-B262-B495B0A525CB}"
 	ProjectSection(SolutionItems) = preProject
