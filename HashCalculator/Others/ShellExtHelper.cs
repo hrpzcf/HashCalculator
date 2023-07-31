@@ -307,7 +307,7 @@ namespace HashCalculator
             {
                 try
                 {
-                    using (RegistryKey parent = Registry.CurrentUser.OpenSubKey(regPath, true))
+                    using (RegistryKey parent = Registry.CurrentUser.CreateSubKey(regPath, true))
                     {
                         if (parent == null)
                         {
@@ -339,13 +339,13 @@ namespace HashCalculator
                 {
                     using (RegistryKey parent = Registry.CurrentUser.OpenSubKey(regPath, true))
                     {
-                        if (parent == null)
+                        if (parent != null)
                         {
-                            return new Exception($"无法打开注册表键：{regPath}");
+                            parent.DeleteSubKeyTree(regNode.Name, false);
+                            return null;
                         }
-                        parent.DeleteSubKeyTree(regNode.Name, false);
+                        return new Exception($"无法打开注册表键或注册表键不存在：{regPath}");
                     }
-                    return null;
                 }
                 catch (Exception exception)
                 {
