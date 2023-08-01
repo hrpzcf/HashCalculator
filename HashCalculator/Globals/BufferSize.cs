@@ -2,19 +2,20 @@
 {
     internal static class BufferSize
     {
+        private const long maxTimes = 1024L;
+        private const long pageSize = 4096L;
+
         /// <summary>
-        /// 2MB 内小文件尽量一次全部读取
+        /// 4MB 内小文件尽量一次全部读取
         /// </summary>
         public static int Suggest(long fileSize)
         {
-            int times = (int)(fileSize / pageSize) + 1;
-            if (times > 512)
+            long timesToPageSize = fileSize / pageSize + 1L;
+            if (timesToPageSize > maxTimes)
             {
-                times = 512;
+                timesToPageSize = maxTimes;
             }
-            return pageSize * times;
+            return (int)(pageSize * timesToPageSize);
         }
-
-        private const int pageSize = 4096;
     }
 }
