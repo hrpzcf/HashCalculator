@@ -14,8 +14,8 @@ namespace HashCalculator
         private double mainWndTop = double.NaN;
         private double mainWndLeft = double.NaN;
         private WindowState mainWindowState = WindowState.Normal;
-        private double settingsWndWidth = 530.0;
-        private double settingsWndHeight = 450.0;
+        private double settingsWndWidth = 600.0;
+        private double settingsWndHeight = 500.0;
         private AlgoType selectedAlgorithm = AlgoType.SHA1;
         private OutputType selectedOutputType = OutputType.BinaryUpper;
         private ExportType resultFileTypeExportAs = ExportType.TxtFile;

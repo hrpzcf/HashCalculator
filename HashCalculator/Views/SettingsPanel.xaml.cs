@@ -22,11 +22,6 @@ namespace HashCalculator
             e.Cancel = !this.viewModel.NotSettingShellExtension;
         }
 
-        private void Button_Confirm_Click(object sender, RoutedEventArgs e)
-        {
-            this.DialogResult = true;
-        }
-
         private void RadioButton_ExportTxt_Click(object sender, RoutedEventArgs e)
         {
             this.viewModel.ResultFileTypeExportAs = ExportType.TxtFile;
