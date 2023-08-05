@@ -132,7 +132,7 @@
                     Command="{Binding ExportHashResultCmd}"
                     IsEnabled="{Binding State, Converter={StaticResource ButtonEnabledCvt}}"
                     Style="{StaticResource ImageButtonStyle2}"
-                    ToolTip="导出哈希值：将表格中所有文件的哈希计算结果导出为文本文件&#10;导出的内容使用的输出方式受到 [默认输出方式] 的控制而不受各文件自己的 [输出方式] 的控制&#10;没有计算结果的行不会被导出，[导出] 列没有勾选的行也不会被导出">
+                    ToolTip="导出哈希值：将表格中所有文件的哈希计算结果导出为文件&#10;导出的内容使用的输出方式受到 [默认输出方式] 的控制而不受各文件自己的 [输出方式] 的控制&#10;没有计算结果的行不会被导出，[导出] 列没有勾选的行也不会被导出">
                     <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnExportEnabledImgCvt}}" />
                 </Button>
                 <Button
@@ -454,7 +454,7 @@
                 <DataGridTextColumn
                     MinWidth="80"
                     Binding="{Binding DurationofTask, StringFormat=f2}"
-                    Header="运行时长(秒)"
+                    Header="运行时长 (秒)"
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoDurationColumn, Converter={StaticResource NoColumnCvt}, Mode=OneWay}" />
                 <DataGridTemplateColumn
                     CanUserSort="True"
