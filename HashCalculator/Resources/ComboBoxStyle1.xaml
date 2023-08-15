@@ -312,6 +312,7 @@
             <ToggleButton
                 x:Name="toggleButton"
                 Grid.ColumnSpan="2"
+                Margin="0,-1"
                 Background="{TemplateBinding Background}"
                 BorderBrush="{TemplateBinding BorderBrush}"
                 BorderThickness="{TemplateBinding BorderThickness}"

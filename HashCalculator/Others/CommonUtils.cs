@@ -1,5 +1,4 @@
-﻿using Microsoft.Win32.SafeHandles;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -15,25 +14,25 @@ namespace HashCalculator
         private const double mb = 1048576D;
         private const double gb = 1073741824D;
 
-        public static string FileSizeCvt(long bytes)
+        public static string FileSizeCvt(long bytesLength)
         {
-            double bytesto;
-            bytesto = bytes / gb;
-            if (bytesto >= 1)
+            double byteLenInUnits;
+            byteLenInUnits = bytesLength / gb;
+            if (byteLenInUnits >= 1)
             {
-                return $"{bytesto:f1}GB";
+                return $"{byteLenInUnits:f1} GB";
             }
-            bytesto = bytes / mb;
-            if (bytesto >= 1)
+            byteLenInUnits = bytesLength / mb;
+            if (byteLenInUnits >= 1)
             {
-                return $"{bytesto:f1}MB";
+                return $"{byteLenInUnits:f1} MB";
             }
-            bytesto = bytes / kb;
-            if (bytesto >= 1)
+            byteLenInUnits = bytesLength / kb;
+            if (byteLenInUnits >= 1)
             {
-                return $"{bytesto:f1}KB";
+                return $"{byteLenInUnits:f1} KB";
             }
-            return $"{bytes}B";
+            return $"{bytesLength} B";
         }
 
         public static bool OpenFolderAndSelectItem(string path)

@@ -1,10 +1,9 @@
-﻿using Org.BouncyCastle.Crypto.Digests;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -13,26 +12,23 @@ namespace HashCalculator
 {
     internal class HashViewModel : NotifiableModel
     {
-        #region properties for binding
-        private string _hashString = string.Empty;
+        private string _taskDetails = string.Empty;
         private string _modelDetails = "暂无详情...";
-        private bool _exportHash = false;
-        private double durationofTask = 0.0;
         private long _fileSize = 0L;
         private long _progress = 0L;
-        private long _progressTotal = 0L;
-        private AlgoType _hashAlgoType = AlgoType.Unknown;
-        private CmpRes _cmpResult = CmpRes.NoResult;
+        private long _maxProgress = 0L;
+        private double _durationofTask = 0.0;
+        private AlgoInOutModel _curAlgoInOutItem = null;
+        private AlgoInOutModel[] _algoInOutModels = null;
         private HashResult _currentResult = HashResult.NoResult;
-        private OutputType selectedOutputType = OutputType.Unknown;
-        private volatile HashState _currentState = HashState.NoState;
+        private HashState _currentState = HashState.NoState;
+        private OutputType _selectedOutput = OutputType.Unknown;
         private RelayCommand shutdownModelSelfCmd;
         private RelayCommand restartModelSelfCmd;
         private RelayCommand pauseOrContinueModelSelfCmd;
         private RelayCommand copyOneModelHashValueCmd;
-        #endregion
+        private RelayCommand showHashDetailsWindowCmd;
 
-        private readonly byte[] expectedHash;
         private readonly bool isDeprecated;
         private static readonly Dispatcher synchronization =
             Application.Current.Dispatcher;
@@ -65,48 +61,32 @@ namespace HashCalculator
         public HashViewModel(int serial, ModelArg arg)
         {
             this.ModelArg = arg;
-            this.HashAlgoType = arg.PresetAlgo;
             this.Serial = serial;
             this.FileInfo = new FileInfo(arg.filepath);
             this.FileName = this.FileInfo.Name;
-            this.expectedHash = arg.expected;
             this.isDeprecated = arg.deprecated;
+            if (arg.PresetAlgo != AlgoType.Unknown)
+            {
+                this.AlgoInOutModels =
+                    AlgosPanelModel.GetKnownAlgos(arg.PresetAlgo);
+            }
+            if (arg.expected != null)
+            {
+                this.MakeSureAlgoModelArrayNotEmpty();
+                foreach (AlgoInOutModel model in this.AlgoInOutModels)
+                {
+                    model.ExpectedResult = arg.expected;
+                }
+            }
         }
 
-        public int Serial { get; private set; }
+        public int Serial { get; }
 
-        public string FileName { get; private set; }
+        public string FileName { get; }
 
-        public FileInfo FileInfo { get; private set; }
+        public FileInfo FileInfo { get; }
 
         public ModelArg ModelArg { get; }
-
-        // Xaml 绑定会更改此值，不使用 private set
-        public bool Export
-        {
-            get
-            {
-                return this._exportHash;
-            }
-            set
-            {
-                this.SetPropNotify(ref this._exportHash, value);
-            }
-        }
-
-        public byte[] Hash { get; private set; }
-
-        public string HashString
-        {
-            get
-            {
-                return this._hashString;
-            }
-            private set
-            {
-                this.SetPropNotify(ref this._hashString, value);
-            }
-        }
 
         public long FileSize
         {
@@ -120,28 +100,27 @@ namespace HashCalculator
             }
         }
 
-        public AlgoType HashAlgoType
+        public AlgoInOutModel CurrentInOutModel
         {
             get
             {
-                return this._hashAlgoType;
-            }
-            private set
-            {
-                this.SetPropNotify(ref this._hashAlgoType, value);
-            }
-        }
-
-        // 校验哈希值时外部会更改此值，不使用 private set
-        public CmpRes CmpResult
-        {
-            get
-            {
-                return this._cmpResult;
+                return this._curAlgoInOutItem;
             }
             set
             {
-                this.SetPropNotify(ref this._cmpResult, value);
+                this.SetPropNotify(ref this._curAlgoInOutItem, value);
+            }
+        }
+
+        public AlgoInOutModel[] AlgoInOutModels
+        {
+            get
+            {
+                return this._algoInOutModels;
+            }
+            private set
+            {
+                this.SetPropNotify(ref this._algoInOutModels, value);
             }
         }
 
@@ -153,17 +132,15 @@ namespace HashCalculator
             }
             private set
             {
-                this._currentState = value;
-                switch (value)
+                this.SetPropNotify(ref this._currentState, value);
+                if (value == HashState.NoState)
                 {
-                    case HashState.NoState:
-                        this.HashString = string.Empty;
-                        break;
-                    case HashState.Waiting:
-                        this.HashString = "任务排队中...";
-                        break;
+                    this.TaskMessage = string.Empty;
                 }
-                this.NotifyPropertyChanged();
+                else if (value == HashState.Waiting)
+                {
+                    this.TaskMessage = "任务排队中...";
+                }
             }
         }
 
@@ -175,13 +152,11 @@ namespace HashCalculator
             }
             private set
             {
-                switch (value)
-                {
-                    case HashResult.Canceled:
-                        this.HashString = "任务已取消...";
-                        break;
-                }
                 this.SetPropNotify(ref this._currentResult, value);
+                if (value == HashResult.Canceled)
+                {
+                    this.TaskMessage = "任务已取消...";
+                }
             }
         }
 
@@ -197,15 +172,27 @@ namespace HashCalculator
             }
         }
 
-        public long ProgressTotal
+        public long MaxProgress
         {
             get
             {
-                return this._progressTotal;
+                return this._maxProgress;
             }
             private set
             {
-                this.SetPropNotify(ref this._progressTotal, value);
+                this.SetPropNotify(ref this._maxProgress, value);
+            }
+        }
+
+        public string TaskMessage
+        {
+            get
+            {
+                return this._taskDetails;
+            }
+            set
+            {
+                this.SetPropNotify(ref this._taskDetails, value);
             }
         }
 
@@ -225,11 +212,11 @@ namespace HashCalculator
         {
             get
             {
-                return this.durationofTask;
+                return this._durationofTask;
             }
             private set
             {
-                this.SetPropNotify(ref this.durationofTask, value);
+                this.SetPropNotify(ref this._durationofTask, value);
             }
         }
 
@@ -238,15 +225,11 @@ namespace HashCalculator
         {
             get
             {
-                return this.selectedOutputType;
+                return this._selectedOutput;
             }
             set
             {
-                this.SetPropNotify(ref this.selectedOutputType, value);
-                if (this.Hash != null)
-                {
-                    this.HashString = (string)HashBytesOutputTypeCvt.Convert(this.Hash, value);
-                }
+                this.SetPropNotify(ref this._selectedOutput, value);
             }
         }
 
@@ -256,15 +239,8 @@ namespace HashCalculator
             {
                 return;
             }
-            if (this.SelectedOutputType != OutputType.Unknown)
-            {
-                Clipboard.SetText(this.HashString);
-            }
-            else
-            {
-                Clipboard.SetText((string)HashBytesOutputTypeCvt.Convert(
-                    this.Hash, Settings.Current.SelectedOutputType));
-            }
+            Clipboard.SetText(BytesToStrByOutputTypeCvt.Convert(
+                this.CurrentInOutModel.HashResult, this.SelectedOutputType));
         }
 
         public ICommand CopyOneModelHashValueCmd
@@ -334,27 +310,60 @@ namespace HashCalculator
             }
         }
 
+        private void ShowHashDetailsWindowAction(object param)
+        {
+            new HashDetailsWnd(this) { Owner = MainWindow.This }.ShowDialog();
+        }
+
+        public ICommand ShowHashDetailsWindowCmd
+        {
+            get
+            {
+                if (this.showHashDetailsWindowCmd == null)
+                {
+                    this.showHashDetailsWindowCmd =
+                        new RelayCommand(this.ShowHashDetailsWindowAction);
+                }
+                return this.showHashDetailsWindowCmd;
+            }
+        }
+
         public bool HasBeenRun { get; private set; }
 
         public ControlItem[] AvailableOutputTypes { get; } =
         {
-            new ControlItem("没有指定", OutputType.Unknown),
             new ControlItem("Base64", OutputType.BASE64),
             new ControlItem("Hex大写", OutputType.BinaryUpper),
             new ControlItem("Hex小写", OutputType.BinaryLower),
         };
 
+        private void MakeSureAlgoModelArrayNotEmpty()
+        {
+            if (!this.AlgoInOutModels?.Any() ?? true)
+            {
+                this.AlgoInOutModels = AlgosPanelModel.GetSelectedAlgos();
+            }
+            this.CurrentInOutModel = this.AlgoInOutModels[0];
+        }
+
         public void ResetHashViewModel()
         {
-            this.Hash = null;
-            this.Export = false;
+            this.TaskMessage = string.Empty;
             this.FileSize = 0;
             this.DurationofTask = 0.0;
             this.Progress = 0;
-            this.ProgressTotal = 0;
+            this.MaxProgress = 0;
             this.State = HashState.NoState;
             this.Result = HashResult.NoResult;
-            this.CmpResult = CmpRes.NoResult;
+            if (this.AlgoInOutModels != null)
+            {
+                foreach (var model in this.AlgoInOutModels)
+                {
+                    model.HashResult = null;
+                    model.Export = false;
+                    model.HashCmpResult = CmpRes.NoResult;
+                }
+            }
             this.cancellation = new CancellationTokenSource();
             this.cancellation.Token.Register(() =>
             {
@@ -373,8 +382,8 @@ namespace HashCalculator
                 bool conditionMatched = false;
                 if (force)
                 {
+                    this.AlgoInOutModels = null;
                     this.SelectedOutputType = OutputType.Unknown;
-                    this.HashAlgoType = AlgoType.Unknown;
                     conditionMatched = this.State == HashState.Finished;
                 }
                 else
@@ -383,15 +392,15 @@ namespace HashCalculator
                     // 但 Waiting 的 HashViewModel 不该被再次启动，因为 Waiting 代表已排队待计算
                     if (this.State == HashState.NoState)
                     {
-                        // 此处不重置 HashAlgoType 属性是因为首次启动可能已经预置了此属性
-                        // 例如从系统右键选择特定的哈希值启动计算，此类实例就预置了 HashAlgoType 属性
+                        // 此处不重置 AlgoInOutModels 属性是因为首次启动可能已经预置了此属性
+                        // 例如从系统右键选择特定的哈希值启动计算，此类实例就预置了 AlgoInOutModels 属性
                         // 而 State == HashState.NoState 就代表是任务的首次启动
                         conditionMatched = true;
                     }
                     else if (this.State == HashState.Finished && this.Result != HashResult.Succeeded)
                     {
                         conditionMatched = true;
-                        this.HashAlgoType = AlgoType.Unknown;
+                        this.AlgoInOutModels = null;
                     }
                 }
                 if (conditionMatched)
@@ -488,7 +497,10 @@ namespace HashCalculator
         {
             if (queueContainsThis)
             {
-                synchronization.Invoke(() => { this.State = HashState.Waiting; });
+                synchronization.Invoke(() =>
+                {
+                    this.State = HashState.Waiting;
+                });
                 return false;
             }
             // 增加一个 private bool MarkAsWaiting 方法的原因是：
@@ -514,17 +526,13 @@ namespace HashCalculator
             synchronization.Invoke(() =>
             {
                 this.State = HashState.Running;
-                if (this._hashAlgoType == AlgoType.Unknown)
-                {
-                    this.HashAlgoType = Settings.Current.SelectedAlgo;
-                }
             });
             if (this.isDeprecated)
             {
                 synchronization.Invoke(() =>
                 {
                     this.Result = HashResult.Failed;
-                    this.HashString = "未搜索到文件，请检查搜索策略后重新添加...";
+                    this.TaskMessage = "未搜索到文件，请检查搜索策略后重新添加...";
                 });
                 goto FinishingTouchesBeforeExiting;
             }
@@ -534,7 +542,7 @@ namespace HashCalculator
                 synchronization.Invoke(() =>
                 {
                     this.Result = HashResult.Failed;
-                    this.HashString = "此文件不存在或无法访问...";
+                    this.TaskMessage = "此文件不存在或无法访问...";
                 });
                 goto FinishingTouchesBeforeExiting;
             }
@@ -544,132 +552,99 @@ namespace HashCalculator
                 {
                     synchronization.Invoke(() =>
                     {
+                        this.MakeSureAlgoModelArrayNotEmpty();
                         this.FileSize = fs.Length;
                         this.Progress = 0L;
-                        this.ProgressTotal = this.FileSize;
-                    });
-                    HashAlgorithm algoObject;
-                    switch (this._hashAlgoType)
-                    {
-                        case AlgoType.SHA1:
-                            algoObject = new SHA1Cng();
-                            break;
-                        case AlgoType.SHA224:
-                            algoObject = new BouncyCastleSha224Digest();
-                            break;
-                        default:
-                        case AlgoType.SHA256:
-                            algoObject = new SHA256Cng();
-                            break;
-                        case AlgoType.SHA384:
-                            algoObject = new SHA384Cng();
-                            break;
-                        case AlgoType.SHA512:
-                            algoObject = new SHA512Cng();
-                            break;
-                        case AlgoType.SHA3_224:
-                            algoObject = new BouncyCastleSha3Digest(224);
-                            break;
-                        case AlgoType.SHA3_256:
-                            algoObject = new BouncyCastleSha3Digest(256);
-                            break;
-                        case AlgoType.SHA3_384:
-                            algoObject = new BouncyCastleSha3Digest(384);
-                            break;
-                        case AlgoType.SHA3_512:
-                            algoObject = new BouncyCastleSha3Digest(512);
-                            break;
-                        case AlgoType.MD5:
-                            algoObject = new MD5Cng();
-                            break;
-                        case AlgoType.BLAKE2S:
-                            algoObject = new BouncyCastleIDigest<Blake2sDigest>();
-                            break;
-                        case AlgoType.BLAKE2B:
-                            algoObject = new BouncyCastleIDigest<Blake2bDigest>();
-                            break;
-                        case AlgoType.BLAKE3:
-                            algoObject = new BouncyCastleIDigest<Blake3Digest>();
-                            break;
-                        case AlgoType.WHIRLPOOL:
-                            algoObject = new BouncyCastleIDigest<WhirlpoolDigest>();
-                            break;
-                    }
-                    using (algoObject)
-                    {
-                        int readedSize = 0;
-                        byte[] buffer = new byte[BufferSize.Suggest(this.FileSize)];
-                        while (true)
+                        this.MaxProgress = fs.Length;
+                        if (this.SelectedOutputType == OutputType.Unknown)
                         {
-                            if (this.cancellation.IsCancellationRequested)
-                            {
-                                goto FinishingTouchesBeforeExiting;
-                            }
-                            readedSize = fs.Read(buffer, 0, buffer.Length);
-                            if (readedSize <= 0)
-                            {
-                                break;
-                            }
-                            algoObject.TransformBlock(buffer, 0, readedSize, null, 0);
-                            synchronization.Invoke(
-                                () => { this.Progress += readedSize; }, DispatcherPriority.Background);
-                            this.manualPauseController.WaitOne();
+                            this.SelectedOutputType =
+                                Settings.Current.SelectedOutputType;
                         }
-                        algoObject.TransformFinalBlock(buffer, 0, 0);
-                        this.Hash = algoObject.Hash;
-                        CmpRes comparisonResult = CmpRes.NoResult;
-                        if (this.expectedHash != null)
+                    });
+                    int readedSize = 0;
+                    byte[] buffer = new byte[BufferSize.Suggest(this.FileSize)];
+                    ParallelOptions options = new ParallelOptions();
+                    options.MaxDegreeOfParallelism = 4;
+                    Action<int> progressUpdate = size => { this.Progress += size; };
+                    while (true)
+                    {
+                        if (this.cancellation.IsCancellationRequested)
                         {
-                            if (!this.expectedHash.Any())
+                            goto FinishingTouchesBeforeExiting;
+                        }
+                        readedSize = fs.Read(buffer, 0, buffer.Length);
+                        if (readedSize <= 0)
+                        {
+                            break;
+                        }
+                        Parallel.ForEach(this.AlgoInOutModels, options, i =>
+                        {
+                            i.Algo.TransformBlock(buffer, 0, readedSize, null, 0);
+                        });
+                        synchronization.BeginInvoke(progressUpdate, readedSize);
+                        this.manualPauseController.WaitOne();
+                    }
+                    Action<AlgoInOutModel> hashBytesUpdate = a =>
+                    {
+                        a.HashResult = a.Algo.Hash;
+                    };
+                    Action<AlgoInOutModel, CmpRes> modelUpdate = (a, c) =>
+                    {
+                        a.Export = true;
+                        a.HashCmpResult = c;
+                    };
+                    foreach (AlgoInOutModel item in this.AlgoInOutModels)
+                    {
+                        item.Algo.TransformFinalBlock(buffer, 0, 0);
+                        synchronization.Invoke(hashBytesUpdate, item);
+                        CmpRes comparisonResult = CmpRes.NoResult;
+                        if (item.ExpectedResult != null)
+                        {
+                            if (!item.ExpectedResult.Any())
                             {
                                 comparisonResult = CmpRes.Uncertain;
                             }
+                            else if (item.ExpectedResult.SequenceEqual(item.HashResult))
+                            {
+                                comparisonResult = CmpRes.Matched;
+                            }
                             else
                             {
-                                if (this.expectedHash.SequenceEqual(this.Hash))
-                                {
-                                    comparisonResult = CmpRes.Matched;
-                                }
-                                else
-                                {
-                                    comparisonResult = CmpRes.Mismatch;
-                                }
+                                comparisonResult = CmpRes.Mismatch;
                             }
                         }
-                        synchronization.Invoke(() =>
-                        {
-                            this.Export = true;
-                            if (this.SelectedOutputType != OutputType.Unknown)
-                            {
-                                // 用于触发刷新 this.HashString
-                                this.SelectedOutputType = this.SelectedOutputType;
-                            }
-                            else
-                            {
-                                this.SelectedOutputType = Settings.Current.SelectedOutputType;
-                            }
-                            this.CmpResult = comparisonResult;
-                            this.Result = HashResult.Succeeded;
-                        });
+                        synchronization.Invoke(modelUpdate, item, comparisonResult);
                     }
                 }
+                synchronization.Invoke(() =>
+                {
+                    this.Result = HashResult.Succeeded;
+                });
             }
             catch
             {
                 synchronization.Invoke(() =>
                 {
                     this.Result = HashResult.Failed;
-                    this.HashString = "此文件读取失败或计算出错...";
+                    this.TaskMessage = "此文件读取失败或计算出错...";
                 });
             }
         FinishingTouchesBeforeExiting:
+            if (this.AlgoInOutModels != null)
+            {
+                foreach (var model in this.AlgoInOutModels)
+                {
+                    model.Algo.Dispose();
+                }
+            }
             stopwatch.Stop();
             double duration = stopwatch.Elapsed.TotalSeconds;
             synchronization.Invoke(() =>
             {
                 this.DurationofTask = duration;
                 this.ModelDetails = $"文件名称：{this.FileName}\n文件大小：{CommonUtils.FileSizeCvt(this.FileSize)}\n"
-                    + $"任务运行时长：{duration:f2}秒";
+                    + $"任务任务耗时：{duration:f2}秒";
                 this.State = HashState.Finished;
             });
             this.ModelReleasedEvent?.InvokeAsync(this);

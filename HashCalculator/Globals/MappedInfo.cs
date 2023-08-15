@@ -12,7 +12,7 @@
         public const int ItemLength = sizeof(int);
         // Win32 API CreateProcessW 的 lpCommandLine 参数最多允许 32767 个字符
         // Version + ProcessId + RunMulti + ItemCount + ItemLength * 32767 + sizeof(char) * 32767 < 262144
-        // ItemLength* 32767: 最坏的情况是每个字符串配一个指示字符串长度的 ItemLength
+        // ItemLength * 32767: 最坏的情况是每个字符串配一个指示字符串长度的 ItemLength
         public const long MaxLength = 262144;
     }
 

@@ -105,7 +105,7 @@
                     Grid.Row="6"
                     Margin="0,0,0,4"
                     Padding="4,0,0,0"
-                    Content="不显示“运行时长”列"
+                    Content="不显示“任务耗时”列"
                     IsChecked="{Binding NoDurationColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <CheckBox
                     Grid.Row="7"

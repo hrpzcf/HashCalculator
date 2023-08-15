@@ -37,6 +37,7 @@ namespace HashCalculator
         private readonly object displayingModelLock = new object();
         private readonly object displayModelRequestLock = new object();
         private readonly object tobeComputedModelsCountLock = new object();
+        private RelayCommand openSelectAlgoWndCmd;
         private RelayCommand mainWindowTopmostCmd;
         private RelayCommand clearAllTableLinesCmd;
         private RelayCommand exportHashResultCmd;
@@ -243,29 +244,11 @@ namespace HashCalculator
         public void GenerateVerificationReport()
         {
             int noresult, unrelated, matched, mismatch,
-                uncertain, succeeded, canceled, hasFailed;
+                uncertain, succeeded, canceled, hasFailed, totalHash;
             noresult = unrelated = matched = mismatch =
-                uncertain = succeeded = canceled = hasFailed = 0;
+                uncertain = succeeded = canceled = hasFailed = totalHash = 0;
             foreach (HashViewModel hm in HashViewModels)
             {
-                switch (hm.CmpResult)
-                {
-                    case CmpRes.NoResult:
-                        ++noresult;
-                        break;
-                    case CmpRes.Unrelated:
-                        ++unrelated;
-                        break;
-                    case CmpRes.Matched:
-                        ++matched;
-                        break;
-                    case CmpRes.Mismatch:
-                        ++mismatch;
-                        break;
-                    case CmpRes.Uncertain:
-                        ++uncertain;
-                        break;
-                }
                 switch (hm.Result)
                 {
                     case HashResult.Canceled:
@@ -278,12 +261,39 @@ namespace HashCalculator
                         ++succeeded;
                         break;
                 }
+                if (hm.AlgoInOutModels != null)
+                {
+                    foreach (AlgoInOutModel model in hm.AlgoInOutModels)
+                    {
+                        ++totalHash;
+                        switch (model.HashCmpResult)
+                        {
+                            case CmpRes.NoResult:
+                                ++noresult;
+                                break;
+                            case CmpRes.Unrelated:
+                                ++unrelated;
+                                break;
+                            case CmpRes.Matched:
+                                ++matched;
+                                break;
+                            case CmpRes.Mismatch:
+                                ++mismatch;
+                                break;
+                            case CmpRes.Uncertain:
+                                ++uncertain;
+                                break;
+                        }
+                    }
+                }
             }
-            this.Report
-                = $"总项数：{HashViewModels.Count}\n已成功：{succeeded}\n"
-                + $"已失败：{hasFailed}\n已取消：{canceled}\n\n"
-                + $"校验汇总：\n已匹配：{matched}\n不匹配：{mismatch}\n"
-                + $"不确定：{uncertain}\n无关联：{unrelated}\n未校验：{noresult}";
+            StringBuilder sb = new StringBuilder();
+            sb.Append($"总项数：{HashViewModels.Count}\n已成功：{succeeded}\n");
+            sb.Append($"已失败：{hasFailed}\n已取消：{canceled}\n\n");
+            sb.Append($"哈希校验汇总：\n总哈希数：{totalHash}\n");
+            sb.Append($"已匹配：{matched}\n不匹配：{mismatch}\n");
+            sb.Append($"不确定：{uncertain}\n无关联：{unrelated}\n未校验：{noresult}");
+            this.Report = sb.ToString();
         }
 
         /// <summary>
@@ -301,10 +311,22 @@ namespace HashCalculator
             }
         }
 
-        public string StartVerifyToolTip { get; } =
-            "当面板为空时，如果校验依据选择的是通用格式的哈希值文本文件，则：\n" +
-            "点击 [校验] 后程序会自动解析文件并在相同目录下寻找要计算哈希值的文件完成计算并显示校验结果。\n" +
-            "通用格式的哈希值文件请参考程序 [导出结果] 功能导出的文件的内容排布格式。";
+        private void OpenSelectAlgoWndAction(object param)
+        {
+            new AlgosPanel() { Owner = MainWindow.This }.ShowDialog();
+        }
+
+        public ICommand OpenSelectAlgoWndCmd
+        {
+            get
+            {
+                if (this.openSelectAlgoWndCmd == null)
+                {
+                    this.openSelectAlgoWndCmd = new RelayCommand(this.OpenSelectAlgoWndAction);
+                }
+                return this.openSelectAlgoWndCmd;
+            }
+        }
 
         private void CopyModelsHashBase64Action(object param)
         {
@@ -337,19 +359,18 @@ namespace HashCalculator
                     string formatedHashValue;
                     if (output != OutputType.Unknown)
                     {
-                        formatedHashValue =
-                            (string)HashBytesOutputTypeCvt.Convert(
-                                model.Hash, output);
+                        formatedHashValue = BytesToStrByOutputTypeCvt.Convert(
+                            model.CurrentInOutModel.HashResult, output);
                     }
                     else if (model.SelectedOutputType == OutputType.Unknown)
                     {
-                        formatedHashValue =
-                            (string)HashBytesOutputTypeCvt.Convert(
-                                model.Hash, Settings.Current.SelectedOutputType);
+                        formatedHashValue = BytesToStrByOutputTypeCvt.Convert(
+                            model.CurrentInOutModel.HashResult, Settings.Current.SelectedOutputType);
                     }
                     else
                     {
-                        formatedHashValue = model.HashString;
+                        formatedHashValue = BytesToStrByOutputTypeCvt.Convert(
+                             model.CurrentInOutModel.HashResult, model.SelectedOutputType);
                     }
                     if (i != 0)
                     {
@@ -787,13 +808,13 @@ namespace HashCalculator
                 {
                     foreach (HashViewModel hm in HashViewModels)
                     {
-                        if (hm.Result != HashResult.Succeeded || !hm.Export)
+                        if (hm.Result != HashResult.Succeeded || !hm.CurrentInOutModel.Export)
                         {
                             continue;
                         }
-                        string hash = HashBytesOutputTypeCvt.Convert(
-                                hm.Hash, Settings.Current.SelectedOutputType) as string;
-                        sw.WriteLine($"#{AlgoMap.GetAlgoName(hm.HashAlgoType)} *{hash} *{hm.FileName}");
+                        string hash = BytesToStrByOutputTypeCvt.Convert(
+                            hm.CurrentInOutModel.HashResult, Settings.Current.SelectedOutputType);
+                        sw.WriteLine($"#{hm.CurrentInOutModel.AlgoName} *{hash} *{hm.FileName}");
                     }
                 }
             }
@@ -925,13 +946,22 @@ namespace HashCalculator
             {
                 foreach (HashViewModel hm in HashViewModels)
                 {
-                    if (hm.Result != HashResult.Succeeded)
+                    if (hm.AlgoInOutModels != null)
                     {
-                        hm.CmpResult = CmpRes.NoResult;
-                    }
-                    else
-                    {
-                        hm.CmpResult = this.MainBasis.Verify(hm.FileName, hm.Hash);
+                        if (hm.Result != HashResult.Succeeded)
+                        {
+                            foreach (AlgoInOutModel model in hm.AlgoInOutModels)
+                            {
+                                model.HashCmpResult = CmpRes.NoResult;
+                            }
+                        }
+                        else
+                        {
+                            foreach (AlgoInOutModel model in hm.AlgoInOutModels)
+                            {
+                                model.HashCmpResult = this.MainBasis.Verify(hm.FileName, model.HashResult);
+                            }
+                        }
                     }
                 }
                 this.GenerateVerificationReport();
