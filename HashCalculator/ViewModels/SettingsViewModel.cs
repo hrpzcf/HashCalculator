@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml.Serialization;
@@ -16,10 +18,13 @@ namespace HashCalculator
         private WindowState mainWindowState = WindowState.Normal;
         private double settingsWndWidth = 600.0;
         private double settingsWndHeight = 500.0;
-        private AlgoType selectedAlgorithm = AlgoType.SHA1;
-        private OutputType selectedOutputType = OutputType.BinaryUpper;
+        private double algosPanelWidth = 550.0;
+        private double algosPanelHeight = 320.0;
+        private double hashDetailsWidth = 600.0;
+        private double hashDetailsHeight = 700.0;
+        private TaskNum selectedTaskNumberLimit = TaskNum.One;
         private ExportType resultFileTypeExportAs = ExportType.TxtFile;
-        private TaskNum selectedTaskNumberLimit = TaskNum.Two;
+        private OutputType selectedOutputType = OutputType.BinaryUpper;
         private bool showResultText = false;
         private bool noExportColumn = false;
         private bool noDurationColumn = false;
@@ -41,6 +46,50 @@ namespace HashCalculator
                 this.mainWndTop = (SystemParameters.PrimaryScreenHeight
                     - this.mainWndHeight) / 2;
             }
+            this.AddSelectedAlgosChanged();
+        }
+
+        private void SelectedAlgosChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                    if (e.NewItems.AnyItem() && e.NewItems[0] is string name1)
+                    {
+                        foreach (AlgoInOutModel model in AlgosPanelModel.ProvidedAlgos)
+                        {
+                            if (model.AlgoName == name1)
+                            {
+                                model.Selected = true;
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                case NotifyCollectionChangedAction.Remove:
+                    if (e.OldItems.AnyItem() && e.OldItems[0] is string name2)
+                    {
+                        foreach (AlgoInOutModel model in AlgosPanelModel.ProvidedAlgos)
+                        {
+                            if (model.AlgoName == name2)
+                            {
+                                model.Selected = false;
+                                break;
+                            }
+                        }
+                    }
+                    break;
+            }
+        }
+
+        internal void AddSelectedAlgosChanged()
+        {
+            this.SelectedAlgos.CollectionChanged += this.SelectedAlgosChanged;
+        }
+
+        internal void RemoveSelectedAlgosChanged()
+        {
+            this.SelectedAlgos.CollectionChanged -= this.SelectedAlgosChanged;
         }
 
         public bool MainWndTopmost
@@ -139,17 +188,56 @@ namespace HashCalculator
             }
         }
 
-        public AlgoType SelectedAlgo
+        public double AlgosPanelWidth
         {
             get
             {
-                return this.selectedAlgorithm;
+                return this.algosPanelWidth;
             }
             set
             {
-                this.SetPropNotify(ref this.selectedAlgorithm, value);
+                this.SetPropNotify(ref this.algosPanelWidth, value);
             }
         }
+
+        public double AlgosPanelHeight
+        {
+            get
+            {
+                return this.algosPanelHeight;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.algosPanelHeight, value);
+            }
+        }
+
+        public double HashDetailsWndWidth
+        {
+            get
+            {
+                return this.hashDetailsWidth;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.hashDetailsWidth, value);
+            }
+        }
+
+        public double HashDetailsWndHeight
+        {
+            get
+            {
+                return this.hashDetailsHeight;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.hashDetailsHeight, value);
+            }
+        }
+
+        public ObservableCollection<string> SelectedAlgos { get; } =
+            new ObservableCollection<string>();
 
         public OutputType SelectedOutputType
         {
@@ -363,25 +451,6 @@ namespace HashCalculator
                 return this.unInstallShellExtCmd;
             }
         }
-
-        [XmlIgnore]
-        public ControlItem[] AvailableAlgos { get; } =
-        {
-            new ControlItem(AlgoMap.GetAlgoName(AlgoType.SHA1), AlgoType.SHA1),
-            new ControlItem(AlgoMap.GetAlgoName(AlgoType.SHA224), AlgoType.SHA224),
-            new ControlItem(AlgoMap.GetAlgoName(AlgoType.SHA256), AlgoType.SHA256),
-            new ControlItem(AlgoMap.GetAlgoName(AlgoType.SHA384), AlgoType.SHA384),
-            new ControlItem(AlgoMap.GetAlgoName(AlgoType.SHA512), AlgoType.SHA512),
-            new ControlItem(AlgoMap.GetAlgoName(AlgoType.SHA3_224), AlgoType.SHA3_224),
-            new ControlItem(AlgoMap.GetAlgoName(AlgoType.SHA3_256), AlgoType.SHA3_256),
-            new ControlItem(AlgoMap.GetAlgoName(AlgoType.SHA3_384), AlgoType.SHA3_384),
-            new ControlItem(AlgoMap.GetAlgoName(AlgoType.SHA3_512), AlgoType.SHA3_512),
-            new ControlItem(AlgoMap.GetAlgoName(AlgoType.MD5), AlgoType.MD5),
-            new ControlItem(AlgoMap.GetAlgoName(AlgoType.BLAKE2S), AlgoType.BLAKE2S),
-            new ControlItem(AlgoMap.GetAlgoName(AlgoType.BLAKE2B), AlgoType.BLAKE2B),
-            new ControlItem(AlgoMap.GetAlgoName(AlgoType.BLAKE3), AlgoType.BLAKE3),
-            new ControlItem(AlgoMap.GetAlgoName(AlgoType.WHIRLPOOL), AlgoType.WHIRLPOOL),
-        };
 
         [XmlIgnore]
         public ControlItem[] AvailableOutputTypes { get; } =

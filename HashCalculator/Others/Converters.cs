@@ -10,7 +10,7 @@ using System.Windows.Media.Imaging;
 
 namespace HashCalculator
 {
-    internal class CmpResFgCvt : IMultiValueConverter
+    internal class CmpResForegroundCvt : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
@@ -19,20 +19,24 @@ namespace HashCalculator
             {
                 return new SolidColorBrush(Colors.Transparent);
             }
-            switch ((CmpRes)values[1])
+            if (values[1] is CmpRes cmpResult)
             {
-                case CmpRes.Unrelated:
-                    return new SolidColorBrush(Colors.Black);
-                case CmpRes.Matched:
-                    return new SolidColorBrush(Colors.White);
-                case CmpRes.Mismatch:
-                    return new SolidColorBrush(Colors.White);
-                case CmpRes.Uncertain:
-                    return new SolidColorBrush(Colors.White);
-                case CmpRes.NoResult:
-                default:
-                    return new SolidColorBrush(Colors.Transparent);
+                switch (cmpResult)
+                {
+                    case CmpRes.Unrelated:
+                        return new SolidColorBrush(Colors.Black);
+                    case CmpRes.Matched:
+                        return new SolidColorBrush(Colors.White);
+                    case CmpRes.Mismatch:
+                        return new SolidColorBrush(Colors.White);
+                    case CmpRes.Uncertain:
+                        return new SolidColorBrush(Colors.White);
+                    case CmpRes.NoResult:
+                    default:
+                        return new SolidColorBrush(Colors.Transparent);
+                }
             }
+            return new SolidColorBrush(Colors.Transparent);
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
@@ -41,7 +45,7 @@ namespace HashCalculator
         }
     }
 
-    internal class CmpResBgCvt : IValueConverter
+    internal class CmpResBackgroundCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object param, CultureInfo culture)
         {
@@ -83,7 +87,7 @@ namespace HashCalculator
                     return "不确定";
                 case CmpRes.NoResult:
                 default:
-                    return string.Empty;
+                    return "未校验";
             }
         }
 
@@ -113,63 +117,57 @@ namespace HashCalculator
         }
     }
 
-    internal class AlgoTypeBgCvt : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            switch ((AlgoType)value)
-            {
-                case AlgoType.SHA1:
-                    return "#64FF0000";
-                case AlgoType.SHA224:
-                    return "#64ff5900";
-                case AlgoType.SHA256:
-                    return "#64ff8900";
-                case AlgoType.SHA384:
-                    return "#64ffaa00";
-                case AlgoType.SHA512:
-                    return "#64ffc600";
-                case AlgoType.SHA3_224:
-                    return "#64ffe100";
-                case AlgoType.SHA3_256:
-                    return "#64ffff00";
-                case AlgoType.SHA3_384:
-                    return "#64bdf400";
-                case AlgoType.SHA3_512:
-                    return "#647ce700";
-                case AlgoType.MD5:
-                    return "#6400cc00";
-                case AlgoType.BLAKE2S:
-                    return "#642618b1";
-                case AlgoType.BLAKE2B:
-                    return "#641240ab";
-                case AlgoType.BLAKE3:
-                    return "#647109aa";
-                case AlgoType.WHIRLPOOL:
-                    return "#6400a876";
-                default:
-                    return "#64A0A0A0";
-            }
-        }
+    //internal class AlgoTypeBackgroundCvt : IValueConverter
+    //{
+    //    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    //    {
+    //        if (value is AlgoInOutModel model)
+    //        {
+    //            switch (model.Type)
+    //            {
+    //                case AlgoType.SHA1:
+    //                    return "#64FF0000";
+    //                case AlgoType.SHA224:
+    //                    return "#64ff5900";
+    //                case AlgoType.SHA256:
+    //                    return "#64ff8900";
+    //                case AlgoType.SHA384:
+    //                    return "#64ffaa00";
+    //                case AlgoType.SHA512:
+    //                    return "#64ffc600";
+    //                case AlgoType.SHA3_224:
+    //                    return "#64ffe100";
+    //                case AlgoType.SHA3_256:
+    //                    return "#64ffff00";
+    //                case AlgoType.SHA3_384:
+    //                    return "#64bdf400";
+    //                case AlgoType.SHA3_512:
+    //                    return "#647ce700";
+    //                case AlgoType.MD5:
+    //                    return "#6400cc00";
+    //                case AlgoType.BLAKE2S:
+    //                    return "#642618b1";
+    //                case AlgoType.BLAKE2B:
+    //                    return "#641240ab";
+    //                case AlgoType.BLAKE3:
+    //                    return "#647109aa";
+    //                case AlgoType.WHIRLPOOL:
+    //                    return "#6400a876";
+    //                default:
+    //                    return "#64A0A0A0";
+    //            }
+    //        }
+    //        else
+    //        {
+    //            return "Transparent";
+    //        }
+    //    }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return AlgoType.SHA256; // 此处未使用，只返回默认值
-        }
-    }
-
-    internal class AlgoTypeNameCvt : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return AlgoMap.GetAlgoName((AlgoType)value);
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
+    //    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    //    {
+    //        return AlgoType.SHA256; // 此处未使用，只返回默认值
+    //    }
+    //}
 
     internal class SubBtnVisiblityRunningCvt : IValueConverter
     {
@@ -237,12 +235,13 @@ namespace HashCalculator
         }
     }
 
-    internal class FinishedVisiblityCvt : IValueConverter
+    internal class SubCtrlVisiblitySucceededCvt : IMultiValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            HashState state = (HashState)value;
-            if (state == HashState.Running || state == HashState.Paused)
+            Debug.Assert(values.Length == 2);
+            if ((HashState)values[0] != HashState.Finished ||
+                !(values[1] is HashResult hashResult) || hashResult != HashResult.Succeeded)
             {
                 return Visibility.Hidden;
             }
@@ -252,7 +251,33 @@ namespace HashCalculator
             }
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class SubCtrlVisiblityNotSucceedCvt : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            Debug.Assert(values.Length == 2);
+            if ((HashState)values[0] != HashState.Finished)
+            {
+                return Visibility.Hidden;
+            }
+            if (!(values[1] is HashResult hashResult) ||
+                (hashResult != HashResult.Canceled && hashResult != HashResult.Failed))
+            {
+                return Visibility.Hidden;
+            }
+            else
+            {
+                return Visibility.Visible;
+            }
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }
@@ -263,26 +288,6 @@ namespace HashCalculator
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if ((HashState)value != HashState.Waiting)
-            {
-                return Visibility.Hidden;
-            }
-            else
-            {
-                return Visibility.Visible;
-            }
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    internal class SubBtnVisiblitySucceededCvt : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if ((HashResult)value != HashResult.Succeeded)
             {
                 return Visibility.Hidden;
             }
@@ -318,12 +323,14 @@ namespace HashCalculator
         }
     }
 
-    internal class SubBtnVisiblityUnsuccessfulCvt : IValueConverter
+    internal class TaskMessageCtrlVisiblityCvt : IMultiValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            HashResult hashResult = (HashResult)value;
-            if (hashResult != HashResult.Canceled && hashResult != HashResult.Failed)
+            Debug.Assert(values.Length == 2);
+            HashState hashState = (HashState)values[0];
+            if (hashState == HashState.Running || hashState == HashState.Paused
+                || (values[1] is HashResult hashResult && hashResult == HashResult.Succeeded))
             {
                 return Visibility.Hidden;
             }
@@ -333,7 +340,7 @@ namespace HashCalculator
             }
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }
@@ -519,7 +526,7 @@ namespace HashCalculator
         }
     }
 
-    internal class HashBytesOutputTypeCvt : IMultiValueConverter
+    internal class BytesToStrByOutputTypeCvt : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
@@ -527,7 +534,7 @@ namespace HashCalculator
             return Convert(values[0], values[1]);
         }
 
-        internal static object Convert(object bytes, object outputType)
+        internal static string Convert(object bytes, object outputType)
         {
             if (!(bytes is byte[] hashBytes) || !hashBytes.Any())
             {
@@ -542,8 +549,9 @@ namespace HashCalculator
                     return CommonUtils.ToHexStringLower(hashBytes);
                 case OutputType.BASE64:
                     return System.Convert.ToBase64String(hashBytes);
+                // 返回值可能被复制所以不返回 null，上同
                 case OutputType.Unknown:
-                    return string.Empty;  // 返回值可能被复制所以不返回 null，上同
+                    return string.Empty;
             }
         }
 
@@ -619,6 +627,23 @@ namespace HashCalculator
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return (ExportType)value == ExportType.HcbFile;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class HashDetailsFileSizeExCvt : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is long bytesLength)
+            {
+                return $"{CommonUtils.FileSizeCvt(bytesLength)} ({bytesLength} 字节)";
+            }
+            return "未知字节数";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

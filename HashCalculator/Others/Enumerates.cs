@@ -130,23 +130,48 @@
     }
 
     /// <summary>
-    /// 哈希算法类型，Unknown 是创建 HashViewModel 实例时的默认值
+    /// 哈希算法类型
     /// </summary>
     public enum AlgoType
     {
+        // SHA1
         SHA1,
+        // SHA2
         SHA224,
         SHA256,
         SHA384,
         SHA512,
+        // SHA3
+        SHA3, // 代表 SHA3 分组
         SHA3_224,
         SHA3_256,
         SHA3_384,
         SHA3_512,
+        // MD5
         MD5,
-        BLAKE2S,
-        BLAKE2B,
-        BLAKE3,
+        // BLAKE2S
+        BLAKE2S, // 代表 BLAKE2S 分组
+        BLAKE2S_128,
+        BLAKE2S_160,
+        BLAKE2S_224,
+        BLAKE2S_256,
+        // BLAKE2B
+        BLAKE2B, // 代表 BLAKE2B 分组
+        BLAKE2B_128,
+        BLAKE2B_160,
+        BLAKE2B_224,
+        BLAKE2B_256,
+        BLAKE2B_384,
+        BLAKE2B_512,
+        // BLAKE3
+        BLAKE3, // 代表 BLAKE3 分组
+        BLAKE3_128,
+        BLAKE3_160,
+        BLAKE3_224,
+        BLAKE3_256,
+        BLAKE3_384,
+        BLAKE3_512,
+        // WHIRLPOOL
         WHIRLPOOL,
         Unknown = -1,
     }

@@ -1,33 +1,23 @@
 ﻿using Org.BouncyCastle.Crypto.Digests;
-using System.Security.Cryptography;
 
 namespace HashCalculator
 {
-    internal class BouncyCastleBlake2B : HashAlgorithm
+    internal class BouncyCastleBlake2b : BouncyCastleDigest
     {
-        private readonly Blake2bDigest blake2bDigest;
+        private readonly int bitLength;
 
-        public BouncyCastleBlake2B(int bitLength)
+        public override string AlgoName => $"BLAKE2b-{this.bitLength}";
+
+        public override AlgoType AlgoGroup => AlgoType.BLAKE2B;
+
+        public BouncyCastleBlake2b(int bitLength) : base(new Blake2bDigest(bitLength), bitLength)
         {
-            this.blake2bDigest = new Blake2bDigest(bitLength);
+            this.bitLength = bitLength;
         }
 
-        public override void Initialize()
+        public override IHashAlgoInfo NewInstance()
         {
-            this.blake2bDigest.Reset();
-        }
-
-        protected override void HashCore(byte[] array, int ibStart, int cbSize)
-        {
-            this.blake2bDigest.BlockUpdate(array, ibStart, cbSize);
-        }
-
-        protected override byte[] HashFinal()
-        {
-            int size = this.blake2bDigest.GetDigestSize();
-            byte[] computedBlake3Result = new byte[size];
-            this.blake2bDigest.DoFinal(computedBlake3Result, 0);
-            return computedBlake3Result;
+            return new BouncyCastleBlake2b(this.bitLength);
         }
     }
 }

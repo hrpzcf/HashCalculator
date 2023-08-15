@@ -19,14 +19,14 @@ insert_final_newline = false
 
 # 组织 Using
 dotnet_separate_import_directive_groups = false
-dotnet_sort_system_directives_first = false
+dotnet_sort_system_directives_first = true
 file_header_template = unset
 
 # this. 和 Me. 首选项
-dotnet_style_qualification_for_event = true:suggestion
+dotnet_style_qualification_for_event = true
 dotnet_style_qualification_for_field = true
-dotnet_style_qualification_for_method = true:suggestion
-dotnet_style_qualification_for_property = true:suggestion
+dotnet_style_qualification_for_method = true
+dotnet_style_qualification_for_property = true
 
 # 语言关键字与 bcl 类型首选项
 dotnet_style_predefined_type_for_locals_parameters_members = true
@@ -47,7 +47,7 @@ dotnet_style_collection_initializer = true
 dotnet_style_explicit_tuple_names = true
 dotnet_style_namespace_match_folder = true
 dotnet_style_null_propagation = true
-dotnet_style_object_initializer = false
+dotnet_style_object_initializer = true:silent
 dotnet_style_operator_placement_when_wrapping = beginning_of_line
 dotnet_style_prefer_auto_properties = true
 dotnet_style_prefer_compound_assignment = true
@@ -67,7 +67,7 @@ dotnet_style_readonly_field = true
 dotnet_code_quality_unused_parameters = all
 
 # 禁止显示首选项
-dotnet_remove_unnecessary_suppression_exclusions = 0
+dotnet_remove_unnecessary_suppression_exclusions = none
 
 # 新行首选项
 dotnet_style_allow_multiple_blank_lines_experimental = false
@@ -104,16 +104,19 @@ csharp_style_conditional_delegate_call = true
 # 修饰符首选项
 csharp_prefer_static_local_function = true
 csharp_preferred_modifier_order = public,private,protected,internal,static,extern,new,virtual,abstract,sealed,override,readonly,unsafe,required,volatile,async
+csharp_style_prefer_readonly_struct = true
+csharp_style_prefer_readonly_struct_member = true
 
 # 代码块首选项
 csharp_prefer_braces = true
 csharp_prefer_simple_using_statement = false
 csharp_style_namespace_declarations = file_scoped
 csharp_style_prefer_method_group_conversion = true
+csharp_style_prefer_primary_constructors = true
 csharp_style_prefer_top_level_statements = false
 
 # 表达式级首选项
-csharp_prefer_simple_default_expression = true
+csharp_prefer_simple_default_expression = false:silent
 csharp_style_deconstructed_variable_declaration = true
 csharp_style_implicit_object_creation_when_type_is_apparent = true
 csharp_style_inlined_variable_declaration = true
@@ -132,6 +135,8 @@ csharp_using_directive_placement = outside_namespace
 
 # 新行首选项
 csharp_style_allow_blank_line_after_colon_in_constructor_initializer_experimental = true
+csharp_style_allow_blank_line_after_token_in_arrow_expression_clause_experimental = true
+csharp_style_allow_blank_line_after_token_in_conditional_expression_experimental = true
 csharp_style_allow_blank_lines_between_consecutive_braces_experimental = false
 csharp_style_allow_embedded_statements_on_same_line_experimental = true
 

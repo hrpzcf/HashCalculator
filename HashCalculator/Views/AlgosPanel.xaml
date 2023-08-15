@@ -1,0 +1,97 @@
+﻿<Window
+    x:Class="HashCalculator.AlgosPanel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:HashCalculator"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Width="{Binding Source={x:Static local:Settings.Current}, Path=AlgosPanelWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+    Height="{Binding Source={x:Static local:Settings.Current}, Path=AlgosPanelHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+    d:DataContext="{d:DesignInstance Type=local:AlgosPanelModel}"
+    ShowInTaskbar="False"
+    UseLayoutRounding="True"
+    WindowStartupLocation="CenterOwner"
+    mc:Ignorable="d">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/FixedBorderColorButtonStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid Margin="8">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <GroupBox
+            Grid.Row="0"
+            Grid.ColumnSpan="3"
+            Padding="0,4,0,0"
+            Foreground="#FF006FD6"
+            Header="对每个文件计算以下已勾选算法的结果">
+            <ScrollViewer
+                Padding="4"
+                HorizontalScrollBarVisibility="Auto"
+                VerticalScrollBarVisibility="Disabled">
+                <ItemsControl ItemsSource="{Binding Path=(local:AlgosPanelModel.ProvidedAlgos)}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel HorizontalAlignment="Center" Orientation="Vertical" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox
+                                Margin="16,4"
+                                VerticalContentAlignment="Center"
+                                Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.CheckBoxChangedCmd}"
+                                CommandParameter="{Binding}"
+                                Content="{Binding AlgoName}"
+                                IsChecked="{Binding Selected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </GroupBox>
+        <TextBlock
+            Grid.Row="1"
+            Grid.ColumnSpan="3"
+            Margin="0,4,0,4"
+            Padding="4"
+            FontSize="8pt"
+            Foreground="#96000000"
+            Text="如果没有选择任何算法，则默认使用 SHA-1 算法；如果选择了多个算法，则强烈建议在设置面板中把&lt;同时计算多少个文件的哈希值&gt;设置为 1，并且不建议选择过多算法，否则极易造成程序无响应。"
+            TextWrapping="Wrap" />
+        <Button
+            Grid.Row="2"
+            Grid.Column="1"
+            Margin="0,0,16,4"
+            Padding="20,4,20,4"
+            HorizontalAlignment="Left"
+            Background="{x:Null}"
+            BorderBrush="#FFFFA941"
+            BorderThickness="2"
+            Command="{Binding ClearAllSelectedCmd}"
+            Content="清除"
+            Style="{StaticResource FixedBdColorButtonStyle1}" />
+        <Button
+            Grid.Row="2"
+            Grid.Column="2"
+            Margin="16,0,0,4"
+            Padding="20,4,20,4"
+            HorizontalAlignment="Right"
+            Background="{x:Null}"
+            BorderBrush="#FF0084FF"
+            BorderThickness="2"
+            Click="OnButtonCloseWindowClick"
+            Content="关闭"
+            Style="{StaticResource FixedBdColorButtonStyle1}" />
+    </Grid>
+</Window>

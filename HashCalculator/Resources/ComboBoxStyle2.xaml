@@ -311,6 +311,7 @@
             <ToggleButton
                 x:Name="toggleButton"
                 Grid.ColumnSpan="2"
+                Margin="0,-1"
                 Background="{TemplateBinding Background}"
                 BorderBrush="{TemplateBinding BorderBrush}"
                 BorderThickness="{TemplateBinding BorderThickness}"
@@ -330,7 +331,7 @@
         </Grid>
         <ControlTemplate.Triggers>
             <Trigger Property="IsDropDownOpen" Value="True">
-                <Setter TargetName="dropDownBorder" Property="BorderThickness" Value="1,0,1,1" />
+                <Setter TargetName="dropDownBorder" Property="BorderThickness" Value="1" />
             </Trigger>
             <Trigger Property="HasItems" Value="false">
                 <Setter TargetName="dropDownBorder" Property="Height" Value="95" />

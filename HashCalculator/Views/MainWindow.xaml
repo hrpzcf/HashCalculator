@@ -21,6 +21,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/AlgosButtonStyles.xaml" />
                 <ResourceDictionary Source="/Resources/ComboBoxStyle1.xaml" />
                 <ResourceDictionary Source="/Resources/ComboBoxStyle2.xaml" />
                 <ResourceDictionary Source="/Resources/ImageButtonStyles.xaml" />
@@ -63,20 +64,14 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <Label
+                <Button
                     Grid.Column="0"
-                    Padding="0"
-                    VerticalContentAlignment="Center"
-                    Content="默认哈希算法：" />
-                <ComboBox
-                    Grid.Column="1"
-                    Width="100"
+                    Padding="16,3,16,3"
                     VerticalAlignment="Center"
-                    DisplayMemberPath="Display"
-                    ItemsSource="{Binding Source={x:Static local:Settings.Current}, Path=AvailableAlgos}"
-                    SelectedValue="{Binding Source={x:Static local:Settings.Current}, Path=SelectedAlgo}"
-                    SelectedValuePath="ItemValue"
-                    Style="{StaticResource ComboBoxStyle1}"
+                    Background="{x:Null}"
+                    Command="{Binding OpenSelectAlgoWndCmd}"
+                    Content="默认哈希算法"
+                    Style="{DynamicResource AlgosButtonStyle1}"
                     ToolTip="此选项影响新加入的文件、[新增哈希计算] 按钮、[计算未完成项] 按钮、[全部重新计算] 按钮的结果" />
                 <Label
                     Grid.Column="2"
@@ -85,6 +80,7 @@
                     VerticalContentAlignment="Center"
                     Content="默认输出方式：" />
                 <ComboBox
+                    x:Name="outputTypeComboBox"
                     Grid.Column="3"
                     Width="110"
                     VerticalAlignment="Center"
@@ -322,7 +318,7 @@
                 <DataGridTemplateColumn
                     CanUserSort="True"
                     Header="算法"
-                    SortMemberPath="HashAlgoType">
+                    SortMemberPath="CurrentInOutModel.AlgoType">
                     <DataGridTemplateColumn.HeaderStyle>
                         <Style TargetType="{x:Type DataGridColumnHeader}">
                             <Setter Property="HorizontalContentAlignment" Value="Center" />
@@ -330,23 +326,17 @@
                     </DataGridTemplateColumn.HeaderStyle>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Label
+                            <ComboBox
                                 Margin="2"
-                                Padding="4,2,4,2"
-                                HorizontalContentAlignment="Center"
-                                VerticalContentAlignment="Center"
-                                Background="{Binding HashAlgoType, Converter={StaticResource AlgoTypeBgCvt}}"
-                                BorderBrush="#FF0091FF"
-                                BorderThickness="1"
-                                Content="{Binding HashAlgoType, Converter={StaticResource AlgoTypeNameCvt}}" />
+                                VerticalAlignment="Center"
+                                DisplayMemberPath="AlgoName"
+                                ItemsSource="{Binding AlgoInOutModels}"
+                                SelectedItem="{Binding CurrentInOutModel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                Style="{StaticResource ComboBoxStyle2}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn
-                    MinWidth="210"
-                    CanUserSort="True"
-                    Header="哈希值"
-                    SortMemberPath="HashString">
+                <DataGridTemplateColumn MinWidth="210" Header="哈希值">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid VerticalAlignment="Center">
@@ -361,9 +351,34 @@
                                     Grid.Column="0"
                                     Margin="4,0,4,0"
                                     VerticalAlignment="Center"
-                                    Text="{Binding HashString}"
-                                    ToolTip="{Binding ModelDetails}"
-                                    Visibility="{Binding State, Converter={StaticResource FinishedVisiblityCvt}}" />
+                                    TextTrimming="CharacterEllipsis"
+                                    ToolTip="{Binding ModelDetails}">
+                                    <TextBlock.Visibility>
+                                        <MultiBinding Converter="{StaticResource SubCtrlVisiblitySucceededCvt}">
+                                            <Binding Path="State" />
+                                            <Binding Path="Result" />
+                                        </MultiBinding>
+                                    </TextBlock.Visibility>
+                                    <TextBlock.Text>
+                                        <MultiBinding Converter="{StaticResource BytesToStrByOutputTypeCvt}">
+                                            <Binding Path="CurrentInOutModel.HashResult" />
+                                            <Binding Path="SelectedOutputType" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Margin="4,0,4,0"
+                                    VerticalAlignment="Center"
+                                    Text="{Binding TaskMessage}"
+                                    TextTrimming="CharacterEllipsis">
+                                    <TextBlock.Visibility>
+                                        <MultiBinding Converter="{StaticResource TaskMessageCtrlVisiblityCvt}">
+                                            <Binding Path="State" />
+                                            <Binding Path="Result" />
+                                        </MultiBinding>
+                                    </TextBlock.Visibility>
+                                </TextBlock>
                                 <!--  正在计算状态  -->
                                 <!--  ProgressBar的Value绑定需是OneWay，因为默认TwoWay和private set的Progress无法成功绑定  -->
                                 <ProgressBar
@@ -373,7 +388,7 @@
                                     Margin="4,0,4,0"
                                     HorizontalAlignment="Left"
                                     Foreground="#8000B4E7"
-                                    Maximum="{Binding ProgressTotal}"
+                                    Maximum="{Binding MaxProgress}"
                                     Visibility="{Binding State, Converter={StaticResource SubBtnVisiblityRunningCvt}}"
                                     Value="{Binding Progress, Mode=OneWay}" />
                                 <Button
@@ -410,9 +425,28 @@
                                     Padding="4"
                                     Command="{Binding CopyOneModelHashValueCmd}"
                                     Style="{StaticResource ImageButtonStyle1}"
-                                    ToolTip="复制..."
-                                    Visibility="{Binding Result, Converter={StaticResource SubBtnVisiblitySucceededCvt}}">
+                                    ToolTip="复制...">
+                                    <Button.Visibility>
+                                        <MultiBinding Converter="{StaticResource SubCtrlVisiblitySucceededCvt}">
+                                            <Binding Path="State" />
+                                            <Binding Path="Result" />
+                                        </MultiBinding>
+                                    </Button.Visibility>
                                     <Image Source="/Images/copy.png" />
+                                </Button>
+                                <Button
+                                    Grid.Column="1"
+                                    Padding="4"
+                                    Command="{Binding ShowHashDetailsWindowCmd}"
+                                    Style="{StaticResource ImageButtonStyle1}"
+                                    ToolTip="详情...">
+                                    <Button.Visibility>
+                                        <MultiBinding Converter="{StaticResource SubCtrlVisiblitySucceededCvt}">
+                                            <Binding Path="State" />
+                                            <Binding Path="Result" />
+                                        </MultiBinding>
+                                    </Button.Visibility>
+                                    <Image Source="/Images/details_16.png" />
                                 </Button>
                                 <!--  未成功  -->
                                 <Button
@@ -420,8 +454,13 @@
                                     Padding="4"
                                     Command="{Binding RestartModelSelfCmd}"
                                     Style="{StaticResource ImageButtonStyle1}"
-                                    ToolTip="开始..."
-                                    Visibility="{Binding Result, Converter={StaticResource SubBtnVisiblityUnsuccessfulCvt}}">
+                                    ToolTip="开始...">
+                                    <Button.Visibility>
+                                        <MultiBinding Converter="{StaticResource SubCtrlVisiblityNotSucceedCvt}">
+                                            <Binding Path="State" />
+                                            <Binding Path="Result" />
+                                        </MultiBinding>
+                                    </Button.Visibility>
                                     <Image Source="/Images/start.png" />
                                 </Button>
                             </Grid>
@@ -454,16 +493,16 @@
                 <DataGridTextColumn
                     MinWidth="80"
                     Binding="{Binding DurationofTask, StringFormat=f2}"
-                    Header="运行时长 (秒)"
+                    Header="任务耗时 (秒)"
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoDurationColumn, Converter={StaticResource NoColumnCvt}, Mode=OneWay}" />
                 <DataGridTemplateColumn
                     CanUserSort="True"
                     Header="导出"
-                    SortMemberPath="Export"
+                    SortMemberPath="CurrentInOutModel.Export"
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoExportColumn, Converter={StaticResource NoColumnCvt}, Mode=OneWay}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <CheckBox HorizontalAlignment="Center" IsChecked="{Binding Export, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <CheckBox HorizontalAlignment="Center" IsChecked="{Binding CurrentInOutModel.Export, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -471,7 +510,7 @@
                     MinWidth="60"
                     CanUserSort="True"
                     Header="校验结果"
-                    SortMemberPath="CmpResult">
+                    SortMemberPath="CurrentInOutModel.HashCmpResult">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Label
@@ -479,18 +518,18 @@
                                 Padding="4,2,4,2"
                                 HorizontalContentAlignment="Center"
                                 VerticalContentAlignment="Center"
-                                Background="{Binding CmpResult, Converter={StaticResource CmpResBgCvt}}"
-                                BorderBrush="{Binding CmpResult, Converter={StaticResource CmpResBorderBrushCvt}}"
+                                Background="{Binding CurrentInOutModel.HashCmpResult, Converter={StaticResource CmpResBackgroundCvt}}"
+                                BorderBrush="{Binding CurrentInOutModel.HashCmpResult, Converter={StaticResource CmpResBorderBrushCvt}}"
                                 BorderThickness="1"
-                                Content="{Binding CmpResult, Converter={StaticResource CmpResTextCvt}}"
+                                Content="{Binding CurrentInOutModel.HashCmpResult, Converter={StaticResource CmpResTextCvt}}"
                                 ToolTip="{Binding DataContext.Report, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}, AncestorLevel=1}}"
                                 ToolTipService.BetweenShowDelay="0"
                                 ToolTipService.InitialShowDelay="0"
                                 ToolTipService.ShowDuration="60000">
                                 <Label.Foreground>
-                                    <MultiBinding Converter="{StaticResource CmpResFgCvt}">
+                                    <MultiBinding Converter="{StaticResource CmpResForegroundCvt}">
                                         <Binding Path="ShowResultText" Source="{x:Static local:Settings.Current}" />
-                                        <Binding Path="CmpResult" />
+                                        <Binding Path="CurrentInOutModel.HashCmpResult" />
                                     </MultiBinding>
                                 </Label.Foreground>
                             </Label>
@@ -568,7 +607,7 @@
                 CommandParameter="{Binding ElementName=uiTextBox_HashValueOrFilePath, Path=Text}"
                 Content="校验"
                 IsEnabled="{Binding State, Converter={StaticResource ButtonEnabledCvt}}"
-                ToolTip="{Binding StartVerifyToolTip}" />
+                ToolTip="当面板为空时，如果校验依据选择的是通用格式的哈希值文本文件，则：&#10;点击 [校验] 后程序会自动解析文件并在相同目录下寻找要计算哈希值的文件完成计算并显示校验结果。&#10;通用格式的哈希值文件请参考程序 [导出结果] 功能导出的文件的内容排布格式。" />
         </Grid>
     </Grid>
 </Window>

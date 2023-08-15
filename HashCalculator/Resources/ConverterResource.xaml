@@ -2,17 +2,16 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:HashCalculator">
-    <local:AlgoTypeBgCvt x:Key="AlgoTypeBgCvt" />
-    <local:AlgoTypeNameCvt x:Key="AlgoTypeNameCvt" />
-    <local:CmpResFgCvt x:Key="CmpResFgCvt" />
-    <local:CmpResBgCvt x:Key="CmpResBgCvt" />
+    <!--<local:AlgoTypeBackgroundCvt x:Key="AlgoTypeBackgroundCvt" />-->
+    <local:CmpResForegroundCvt x:Key="CmpResForegroundCvt" />
+    <local:CmpResBackgroundCvt x:Key="CmpResBackgroundCvt" />
     <local:CmpResTextCvt x:Key="CmpResTextCvt" />
     <local:CmpResBorderBrushCvt x:Key="CmpResBorderBrushCvt" />
     <local:SubBtnVisiblityRunningCvt x:Key="SubBtnVisiblityRunningCvt" />
-    <local:FinishedVisiblityCvt x:Key="FinishedVisiblityCvt" />
     <local:SubBtnVisiblityWaitingCvt x:Key="SubBtnVisiblityWaitingCvt" />
-    <local:SubBtnVisiblitySucceededCvt x:Key="SubBtnVisiblitySucceededCvt" />
-    <local:SubBtnVisiblityUnsuccessfulCvt x:Key="SubBtnVisiblityUnsuccessfulCvt" />
+    <local:SubCtrlVisiblitySucceededCvt x:Key="SubCtrlVisiblitySucceededCvt" />
+    <local:TaskMessageCtrlVisiblityCvt x:Key="TaskMessageCtrlVisiblityCvt" />
+    <local:SubCtrlVisiblityNotSucceedCvt x:Key="SubCtrlVisiblityNotSucceedCvt" />
     <local:ButtonEnabledCvt x:Key="ButtonEnabledCvt" />
     <local:NoColumnCvt x:Key="NoColumnCvt" />
     <local:SubBtnPauseImageSrcCvt x:Key="SubBtnPauseImageSrcCvt" />
@@ -24,9 +23,10 @@
     <local:BtnTopmostEnabledImgCvt x:Key="BtnTopmostEnabledImgCvt" />
     <local:MenuCopyHashEnabledCvt x:Key="MenuCopyHashEnabledCvt" />
     <local:LoadingImageVisiblityCvt x:Key="LoadingImageVisiblityCvt" />
-    <local:HashBytesOutputTypeCvt x:Key="HashBytesOutputTypeCvt" />
+    <local:BytesToStrByOutputTypeCvt x:Key="BytesToStrByOutputTypeCvt" />
     <local:CopyModelsHashMenuEnabledCvt x:Key="CopyModelsHashMenuEnabledCvt" />
     <local:HashOrPathPlaceHolderVisibCvt x:Key="HashOrPathPlaceHolderVisibCvt" />
     <local:RadioExportAsTxtFileCvt x:Key="RadioExportAsTxtFileCvt" />
     <local:RadioExportAsHcbFileCvt x:Key="RadioExportAsHcbFileCvt" />
+    <local:HashDetailsFileSizeExCvt x:Key="HashDetailsFileSizeExCvt" />
 </ResourceDictionary>
