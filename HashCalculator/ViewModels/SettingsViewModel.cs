@@ -18,8 +18,8 @@ namespace HashCalculator
         private WindowState mainWindowState = WindowState.Normal;
         private double settingsWndWidth = 600.0;
         private double settingsWndHeight = 500.0;
-        private double algosPanelWidth = 550.0;
-        private double algosPanelHeight = 320.0;
+        private double algosPanelWidth = 500.0;
+        private double algosPanelHeight = 380.0;
         private double hashDetailsWidth = 600.0;
         private double hashDetailsHeight = 700.0;
         private TaskNum selectedTaskNumberLimit = TaskNum.One;
@@ -31,6 +31,7 @@ namespace HashCalculator
         private bool noFileSizeColumn = false;
         private bool runInMultiInstanceMode = false;
         private bool notSettingShellExtension = true;
+        private bool preferAlgosInBasis = true;
         private RelayCommand installShellExtCmd;
         private RelayCommand unInstallShellExtCmd;
 
@@ -354,6 +355,18 @@ namespace HashCalculator
             set
             {
                 this.lastUsedPath = value;
+            }
+        }
+
+        public bool PreferAlgosInBasis
+        {
+            get
+            {
+                return this.preferAlgosInBasis;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.preferAlgosInBasis, value);
             }
         }
 

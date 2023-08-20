@@ -63,7 +63,12 @@ namespace HashCalculator
             this.Serial = serial;
             this.FileInfo = new FileInfo(arg.FilePath);
             this.FileName = this.FileInfo.Name;
-            if (arg.PresetAlgo != AlgoType.Unknown)
+            if (arg.HashBasis != null && Settings.Current.PreferAlgosInBasis)
+            {
+                this.AlgoInOutModels =
+                    AlgosPanelModel.GetAlgosFromBasis(this.FileName, arg.HashBasis);
+            }
+            else if (arg.PresetAlgo != AlgoType.Unknown)
             {
                 this.AlgoInOutModels = AlgosPanelModel.GetKnownAlgos(arg.PresetAlgo);
             }

@@ -44,6 +44,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <StackPanel
@@ -87,37 +88,43 @@
                     Grid.Row="3"
                     Margin="0,0,0,4"
                     Padding="4,0,0,0"
+                    Content="直接使用校验依据进行校验时首选依据算法而非默认算法"
+                    IsChecked="{Binding PreferAlgosInBasis, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <CheckBox
+                    Grid.Row="4"
+                    Margin="0,0,0,4"
+                    Padding="4,0,0,0"
                     Content="在校验结果的色块中显示文字描述"
                     IsChecked="{Binding ShowResultText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <CheckBox
-                    Grid.Row="4"
+                    Grid.Row="5"
                     Margin="0,0,0,4"
                     Padding="4,0,0,0"
                     Content="右键选择删除文件时永久删除而不是移动到回收站"
                     IsChecked="{Binding PermanentlyDeleteFiles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <CheckBox
-                    Grid.Row="5"
+                    Grid.Row="6"
                     Margin="0,0,0,4"
                     Padding="4,0,0,0"
                     Content="不显示“导出”列"
                     IsChecked="{Binding NoExportColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <CheckBox
-                    Grid.Row="6"
+                    Grid.Row="7"
                     Margin="0,0,0,4"
                     Padding="4,0,0,0"
                     Content="不显示“任务耗时”列"
                     IsChecked="{Binding NoDurationColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <CheckBox
-                    Grid.Row="7"
+                    Grid.Row="8"
                     Margin="0,0,0,4"
                     Padding="4,0,0,0"
                     Content="不显示“文件大小”列"
                     IsChecked="{Binding NoFileSizeColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <CheckBox
-                    Grid.Row="8"
+                    Grid.Row="9"
                     Margin="0,0,0,4"
                     Padding="4,0,0,0"
-                    Content="允许打开多个窗口 (包括从系统右键菜单和关联文件启动)"
+                    Content="允许启动多个主窗口，包括被系统右键菜单或关联文件启动"
                     IsChecked="{Binding RunInMultiInstMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </Grid>
         </TabItem>

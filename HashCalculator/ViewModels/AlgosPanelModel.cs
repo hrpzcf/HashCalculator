@@ -86,6 +86,40 @@ namespace HashCalculator
             return default(AlgoInOutModel[]);
         }
 
+        public static AlgoInOutModel[] GetAlgosFromBasis(string fileName, HashBasis basis)
+        {
+            if (basis != null)
+            {
+                List<AlgoInOutModel> algoInOutModels = new List<AlgoInOutModel>();
+                string matchedFileName = null;
+                foreach (string nameInBasis in basis.FileHashDict.Keys)
+                {
+                    if (nameInBasis.Equals(fileName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        matchedFileName = nameInBasis;
+                        break;
+                    }
+                }
+                if (matchedFileName != null)
+                {
+                    foreach (string name in basis
+                        .FileHashDict[matchedFileName].GetExistsAlgoNames())
+                    {
+                        foreach (AlgoInOutModel model in ProvidedAlgos)
+                        {
+                            if (model.AlgoName.Equals(name, StringComparison.OrdinalIgnoreCase))
+                            {
+                                algoInOutModels.Add(model.NewAlgoInOutModel());
+                                break;
+                            }
+                        }
+                    }
+                }
+                return algoInOutModels.ToArray();
+            }
+            return default(AlgoInOutModel[]);
+        }
+
         private void CheckBoxChangedAction(object param)
         {
             if (param is AlgoInOutModel model)
