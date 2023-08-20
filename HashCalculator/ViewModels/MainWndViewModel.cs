@@ -1,6 +1,4 @@
-﻿using Microsoft.Win32;
-using Microsoft.WindowsAPICodePack.Dialogs;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,6 +13,8 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Resources;
 using System.Windows.Threading;
+using Microsoft.Win32;
+using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace HashCalculator
 {
@@ -499,6 +499,10 @@ namespace HashCalculator
                 {
                     bool isMatched = false;
                     HashViewModel model = (HashViewModel)selectedModels[i];
+                    if (model.ModelArg.Deprecated)
+                    {
+                        continue;
+                    }
                     foreach (string key in groupByDir.Keys)
                     {
                         if (model.FileInfo.ParentSameWith(key))
@@ -918,15 +922,18 @@ namespace HashCalculator
                 MessageBox.Show(this.Parent, "没有输入哈希值校验依据。", "提示");
                 return;
             }
-            string basisUpdated;
+            string updateFailedMessage;
+            // pathOrHash 不是一个文件
             if (!File.Exists(pathOrHash))
             {
-                basisUpdated = this.MainBasis.UpdateWithHash(pathOrHash);
+                updateFailedMessage = this.MainBasis.UpdateWithHash(pathOrHash);
             }
+            // pathOrHash 是一个文件，但哈希结果列表不是空
             else if (HashViewModels.Any())
             {
-                basisUpdated = this.MainBasis.UpdateWithFile(pathOrHash);
+                updateFailedMessage = this.MainBasis.UpdateWithFile(pathOrHash);
             }
+            // pathOrHash 是一个文件，且哈希结果列表也是空
             else
             {
                 HashBasis newBasis = new HashBasis(pathOrHash);
@@ -942,7 +949,7 @@ namespace HashCalculator
                 }
                 return;
             }
-            if (basisUpdated == null)
+            if (updateFailedMessage == null)
             {
                 foreach (HashViewModel hm in HashViewModels)
                 {
@@ -957,9 +964,19 @@ namespace HashCalculator
                         }
                         else
                         {
-                            foreach (AlgoInOutModel model in hm.AlgoInOutModels)
+                            if (!(this.MainBasis.GetFileAlgosHashs(hm.FileName) is FileAlgosHashs algosHashs))
                             {
-                                model.HashCmpResult = this.MainBasis.Verify(hm.FileName, model.HashResult);
+                                foreach (AlgoInOutModel model in hm.AlgoInOutModels)
+                                {
+                                    model.HashCmpResult = CmpRes.Unrelated;
+                                }
+                            }
+                            else
+                            {
+                                foreach (AlgoInOutModel model in hm.AlgoInOutModels)
+                                {
+                                    model.HashCmpResult = algosHashs.CompareHash(model.AlgoName, model.HashResult);
+                                }
                             }
                         }
                     }
@@ -968,7 +985,7 @@ namespace HashCalculator
             }
             else
             {
-                MessageBox.Show(MainWindow.This, basisUpdated, "错误", MessageBoxButton.OK,
+                MessageBox.Show(MainWindow.This, updateFailedMessage, "错误", MessageBoxButton.OK,
                     MessageBoxImage.Error);
             }
         }

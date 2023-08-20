@@ -5,50 +5,75 @@ using System.Linq;
 
 namespace HashCalculator
 {
-    internal class HashBasisDictValue
+    internal class FileAlgosHashs
     {
-        public HashBasisDictValue() { }
+        public bool FileIndependent { get; set; }
 
-        public HashBasisDictValue(byte[] initHash)
+        public bool NameInBasisExist { get; set; }
+
+        public FileAlgosHashs() { }
+
+        public FileAlgosHashs(byte[] initHash)
         {
-            this.HashList.Add(initHash);
+            this.AddAlgoHash(string.Empty, initHash);
         }
 
-        public bool HasBeenChecked { get; set; }
-
-        public List<byte[]> HashList { get; } = new List<byte[]>();
-
-        public bool ContainsHash(byte[] hash)
+        public FileAlgosHashs(string algoName, byte[] initHash)
         {
-            for (int i = 0; i < this.HashList.Count; ++i)
-            {
-                if (this.HashList[i].SequenceEqual(hash))
-                {
-                    return true;
-                }
-            }
-            return false;
+            this.AddAlgoHash(algoName, initHash);
         }
 
-        public CmpRes CompareHash(byte[] hash)
+        private Dictionary<string, List<byte[]>> AlgosHashs { get; } =
+            new Dictionary<string, List<byte[]>>();
+
+        public bool AddAlgoHash(string algoName, byte[] hashBytes)
         {
-            if (!this.HashList.Any())
+            if (algoName == null || hashBytes == null)
             {
-                return CmpRes.Uncertain;
+                return false;
             }
-            else if (this.HashList.Count == 1)
+            if (this.AlgosHashs.TryGetValue(algoName, out List<byte[]> hashValues))
             {
-                return this.ContainsHash(hash) ? CmpRes.Matched : CmpRes.Mismatch;
-            }
-            byte[] first = this.HashList.First();
-            if (!this.HashList.Skip(1).All(i => i.SequenceEqual(first)))
-            {
-                return CmpRes.Uncertain;
+                hashValues.Add(hashBytes);
             }
             else
             {
-                return first.SequenceEqual(hash) ? CmpRes.Matched : CmpRes.Mismatch;
+                this.AlgosHashs.Add(algoName, new List<byte[]>()
+                {
+                    hashBytes
+                });
             }
+            return true;
+        }
+
+        public CmpRes CompareHash(string algoName, byte[] hashBytes)
+        {
+            if (algoName == null || hashBytes == null || !this.AlgosHashs.Any())
+            {
+                return CmpRes.Unrelated;
+            }
+            if (!this.AlgosHashs.TryGetValue(algoName, out List<byte[]> hashValues))
+            {
+                this.AlgosHashs.TryGetValue(string.Empty, out hashValues);
+            }
+            if (hashValues != null)
+            {
+                if (!hashValues.Any())
+                {
+                    return CmpRes.Uncertain;
+                }
+                byte[] first = hashValues[0];
+                if (hashValues.Count > 1)
+                {
+                    if (!hashValues.Skip(1).All(i => i.SequenceEqual(first)))
+                    {
+                        return CmpRes.Uncertain;
+                    }
+                }
+                return first.SequenceEqual(hashBytes) ? 
+                    CmpRes.Matched : this.FileIndependent ? CmpRes.Unrelated : CmpRes.Mismatch;
+            }
+            return CmpRes.Unrelated;
         }
     }
 
@@ -61,23 +86,39 @@ namespace HashCalculator
 
         public HashBasis() { }
 
-        private bool AddHashAndName(string hashString, string name)
+        public bool IsNameInBasis(string fileName)
         {
-            if (hashString is null || name is null)
+            foreach (string nameInBasis in this.FileHashDict.Keys)
+            {
+                if (nameInBasis.Equals(fileName, StringComparison.OrdinalIgnoreCase))
+                {
+                    this.FileHashDict[nameInBasis].NameInBasisExist = true;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool AddHashAndName(string algoName, string hashString, string fileName)
+        {
+            if (algoName is null || hashString is null || fileName is null)
             {
                 return false;
             }
             if (CommonUtils.HashFromAnyString(hashString) is byte[] hash)
             {
-                // Windows 文件名不区分大小写
-                name = name.Trim(new char[] { '*', ' ', '\n' }).ToLower();
-                if (this.FileHashDict.ContainsKey(name))
+                fileName = fileName.Trim(new char[] { '*', ' ', '\n' });
+                if (this.FileHashDict.ContainsKey(fileName))
                 {
-                    this.FileHashDict[name].HashList.Add(hash);
+                    this.FileHashDict[fileName].AddAlgoHash(algoName, hash);
                 }
                 else
                 {
-                    this.FileHashDict[name] = new HashBasisDictValue(hash);
+                    this.FileHashDict[fileName] = new FileAlgosHashs(algoName, hash);
+                }
+                if (fileName == string.Empty)
+                {
+                    this.FileHashDict[fileName].FileIndependent = true;
                 }
                 return true;
             }
@@ -86,7 +127,7 @@ namespace HashCalculator
 
         private bool AddOnlyHashString(string hashString)
         {
-            return this.AddHashAndName(hashString, string.Empty);
+            return this.AddHashAndName(string.Empty, hashString, string.Empty);
         }
 
         public string UpdateWithFile(string filePath)
@@ -95,28 +136,30 @@ namespace HashCalculator
             this.ReasonForFailure = null;
             try
             {
-                using (FileStream fileStream = File.OpenRead(filePath))
+                using (FileStream fs = File.OpenRead(filePath))
                 {
-                    using (StreamReader reader = new StreamReader(fileStream))
+                    using (StreamReader reader = new StreamReader(fs))
                     {
-                        string hashLine;
+                        string line;
                         int readedLineCount = 0;
-                        while ((hashLine = reader.ReadLine()) != null)
+                        while ((line = reader.ReadLine()) != null)
                         {
-                            string[] items = hashLine.Split(
+                            string[] items = line.Split(
                                 new char[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
+                            // 对应格式：hash-string *file-fileName
                             if (items.Length == 2)
                             {
-                                // 对应格式：hash-string *file-name
-                                if (this.AddHashAndName(items[0], items[1]))
+                                if (this.AddHashAndName(string.Empty, items[0], items[1]))
                                 {
                                     ++readedLineCount;
                                 }
                             }
+                            // 对应格式：#hash-fileName *hash-string *file-fileName
                             else if (items.Length == 3)
                             {
-                                // 对应格式：#hash-name *hash-string *file-name
-                                if (this.AddHashAndName(items[1].Trim(new char[] { ' ', '*' }), items[2]))
+                                if (this.AddHashAndName(
+                                    items[0].Trim(new char[] { '#', ' ' }),
+                                    items[1].Trim(new char[] { ' ', '*' }), items[2]))
                                 {
                                     ++readedLineCount;
                                 }
@@ -148,74 +191,45 @@ namespace HashCalculator
             return this.ReasonForFailure;
         }
 
-        public bool IsExpectedFileHash(string name, out byte[] outputHash)
+        public FileAlgosHashs GetFileAlgosHashs(string fileName)
         {
-            string matchedName = null;
-            foreach (string nameInMap in this.FileHashDict.Keys)
+            if (fileName == null || !this.FileHashDict.Any())
             {
-                if (nameInMap.Equals(name, StringComparison.OrdinalIgnoreCase))
+                return default(FileAlgosHashs);
+            }
+            if (this.FileHashDict.Count == 1 &&
+                this.FileHashDict.TryGetValue(string.Empty, out var algosHashs))
+            {
+                return algosHashs;
+            }
+            foreach (string dictFileName in this.FileHashDict.Keys)
+            {
+                // Windows 文件名不区分大小写，查找时忽略大小写
+                if (dictFileName.Equals(fileName, StringComparison.OrdinalIgnoreCase))
                 {
-                    matchedName = nameInMap;
-                    break;
+                    return this.FileHashDict[dictFileName];
                 }
             }
-            if (matchedName == null)
-            {
-                outputHash = default;
-                return false;
-            }
-            HashBasisDictValue dictValue = this.FileHashDict[matchedName];
-            dictValue.HasBeenChecked = true;
-            if (!dictValue.HashList.Any())
-            {
-                outputHash = new byte[0];
-                return true;
-            }
-            if (dictValue.HashList.Count == 1)
-            {
-                outputHash = dictValue.HashList[0];
-                return true;
-            }
-            byte[] first = dictValue.HashList.First();
-            if (!dictValue.HashList.Skip(1).All(i => i.SequenceEqual(first)))
-            {
-                outputHash = new byte[0];
-                return true;
-            }
-            outputHash = first;
-            return true;
+            return default(FileAlgosHashs);
         }
 
-        public CmpRes Verify(string name, byte[] hash)
+        public CmpRes Verify(string fileName, string algoName, byte[] hash)
         {
-            if (hash is null || name is null || !this.FileHashDict.Any())
+            if (fileName == null || algoName == null || hash == null
+                || !this.FileHashDict.Any())
             {
                 return CmpRes.Unrelated;
             }
-            // Windows 文件名不区分大小写
-            name = name.Trim(new char[] { '*', ' ', '\n' }).ToLower();
-            if (this.FileHashDict.Keys.Count == 1 &&
-                this.FileHashDict.Keys.Contains(string.Empty))
+            if (this.GetFileAlgosHashs(fileName) is FileAlgosHashs algosHashs)
             {
-                if (this.FileHashDict[string.Empty].ContainsHash(hash))
-                {
-                    return CmpRes.Matched;
-                }
-                else
-                {
-                    return CmpRes.Unrelated;
-                }
+                return algosHashs.CompareHash(algoName, hash);
             }
-            if (!this.FileHashDict.TryGetValue(name, out HashBasisDictValue basisValue))
-            {
-                return CmpRes.Unrelated;
-            }
-            return basisValue.CompareHash(hash);
+            return CmpRes.Unrelated;
         }
 
         public string ReasonForFailure { get; private set; }
 
-        public Dictionary<string, HashBasisDictValue> FileHashDict { get; }
-            = new Dictionary<string, HashBasisDictValue>();
+        public Dictionary<string, FileAlgosHashs> FileHashDict { get; } =
+            new Dictionary<string, FileAlgosHashs>();
     }
 }

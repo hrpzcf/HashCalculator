@@ -5,36 +5,31 @@
     /// </summary>
     internal class ModelArg
     {
-        public readonly string filepath;
-        public readonly byte[] expected;
-        public readonly bool deprecated;
+        public string FilePath { get; }
+
+        public bool Deprecated { get; }
 
         public AlgoType PresetAlgo { get; set; }
 
-        /// <summary>
-        /// 约定：hash 长度 0 表示无法确定是否匹配
-        /// </summary>
-        public ModelArg(byte[] hash, string path, AlgoType algo)
-        {
-            this.filepath = path;
-            this.expected = hash;
-            this.deprecated = false;
-            this.PresetAlgo = algo;
-        }
+        public HashBasis HashBasis { get; set; }
 
         public ModelArg(string path, AlgoType algo)
         {
-            this.filepath = path;
-            this.expected = null;
-            this.deprecated = false;
+            this.FilePath = path;
+            this.PresetAlgo = algo;
+        }
+
+        public ModelArg(HashBasis basis, string path, AlgoType algo)
+        {
+            this.FilePath = path;
+            this.HashBasis = basis;
             this.PresetAlgo = algo;
         }
 
         public ModelArg(string path, bool deprecated, AlgoType algo)
         {
-            this.filepath = path;
-            this.expected = null;
-            this.deprecated = deprecated;
+            this.FilePath = path;
+            this.Deprecated = deprecated;
             this.PresetAlgo = algo;
         }
     }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 
@@ -46,6 +47,19 @@ namespace HashCalculator
                 // Whirlpool
                 new AlgoInOutModel(new BouncyCastleWhirlpool()),
             };
+
+        public static AlgoInOutModel[] FromAlgoName(string name)
+        {
+            return ProvidedAlgos.Where(
+                i => i.AlgoName.Equals(name, StringComparison.OrdinalIgnoreCase))
+                .Select(i => i.NewAlgoInOutModel()).ToArray();
+        }
+
+        public static AlgoInOutModel[] FromAlgoType(AlgoType algoType)
+        {
+            return ProvidedAlgos.Where(i => i.AlgoType == algoType).Select(
+                i => i.NewAlgoInOutModel()).ToArray();
+        }
 
         public static AlgoInOutModel[] GetSelectedAlgos()
         {

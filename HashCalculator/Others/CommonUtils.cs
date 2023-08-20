@@ -99,47 +99,6 @@ namespace HashCalculator
             return res2 == 0;
         }
 
-        //public static bool IsSameFile(string path1, string path2)
-        //{
-        //    if (path1 is null || path2 is null)
-        //    {
-        //        return false;
-        //    }
-        //    using (SafeFileHandle handle1 = NativeFunctions.CreateFileW(
-        //        path1, FileAccess.Read,
-        //        FileShare.ReadWrite, IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero))
-        //    {
-        //        if (handle1.IsInvalid)
-        //        {
-        //            return false;
-        //        }
-        //        using (SafeFileHandle handle2 = NativeFunctions.CreateFileW(
-        //            path2, FileAccess.Read,
-        //            FileShare.ReadWrite, IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero))
-        //        {
-        //            if (handle2.IsInvalid)
-        //            {
-        //                return false;
-        //            }
-        //            bool result1 = NativeFunctions.GetFileInformationByHandle(
-        //                handle1, out BY_HANDLE_FILE_INFORMATION information1);
-        //            if (!result1)
-        //            {
-        //                return result1;
-        //            }
-        //            bool result2 = NativeFunctions.GetFileInformationByHandle(
-        //                handle2, out BY_HANDLE_FILE_INFORMATION information2);
-        //            if (!result2)
-        //            {
-        //                return result2;
-        //            }
-        //            return information1.VolumeSerialNumber == information2.VolumeSerialNumber
-        //                && information1.FileIndexLow == information2.FileIndexLow
-        //                && information1.FileIndexHigh == information2.FileIndexHigh;
-        //        }
-        //    }
-        //}
-
         public static string ToBase64String(byte[] bytesPassedIn)
         {
             if (bytesPassedIn is null)
