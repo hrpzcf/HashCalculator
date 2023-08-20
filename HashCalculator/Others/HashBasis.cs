@@ -70,10 +70,15 @@ namespace HashCalculator
                         return CmpRes.Uncertain;
                     }
                 }
-                return first.SequenceEqual(hashBytes) ? 
+                return first.SequenceEqual(hashBytes) ?
                     CmpRes.Matched : this.FileIndependent ? CmpRes.Unrelated : CmpRes.Mismatch;
             }
             return CmpRes.Unrelated;
+        }
+
+        public string[] GetExistsAlgoNames()
+        {
+            return this.AlgosHashs.Keys.Where(i => i != string.Empty).ToArray();
         }
     }
 
@@ -107,7 +112,9 @@ namespace HashCalculator
             }
             if (CommonUtils.HashFromAnyString(hashString) is byte[] hash)
             {
-                fileName = fileName.Trim(new char[] { '*', ' ', '\n' });
+                // 虽然查询时会忽略文件名的大小写，但也要避免储存仅大小写不同的键
+                // 因为查询时有可能每次都随机匹配到它们其中的一个(取决于 Keys 顺序是否固定)
+                fileName = fileName.Trim(new char[] { '*', ' ', '\n' }).ToLower();
                 if (this.FileHashDict.ContainsKey(fileName))
                 {
                     this.FileHashDict[fileName].AddAlgoHash(algoName, hash);
@@ -187,7 +194,7 @@ namespace HashCalculator
         {
             this.FileHashDict.Clear();
             this.ReasonForFailure = this.AddOnlyHashString(hash.Trim()) ?
-                null : "收集校验依据失败，可能哈希值格式不正确";
+                null : "收集校验依据失败，可能是哈希值格式不正确或不存在该校验依据文件";
             return this.ReasonForFailure;
         }
 
@@ -213,16 +220,16 @@ namespace HashCalculator
             return default(FileAlgosHashs);
         }
 
-        public CmpRes Verify(string fileName, string algoName, byte[] hash)
+        public CmpRes VerifyHash(string fileName, string algoName, byte[] hash)
         {
             if (fileName == null || algoName == null || hash == null
                 || !this.FileHashDict.Any())
             {
                 return CmpRes.Unrelated;
             }
-            if (this.GetFileAlgosHashs(fileName) is FileAlgosHashs algosHashs)
+            if (this.GetFileAlgosHashs(fileName) is FileAlgosHashs fileAlgosHashs)
             {
-                return algosHashs.CompareHash(algoName, hash);
+                return fileAlgosHashs.CompareHash(algoName, hash);
             }
             return CmpRes.Unrelated;
         }

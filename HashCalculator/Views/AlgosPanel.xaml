@@ -15,6 +15,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/DescTextBlockStyles.xaml" />
                 <ResourceDictionary Source="/Resources/FixedBorderColorButtonStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -22,6 +23,8 @@
     <Grid Margin="8">
         <Grid.RowDefinitions>
             <RowDefinition />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
@@ -63,14 +66,25 @@
         <TextBlock
             Grid.Row="1"
             Grid.ColumnSpan="3"
-            Margin="0,4,0,4"
-            Padding="4"
-            FontSize="8pt"
-            Foreground="#96000000"
-            Text="如果没有选择任何算法，则默认使用 SHA-1 算法；如果选择了多个算法，则强烈建议在设置面板中把&lt;同时计算多少个文件的哈希值&gt;设置为 1，并且不建议选择过多算法，否则极易造成程序无响应。"
-            TextWrapping="Wrap" />
-        <Button
+            Margin="0,4,0,0"
+            Padding="1"
+            Style="{StaticResource DescTextBlockStyle}"
+            Text="如果没有选择任何算法，则默认使用第一个算法；" />
+        <TextBlock
             Grid.Row="2"
+            Grid.ColumnSpan="3"
+            Padding="1"
+            Style="{StaticResource DescTextBlockStyle}"
+            Text="如果选择了多个算法，则强烈建议把设置中【同时计算多少个文件的哈希值】设置为 1；" />
+        <TextBlock
+            Grid.Row="3"
+            Grid.ColumnSpan="3"
+            Margin="0,0,0,4"
+            Padding="1"
+            Style="{StaticResource DescTextBlockStyle}"
+            Text="不建议选择过多个算法，否则极易造成程序无响应。" />
+        <Button
+            Grid.Row="4"
             Grid.Column="1"
             Margin="0,0,16,4"
             Padding="20,4,20,4"
@@ -82,7 +96,7 @@
             Content="清除"
             Style="{StaticResource FixedBdColorButtonStyle1}" />
         <Button
-            Grid.Row="2"
+            Grid.Row="4"
             Grid.Column="2"
             Margin="16,0,0,4"
             Padding="20,4,20,4"
