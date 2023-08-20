@@ -25,8 +25,6 @@ namespace HashCalculator
 
         public IHashAlgoInfo IAlgo { get; }
 
-        public byte[] ExpectedResult { get; set; }
-
         public bool Export
         {
             get

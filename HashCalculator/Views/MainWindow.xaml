@@ -228,7 +228,7 @@
             HeadersVisibility="Column"
             HorizontalGridLinesBrush="#FF969696"
             IsReadOnly="True"
-            ItemsSource="{Binding Source={x:Static local:MainWndViewModel.HashViewModels}}"
+            ItemsSource="{Binding Source={x:Static local:MainWndViewModel.HashViewModels}, IsAsync=True}"
             PreviewKeyDown="DataGrid_HashFiles_PrevKeyDown"
             RowStyle="{StaticResource RowStyleNormal}"
             ScrollViewer.CanContentScroll="True"

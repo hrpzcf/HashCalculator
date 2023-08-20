@@ -52,15 +52,15 @@ namespace HashCalculator
                     try
                     {
                         DirectoryInfo dInfo = new DirectoryInfo(path);
-                        IEnumerator<FileInfo> fiEnum;
+                        IEnumerator<FileInfo> fileInfoEnum;
                         switch (this.searchPolicy)
                         {
                             default:
                             case SearchPolicy.Children:
-                                fiEnum = dInfo.EnumerateFiles().GetEnumerator();
+                                fileInfoEnum = dInfo.EnumerateFiles().GetEnumerator();
                                 break;
                             case SearchPolicy.Descendants:
-                                fiEnum = dInfo.EnumerateFiles("*", SearchOption.AllDirectories).GetEnumerator();
+                                fileInfoEnum = dInfo.EnumerateFiles("*", SearchOption.AllDirectories).GetEnumerator();
                                 break;
                             case SearchPolicy.DontSearch:
                                 continue;
@@ -71,37 +71,36 @@ namespace HashCalculator
                         {
                             try
                             {
-                                if (!fiEnum.MoveNext())
+                                if (!fileInfoEnum.MoveNext())
                                 {
                                     break;
                                 }
                             }
                             catch (Exception)
                             {
-                                // 不使用 continue 而使用 break 的原因：
-                                // 如果因权限等问题导致 MoveNext 抛出异常，
+                                // 不使用 continue 而使用 break 的原因：如果因权限等问题导致 MoveNext 抛出异常，
                                 // 那么下次 MoveNext 结果肯定是 false(?)，使用 continue 没有意义
                                 break;
                             }
-                            if (this.hashBasis is null)
+                            if (this.hashBasis == null)
                             {
-                                yield return new ModelArg(fiEnum.Current.FullName, this.PresetAlgoType);
+                                yield return new ModelArg(fileInfoEnum.Current.FullName, this.PresetAlgoType);
                             }
-                            else if (this.hashBasis.IsExpectedFileHash(fiEnum.Current.Name, out byte[] hash))
+                            else if (this.hashBasis.IsNameInBasis(fileInfoEnum.Current.Name))
                             {
-                                yield return new ModelArg(hash, fiEnum.Current.FullName, this.PresetAlgoType);
+                                yield return new ModelArg(this.hashBasis, fileInfoEnum.Current.FullName, this.PresetAlgoType);
                             }
-                            if (this.StopSearchingToken != null &&
-                                this.StopSearchingToken.IsCancellationRequested)
+                            if (this.StopSearchingToken != null && this.StopSearchingToken.IsCancellationRequested)
                             {
                                 yield break;
                             }
                         }
                         if (this.hashBasis != null)
                         {
-                            foreach (KeyValuePair<string, HashBasisDictValue> kv in this.hashBasis.FileHashDict)
+                            foreach (KeyValuePair<string, FileAlgosHashs> kv in this.hashBasis.FileHashDict)
                             {
-                                if (!kv.Value.HasBeenChecked)
+                                // 此属性由 HashBasis.IsNameInBasis 方法标记
+                                if (!kv.Value.NameInBasisExist)
                                 {
                                     yield return new ModelArg(kv.Key, true, this.PresetAlgoType);
                                 }
@@ -116,14 +115,7 @@ namespace HashCalculator
                 }
                 else if (File.Exists(path))
                 {
-                    if (this.hashBasis is null)
-                    {
-                        yield return new ModelArg(path, this.PresetAlgoType);
-                    }
-                    else if (this.hashBasis.IsExpectedFileHash(Path.GetFileName(path), out byte[] hash))
-                    {
-                        yield return new ModelArg(hash, path, this.PresetAlgoType);
-                    }
+                    yield return new ModelArg(this.hashBasis, path, this.PresetAlgoType);
                 }
             }
         }

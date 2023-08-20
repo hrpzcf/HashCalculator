@@ -44,9 +44,9 @@
         <Grid Grid.Row="1" Margin="0,8,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition />
+                <ColumnDefinition Width="2*" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <TextBlock
                 Grid.Column="0"
@@ -77,7 +77,7 @@
             Padding="4,0,4,4"
             Foreground="#FF006FD6">
             <GroupBox.Header>
-                <TextBlock VerticalAlignment="Center" Text="{Binding FileName, StringFormat=&lt; {0} &gt; 文件所有已计算的哈希值和校验结果}" />
+                <TextBlock VerticalAlignment="Center" Text="{Binding FileName, StringFormat=[ {0} ] 所有已计算的哈希值和校验结果}" />
             </GroupBox.Header>
             <ItemsControl Grid.IsSharedSizeScope="True" ItemsSource="{Binding AlgoInOutModels}">
                 <ItemsControl.ItemTemplate>
@@ -92,7 +92,7 @@
                                 Grid.Column="0"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Center"
-                                Foreground="Gray"
+                                Foreground="Black"
                                 Text="{Binding AlgoName, StringFormat={}{0}：}" />
                             <TextBox
                                 Grid.Column="1"
@@ -120,7 +120,8 @@
                                 Background="{Binding HashCmpResult, Converter={StaticResource CmpResBackgroundCvt}}"
                                 BorderBrush="#FF0091FF"
                                 BorderThickness="1"
-                                Content="{Binding HashCmpResult, Converter={StaticResource CmpResTextCvt}}">
+                                Content="{Binding HashCmpResult, Converter={StaticResource CmpResTextCvt}}"
+                                ToolTip="{Binding HashCmpResult, Converter={StaticResource CmpResTextCvt}}">
                                 <Label.Foreground>
                                     <MultiBinding Converter="{StaticResource CmpResForegroundCvt}">
                                         <Binding Path="ShowResultText" Source="{x:Static local:Settings.Current}" />

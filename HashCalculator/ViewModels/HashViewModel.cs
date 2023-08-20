@@ -29,7 +29,6 @@ namespace HashCalculator
         private RelayCommand copyOneModelHashValueCmd;
         private RelayCommand showHashDetailsWindowCmd;
 
-        private readonly bool isDeprecated;
         private static readonly Dispatcher synchronization =
             Application.Current.Dispatcher;
         private readonly ManualResetEvent manualPauseController =
@@ -62,21 +61,11 @@ namespace HashCalculator
         {
             this.ModelArg = arg;
             this.Serial = serial;
-            this.FileInfo = new FileInfo(arg.filepath);
+            this.FileInfo = new FileInfo(arg.FilePath);
             this.FileName = this.FileInfo.Name;
-            this.isDeprecated = arg.deprecated;
             if (arg.PresetAlgo != AlgoType.Unknown)
             {
-                this.AlgoInOutModels =
-                    AlgosPanelModel.GetKnownAlgos(arg.PresetAlgo);
-            }
-            if (arg.expected != null)
-            {
-                this.MakeSureAlgoModelArrayNotEmpty();
-                foreach (AlgoInOutModel model in this.AlgoInOutModels)
-                {
-                    model.ExpectedResult = arg.expected;
-                }
+                this.AlgoInOutModels = AlgosPanelModel.GetKnownAlgos(arg.PresetAlgo);
             }
         }
 
@@ -527,7 +516,7 @@ namespace HashCalculator
             {
                 this.State = HashState.Running;
             });
-            if (this.isDeprecated)
+            if (this.ModelArg.Deprecated)
             {
                 synchronization.Invoke(() =>
                 {
@@ -594,27 +583,18 @@ namespace HashCalculator
                         a.Export = true;
                         a.HashCmpResult = c;
                     };
+                    FileAlgosHashs algosHashs =
+                        this.ModelArg.HashBasis?.GetFileAlgosHashs(this.FileName);
                     foreach (AlgoInOutModel item in this.AlgoInOutModels)
                     {
                         item.Algo.TransformFinalBlock(buffer, 0, 0);
                         synchronization.Invoke(hashBytesUpdate, item);
-                        CmpRes comparisonResult = CmpRes.NoResult;
-                        if (item.ExpectedResult != null)
+                        if (algosHashs != null)
                         {
-                            if (!item.ExpectedResult.Any())
-                            {
-                                comparisonResult = CmpRes.Uncertain;
-                            }
-                            else if (item.ExpectedResult.SequenceEqual(item.HashResult))
-                            {
-                                comparisonResult = CmpRes.Matched;
-                            }
-                            else
-                            {
-                                comparisonResult = CmpRes.Mismatch;
-                            }
+                            CmpRes comparisonResult = algosHashs.CompareHash(
+                                item.AlgoName, item.HashResult);
+                            synchronization.Invoke(modelUpdate, item, comparisonResult);
                         }
-                        synchronization.Invoke(modelUpdate, item, comparisonResult);
                     }
                 }
                 synchronization.Invoke(() =>
