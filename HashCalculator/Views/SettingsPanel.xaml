@@ -33,51 +33,26 @@
             Padding="8"
             Header="常规设置"
             Style="{StaticResource TabItemStyle1}">
-            <Grid Margin="4">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-                <StackPanel
-                    Grid.Row="0"
-                    Margin="0,0,0,4"
-                    Orientation="Horizontal">
+            <StackPanel Margin="8">
+                <StackPanel Orientation="Horizontal">
                     <TextBlock VerticalAlignment="Center" Text="同时计算多少个文件的哈希值：" />
                     <ComboBox
-                        Grid.Column="2"
                         DisplayMemberPath="Display"
                         ItemsSource="{Binding AvailableTaskNumLimits}"
                         SelectedValue="{Binding SelectedTaskNumberLimit, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         SelectedValuePath="ItemValue" />
                 </StackPanel>
-                <StackPanel
-                    Grid.Row="1"
-                    Margin="0,0,0,4"
-                    Orientation="Horizontal">
+                <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
                     <TextBlock VerticalAlignment="Center" Text="当选择的计算对象中包含文件夹时：" />
                     <ComboBox
-                        Grid.Column="1"
                         DisplayMemberPath="Display"
                         ItemsSource="{Binding AvailableDroppedSearchPolicies}"
                         SelectedValue="{Binding SelectedSearchPolicy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         SelectedValuePath="ItemValue" />
                 </StackPanel>
-                <StackPanel
-                    Grid.Row="2"
-                    Margin="0,0,0,4"
-                    Orientation="Horizontal">
+                <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
                     <TextBlock VerticalAlignment="Center" Text="直接使用校验依据进行校验时：" />
                     <ComboBox
-                        Grid.Column="1"
                         DisplayMemberPath="Display"
                         ItemsSource="{Binding AvailableQVSearchPolicies}"
                         SelectedValue="{Binding SelectedQVSPolicy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -85,48 +60,48 @@
                         ToolTip="当表格为空时，如果校验依据选择的是通用格式的哈希值文本文件，则：&#10;点击 [校验] 后程序会自动解析文件并在相同目录下寻找要计算哈希值的文件完成计算并显示校验结果。&#10;通用格式的哈希值文件请参考程序 [导出结果] 功能导出的文件的内容排布格式。" />
                 </StackPanel>
                 <CheckBox
-                    Grid.Row="3"
-                    Margin="0,0,0,4"
+                    Margin="0,8,0,0"
                     Padding="4,0,0,0"
                     Content="直接使用校验依据进行校验时首选依据算法而非默认算法"
                     IsChecked="{Binding PreferAlgosInBasis, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <CheckBox
-                    Grid.Row="4"
-                    Margin="0,0,0,4"
-                    Padding="4,0,0,0"
-                    Content="在校验结果的色块中显示文字描述"
-                    IsChecked="{Binding ShowResultText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <CheckBox
-                    Grid.Row="5"
-                    Margin="0,0,0,4"
+                    Margin="0,8,0,0"
                     Padding="4,0,0,0"
                     Content="右键选择删除文件时永久删除而不是移动到回收站"
                     IsChecked="{Binding PermanentlyDeleteFiles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <CheckBox
-                    Grid.Row="6"
-                    Margin="0,0,0,4"
+                    Margin="0,8,0,0"
                     Padding="4,0,0,0"
-                    Content="不显示“导出”列"
-                    IsChecked="{Binding NoExportColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    Content="允许启动多个主窗口，包括被系统右键菜单或关联文件启动"
+                    IsChecked="{Binding RunInMultiInstMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </StackPanel>
+        </TabItem>
+        <TabItem
+            Padding="8"
+            Header="界面设置"
+            Style="{StaticResource TabItemStyle1}">
+            <StackPanel Margin="8">
                 <CheckBox
-                    Grid.Row="7"
-                    Margin="0,0,0,4"
-                    Padding="4,0,0,0"
-                    Content="不显示“任务耗时”列"
-                    IsChecked="{Binding NoDurationColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <CheckBox
-                    Grid.Row="8"
                     Margin="0,0,0,4"
                     Padding="4,0,0,0"
                     Content="不显示“文件大小”列"
                     IsChecked="{Binding NoFileSizeColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <CheckBox
-                    Grid.Row="9"
                     Margin="0,0,0,4"
                     Padding="4,0,0,0"
-                    Content="允许启动多个主窗口，包括被系统右键菜单或关联文件启动"
-                    IsChecked="{Binding RunInMultiInstMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-            </Grid>
+                    Content="不显示“任务耗时”列"
+                    IsChecked="{Binding NoDurationColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <CheckBox
+                    Margin="0,0,0,4"
+                    Padding="4,0,0,0"
+                    Content="不显示“导出”列"
+                    IsChecked="{Binding NoExportColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <CheckBox
+                    Margin="0,0,0,4"
+                    Padding="4,0,0,0"
+                    Content="在校验结果的色块中显示文字描述"
+                    IsChecked="{Binding ShowResultText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </StackPanel>
         </TabItem>
         <TabItem
             Padding="8"
@@ -135,7 +110,7 @@
             <GroupBox
                 Margin="4"
                 Padding="4,8,4,4"
-                Foreground="Gray"
+                Foreground="#FF006FD6"
                 Header="扩展系统右键菜单和关联 .hcb 文件">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -214,57 +189,74 @@
         </TabItem>
         <TabItem
             Padding="8"
-            Header="默认导出类型"
+            Header="导出结果设置"
             Style="{StaticResource TabItemStyle1}">
-            <GroupBox
-                Margin="4"
-                Padding="4,8,4,4"
-                Foreground="Gray"
-                Header="导出哈希计算结果时首选导出文件类型">
-                <StackPanel>
-                    <Border
-                        Padding="4"
-                        BorderBrush="LightGray"
-                        BorderThickness="1">
+            <StackPanel Margin="4">
+                <GroupBox
+                    Padding="4,8,4,4"
+                    Foreground="#FF006FD6"
+                    Header="导出哈希值时导出哪些算法的结果？">
+                    <StackPanel>
                         <RadioButton
-                            HorizontalContentAlignment="Stretch"
+                            Margin="8,0"
                             VerticalContentAlignment="Center"
-                            Click="RadioButton_ExportTxt_Click"
-                            IsChecked="{Binding Source={x:Static local:Settings.Current}, Path=ResultFileTypeExportAs, Converter={StaticResource RadioExportAsTxtFileCvt}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
-                            <StackPanel>
-                                <TextBlock Text="导出为文本文件 (.txt)" />
-                                <TextBlock
-                                    FontSize="8pt"
-                                    Style="{StaticResource DescTextBlockStyle}"
-                                    Text="将哈希值结果导出为 .txt 后缀的文本文件，每行格式：[#算法 *哈希值 *文件名]，不包括方括号" />
-                            </StackPanel>
-                        </RadioButton>
-                    </Border>
-                    <Border
-                        Margin="0,8,0,0"
-                        Padding="4"
-                        BorderBrush="LightGray"
-                        BorderThickness="1">
+                            Content="仅导出每个文件当前显示的算法结果"
+                            IsChecked="{Binding HowToExportHashValues, Converter={StaticResource RadioExportCurrentAlgoCvt}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         <RadioButton
-                            HorizontalContentAlignment="Stretch"
+                            Margin="8,8,0,0"
                             VerticalContentAlignment="Center"
-                            Click="RadioButton_ExportHcb_Click"
-                            IsChecked="{Binding Source={x:Static local:Settings.Current}, Path=ResultFileTypeExportAs, Converter={StaticResource RadioExportAsHcbFileCvt}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
-                            <StackPanel>
-                                <TextBlock Text="导出为文本文件 (.hcb)" />
-                                <TextBlock
-                                    FontSize="8pt"
-                                    Style="{StaticResource DescTextBlockStyle}"
-                                    Text="内容与&lt;导出为文本文件 (.txt)&gt;相同，如果已设置文件关联则可直接双击打开 .hcb 文件进行校验" />
-                                <TextBlock
-                                    FontSize="8pt"
-                                    Style="{StaticResource DescTextBlockStyle}"
-                                    Text="但 .hcb 文件需与待校验文件在同目录下，设置项&lt;直接使用校验依据进行校验时&gt;需选择合适策略" />
-                            </StackPanel>
-                        </RadioButton>
-                    </Border>
-                </StackPanel>
-            </GroupBox>
+                            Content="导出每个文件所有已计算的算法结果"
+                            IsChecked="{Binding HowToExportHashValues, Converter={StaticResource RadioExportAllCalculatedAlgosCvt}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    </StackPanel>
+                </GroupBox>
+                <GroupBox
+                    Margin="0,8,0,0"
+                    Padding="4,8,4,4"
+                    Foreground="#FF006FD6"
+                    Header="导出哈希计算结果时首选导出文件类型">
+                    <StackPanel>
+                        <Border
+                            Padding="4"
+                            BorderBrush="LightGray"
+                            BorderThickness="1">
+                            <RadioButton
+                                HorizontalContentAlignment="Stretch"
+                                VerticalContentAlignment="Center"
+                                IsChecked="{Binding ResultFileTypeExportAs, Converter={StaticResource RadioExportAsTxtFileCvt}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                <StackPanel>
+                                    <TextBlock Text="导出为文本文件 (.txt)" />
+                                    <TextBlock
+                                        FontSize="8pt"
+                                        Style="{StaticResource DescTextBlockStyle}"
+                                        Text="将哈希值结果导出为 .txt 后缀的文本文件，每行格式：[#算法 *哈希值 *文件名]，不包括方括号" />
+                                </StackPanel>
+                            </RadioButton>
+                        </Border>
+                        <Border
+                            Margin="0,8,0,0"
+                            Padding="4"
+                            BorderBrush="LightGray"
+                            BorderThickness="1">
+                            <RadioButton
+                                HorizontalContentAlignment="Stretch"
+                                VerticalContentAlignment="Center"
+                                IsChecked="{Binding ResultFileTypeExportAs, Converter={StaticResource RadioExportAsHcbFileCvt}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                <StackPanel>
+                                    <TextBlock Text="导出为文本文件 (.hcb)" />
+                                    <TextBlock
+                                        FontSize="8pt"
+                                        Style="{StaticResource DescTextBlockStyle}"
+                                        Text="内容与&lt;导出为文本文件 (.txt)&gt;相同，如果已设置文件关联则可直接双击打开 .hcb 文件进行校验" />
+                                    <TextBlock
+                                        FontSize="8pt"
+                                        Style="{StaticResource DescTextBlockStyle}"
+                                        Text="但 .hcb 文件需与待校验文件在同目录下，设置项&lt;直接使用校验依据进行校验时&gt;需选择合适策略" />
+                                </StackPanel>
+                            </RadioButton>
+                        </Border>
+                    </StackPanel>
+                </GroupBox>
+            </StackPanel>
         </TabItem>
     </TabControl>
 </Window>

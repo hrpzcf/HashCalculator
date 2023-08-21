@@ -579,14 +579,14 @@ namespace HashCalculator
                         synchronization.BeginInvoke(progressUpdate, readedSize);
                         this.manualPauseController.WaitOne();
                     }
-                    Action<AlgoInOutModel> hashBytesUpdate = a =>
+                    Action<AlgoInOutModel> hashBytesUpdate = i =>
                     {
-                        a.HashResult = a.Algo.Hash;
+                        i.Export = true;
+                        i.HashResult = i.Algo.Hash;
                     };
-                    Action<AlgoInOutModel, CmpRes> modelUpdate = (a, c) =>
+                    Action<AlgoInOutModel, CmpRes> modelUpdate = (i, c) =>
                     {
-                        a.Export = true;
-                        a.HashCmpResult = c;
+                        i.HashCmpResult = c;
                     };
                     FileAlgosHashs algosHashs =
                         this.ModelArg.HashBasis?.GetFileAlgosHashs(this.FileName);

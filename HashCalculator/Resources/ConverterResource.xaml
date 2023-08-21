@@ -28,5 +28,7 @@
     <local:HashOrPathPlaceHolderVisibCvt x:Key="HashOrPathPlaceHolderVisibCvt" />
     <local:RadioExportAsTxtFileCvt x:Key="RadioExportAsTxtFileCvt" />
     <local:RadioExportAsHcbFileCvt x:Key="RadioExportAsHcbFileCvt" />
+    <local:RadioExportCurrentAlgoCvt x:Key="RadioExportCurrentAlgoCvt" />
+    <local:RadioExportAllCalculatedAlgosCvt x:Key="RadioExportAllCalculatedAlgosCvt" />
     <local:HashDetailsFileSizeExCvt x:Key="HashDetailsFileSizeExCvt" />
 </ResourceDictionary>

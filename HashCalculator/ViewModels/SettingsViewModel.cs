@@ -24,6 +24,7 @@ namespace HashCalculator
         private double hashDetailsHeight = 700.0;
         private TaskNum selectedTaskNumberLimit = TaskNum.One;
         private ExportType resultFileTypeExportAs = ExportType.TxtFile;
+        private ExportAlgos howToExportHashValues = ExportAlgos.Current;
         private OutputType selectedOutputType = OutputType.BinaryUpper;
         private bool showResultText = false;
         private bool noExportColumn = false;
@@ -327,6 +328,18 @@ namespace HashCalculator
             set
             {
                 this.SetPropNotify(ref this.runInMultiInstanceMode, value);
+            }
+        }
+
+        public ExportAlgos HowToExportHashValues
+        {
+            get
+            {
+                return this.howToExportHashValues;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.howToExportHashValues, value);
             }
         }
 

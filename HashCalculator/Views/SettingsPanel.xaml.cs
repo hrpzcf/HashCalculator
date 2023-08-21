@@ -17,27 +17,17 @@ namespace HashCalculator
             This = this;
         }
 
-        private void SettingsPanelClosing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            e.Cancel = !this.viewModel.NotSettingShellExtension;
-        }
-
-        private void RadioButton_ExportTxt_Click(object sender, RoutedEventArgs e)
-        {
-            this.viewModel.ResultFileTypeExportAs = ExportType.TxtFile;
-        }
-
-        private void RadioButton_ExportHcb_Click(object sender, RoutedEventArgs e)
-        {
-            this.viewModel.ResultFileTypeExportAs = ExportType.HcbFile;
-        }
-
         private void SettingsPanel_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (e.Key == System.Windows.Input.Key.Escape)
             {
                 this.Close();
             }
+        }
+
+        private void SettingsPanelClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            e.Cancel = !this.viewModel.NotSettingShellExtension;
         }
     }
 }

@@ -185,6 +185,21 @@
     }
 
     /// <summary>
+    /// 选择导出每个文件的哪些算法的哈希结果
+    /// </summary>
+    public enum ExportAlgos
+    {
+        /// <summary>
+        /// 导出每个文件当前显示的算法的结果
+        /// </summary>
+        Current,
+        /// <summary>
+        /// 导出每个文件所有已计算的算法的结果
+        /// </summary>
+        AllCalculated,
+    }
+
+    /// <summary>
     /// 哈希值结果可导出的文件类型
     /// </summary>
     public enum ExportType
@@ -199,7 +214,6 @@
         /// 前提是<直接使用校验依据进行校验时>设置项选择了合适的文件搜索策略
         /// </summary>
         HcbFile,
-        Unknown = -1,
     }
 
     /// <summary>
