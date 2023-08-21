@@ -20,6 +20,7 @@ namespace HashCalculator
 {
     internal class MainWndViewModel : NotifiableModel
     {
+        private const string exportHashFormat = "#{0} *{1} *{2}\n";
         private readonly HashBasis MainBasis = new HashBasis();
         private readonly ModelStarter starter =
             new ModelStarter((int)Settings.Current.SelectedTaskNumberLimit, 8);
@@ -808,7 +809,29 @@ namespace HashCalculator
             Settings.Current.LastUsedPath = Path.GetDirectoryName(sf.FileName);
             try
             {
-                using (StreamWriter sw = File.CreateText(sf.FileName))
+                StringBuilder stringBuilder = new StringBuilder();
+                if (Settings.Current.HowToExportHashValues == ExportAlgos.AllCalculated)
+                {
+                    foreach (HashViewModel hm in HashViewModels)
+                    {
+                        if (hm.Result != HashResult.Succeeded)
+                        {
+                            continue;
+                        }
+                        foreach (AlgoInOutModel model in hm.AlgoInOutModels)
+                        {
+                            if (!model.Export)
+                            {
+                                continue;
+                            }
+                            string hash = BytesToStrByOutputTypeCvt.Convert(model.HashResult,
+                                Settings.Current.SelectedOutputType);
+                            stringBuilder.AppendFormat(exportHashFormat, model.AlgoName, hash,
+                                hm.FileName);
+                        }
+                    }
+                }
+                else if (Settings.Current.HowToExportHashValues == ExportAlgos.Current)
                 {
                     foreach (HashViewModel hm in HashViewModels)
                     {
@@ -816,10 +839,20 @@ namespace HashCalculator
                         {
                             continue;
                         }
-                        string hash = BytesToStrByOutputTypeCvt.Convert(
-                            hm.CurrentInOutModel.HashResult, Settings.Current.SelectedOutputType);
-                        sw.WriteLine($"#{hm.CurrentInOutModel.AlgoName} *{hash} *{hm.FileName}");
+                        string hash = BytesToStrByOutputTypeCvt.Convert(hm.CurrentInOutModel.HashResult,
+                            Settings.Current.SelectedOutputType);
+                        stringBuilder.AppendFormat(exportHashFormat, hm.CurrentInOutModel.AlgoName, hash,
+                            hm.FileName);
                     }
+                }
+                if (stringBuilder.Length > 0)
+                {
+                    File.WriteAllText(sf.FileName, stringBuilder.ToString());
+                }
+                else
+                {
+                    MessageBox.Show(this.Parent, $"收集到的哈希结果为空", "提示",
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
             catch (Exception ex)

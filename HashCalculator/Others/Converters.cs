@@ -618,7 +618,7 @@ namespace HashCalculator
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            return (bool)value ? ExportType.TxtFile : ExportType.HcbFile;
         }
     }
 
@@ -631,7 +631,33 @@ namespace HashCalculator
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            return (bool)value ? ExportType.HcbFile : ExportType.TxtFile;
+        }
+    }
+
+    internal class RadioExportCurrentAlgoCvt : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return (ExportAlgos)value == ExportAlgos.Current;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return (bool)value ? ExportAlgos.Current : ExportAlgos.AllCalculated;
+        }
+    }
+
+    internal class RadioExportAllCalculatedAlgosCvt : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return (ExportAlgos)value == ExportAlgos.AllCalculated;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return (bool)value ? ExportAlgos.AllCalculated : ExportAlgos.Current;
         }
     }
 
