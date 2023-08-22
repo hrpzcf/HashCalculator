@@ -18,8 +18,8 @@ namespace HashCalculator
         private WindowState mainWindowState = WindowState.Normal;
         private double settingsWndWidth = 600.0;
         private double settingsWndHeight = 500.0;
-        private double algosPanelWidth = 500.0;
-        private double algosPanelHeight = 380.0;
+        private double algosPanelWidth = 510.0;
+        private double algosPanelHeight = 390.0;
         private double hashDetailsWidth = 600.0;
         private double hashDetailsHeight = 700.0;
         private TaskNum selectedTaskNumberLimit = TaskNum.One;
