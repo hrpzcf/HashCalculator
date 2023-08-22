@@ -20,6 +20,7 @@ namespace HashCalculator
 {
     internal class MainWndViewModel : NotifiableModel
     {
+        private const string hashLineForCopyFormat = "{0}\n";
         private const string exportHashFormat = "#{0} *{1} *{2}\n";
         private readonly HashBasis MainBasis = new HashBasis();
         private readonly ModelStarter starter =
@@ -54,6 +55,7 @@ namespace HashCalculator
         private RelayCommand pauseDisplayedModelsCmd;
         private RelayCommand continueDisplayedModelsCmd;
         private RelayCommand copyModelsHashStringCmd;
+        private RelayCommand copyModelsAllAlgosValueCmd;
         private RelayCommand copyFilesNameCmd;
         private RelayCommand copyFilesFullPathCmd;
         private RelayCommand openFolderSelectItemsCmd;
@@ -64,6 +66,7 @@ namespace HashCalculator
         private RelayCommand removeSelectedModelsCmd;
         private RelayCommand stopEnumeratingPackageCmd;
         private ControlItem[] copyModelsHashMenuCmds;
+        private ControlItem[] copyModelsAllAlgosMenuCmds;
         private ControlItem[] hashModelTasksCtrlCmds;
 
         public MainWndViewModel()
@@ -346,17 +349,11 @@ namespace HashCalculator
 
         private void CopyModelsHashValueAction(object param, OutputType output)
         {
-            if (param is IList selectedModels)
+            if (param is IList selectedModels && selectedModels.AnyItem())
             {
-                int count = selectedModels.Count;
-                if (count == 0)
+                StringBuilder stringBuilder = new StringBuilder();
+                foreach (HashViewModel model in selectedModels)
                 {
-                    return;
-                }
-                StringBuilder hashValueStringBuilder = new StringBuilder();
-                for (int i = 0; i < count; ++i)
-                {
-                    HashViewModel model = (HashViewModel)selectedModels[i];
                     string formatedHashValue;
                     if (output != OutputType.Unknown)
                     {
@@ -373,15 +370,11 @@ namespace HashCalculator
                         formatedHashValue = BytesToStrByOutputTypeCvt.Convert(
                              model.CurrentInOutModel.HashResult, model.SelectedOutputType);
                     }
-                    if (i != 0)
-                    {
-                        hashValueStringBuilder.AppendLine();
-                    }
-                    hashValueStringBuilder.Append(formatedHashValue);
+                    stringBuilder.AppendFormat(hashLineForCopyFormat, formatedHashValue);
                 }
-                if (hashValueStringBuilder.Length != 0)
+                if (stringBuilder.Length > 0)
                 {
-                    Clipboard.SetText(hashValueStringBuilder.ToString());
+                    Clipboard.SetText(stringBuilder.ToString());
                 }
             }
         }
@@ -392,7 +385,8 @@ namespace HashCalculator
             {
                 if (this.copyModelsHashMenuCmds is null)
                 {
-                    this.copyModelsHashMenuCmds = new ControlItem[] {
+                    this.copyModelsHashMenuCmds = new ControlItem[]
+                    {
                         new ControlItem("Base64 格式", new RelayCommand(this.CopyModelsHashBase64Action)),
                         new ControlItem("十六进制大写", new RelayCommand(this.CopyModelsHashBinUpperAction)),
                         new ControlItem("十六进制小写", new RelayCommand(this.CopyModelsHashBinLowerAction)),
@@ -416,6 +410,90 @@ namespace HashCalculator
                     this.copyModelsHashStringCmd = new RelayCommand(this.CopyModelsHashStringAction);
                 }
                 return this.copyModelsHashStringCmd;
+            }
+        }
+
+        private void CopyModelsAllAlgosValueAction(object param, OutputType output)
+        {
+            if (param is IList selectedModels && selectedModels.AnyItem())
+            {
+                StringBuilder stringBuilder = new StringBuilder();
+                foreach (HashViewModel model in selectedModels)
+                {
+                    foreach (AlgoInOutModel inOutModel in model.AlgoInOutModels)
+                    {
+                        string formatedHash;
+                        if (output != OutputType.Unknown)
+                        {
+                            formatedHash = BytesToStrByOutputTypeCvt.Convert(
+                                inOutModel.HashResult, output);
+                        }
+                        else if (model.SelectedOutputType == OutputType.Unknown)
+                        {
+                            formatedHash = BytesToStrByOutputTypeCvt.Convert(
+                                inOutModel.HashResult, Settings.Current.SelectedOutputType);
+                        }
+                        else
+                        {
+                            formatedHash = BytesToStrByOutputTypeCvt.Convert(
+                                 inOutModel.HashResult, model.SelectedOutputType);
+                        }
+                        stringBuilder.AppendFormat(hashLineForCopyFormat, formatedHash);
+                    }
+                }
+                if (stringBuilder.Length > 0)
+                {
+                    Clipboard.SetText(stringBuilder.ToString());
+                }
+            }
+        }
+
+        private void CopyModelsAllAlgosBase64Action(object param)
+        {
+            this.CopyModelsAllAlgosValueAction(param, OutputType.BASE64);
+        }
+
+        private void CopyModelsAllAlgosBinUpperAction(object param)
+        {
+            this.CopyModelsAllAlgosValueAction(param, OutputType.BinaryUpper);
+        }
+
+        private void CopyModelsAllAlgosBinLowerAction(object param)
+        {
+            this.CopyModelsAllAlgosValueAction(param, OutputType.BinaryLower);
+        }
+
+        public ControlItem[] CopyModelsAllAlgosMenuCmds
+        {
+            get
+            {
+                if (this.copyModelsAllAlgosMenuCmds == null)
+                {
+                    this.copyModelsAllAlgosMenuCmds = new ControlItem[]
+                    {
+                        new ControlItem("Base64 格式", new RelayCommand(this.CopyModelsAllAlgosBase64Action)),
+                        new ControlItem("十六进制大写", new RelayCommand(this.CopyModelsAllAlgosBinUpperAction)),
+                        new ControlItem("十六进制小写", new RelayCommand(this.CopyModelsAllAlgosBinLowerAction)),
+                    };
+                }
+                return this.copyModelsAllAlgosMenuCmds;
+            }
+        }
+
+        private void CopyModelsAllAlgosStringAction(object param)
+        {
+            this.CopyModelsAllAlgosValueAction(param, OutputType.Unknown);
+        }
+
+        public ICommand CopyModelsAllAlgosValueCmd
+        {
+            get
+            {
+                if (this.copyModelsAllAlgosValueCmd == null)
+                {
+                    this.copyModelsAllAlgosValueCmd = new RelayCommand(this.CopyModelsAllAlgosStringAction);
+                }
+                return this.copyModelsAllAlgosValueCmd;
             }
         }
 

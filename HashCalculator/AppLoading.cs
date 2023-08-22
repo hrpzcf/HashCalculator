@@ -67,7 +67,7 @@ namespace HashCalculator
             // 剪贴板无法打开(CLIPBRD_E_CANT_OPEN)错误代码：0x800401D0
             if ((uint)e.Exception.HResult == 0x800401D0)
             {
-                excContent = "复制哈希值失败";
+                excContent = "复制哈希结果失败";
             }
             else
             {
