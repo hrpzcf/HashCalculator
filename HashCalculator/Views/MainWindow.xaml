@@ -318,20 +318,32 @@
             </DataGrid.ContextMenu>
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Serial}" Header="序号" />
-                <DataGridTextColumn
+                <DataGridTemplateColumn
                     MinWidth="180"
-                    Binding="{Binding FileName}"
-                    Header="文件名">
-                    <DataGridTextColumn.CellStyle>
-                        <Style BasedOn="{StaticResource CellStyleNormal}" TargetType="{x:Type DataGridCell}">
-                            <Setter Property="ToolTip" Value="{Binding FileInfo}" />
-                        </Style>
-                    </DataGridTextColumn.CellStyle>
-                </DataGridTextColumn>
-                <DataGridTextColumn
-                    Binding="{Binding FileSize}"
+                    Header="文件名"
+                    SortMemberPath="FileName">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock
+                                Padding="4,0"
+                                Text="{Binding FileName}"
+                                ToolTip="{Binding FileInfo}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn
                     Header="文件大小 (字节)"
-                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoFileSizeColumn, Converter={StaticResource NoColumnCvt}, Mode=OneWay}" />
+                    SortMemberPath="FileSize"
+                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoFileSizeColumn, Converter={StaticResource NoColumnCvt}, Mode=OneWay}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock
+                                Padding="4,0"
+                                Text="{Binding FileSize}"
+                                ToolTip="{Binding FileSize, Converter={StaticResource ToFriendlyFileSizeCvt}}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTemplateColumn
                     CanUserSort="True"
                     Header="算法"

@@ -677,4 +677,21 @@ namespace HashCalculator
             throw new NotImplementedException();
         }
     }
+
+    internal class ToFriendlyFileSizeCvt : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is long bytesLength)
+            {
+                return CommonUtils.FileSizeCvt(bytesLength);
+            }
+            return "未知字节数";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }
