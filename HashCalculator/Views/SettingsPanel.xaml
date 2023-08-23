@@ -10,7 +10,7 @@
     Height="{Binding SettingsWndHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     d:DataContext="{d:DesignInstance Type=local:SettingsViewModel}"
     Closing="SettingsPanelClosing"
-    KeyDown="SettingsPanel_KeyDown"
+    KeyDown="SettingsPanelKeyDown"
     ShowInTaskbar="False"
     UseLayoutRounding="True"
     WindowStartupLocation="CenterOwner"

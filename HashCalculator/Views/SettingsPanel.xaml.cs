@@ -17,7 +17,7 @@ namespace HashCalculator
             This = this;
         }
 
-        private void SettingsPanel_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private void SettingsPanelKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (e.Key == System.Windows.Input.Key.Escape)
             {
