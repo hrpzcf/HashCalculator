@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -18,7 +19,8 @@ namespace HashCalculator
         private long _progress = 0L;
         private long _maxProgress = 0L;
         private double _durationofTask = 0.0;
-        private AlgoInOutModel _curAlgoInOutItem = null;
+        private string _currentHashString = null;
+        private AlgoInOutModel _currentInOutModel = null;
         private AlgoInOutModel[] _algoInOutModels = null;
         private HashResult _currentResult = HashResult.NoResult;
         private HashState _currentState = HashState.NoState;
@@ -72,6 +74,7 @@ namespace HashCalculator
             {
                 this.AlgoInOutModels = AlgosPanelModel.GetKnownAlgos(arg.PresetAlgo);
             }
+            this.PropertyChanged += this.CurrentHashStringHandler;
         }
 
         public int Serial { get; }
@@ -94,15 +97,27 @@ namespace HashCalculator
             }
         }
 
+        public string CurrentHashString
+        {
+            get
+            {
+                return this._currentHashString;
+            }
+            set
+            {
+                this.SetPropNotify(ref this._currentHashString, value);
+            }
+        }
+
         public AlgoInOutModel CurrentInOutModel
         {
             get
             {
-                return this._curAlgoInOutItem;
+                return this._currentInOutModel;
             }
             set
             {
-                this.SetPropNotify(ref this._curAlgoInOutItem, value);
+                this.SetPropNotify(ref this._currentInOutModel, value);
             }
         }
 
@@ -229,12 +244,11 @@ namespace HashCalculator
 
         private void CopyOneModelHashValueAction(object param)
         {
-            if (this.Result != HashResult.Succeeded)
+            if (this.Result == HashResult.Succeeded
+                && !string.IsNullOrEmpty(this.CurrentHashString))
             {
-                return;
+                Clipboard.SetText(this.CurrentHashString);
             }
-            Clipboard.SetText(BytesToStrByOutputTypeCvt.Convert(
-                this.CurrentInOutModel.HashResult, this.SelectedOutputType));
         }
 
         public ICommand CopyOneModelHashValueCmd
@@ -338,6 +352,30 @@ namespace HashCalculator
                 this.AlgoInOutModels = AlgosPanelModel.GetSelectedAlgos();
             }
             this.CurrentInOutModel = this.AlgoInOutModels[0];
+            foreach (AlgoInOutModel model in this.AlgoInOutModels)
+            {
+                model.SetHashResultChangedHandler(this.CurrentHashStringHandler);
+            }
+        }
+
+        private void CurrentHashStringHandler(object sender, PropertyChangedEventArgs e)
+        {
+            if ((e.PropertyName == nameof(this.CurrentInOutModel) ||
+                e.PropertyName == nameof(AlgoInOutModel.HashResult) ||
+                e.PropertyName == nameof(this.SelectedOutputType)) &&
+                this.CurrentInOutModel != null && this.CurrentInOutModel.HashResult != null)
+            {
+                if (this.SelectedOutputType != OutputType.Unknown)
+                {
+                    this.CurrentHashString = BytesToStrByOutputTypeCvt.Convert(
+                        this.CurrentInOutModel.HashResult, this.SelectedOutputType);
+                }
+                else
+                {
+                    this.CurrentHashString = BytesToStrByOutputTypeCvt.Convert(
+                        this.CurrentInOutModel.HashResult, Settings.Current.SelectedOutputType);
+                }
+            }
         }
 
         public void ResetHashViewModel()

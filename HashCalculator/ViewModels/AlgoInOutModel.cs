@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System.ComponentModel;
+using System.Security.Cryptography;
 
 namespace HashCalculator
 {
@@ -8,6 +9,7 @@ namespace HashCalculator
         private CmpRes _hashCmpResult;
         private bool _export = false;
         private bool _selected = false;
+        private bool _hashResultHandlerAdded = false;
 
         public AlgoInOutModel(IHashAlgoInfo algoInfo)
         {
@@ -76,6 +78,15 @@ namespace HashCalculator
         public AlgoInOutModel NewAlgoInOutModel()
         {
             return new AlgoInOutModel(this.IAlgo.NewInstance());
+        }
+
+        public void SetHashResultChangedHandler(PropertyChangedEventHandler e)
+        {
+            if (!this._hashResultHandlerAdded)
+            {
+                this.PropertyChanged += e;
+                this._hashResultHandlerAdded = true;
+            }
         }
     }
 }
