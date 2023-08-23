@@ -365,7 +365,10 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn MinWidth="210" Header="哈希值">
+                <DataGridTemplateColumn
+                    MinWidth="210"
+                    Header="哈希值"
+                    SortMemberPath="CurrentHashString">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid VerticalAlignment="Center">
@@ -380,6 +383,7 @@
                                     Grid.Column="0"
                                     Margin="4,0,4,0"
                                     VerticalAlignment="Center"
+                                    Text="{Binding CurrentHashString}"
                                     TextTrimming="CharacterEllipsis"
                                     ToolTip="{Binding ModelDetails}">
                                     <TextBlock.Visibility>
@@ -388,12 +392,6 @@
                                             <Binding Path="Result" />
                                         </MultiBinding>
                                     </TextBlock.Visibility>
-                                    <TextBlock.Text>
-                                        <MultiBinding Converter="{StaticResource BytesToStrByOutputTypeCvt}">
-                                            <Binding Path="CurrentInOutModel.HashResult" />
-                                            <Binding Path="SelectedOutputType" />
-                                        </MultiBinding>
-                                    </TextBlock.Text>
                                 </TextBlock>
                                 <TextBlock
                                     Grid.Column="0"

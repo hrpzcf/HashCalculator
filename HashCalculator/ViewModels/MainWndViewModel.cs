@@ -354,23 +354,26 @@ namespace HashCalculator
                 StringBuilder stringBuilder = new StringBuilder();
                 foreach (HashViewModel model in selectedModels)
                 {
-                    string formatedHashValue;
-                    if (output != OutputType.Unknown)
+                    string formatedHashString = model.CurrentHashString;
+                    if (string.IsNullOrEmpty(formatedHashString))
                     {
-                        formatedHashValue = BytesToStrByOutputTypeCvt.Convert(
-                            model.CurrentInOutModel.HashResult, output);
+                        if (output != OutputType.Unknown)
+                        {
+                            formatedHashString = BytesToStrByOutputTypeCvt.Convert(
+                                model.CurrentInOutModel.HashResult, output);
+                        }
+                        else if (model.SelectedOutputType == OutputType.Unknown)
+                        {
+                            formatedHashString = BytesToStrByOutputTypeCvt.Convert(
+                                model.CurrentInOutModel.HashResult, Settings.Current.SelectedOutputType);
+                        }
+                        else
+                        {
+                            formatedHashString = BytesToStrByOutputTypeCvt.Convert(
+                                 model.CurrentInOutModel.HashResult, model.SelectedOutputType);
+                        }
                     }
-                    else if (model.SelectedOutputType == OutputType.Unknown)
-                    {
-                        formatedHashValue = BytesToStrByOutputTypeCvt.Convert(
-                            model.CurrentInOutModel.HashResult, Settings.Current.SelectedOutputType);
-                    }
-                    else
-                    {
-                        formatedHashValue = BytesToStrByOutputTypeCvt.Convert(
-                             model.CurrentInOutModel.HashResult, model.SelectedOutputType);
-                    }
-                    stringBuilder.AppendFormat(hashLineForCopyFormat, formatedHashValue);
+                    stringBuilder.AppendFormat(hashLineForCopyFormat, formatedHashString);
                 }
                 if (stringBuilder.Length > 0)
                 {
@@ -422,23 +425,23 @@ namespace HashCalculator
                 {
                     foreach (AlgoInOutModel inOutModel in model.AlgoInOutModels)
                     {
-                        string formatedHash;
+                        string formatedHashString;
                         if (output != OutputType.Unknown)
                         {
-                            formatedHash = BytesToStrByOutputTypeCvt.Convert(
+                            formatedHashString = BytesToStrByOutputTypeCvt.Convert(
                                 inOutModel.HashResult, output);
                         }
                         else if (model.SelectedOutputType == OutputType.Unknown)
                         {
-                            formatedHash = BytesToStrByOutputTypeCvt.Convert(
+                            formatedHashString = BytesToStrByOutputTypeCvt.Convert(
                                 inOutModel.HashResult, Settings.Current.SelectedOutputType);
                         }
                         else
                         {
-                            formatedHash = BytesToStrByOutputTypeCvt.Convert(
+                            formatedHashString = BytesToStrByOutputTypeCvt.Convert(
                                  inOutModel.HashResult, model.SelectedOutputType);
                         }
-                        stringBuilder.AppendFormat(hashLineForCopyFormat, formatedHash);
+                        stringBuilder.AppendFormat(hashLineForCopyFormat, formatedHashString);
                     }
                 }
                 if (stringBuilder.Length > 0)
@@ -913,14 +916,21 @@ namespace HashCalculator
                 {
                     foreach (HashViewModel hm in HashViewModels)
                     {
-                        if (hm.Result != HashResult.Succeeded || !hm.CurrentInOutModel.Export)
+                        if (hm.Result == HashResult.Succeeded && hm.CurrentInOutModel.Export)
                         {
-                            continue;
+                            if (string.IsNullOrEmpty(hm.CurrentHashString))
+                            {
+                                string hash = BytesToStrByOutputTypeCvt.Convert(hm.CurrentInOutModel.HashResult,
+                                    Settings.Current.SelectedOutputType);
+                                stringBuilder.AppendFormat(exportHashFormat, hm.CurrentInOutModel.AlgoName, hash,
+                                    hm.FileName);
+                            }
+                            else
+                            {
+                                stringBuilder.AppendFormat(exportHashFormat, hm.CurrentInOutModel.AlgoName,
+                                    hm.CurrentHashString, hm.FileName);
+                            }
                         }
-                        string hash = BytesToStrByOutputTypeCvt.Convert(hm.CurrentInOutModel.HashResult,
-                            Settings.Current.SelectedOutputType);
-                        stringBuilder.AppendFormat(exportHashFormat, hm.CurrentInOutModel.AlgoName, hash,
-                            hm.FileName);
                     }
                 }
                 if (stringBuilder.Length > 0)
