@@ -78,7 +78,14 @@
             Padding="4,0,4,4"
             Foreground="#FF006FD6">
             <GroupBox.Header>
-                <TextBlock VerticalAlignment="Center" Text="{Binding FileName, StringFormat=[ {0} ] 所有已计算的哈希值和校验结果}" />
+                <TextBlock VerticalAlignment="Center">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="[ {0} ] 所有 {1} 个已计算的哈希值和校验结果">
+                            <Binding Path="FileName" />
+                            <Binding Path="AlgoInOutModels.Length" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
             </GroupBox.Header>
             <ItemsControl Grid.IsSharedSizeScope="True" ItemsSource="{Binding AlgoInOutModels}">
                 <ItemsControl.ItemTemplate>
