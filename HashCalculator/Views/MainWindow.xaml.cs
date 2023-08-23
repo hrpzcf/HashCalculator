@@ -1,13 +1,14 @@
-﻿using CommandLine;
-using Microsoft.WindowsAPICodePack.Dialogs;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
+using CommandLine;
+using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace HashCalculator
 {
@@ -147,13 +148,10 @@ namespace HashCalculator
             thread.Start();
         }
 
-        private void DataGrid_FilesToCalculate_Drop(object sender, DragEventArgs e)
+        private void DataGridHashingFilesDrop(object sender, DragEventArgs e)
         {
-            if (!e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                return;
-            }
-            if (!(e.Data.GetData(DataFormats.FileDrop) is string[] data) || !data.Any())
+            if (!e.Data.GetDataPresent(DataFormats.FileDrop) ||
+                !(e.Data.GetData(DataFormats.FileDrop) is string[] data) || !data.Any())
             {
                 return;
             }
@@ -161,15 +159,15 @@ namespace HashCalculator
                 new PathPackage(data, Settings.Current.SelectedSearchPolicy));
         }
 
-        private void DataGrid_HashFiles_PrevKeyDown(object sender, KeyEventArgs e)
+        private void DataGridHashingFilesPrevKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Escape)
+            if (e.Key == Key.Escape && sender is DataGrid dataGrid)
             {
-                this.uiDataGrid_HashFiles.SelectedIndex = -1;
+                dataGrid.SelectedItem = null;
             }
         }
 
-        private void Button_SelectBasisFileSetPath_Click(object sender, RoutedEventArgs e)
+        private void ButtonSelectBasisFileSetPathClick(object sender, RoutedEventArgs e)
         {
             CommonOpenFileDialog openFile = new CommonOpenFileDialog
             {
@@ -183,20 +181,17 @@ namespace HashCalculator
             }
         }
 
-        private void TextBox_HashOrFilePath_PreviewDrop(object sender, DragEventArgs e)
+        private void TextBoxHashOrFilePathPreviewDrop(object sender, DragEventArgs e)
         {
-            if (!e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                return;
-            }
-            if (!(e.Data.GetData(DataFormats.FileDrop) is string[] data) || !data.Any())
+            if (!e.Data.GetDataPresent(DataFormats.FileDrop) || 
+                !(e.Data.GetData(DataFormats.FileDrop) is string[] data) || !data.Any())
             {
                 return;
             }
             this.uiTextBox_HashValueOrFilePath.Text = data[0];
         }
 
-        private void TextBox_HashValueOrFilePath_PreviewDragOver(object sender, DragEventArgs e)
+        private void TextBoxHashValueOrFilePathPreviewDragOver(object sender, DragEventArgs e)
         {
             e.Handled = true;
         }

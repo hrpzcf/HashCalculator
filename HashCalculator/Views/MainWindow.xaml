@@ -217,19 +217,18 @@
             </Grid>
         </ScrollViewer>
         <DataGrid
-            x:Name="uiDataGrid_HashFiles"
             Grid.Row="1"
             Margin="0,4,0,0"
             AllowDrop="True"
             AutoGenerateColumns="False"
             Background="Transparent"
             CellStyle="{StaticResource CellStyleNormal}"
-            Drop="DataGrid_FilesToCalculate_Drop"
+            Drop="DataGridHashingFilesDrop"
             HeadersVisibility="Column"
             HorizontalGridLinesBrush="#FF969696"
             IsReadOnly="True"
             ItemsSource="{Binding Source={x:Static local:MainWndViewModel.HashViewModels}, IsAsync=True}"
-            PreviewKeyDown="DataGrid_HashFiles_PrevKeyDown"
+            PreviewKeyDown="DataGridHashingFilesPrevKeyDown"
             RowStyle="{StaticResource RowStyleNormal}"
             ScrollViewer.CanContentScroll="True"
             SelectionMode="Extended"
@@ -378,21 +377,31 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
                                 <!--  不在计算状态  -->
-                                <TextBlock
-                                    x:Name="hashValueTextBlock"
+                                <Label
+                                    x:Name="hashStringLabel"
                                     Grid.Column="0"
                                     Margin="4,0,4,0"
-                                    VerticalAlignment="Center"
-                                    Text="{Binding CurrentHashString}"
-                                    TextTrimming="CharacterEllipsis"
+                                    Padding="0"
+                                    VerticalContentAlignment="Center"
                                     ToolTip="{Binding ModelDetails}">
-                                    <TextBlock.Visibility>
+                                    <Label.Visibility>
                                         <MultiBinding Converter="{StaticResource SubCtrlVisiblitySucceededCvt}">
                                             <Binding Path="State" />
                                             <Binding Path="Result" />
                                         </MultiBinding>
-                                    </TextBlock.Visibility>
-                                </TextBlock>
+                                    </Label.Visibility>
+                                    <Label.InputBindings>
+                                        <MouseBinding Command="{Binding ShowHashDetailsWindowCmd}" MouseAction="LeftDoubleClick" />
+                                    </Label.InputBindings>
+                                    <Label.ContentTemplate>
+                                        <DataTemplate>
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                Text="{Binding ElementName=hashStringLabel, Path=DataContext.CurrentHashString}"
+                                                TextTrimming="CharacterEllipsis" />
+                                        </DataTemplate>
+                                    </Label.ContentTemplate>
+                                </Label>
                                 <TextBlock
                                     Grid.Column="0"
                                     Margin="4,0,4,0"
@@ -410,7 +419,7 @@
                                 <!--  ProgressBar的Value绑定需是OneWay，因为默认TwoWay和private set的Progress无法成功绑定  -->
                                 <ProgressBar
                                     Grid.Column="0"
-                                    Width="{Binding ElementName=hashValueTextBlock, Path=ActualWidth}"
+                                    Width="{Binding ElementName=hashStringLabel, Path=ActualWidth}"
                                     Height="6"
                                     Margin="4,0,4,0"
                                     HorizontalAlignment="Left"
@@ -617,14 +626,14 @@
                     Panel.ZIndex="1"
                     Background="Transparent"
                     MaxLines="1"
-                    PreviewDragOver="TextBox_HashValueOrFilePath_PreviewDragOver"
-                    PreviewDrop="TextBox_HashOrFilePath_PreviewDrop" />
+                    PreviewDragOver="TextBoxHashValueOrFilePathPreviewDragOver"
+                    PreviewDrop="TextBoxHashOrFilePathPreviewDrop" />
             </Grid>
             <Button
                 Grid.Column="2"
                 Margin="8,0,0,0"
                 Padding="8,1,8,1"
-                Click="Button_SelectBasisFileSetPath_Click"
+                Click="ButtonSelectBasisFileSetPathClick"
                 Content="..." />
             <Button
                 Grid.Column="3"
