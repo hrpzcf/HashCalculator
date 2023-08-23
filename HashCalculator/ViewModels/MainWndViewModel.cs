@@ -572,16 +572,14 @@ namespace HashCalculator
 
         private void OpenFolderSelectItemsAction(object param)
         {
-            if (param is IList selectedModels)
+            if (param is IList selectedModels && selectedModels.AnyItem())
             {
                 Dictionary<string, List<string>> groupByDir =
                     new Dictionary<string, List<string>>();
-                int count = selectedModels.Count;
-                for (int i = 0; i < count; ++i)
+                foreach (HashViewModel model in selectedModels)
                 {
                     bool isMatched = false;
-                    HashViewModel model = (HashViewModel)selectedModels[i];
-                    if (model.ModelArg.Deprecated)
+                    if (!Path.IsPathRooted(model.ModelArg.FilePath))
                     {
                         continue;
                     }
