@@ -8,6 +8,7 @@
     Width="{Binding Source={x:Static local:Settings.Current}, Path=AlgosPanelWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     Height="{Binding Source={x:Static local:Settings.Current}, Path=AlgosPanelHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     d:DataContext="{d:DesignInstance Type=local:AlgosPanelModel}"
+    KeyDown="AlgosPanelKeyDown"
     ShowInTaskbar="False"
     UseLayoutRounding="True"
     WindowStartupLocation="CenterOwner"
