@@ -4,7 +4,7 @@ namespace HashCalculator
 {
     internal class BouncyCastleWhirlpool : BouncyCastleDigest
     {
-        public override string AlgoName => "Whirlpool-512";
+        public override string AlgoName => "Whirlpool";
 
         public override AlgoType AlgoGroup => AlgoType.WHIRLPOOL;
 

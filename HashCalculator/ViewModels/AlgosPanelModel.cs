@@ -24,6 +24,9 @@ namespace HashCalculator
                 new AlgoInOutModel(new BouncyCastleSha3(256)),
                 new AlgoInOutModel(new BouncyCastleSha3(384)),
                 new AlgoInOutModel( new BouncyCastleSha3(512)),
+                // Whirlpool
+                new AlgoInOutModel(new BouncyCastleWhirlpool()),
+                // MD5
                 new AlgoInOutModel(new MicrosoftMD5Cng()),
                 // Blake2s
                 new AlgoInOutModel(new BouncyCastleBlake2s(128)),
@@ -44,8 +47,6 @@ namespace HashCalculator
                 new AlgoInOutModel(new BouncyCastleBlake3(256)),
                 new AlgoInOutModel(new BouncyCastleBlake3(384)),
                 new AlgoInOutModel(new BouncyCastleBlake3(512)),
-                // Whirlpool
-                new AlgoInOutModel(new BouncyCastleWhirlpool()),
             };
 
         public static AlgoInOutModel[] FromAlgoName(string name)

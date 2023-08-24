@@ -35,13 +35,18 @@
             Style="{StaticResource TabItemStyle1}">
             <StackPanel Margin="8">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock VerticalAlignment="Center" Text="同时计算多少个文件的哈希值：" />
+                    <TextBlock VerticalAlignment="Center" Text="同时进行的最大任务数量：" />
                     <ComboBox
                         DisplayMemberPath="Display"
                         ItemsSource="{Binding AvailableTaskNumLimits}"
                         SelectedValue="{Binding SelectedTaskNumberLimit, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         SelectedValuePath="ItemValue" />
                 </StackPanel>
+                <CheckBox
+                    Margin="0,8,0,0"
+                    Padding="4,0,0,0"
+                    Content="每个任务的多个算法并行计算(不勾选则多个算法串行计算)"
+                    IsChecked="{Binding ParallelBetweenAlgos, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
                     <TextBlock VerticalAlignment="Center" Text="当选择的计算对象中包含文件夹时：" />
                     <ComboBox
