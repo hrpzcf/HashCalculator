@@ -137,7 +137,7 @@
                     Command="{Binding RefreshHashNewLinesCmd}"
                     IsEnabled="{Binding State, Converter={StaticResource ButtonEnabledCvt}}"
                     Style="{StaticResource ImageButtonStyle2}"
-                    ToolTip="新增哈希计算：根据 [默认哈希算法] 下拉列表所选算法，计算表格中所有文件的哈希值，但不清除原来的计算结果，而是增加新的行来显示结果">
+                    ToolTip="新增哈希计算：根据 [默认哈希算法] 所选算法，计算表格中所有文件的哈希值，但不清除原来的计算结果，而是增加新的行来显示结果">
                     <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnNewLineEnabledImgCvt}}" />
                 </Button>
                 <Button
@@ -146,7 +146,7 @@
                     Command="{Binding RefreshCurrentHashCmd}"
                     IsEnabled="{Binding State, Converter={StaticResource ButtonEnabledCvt}}"
                     Style="{StaticResource ImageButtonStyle2}"
-                    ToolTip="计算未完成项：根据 [默认哈希算法] 下拉列表所选算法，重新计算表格中未完成计算的文件的哈希值">
+                    ToolTip="计算未完成项：根据 [默认哈希算法] 所选算法，重新计算表格中未完成计算的文件的哈希值">
                     <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnRefreshEnabledImgCvt}}" />
                 </Button>
                 <Button
@@ -155,7 +155,7 @@
                     Command="{Binding RefreshCurHashForceCmd}"
                     IsEnabled="{Binding State, Converter={StaticResource ButtonEnabledCvt}}"
                     Style="{StaticResource ImageButtonStyle2}"
-                    ToolTip="全部重新计算：根据 [默认哈希算法] 下拉列表所选算法，重新计算表格中所有文件的哈希值">
+                    ToolTip="全部重新计算：根据 [默认哈希算法] 所选算法，重新计算表格中所有文件的哈希值">
                     <Image Source="{Binding IsEnabled, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Button}, AncestorLevel=1}, Converter={StaticResource BtnRefreshForceEnabledImgCvt}}" />
                 </Button>
                 <Button

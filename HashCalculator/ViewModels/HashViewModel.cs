@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -590,17 +591,19 @@ namespace HashCalculator
                         this.MaxProgress = fs.Length;
                         if (this.SelectedOutputType == OutputType.Unknown)
                         {
-                            this.SelectedOutputType =
-                                Settings.Current.SelectedOutputType;
+                            this.SelectedOutputType = Settings.Current.SelectedOutputType;
                         }
                     });
                     int readedSize = 0;
                     byte[] buffer = new byte[BufferSize.Suggest(this.FileSize)];
-                    ParallelOptions options = new ParallelOptions();
-                    options.MaxDegreeOfParallelism = 4;
+                    ParallelOptions options = new ParallelOptions()
+                    {
+                        MaxDegreeOfParallelism = Environment.ProcessorCount,
+                    };
                     Action<int> progressUpdate = size => { this.Progress += size; };
                     while (true)
                     {
+                        this.manualPauseController.WaitOne();
                         if (this.cancellation.IsCancellationRequested)
                         {
                             goto FinishingTouchesBeforeExiting;
@@ -610,12 +613,29 @@ namespace HashCalculator
                         {
                             break;
                         }
-                        Parallel.ForEach(this.AlgoInOutModels, options, i =>
+                        if (Settings.Current.ParallelBetweenAlgos)
                         {
-                            i.Algo.TransformBlock(buffer, 0, readedSize, null, 0);
-                        });
+                            if (this.AlgoInOutModels.Length > 1)
+                            {
+                                Parallel.ForEach(this.AlgoInOutModels, options, i =>
+                                {
+                                    i.Algo.TransformBlock(buffer, 0, readedSize, null, 0);
+                                });
+                            }
+                            else
+                            {
+                                HashAlgorithm algo = this.AlgoInOutModels[0].Algo;
+                                algo.TransformBlock(buffer, 0, readedSize, null, 0);
+                            }
+                        }
+                        else
+                        {
+                            foreach (AlgoInOutModel algoInOut in this.AlgoInOutModels)
+                            {
+                                algoInOut.Algo.TransformBlock(buffer, 0, readedSize, null, 0);
+                            }
+                        }
                         synchronization.BeginInvoke(progressUpdate, readedSize);
-                        this.manualPauseController.WaitOne();
                     }
                     Action<AlgoInOutModel> hashBytesUpdate = i =>
                     {

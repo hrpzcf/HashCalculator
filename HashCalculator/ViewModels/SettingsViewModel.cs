@@ -18,7 +18,7 @@ namespace HashCalculator
         private WindowState mainWindowState = WindowState.Normal;
         private double settingsWndWidth = 600.0;
         private double settingsWndHeight = 500.0;
-        private double algosPanelWidth = 510.0;
+        private double algosPanelWidth = 500.0;
         private double algosPanelHeight = 390.0;
         private double hashDetailsWidth = 600.0;
         private double hashDetailsHeight = 700.0;
@@ -33,6 +33,7 @@ namespace HashCalculator
         private bool runInMultiInstanceMode = false;
         private bool notSettingShellExtension = true;
         private bool preferAlgosInBasis = true;
+        private bool parallelBetweenAlgos = false;
         private RelayCommand installShellExtCmd;
         private RelayCommand unInstallShellExtCmd;
 
@@ -380,6 +381,18 @@ namespace HashCalculator
             set
             {
                 this.SetPropNotify(ref this.preferAlgosInBasis, value);
+            }
+        }
+
+        public bool ParallelBetweenAlgos
+        {
+            get
+            {
+                return this.parallelBetweenAlgos;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.parallelBetweenAlgos, value);
             }
         }
 

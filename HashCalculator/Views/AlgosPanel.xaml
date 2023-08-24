@@ -31,8 +31,7 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <GroupBox
             Grid.Row="0"
@@ -69,25 +68,31 @@
             Grid.ColumnSpan="3"
             Margin="0,4,0,0"
             Padding="1"
+            HorizontalAlignment="Center"
+            FontSize="8pt"
             Style="{StaticResource DescTextBlockStyle}"
             Text="如果没有选择任何算法，则默认使用第一个算法；" />
         <TextBlock
             Grid.Row="2"
             Grid.ColumnSpan="3"
             Padding="1"
+            HorizontalAlignment="Center"
+            FontSize="8pt"
             Style="{StaticResource DescTextBlockStyle}"
-            Text="如果选择了多个算法，则强烈建议把设置中【同时计算多少个文件的哈希值】设置为 1；" />
+            Text="如果选择了多个算法，则强烈建议把设置中【同时进行的最大任务数量】设置为 1；" />
         <TextBlock
             Grid.Row="3"
             Grid.ColumnSpan="3"
             Margin="0,0,0,4"
             Padding="1"
+            HorizontalAlignment="Center"
+            FontSize="8pt"
             Style="{StaticResource DescTextBlockStyle}"
             Text="不建议选择过多个算法，否则极易造成程序无响应。" />
         <Button
             Grid.Row="4"
-            Grid.Column="1"
-            Margin="0,0,16,4"
+            Grid.Column="0"
+            Margin="0,0,0,4"
             Padding="20,4,20,4"
             HorizontalAlignment="Left"
             Background="{x:Null}"
@@ -98,8 +103,8 @@
             Style="{StaticResource FixedBdColorButtonStyle1}" />
         <Button
             Grid.Row="4"
-            Grid.Column="2"
-            Margin="16,0,0,4"
+            Grid.Column="1"
+            Margin="0,0,0,4"
             Padding="20,4,20,4"
             HorizontalAlignment="Right"
             Background="{x:Null}"

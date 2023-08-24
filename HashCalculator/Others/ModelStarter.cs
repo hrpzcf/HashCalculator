@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace HashCalculator
 {
@@ -28,8 +27,7 @@ namespace HashCalculator
             this.tokenSource = new CancellationTokenSource();
             Task.Factory.StartNew(() =>
                 {
-                    this.process(
-                        this.tokenSource.Token, this.Refresh);
+                    this.process(this.tokenSource.Token, this.Refresh);
                 },
                 this.tokenSource.Token,
                 TaskCreationOptions.LongRunning, TaskScheduler.Default);
@@ -133,8 +131,8 @@ namespace HashCalculator
                 Monitor.Exit(this.changeCountLock);
                 try
                 {
-                    HashViewModel mmodel = this.queue.Take(token);
-                    mmodel.ComputeManyHashValue();
+                    HashViewModel model = this.queue.Take(token);
+                    model.ComputeManyHashValue();
                 }
                 catch (OperationCanceledException) { }
             }
