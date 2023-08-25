@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -596,74 +595,95 @@ namespace HashCalculator
                     });
                     int readedSize = 0;
                     byte[] buffer = new byte[BufferSize.Suggest(this.FileSize)];
-                    ParallelOptions options = new ParallelOptions()
+                    Action<int> updateProgress = size => { this.Progress += size; };
+                    bool terminateByCancellation = false;
+                    if (Settings.Current.ParallelBetweenAlgos)
                     {
-                        MaxDegreeOfParallelism = Environment.ProcessorCount,
-                    };
-                    Action<int> progressUpdate = size => { this.Progress += size; };
-                    while (true)
-                    {
-                        this.manualPauseController.WaitOne();
-                        if (this.cancellation.IsCancellationRequested)
-                        {
-                            goto FinishingTouchesBeforeExiting;
-                        }
-                        readedSize = fs.Read(buffer, 0, buffer.Length);
-                        if (readedSize <= 0)
-                        {
-                            break;
-                        }
-                        if (Settings.Current.ParallelBetweenAlgos)
-                        {
-                            if (this.AlgoInOutModels.Length > 1)
+                        int modelsCount = this.AlgoInOutModels.Length;
+                        using (Barrier barrier = new Barrier(modelsCount, i =>
                             {
-                                Parallel.ForEach(this.AlgoInOutModels, options, i =>
+                                this.manualPauseController.WaitOne();
+                                readedSize = fs.Read(buffer, 0, buffer.Length);
+                                synchronization.BeginInvoke(updateProgress, readedSize);
+                            }))
+                        {
+                            void DoTransformBlocks(AlgoInOutModel model)
+                            {
+                                while (true)
                                 {
-                                    i.Algo.TransformBlock(buffer, 0, readedSize, null, 0);
-                                });
+                                    barrier.SignalAndWait();
+                                    if (this.cancellation.IsCancellationRequested)
+                                    {
+                                        barrier.RemoveParticipant();
+                                        terminateByCancellation = true;
+                                        break;
+                                    }
+                                    if (readedSize <= 0)
+                                    {
+                                        break;
+                                    }
+                                    model.Algo.TransformBlock(buffer, 0, readedSize, null, 0);
+                                }
                             }
-                            else
+                            ThreadPool.GetMinThreads(out int minwt, out int mincpt);
+                            if (minwt < modelsCount)
                             {
-                                HashAlgorithm algo = this.AlgoInOutModels[0].Algo;
-                                algo.TransformBlock(buffer, 0, readedSize, null, 0);
+                                ThreadPool.SetMinThreads(modelsCount, mincpt);
                             }
+                            Parallel.ForEach(this.AlgoInOutModels, DoTransformBlocks);
                         }
-                        else
+                    }
+                    else
+                    {
+                        while (true)
                         {
+                            this.manualPauseController.WaitOne();
+                            if (this.cancellation.IsCancellationRequested)
+                            {
+                                goto FinishingTouchesBeforeExiting;
+                            }
+                            readedSize = fs.Read(buffer, 0, buffer.Length);
+                            if (readedSize <= 0)
+                            {
+                                break;
+                            }
                             foreach (AlgoInOutModel algoInOut in this.AlgoInOutModels)
                             {
                                 algoInOut.Algo.TransformBlock(buffer, 0, readedSize, null, 0);
                             }
+                            synchronization.BeginInvoke(updateProgress, readedSize);
                         }
-                        synchronization.BeginInvoke(progressUpdate, readedSize);
                     }
-                    Action<AlgoInOutModel> hashBytesUpdate = i =>
+                    if (!terminateByCancellation)
                     {
-                        i.Export = true;
-                        i.HashResult = i.Algo.Hash;
-                    };
-                    Action<AlgoInOutModel, CmpRes> modelUpdate = (i, c) =>
-                    {
-                        i.HashCmpResult = c;
-                    };
-                    FileAlgosHashs algosHashs =
-                        this.ModelArg.HashBasis?.GetFileAlgosHashs(this.FileName);
-                    foreach (AlgoInOutModel item in this.AlgoInOutModels)
-                    {
-                        item.Algo.TransformFinalBlock(buffer, 0, 0);
-                        synchronization.Invoke(hashBytesUpdate, item);
-                        if (algosHashs != null)
+                        Action<AlgoInOutModel> updateHashBytes = i =>
                         {
-                            CmpRes comparisonResult = algosHashs.CompareHash(
-                                item.AlgoName, item.HashResult);
-                            synchronization.Invoke(modelUpdate, item, comparisonResult);
+                            i.Export = true;
+                            i.HashResult = i.Algo.Hash;
+                        };
+                        Action<AlgoInOutModel, CmpRes> updateModel = (i, c) =>
+                        {
+                            i.HashCmpResult = c;
+                        };
+                        FileAlgosHashs algosHashs =
+                            this.ModelArg.HashBasis?.GetFileAlgosHashs(this.FileName);
+                        foreach (AlgoInOutModel item in this.AlgoInOutModels)
+                        {
+                            item.Algo.TransformFinalBlock(buffer, 0, 0);
+                            synchronization.Invoke(updateHashBytes, item);
+                            if (algosHashs != null)
+                            {
+                                CmpRes bytesComparisonResult = algosHashs.CompareHash(
+                                    item.AlgoName, item.HashResult);
+                                synchronization.Invoke(updateModel, item, bytesComparisonResult);
+                            }
                         }
+                        synchronization.Invoke(() =>
+                        {
+                            this.Result = HashResult.Succeeded;
+                        });
                     }
                 }
-                synchronization.Invoke(() =>
-                {
-                    this.Result = HashResult.Succeeded;
-                });
             }
             catch
             {
