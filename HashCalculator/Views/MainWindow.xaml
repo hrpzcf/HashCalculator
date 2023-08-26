@@ -268,10 +268,10 @@
                     <MenuItem
                         Command="{Binding CopyModelsHashStringCmd}"
                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
-                        Header="复制当前算法结果"
+                        Header="复制选中项当前显示结果"
                         IsEnabled="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems, Converter={StaticResource CopyModelsHashMenuEnabledCvt}}" />
                     <MenuItem
-                        Header="按格式复制当前算法结果"
+                        Header="按格式复制选中项当前结果"
                         IsEnabled="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems, Converter={StaticResource CopyModelsHashMenuEnabledCvt}}"
                         ItemsSource="{Binding CopyModelsHashMenuCmds}">
                         <MenuItem.ItemContainerStyle>
@@ -285,10 +285,10 @@
                     <MenuItem
                         Command="{Binding CopyModelsAllAlgosValueCmd}"
                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
-                        Header="复制所有算法结果"
+                        Header="复制选中项所有算法结果"
                         IsEnabled="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems, Converter={StaticResource CopyModelsHashMenuEnabledCvt}}" />
                     <MenuItem
-                        Header="按格式复制所有算法结果"
+                        Header="按格式复制选中项所有结果"
                         IsEnabled="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems, Converter={StaticResource CopyModelsHashMenuEnabledCvt}}"
                         ItemsSource="{Binding CopyModelsAllAlgosMenuCmds}">
                         <MenuItem.ItemContainerStyle>
