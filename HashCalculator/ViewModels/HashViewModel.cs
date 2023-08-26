@@ -244,8 +244,7 @@ namespace HashCalculator
 
         private void CopyOneModelHashValueAction(object param)
         {
-            if (this.Result == HashResult.Succeeded
-                && !string.IsNullOrEmpty(this.CurrentHashString))
+            if (this.Result == HashResult.Succeeded && !string.IsNullOrEmpty(this.CurrentHashString))
             {
                 Clipboard.SetText(this.CurrentHashString);
             }

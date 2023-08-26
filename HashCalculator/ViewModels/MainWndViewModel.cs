@@ -354,24 +354,21 @@ namespace HashCalculator
                 StringBuilder stringBuilder = new StringBuilder();
                 foreach (HashViewModel model in selectedModels)
                 {
-                    string formatedHashString = model.CurrentHashString;
-                    if (string.IsNullOrEmpty(formatedHashString))
+                    string formatedHashString;
+                    if (output != OutputType.Unknown)
                     {
-                        if (output != OutputType.Unknown)
-                        {
-                            formatedHashString = BytesToStrByOutputTypeCvt.Convert(
-                                model.CurrentInOutModel.HashResult, output);
-                        }
-                        else if (model.SelectedOutputType == OutputType.Unknown)
-                        {
-                            formatedHashString = BytesToStrByOutputTypeCvt.Convert(
-                                model.CurrentInOutModel.HashResult, Settings.Current.SelectedOutputType);
-                        }
-                        else
-                        {
-                            formatedHashString = BytesToStrByOutputTypeCvt.Convert(
-                                 model.CurrentInOutModel.HashResult, model.SelectedOutputType);
-                        }
+                        formatedHashString = BytesToStrByOutputTypeCvt.Convert(
+                            model.CurrentInOutModel.HashResult, output);
+                    }
+                    else if (model.SelectedOutputType != OutputType.Unknown)
+                    {
+                        formatedHashString = BytesToStrByOutputTypeCvt.Convert(
+                            model.CurrentInOutModel.HashResult, model.SelectedOutputType);
+                    }
+                    else
+                    {
+                        formatedHashString = BytesToStrByOutputTypeCvt.Convert(
+                            model.CurrentInOutModel.HashResult, Settings.Current.SelectedOutputType);
                     }
                     stringBuilder.AppendFormat(hashLineForCopyFormat, formatedHashString);
                 }
@@ -423,23 +420,23 @@ namespace HashCalculator
                 StringBuilder stringBuilder = new StringBuilder();
                 foreach (HashViewModel model in selectedModels)
                 {
-                    foreach (AlgoInOutModel inOutModel in model.AlgoInOutModels)
+                    foreach (AlgoInOutModel algoInOutModel in model.AlgoInOutModels)
                     {
                         string formatedHashString;
                         if (output != OutputType.Unknown)
                         {
                             formatedHashString = BytesToStrByOutputTypeCvt.Convert(
-                                inOutModel.HashResult, output);
+                                algoInOutModel.HashResult, output);
                         }
-                        else if (model.SelectedOutputType == OutputType.Unknown)
+                        else if (model.SelectedOutputType != OutputType.Unknown)
                         {
                             formatedHashString = BytesToStrByOutputTypeCvt.Convert(
-                                inOutModel.HashResult, Settings.Current.SelectedOutputType);
+                                algoInOutModel.HashResult, model.SelectedOutputType);
                         }
                         else
                         {
                             formatedHashString = BytesToStrByOutputTypeCvt.Convert(
-                                 inOutModel.HashResult, model.SelectedOutputType);
+                                algoInOutModel.HashResult, Settings.Current.SelectedOutputType);
                         }
                         stringBuilder.AppendFormat(hashLineForCopyFormat, formatedHashString);
                     }
