@@ -220,8 +220,7 @@
                             class="steps">&quot;新增哈希计算&quot;按钮：</span>根据&quot;默认哈希算法&quot;所选算法，计算表格中所有文件的哈希值，但不清除原来的计算结果，而是增加新的行来显示结果。这对于需要对同一个文件计算多个类型的哈希值时很有用。
                     </li>
                     <li>
-                        <span
-                            class="steps">&quot;计算未完成项&quot;按钮：</span>根据&quot;默认哈希算法&quot;所选算法，清空表格内容并重新计算表格中所有文件的哈希值。
+                        <span class="steps">&quot;计算未完成项&quot;按钮：</span>根据&quot;默认哈希算法&quot;所选算法，清空表格内容并重新计算表格中所有文件的哈希值。
                     </li>
                     <li>
                         <span class="steps">&quot;全部重新计算&quot;按钮：</span>根据&quot;默认哈希算法&quot;所选算法，重新计算表格中所有文件的哈希值。
@@ -284,8 +283,7 @@
                             <li><span class="steps">暂停任务：</span>暂停所有已选中的、正在运行的任务</li>
                             <li><span class="steps">继续任务：</span>启动所有已选中的、已被暂停的任务</li>
                             <li><span class="steps">取消任务：</span>取消所有已选中的、排队中或运行中或暂停中的任务</li>
-                            <li><span
-                                    class="steps">新增计算：</span>复制所有已选中的行到新行并启动，新任务开始运行时将以&quot;默认哈希算法&quot;所选的算法进行计算
+                            <li><span class="steps">新增计算：</span>复制所有已选中的行到新行并启动，新任务开始运行时将以&quot;默认哈希算法&quot;所选的算法进行计算
                             </li>
                             <li><span
                                     class="steps">启动未成功项：</span>重新启动所有已选中的任务中未运行的、非成功的任务，任务开始运行时将以&quot;默认哈希算法&quot;所选的算法进行计算
@@ -297,15 +295,25 @@
                     </li>
                     <li><span class="steps">复制文件名：</span>将所有选中行对应的文件名复制到剪贴板，复制后的格式是每行一个文件名。</li>
                     <li><span class="steps">复制路径：</span>将所有选中行对应的文件完整路径复制到剪贴板，复制后的格式是每行一个路径。</li>
-                    <li><span class="steps">复制哈希结果</span>
+                    <li><span class="steps">复制选中项当前显示结果</span>将所有选中行当前显示的哈希结果复制为各行 <b>输出方式</b> 列指定的字符串格式，如果
+                        <b>输出方式没有指定</b> 则复制为 <b>默认输出方式</b> 指定的格式。
+                    </li>
+                    <li><span class="steps">按格式复制选中项当前结果</span>
                         <ul>
                             <li><span class="steps">Base64：</span>将所有选中行的哈希结果复制为 Base64 字符串格式。</li>
                             <li><span class="steps">十六进制大写：</span>将所有选中行的哈希结果复制为十六进制字符串格式，字母大写。</li>
                             <li><span class="steps">十六进制小写：</span>将所有选中行的哈希结果复制为十六进制字符串格式，字母小写。</li>
                         </ul>
                     </li>
-                    <li><span class="steps">复制哈希结果</span>将所有选中行的哈希结果复制为各行 <b>输出方式</b> 列指定的字符串格式，如果 <b>输出方式</b> 是
-                        <b>没有指定</b> 则复制为 <b>默认输出方式</b> 指定的格式。
+                    <li><span class="steps">复制选中项所有算法结果</span>将所有选中行所有已计算的哈希结果复制为各行 <b>输出方式</b> 列指定的字符串格式，如果
+                        <b>输出方式没有指定</b> 则复制为 <b>默认输出方式</b> 指定的格式。
+                    </li>
+                    <li><span class="steps">按格式复制选中项所有结果</span>
+                        <ul>
+                            <li><span class="steps">Base64：</span>将所有选中行所有已计算的哈希结果复制为 Base64 字符串格式。</li>
+                            <li><span class="steps">十六进制大写：</span>将所有选中行所有已计算的哈希结果复制为十六进制字符串格式，字母大写。</li>
+                            <li><span class="steps">十六进制小写：</span>将所有选中行所有已计算的哈希结果复制为十六进制字符串格式，字母小写。</li>
+                        </ul>
                     </li>
                     <li><span
                             class="steps">删除文件</span>将所有选中的行从表格移除，永久删除对应的文件或移动到回收站(取决于设置面板<b>右键选择删除文件时永久删除而不是移动到回收站</b>项的设置)，删除文件前会显示确认对话框。
