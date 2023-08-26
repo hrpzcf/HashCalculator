@@ -119,7 +119,7 @@
     }
 
     /// <summary>
-    /// 任务数量限制（同时进行的最大任务数量）
+    /// 同时进行的任务数量上限
     /// </summary>
     public enum TaskNum
     {

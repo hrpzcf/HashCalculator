@@ -71,7 +71,7 @@
             HorizontalAlignment="Center"
             FontSize="8pt"
             Style="{StaticResource DescTextBlockStyle}"
-            Text="如果没有选择任何算法，则默认使用第一个算法；" />
+            Text="如果没有选择任何算法，则默认使用第一个算法" />
         <TextBlock
             Grid.Row="2"
             Grid.ColumnSpan="3"
@@ -79,7 +79,7 @@
             HorizontalAlignment="Center"
             FontSize="8pt"
             Style="{StaticResource DescTextBlockStyle}"
-            Text="如果选择了多个算法，则强烈建议把设置中【同时进行的最大任务数量】设置为 1；" />
+            Text="如果默认算法多选且设置中启用并行计算，强烈建议把同时进行的任务数上限设置为 1" />
         <TextBlock
             Grid.Row="3"
             Grid.ColumnSpan="3"
@@ -88,7 +88,7 @@
             HorizontalAlignment="Center"
             FontSize="8pt"
             Style="{StaticResource DescTextBlockStyle}"
-            Text="不建议选择过多个算法，否则极易造成程序无响应。" />
+            Text="不建议选择太多算法，否则对程序做任何操作都极易造成程序无响应" />
         <Button
             Grid.Row="4"
             Grid.Column="0"

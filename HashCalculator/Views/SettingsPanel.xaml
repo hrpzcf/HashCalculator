@@ -35,7 +35,7 @@
             Style="{StaticResource TabItemStyle1}">
             <StackPanel Margin="8">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock VerticalAlignment="Center" Text="同时进行的最大任务数量：" />
+                    <TextBlock VerticalAlignment="Center" Text="同时进行的任务数量上限：" />
                     <ComboBox
                         DisplayMemberPath="Display"
                         ItemsSource="{Binding AvailableTaskNumLimits}"
