@@ -232,7 +232,7 @@ namespace HashCalculator
     internal enum HChangeNotifyEventID
     {
         /// <summary>
-        /// All events have occurred.
+        /// Cover events have occurred.
         /// </summary>
         SHCNE_ALLEVENTS = 0x7FFFFFFF,
 

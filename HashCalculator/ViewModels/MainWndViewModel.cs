@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Resources;
 using System.Windows.Threading;
@@ -36,9 +37,11 @@ namespace HashCalculator
         private List<ModelArg> displayedFiles = new List<ModelArg>();
         private string hashCheckReport = string.Empty;
         private QueueState queueState = QueueState.None;
+        private CommandPanel commandPanelInst = null;
         private readonly object displayingModelLock = new object();
         private readonly object displayModelRequestLock = new object();
         private readonly object tobeComputedModelsCountLock = new object();
+        private RelayCommand openCommandPanelCmd;
         private RelayCommand openSelectAlgoWndCmd;
         private RelayCommand mainWindowTopmostCmd;
         private RelayCommand clearAllTableLinesCmd;
@@ -71,11 +74,30 @@ namespace HashCalculator
 
         public MainWndViewModel()
         {
+            HashViewModelsViewSrc = new CollectionViewSource();
+            HashViewModelsViewSrc.Source = HashViewModels;
+            HashViewModelsViewSrc.View.Filter = value =>
+            {
+                if (value is HashViewModel model)
+                {
+                    return model.Matched == true;
+                }
+                return true;
+            };
             Settings.Current.PropertyChanged += this.PropChangedAction;
             this.addModelAction = new AddModelDelegate(this.AddModelAction);
+            Current = this;
         }
 
-        public Window Parent { get; set; }
+        public static MainWndViewModel Current { get; private set; }
+
+        public Window OwnerWnd { get; set; }
+
+        public static CollectionViewSource HashViewModelsViewSrc
+        {
+            get;
+            private set;
+        }
 
         public static ObservableCollection<HashViewModel> HashViewModels { get; }
             = new ObservableCollection<HashViewModel>();
@@ -312,6 +334,35 @@ namespace HashCalculator
             else if (e.PropertyName == nameof(Settings.Current.RunInMultiInstMode))
             {
                 MappedFiler.RunMultiMode = Settings.Current.RunInMultiInstMode;
+            }
+        }
+
+        private void OpenCommandPanelAction(object param)
+        {
+            if (this.commandPanelInst != null)
+            {
+                if (!this.commandPanelInst.CheckIfPanelOutsideScreen())
+                {
+                    this.commandPanelInst.Close();
+                }
+            }
+            else
+            {
+                this.commandPanelInst = new CommandPanel((o, e) => { this.commandPanelInst = null; });
+                this.commandPanelInst.Owner = MainWindow.This;
+                this.commandPanelInst.Show();
+            }
+        }
+
+        public ICommand OpenCommandPanelCmd
+        {
+            get
+            {
+                if (this.openCommandPanelCmd == null)
+                {
+                    this.openCommandPanelCmd = new RelayCommand(this.OpenCommandPanelAction);
+                }
+                return this.openCommandPanelCmd;
             }
         }
 
@@ -721,7 +772,7 @@ namespace HashCalculator
                 }
                 catch (Exception)
                 {
-                    MessageBox.Show(this.Parent,
+                    MessageBox.Show(this.OwnerWnd,
                         $"文件删除失败：\n{model.FileInfo.FullName}", "错误",
                         MessageBoxButton.OK, MessageBoxImage.Error);
                 }
@@ -731,7 +782,7 @@ namespace HashCalculator
                 if (!CommonUtils.SendToRecycleBin(
                         MainWindow.WndHandle, model.FileInfo.FullName))
                 {
-                    MessageBox.Show(this.Parent,
+                    MessageBox.Show(this.OwnerWnd,
                         $"文件移动到回收站失败：\n{model.FileInfo.FullName}", "错误",
                         MessageBoxButton.OK, MessageBoxImage.Error);
                 }
@@ -757,7 +808,7 @@ namespace HashCalculator
                     deleteFileTip = $"确定把选中的 {count} 个文件移动到回收站吗？";
                 }
                 if (MessageBox.Show(
-                    this.Parent, deleteFileTip, "提示",
+                    this.OwnerWnd, deleteFileTip, "提示",
                     MessageBoxButton.OKCancel,
                     MessageBoxImage.Exclamation,
                     MessageBoxResult.Cancel) != MessageBoxResult.OK)
@@ -856,7 +907,7 @@ namespace HashCalculator
         {
             if (!HashViewModels.Any())
             {
-                MessageBox.Show(this.Parent, "列表中没有任何可以导出的条目。", "提示");
+                MessageBox.Show(this.OwnerWnd, "列表中没有任何可以导出的条目。", "提示");
                 return;
             }
             string fileName = "hashsums.txt";
@@ -934,13 +985,13 @@ namespace HashCalculator
                 }
                 else
                 {
-                    MessageBox.Show(this.Parent, $"收集到的哈希结果为空", "提示",
+                    MessageBox.Show(this.OwnerWnd, $"收集到的哈希结果为空", "提示",
                         MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this.Parent, $"哈希值导出失败：\n{ex.Message}", "错误",
+                MessageBox.Show(this.OwnerWnd, $"哈希值导出失败：\n{ex.Message}", "错误",
                     MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
@@ -1035,7 +1086,7 @@ namespace HashCalculator
             string pathOrHash = param as string;
             if (string.IsNullOrEmpty(pathOrHash))
             {
-                MessageBox.Show(this.Parent, "没有输入哈希值校验依据。", "提示");
+                MessageBox.Show(this.OwnerWnd, "没有输入哈希值校验依据。", "提示");
                 return;
             }
             string updateFailedMessage;
@@ -1120,7 +1171,7 @@ namespace HashCalculator
 
         private void OpenSettingsPanelAction(object param)
         {
-            Window settingsWindow = new SettingsPanel() { Owner = this.Parent };
+            Window settingsWindow = new SettingsPanel() { Owner = this.OwnerWnd };
             settingsWindow.ShowDialog();
         }
 
@@ -1158,7 +1209,7 @@ namespace HashCalculator
             catch (Exception)
             {
                 MessageBox.Show(
-                    this.Parent, "打开帮助页面失败~", "提示",
+                    this.OwnerWnd, "打开帮助页面失败~", "提示",
                     MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }

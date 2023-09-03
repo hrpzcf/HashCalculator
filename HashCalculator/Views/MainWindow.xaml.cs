@@ -29,7 +29,7 @@ namespace HashCalculator
         public MainWindow()
         {
             This = this;
-            this.viewModel.Parent = this;
+            this.viewModel.OwnerWnd = this;
             this.DataContext = this.viewModel;
             this.Closed += this.MainWindowClosed;
             this.Loaded += this.MainWindowLoaded;

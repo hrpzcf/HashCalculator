@@ -26,7 +26,8 @@ namespace HashCalculator
                 asmbName == "CommandLine" ||
                 asmbName == "BouncyCastle.Cryptography" ||
                 asmbName == "Microsoft.WindowsAPICodePack" ||
-                asmbName == "Microsoft.WindowsAPICodePack.Shell"))
+                asmbName == "Microsoft.WindowsAPICodePack.Shell" ||
+                asmbName == "Microsoft.Bcl.HashCode"))
             {
                 return default;
             }

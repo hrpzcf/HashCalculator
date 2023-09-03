@@ -226,12 +226,41 @@
         /// 未知版本，不读取 MemoryMappedFile 的内容
         /// </summary>
         Unknown,
+
         /// <summary>
-        /// 版本 1，按版本 1 的规则读取 MemoryMappedFile 内容
-        ///  0~3 字节：MemoryMappedFile 内容排布方案版本
-        ///  4~7 字节：MemoryMappedFile 内容条目数量
-        /// 8~11 字节：第一个条目的字节数；12~n 字节：第一个条目的内容，n 是 8~11 字节代表的 int 大小 + 11
+        /// 版本 1，按版本 1 的规则读取 MemoryMappedFile 内容：<br/>
+        /// a. 00~03(含) 字节：版本号，MemoryMappedFile 内容排布方案版本，所有版本都固定<br/>
+        /// b. 04~07(含) 字节：内容数量(非字节数)，MemoryMappedFile 内容的条目的数量<br/>
+        /// c. 08~11(含) 字节：第一个条目的字节数，表示这个条目从第 12 字节开始占用的字节数
+        /// d. 12~n (含) 字节：第一个条目的内容，n 是 [8~11(含) 字节内容转为 int 值] + 11<br/>
+        /// e. 下一个条目从第 n + 1 字节开始，以此类推......
         /// </summary>
         Version1,
+    }
+
+    /// <summary>
+    /// 筛选器的筛选逻辑
+    /// </summary>
+    internal enum FilterLogic
+    {
+        /// <summary>
+        /// 对象的目标属性(数组)里的任意一项符合筛选器多个要求里任意一个要求
+        /// </summary>
+        Any,
+
+        /// <summary>
+        /// 对象的目标属性(数组)涵盖了筛选器的所有要求，且不允许含有要求以外的项
+        /// </summary>
+        Strict,
+
+        /// <summary>
+        /// 对象的目标属性(数组)里的所有项都在筛选器多个要求组成的限制范围之内
+        /// </summary>
+        Within,
+
+        /// <summary>
+        /// 对象的目标属性(数组)涵盖了筛选器的所有要求，但也可能含有要求以外的项
+        /// </summary>
+        Cover,
     }
 }
