@@ -11,5 +11,7 @@
         public string Display { get; }
 
         public object ItemValue { get; }
+
+        public bool Selected { get; set; }
     }
 }

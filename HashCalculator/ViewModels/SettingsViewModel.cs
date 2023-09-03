@@ -22,6 +22,8 @@ namespace HashCalculator
         private double algosPanelHeight = 390.0;
         private double hashDetailsWidth = 600.0;
         private double hashDetailsHeight = 700.0;
+        private double cmdPanelTopRelToMainWnd = 0.0;
+        private double cmdPanelLeftRelToMainWnd = 0.0;
         private TaskNum selectedTaskNumberLimit = TaskNum.One;
         private ExportType resultFileTypeExportAs = ExportType.TxtFile;
         private ExportAlgos howToExportHashValues = ExportAlgos.Current;
@@ -236,6 +238,30 @@ namespace HashCalculator
             set
             {
                 this.SetPropNotify(ref this.hashDetailsHeight, value);
+            }
+        }
+
+        public double CmdPanelTopRelToMainWnd
+        {
+            get
+            {
+                return this.cmdPanelTopRelToMainWnd;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.cmdPanelTopRelToMainWnd, value);
+            }
+        }
+
+        public double CmdPanelLeftRelToMainWnd
+        {
+            get
+            {
+                return this.cmdPanelLeftRelToMainWnd;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.cmdPanelLeftRelToMainWnd, value);
             }
         }
 

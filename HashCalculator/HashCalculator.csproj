@@ -52,6 +52,11 @@
       <HintPath>Assembly\CommandLine.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Microsoft.Bcl.HashCode, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Assembly\Microsoft.Bcl.HashCode.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Microsoft.WindowsAPICodePack">
       <HintPath>Assembly\Microsoft.WindowsAPICodePack.dll</HintPath>
       <Private>False</Private>
@@ -96,8 +101,14 @@
     <Compile Include="HashAlgos\MicrosoftSHA256Cng.cs" />
     <Compile Include="HashAlgos\MicrosoftSHA384Cng.cs" />
     <Compile Include="HashAlgos\MicrosoftSHA512Cng.cs" />
+    <Compile Include="HashSelectors\CmpResultSelector.cs" />
+    <Compile Include="HashSelectors\TaskResultSelector.cs" />
+    <Compile Include="HashSelectors\HashStringSelector.cs" />
+    <Compile Include="HashSelectors\HashAlgoSelector.cs" />
+    <Compile Include="HashSelectors\SameHashSelector.cs" />
     <Compile Include="Others\CmdOptions.cs" />
     <Compile Include="Others\CommonExts.cs" />
+    <Compile Include="HashSelectors\HashSelector.cs" />
     <Compile Include="Others\MappedReader.cs" />
     <Compile Include="Others\MappedWriter.cs" />
     <Compile Include="Others\NativeFunctions.cs" />
@@ -116,12 +127,16 @@
     <Compile Include="Others\ShellExtHelper.cs" />
     <Compile Include="ViewModels\AlgosPanelModel.cs" />
     <Compile Include="ViewModels\AlgoInOutModel.cs" />
+    <Compile Include="ViewModels\CommandPanelModel.cs" />
     <Compile Include="ViewModels\MainWndViewModel.cs" />
     <Compile Include="Others\Converters.cs" />
     <Compile Include="Others\Enumerates.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="Views\AlgosPanel.xaml.cs">
       <DependentUpon>AlgosPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CommandPanel.xaml.cs">
+      <DependentUpon>CommandPanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\HashDetailsWnd.xaml.cs">
       <DependentUpon>HashDetailsWnd.xaml</DependentUpon>
@@ -175,6 +190,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\AlgosPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CommandPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -247,16 +266,16 @@
     <Resource Include="Images\search_files_32.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Assembly\BouncyCastle.CryptographyLicense.txt" />
+    <EmbeddedResource Include="Assembly\BouncyCastle.Cryptography-License.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Assembly\CommandLineParserLicense.txt" />
+    <EmbeddedResource Include="Assembly\CommandLineParser-License.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Assembly\WindowsAPICodePackLicense.txt" />
+    <EmbeddedResource Include="Assembly\WindowsAPICodePack-License.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Assembly\XamlAnimatedGifLicense.txt" />
+    <EmbeddedResource Include="Assembly\XamlAnimatedGif-License.txt" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ShellExt\HashCalculator.dll" />
@@ -264,6 +283,22 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\details_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\filter_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\filter_32_gray.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\refresh_64.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\refresh_64_gray.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Assembly\Microsoft.Bcl.HashCode-License.txt" />
+    <EmbeddedResource Include="Assembly\Microsoft.Bcl.HashCode.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -346,7 +346,7 @@ namespace HashCalculator
         }
     }
 
-    internal class ButtonEnabledCvt : IValueConverter
+    internal class MainModelStateToBoolCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -377,6 +377,30 @@ namespace HashCalculator
             else
             {
                 return Visibility.Visible;
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class BtnFilterEnabledImgCvt : IValueConverter
+    {
+        private static readonly BitmapImage enabled =
+            new BitmapImage(new Uri("/Images/filter_32.png", UriKind.Relative));
+        private static readonly BitmapImage disabled =
+            new BitmapImage(new Uri("/Images/filter_32_gray.png", UriKind.Relative));
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            switch ((bool)value)
+            {
+                case true:
+                    return enabled;
+                default:
+                    return disabled;
             }
         }
 
@@ -506,6 +530,30 @@ namespace HashCalculator
         }
     }
 
+    internal class BtnRefreshFilterEnabledImgCvt : IValueConverter
+    {
+        private static readonly BitmapImage enabled =
+            new BitmapImage(new Uri("/Images/refresh_64.png", UriKind.Relative));
+        private static readonly BitmapImage disabled =
+            new BitmapImage(new Uri("/Images/refresh_64_gray.png", UriKind.Relative));
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            switch ((bool)value)
+            {
+                case true:
+                    return enabled;
+                default:
+                    return disabled;
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     internal class LoadingImageVisiblityCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -589,7 +637,7 @@ namespace HashCalculator
         }
     }
 
-    internal class HashOrPathPlaceHolderVisibCvt : IValueConverter
+    internal class PlaceHolderTextVisibilityCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -692,6 +740,62 @@ namespace HashCalculator
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
+        }
+    }
+
+    internal class CommandPanelTopCvt : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (values.All(i => i is double))
+            {
+                return (double)values[0] + (double)values[1];
+            }
+            return 0.0;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            return new object[] { Binding.DoNothing, (double)value - Settings.Current.MainWindowTop };
+        }
+    }
+
+    internal class CommandPanelLeftCvt : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (values.All(i => i is double))
+            {
+                return (double)values[0] + (double)values[1];
+            }
+            return 0.0;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            return new object[] { Binding.DoNothing, (double)value - Settings.Current.MainWindowLeft };
+        }
+    }
+
+    internal class MultiLineTextToStrArrayCvt : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is string[] textLineArray)
+            {
+                return string.Join("\n", textLineArray);
+            }
+            return null;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is string multiLineText)
+            {
+                return multiLineText.Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(i => i.Trim()).ToArray();
+            }
+            return default(string[]);
         }
     }
 }

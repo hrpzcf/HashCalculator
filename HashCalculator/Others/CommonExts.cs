@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -41,6 +42,29 @@ namespace HashCalculator
         public static async void InvokeAsync(this Action<HashViewModel> action, HashViewModel model)
         {
             await Task.Run(() => { action(model); });
+        }
+
+        /// <summary>
+        /// 为 IEnumerable<T> 类型提供返回 HashSet<T> 的 ToHashSet 扩展方法
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="enumerale"></param>
+        /// <returns></returns>
+        public static HashSet<T> ToHashSet<T>(this IEnumerable<T> enumerale)
+        {
+            return new HashSet<T>(enumerale);
+        }
+
+        /// <summary>
+        /// 为 IEnumerable<T> 类型提供返回 HashSet<T> 的 ToHashSet 扩展方法
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="enumerale"></param>
+        /// <param name="comparer"></param>
+        /// <returns></returns>
+        public static HashSet<T> ToHashSet<T>(this IEnumerable<T> enumerale, IEqualityComparer<T> comparer)
+        {
+            return new HashSet<T>(enumerale, comparer);
         }
     }
 }

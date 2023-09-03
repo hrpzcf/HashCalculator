@@ -110,7 +110,7 @@ namespace HashCalculator
 
         public static byte[] FromBase64String(string base64String)
         {
-            if (base64String is null)
+            if (string.IsNullOrEmpty(base64String))
             {
                 return default;
             }
@@ -136,7 +136,7 @@ namespace HashCalculator
 
         private static string ToHexString(byte[] bytesPassedIn, string format)
         {
-            Debug.Assert(new string[] { "x2", "X2"}.Contains(format));
+            Debug.Assert(new string[] { "x2", "X2" }.Contains(format));
             if (bytesPassedIn is null)
             {
                 return default;
@@ -151,7 +151,7 @@ namespace HashCalculator
 
         public static byte[] FromHexString(string hexString)
         {
-            if (hexString is null || hexString.Length % 2 != 0)
+            if (string.IsNullOrEmpty(hexString) || hexString.Length % 2 != 0)
             {
                 return default;
             }

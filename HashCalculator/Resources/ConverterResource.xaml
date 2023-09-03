@@ -13,10 +13,11 @@
     <local:SubCtrlVisiblitySucceededCvt x:Key="SubCtrlVisiblitySucceededCvt" />
     <local:TaskMessageCtrlVisiblityCvt x:Key="TaskMessageCtrlVisiblityCvt" />
     <local:SubCtrlVisiblityNotSucceedCvt x:Key="SubCtrlVisiblityNotSucceedCvt" />
-    <local:ButtonEnabledCvt x:Key="ButtonEnabledCvt" />
+    <local:MainModelStateToBoolCvt x:Key="MainModelStateToBoolCvt" />
     <local:NoColumnCvt x:Key="NoColumnCvt" />
     <local:SubBtnPauseImageSrcCvt x:Key="SubBtnPauseImageSrcCvt" />
     <local:SubBtnPauseToolTipCvt x:Key="SubBtnPauseToolTipCvt" />
+    <local:BtnFilterEnabledImgCvt x:Key="BtnFilterEnabledImgCvt" />
     <local:BtnExportEnabledImgCvt x:Key="BtnExportEnabledImgCvt" />
     <local:BtnNewLineEnabledImgCvt x:Key="BtnNewLineEnabledImgCvt" />
     <local:BtnRefreshEnabledImgCvt x:Key="BtnRefreshEnabledImgCvt" />
@@ -26,10 +27,14 @@
     <local:LoadingImageVisiblityCvt x:Key="LoadingImageVisiblityCvt" />
     <local:BytesToStrByOutputTypeCvt x:Key="BytesToStrByOutputTypeCvt" />
     <local:CopyModelsHashMenuEnabledCvt x:Key="CopyModelsHashMenuEnabledCvt" />
-    <local:HashOrPathPlaceHolderVisibCvt x:Key="HashOrPathPlaceHolderVisibCvt" />
+    <local:PlaceHolderTextVisibilityCvt x:Key="PlaceHolderTextVisibilityCvt" />
     <local:RadioExportAsTxtFileCvt x:Key="RadioExportAsTxtFileCvt" />
     <local:RadioExportAsHcbFileCvt x:Key="RadioExportAsHcbFileCvt" />
     <local:RadioExportCurrentAlgoCvt x:Key="RadioExportCurrentAlgoCvt" />
     <local:RadioExportAllCalculatedAlgosCvt x:Key="RadioExportAllCalculatedAlgosCvt" />
     <local:HashDetailsFileSizeExCvt x:Key="HashDetailsFileSizeExCvt" />
+    <local:CommandPanelTopCvt x:Key="CommandPanelTopCvt" />
+    <local:CommandPanelLeftCvt x:Key="CommandPanelLeftCvt" />
+    <local:BtnRefreshFilterEnabledImgCvt x:Key="BtnRefreshFilterEnabledImgCvt" />
+    <local:MultiLineTextToStrArrayCvt x:Key="MultiLineTextToStrArrayCvt" />
 </ResourceDictionary>

@@ -1,0 +1,324 @@
+﻿<Window
+    x:Class="HashCalculator.CommandPanel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:HashCalculator"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Name="cmdPanel"
+    d:DataContext="{d:DesignInstance Type=local:CommandPanelModel}"
+    KeyDown="CommandPanelKeyDown"
+    ResizeMode="NoResize"
+    ShowInTaskbar="False"
+    SizeToContent="WidthAndHeight"
+    UseLayoutRounding="True"
+    mc:Ignorable="d">
+    <Window.Resources>
+        <ResourceDictionary>
+            <local:CommandPanelModel x:Key="CommandPanelModel" />
+            <local:CmpResultSelector x:Key="CmpResultSelector" />
+            <local:HashAlgoSelector x:Key="HashAlgoSelector" />
+            <local:HashStringSelector x:Key="HashStringSelector" />
+            <local:SameHashSelector x:Key="SameHashSelector" />
+            <local:TaskResultSelector x:Key="TaskResultSelector" />
+            <ResourceDictionary.MergedDictionaries>
+                <!--<ResourceDictionary Source="/Resources/AlgosButtonStyles.xaml" />-->
+                <!--<ResourceDictionary Source="/Resources/ComboBoxStyle1.xaml" />-->
+                <!--<ResourceDictionary Source="/Resources/ComboBoxStyle2.xaml" />-->
+                <ResourceDictionary Source="/Resources/ImageButtonStyles.xaml" />
+                <ResourceDictionary Source="/Resources/ConverterResource.xaml" />
+                <ResourceDictionary Source="/Resources/DescTextBlockStyles.xaml" />
+                <!--<ResourceDictionary Source="/Resources/DataGridCellStyles.xaml" />-->
+                <!--<ResourceDictionary Source="/Resources/DataGridRowStyles.xaml" />-->
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Window.Top>
+        <MultiBinding
+            Converter="{StaticResource CommandPanelTopCvt}"
+            Mode="TwoWay"
+            UpdateSourceTrigger="PropertyChanged">
+            <Binding
+                Mode="TwoWay"
+                Path="MainWindowTop"
+                Source="{x:Static local:Settings.Current}"
+                UpdateSourceTrigger="PropertyChanged" />
+            <Binding
+                Mode="TwoWay"
+                Path="CmdPanelTopRelToMainWnd"
+                Source="{x:Static local:Settings.Current}"
+                UpdateSourceTrigger="PropertyChanged" />
+        </MultiBinding>
+    </Window.Top>
+    <Window.Left>
+        <MultiBinding
+            Converter="{StaticResource CommandPanelLeftCvt}"
+            Mode="TwoWay"
+            UpdateSourceTrigger="PropertyChanged">
+            <Binding
+                Mode="TwoWay"
+                Path="MainWindowLeft"
+                Source="{x:Static local:Settings.Current}"
+                UpdateSourceTrigger="PropertyChanged" />
+            <Binding
+                Mode="TwoWay"
+                Path="CmdPanelLeftRelToMainWnd"
+                Source="{x:Static local:Settings.Current}"
+                UpdateSourceTrigger="PropertyChanged" />
+        </MultiBinding>
+    </Window.Left>
+    <Window.DataContext>
+        <Binding Source="{StaticResource CommandPanelModel}" />
+    </Window.DataContext>
+    <Window.IsEnabled>
+        <Binding
+            Converter="{StaticResource MainModelStateToBoolCvt}"
+            Mode="OneWay"
+            Path="State"
+            Source="{x:Static local:MainWndViewModel.Current}" />
+    </Window.IsEnabled>
+    <Grid Margin="4">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <GroupBox Grid.Row="0" Padding="0,6,0,0">
+            <GroupBox.Header>
+                <TextBlock
+                    VerticalAlignment="Center"
+                    Foreground="#FF006FD6"
+                    Text="可用的筛选器"
+                    ToolTip="勾选筛选器并点击 [刷新] 按钮以更新主窗口表格，勾选的筛选器之间为 [且] 关系" />
+            </GroupBox.Header>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <GroupBox
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Padding="0,6,0,2"
+                    DataContext="{StaticResource HashAlgoSelector}">
+                    <GroupBox.Header>
+                        <CheckBox
+                            Margin="3,0,0,0"
+                            VerticalContentAlignment="Center"
+                            Command="{Binding ElementName=cmdPanel, Path=DataContext.SelectorChangedCmd}"
+                            CommandParameter="{Binding}"
+                            Content="{Binding Display}"
+                            IsChecked="{Binding Selected, Mode=OneWayToSource}"
+                            ToolTip="{Binding Description}" />
+                    </GroupBox.Header>
+                    <StackPanel>
+                        <ComboBox ItemsSource="{Binding Items}" SelectedIndex="0">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <CheckBox
+                                        VerticalContentAlignment="Center"
+                                        Content="{Binding AlgoName}"
+                                        IsChecked="{Binding Selected}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <StackPanel Margin="0,4,0,0" Orientation="Horizontal">
+                            <TextBlock VerticalAlignment="Center" Text="筛选逻辑：" />
+                            <ComboBox
+                                DisplayMemberPath="Display"
+                                ItemsSource="{Binding FilterLogics}"
+                                SelectedValue="{Binding Param}"
+                                SelectedValuePath="ItemValue"
+                                ToolTip="[要求] 指的是下拉列表中已勾选的哈希算法集合&#10;[满足任意要求] 该行的所有算法中至少一个算法命中了要求中的一个算法&#10;[严格满足要求] 该行的所有算法涵盖了要求中的所有算法，且不含要求以外的算法&#10;[在要求范围内] 该行的所有算法都在要求的多个算法所组成的范围之内&#10;[涵盖所有要求] 该行的所有算法涵盖了要求中的所有算法，可能含有要求以外的算法" />
+                        </StackPanel>
+                    </StackPanel>
+                </GroupBox>
+                <GroupBox
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Margin="2,0,0,0"
+                    Padding="0,6,0,2"
+                    DataContext="{StaticResource CmpResultSelector}">
+                    <GroupBox.Header>
+                        <CheckBox
+                            Margin="3,0,0,0"
+                            VerticalContentAlignment="Center"
+                            Command="{Binding ElementName=cmdPanel, Path=DataContext.SelectorChangedCmd}"
+                            CommandParameter="{Binding}"
+                            Content="{Binding Display}"
+                            IsChecked="{Binding Selected, Mode=OneWayToSource}"
+                            ToolTip="{Binding Description}" />
+                    </GroupBox.Header>
+                    <StackPanel>
+                        <ComboBox ItemsSource="{Binding Items}" SelectedIndex="0">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <CheckBox
+                                        VerticalContentAlignment="Center"
+                                        Content="{Binding Display}"
+                                        IsChecked="{Binding Selected}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <StackPanel Margin="0,4,0,0" Orientation="Horizontal">
+                            <TextBlock VerticalAlignment="Center" Text="筛选逻辑：" />
+                            <ComboBox
+                                DisplayMemberPath="Display"
+                                ItemsSource="{Binding FilterLogics}"
+                                SelectedValue="{Binding Param}"
+                                SelectedValuePath="ItemValue"
+                                ToolTip="[要求] 指的是下拉列表中已勾选的校验结果集合&#10;[满足任意要求] 该行的所有校验结果中至少一个校验结果命中了要求中的一个校验结果&#10;[严格满足要求] 该行的所有校验结果涵盖了要求中的所有校验结果，且不含要求以外的校验结果&#10;[在要求范围内] 该行的所有校验结果都在要求的多个校验结果所组成的范围之内&#10;[涵盖所有要求] 该行的所有校验结果涵盖了要求中的所有校验结果，可能含有要求以外的校验结果" />
+                        </StackPanel>
+                    </StackPanel>
+                </GroupBox>
+                <GroupBox
+                    Grid.Row="0"
+                    Grid.Column="2"
+                    Margin="2,0,0,0"
+                    Padding="0,6,0,2"
+                    DataContext="{StaticResource TaskResultSelector}">
+                    <GroupBox.Header>
+                        <CheckBox
+                            Margin="3,0,0,0"
+                            VerticalContentAlignment="Center"
+                            Command="{Binding ElementName=cmdPanel, Path=DataContext.SelectorChangedCmd}"
+                            CommandParameter="{Binding}"
+                            Content="{Binding Display}"
+                            IsChecked="{Binding Selected, Mode=OneWayToSource}"
+                            ToolTip="{Binding Description}" />
+                    </GroupBox.Header>
+                    <StackPanel>
+                        <ComboBox
+                            VerticalAlignment="Top"
+                            ItemsSource="{Binding Items}"
+                            SelectedIndex="0">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <CheckBox
+                                        VerticalContentAlignment="Center"
+                                        Content="{Binding Display}"
+                                        IsChecked="{Binding Selected}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <StackPanel Margin="0,4,0,0" Orientation="Horizontal">
+                            <TextBlock VerticalAlignment="Center" Text="筛选逻辑：" />
+                            <ComboBox
+                                DisplayMemberPath="Display"
+                                Foreground="Gray"
+                                IsEnabled="False"
+                                ItemsSource="{Binding FilterLogics}"
+                                SelectedValue="{Binding Param}"
+                                SelectedValuePath="ItemValue" />
+                        </StackPanel>
+                    </StackPanel>
+                </GroupBox>
+                <GroupBox
+                    Grid.Row="1"
+                    Grid.ColumnSpan="3"
+                    Margin="0,4,0,0"
+                    Padding="0,6,0,2"
+                    DataContext="{StaticResource HashStringSelector}">
+                    <GroupBox.Header>
+                        <CheckBox
+                            Margin="3,0,0,0"
+                            VerticalContentAlignment="Center"
+                            Command="{Binding ElementName=cmdPanel, Path=DataContext.SelectorChangedCmd}"
+                            CommandParameter="{Binding}"
+                            Content="{Binding Display}"
+                            IsChecked="{Binding Selected, Mode=OneWayToSource}"
+                            ToolTip="{Binding Description}" />
+                    </GroupBox.Header>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.ColumnSpan="3"
+                            Padding="4,0,0,0"
+                            VerticalAlignment="Center"
+                            Panel.ZIndex="0"
+                            Foreground="#A0808080"
+                            Text="每行一个哈希值，按回车换行"
+                            Visibility="{Binding ElementName=hashStringsTextBox, Path=Text, Converter={StaticResource PlaceHolderTextVisibilityCvt}}" />
+                        <TextBox
+                            x:Name="hashStringsTextBox"
+                            Grid.Row="0"
+                            Grid.ColumnSpan="3"
+                            MinWidth="220"
+                            Padding="0,2"
+                            VerticalAlignment="Center"
+                            AcceptsReturn="True"
+                            Background="Transparent"
+                            Text="{Binding Items, Mode=OneWayToSource, Converter={StaticResource MultiLineTextToStrArrayCvt}}"
+                            TextWrapping="WrapWithOverflow" />
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Margin="0,4,0,0"
+                            VerticalAlignment="Center"
+                            Text="筛选逻辑：" />
+                        <ComboBox
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Margin="0,4,0,0"
+                            DisplayMemberPath="Display"
+                            ItemsSource="{Binding FilterLogics}"
+                            SelectedValue="{Binding Param}"
+                            SelectedValuePath="ItemValue"
+                            ToolTip="[要求] 指的是上方输入框中已输入的哈希值集合&#10;[满足任意要求] 该行的所有哈希值中至少一个哈希值命中了要求中的一个哈希值&#10;[严格满足要求] 该行的所有哈希值涵盖了要求中的所有哈希值，且不含要求以外的哈希值&#10;[在要求范围内] 该行的所有哈希值都在要求的多个哈希值所组成的范围之内&#10;[涵盖所有要求] 该行的所有哈希值涵盖了要求中的所有哈希值，可能含有要求以外的哈希值" />
+                    </Grid>
+                </GroupBox>
+                <Button
+                    Grid.RowSpan="2"
+                    Grid.Column="3"
+                    Width="64"
+                    Height="64"
+                    Margin="4,0,0,0"
+                    Command="{Binding RefreshViewCmd}"
+                    IsEnabled="{Binding RefreshEnabled}"
+                    Style="{StaticResource ImageButtonStyle2}"
+                    ToolTip="应用已勾选的筛选器并刷新主窗口表格视图">
+                    <Image Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnRefreshFilterEnabledImgCvt}}" />
+                </Button>
+            </Grid>
+        </GroupBox>
+        <GroupBox
+            Grid.Row="1"
+            Margin="0,8,0,0"
+            Padding="4,8,4,4"
+            Foreground="#FF006FD6"
+            Header="对筛选结果执行的命令"
+            Visibility="Collapsed">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+            </Grid>
+        </GroupBox>
+        <TextBlock
+            Grid.Row="2"
+            Margin="0,8,0,4"
+            FontSize="8pt"
+            Foreground="Red"
+            Style="{StaticResource DescTextBlockStyle}"
+            Text="执行命令前请再次确认筛选结果是否正确，如果不小心误删请到回收站恢复文件"
+            Visibility="Collapsed" />
+    </Grid>
+</Window>

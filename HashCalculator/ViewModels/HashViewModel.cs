@@ -85,6 +85,10 @@ namespace HashCalculator
 
         public ModelArg ModelArg { get; }
 
+        public bool Matched { get; set; } = true;
+
+        public bool HasBeenRun { get; private set; }
+
         public long FileSize
         {
             get
@@ -334,8 +338,6 @@ namespace HashCalculator
                 return this.showHashDetailsWindowCmd;
             }
         }
-
-        public bool HasBeenRun { get; private set; }
 
         public ControlItem[] AvailableOutputTypes { get; } =
         {
