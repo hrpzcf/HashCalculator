@@ -16,11 +16,11 @@
     <Window.Resources>
         <ResourceDictionary>
             <local:CommandPanelModel x:Key="CommandPanelModel" />
-            <local:CmpResultSelector x:Key="CmpResultSelector" />
-            <local:HashAlgoSelector x:Key="HashAlgoSelector" />
-            <local:HashStringSelector x:Key="HashStringSelector" />
-            <local:SameHashSelector x:Key="SameHashSelector" />
-            <local:TaskResultSelector x:Key="TaskResultSelector" />
+            <local:CmpResultFilter x:Key="CmpResultFilter" />
+            <local:EqualHashByteFilter x:Key="EqualHashByteFilter" />
+            <local:HashAlgoFilter x:Key="HashAlgoFilter" />
+            <local:HashStringFilter x:Key="HashStringFilter" />
+            <local:HashTaskResultFilter x:Key="HashTaskResultFilter" />
             <ResourceDictionary.MergedDictionaries>
                 <!--<ResourceDictionary Source="/Resources/AlgosButtonStyles.xaml" />-->
                 <!--<ResourceDictionary Source="/Resources/ComboBoxStyle1.xaml" />-->
@@ -95,6 +95,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -106,7 +107,7 @@
                     Grid.Row="0"
                     Grid.Column="0"
                     Padding="0,6,0,2"
-                    DataContext="{StaticResource HashAlgoSelector}">
+                    DataContext="{StaticResource HashAlgoFilter}">
                     <GroupBox.Header>
                         <CheckBox
                             Margin="3,0,0,0"
@@ -144,7 +145,7 @@
                     Grid.Column="1"
                     Margin="2,0,0,0"
                     Padding="0,6,0,2"
-                    DataContext="{StaticResource CmpResultSelector}">
+                    DataContext="{StaticResource CmpResultFilter}">
                     <GroupBox.Header>
                         <CheckBox
                             Margin="3,0,0,0"
@@ -182,7 +183,7 @@
                     Grid.Column="2"
                     Margin="2,0,0,0"
                     Padding="0,6,0,2"
-                    DataContext="{StaticResource TaskResultSelector}">
+                    DataContext="{StaticResource HashTaskResultFilter}">
                     <GroupBox.Header>
                         <CheckBox
                             Margin="3,0,0,0"
@@ -221,10 +222,42 @@
                 </GroupBox>
                 <GroupBox
                     Grid.Row="1"
+                    Grid.Column="0"
+                    Margin="0,4,0,0"
+                    Padding="0,6,0,2"
+                    DataContext="{StaticResource EqualHashByteFilter}">
+                    <GroupBox.Header>
+                        <CheckBox
+                            Margin="3,0,0,0"
+                            VerticalContentAlignment="Center"
+                            Command="{Binding ElementName=cmdPanel, Path=DataContext.SelectorChangedCmd}"
+                            CommandParameter="{Binding}"
+                            Content="{Binding Display}"
+                            IsChecked="{Binding Selected, Mode=OneWayToSource}"
+                            ToolTip="{Binding Description}" />
+                    </GroupBox.Header>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            Text="关注的算法：" />
+                        <ComboBox
+                            Grid.Column="1"
+                            DisplayMemberPath="AlgoName"
+                            ItemsSource="{Binding Items}"
+                            SelectedItem="{Binding Param}" />
+                    </Grid>
+                </GroupBox>
+                <GroupBox
+                    Grid.Row="2"
                     Grid.ColumnSpan="3"
                     Margin="0,4,0,0"
                     Padding="0,6,0,2"
-                    DataContext="{StaticResource HashStringSelector}">
+                    DataContext="{StaticResource HashStringFilter}">
                     <GroupBox.Header>
                         <CheckBox
                             Margin="3,0,0,0"
@@ -283,7 +316,7 @@
                     </Grid>
                 </GroupBox>
                 <Button
-                    Grid.RowSpan="2"
+                    Grid.RowSpan="3"
                     Grid.Column="3"
                     Width="64"
                     Height="64"

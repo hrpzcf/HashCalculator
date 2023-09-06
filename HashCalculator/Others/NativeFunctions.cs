@@ -1,10 +1,11 @@
 ﻿using System;
+using System.IO;
 using System.Runtime.InteropServices;
 
 namespace HashCalculator
 {
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public struct SHFILEOPSTRUCTW64
+    internal struct SHFILEOPSTRUCTW64
     {
         public IntPtr hwnd;
         public uint wFunc;
@@ -20,7 +21,7 @@ namespace HashCalculator
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode, Pack = 1)]
-    public struct SHFILEOPSTRUCTW32
+    internal struct SHFILEOPSTRUCTW32
     {
         public IntPtr hwnd;
         public uint wFunc;
@@ -35,7 +36,7 @@ namespace HashCalculator
         public string lpszProgressTitle;
     }
 
-    public enum FileFuncFlags : uint
+    internal enum FileFuncFlags : uint
     {
         FO_MOVE = 0x1,
         FO_COPY = 0x2,
@@ -44,7 +45,7 @@ namespace HashCalculator
     }
 
     [Flags]
-    public enum FILEOP_FLAGS : ushort
+    internal enum FILEOP_FLAGS : ushort
     {
         FOF_MULTIDESTFILES = 0x1,
         FOF_CONFIRMMOUSE = 0x2,
@@ -102,7 +103,7 @@ namespace HashCalculator
         FOF_NORECURSEREPARSE = 0x8000
     }
 
-    public enum ShowCmds : int
+    internal enum ShowCmds : int
     {
         SW_HIDE = 0,
         SW_SHOWNORMAL = 1,
@@ -122,7 +123,7 @@ namespace HashCalculator
     }
 
     [Flags]
-    public enum SEMaskFlags : uint
+    internal enum SEMaskFlags : uint
     {
         SEE_MASK_DEFAULT = 0x00000000,
         SEE_MASK_CLASSNAME = 0x00000001,
@@ -150,7 +151,7 @@ namespace HashCalculator
     /// https://learn.microsoft.com/en-us/windows/win32/api/shellapi/ns-shellapi-shellexecuteinfow
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-    public struct SHELLEXECUTEINFOW
+    internal struct SHELLEXECUTEINFOW
     {
         public int cbSize;
         public SEMaskFlags fMask;
@@ -177,39 +178,20 @@ namespace HashCalculator
     ///// <summary>
     ///// https://learn.microsoft.com/en-us/windows/win32/api/fileapi/ns-fileapi-by_handle_file_information
     ///// </summary>
-    //[StructLayout(LayoutKind.Explicit)]
-    //public struct BY_HANDLE_FILE_INFORMATION
-    //{
-    //    [FieldOffset(0)]
-    //    public uint FileAttributes;
-
-    //    [FieldOffset(4)]
-    //    public System.Runtime.InteropServices.ComTypes.FILETIME CreationTime;
-
-    //    [FieldOffset(12)]
-    //    public System.Runtime.InteropServices.ComTypes.FILETIME LastAccessTime;
-
-    //    [FieldOffset(20)]
-    //    public System.Runtime.InteropServices.ComTypes.FILETIME LastWriteTime;
-
-    //    [FieldOffset(28)]
-    //    public uint VolumeSerialNumber;
-
-    //    [FieldOffset(32)]
-    //    public uint FileSizeHigh;
-
-    //    [FieldOffset(36)]
-    //    public uint FileSizeLow;
-
-    //    [FieldOffset(40)]
-    //    public uint NumberOfLinks;
-
-    //    [FieldOffset(44)]
-    //    public uint FileIndexHigh;
-
-    //    [FieldOffset(48)]
-    //    public uint FileIndexLow;
-    //}
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    internal struct BY_HANDLE_FILE_INFORMATION
+    {
+        public uint dwFileAttributes;
+        public System.Runtime.InteropServices.ComTypes.FILETIME ftCreationTime;
+        public System.Runtime.InteropServices.ComTypes.FILETIME ftLastAccessTime;
+        public System.Runtime.InteropServices.ComTypes.FILETIME ftLastWriteTime;
+        public uint dwVolumeSerialNumber;
+        public uint nFileSizeHigh;
+        public uint nFileSizeLow;
+        public uint nNumberOfLinks;
+        public uint nFileIndexHigh;
+        public uint nFileIndexLow;
+    }
 
     #region enum HChangeNotifyEventID
     /// <summary>
@@ -417,7 +399,7 @@ namespace HashCalculator
     /// The uFlags parameter must be one of the following values.
     /// </summary>
     [Flags]
-    public enum HChangeNotifyFlags
+    internal enum HChangeNotifyFlags
     {
         /// <summary>
         /// The <i>dwItem1</i> and <i>dwItem2</i> parameters are DWORD values.
@@ -469,90 +451,80 @@ namespace HashCalculator
     internal static class NativeFunctions
     {
         /// <summary>
+        /// https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-colorhlstorgb
+        /// </summary>
+        [DllImport("shlwapi.dll")]
+        public static extern uint ColorHLSToRGB(int wHue, int wLuminance, int wSaturation);
+
+        /// <summary>
         /// http://www.pinvoke.net/default.aspx/shell32/SHOpenFolderAndSelectItems.html
         /// https://learn.microsoft.com/en-us/windows/win32/api/shlobj_core/nf-shlobj_core-shopenfolderandselectitems
         /// </summary>
-        /// <param name="pidlFolder"></param>
-        /// <param name="cidl"></param>
-        /// <param name="apidl"></param>
-        /// <param name="dwFlags"></param>
-        /// <returns></returns>
         [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
-        public static extern int SHOpenFolderAndSelectItems(
-            IntPtr pidlFolder, uint cidl, IntPtr[] apidl, uint dwFlags);
+        internal static extern int SHOpenFolderAndSelectItems(IntPtr pidlFolder, uint cidl, IntPtr[] apidl, uint dwFlags);
 
         /// <summary>
         /// http://www.pinvoke.net/default.aspx/shell32/SHOpenFolderAndSelectItems.html
         /// https://learn.microsoft.com/en-us/windows/win32/api/shlobj_core/nf-shlobj_core-shparsedisplayname
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="bindingContext"></param>
-        /// <param name="pidl"></param>
-        /// <param name="sfgaoIn"></param>
-        /// <param name="psfgaoOut"></param>
         [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
-        public static extern void SHParseDisplayName(
-            string name, IntPtr bindingContext, out IntPtr pidl, uint sfgaoIn, out uint psfgaoOut);
+        internal static extern void SHParseDisplayName(string name, IntPtr bindingContext, out IntPtr pidl, uint sfgaoIn, out uint psfgaoOut);
 
         /// <summary>
         /// https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shellexecutew
         /// </summary>
-        /// <param name="hwnd"></param>
-        /// <param name="lpOperation"></param>
-        /// <param name="lpFile"></param>
-        /// <param name="lpParameters"></param>
-        /// <param name="lpDirectory"></param>
-        /// <param name="nShowCmd"></param>
-        /// <returns></returns>
         [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
-        public static extern IntPtr ShellExecuteW(
-            IntPtr hwnd, string lpOperation, string lpFile,
-            string lpParameters, string lpDirectory, ShowCmds nShowCmd);
+        internal static extern IntPtr ShellExecuteW(IntPtr hwnd, string lpOperation, string lpFile, string lpParameters, string lpDirectory, ShowCmds nShowCmd);
 
         /// <summary>
         /// https://learn.microsoft.com/zh-cn/windows/win32/api/shellapi/nf-shellapi-shellexecuteexw
         /// </summary>
-        /// <param name="lpExecInfo"></param>
-        /// <returns></returns>
         [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
-        public static extern bool ShellExecuteExW(ref SHELLEXECUTEINFOW lpExecInfo);
+        internal static extern bool ShellExecuteExW(ref SHELLEXECUTEINFOW lpExecInfo);
 
-        ///// <summary>
-        ///// https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfileinformationbyhandle
-        ///// </summary>
-        ///// <param name="hFile"></param>
-        ///// <param name="lpFileInformation"></param>
-        ///// <returns></returns>
-        //[DllImport("kernel32.dll")]
-        //public static extern bool GetFileInformationByHandle(SafeFileHandle hFile, out BY_HANDLE_FILE_INFORMATION lpFileInformation);
+        /// <summary>
+        /// https://learn.microsoft.com/zh-cn/windows/win32/api/handleapi/nf-handleapi-closehandle
+        /// </summary>
+        [DllImport("kernel32.dll", SetLastError = true)]
+        internal static extern bool CloseHandle(IntPtr hObject);
 
-        ///// <summary>
-        ///// https://learn.microsoft.com/en-US/windows/win32/api/fileapi/nf-fileapi-createfilew
-        ///// </summary>
-        ///// <param name="filename"></param>
-        ///// <param name="access"></param>
-        ///// <param name="share"></param>
-        ///// <param name="securityAttributes"></param>
-        ///// <param name="creationDisposition"></param>
-        ///// <param name="flagsAndAttributes"></param>
-        ///// <param name="templateFile"></param>
-        ///// <returns></returns>
-        //[DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        //public static extern SafeFileHandle CreateFileW(
-        //    [MarshalAs(UnmanagedType.LPWStr)] string filename,
-        //    [MarshalAs(UnmanagedType.U4)] FileAccess access,
-        //    [MarshalAs(UnmanagedType.U4)] FileShare share,
-        //    IntPtr securityAttributes,
-        //    [MarshalAs(UnmanagedType.U4)] FileMode creationDisposition,
-        //    [MarshalAs(UnmanagedType.U4)] FileAttributes flagsAndAttributes,
-        //    IntPtr templateFile);
+        /// <summary>
+        /// https://learn.microsoft.com/en-US/windows/win32/api/fileapi/nf-fileapi-createfilew
+        /// </summary>
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        internal static extern IntPtr CreateFileW(
+            [MarshalAs(UnmanagedType.LPWStr)] string lpFileName,
+            uint dwDesiredAccess,
+            [MarshalAs(UnmanagedType.U4)] FileShare dwShareMode,
+            IntPtr lpSecurityAttributes,
+            [MarshalAs(UnmanagedType.U4)] FileMode dwCreationDisposition,
+            [MarshalAs(UnmanagedType.U4)] FileAttributes dwFlagsAndAttributes,
+            IntPtr hTemplateFile);
+
+        /// <summary>
+        /// https://learn.microsoft.com/en-US/windows/win32/api/fileapi/nf-fileapi-createfilew
+        /// </summary>
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        internal static extern IntPtr CreateFileW(
+            [MarshalAs(UnmanagedType.LPWStr)] string lpFileName,
+            [MarshalAs(UnmanagedType.U4)] FileAccess dwDesiredAccess,
+            [MarshalAs(UnmanagedType.U4)] FileShare dwShareMode,
+            IntPtr lpSecurityAttributes,
+            [MarshalAs(UnmanagedType.U4)] FileMode dwCreationDisposition,
+            [MarshalAs(UnmanagedType.U4)] FileAttributes dwFlagsAndAttributes,
+            IntPtr hTemplateFile);
+
+        /// <summary>
+        /// https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfileinformationbyhandle
+        /// </summary>
+        [DllImport("kernel32.dll")]
+        internal static extern bool GetFileInformationByHandle(IntPtr hFile, out BY_HANDLE_FILE_INFORMATION lpFileInformation);
 
         /// <summary>
         /// https://learn.microsoft.com/zh-cn/windows/win32/api/winuser/nf-winuser-setwindowpos
         /// </summary>
         [DllImport("user32.dll")]
-        internal static extern bool SetWindowPos(
-            IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+        internal static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
 
         /// <summary>
         /// https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-isiconic
@@ -587,16 +559,12 @@ namespace HashCalculator
         /// <summary>
         /// https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shfileoperationw
         /// </summary>
-        /// <param name="lpFileOp"></param>
-        /// <returns></returns>
         [DllImport("shell32.dll", EntryPoint = "SHFileOperationW", CharSet = CharSet.Unicode)]
         internal static extern int SHFileOperationW32(ref SHFILEOPSTRUCTW32 lpFileOp);
 
         /// <summary>
         /// https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shfileoperationw
         /// </summary>
-        /// <param name="lpFileOp"></param>
-        /// <returns></returns>
         [DllImport("shell32.dll", EntryPoint = "SHFileOperationW", CharSet = CharSet.Unicode)]
         internal static extern int SHFileOperationW64(ref SHFILEOPSTRUCTW64 lpFileOp);
 

@@ -97,7 +97,7 @@
                     Command="{Binding OpenCommandPanelCmd}"
                     IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBoolCvt}}"
                     Style="{StaticResource ImageButtonStyle2}"
-                    ToolTip="筛选与执行：打开筛选与执行窗口以进行筛选和对筛选结果进行操作/关闭筛选与执行窗口">
+                    ToolTip="筛选与命令：打开筛选与命令窗口以进行筛选、对筛选结果进行操作，或关闭该窗口">
                     <Image Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnFilterEnabledImgCvt}}" />
                 </Button>
                 <Button
@@ -391,8 +391,9 @@
                                     x:Name="hashStringLabel"
                                     Grid.Column="0"
                                     Margin="4,0,4,0"
-                                    Padding="0"
+                                    Padding="4,0"
                                     VerticalContentAlignment="Center"
+                                    Background="{Binding GroupId.Color, Converter={StaticResource GroupIdToSolidColorBrushCvt}}"
                                     ToolTip="{Binding ModelDetails}">
                                     <Label.Visibility>
                                         <MultiBinding Converter="{StaticResource SubCtrlVisiblitySucceededCvt}">

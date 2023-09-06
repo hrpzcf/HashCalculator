@@ -48,7 +48,10 @@ namespace HashCalculator
             createdNew = Marshal.GetLastWin32Error() != ERROR_ALREADY_EXISTS;
         }
 
-        ~ProcSynchronizer() { CloseHandle(this._eventHandle); }
+        ~ProcSynchronizer()
+        {
+            NativeFunctions.CloseHandle(this._eventHandle);
+        }
 
         public bool Wait(int milliseconds = INFINITE)
         {
@@ -59,12 +62,6 @@ namespace HashCalculator
         {
             return SetEvent(this._eventHandle);
         }
-
-        /// <summary>
-        /// https://learn.microsoft.com/zh-cn/windows/win32/api/handleapi/nf-handleapi-closehandle
-        /// </summary>
-        [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern bool CloseHandle(IntPtr hObject);
 
         /// <summary>
         /// https://learn.microsoft.com/zh-cn/windows/win32/api/synchapi/nf-synchapi-createeventw

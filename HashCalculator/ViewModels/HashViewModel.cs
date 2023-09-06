@@ -13,15 +13,16 @@ namespace HashCalculator
 {
     internal class HashViewModel : NotifiableModel
     {
+        private string _currentHashString = null;
         private string _taskDetails = string.Empty;
         private string _modelDetails = "暂无详情...";
         private long _fileSize = 0L;
         private long _progress = 0L;
         private long _maxProgress = 0L;
         private double _durationofTask = 0.0;
-        private string _currentHashString = null;
         private AlgoInOutModel _currentInOutModel = null;
         private AlgoInOutModel[] _algoInOutModels = null;
+        private ComparableColor _groupId = null;
         private HashResult _currentResult = HashResult.NoResult;
         private HashState _currentState = HashState.NoState;
         private OutputType _selectedOutput = OutputType.Unknown;
@@ -122,6 +123,18 @@ namespace HashCalculator
             set
             {
                 this.SetPropNotify(ref this._currentInOutModel, value);
+            }
+        }
+
+        public ComparableColor GroupId
+        {
+            get
+            {
+                return this._groupId;
+            }
+            set
+            {
+                this.SetPropNotify(ref this._groupId, value);
             }
         }
 

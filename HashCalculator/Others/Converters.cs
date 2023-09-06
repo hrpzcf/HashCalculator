@@ -798,4 +798,24 @@ namespace HashCalculator
             return default(string[]);
         }
     }
+
+    internal class GroupIdToSolidColorBrushCvt : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is Color color && color != default(Color))
+            {
+                return new SolidColorBrush(color);
+            }
+            else
+            {
+                return new SolidColorBrush(Colors.Transparent);
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

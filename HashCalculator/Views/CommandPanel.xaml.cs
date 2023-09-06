@@ -9,7 +9,7 @@ namespace HashCalculator
         {
             this.Closed += handler;
             this.Closed += this.PanelClosed;
-            this.Loaded += (s, e) => { this.CheckIfPanelOutsideScreen(); };
+            this.Loaded += (s, e) => { this.CheckPanelPosition(); };
             this.InitializeComponent();
         }
 
@@ -17,12 +17,11 @@ namespace HashCalculator
         {
             if (this.DataContext is CommandPanelModel model)
             {
-                model.HashSelectors.Clear();
-                model.RefreshViewAction(null);
+                model.ClearSelectorsAndRefresh();
             }
         }
 
-        public bool CheckIfPanelOutsideScreen()
+        public bool CheckPanelPosition()
         {
             if (this.Left < 0.0)
             {

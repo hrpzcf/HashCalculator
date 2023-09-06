@@ -78,11 +78,14 @@ namespace HashCalculator
             HashViewModelsViewSrc.Source = HashViewModels;
             HashViewModelsViewSrc.View.Filter = value =>
             {
-                if (value is HashViewModel model)
+                if (!(value is HashViewModel model))
                 {
-                    return model.Matched == true;
+                    return true;
                 }
-                return true;
+                else
+                {
+                    return model.Matched;
+                }
             };
             Settings.Current.PropertyChanged += this.PropChangedAction;
             this.addModelAction = new AddModelDelegate(this.AddModelAction);
@@ -341,7 +344,7 @@ namespace HashCalculator
         {
             if (this.commandPanelInst != null)
             {
-                if (!this.commandPanelInst.CheckIfPanelOutsideScreen())
+                if (!this.commandPanelInst.CheckPanelPosition())
                 {
                     this.commandPanelInst.Close();
                 }

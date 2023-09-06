@@ -3,40 +3,30 @@ using System.Linq;
 
 namespace HashCalculator
 {
-    internal class HashAlgoSelector : HashSelector<HashViewModel>
+    internal class CmpResultFilter : HashViewFilter<HashViewModel>
     {
-        private AlgoInOutModel[] _algos;
+        public override string Display => "校验结果";
 
-        public override string Display => "哈希算法";
-
-        public override string Description => "将各行中含有指定算法的行筛选出来";
+        public override string Description => "将各行中含有指定校验结果的行筛选出来";
 
         public override object Param { get; set; } = FilterLogic.Any;
 
-        public override object[] Items
-        {
-            get
-            {
-                return this._algos;
-            }
-            set
-            {
-                this._algos = value as AlgoInOutModel[];
-            }
-        }
-
-        public HashAlgoSelector()
-        {
-            this._algos = AlgosPanelModel.ProvidedAlgos.Select(
-                i => i.NewAlgoInOutModel()).ToArray();
-        }
+        public override object[] Items { get; set; } =
+            new ControlItem[] {
+            new ControlItem("未校验", CmpRes.NoResult),
+            new ControlItem("无关联", CmpRes.Unrelated),
+            new ControlItem("已匹配", CmpRes.Matched),
+            new ControlItem("不匹配", CmpRes.Mismatch),
+            new ControlItem("不确定", CmpRes.Uncertain),
+        };
 
         public override void SetFilterTags(HashViewModel model)
         {
             if (model != null && this.Param is FilterLogic filterLogic)
             {
-                IEnumerable<AlgoInOutModel> expModels = this._algos.Where(i => i.Selected);
-                if (expModels.Any())
+                IEnumerable<ControlItem> cmpResultCtrls = 
+                    this.Items.Cast<ControlItem>().Where(i => i.Selected);
+                if (cmpResultCtrls.Any())
                 {
                     if (model.AlgoInOutModels == null)
                     {
@@ -44,32 +34,32 @@ namespace HashCalculator
                     }
                     else
                     {
-                        HashSet<AlgoType> expAlgos = expModels.Select(i => i.AlgoType).ToHashSet();
-                        HashSet<AlgoType> modelAlgos = model.AlgoInOutModels.Select(i => i.AlgoType).ToHashSet();
+                        HashSet<CmpRes> expResults = cmpResultCtrls.Select(i => (CmpRes)i.ItemValue).ToHashSet();
+                        HashSet<CmpRes> modelResults = model.AlgoInOutModels.Select(i => i.HashCmpResult).ToHashSet();
                         if (filterLogic == FilterLogic.Any)
                         {
-                            if (!modelAlgos.Overlaps(expAlgos))
+                            if (!modelResults.Overlaps(expResults))
                             {
                                 model.Matched = false;
                             }
                         }
                         else if (filterLogic == FilterLogic.Strict)
                         {
-                            if (!modelAlgos.SetEquals(expAlgos))
+                            if (!modelResults.SetEquals(expResults))
                             {
                                 model.Matched = false;
                             }
                         }
                         else if (filterLogic == FilterLogic.Within)
                         {
-                            if (!modelAlgos.IsSubsetOf(expAlgos))
+                            if (!modelResults.IsSubsetOf(expResults))
                             {
                                 model.Matched = false;
                             }
                         }
                         else if (filterLogic == FilterLogic.Cover)
                         {
-                            if (!modelAlgos.IsSupersetOf(expAlgos))
+                            if (!modelResults.IsSupersetOf(expResults))
                             {
                                 model.Matched = false;
                             }

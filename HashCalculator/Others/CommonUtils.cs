@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Windows.Media;
 
 namespace HashCalculator
 {
@@ -183,8 +185,7 @@ namespace HashCalculator
             return default;
         }
 
-        public static bool SendToRecycleBin(
-            IntPtr hParent, string path, bool silent = true)
+        public static bool SendToRecycleBin(IntPtr hParent, string path, bool silent = true)
         {
             FILEOP_FLAGS flags = FILEOP_FLAGS.FOF_ALLOWUNDO;
             if (silent)
@@ -216,6 +217,132 @@ namespace HashCalculator
                 result = NativeFunctions.SHFileOperationW64(ref data);
             }
             return result == 0;
+        }
+
+        public static bool IsPathsPointToSameFile(string filePath1, string filePath2, out bool isSameFile)
+        {
+            int INVALID_HANDLE_VALUE = -1;
+            IntPtr fileHandle1 = new IntPtr(INVALID_HANDLE_VALUE);
+            IntPtr fileHandle2 = new IntPtr(INVALID_HANDLE_VALUE);
+            bool executeResult = false;
+            isSameFile = false;
+            if (!File.Exists(filePath1) || !File.Exists(filePath2))
+            {
+                goto FinalizeAndReturnResult;
+            }
+            fileHandle1 = NativeFunctions.CreateFileW(filePath1, 0U, FileShare.Read | FileShare.Write | FileShare.Delete,
+               IntPtr.Zero, FileMode.Open, FileAttributes.Normal | FileAttributes.ReparsePoint, IntPtr.Zero);
+            if (fileHandle1.ToInt32() == INVALID_HANDLE_VALUE)
+            {
+                goto FinalizeAndReturnResult;
+            }
+            fileHandle2 = NativeFunctions.CreateFileW(filePath2, 0U, FileShare.Read | FileShare.Write | FileShare.Delete,
+               IntPtr.Zero, FileMode.Open, FileAttributes.Normal | FileAttributes.ReparsePoint, IntPtr.Zero);
+            if (fileHandle2.ToInt32() == INVALID_HANDLE_VALUE)
+            {
+                goto FinalizeAndReturnResult;
+            }
+            if (!NativeFunctions.GetFileInformationByHandle(fileHandle1, out BY_HANDLE_FILE_INFORMATION fileInfo1) ||
+                !NativeFunctions.GetFileInformationByHandle(fileHandle2, out BY_HANDLE_FILE_INFORMATION fileInfo2))
+            {
+                goto FinalizeAndReturnResult;
+            }
+            isSameFile = fileInfo1.dwVolumeSerialNumber == fileInfo2.dwVolumeSerialNumber &&
+                fileInfo1.nFileIndexLow == fileInfo2.nFileIndexLow && fileInfo1.nFileIndexHigh == fileInfo2.nFileIndexHigh;
+            executeResult = true;
+        FinalizeAndReturnResult:
+            if (fileHandle1.ToInt32() != INVALID_HANDLE_VALUE)
+            {
+                NativeFunctions.CloseHandle(fileHandle1);
+            }
+            if (fileHandle2.ToInt32() != INVALID_HANDLE_VALUE)
+            {
+                NativeFunctions.CloseHandle(fileHandle2);
+            }
+            return executeResult;
+        }
+
+        private class CyclingDouble : IEnumerable<double>
+        {
+            private readonly double _maxValue;
+            private readonly double _minValue;
+            private readonly int _count;
+            private readonly float _increments;
+
+            public CyclingDouble(double minValue, double maxValue, int count)
+            {
+                this._minValue = minValue;
+                this._maxValue = maxValue;
+                if (count % 2 == 0)
+                {
+                    this._count = count;
+                }
+                else
+                {
+                    this._count = count + 1;
+                }
+                this._increments = (float)(maxValue / this._count);
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return this.GetEnumerator();
+            }
+
+            public IEnumerator<double> GetEnumerator()
+            {
+                Random random = new Random();
+                double[] doubleHues = new double[this._count];
+                // 色环随机起点，避免每次都是 0° (正红) 为起点
+                double start = (random.NextDouble() * this._maxValue) + this._minValue;
+                double splitPoint = start;
+                int index = 0;
+                while (start < this._maxValue && index < this._count)
+                {
+                    doubleHues[index++] = start;
+                    start += this._increments;
+                }
+                if (splitPoint > this._minValue)
+                {
+                    start = start - this._maxValue + this._minValue;
+                    while (start < splitPoint && index < this._count)
+                    {
+                        doubleHues[index++] = start;
+                        start += this._increments;
+                    }
+                }
+                index = 0;
+                int middle = this._count / 2;
+                int iBack = middle;
+                bool arrayFrontEnd = true;
+                while (index < middle || iBack < this._count)
+                {
+                    yield return arrayFrontEnd ? doubleHues[index++] : doubleHues[iBack++];
+                    arrayFrontEnd = !arrayFrontEnd;
+                }
+            }
+        }
+
+        private static Color RgbDwordToColor(uint color)
+        {
+            // DWORD from ColorHLSToRGB: 0x00bbggrr(RGB)
+            return Color.FromRgb((byte)(color & 0xFFu), (byte)((color & 0xFF00u) >> 8),
+                (byte)((color & 0xFF0000u) >> 16));
+        }
+
+        public static Color[] RandomColorGenerator(int number)
+        {
+            List<Color> colors = new List<Color>();
+            // 函数 ColorHLSToRGB 三个参数范围都是 0~240
+            double MAX_HLS = 240.0;
+            Random random = new Random();
+            foreach (double H in new CyclingDouble(0.0, MAX_HLS, number))
+            {
+                int L = random.Next(170, 190);
+                int S = random.Next(160, 220);
+                colors.Add(RgbDwordToColor(NativeFunctions.ColorHLSToRGB((int)H, L, S)));
+            }
+            return colors.ToArray();
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace HashCalculator
 {
-    internal class TaskResultSelector : HashSelector<HashViewModel>
+    internal class HashTaskResultFilter : HashViewFilter<HashViewModel>
     {
         public override string Display => "运行结果";
 
