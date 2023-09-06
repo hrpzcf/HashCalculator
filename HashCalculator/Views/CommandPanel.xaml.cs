@@ -17,7 +17,7 @@ namespace HashCalculator
         {
             if (this.DataContext is CommandPanelModel model)
             {
-                model.ClearSelectorsAndRefresh();
+                model.ClearFiltersAndRefresh();
             }
         }
 

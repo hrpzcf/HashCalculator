@@ -13,26 +13,26 @@ namespace HashCalculator
         private readonly PropertyGroupDescription groupDescription =
             new PropertyGroupDescription(nameof(HashViewModel.GroupId));
         private RelayCommand refreshViewCmd;
-        private RelayCommand selectorChangedCmd;
+        private RelayCommand filterChangedCmd;
 
-        private List<HashViewFilter<HashViewModel>> HashModelSelectors { get; } =
+        private List<HashViewFilter<HashViewModel>> HashModelFilters { get; } =
             new List<HashViewFilter<HashViewModel>>();
 
-        private List<HashViewFilter<IEnumerable<HashViewModel>>> HashModelIEnumSelectors { get; } =
+        private List<HashViewFilter<IEnumerable<HashViewModel>>> HashModelIEnumFilters { get; } =
             new List<HashViewFilter<IEnumerable<HashViewModel>>>();
 
-        public void ClearSelectorsAndRefresh()
+        public void ClearFiltersAndRefresh()
         {
-            foreach (HashViewFilter<HashViewModel> selector1 in this.HashModelSelectors)
+            foreach (HashViewFilter<HashViewModel> filter1 in this.HashModelFilters)
             {
-                selector1.Finish();
+                filter1.Finish();
             }
-            foreach (HashViewFilter<IEnumerable<HashViewModel>> selector2 in this.HashModelIEnumSelectors)
+            foreach (HashViewFilter<IEnumerable<HashViewModel>> filter2 in this.HashModelIEnumFilters)
             {
-                selector2.Finish();
+                filter2.Finish();
             }
-            this.HashModelSelectors.Clear();
-            this.HashModelIEnumSelectors.Clear();
+            this.HashModelFilters.Clear();
+            this.HashModelIEnumFilters.Clear();
             this.RefreshViewAction(null);
         }
 
@@ -48,41 +48,41 @@ namespace HashCalculator
             }
         }
 
-        private void SelectorChangedAction(object param)
+        private void FilterChangedAction(object param)
         {
-            if (param is HashViewFilter<HashViewModel> selector)
+            if (param is HashViewFilter<HashViewModel> filter)
             {
-                if (!selector.Selected)
+                if (!filter.Selected)
                 {
-                    this.HashModelSelectors.Remove(selector);
+                    this.HashModelFilters.Remove(filter);
                 }
-                else if (!this.HashModelSelectors.Contains(selector))
+                else if (!this.HashModelFilters.Contains(filter))
                 {
-                    this.HashModelSelectors.Add(selector);
+                    this.HashModelFilters.Add(filter);
                 }
             }
-            else if (param is HashViewFilter<IEnumerable<HashViewModel>> ienumSelector)
+            else if (param is HashViewFilter<IEnumerable<HashViewModel>> ienumFilter)
             {
-                if (!ienumSelector.Selected)
+                if (!ienumFilter.Selected)
                 {
-                    this.HashModelIEnumSelectors.Remove(ienumSelector);
+                    this.HashModelIEnumFilters.Remove(ienumFilter);
                 }
-                else if (!this.HashModelIEnumSelectors.Contains(ienumSelector))
+                else if (!this.HashModelIEnumFilters.Contains(ienumFilter))
                 {
-                    this.HashModelIEnumSelectors.Add(ienumSelector);
+                    this.HashModelIEnumFilters.Add(ienumFilter);
                 }
             }
         }
 
-        public ICommand SelectorChangedCmd
+        public ICommand FilterChangedCmd
         {
             get
             {
-                if (this.selectorChangedCmd == null)
+                if (this.filterChangedCmd == null)
                 {
-                    this.selectorChangedCmd = new RelayCommand(this.SelectorChangedAction);
+                    this.filterChangedCmd = new RelayCommand(this.FilterChangedAction);
                 }
-                return this.selectorChangedCmd;
+                return this.filterChangedCmd;
             }
         }
 
@@ -95,22 +95,22 @@ namespace HashCalculator
                 {
                     model.GroupId = default(ComparableColor);
                     model.Matched = true;
-                    foreach (HashViewFilter<HashViewModel> selector in this.HashModelSelectors)
+                    foreach (HashViewFilter<HashViewModel> filter in this.HashModelFilters)
                     {
-                        selector.SetFilterTags(model);
+                        filter.SetFilterTags(model);
                     }
                 }
-                if (this.HashModelIEnumSelectors.Any())
+                if (this.HashModelIEnumFilters.Any())
                 {
-                    foreach (HashViewFilter<IEnumerable<HashViewModel>> selector in this.HashModelIEnumSelectors)
+                    foreach (HashViewFilter<IEnumerable<HashViewModel>> filter in this.HashModelIEnumFilters)
                     {
-                        selector.SetFilterTags(MainWndViewModel.HashViewModels);
+                        filter.SetFilterTags(MainWndViewModel.HashViewModels);
                     }
                 }
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     bool refreshed = false;
-                    if (this.HashModelIEnumSelectors.Any())
+                    if (this.HashModelIEnumFilters.Any())
                     {
                         MainWndViewModel.HashViewModelsViewSrc.View.GroupDescriptions.Add(this.groupDescription);
                         refreshed = true;

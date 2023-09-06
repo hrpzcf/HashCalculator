@@ -112,7 +112,7 @@
                         <CheckBox
                             Margin="3,0,0,0"
                             VerticalContentAlignment="Center"
-                            Command="{Binding ElementName=cmdPanel, Path=DataContext.SelectorChangedCmd}"
+                            Command="{Binding ElementName=cmdPanel, Path=DataContext.FilterChangedCmd}"
                             CommandParameter="{Binding}"
                             Content="{Binding Display}"
                             IsChecked="{Binding Selected, Mode=OneWayToSource}"
@@ -150,7 +150,7 @@
                         <CheckBox
                             Margin="3,0,0,0"
                             VerticalContentAlignment="Center"
-                            Command="{Binding ElementName=cmdPanel, Path=DataContext.SelectorChangedCmd}"
+                            Command="{Binding ElementName=cmdPanel, Path=DataContext.FilterChangedCmd}"
                             CommandParameter="{Binding}"
                             Content="{Binding Display}"
                             IsChecked="{Binding Selected, Mode=OneWayToSource}"
@@ -188,7 +188,7 @@
                         <CheckBox
                             Margin="3,0,0,0"
                             VerticalContentAlignment="Center"
-                            Command="{Binding ElementName=cmdPanel, Path=DataContext.SelectorChangedCmd}"
+                            Command="{Binding ElementName=cmdPanel, Path=DataContext.FilterChangedCmd}"
                             CommandParameter="{Binding}"
                             Content="{Binding Display}"
                             IsChecked="{Binding Selected, Mode=OneWayToSource}"
@@ -230,7 +230,7 @@
                         <CheckBox
                             Margin="3,0,0,0"
                             VerticalContentAlignment="Center"
-                            Command="{Binding ElementName=cmdPanel, Path=DataContext.SelectorChangedCmd}"
+                            Command="{Binding ElementName=cmdPanel, Path=DataContext.FilterChangedCmd}"
                             CommandParameter="{Binding}"
                             Content="{Binding Display}"
                             IsChecked="{Binding Selected, Mode=OneWayToSource}"
@@ -262,7 +262,7 @@
                         <CheckBox
                             Margin="3,0,0,0"
                             VerticalContentAlignment="Center"
-                            Command="{Binding ElementName=cmdPanel, Path=DataContext.SelectorChangedCmd}"
+                            Command="{Binding ElementName=cmdPanel, Path=DataContext.FilterChangedCmd}"
                             CommandParameter="{Binding}"
                             Content="{Binding Display}"
                             IsChecked="{Binding Selected, Mode=OneWayToSource}"
