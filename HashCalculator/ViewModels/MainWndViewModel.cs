@@ -74,28 +74,39 @@ namespace HashCalculator
 
         public MainWndViewModel()
         {
+            CurrentModel = this;
             HashViewModelsViewSrc = new CollectionViewSource();
             HashViewModelsViewSrc.Source = HashViewModels;
-            HashViewModelsViewSrc.View.Filter = value =>
+            HashViewModelsView = HashViewModelsViewSrc.View;
+            HashViewModelsView.Filter = obj =>
             {
-                if (!(value is HashViewModel model))
-                {
-                    return true;
-                }
-                else
-                {
-                    return model.Matched;
-                }
+                return obj is HashViewModel model && model.Matched;
             };
             Settings.Current.PropertyChanged += this.PropChangedAction;
             this.addModelAction = new AddModelDelegate(this.AddModelAction);
-            Current = this;
         }
 
-        public static MainWndViewModel Current { get; private set; }
+        public static MainWndViewModel CurrentModel
+        {
+            get;
+            private set;
+        }
 
         public Window OwnerWnd { get; set; }
 
+        /// <summary>
+        /// 使用此属性相当于 HashViewModelsViewSrc.View 的简写
+        /// </summary>
+        public static ICollectionView HashViewModelsView
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// 用于在 .xaml 文件内绑定到 DataGrid 的 ItemsSource 属性
+        /// 因为直接用 HashViewModels 属性绑定到 ItemsSource，则对视图的分组等操作不会生效
+        /// </summary>
         public static CollectionViewSource HashViewModelsViewSrc
         {
             get;
@@ -182,11 +193,10 @@ namespace HashCalculator
         {
             lock (this.tobeComputedModelsCountLock)
             {
-                if (this.TobeComputedModelsCount++ != 0)
+                if (this.TobeComputedModelsCount++ == 0)
                 {
-                    return;
+                    synchronization.Invoke(() => { this.State = QueueState.Started; });
                 }
-                synchronization.Invoke(() => { this.State = QueueState.Started; });
             }
         }
 
@@ -194,11 +204,10 @@ namespace HashCalculator
         {
             lock (this.tobeComputedModelsCountLock)
             {
-                if (--this.TobeComputedModelsCount != 0)
+                if (--this.TobeComputedModelsCount == 0)
                 {
-                    return;
+                    synchronization.Invoke(() => { this.State = QueueState.Stopped; });
                 }
-                synchronization.Invoke(() => { this.State = QueueState.Stopped; });
             }
         }
 
@@ -822,7 +831,7 @@ namespace HashCalculator
                 foreach (HashViewModel model in models)
                 {
                     model.ModelShutdownEvent += this.DeleteModelFileAction;
-                    // 对 HashViewModels 的增删操作必定是在主线程上的，不用加锁
+                    // 对 HashViewModels 的增删操作是在主线程上进行的，不用加锁
                     model.ShutdownModel();
                     HashViewModels.Remove(model);
                 }
@@ -850,7 +859,7 @@ namespace HashCalculator
                 foreach (HashViewModel model in models)
                 {
                     model.ShutdownModel();
-                    // 对 HashViewModels 的增删操作必定是在主线程上的，不用加锁
+                    // 对 HashViewModels 的增删操作是在主线程上进行的，不用加锁
                     HashViewModels.Remove(model);
                 }
                 this.GenerateVerificationReport();
@@ -1023,13 +1032,12 @@ namespace HashCalculator
             }
             else
             {
-                if (this.displayedFiles.Count <= 0)
+                if (this.displayedFiles.Any())
                 {
-                    return;
+                    List<ModelArg> args = this.displayedFiles;
+                    this.displayedFiles = new List<ModelArg>();
+                    this.BeginDisplayModels(args, true);
                 }
-                List<ModelArg> args = this.displayedFiles;
-                this.displayedFiles = new List<ModelArg>();
-                this.BeginDisplayModels(args, true);
             }
         }
 

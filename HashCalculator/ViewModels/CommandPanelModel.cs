@@ -112,16 +112,16 @@ namespace HashCalculator
                     bool refreshed = false;
                     if (this.HashModelIEnumFilters.Any())
                     {
-                        MainWndViewModel.HashViewModelsViewSrc.View.GroupDescriptions.Add(this.groupDescription);
+                        MainWndViewModel.HashViewModelsView.GroupDescriptions.Add(this.groupDescription);
                         refreshed = true;
                     }
                     else
                     {
-                        refreshed = MainWndViewModel.HashViewModelsViewSrc.View.GroupDescriptions.Remove(this.groupDescription);
+                        refreshed = MainWndViewModel.HashViewModelsView.GroupDescriptions.Remove(this.groupDescription);
                     }
                     if (!refreshed)
                     {
-                        MainWndViewModel.HashViewModelsViewSrc.View.Refresh();
+                        MainWndViewModel.HashViewModelsView.Refresh();
                     }
                 });
             });

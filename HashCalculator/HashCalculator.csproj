@@ -290,9 +290,6 @@
     <Resource Include="Images\filter_32.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\filter_32_gray.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\refresh_64.png" />
   </ItemGroup>
   <ItemGroup>

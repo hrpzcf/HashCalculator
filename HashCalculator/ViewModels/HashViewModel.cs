@@ -401,6 +401,7 @@ namespace HashCalculator
             this.MaxProgress = 0;
             this.State = HashState.NoState;
             this.Result = HashResult.NoResult;
+            this.GroupId = null;
             if (this.AlgoInOutModels != null)
             {
                 foreach (var model in this.AlgoInOutModels)

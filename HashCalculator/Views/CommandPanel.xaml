@@ -70,13 +70,6 @@
     <Window.DataContext>
         <Binding Source="{StaticResource CommandPanelModel}" />
     </Window.DataContext>
-    <Window.IsEnabled>
-        <Binding
-            Converter="{StaticResource MainModelStateToBoolCvt}"
-            Mode="OneWay"
-            Path="State"
-            Source="{x:Static local:MainWndViewModel.Current}" />
-    </Window.IsEnabled>
     <Grid Margin="4">
         <Grid.RowDefinitions>
             <RowDefinition />
@@ -322,9 +315,14 @@
                     Height="64"
                     Margin="4,0,0,0"
                     Command="{Binding RefreshViewCmd}"
-                    IsEnabled="{Binding RefreshEnabled}"
                     Style="{StaticResource ImageButtonStyle2}"
                     ToolTip="应用已勾选的筛选器并刷新主窗口表格视图">
+                    <Button.IsEnabled>
+                        <MultiBinding Converter="{StaticResource CmdPanelCriticalControlsEnabledCvt}">
+                            <Binding Path="RefreshEnabled" />
+                            <Binding Path="State" Source="{x:Static local:MainWndViewModel.CurrentModel}" />
+                        </MultiBinding>
+                    </Button.IsEnabled>
                     <Image Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnRefreshFilterEnabledImgCvt}}" />
                 </Button>
             </Grid>

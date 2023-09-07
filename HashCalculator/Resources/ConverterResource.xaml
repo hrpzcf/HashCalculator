@@ -14,10 +14,10 @@
     <local:TaskMessageCtrlVisiblityCvt x:Key="TaskMessageCtrlVisiblityCvt" />
     <local:SubCtrlVisiblityNotSucceedCvt x:Key="SubCtrlVisiblityNotSucceedCvt" />
     <local:MainModelStateToBoolCvt x:Key="MainModelStateToBoolCvt" />
+    <local:CmdPanelCriticalControlsEnabledCvt x:Key="CmdPanelCriticalControlsEnabledCvt" />
     <local:NoColumnCvt x:Key="NoColumnCvt" />
     <local:SubBtnPauseImageSrcCvt x:Key="SubBtnPauseImageSrcCvt" />
     <local:SubBtnPauseToolTipCvt x:Key="SubBtnPauseToolTipCvt" />
-    <local:BtnFilterEnabledImgCvt x:Key="BtnFilterEnabledImgCvt" />
     <local:BtnExportEnabledImgCvt x:Key="BtnExportEnabledImgCvt" />
     <local:BtnNewLineEnabledImgCvt x:Key="BtnNewLineEnabledImgCvt" />
     <local:BtnRefreshEnabledImgCvt x:Key="BtnRefreshEnabledImgCvt" />

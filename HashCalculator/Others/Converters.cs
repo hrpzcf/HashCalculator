@@ -366,6 +366,28 @@ namespace HashCalculator
         }
     }
 
+    internal class CmdPanelCriticalControlsEnabledCvt : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            Debug.Assert(values.Length == 2);
+            if (values[0] is bool enabled && !enabled)
+            {
+                return false;
+            }
+            if (values[1] is QueueState state && state == QueueState.Started)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     internal class NoColumnCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -377,30 +399,6 @@ namespace HashCalculator
             else
             {
                 return Visibility.Visible;
-            }
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    internal class BtnFilterEnabledImgCvt : IValueConverter
-    {
-        private static readonly BitmapImage enabled =
-            new BitmapImage(new Uri("/Images/filter_32.png", UriKind.Relative));
-        private static readonly BitmapImage disabled =
-            new BitmapImage(new Uri("/Images/filter_32_gray.png", UriKind.Relative));
-
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            switch ((bool)value)
-            {
-                case true:
-                    return enabled;
-                default:
-                    return disabled;
             }
         }
 

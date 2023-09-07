@@ -95,10 +95,9 @@
                     Grid.Column="5"
                     Margin="28,0,0,0"
                     Command="{Binding OpenCommandPanelCmd}"
-                    IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBoolCvt}}"
                     Style="{StaticResource ImageButtonStyle2}"
                     ToolTip="筛选与命令：打开筛选与命令窗口以进行筛选、对筛选结果进行操作，或关闭该窗口">
-                    <Image Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnFilterEnabledImgCvt}}" />
+                    <Image Source="/Images/filter_32.png" />
                 </Button>
                 <Button
                     Grid.Column="6"
