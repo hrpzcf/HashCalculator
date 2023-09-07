@@ -12,7 +12,7 @@ namespace HashCalculator
         public ComparableColor(Color color)
         {
             this.Color = color;
-            this.ColorInt = (color.A << 24) & (color.B << 16) & (color.G << 8) & color.R;
+            this.ColorInt = (color.A << 24) | (color.B << 16) | (color.G << 8) & color.R;
         }
 
         public override int GetHashCode()
