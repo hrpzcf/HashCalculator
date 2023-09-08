@@ -219,7 +219,7 @@ namespace HashCalculator
             return result == 0;
         }
 
-        public static bool IsPathsPointToSameFile(string filePath1, string filePath2, out bool isSameFile)
+        public static bool IsPointToSameFile(string filePath1, string filePath2, out bool isSameFile)
         {
             int INVALID_HANDLE_VALUE = -1;
             IntPtr fileHandle1 = new IntPtr(INVALID_HANDLE_VALUE);
@@ -330,9 +330,9 @@ namespace HashCalculator
                 (byte)((color & 0xFF0000u) >> 16));
         }
 
-        public static Color[] RandomColorGenerator(int number)
+        public static Color[] ColorGenerator(int number)
         {
-            List<Color> colors = new List<Color>();
+            List<Color> colors = new List<Color>(number);
             // 函数 ColorHLSToRGB 三个参数范围都是 0~240
             double MAX_HLS = 240.0;
             Random random = new Random();

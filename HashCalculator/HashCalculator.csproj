@@ -111,6 +111,7 @@
     <Compile Include="Others\CommonExts.cs" />
     <Compile Include="HashFilters\HashViewFilter.cs" />
     <Compile Include="Others\ComparableColor.cs" />
+    <Compile Include="Others\CmpableFileIndex.cs" />
     <Compile Include="Others\MappedReader.cs" />
     <Compile Include="Others\MappedWriter.cs" />
     <Compile Include="Others\NativeFunctions.cs" />

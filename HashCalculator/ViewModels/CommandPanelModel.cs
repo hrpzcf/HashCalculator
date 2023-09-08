@@ -12,6 +12,8 @@ namespace HashCalculator
         private bool _refreshEnabled = true;
         private readonly PropertyGroupDescription groupDescription =
             new PropertyGroupDescription(nameof(HashViewModel.GroupId));
+        private readonly PropertyGroupDescription fileIndexDescription =
+            new PropertyGroupDescription(nameof(HashViewModel.FileIndex));
         private RelayCommand refreshViewCmd;
         private RelayCommand filterChangedCmd;
 
@@ -109,19 +111,18 @@ namespace HashCalculator
                 }
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    bool refreshed = false;
                     if (this.HashModelIEnumFilters.Any())
                     {
-                        MainWndViewModel.HashViewModelsView.GroupDescriptions.Add(this.groupDescription);
-                        refreshed = true;
+                        using (MainWndViewModel.HashViewModelsView.DeferRefresh())
+                        {
+                            MainWndViewModel.HashViewModelsView.GroupDescriptions.Clear();
+                            MainWndViewModel.HashViewModelsView.GroupDescriptions.Add(this.groupDescription);
+                            MainWndViewModel.HashViewModelsView.GroupDescriptions.Add(this.fileIndexDescription);
+                        }
                     }
                     else
                     {
-                        refreshed = MainWndViewModel.HashViewModelsView.GroupDescriptions.Remove(this.groupDescription);
-                    }
-                    if (!refreshed)
-                    {
-                        MainWndViewModel.HashViewModelsView.Refresh();
+                        MainWndViewModel.HashViewModelsView.GroupDescriptions.Clear();
                     }
                 });
             });

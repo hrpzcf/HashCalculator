@@ -325,7 +325,7 @@
                 </ContextMenu>
             </DataGrid.ContextMenu>
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Serial}" Header="序号" />
+                <DataGridTextColumn Binding="{Binding SerialNumber}" Header="序号" />
                 <DataGridTemplateColumn
                     MinWidth="180"
                     Header="文件名"

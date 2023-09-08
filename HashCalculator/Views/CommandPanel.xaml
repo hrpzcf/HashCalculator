@@ -230,19 +230,32 @@
                             ToolTip="{Binding Description}" />
                     </GroupBox.Header>
                     <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <TextBlock
+                            Grid.Row="0"
                             Grid.Column="0"
                             VerticalAlignment="Center"
                             Text="关注的算法：" />
                         <ComboBox
+                            Grid.Row="0"
                             Grid.Column="1"
                             DisplayMemberPath="AlgoName"
                             ItemsSource="{Binding Items}"
                             SelectedItem="{Binding Param}" />
+                        <CheckBox
+                            Grid.Row="1"
+                            Grid.ColumnSpan="2"
+                            Margin="0,4,0,0"
+                            VerticalContentAlignment="Center"
+                            Content="排除多次计算的同一个文件"
+                            IsChecked="{Binding CheckFileIndex}" />
                     </Grid>
                 </GroupBox>
                 <GroupBox

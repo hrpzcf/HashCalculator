@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Media;
 
@@ -8,15 +9,15 @@ namespace HashCalculator
     {
         public AlgoAndHashModels()
         {
-            this.Items = new Dictionary<AlgoInOutModel, HashViewModel>();
+            this.Items = new Dictionary<HashViewModel, AlgoInOutModel>();
         }
 
-        public AlgoAndHashModels(AlgoInOutModel algo, HashViewModel model)
+        public AlgoAndHashModels(HashViewModel model, AlgoInOutModel algo)
         {
-            this.Items = new Dictionary<AlgoInOutModel, HashViewModel>() { { algo, model } };
+            this.Items = new Dictionary<HashViewModel, AlgoInOutModel>() { { model, algo } };
         }
 
-        public Dictionary<AlgoInOutModel, HashViewModel> Items { get; }
+        public Dictionary<HashViewModel, AlgoInOutModel> Items { get; }
     }
 
     internal class EqualHashByteFilter : HashViewFilter<IEnumerable<HashViewModel>>
@@ -41,6 +42,8 @@ namespace HashCalculator
                 this._algos = value as AlgoInOutModel[];
             }
         }
+
+        public bool CheckFileIndex { get; set; } = true;
 
         public EqualHashByteFilter()
         {
@@ -89,11 +92,11 @@ namespace HashCalculator
                                     {
                                         if (groupByHash.Keys.Contains(algo.HashResult, this.comparer))
                                         {
-                                            groupByHash[algo.HashResult].Items.Add(algo, item);
+                                            groupByHash[algo.HashResult].Items.Add(item, algo);
                                         }
                                         else
                                         {
-                                            groupByHash[algo.HashResult] = new AlgoAndHashModels(algo, item);
+                                            groupByHash[algo.HashResult] = new AlgoAndHashModels(item, algo);
                                         }
                                         itemMatched = true;
                                     }
@@ -107,37 +110,71 @@ namespace HashCalculator
                         }
                     }
                 }
-                Dictionary<byte[], AlgoAndHashModels> finalResult =
+                Dictionary<byte[], AlgoAndHashModels> equalHashBytes =
                     new Dictionary<byte[], AlgoAndHashModels>(this.comparer);
-                this.Result = finalResult;
+                this.Result = equalHashBytes;
                 foreach (KeyValuePair<byte[], AlgoAndHashModels> pair in groupByHash)
                 {
-                    if (pair.Value.Items.Count > 1)
+                    if (pair.Value.Items.Count < 2)
                     {
-                        finalResult.Add(pair.Key, pair.Value);
-                        foreach (KeyValuePair<AlgoInOutModel, HashViewModel> kv in pair.Value.Items)
-                        {
-                            kv.Value.CurrentInOutModel = kv.Key;
-                        }
-                    }
-                    else
-                    {
-                        foreach (HashViewModel model in pair.Value.Items.Values)
+                        foreach (HashViewModel model in pair.Value.Items.Keys)
                         {
                             model.Matched = false;
                         }
                     }
-                }
-                if (finalResult.Any())
-                {
-                    byte[][] keys = finalResult.Keys.ToArray();
-                    Color[] colors = CommonUtils.RandomColorGenerator(finalResult.Count);
-                    for (int i = 0; i < finalResult.Count; ++i)
+                    else
                     {
-                        foreach (HashViewModel model in finalResult[keys[i]].Items.Values)
+                        if (!this.CheckFileIndex)
                         {
-                            model.GroupId = new ComparableColor(colors[i]);
+                            equalHashBytes.Add(pair.Key, pair.Value);
                         }
+                        else
+                        {
+                            foreach (HashViewModel model in pair.Value.Items.Keys)
+                            {
+                                model.FileIndex = model.ModelArg.FilePath.GetFileIndex();
+                            }
+                            IGrouping<CmpableFileIndex, HashViewModel>[] byFileIndex = pair.Value.Items.Keys.GroupBy(x => x.FileIndex).ToArray();
+                            if (byFileIndex.Length > 1)
+                            {
+                                AlgoAndHashModels algoAndHashModels = new AlgoAndHashModels();
+                                foreach (IGrouping<CmpableFileIndex, HashViewModel> group in byFileIndex)
+                                {
+                                    HashViewModel model = group.FirstOrDefault();
+                                    if (model != default(HashViewModel))
+                                    {
+                                        algoAndHashModels.Items[model] = pair.Value.Items[model];
+                                        foreach (HashViewModel model1 in group.Skip(1))
+                                        {
+                                            model1.Matched = false;
+                                        }
+                                    }
+                                }
+                                equalHashBytes.Add(pair.Key, algoAndHashModels);
+                            }
+                            else if (byFileIndex.Length > 0)
+                            {
+                                foreach (HashViewModel model in byFileIndex[0])
+                                {
+                                    model.Matched = false;
+                                }
+                            }
+                        }
+                        foreach (KeyValuePair<HashViewModel, AlgoInOutModel> kv in pair.Value.Items)
+                        {
+                            kv.Key.CurrentInOutModel = kv.Value;
+                        }
+                    }
+                }
+                if (!equalHashBytes.Any())
+                {
+                    return;
+                }
+                foreach (var tuple in CommonUtils.ColorGenerator(equalHashBytes.Count).ZipElements(equalHashBytes))
+                {
+                    foreach (HashViewModel model in tuple.Item2.Value.Items.Keys)
+                    {
+                        model.GroupId = new ComparableColor(tuple.Item1);
                     }
                 }
             }

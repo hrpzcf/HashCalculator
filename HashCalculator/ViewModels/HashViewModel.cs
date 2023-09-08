@@ -63,7 +63,7 @@ namespace HashCalculator
         public HashViewModel(int serial, ModelArg arg)
         {
             this.ModelArg = arg;
-            this.Serial = serial;
+            this.SerialNumber = serial;
             this.FileInfo = new FileInfo(arg.FilePath);
             this.FileName = this.FileInfo.Name;
             if (arg.HashBasis != null && Settings.Current.PreferAlgosInBasis)
@@ -78,13 +78,15 @@ namespace HashCalculator
             this.PropertyChanged += this.CurrentHashStringHandler;
         }
 
-        public int Serial { get; }
+        public int SerialNumber { get; }
 
         public string FileName { get; }
 
         public FileInfo FileInfo { get; }
 
         public ModelArg ModelArg { get; }
+
+        public CmpableFileIndex FileIndex { get; set; }
 
         public bool Matched { get; set; } = true;
 
