@@ -131,6 +131,7 @@
     <Compile Include="ViewModels\AlgosPanelModel.cs" />
     <Compile Include="ViewModels\AlgoInOutModel.cs" />
     <Compile Include="ViewModels\CommandPanelModel.cs" />
+    <Compile Include="ViewModels\HashViewModel.cs" />
     <Compile Include="ViewModels\MainWndViewModel.cs" />
     <Compile Include="Others\Converters.cs" />
     <Compile Include="Others\Enumerates.cs" />
@@ -219,22 +220,27 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ViewModels\HashViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
-  <ItemGroup>
+    <ItemGroup>
+    <EmbeddedResource Include="ShellExt\HashCalculator.dll" />
+    <EmbeddedResource Include="ShellExt\HashCalculator32.dll" />
     <EmbeddedResource Include="Assembly\BouncyCastle.Cryptography.dll" />
+    <EmbeddedResource Include="Assembly\BouncyCastle.Cryptography-License.txt" />
     <EmbeddedResource Include="Assembly\CommandLine.dll" />
+    <EmbeddedResource Include="Assembly\CommandLineParser-License.txt" />
     <EmbeddedResource Include="Assembly\Microsoft.WindowsAPICodePack.dll" />
     <EmbeddedResource Include="Assembly\Microsoft.WindowsAPICodePack.Shell.dll" />
+    <EmbeddedResource Include="Assembly\WindowsAPICodePack-License.txt" />
     <EmbeddedResource Include="Assembly\XamlAnimatedGif.dll" />
+    <EmbeddedResource Include="Assembly\XamlAnimatedGif-License.txt" />
+    <EmbeddedResource Include="Assembly\Microsoft.Bcl.HashCode.dll" />
+    <EmbeddedResource Include="Assembly\Microsoft.Bcl.HashCode-License.txt" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="WebPages\Help.html" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\icon.ico" />
     <Resource Include="Images\start.png" />
     <Resource Include="Images\stop.png" />
@@ -267,38 +273,10 @@
     <Resource Include="Images\finished_16.png" />
     <Resource Include="Images\loading.gif" />
     <Resource Include="Images\search_files_32.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Assembly\BouncyCastle.Cryptography-License.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Assembly\CommandLineParser-License.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Assembly\WindowsAPICodePack-License.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Assembly\XamlAnimatedGif-License.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="ShellExt\HashCalculator.dll" />
-    <EmbeddedResource Include="ShellExt\HashCalculator32.dll" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\details_16.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\filter_32.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\refresh_64.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\refresh_64_gray.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Assembly\Microsoft.Bcl.HashCode-License.txt" />
-    <EmbeddedResource Include="Assembly\Microsoft.Bcl.HashCode.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
