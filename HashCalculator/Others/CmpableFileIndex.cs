@@ -4,17 +4,15 @@ namespace HashCalculator
 {
     internal class CmpableFileIndex : IComparable
     {
-        public uint VolumeSerialNumber { get; set; }
-
-        public uint FileIndexHigh { get; set; }
-
-        public uint FileIndexLow { get; set; }
+        private readonly uint FileIndexHigh;
+        private readonly uint FileIndexLow;
+        private readonly uint VolumeSerialNumber;
 
         public CmpableFileIndex(BY_HANDLE_FILE_INFORMATION info)
         {
-            this.VolumeSerialNumber = info.dwVolumeSerialNumber;
             this.FileIndexHigh = info.nFileIndexHigh;
             this.FileIndexLow = info.nFileIndexLow;
+            this.VolumeSerialNumber = info.dwVolumeSerialNumber;
         }
 
         public override int GetHashCode()
@@ -24,23 +22,23 @@ namespace HashCalculator
 
         public override bool Equals(object obj)
         {
-            if (obj is CmpableFileIndex fileIndex)
+            if (obj is CmpableFileIndex other)
             {
-                return this.VolumeSerialNumber.Equals(fileIndex.VolumeSerialNumber) &&
-                    this.FileIndexHigh.Equals(fileIndex.FileIndexHigh) && this.FileIndexLow.Equals(fileIndex.FileIndexLow);
+                return this.VolumeSerialNumber.Equals(other.VolumeSerialNumber) &&
+                    this.FileIndexHigh.Equals(other.FileIndexHigh) && this.FileIndexLow.Equals(other.FileIndexLow);
             }
             return false;
         }
 
         public int CompareTo(object obj)
         {
-            if (obj is CmpableFileIndex fileIndex)
+            if (obj is CmpableFileIndex other)
             {
-                ulong index1 = ((ulong)this.VolumeSerialNumber << 32) | (this.FileIndexHigh << 16) | this.FileIndexLow;
-                ulong index2 = ((ulong)fileIndex.VolumeSerialNumber << 32) | (fileIndex.FileIndexHigh << 16) | fileIndex.FileIndexLow;
-                return index1.CompareTo(index2);
+                return this.VolumeSerialNumber > other.VolumeSerialNumber ? 1 : this.VolumeSerialNumber < other.VolumeSerialNumber ? -1
+                    : this.FileIndexHigh > other.FileIndexHigh ? 1 : this.FileIndexHigh < other.FileIndexHigh ? -1
+                    : this.FileIndexLow > other.FileIndexLow ? 1 : this.FileIndexLow < other.FileIndexLow ? -1 : 0;
             }
-            throw new NotImplementedException();
+            return -1;
         }
     }
 }

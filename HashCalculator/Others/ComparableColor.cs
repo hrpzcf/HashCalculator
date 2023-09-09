@@ -5,14 +5,14 @@ namespace HashCalculator
 {
     internal class ComparableColor : IComparable
     {
-        public Color Color { get; set; }
+        private readonly uint colorNumber;
 
-        public int ColorInt { get; set; }
+        public Color Color { get; set; }
 
         public ComparableColor(Color color)
         {
             this.Color = color;
-            this.ColorInt = (color.A << 24) | (color.B << 16) | (color.G << 8) & color.R;
+            this.colorNumber = (((uint)color.A) << 24) | (((uint)color.B) << 16) | (((uint)color.G) << 8) | color.R;
         }
 
         public override int GetHashCode()
@@ -22,20 +22,20 @@ namespace HashCalculator
 
         public override bool Equals(object obj)
         {
-            if (obj is ComparableColor color)
+            if (obj is ComparableColor other)
             {
-                return this.Color.Equals(color.Color);
+                return this.Color.Equals(other.Color);
             }
             return false;
         }
 
         public int CompareTo(object obj)
         {
-            if (obj is ComparableColor color)
+            if (obj is ComparableColor other)
             {
-                return this.ColorInt.CompareTo(color.ColorInt);
+                return this.colorNumber.CompareTo(other.colorNumber);
             }
-            throw new NotImplementedException();
+            return -1;
         }
     }
 }
