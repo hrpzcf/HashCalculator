@@ -50,9 +50,9 @@ namespace HashCalculator
             {
                 return false;
             }
-            int res = NativeFunctions.SHOpenFolderAndSelectItems(nativePath, 0U, null, 0U);
+            int intResult = NativeFunctions.SHOpenFolderAndSelectItems(nativePath, 0U, null, 0U);
             Marshal.FreeCoTaskMem(nativePath);
-            return res == 0;
+            return 0 == intResult;
         }
 
         public static bool OpenFolderAndSelectItems(string folderPath, IEnumerable<string> files)
@@ -72,9 +72,9 @@ namespace HashCalculator
             }
             if (files == null || !files.Any())
             {
-                int res1 = NativeFunctions.SHOpenFolderAndSelectItems(folderID, 0U, null, 0U);
+                int intResult1 = NativeFunctions.SHOpenFolderAndSelectItems(folderID, 0U, null, 0U);
                 Marshal.FreeCoTaskMem(folderID);
-                return res1 == 0;
+                return 0 == intResult1;
             }
             List<IntPtr> fileIDList = new List<IntPtr>();
             foreach (string fname in files)
@@ -91,14 +91,18 @@ namespace HashCalculator
                     fileIDList.Add(fileID);
                 }
             }
-            int res2 = NativeFunctions.SHOpenFolderAndSelectItems(folderID, (uint)fileIDList.Count,
-                fileIDList.ToArray(), 0U);
+            int intResult2 = 0;
+            if (fileIDList.Any())
+            {
+                intResult2 = NativeFunctions.SHOpenFolderAndSelectItems(folderID, (uint)fileIDList.Count,
+                   fileIDList.ToArray(), 0U);
+            }
             Marshal.FreeCoTaskMem(folderID);
             foreach (IntPtr fileID in fileIDList)
             {
                 Marshal.FreeCoTaskMem(fileID);
             }
-            return res2 == 0;
+            return 0 == intResult2;
         }
 
         public static string ToBase64String(byte[] bytesPassedIn)
