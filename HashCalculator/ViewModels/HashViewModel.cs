@@ -20,6 +20,7 @@ namespace HashCalculator
         private long _progress = 0L;
         private long _maxProgress = 0L;
         private double _durationofTask = 0.0;
+        private bool _isExecutionTarget = false;
         private AlgoInOutModel _currentInOutModel = null;
         private AlgoInOutModel[] _algoInOutModels = null;
         private ComparableColor _groupId = null;
@@ -86,11 +87,11 @@ namespace HashCalculator
 
         public ModelArg ModelArg { get; }
 
-        public CmpableFileIndex FileIndex { get; set; }
+        public bool HasBeenRun { get; private set; }
 
         public bool Matched { get; set; } = true;
 
-        public bool HasBeenRun { get; private set; }
+        public CmpableFileIndex FileIndex { get; set; }
 
         public long FileSize
         {
@@ -245,6 +246,18 @@ namespace HashCalculator
             private set
             {
                 this.SetPropNotify(ref this._durationofTask, value);
+            }
+        }
+
+        public bool IsExecutionTarget
+        {
+            get
+            {
+                return this._isExecutionTarget;
+            }
+            set
+            {
+                this.SetPropNotify(ref this._isExecutionTarget, value);
             }
         }
 
@@ -404,6 +417,7 @@ namespace HashCalculator
             this.State = HashState.NoState;
             this.Result = HashResult.NoResult;
             this.GroupId = null;
+            this.IsExecutionTarget = false;
             if (this.AlgoInOutModels != null)
             {
                 foreach (var model in this.AlgoInOutModels)

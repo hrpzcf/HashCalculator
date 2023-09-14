@@ -1,6 +1,9 @@
-﻿namespace HashCalculator
+﻿using System.Collections.Generic;
+using System.ComponentModel;
+
+namespace HashCalculator
 {
-    internal abstract class HashViewFilter<T>
+    internal abstract class HashViewFilter
     {
         public abstract string Display { get; }
 
@@ -10,25 +13,24 @@
 
         public abstract object[] Items { get; set; }
 
-        public virtual ControlItem[] FilterLogics { get; set; } =
-            new ControlItem[]
-            {
-                new ControlItem("满足任意要求", FilterLogic.Any),
-                new ControlItem("严格满足要求", FilterLogic.Strict),
-                new ControlItem("在要求范围内", FilterLogic.Within),
-                new ControlItem("涵盖所有要求", FilterLogic.Cover),
-            };
+        public virtual SortDescription[] SortDescriptions { get; }
 
-        public object Result { get; set; }
+        public virtual GroupDescription[] GroupDescriptions { get; }
+
+        public virtual ControlItem[] FilterLogics { get; set; } = new ControlItem[]
+        {
+            new ControlItem("满足任意要求", FilterLogic.Any),
+            new ControlItem("严格满足要求", FilterLogic.Strict),
+            new ControlItem("在要求范围内", FilterLogic.Within),
+            new ControlItem("涵盖所有要求", FilterLogic.Cover),
+        };
 
         public bool Selected { get; set; }
 
+        public virtual void Init() { }
+
         public virtual void Reset() { }
 
-        public virtual void Initialize() { }
-
-        public virtual void Finish() { }
-
-        public abstract void SetFilterTags(T value);
+        public abstract void FilterObjects(IEnumerable<HashViewModel> models);
     }
 }

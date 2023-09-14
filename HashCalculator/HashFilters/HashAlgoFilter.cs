@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace HashCalculator
 {
-    internal class HashAlgoFilter : HashViewFilter<HashViewModel>
+    internal class HashAlgoFilter : HashViewFilter
     {
         private AlgoInOutModel[] _algos;
 
@@ -31,45 +31,53 @@ namespace HashCalculator
                 i => i.NewAlgoInOutModel()).ToArray();
         }
 
-        public override void SetFilterTags(HashViewModel model)
+        public override void FilterObjects(IEnumerable<HashViewModel> models)
         {
-            if (model != null && this.Param is FilterLogic filterLogic)
+            if (models == null || !(this.Param is FilterLogic filterLogic))
             {
-                IEnumerable<AlgoInOutModel> expModels = this._algos.Where(i => i.Selected);
-                if (expModels.Any())
+                return;
+            }
+            HashSet<AlgoType> expectedAlgos = this._algos.Where(i => i.Selected)
+                .Select(i => i.AlgoType).ToHashSet();
+            if (expectedAlgos.Any())
+            {
+                foreach (HashViewModel model in models)
                 {
+                    if (!model.Matched)
+                    {
+                        continue;
+                    }
                     if (model.AlgoInOutModels == null)
                     {
                         model.Matched = false;
                     }
                     else
                     {
-                        HashSet<AlgoType> expAlgos = expModels.Select(i => i.AlgoType).ToHashSet();
                         HashSet<AlgoType> modelAlgos = model.AlgoInOutModels.Select(i => i.AlgoType).ToHashSet();
                         if (filterLogic == FilterLogic.Any)
                         {
-                            if (!modelAlgos.Overlaps(expAlgos))
+                            if (!modelAlgos.Overlaps(expectedAlgos))
                             {
                                 model.Matched = false;
                             }
                         }
                         else if (filterLogic == FilterLogic.Strict)
                         {
-                            if (!modelAlgos.SetEquals(expAlgos))
+                            if (!modelAlgos.SetEquals(expectedAlgos))
                             {
                                 model.Matched = false;
                             }
                         }
                         else if (filterLogic == FilterLogic.Within)
                         {
-                            if (!modelAlgos.IsSubsetOf(expAlgos))
+                            if (!modelAlgos.IsSubsetOf(expectedAlgos))
                             {
                                 model.Matched = false;
                             }
                         }
                         else if (filterLogic == FilterLogic.Cover)
                         {
-                            if (!modelAlgos.IsSupersetOf(expAlgos))
+                            if (!modelAlgos.IsSupersetOf(expectedAlgos))
                             {
                                 model.Matched = false;
                             }

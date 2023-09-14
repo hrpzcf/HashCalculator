@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Windows.Data;
 
 namespace HashCalculator
 {
@@ -18,7 +20,7 @@ namespace HashCalculator
         public Dictionary<HashViewModel, AlgoInOutModel> Dict { get; }
     }
 
-    internal class EqualHashByteFilter : HashViewFilter<IEnumerable<HashViewModel>>
+    internal class EqualHashByteFilter : HashViewFilter
     {
         private AlgoInOutModel[] _algos;
         private readonly HashBytesComparer comparer = new HashBytesComparer();
@@ -43,6 +45,13 @@ namespace HashCalculator
 
         public bool CheckFileIndex { get; set; } = true;
 
+        public override GroupDescription[] GroupDescriptions { get; } =
+            // 顺序不能反，分组优先级不一样
+            new GroupDescription[] {
+                new PropertyGroupDescription(nameof(HashViewModel.GroupId)),
+                new PropertyGroupDescription(nameof(HashViewModel.FileIndex)),
+            };
+
         public EqualHashByteFilter()
         {
             this._algos = AlgosPanelModel.ProvidedAlgos.Select(
@@ -50,64 +59,52 @@ namespace HashCalculator
             this.Param = this._algos[0];
         }
 
-        public override void Finish()
+        public override void FilterObjects(IEnumerable<HashViewModel> models)
         {
-            if (this.Result is Dictionary<byte[], HashSet<HashViewModel>> result)
-            {
-                foreach (HashSet<HashViewModel> hashSet in result.Values)
-                {
-                    foreach (HashViewModel model in hashSet)
-                    {
-                        model.GroupId = default(ComparableColor);
-                    }
-                }
-            }
-            this.Result = default(object);
-        }
-
-        public override void SetFilterTags(IEnumerable<HashViewModel> models)
-        {
-            if (this.Param is AlgoInOutModel algoSelected)
+            if (models != null && this.Param is AlgoInOutModel focusedAlgo)
             {
                 Dictionary<byte[], ModelCurAlgoDict> groupByHash =
                     new Dictionary<byte[], ModelCurAlgoDict>(this.comparer);
-                foreach (HashViewModel item in models)
+                foreach (HashViewModel model in models)
                 {
-                    if (item.Matched)
+                    if (!model.Matched)
                     {
-                        if (item.Result != HashResult.Succeeded)
+                        continue;
+                    }
+                    if (model.AlgoInOutModels == null)
+                    {
+                        model.Matched = false;
+                    }
+                    else
+                    {
+                        bool modelMatched = false;
+                        foreach (AlgoInOutModel algo in model.AlgoInOutModels)
                         {
-                            item.Matched = false;
-                        }
-                        else
-                        {
-                            bool itemMatched = false;
-                            foreach (AlgoInOutModel algo in item.AlgoInOutModels)
+                            if (algo.AlgoType == focusedAlgo.AlgoType)
                             {
-                                if (algo.AlgoType == algoSelected.AlgoType)
+                                if (algo.HashResult != null)
                                 {
-                                    if (algo.HashResult != null)
+                                    if (groupByHash.Keys.Contains(algo.HashResult, this.comparer))
                                     {
-                                        if (groupByHash.Keys.Contains(algo.HashResult, this.comparer))
-                                        {
-                                            groupByHash[algo.HashResult].Dict.Add(item, algo);
-                                        }
-                                        else
-                                        {
-                                            groupByHash[algo.HashResult] = new ModelCurAlgoDict(item, algo);
-                                        }
-                                        itemMatched = true;
+                                        groupByHash[algo.HashResult].Dict.Add(model, algo);
                                     }
-                                    break;
+                                    else
+                                    {
+                                        groupByHash[algo.HashResult] = new ModelCurAlgoDict(model, algo);
+                                    }
+                                    modelMatched = true;
                                 }
+                                break;
                             }
-                            item.Matched = itemMatched;
+                        }
+                        if (!modelMatched)
+                        {
+                            model.Matched = false;
                         }
                     }
                 }
-                Dictionary<byte[], ModelCurAlgoDict> equalByteArrayModels =
+                Dictionary<byte[], ModelCurAlgoDict> equalHashModels =
                     new Dictionary<byte[], ModelCurAlgoDict>(this.comparer);
-                this.Result = equalByteArrayModels;
                 foreach (KeyValuePair<byte[], ModelCurAlgoDict> pair in groupByHash)
                 {
                     if (pair.Value.Dict.Count < 2)
@@ -121,17 +118,20 @@ namespace HashCalculator
                     {
                         if (!this.CheckFileIndex)
                         {
-                            equalByteArrayModels.Add(pair.Key, pair.Value);
+                            equalHashModels.Add(pair.Key, pair.Value);
                         }
                         else
                         {
                             foreach (HashViewModel model in pair.Value.Dict.Keys)
                             {
                                 model.FileIndex = model.ModelArg.FilePath.GetFileIndex();
-                                model.Matched = model.FileIndex != null;
+                                if (model.FileIndex == null)
+                                {
+                                    model.Matched = false;
+                                }
                             }
-                            IGrouping<CmpableFileIndex, HashViewModel>[] groupByFileIndex = pair.Value.Dict.Keys.Where(
-                                i => i.FileIndex != null).GroupBy(x => x.FileIndex).ToArray();
+                            IGrouping<CmpableFileIndex, HashViewModel>[] groupByFileIndex = pair.Value.Dict.Keys
+                                .Where(i => i.FileIndex != null).GroupBy(x => x.FileIndex).ToArray();
                             if (groupByFileIndex.Length > 1)
                             {
                                 ModelCurAlgoDict modelCurAlgoDict = new ModelCurAlgoDict();
@@ -147,11 +147,11 @@ namespace HashCalculator
                                         }
                                     }
                                 }
-                                equalByteArrayModels.Add(pair.Key, modelCurAlgoDict);
+                                equalHashModels.Add(pair.Key, modelCurAlgoDict);
                             }
-                            else if (groupByFileIndex.Length > 0)
+                            else if (groupByFileIndex.Length == 1)
                             {
-                                foreach (HashViewModel model in groupByFileIndex[0])
+                                foreach (HashViewModel model in groupByFileIndex.First())
                                 {
                                     model.Matched = false;
                                 }
@@ -163,11 +163,11 @@ namespace HashCalculator
                         }
                     }
                 }
-                if (!equalByteArrayModels.Any())
+                if (!equalHashModels.Any())
                 {
                     return;
                 }
-                foreach (var tuple in CommonUtils.ColorGenerator(equalByteArrayModels.Count).ZipElements(equalByteArrayModels))
+                foreach (var tuple in CommonUtils.ColorGenerator(equalHashModels.Count).ZipElements(equalHashModels))
                 {
                     foreach (HashViewModel model in tuple.Item2.Value.Dict.Keys)
                     {

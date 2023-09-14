@@ -16,6 +16,7 @@
     <local:MainModelStateToBoolCvt x:Key="MainModelStateToBoolCvt" />
     <local:CmdPanelCriticalControlsEnabledCvt x:Key="CmdPanelCriticalControlsEnabledCvt" />
     <local:NoColumnCvt x:Key="NoColumnCvt" />
+    <local:ReverseNoColumnCvt x:Key="ReverseNoColumnCvt" />
     <local:SubBtnPauseImageSrcCvt x:Key="SubBtnPauseImageSrcCvt" />
     <local:SubBtnPauseToolTipCvt x:Key="SubBtnPauseToolTipCvt" />
     <local:BtnExportEnabledImgCvt x:Key="BtnExportEnabledImgCvt" />
@@ -38,4 +39,5 @@
     <local:BtnRefreshFilterEnabledImgCvt x:Key="BtnRefreshFilterEnabledImgCvt" />
     <local:MultiLineTextToStrArrayCvt x:Key="MultiLineTextToStrArrayCvt" />
     <local:GroupIdToSolidColorBrushCvt x:Key="GroupIdToSolidColorBrushCvt" />
+    <local:ReverseBoolValueCvt x:Key="ReverseBoolValueCvt" />
 </ResourceDictionary>

@@ -16,15 +16,10 @@
     <Window.Resources>
         <ResourceDictionary>
             <local:CommandPanelModel x:Key="CommandPanelModel" />
-            <local:CmpResultFilter x:Key="CmpResultFilter" />
-            <local:EqualHashByteFilter x:Key="EqualHashByteFilter" />
-            <local:HashAlgoFilter x:Key="HashAlgoFilter" />
-            <local:HashStringFilter x:Key="HashStringFilter" />
-            <local:HashTaskResultFilter x:Key="HashTaskResultFilter" />
             <ResourceDictionary.MergedDictionaries>
-                <!--<ResourceDictionary Source="/Resources/AlgosButtonStyles.xaml" />-->
                 <!--<ResourceDictionary Source="/Resources/ComboBoxStyle1.xaml" />-->
                 <!--<ResourceDictionary Source="/Resources/ComboBoxStyle2.xaml" />-->
+                <ResourceDictionary Source="/Resources/CmderButtonStyles.xaml" />
                 <ResourceDictionary Source="/Resources/ImageButtonStyles.xaml" />
                 <ResourceDictionary Source="/Resources/ConverterResource.xaml" />
                 <ResourceDictionary Source="/Resources/DescTextBlockStyles.xaml" />
@@ -72,8 +67,7 @@
     </Window.DataContext>
     <Grid Margin="4">
         <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <GroupBox Grid.Row="0" Padding="0,6,0,0">
@@ -100,7 +94,7 @@
                     Grid.Row="0"
                     Grid.Column="0"
                     Padding="0,6,0,2"
-                    DataContext="{StaticResource HashAlgoFilter}">
+                    DataContext="{Binding HashModelFilters[0]}">
                     <GroupBox.Header>
                         <CheckBox
                             Margin="3,0,0,0"
@@ -138,7 +132,7 @@
                     Grid.Column="1"
                     Margin="2,0,0,0"
                     Padding="0,6,0,2"
-                    DataContext="{StaticResource CmpResultFilter}">
+                    DataContext="{Binding HashModelFilters[1]}">
                     <GroupBox.Header>
                         <CheckBox
                             Margin="3,0,0,0"
@@ -176,7 +170,7 @@
                     Grid.Column="2"
                     Margin="2,0,0,0"
                     Padding="0,6,0,2"
-                    DataContext="{StaticResource HashTaskResultFilter}">
+                    DataContext="{Binding HashModelFilters[2]}">
                     <GroupBox.Header>
                         <CheckBox
                             Margin="3,0,0,0"
@@ -218,7 +212,7 @@
                     Grid.Column="0"
                     Margin="0,4,0,0"
                     Padding="0,6,0,2"
-                    DataContext="{StaticResource EqualHashByteFilter}">
+                    DataContext="{Binding HashModelFilters[3]}">
                     <GroupBox.Header>
                         <CheckBox
                             Margin="3,0,0,0"
@@ -254,7 +248,7 @@
                             Grid.ColumnSpan="2"
                             Margin="0,4,0,0"
                             VerticalContentAlignment="Center"
-                            Content="排除多次计算的同一个文件"
+                            Content="排除重复计算或不存在的文件"
                             IsChecked="{Binding CheckFileIndex}" />
                     </Grid>
                 </GroupBox>
@@ -263,7 +257,7 @@
                     Grid.ColumnSpan="3"
                     Margin="0,4,0,0"
                     Padding="0,6,0,2"
-                    DataContext="{StaticResource HashStringFilter}">
+                    DataContext="{Binding HashModelFilters[4]}">
                     <GroupBox.Header>
                         <CheckBox
                             Margin="3,0,0,0"
@@ -345,24 +339,90 @@
             Margin="0,8,0,0"
             Padding="4,8,4,4"
             Foreground="#FF006FD6"
-            Header="对筛选结果执行的命令"
-            Visibility="Collapsed">
+            Header="可执行的操作">
+            <GroupBox.IsEnabled>
+                <MultiBinding Converter="{StaticResource CmdPanelCriticalControlsEnabledCvt}">
+                    <Binding Path="RefreshEnabled" />
+                    <Binding Path="State" Source="{x:Static local:MainWndViewModel.CurrentModel}" />
+                </MultiBinding>
+            </GroupBox.IsEnabled>
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
+                <GroupBox
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Padding="0,6,0,2"
+                    DataContext="{Binding HashModelCmders[0]}"
+                    Foreground="Black">
+                    <GroupBox.Header>
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Text="{Binding Display}"
+                            ToolTip="{Binding Description}" />
+                    </GroupBox.Header>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Button
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Padding="24,8"
+                            Background="DarkGreen"
+                            BorderThickness="0"
+                            Command="{Binding CancelExecutionCmdCtrl.ItemValue}"
+                            Content="{Binding CancelExecutionCmdCtrl.Display}"
+                            Foreground="White"
+                            Style="{StaticResource DelFileLeftButtonStyle}"
+                            ToolTip="取消文件删除操作，隐藏主窗口的【删除】列"
+                            Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoExecutionTargetColumn, Converter={StaticResource NoColumnCvt}}" />
+                        <Button
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Padding="24,8"
+                            Background="Purple"
+                            BorderThickness="0"
+                            Command="{Binding PrepareExecutionTargetCmdCtrl.ItemValue}"
+                            Content="{Binding PrepareExecutionTargetCmdCtrl.Display}"
+                            Foreground="White"
+                            Style="{StaticResource DelFileLeftButtonStyle}"
+                            ToolTip="显示主窗口【删除】列，如果使用了【相同哈希值】筛选器，则自动勾选多余的文件"
+                            Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoExecutionTargetColumn, Converter={StaticResource ReverseNoColumnCvt}}" />
+                        <Button
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Padding="24,8"
+                            Background="Red"
+                            BorderThickness="0"
+                            Command="{Binding ExecuteCommandCmdCtrl.ItemValue}"
+                            Content="{Binding ExecuteCommandCmdCtrl.Display}"
+                            Foreground="White"
+                            IsEnabled="{Binding Source={x:Static local:Settings.Current}, Path=NoExecutionTargetColumn, Converter={StaticResource ReverseBoolValueCvt}}"
+                            Style="{StaticResource DelFileRightButtonStyle}"
+                            ToolTip="把已勾选的文件移动到回收站，删除前请确认是否正确勾选了要删除的文件" />
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.ColumnSpan="3"
+                            Margin="0,4,0,0"
+                            VerticalAlignment="Center"
+                            FontSize="8pt"
+                            Foreground="Red"
+                            Text="警告：使用【相同哈希值】筛选器时请勾选【排除重复计算或不存在的文件】，否则可能造成误删" />
+                    </Grid>
+                </GroupBox>
             </Grid>
         </GroupBox>
-        <TextBlock
-            Grid.Row="2"
-            Margin="0,8,0,4"
-            FontSize="8pt"
-            Foreground="Red"
-            Style="{StaticResource DescTextBlockStyle}"
-            Text="执行命令前请再次确认筛选结果是否正确，如果不小心误删请到回收站恢复文件"
-            Visibility="Collapsed" />
     </Grid>
 </Window>
