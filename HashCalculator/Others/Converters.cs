@@ -408,6 +408,26 @@ namespace HashCalculator
         }
     }
 
+    internal class ReverseNoColumnCvt : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (!(bool)value)
+            {
+                return Visibility.Hidden;
+            }
+            else
+            {
+                return Visibility.Visible;
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     internal class BtnExportEnabledImgCvt : IValueConverter
     {
         private static readonly BitmapImage enabled =
@@ -809,6 +829,19 @@ namespace HashCalculator
             {
                 return new SolidColorBrush(Colors.Transparent);
             }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class ReverseBoolValueCvt : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return !(bool)value;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

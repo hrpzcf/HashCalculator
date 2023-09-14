@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -118,6 +120,28 @@ namespace HashCalculator
             for (int index = 0; index < Math.Min(enum1.Count(), enum2.Count()); ++index)
             {
                 yield return new Tuple<T1, T2>(enum1.ElementAt(index), enum2.ElementAt(index));
+            }
+        }
+
+        public static void Extend(this SortDescriptionCollection collection, IEnumerable<SortDescription> descriptions)
+        {
+            if (descriptions != null)
+            {
+                foreach (SortDescription description in descriptions)
+                {
+                    collection.Add(description);
+                }
+            }
+        }
+
+        public static void Extend(this ObservableCollection<GroupDescription> collection, IEnumerable<GroupDescription> descriptions)
+        {
+            if (descriptions != null)
+            {
+                foreach (GroupDescription description in descriptions)
+                {
+                    collection.Add(description);
+                }
             }
         }
     }

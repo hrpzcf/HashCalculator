@@ -32,6 +32,7 @@ namespace HashCalculator
         private bool noExportColumn = false;
         private bool noDurationColumn = false;
         private bool noFileSizeColumn = false;
+        private bool noExecutionTargetColumn = true;
         private bool runInMultiInstanceMode = false;
         private bool notSettingShellExtension = true;
         private bool preferAlgosInBasis = true;
@@ -341,6 +342,19 @@ namespace HashCalculator
             set
             {
                 this.SetPropNotify(ref this.noFileSizeColumn, value);
+            }
+        }
+
+        [XmlIgnore]
+        public bool NoExecutionTargetColumn
+        {
+            get
+            {
+                return this.noExecutionTargetColumn;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.noExecutionTargetColumn, value);
             }
         }
 

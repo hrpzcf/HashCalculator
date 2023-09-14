@@ -373,6 +373,17 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="删除" Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoExecutionTargetColumn, Converter={StaticResource NoColumnCvt}, Mode=OneWay}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox
+                                HorizontalAlignment="Center"
+                                Background="{Binding GroupId.Color, Converter={StaticResource GroupIdToSolidColorBrushCvt}}"
+                                Foreground="#FFFFFFFF"
+                                IsChecked="{Binding IsExecutionTarget, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTemplateColumn
                     MinWidth="210"
                     Header="哈希值"

@@ -1,8 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Data;
 using System.Windows.Input;
 
 namespace HashCalculator
@@ -10,32 +7,40 @@ namespace HashCalculator
     internal class CommandPanelModel : NotifiableModel
     {
         private bool _refreshEnabled = true;
-        private readonly PropertyGroupDescription groupDescription =
-            new PropertyGroupDescription(nameof(HashViewModel.GroupId));
-        private readonly PropertyGroupDescription fileIndexDescription =
-            new PropertyGroupDescription(nameof(HashViewModel.FileIndex));
+        private readonly ICollectionView BoundDataGridView;
         private RelayCommand refreshViewCmd;
         private RelayCommand filterChangedCmd;
 
-        private List<HashViewFilter<HashViewModel>> HashModelFilters { get; } =
-            new List<HashViewFilter<HashViewModel>>();
+        public HashViewCmder[] HashModelCmders { get; } = new HashViewCmder[]
+        {
+            new DelEqualHashFileCmder(),    // 0
+        };
 
-        private List<HashViewFilter<IEnumerable<HashViewModel>>> HashModelIEnumFilters { get; } =
-            new List<HashViewFilter<IEnumerable<HashViewModel>>>();
+        public HashViewFilter[] HashModelFilters { get; } = new HashViewFilter[]
+        {
+            new HashAlgoFilter(),           // 0
+            new CmpResultFilter(),          // 1
+            new HashTaskResultFilter(),     // 2
+            new EqualHashByteFilter(),      // 3
+            new HashStringFilter(),         // 4
+        };
+
+        public CommandPanelModel(ICollectionView view)
+        {
+            this.BoundDataGridView = view;
+        }
+
+        public CommandPanelModel() : this(MainWndViewModel.HashViewModelsView)
+        {
+        }
 
         public void ClearFiltersAndRefresh()
         {
-            foreach (HashViewFilter<HashViewModel> filter1 in this.HashModelFilters)
+            foreach (HashViewFilter filter in this.HashModelFilters)
             {
-                filter1.Finish();
+                filter.Reset();
             }
-            foreach (HashViewFilter<IEnumerable<HashViewModel>> filter2 in this.HashModelIEnumFilters)
-            {
-                filter2.Finish();
-            }
-            this.HashModelFilters.Clear();
-            this.HashModelIEnumFilters.Clear();
-            this.RefreshViewAction(null);
+            this.RefreshViewAction(false);  // 传入 bool 类型(false)表示不筛选
         }
 
         public bool RefreshEnabled
@@ -52,27 +57,9 @@ namespace HashCalculator
 
         private void FilterChangedAction(object param)
         {
-            if (param is HashViewFilter<HashViewModel> filter)
+            if (param is HashViewFilter filter && !filter.Selected)
             {
-                if (!filter.Selected)
-                {
-                    this.HashModelFilters.Remove(filter);
-                }
-                else if (!this.HashModelFilters.Contains(filter))
-                {
-                    this.HashModelFilters.Add(filter);
-                }
-            }
-            else if (param is HashViewFilter<IEnumerable<HashViewModel>> ienumFilter)
-            {
-                if (!ienumFilter.Selected)
-                {
-                    this.HashModelIEnumFilters.Remove(ienumFilter);
-                }
-                else if (!this.HashModelIEnumFilters.Contains(ienumFilter))
-                {
-                    this.HashModelIEnumFilters.Add(ienumFilter);
-                }
+                filter.Reset();
             }
         }
 
@@ -91,41 +78,53 @@ namespace HashCalculator
         private async void RefreshViewAction(object param)
         {
             this.RefreshEnabled = false;
+            foreach (HashViewCmder cmder in this.HashModelCmders)
+            {
+                cmder.Reset();
+            }
+            bool filteringShouldBeApplied = !(param is bool instruction) || instruction;
             await Task.Run(() =>
             {
                 foreach (HashViewModel model in MainWndViewModel.HashViewModels)
                 {
-                    model.GroupId = default(ComparableColor);
                     model.Matched = true;
-                    foreach (HashViewFilter<HashViewModel> filter in this.HashModelFilters)
-                    {
-                        filter.SetFilterTags(model);
-                    }
+                    model.FileIndex = null;
+                    model.GroupId = null;
                 }
-                if (this.HashModelIEnumFilters.Any())
+                if (filteringShouldBeApplied)
                 {
-                    foreach (HashViewFilter<IEnumerable<HashViewModel>> filter in this.HashModelIEnumFilters)
+                    foreach (HashViewFilter filter in this.HashModelFilters)
                     {
-                        filter.SetFilterTags(MainWndViewModel.HashViewModels);
-                    }
-                }
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    if (this.HashModelIEnumFilters.Any())
-                    {
-                        using (MainWndViewModel.HashViewModelsView.DeferRefresh())
+                        if (filter.Selected)
                         {
-                            MainWndViewModel.HashViewModelsView.GroupDescriptions.Clear();
-                            MainWndViewModel.HashViewModelsView.GroupDescriptions.Add(this.groupDescription);
-                            MainWndViewModel.HashViewModelsView.GroupDescriptions.Add(this.fileIndexDescription);
+                            filter.FilterObjects(MainWndViewModel.HashViewModels);
                         }
                     }
-                    else
-                    {
-                        MainWndViewModel.HashViewModelsView.GroupDescriptions.Clear();
-                    }
-                });
+                }
             });
+            using (this.BoundDataGridView.DeferRefresh())
+            {
+                this.BoundDataGridView.SortDescriptions.Clear();
+                this.BoundDataGridView.GroupDescriptions.Clear();
+                this.BoundDataGridView.Filter = null;
+                if (filteringShouldBeApplied)
+                {
+                    bool anyFilterSelected = false;
+                    foreach (HashViewFilter filter in this.HashModelFilters)
+                    {
+                        if (filter.Selected)
+                        {
+                            anyFilterSelected = true;
+                            this.BoundDataGridView.SortDescriptions.Extend(filter.SortDescriptions);
+                            this.BoundDataGridView.GroupDescriptions.Extend(filter.GroupDescriptions);
+                        }
+                    }
+                    if (anyFilterSelected)
+                    {
+                        this.BoundDataGridView.Filter = filterObject => filterObject is HashViewModel model && model.Matched;
+                    }
+                }
+            }
             this.RefreshEnabled = true;
         }
 

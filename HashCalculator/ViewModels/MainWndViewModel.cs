@@ -78,10 +78,6 @@ namespace HashCalculator
             HashViewModelsViewSrc = new CollectionViewSource();
             HashViewModelsViewSrc.Source = HashViewModels;
             HashViewModelsView = HashViewModelsViewSrc.View;
-            HashViewModelsView.Filter = obj =>
-            {
-                return obj is HashViewModel model && model.Matched;
-            };
             Settings.Current.PropertyChanged += this.PropChangedAction;
             this.addModelAction = new AddModelDelegate(this.AddModelAction);
         }
