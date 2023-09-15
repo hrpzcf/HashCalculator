@@ -343,7 +343,7 @@ namespace HashCalculator
             foreach (double H in new CyclingDouble(0.0, MAX_HLS, number))
             {
                 int L = random.Next(170, 190);
-                int S = random.Next(160, 220);
+                int S = random.Next(120, 180);
                 colors.Add(RgbDwordToColor(NativeFunctions.ColorHLSToRGB((int)H, L, S)));
             }
             return colors.ToArray();
