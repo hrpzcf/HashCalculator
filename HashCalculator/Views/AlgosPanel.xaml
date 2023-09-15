@@ -87,6 +87,7 @@
             Padding="1"
             HorizontalAlignment="Center"
             FontSize="8pt"
+            Foreground="Red"
             Style="{StaticResource DescTextBlockStyle}"
             Text="不建议选择太多算法，否则对程序做任何操作都极易造成程序无响应" />
         <Button

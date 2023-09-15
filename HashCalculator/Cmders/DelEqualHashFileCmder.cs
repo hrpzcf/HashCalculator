@@ -17,7 +17,7 @@ namespace HashCalculator
 
         public override string Display => "删除指定文件";
 
-        public override string Description => "把筛选出来的结果中已勾选的文件移动到回收站";
+        public override string Description => "把筛选出来的结果中已勾选的文件移动到回收站\n通常使用【相同哈希值】筛选器进行文件筛选后再使用此功能";
 
         public DelEqualHashFileCmder() : base(MainWndViewModel.HashViewModels)
         {
