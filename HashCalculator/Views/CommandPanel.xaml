@@ -76,7 +76,7 @@
                     VerticalAlignment="Center"
                     Foreground="#FF006FD6"
                     Text="可用的筛选器"
-                    ToolTip="勾选筛选器并点击 [刷新] 按钮以更新主窗口表格，勾选的筛选器之间为 [且] 关系" />
+                    ToolTip="勾选筛选器并点击【刷新】按钮以更新主窗口表格，勾选的筛选器之间为【且】关系&#10;警告：在主窗口发生任何更改后，都应该点击【刷新】按钮刷新筛选结果，否则结果是不可靠的" />
             </GroupBox.Header>
             <Grid>
                 <Grid.RowDefinitions>
@@ -94,7 +94,7 @@
                     Grid.Row="0"
                     Grid.Column="0"
                     Padding="0,6,0,2"
-                    BorderBrush="MediumSpringGreen"
+                    BorderBrush="Green"
                     DataContext="{Binding HashModelFilters[0]}">
                     <GroupBox.Header>
                         <CheckBox
@@ -215,7 +215,7 @@
                     Grid.Column="0"
                     Margin="0,4,0,0"
                     Padding="0,6,0,2"
-                    BorderBrush="CornflowerBlue"
+                    BorderBrush="MediumPurple"
                     DataContext="{Binding HashModelFilters[3]}">
                     <GroupBox.Header>
                         <CheckBox
@@ -261,7 +261,7 @@
                     Grid.ColumnSpan="3"
                     Margin="0,4,0,0"
                     Padding="0,6,0,2"
-                    BorderBrush="Chocolate"
+                    BorderBrush="DeepSkyBlue"
                     DataContext="{Binding HashModelFilters[4]}">
                     <GroupBox.Header>
                         <CheckBox
@@ -342,15 +342,20 @@
         <GroupBox
             Grid.Row="1"
             Margin="0,8,0,0"
-            Padding="0,6,0,0"
-            Foreground="#FF006FD6"
-            Header="可选择的操作">
+            Padding="0,6,0,0">
             <GroupBox.IsEnabled>
                 <MultiBinding Converter="{StaticResource CmdPanelCriticalControlsEnabledCvt}">
                     <Binding Path="RefreshEnabled" />
                     <Binding Path="State" Source="{x:Static local:MainWndViewModel.CurrentModel}" />
                 </MultiBinding>
             </GroupBox.IsEnabled>
+            <GroupBox.Header>
+                <TextBlock
+                    VerticalAlignment="Center"
+                    Foreground="#FF006FD6"
+                    Text="可选择的操作"
+                    ToolTip="可用于对筛选的结果进行操作的一些命令" />
+            </GroupBox.Header>
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition />
