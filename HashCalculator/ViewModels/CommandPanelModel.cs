@@ -23,8 +23,9 @@ namespace HashCalculator
             new HashingTaskResultFilter(),  // 2
             new SerialNumberFilter(),       // 3
             new HashStringFilter(),         // 4
+            new FileNameFilter(),           // 5
             // 这个筛选器因其特殊性需最后应用，否则结果不正确
-            new EqualHashByteFilter(),      // 5
+            new EqualHashByteFilter(),      // 6
         };
 
         public CommandPanelModel(ICollectionView view)

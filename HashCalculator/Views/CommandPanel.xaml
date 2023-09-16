@@ -83,6 +83,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -90,6 +91,7 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
+                <!--  哈希算法筛选器  -->
                 <GroupBox
                     Grid.Row="0"
                     Grid.Column="0"
@@ -128,6 +130,7 @@
                         </StackPanel>
                     </StackPanel>
                 </GroupBox>
+                <!--  校验结果筛选器  -->
                 <GroupBox
                     Grid.Row="0"
                     Grid.Column="1"
@@ -167,6 +170,7 @@
                         </StackPanel>
                     </StackPanel>
                 </GroupBox>
+                <!--  任务运行结果筛选器  -->
                 <GroupBox
                     Grid.Row="0"
                     Grid.Column="2"
@@ -210,13 +214,14 @@
                         </StackPanel>
                     </StackPanel>
                 </GroupBox>
+                <!--  相同哈希值筛选器  -->
                 <GroupBox
                     Grid.Row="1"
                     Grid.Column="0"
                     Margin="0,4,0,0"
                     Padding="0,6,0,2"
                     BorderBrush="MediumPurple"
-                    DataContext="{Binding HashModelFilters[5]}">
+                    DataContext="{Binding HashModelFilters[6]}">
                     <GroupBox.Header>
                         <CheckBox
                             Margin="3,0,0,0"
@@ -256,6 +261,7 @@
                             IsChecked="{Binding CheckFileIndex}" />
                     </Grid>
                 </GroupBox>
+                <!--  序号范围筛选器  -->
                 <GroupBox
                     Grid.Row="1"
                     Grid.Column="1"
@@ -296,6 +302,7 @@
                         </DockPanel>
                     </StackPanel>
                 </GroupBox>
+                <!--  哈希值筛选器  -->
                 <GroupBox
                     Grid.Row="2"
                     Grid.ColumnSpan="3"
@@ -336,7 +343,6 @@
                             x:Name="hashStringsTextBox"
                             Grid.Row="0"
                             Grid.ColumnSpan="3"
-                            MinWidth="220"
                             Padding="0,2"
                             VerticalAlignment="Center"
                             AcceptsReturn="True"
@@ -360,8 +366,63 @@
                             ToolTip="[要求] 指的是上方输入框中已输入的哈希值集合&#10;[满足任意要求] 该行的所有哈希值中至少有一个哈希值满足了其中一个要求&#10;[严格满足要求] 该行的所有哈希值涵盖了要求中的所有哈希值，且不含要求以外的哈希值&#10;[在要求范围内] 该行的所有哈希值都在要求的多个哈希值所组成的范围之内&#10;[涵盖所有要求] 该行的所有哈希值涵盖了要求中的所有哈希值，可能含有要求以外的哈希值" />
                     </Grid>
                 </GroupBox>
+                <!--  文件名筛选器  -->
+                <GroupBox
+                    Grid.Row="3"
+                    Grid.ColumnSpan="3"
+                    Margin="0,4,0,0"
+                    Padding="0,6,0,2"
+                    BorderBrush="DarkGoldenrod"
+                    DataContext="{Binding HashModelFilters[5]}">
+                    <GroupBox.Header>
+                        <CheckBox
+                            Margin="3,0,0,0"
+                            VerticalContentAlignment="Center"
+                            Command="{Binding ElementName=cmdPanel, Path=DataContext.FilterChangedCmd}"
+                            CommandParameter="{Binding}"
+                            Content="{Binding Display}"
+                            IsChecked="{Binding Selected, Mode=OneWayToSource}"
+                            ToolTip="{Binding Description}" />
+                    </GroupBox.Header>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.ColumnSpan="2"
+                            Padding="4,0,0,0"
+                            VerticalAlignment="Center"
+                            Panel.ZIndex="0"
+                            Foreground="#A0808080"
+                            Text="输入文件名片段或正则表达式"
+                            Visibility="{Binding ElementName=patternTextBox, Path=Text, Converter={StaticResource PlaceHolderTextVisibilityCvt}}" />
+                        <TextBox
+                            x:Name="patternTextBox"
+                            Grid.Row="0"
+                            Grid.ColumnSpan="2"
+                            Padding="0,2"
+                            VerticalAlignment="Center"
+                            Background="Transparent"
+                            MaxLines="1"
+                            Text="{Binding Pattern, Mode=OneWayToSource}"
+                            TextWrapping="WrapWithOverflow" />
+                        <CheckBox
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Margin="0,4,0,0"
+                            VerticalContentAlignment="Center"
+                            Content="使用正则表达式"
+                            IsChecked="{Binding Param}" />
+                    </Grid>
+                </GroupBox>
                 <Button
-                    Grid.RowSpan="3"
+                    Grid.RowSpan="4"
                     Grid.Column="3"
                     Width="64"
                     Height="64"
@@ -403,6 +464,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
+                <!--  删除指定文件命令  -->
                 <GroupBox
                     Grid.Row="0"
                     Grid.Column="0"
