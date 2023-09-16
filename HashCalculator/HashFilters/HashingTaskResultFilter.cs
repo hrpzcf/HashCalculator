@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace HashCalculator
 {
-    internal class HashTaskResultFilter : HashViewFilter
+    internal class HashingTaskResultFilter : HashViewFilter
     {
         private readonly ControlItem[] expResultCtrls = new ControlItem[]
         {

@@ -20,9 +20,11 @@ namespace HashCalculator
         {
             new HashAlgoFilter(),           // 0
             new CmpResultFilter(),          // 1
-            new HashTaskResultFilter(),     // 2
-            new EqualHashByteFilter(),      // 3
+            new HashingTaskResultFilter(),  // 2
+            new SerialNumberFilter(),       // 3
             new HashStringFilter(),         // 4
+            // 这个筛选器因其特殊性需最后应用，否则结果不正确
+            new EqualHashByteFilter(),      // 5
         };
 
         public CommandPanelModel(ICollectionView view)
