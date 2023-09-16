@@ -16,6 +16,14 @@ namespace HashCalculator
         private const double mb = 1048576D;
         private const double gb = 1073741824D;
 
+        public static void Swap<T>(ref T leftValue, ref T rightValue)
+        {
+            T temp;
+            temp = leftValue;
+            leftValue = rightValue;
+            rightValue = temp;
+        }
+
         public static string FileSizeCvt(long bytesLength)
         {
             double byteLenInUnits;
