@@ -249,7 +249,7 @@
                             SelectedItem="{Binding Param}" />
                     </DockPanel>
                 </GroupBox>
-                <!--  非重复文件筛选器  -->
+                <!--  有效的文件筛选器  -->
                 <GroupBox
                     Grid.Row="1"
                     Grid.Column="1"
@@ -406,13 +406,8 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
                         <TextBlock
                             Grid.Row="0"
-                            Grid.ColumnSpan="2"
                             Padding="4,0,0,0"
                             VerticalAlignment="Center"
                             Panel.ZIndex="0"
@@ -422,20 +417,26 @@
                         <TextBox
                             x:Name="patternTextBox"
                             Grid.Row="0"
-                            Grid.ColumnSpan="2"
                             Padding="0,2"
                             VerticalAlignment="Center"
                             Background="Transparent"
                             MaxLines="1"
                             Text="{Binding Pattern, Mode=OneWayToSource}"
                             TextWrapping="WrapWithOverflow" />
-                        <CheckBox
+                        <StackPanel
                             Grid.Row="1"
-                            Grid.Column="0"
                             Margin="0,4,0,0"
-                            VerticalContentAlignment="Center"
-                            Content="使用正则表达式"
-                            IsChecked="{Binding Param}" />
+                            Orientation="Horizontal">
+                            <CheckBox
+                                VerticalContentAlignment="Center"
+                                Content="使用正则表达式"
+                                IsChecked="{Binding Param}" />
+                            <CheckBox
+                                Margin="8,0,0,0"
+                                VerticalContentAlignment="Center"
+                                Content="忽略大小写"
+                                IsChecked="{Binding IgnoreCase}" />
+                        </StackPanel>
                     </Grid>
                 </GroupBox>
                 <Button
