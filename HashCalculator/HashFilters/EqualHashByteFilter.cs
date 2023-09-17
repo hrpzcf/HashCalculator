@@ -5,19 +5,15 @@ using System.Windows.Data;
 
 namespace HashCalculator
 {
-    internal class ModelCurAlgoDict
+    /// <summary>
+    /// 作为 Dictionary<HashViewModel, AlgoInOutModel> 的别名
+    /// </summary>
+    internal class ModelCurAlgoDict : Dictionary<HashViewModel, AlgoInOutModel>
     {
-        public ModelCurAlgoDict()
+        public ModelCurAlgoDict(HashViewModel model, AlgoInOutModel algo) : base()
         {
-            this.Dict = new Dictionary<HashViewModel, AlgoInOutModel>();
+            this.Add(model, algo);
         }
-
-        public ModelCurAlgoDict(HashViewModel model, AlgoInOutModel algo)
-        {
-            this.Dict = new Dictionary<HashViewModel, AlgoInOutModel>() { { model, algo } };
-        }
-
-        public Dictionary<HashViewModel, AlgoInOutModel> Dict { get; }
     }
 
     internal class EqualHashByteFilter : HashViewFilter
@@ -43,13 +39,12 @@ namespace HashCalculator
             }
         }
 
-        public bool CheckFileIndex { get; set; } = true;
-
         public override GroupDescription[] GroupDescriptions { get; } =
             // 顺序不能反，分组优先级不一样
             new GroupDescription[] {
                 new PropertyGroupDescription(nameof(HashViewModel.GroupId)),
                 new PropertyGroupDescription(nameof(HashViewModel.FileIndex)),
+                new PropertyGroupDescription(nameof(HashViewModel.FileName)),
             };
 
         public EqualHashByteFilter()
@@ -63,7 +58,7 @@ namespace HashCalculator
         {
             if (models != null && this.Param is AlgoInOutModel focusedAlgo)
             {
-                Dictionary<byte[], ModelCurAlgoDict> groupByHash =
+                Dictionary<byte[], ModelCurAlgoDict> groupByHashBytes =
                     new Dictionary<byte[], ModelCurAlgoDict>(this.comparer);
                 foreach (HashViewModel model in models)
                 {
@@ -84,13 +79,13 @@ namespace HashCalculator
                             {
                                 if (algo.HashResult != null)
                                 {
-                                    if (groupByHash.Keys.Contains(algo.HashResult, this.comparer))
+                                    if (groupByHashBytes.Keys.Contains(algo.HashResult, this.comparer))
                                     {
-                                        groupByHash[algo.HashResult].Dict.Add(model, algo);
+                                        groupByHashBytes[algo.HashResult].Add(model, algo);
                                     }
                                     else
                                     {
-                                        groupByHash[algo.HashResult] = new ModelCurAlgoDict(model, algo);
+                                        groupByHashBytes[algo.HashResult] = new ModelCurAlgoDict(model, algo);
                                     }
                                     modelMatched = true;
                                 }
@@ -103,73 +98,33 @@ namespace HashCalculator
                         }
                     }
                 }
-                Dictionary<byte[], ModelCurAlgoDict> equalHashModels =
+                Dictionary<byte[], ModelCurAlgoDict> finalHashModels =
                     new Dictionary<byte[], ModelCurAlgoDict>(this.comparer);
-                foreach (KeyValuePair<byte[], ModelCurAlgoDict> pair in groupByHash)
+                foreach (KeyValuePair<byte[], ModelCurAlgoDict> pair in groupByHashBytes)
                 {
-                    if (pair.Value.Dict.Count < 2)
+                    if (pair.Value.Count < 2)
                     {
-                        foreach (HashViewModel model in pair.Value.Dict.Keys)
+                        foreach (HashViewModel model in pair.Value.Keys)
                         {
                             model.Matched = false;
                         }
                     }
                     else
                     {
-                        if (!this.CheckFileIndex)
-                        {
-                            equalHashModels.Add(pair.Key, pair.Value);
-                        }
-                        else
-                        {
-                            foreach (HashViewModel model in pair.Value.Dict.Keys)
-                            {
-                                model.FileIndex = model.ModelArg.FilePath.GetFileIndex();
-                                if (model.FileIndex == null)
-                                {
-                                    model.Matched = false;
-                                }
-                            }
-                            IGrouping<CmpableFileIndex, HashViewModel>[] groupByFileIndex = pair.Value.Dict.Keys
-                                .Where(i => i.FileIndex != null).GroupBy(x => x.FileIndex).ToArray();
-                            if (groupByFileIndex.Length > 1)
-                            {
-                                ModelCurAlgoDict modelCurAlgoDict = new ModelCurAlgoDict();
-                                foreach (IGrouping<CmpableFileIndex, HashViewModel> group in groupByFileIndex)
-                                {
-                                    HashViewModel model = group.FirstOrDefault();
-                                    if (model != default(HashViewModel))
-                                    {
-                                        modelCurAlgoDict.Dict[model] = pair.Value.Dict[model];
-                                        foreach (HashViewModel model1 in group.Skip(1))
-                                        {
-                                            model1.Matched = false;
-                                        }
-                                    }
-                                }
-                                equalHashModels.Add(pair.Key, modelCurAlgoDict);
-                            }
-                            else if (groupByFileIndex.Length == 1)
-                            {
-                                foreach (HashViewModel model in groupByFileIndex.First())
-                                {
-                                    model.Matched = false;
-                                }
-                            }
-                        }
-                        foreach (KeyValuePair<HashViewModel, AlgoInOutModel> kv in pair.Value.Dict)
+                        finalHashModels.Add(pair.Key, pair.Value);
+                        foreach (KeyValuePair<HashViewModel, AlgoInOutModel> kv in pair.Value)
                         {
                             kv.Key.CurrentInOutModel = kv.Value;
                         }
                     }
                 }
-                if (!equalHashModels.Any())
+                if (!finalHashModels.Any())
                 {
                     return;
                 }
-                foreach (var tuple in CommonUtils.ColorGenerator(equalHashModels.Count).ZipElements(equalHashModels))
+                foreach (var tuple in CommonUtils.ColorGenerator(finalHashModels.Count).ZipElements(finalHashModels))
                 {
-                    foreach (HashViewModel model in tuple.Item2.Value.Dict.Keys)
+                    foreach (HashViewModel model in tuple.Item2.Value.Keys)
                     {
                         model.GroupId = new ComparableColor(tuple.Item1);
                     }

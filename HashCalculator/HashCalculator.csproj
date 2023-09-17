@@ -104,6 +104,7 @@
     <Compile Include="HashAlgos\MicrosoftSHA384Cng.cs" />
     <Compile Include="HashAlgos\MicrosoftSHA512Cng.cs" />
     <Compile Include="HashFilters\CmpResultFilter.cs" />
+    <Compile Include="HashFilters\DistinctFilesFilter.cs" />
     <Compile Include="HashFilters\FileNameFilter.cs" />
     <Compile Include="HashFilters\HashBytesComparer.cs" />
     <Compile Include="HashFilters\HashingTaskResultFilter.cs" />

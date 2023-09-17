@@ -221,6 +221,41 @@
                     Margin="0,4,0,0"
                     Padding="0,6,0,2"
                     BorderBrush="MediumPurple"
+                    DataContext="{Binding HashModelFilters[7]}">
+                    <GroupBox.Header>
+                        <CheckBox
+                            Margin="3,0,0,0"
+                            VerticalContentAlignment="Center"
+                            Command="{Binding ElementName=cmdPanel, Path=DataContext.FilterChangedCmd}"
+                            CommandParameter="{Binding}"
+                            Content="{Binding Display}"
+                            IsChecked="{Binding Selected, Mode=OneWayToSource}"
+                            ToolTip="{Binding Description}" />
+                    </GroupBox.Header>
+                    <DockPanel>
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            DockPanel.Dock="Left"
+                            Text="关注的算法：" />
+                        <ComboBox
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            DisplayMemberPath="AlgoName"
+                            DockPanel.Dock="Right"
+                            ItemsSource="{Binding Items}"
+                            SelectedItem="{Binding Param}" />
+                    </DockPanel>
+                </GroupBox>
+                <!--  非重复文件筛选器  -->
+                <GroupBox
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Margin="2,4,0,0"
+                    Padding="0,6,0,2"
+                    BorderBrush="Aquamarine"
                     DataContext="{Binding HashModelFilters[6]}">
                     <GroupBox.Header>
                         <CheckBox
@@ -232,39 +267,21 @@
                             IsChecked="{Binding Selected, Mode=OneWayToSource}"
                             ToolTip="{Binding Description}" />
                     </GroupBox.Header>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition />
-                            <RowDefinition />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
+                    <StackPanel VerticalAlignment="Center">
                         <TextBlock
-                            Grid.Row="0"
-                            Grid.Column="0"
+                            HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            Text="关注的算法：" />
-                        <ComboBox
-                            Grid.Row="0"
-                            Grid.Column="1"
-                            DisplayMemberPath="AlgoName"
-                            ItemsSource="{Binding Items}"
-                            SelectedItem="{Binding Param}" />
-                        <CheckBox
-                            Grid.Row="1"
-                            Grid.ColumnSpan="2"
-                            Margin="0,4,0,0"
-                            VerticalContentAlignment="Center"
-                            Content="排除重复计算或不存在的文件"
-                            IsChecked="{Binding CheckFileIndex}" />
-                    </Grid>
+                            Text="过滤掉不存在的文件" />
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Text="重复的文件只显示其中一行" />
+                    </StackPanel>
                 </GroupBox>
                 <!--  序号范围筛选器  -->
                 <GroupBox
                     Grid.Row="1"
-                    Grid.Column="1"
+                    Grid.Column="2"
                     Margin="2,4,0,0"
                     Padding="0,6,0,2"
                     BorderBrush="DarkGoldenrod"
