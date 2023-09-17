@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace HashCalculator
@@ -11,6 +12,11 @@ namespace HashCalculator
 
         public string Pattern { get; set; }
 
+        public bool IgnoreCase { get; set; }
+
+        /// <summary>
+        /// 是否使用正则表达式
+        /// </summary>
         public override object Param { get; set; } = false;
 
         public override object[] Items { get; set; }
@@ -21,7 +27,9 @@ namespace HashCalculator
             {
                 if (regexp)
                 {
-                    Regex regex = new Regex(this.Pattern);
+                    RegexOptions options = this.IgnoreCase ? RegexOptions.IgnoreCase :
+                        RegexOptions.None;
+                    Regex regex = new Regex(this.Pattern, options);
                     foreach (HashViewModel model in models)
                     {
                         if (!regex.IsMatch(model.FileName))
@@ -32,9 +40,11 @@ namespace HashCalculator
                 }
                 else
                 {
+                    StringComparison comparison = this.IgnoreCase ? StringComparison.OrdinalIgnoreCase :
+                        StringComparison.Ordinal;
                     foreach (HashViewModel model in models)
                     {
-                        if (!model.FileName.Contains(this.Pattern))
+                        if (model.FileName.IndexOf(this.Pattern, comparison) < 0)
                         {
                             model.Matched = false;
                         }

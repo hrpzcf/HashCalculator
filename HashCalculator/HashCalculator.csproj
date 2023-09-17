@@ -112,6 +112,7 @@
     <Compile Include="HashFilters\HashAlgoFilter.cs" />
     <Compile Include="HashFilters\EqualHashByteFilter.cs" />
     <Compile Include="HashFilters\SerialNumberFilter.cs" />
+    <Compile Include="HashFilters\StringComparer.cs" />
     <Compile Include="Others\CmdOptions.cs" />
     <Compile Include="Others\CommonExts.cs" />
     <Compile Include="HashFilters\HashViewFilter.cs" />
