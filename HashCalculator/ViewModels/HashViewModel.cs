@@ -13,6 +13,7 @@ namespace HashCalculator
 {
     internal class HashViewModel : NotifiableModel
     {
+        private string _fileName = string.Empty;
         private string _currentHashString = null;
         private string _taskDetails = string.Empty;
         private string _modelDetails = "暂无详情...";
@@ -81,8 +82,6 @@ namespace HashCalculator
 
         public int SerialNumber { get; }
 
-        public string FileName { get; }
-
         public FileInfo FileInfo { get; }
 
         public ModelArg ModelArg { get; }
@@ -92,6 +91,18 @@ namespace HashCalculator
         public bool Matched { get; set; } = true;
 
         public CmpableFileIndex FileIndex { get; set; }
+
+        public string FileName
+        {
+            get
+            {
+                return this._fileName;
+            }
+            set
+            {
+                this.SetPropNotify(ref this._fileName, value);
+            }
+        }
 
         public long FileSize
         {

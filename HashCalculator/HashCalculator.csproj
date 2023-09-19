@@ -85,8 +85,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppLoading.cs" />
-    <Compile Include="Cmders\DelEqualHashFileCmder.cs" />
+    <Compile Include="Cmders\DeleteFileCmder.cs" />
     <Compile Include="Cmders\HashViewCmder.cs" />
+    <Compile Include="Cmders\RenameFileCmder.cs" />
     <Compile Include="Globals\BufferSize.cs" />
     <Compile Include="Globals\MappedFiler.cs" />
     <Compile Include="Globals\MappedInfo.cs" />

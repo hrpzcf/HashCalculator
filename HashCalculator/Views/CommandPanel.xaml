@@ -6,6 +6,7 @@
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     x:Name="cmdPanel"
+    Title="筛选与操作"
     d:DataContext="{d:DesignInstance Type=local:CommandPanelModel}"
     KeyDown="CommandPanelKeyDown"
     ResizeMode="NoResize"
@@ -86,9 +87,9 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <!--  哈希算法筛选器  -->
@@ -412,7 +413,7 @@
                             VerticalAlignment="Center"
                             Panel.ZIndex="0"
                             Foreground="#A0808080"
-                            Text="输入文件名片段或正则表达式"
+                            Text="输入文件名片段或正则表达式 (C#)"
                             Visibility="{Binding ElementName=patternTextBox, Path=Text, Converter={StaticResource PlaceHolderTextVisibilityCvt}}" />
                         <TextBox
                             x:Name="patternTextBox"
@@ -481,6 +482,7 @@
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
+                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <!--  删除指定文件命令  -->
                 <GroupBox
@@ -503,54 +505,157 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <Button
                             Grid.Row="0"
-                            Grid.Column="0"
-                            Padding="28,10"
-                            Background="DarkGreen"
-                            BorderThickness="0"
-                            Command="{Binding CancelExecutionCmdCtrl.ItemValue}"
-                            Content="{Binding CancelExecutionCmdCtrl.Display}"
-                            Foreground="White"
-                            Style="{StaticResource DelFileLeftButtonStyle}"
-                            ToolTip="取消文件删除操作，隐藏主窗口的【删除】列"
-                            Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoExecutionTargetColumn, Converter={StaticResource NoColumnCvt}}" />
-                        <Button
-                            Grid.Row="0"
-                            Grid.Column="0"
-                            Padding="28,10"
+                            Grid.Column="1"
+                            Padding="24,6"
+                            VerticalAlignment="Center"
                             Background="Purple"
-                            BorderThickness="0"
-                            Command="{Binding PrepareExecutionTargetCmdCtrl.ItemValue}"
-                            Content="{Binding PrepareExecutionTargetCmdCtrl.Display}"
+                            BorderThickness="1,1,0,1"
+                            Command="{Binding PrepareExecutionTargetCmd}"
+                            Content="选择"
                             Foreground="White"
-                            Style="{StaticResource DelFileLeftButtonStyle}"
+                            Style="{StaticResource RadiusLeftButtonStyle}"
                             ToolTip="显示主窗口【删除】列，如果使用了【相同哈希值】筛选器，则自动勾选多余的文件"
                             Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoExecutionTargetColumn, Converter={StaticResource ReverseNoColumnCvt}}" />
                         <Button
                             Grid.Row="0"
                             Grid.Column="1"
-                            Padding="28,10"
+                            Padding="24,6"
+                            VerticalAlignment="Center"
+                            Background="DarkGreen"
+                            BorderThickness="1,1,0,1"
+                            Command="{Binding CancelExecutionCmd}"
+                            Content="取消"
+                            Foreground="White"
+                            Style="{StaticResource RadiusLeftButtonStyle}"
+                            ToolTip="取消文件删除操作，隐藏主窗口的【删除】列"
+                            Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoExecutionTargetColumn, Converter={StaticResource NoColumnCvt}}" />
+                        <Button
+                            Grid.Row="0"
+                            Grid.Column="2"
+                            Padding="24,6"
+                            VerticalAlignment="Center"
                             Background="Red"
-                            BorderThickness="0"
-                            Command="{Binding ExecuteCommandCmdCtrl.ItemValue}"
-                            Content="{Binding ExecuteCommandCmdCtrl.Display}"
+                            BorderThickness="0,1,1,1"
+                            Command="{Binding ExecuteCommandCmd}"
+                            Content="删除"
                             Foreground="White"
                             IsEnabled="{Binding Source={x:Static local:Settings.Current}, Path=NoExecutionTargetColumn, Converter={StaticResource ReverseBoolValueCvt}}"
-                            Style="{StaticResource DelFileRightButtonStyle}"
+                            Style="{StaticResource RadiusRightButtonStyle}"
                             ToolTip="把已勾选的文件移动到回收站，删除前请确认是否正确勾选了要删除的文件" />
                         <TextBlock
                             Grid.Row="1"
-                            Grid.ColumnSpan="3"
+                            Grid.ColumnSpan="4"
                             Margin="0,4,0,0"
                             VerticalAlignment="Center"
                             FontSize="8pt"
                             Foreground="Red"
-                            Text="警告：使用【相同哈希值】筛选器时请勾选【排除重复计算或不存在的文件】，否则某些情况下会造成误删" />
+                            Text="至少勾选【有效的文件】筛选器并刷新以避免误删" />
+                    </Grid>
+                </GroupBox>
+                <!--  重命名文件命令  -->
+                <GroupBox
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Margin="4,0,0,0"
+                    Padding="0,6,0,2"
+                    BorderBrush="Navy"
+                    DataContext="{Binding HashModelCmders[1]}"
+                    Foreground="Black">
+                    <GroupBox.Header>
+                        <TextBlock
+                            Margin="3,0,0,0"
+                            VerticalAlignment="Center"
+                            Text="{Binding Display}"
+                            ToolTip="{Binding Description}" />
+                    </GroupBox.Header>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Row="0" Grid.Column="0">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock VerticalAlignment="Center" Text="关注的算法：" />
+                                <ComboBox
+                                    Width="{Binding ElementName=outputComboBox, Path=ActualWidth}"
+                                    VerticalAlignment="Center"
+                                    VerticalContentAlignment="Center"
+                                    DisplayMemberPath="AlgoName"
+                                    ItemsSource="{Binding AlgoInOutModels}"
+                                    SelectedValue="{Binding SelectedAlgo}"
+                                    SelectedValuePath="AlgoType" />
+                            </StackPanel>
+                            <StackPanel Margin="0,2,0,0" Orientation="Horizontal">
+                                <TextBlock VerticalAlignment="Center" Text="哈希值格式：" />
+                                <ComboBox
+                                    x:Name="outputComboBox"
+                                    VerticalAlignment="Center"
+                                    VerticalContentAlignment="Center"
+                                    DisplayMemberPath="Display"
+                                    ItemsSource="{Binding OutputTypes}"
+                                    SelectedValue="{Binding UsingOutput}"
+                                    SelectedValuePath="ItemValue" />
+                            </StackPanel>
+                        </StackPanel>
+                        <Button
+                            Grid.Row="0"
+                            Grid.Column="2"
+                            Margin="8,0,0,0"
+                            Padding="24,6"
+                            VerticalAlignment="Center"
+                            Background="Purple"
+                            BorderThickness="1,1,0,1"
+                            Command="{Binding PrepareFilesCmd}"
+                            Content="选择"
+                            Foreground="White"
+                            Style="{StaticResource RadiusLeftButtonStyle}"
+                            Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoExecutionTargetColumn, Converter={StaticResource ReverseNoColumnCvt}}" />
+                        <Button
+                            Grid.Row="0"
+                            Grid.Column="2"
+                            Margin="8,0,0,0"
+                            Padding="24,6"
+                            VerticalAlignment="Center"
+                            Background="DarkGreen"
+                            BorderThickness="1,1,0,1"
+                            Command="{Binding CancelRenameCmd}"
+                            Content="取消"
+                            Foreground="White"
+                            Style="{StaticResource RadiusLeftButtonStyle}"
+                            Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoExecutionTargetColumn, Converter={StaticResource NoColumnCvt}}" />
+                        <Button
+                            Grid.Row="0"
+                            Grid.Column="3"
+                            Padding="16,6"
+                            VerticalAlignment="Center"
+                            Background="SaddleBrown"
+                            BorderThickness="0,1,1,1"
+                            Command="{Binding RenameFilesCmd}"
+                            Content="重命名"
+                            Foreground="White"
+                            IsEnabled="{Binding Source={x:Static local:Settings.Current}, Path=NoExecutionTargetColumn, Converter={StaticResource ReverseBoolValueCvt}}"
+                            Style="{StaticResource RadiusRightButtonStyle}" />
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.ColumnSpan="5"
+                            Margin="0,4,0,0"
+                            VerticalAlignment="Center"
+                            FontSize="8pt"
+                            Foreground="Red"
+                            Text="至少勾选【有效的文件】筛选器并刷新以避免重复重命名" />
                     </Grid>
                 </GroupBox>
             </Grid>
