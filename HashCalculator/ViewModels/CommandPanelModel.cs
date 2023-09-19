@@ -13,7 +13,8 @@ namespace HashCalculator
 
         public HashViewCmder[] HashModelCmders { get; } = new HashViewCmder[]
         {
-            new DelEqualHashFileCmder(),    // 0
+            new DeleteFileCmder(),          // 0
+            new RenameFileCmder(),          // 1
         };
 
         public HashViewFilter[] HashModelFilters { get; } = new HashViewFilter[]

@@ -6,24 +6,21 @@ using System.Windows.Input;
 
 namespace HashCalculator
 {
-    internal class DelEqualHashFileCmder : HashViewCmder
+    internal class DeleteFileCmder : HashViewCmder
     {
         private RelayCommand cancelExecutionCmd;
-        private ControlItem cancelExecutionCmdCtrl;
         private RelayCommand executeCommandCmd;
-        private ControlItem executeCommandCmdCtrl;
         private RelayCommand prepareExecutionTargetCmd;
-        private ControlItem prepareExecutionTargetCmdCtrl;
 
-        public override string Display => "删除指定文件";
+        public override string Display => "删除已勾选【操作目标】的文件";
 
-        public override string Description => "把筛选出来的结果中已勾选的文件移动到回收站\n通常使用【相同哈希值】筛选器进行文件筛选后再使用此功能";
+        public override string Description => "把筛选出来的结果中已勾选【操作目标】的文件移动到回收站\n通常使用【相同哈希值】筛选器进行文件筛选后再使用此功能";
 
-        public DelEqualHashFileCmder() : base(MainWndViewModel.HashViewModels)
+        public DeleteFileCmder() : this(MainWndViewModel.HashViewModels)
         {
         }
 
-        public DelEqualHashFileCmder(IEnumerable<HashViewModel> models) : base(models)
+        public DeleteFileCmder(IEnumerable<HashViewModel> models) : base(models)
         {
         }
 
@@ -39,7 +36,7 @@ namespace HashCalculator
             Settings.Current.NoExecutionTargetColumn = true;
         }
 
-        private ICommand CancelExecutionCmd
+        public ICommand CancelExecutionCmd
         {
             get
             {
@@ -48,18 +45,6 @@ namespace HashCalculator
                     this.cancelExecutionCmd = new RelayCommand(o => { this.Reset(); });
                 }
                 return this.cancelExecutionCmd;
-            }
-        }
-
-        public ControlItem CancelExecutionCmdCtrl
-        {
-            get
-            {
-                if (this.cancelExecutionCmdCtrl == null)
-                {
-                    this.cancelExecutionCmdCtrl = new ControlItem("取消", this.CancelExecutionCmd);
-                }
-                return this.cancelExecutionCmdCtrl;
             }
         }
 
@@ -99,7 +84,7 @@ namespace HashCalculator
             }
         }
 
-        private ICommand ExecuteCommandCmd
+        public ICommand ExecuteCommandCmd
         {
             get
             {
@@ -111,24 +96,12 @@ namespace HashCalculator
             }
         }
 
-        public ControlItem ExecuteCommandCmdCtrl
-        {
-            get
-            {
-                if (this.executeCommandCmdCtrl == null)
-                {
-                    this.executeCommandCmdCtrl = new ControlItem("删除", this.ExecuteCommandCmd);
-                }
-                return this.executeCommandCmdCtrl;
-            }
-        }
-
         private void PrepareExecutionTargetAction(object param)
         {
             if (this.RefModels is IEnumerable<HashViewModel> models)
             {
-                IEnumerable<IGrouping<ComparableColor, HashViewModel>> byGroupId =
-                    models.Where(i => i.Matched && i.GroupId != null).GroupBy(i => i.GroupId);
+                IEnumerable<IGrouping<ComparableColor, HashViewModel>> byGroupId = models.Where(
+                    i => i.Matched && i.FileIndex != null && i.GroupId != null).GroupBy(i => i.GroupId);
                 foreach (IGrouping<ComparableColor, HashViewModel> group in byGroupId)
                 {
                     foreach (HashViewModel model in group.Skip(1))
@@ -138,14 +111,9 @@ namespace HashCalculator
                 }
                 Settings.Current.NoExecutionTargetColumn = false;
             }
-            else
-            {
-                MessageBox.Show(MainWindow.This, "没有找到要执行的目标，请刷新筛选", "提示",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
-            }
         }
 
-        private ICommand PrepareExecutionTargetCmd
+        public ICommand PrepareExecutionTargetCmd
         {
             get
             {
@@ -154,18 +122,6 @@ namespace HashCalculator
                     this.prepareExecutionTargetCmd = new RelayCommand(this.PrepareExecutionTargetAction);
                 }
                 return this.prepareExecutionTargetCmd;
-            }
-        }
-
-        public ControlItem PrepareExecutionTargetCmdCtrl
-        {
-            get
-            {
-                if (this.prepareExecutionTargetCmdCtrl == null)
-                {
-                    this.prepareExecutionTargetCmdCtrl = new ControlItem("选择", this.PrepareExecutionTargetCmd);
-                }
-                return this.prepareExecutionTargetCmdCtrl;
             }
         }
     }
