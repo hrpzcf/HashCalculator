@@ -489,7 +489,7 @@
                     Grid.Row="0"
                     Grid.Column="0"
                     Padding="0,6,0,2"
-                    BorderBrush="Olive"
+                    BorderBrush="Navy"
                     DataContext="{Binding HashModelCmders[0]}"
                     Foreground="Black">
                     <GroupBox.Header>
@@ -565,7 +565,7 @@
                     Grid.Column="1"
                     Margin="4,0,0,0"
                     Padding="0,6,0,2"
-                    BorderBrush="Navy"
+                    BorderBrush="Olive"
                     DataContext="{Binding HashModelCmders[1]}"
                     Foreground="Black">
                     <GroupBox.Header>

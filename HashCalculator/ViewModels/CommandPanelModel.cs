@@ -1,5 +1,7 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace HashCalculator
@@ -102,7 +104,19 @@ namespace HashCalculator
                     {
                         if (filter.Selected)
                         {
-                            filter.FilterObjects(MainWndViewModel.HashViewModels);
+                            try
+                            {
+                                filter.FilterObjects(MainWndViewModel.HashViewModels);
+                            }
+                            catch (Exception ex)
+                            {
+                                Application.Current.Dispatcher.Invoke(() =>
+                                {
+                                    MessageBox.Show(MainWindow.This,
+                                        $"筛选器名：{filter.Display}\n错误详情：{ex.Message}", "筛选出错",
+                                        MessageBoxButton.OK, MessageBoxImage.Error);
+                                });
+                            }
                         }
                     }
                 }
