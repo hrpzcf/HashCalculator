@@ -696,7 +696,7 @@
                                     DisplayMemberPath="Display"
                                     DockPanel.Dock="Right"
                                     ItemsSource="{Binding OutputTypes}"
-                                    SelectedValue="{Binding UsingOutput}"
+                                    SelectedValue="{Binding OutputBeingUsed}"
                                     SelectedValuePath="ItemValue" />
                             </DockPanel>
                         </StackPanel>

@@ -23,7 +23,7 @@ namespace HashCalculator
             new ControlItem("十六进制大写", OutputType.BinaryUpper),
         };
 
-        public OutputType UsingOutput { get; set; } = OutputType.BinaryLower;
+        public OutputType OutputBeingUsed { get; set; } = OutputType.BinaryLower;
 
         public AlgoInOutModel[] AlgoInOutModels { get => this._algos; }
 
@@ -70,7 +70,7 @@ namespace HashCalculator
                         {
                             if (algo.AlgoType == this.SelectedAlgo)
                             {
-                                newFileName = BytesToStrByOutputTypeCvt.Convert(algo.HashResult, this.UsingOutput);
+                                newFileName = BytesToStrByOutputTypeCvt.Convert(algo.HashResult, this.OutputBeingUsed);
                                 break;
                             }
                         }
