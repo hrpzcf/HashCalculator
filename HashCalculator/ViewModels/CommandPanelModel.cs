@@ -8,15 +8,15 @@ namespace HashCalculator
 {
     internal class CommandPanelModel : NotifiableModel
     {
-        private bool _refreshEnabled = true;
         private readonly ICollectionView BoundDataGridView;
         private RelayCommand refreshViewCmd;
         private RelayCommand filterChangedCmd;
 
         public HashViewCmder[] HashModelCmders { get; } = new HashViewCmder[]
         {
-            new DeleteFileCmder(),          // 0
-            new RenameFileCmder(),          // 1
+            new SelectFileCmder(),          // 0
+            new DeleteFileCmder(),          // 1
+            new RenameFileCmder(),          // 2
         };
 
         public HashViewFilter[] HashModelFilters { get; } = new HashViewFilter[]
@@ -50,18 +50,6 @@ namespace HashCalculator
             this.RefreshViewAction(false);  // 传入 bool 类型(false)表示不筛选
         }
 
-        public bool RefreshEnabled
-        {
-            get
-            {
-                return this._refreshEnabled;
-            }
-            set
-            {
-                this.SetPropNotify(ref this._refreshEnabled, value);
-            }
-        }
-
         private void FilterChangedAction(object param)
         {
             if (param is HashViewFilter filter && !filter.Selected)
@@ -84,7 +72,11 @@ namespace HashCalculator
 
         private async void RefreshViewAction(object param)
         {
-            this.RefreshEnabled = false;
+            if (!Settings.Current.FilterOrCmderEnabled)
+            {
+                return;
+            }
+            Settings.Current.FilterOrCmderEnabled = false;
             foreach (HashViewCmder cmder in this.HashModelCmders)
             {
                 cmder.Reset();
@@ -144,7 +136,7 @@ namespace HashCalculator
                     }
                 }
             }
-            this.RefreshEnabled = true;
+            Settings.Current.FilterOrCmderEnabled = true;
         }
 
         public ICommand RefreshViewCmd

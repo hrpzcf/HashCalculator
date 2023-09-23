@@ -16,6 +16,7 @@
     <local:MainModelStateToBoolCvt x:Key="MainModelStateToBoolCvt" />
     <local:CmdPanelCriticalControlsEnabledCvt x:Key="CmdPanelCriticalControlsEnabledCvt" />
     <local:NoColumnCvt x:Key="NoColumnCvt" />
+    <local:ShowColumnCvt x:Key="ShowColumnCvt" />
     <local:ReverseNoColumnCvt x:Key="ReverseNoColumnCvt" />
     <local:SubBtnPauseImageSrcCvt x:Key="SubBtnPauseImageSrcCvt" />
     <local:SubBtnPauseToolTipCvt x:Key="SubBtnPauseToolTipCvt" />

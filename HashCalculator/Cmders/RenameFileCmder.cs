@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.ConstrainedExecution;
 using System.Windows;
 using System.Windows.Input;
 
@@ -9,14 +10,12 @@ namespace HashCalculator
 {
     internal class RenameFileCmder : HashViewCmder
     {
-        private RelayCommand prepareFilesCmd;
-        private RelayCommand renameFilesCmd;
-        private RelayCommand cancelRenameCmd;
         private readonly AlgoInOutModel[] _algos;
+        private RelayCommand renameFilesCmd;
 
         public override string Display => "使用哈希值作为文件名重命名文件";
 
-        public override string Description => "使用哈希值作为文件名重命名筛选出来并勾选了【操作目标】列的文件";
+        public override string Description => "使用指定算法、格式的哈希值作为文件名，重命名操作对象所指的文件";
 
         public ControlItem[] OutputTypes { get; } = new ControlItem[]
         {
@@ -30,6 +29,8 @@ namespace HashCalculator
 
         public AlgoType SelectedAlgo { get; set; }
 
+        public bool CheckIfUsingDistinctFilesFilter { get; set; } = true;
+
         public RenameFileCmder() : this(MainWndViewModel.HashViewModels)
         {
         }
@@ -40,48 +41,29 @@ namespace HashCalculator
             this.SelectedAlgo = this._algos[0].AlgoType;
         }
 
-        public override void Reset()
-        {
-            if (this.RefModels is IEnumerable<HashViewModel> models)
-            {
-                foreach (HashViewModel model in models)
-                {
-                    model.IsExecutionTarget = false;
-                }
-            }
-            Settings.Current.NoExecutionTargetColumn = true;
-        }
-
-        public ICommand CancelRenameCmd
-        {
-            get
-            {
-                if (this.cancelRenameCmd == null)
-                {
-                    this.cancelRenameCmd = new RelayCommand(o => { this.Reset(); });
-                }
-                return this.cancelRenameCmd;
-            }
-        }
-
         private void RenameFilesAction(object param)
         {
-            if (this.RefModels is IEnumerable<HashViewModel> models)
+            if (Settings.Current.ShowExecutionTargetColumn &&
+                Settings.Current.FilterOrCmderEnabled &&
+                this.RefModels is IEnumerable<HashViewModel> models)
             {
+                Settings.Current.FilterOrCmderEnabled = false;
                 if (!models.Any(i => i.IsExecutionTarget && i.AlgoInOutModels != null))
                 {
                     MessageBox.Show(MainWindow.This, "没有任何可重命名的目标文件", "提示",
                         MessageBoxButton.OK, MessageBoxImage.Information);
-                    return;
+                    goto FinalizeAction;
                 }
-                if (MessageBox.Show(MainWindow.This, "使用哈希值为文件名重命名已勾选【操作目标】的行吗？", "确认",
-                    MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+                else if (MessageBox.Show(MainWindow.This, "使用哈希值为文件名重命名操作对象所指的文件吗？", "确认",
+                     MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
                 {
-                    return;
+                    goto FinalizeAction;
                 }
                 foreach (HashViewModel model in models)
                 {
-                    if (model.IsExecutionTarget && model.FileIndex != null && model.AlgoInOutModels != null)
+                    if (model.IsExecutionTarget &&
+                        (!this.CheckIfUsingDistinctFilesFilter || model.FileIndex != null) &&
+                        model.AlgoInOutModels != null)
                     {
                         string newFileName = null;
                         foreach (AlgoInOutModel algo in model.AlgoInOutModels)
@@ -92,38 +74,38 @@ namespace HashCalculator
                                 break;
                             }
                         }
-                        if (!string.IsNullOrEmpty(newFileName))
+                        if (string.IsNullOrEmpty(newFileName) || newFileName.Equals(model.FileName))
                         {
-                            string fileNewPath = Path.Combine(
-                                model.FileInfo.DirectoryName, $"{newFileName}{model.FileInfo.Extension}");
-                            try
+                            continue;
+                        }
+                        string fileNewPath = Path.Combine(
+                               model.FileInfo.DirectoryName, $"{newFileName}{model.FileInfo.Extension}");
+                        int number = 1;
+                    TryRenameFile:
+                        try
+                        {
+                            // 有可能重命名只改变原文件名大小写，即“已存在”的是即将重命名的文件本身，
+                            // 这种情况重命名是可以成功的，不需要添加序号后缀
+                            if (!File.Exists(fileNewPath) || model.FileInfo.FullName.Equals(
+                                fileNewPath, StringComparison.OrdinalIgnoreCase))
                             {
                                 model.FileInfo.MoveTo(fileNewPath);
                                 model.FileName = model.FileInfo.Name;
                             }
-                            catch (IOException)
+                            else
                             {
-                                // 不在第一次用 MoveTo 重命名前判断新文件是否存在的原因是：
-                                // 有可能重命名只改变原文件名大小写，即“已存在”的是即将重命名的文件本身，
-                                // 这种情况重命名是可以成功的，不需要添加序号后缀
-                                int number = 1;
-                                while (File.Exists(fileNewPath))
-                                {
-                                    fileNewPath = Path.Combine(
-                                        model.FileInfo.DirectoryName, $"{newFileName}-{number++}{model.FileInfo.Extension}");
-                                }
-                                try
-                                {
-                                    model.FileInfo.MoveTo(fileNewPath);
-                                    model.FileName = model.FileInfo.Name;
-                                }
-                                catch (Exception) { }
+                                fileNewPath = Path.Combine(
+                                    model.FileInfo.DirectoryName, $"{newFileName} ({++number}){model.FileInfo.Extension}");
+                                goto TryRenameFile;
                             }
-                            catch (Exception) { }
                         }
+                        catch (Exception) { }
                     }
+                    model.IsExecutionTarget = false;
                 }
-                Settings.Current.NoExecutionTargetColumn = true;
+            FinalizeAction:
+                Settings.Current.FilterOrCmderEnabled = true;
+                Settings.Current.ShowExecutionTargetColumn = false;
             }
         }
 
@@ -136,30 +118,6 @@ namespace HashCalculator
                     this.renameFilesCmd = new RelayCommand(this.RenameFilesAction);
                 }
                 return this.renameFilesCmd;
-            }
-        }
-
-        private void PrepareFilesAction(object param)
-        {
-            if (this.RefModels is IEnumerable<HashViewModel> models)
-            {
-                foreach (HashViewModel model in models)
-                {
-                    model.IsExecutionTarget = model.Matched && model.FileIndex != null;
-                }
-                Settings.Current.NoExecutionTargetColumn = false;
-            }
-        }
-
-        public ICommand PrepareFilesCmd
-        {
-            get
-            {
-                if (this.prepareFilesCmd == null)
-                {
-                    this.prepareFilesCmd = new RelayCommand(this.PrepareFilesAction);
-                }
-                return this.prepareFilesCmd;
             }
         }
     }
