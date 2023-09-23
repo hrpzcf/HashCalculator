@@ -109,7 +109,10 @@ namespace HashCalculator
         {
             if (this.RefModels is IEnumerable<HashViewModel> models)
             {
-                this.DeselectAllModelsAction(null);
+                foreach (HashViewModel model in models)
+                {
+                    model.IsExecutionTarget = false;
+                }
                 IEnumerable<IGrouping<ComparableColor, HashViewModel>> byGroupId =
                     models.Where(i => i.Matched && i.GroupId != null).GroupBy(i => i.GroupId);
                 foreach (IGrouping<ComparableColor, HashViewModel> group in byGroupId)

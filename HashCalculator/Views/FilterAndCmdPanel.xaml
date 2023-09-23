@@ -526,7 +526,8 @@
                             Command="{Binding SelectAllModelsCmd}"
                             Content="全选"
                             Foreground="WhiteSmoke"
-                            Style="{StaticResource IndepButtonStyle}" />
+                            Style="{StaticResource IndepButtonStyle}"
+                            ToolTip="选择所有已通过筛选的行" />
                         <Button
                             Grid.Column="2"
                             Margin="4,0,0,0"
@@ -536,7 +537,8 @@
                             Command="{Binding DeselectAllModelsCmd}"
                             Content="全不选"
                             Foreground="WhiteSmoke"
-                            Style="{StaticResource IndepButtonStyle}" />
+                            Style="{StaticResource IndepButtonStyle}"
+                            ToolTip="取消选择所有行" />
                         <Button
                             Grid.Column="3"
                             Margin="4,0,0,0"
@@ -546,7 +548,8 @@
                             Command="{Binding ReverseSelectModelsCmd}"
                             Content="反选"
                             Foreground="WhiteSmoke"
-                            Style="{StaticResource IndepButtonStyle}" />
+                            Style="{StaticResource IndepButtonStyle}"
+                            ToolTip="反向改变所有已通过筛选的行的选择状态" />
                         <Button
                             Grid.Column="4"
                             Margin="4,0,0,0"
@@ -556,7 +559,8 @@
                             Command="{Binding SelectGroupingsCmd}"
                             Content="按组选择"
                             Foreground="WhiteSmoke"
-                            Style="{StaticResource IndepButtonStyle}" />
+                            Style="{StaticResource IndepButtonStyle}"
+                            ToolTip="如果已经过【相同哈希值】等有分组功能的筛选器筛选，则每组选择除了第一行外的所有行，否则取消选择所有行" />
                         <Button
                             Grid.Column="5"
                             Margin="4,0,0,0"
@@ -566,7 +570,8 @@
                             Command="{Binding CancelSelectionCmd}"
                             Content="取消"
                             Foreground="WhiteSmoke"
-                            Style="{StaticResource IndepButtonStyle}" />
+                            Style="{StaticResource IndepButtonStyle}"
+                            ToolTip="取消选择所有行并隐藏主窗口【操作对象】列" />
                     </Grid>
                 </GroupBox>
                 <!--  删除指定文件命令  -->
@@ -673,7 +678,8 @@
                                 <TextBlock
                                     VerticalAlignment="Center"
                                     DockPanel.Dock="Left"
-                                    Text="关注的算法：" />
+                                    Text="关注的算法："
+                                    ToolTip="使用该算法的哈希值，如果操作对象没有完成该算法则不重命名该对象所指文件" />
                                 <ComboBox
                                     Width="{Binding ElementName=outputComboBox, Path=ActualWidth}"
                                     VerticalAlignment="Center"
@@ -682,13 +688,15 @@
                                     DockPanel.Dock="Right"
                                     ItemsSource="{Binding AlgoInOutModels}"
                                     SelectedValue="{Binding SelectedAlgo}"
-                                    SelectedValuePath="AlgoType" />
+                                    SelectedValuePath="AlgoType"
+                                    ToolTip="使用该算法的哈希值，如果操作对象没有完成该算法则不重命名该对象所指文件" />
                             </DockPanel>
                             <DockPanel Margin="0,2,0,0">
                                 <TextBlock
                                     VerticalAlignment="Center"
                                     DockPanel.Dock="Left"
-                                    Text="哈希值格式：" />
+                                    Text="哈希值格式："
+                                    ToolTip="把哈希值转换为该格式的字符串作为文件名，不支持 Base64 的原因是某些字符不能作为文件名" />
                                 <ComboBox
                                     x:Name="outputComboBox"
                                     VerticalAlignment="Center"
@@ -697,7 +705,8 @@
                                     DockPanel.Dock="Right"
                                     ItemsSource="{Binding OutputTypes}"
                                     SelectedValue="{Binding OutputBeingUsed}"
-                                    SelectedValuePath="ItemValue" />
+                                    SelectedValuePath="ItemValue"
+                                    ToolTip="把哈希值转换为该格式的字符串作为文件名，不支持 Base64 的原因是某些字符不能作为文件名" />
                             </DockPanel>
                         </StackPanel>
                         <Button
@@ -713,7 +722,8 @@
                             Content="重命名"
                             Foreground="White"
                             IsEnabled="{Binding Source={x:Static local:Settings.Current}, Path=ShowExecutionTargetColumn}"
-                            Style="{StaticResource IndepButtonStyle}" />
+                            Style="{StaticResource IndepButtonStyle}"
+                            ToolTip="把指定算法的哈希值转换为指定格式的字符串，将该字符串作为文件名重命名操作对象所指的文件" />
                         <CheckBox
                             Grid.Row="1"
                             Grid.ColumnSpan="2"
