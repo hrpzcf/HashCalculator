@@ -87,6 +87,7 @@
     <Compile Include="AppLoading.cs" />
     <Compile Include="Cmders\DeleteFileCmder.cs" />
     <Compile Include="Cmders\HashViewCmder.cs" />
+    <Compile Include="Cmders\SelectFileCmder.cs" />
     <Compile Include="Cmders\RenameFileCmder.cs" />
     <Compile Include="Globals\BufferSize.cs" />
     <Compile Include="Globals\MappedFiler.cs" />
@@ -146,11 +147,11 @@
     <Compile Include="Views\AlgosPanel.xaml.cs">
       <DependentUpon>AlgosPanel.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\CommandPanel.xaml.cs">
-      <DependentUpon>CommandPanel.xaml</DependentUpon>
+    <Compile Include="Views\FilterAndCmdPanel.xaml.cs">
+      <DependentUpon>FilterAndCmdPanel.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\HashDetailsWnd.xaml.cs">
-      <DependentUpon>HashDetailsWnd.xaml</DependentUpon>
+    <Compile Include="Views\HashDetailsWindow.xaml.cs">
+      <DependentUpon>HashDetailsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SettingsPanel.xaml.cs">
       <DependentUpon>SettingsPanel.xaml</DependentUpon>
@@ -208,11 +209,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\CommandPanel.xaml">
+    <Page Include="Views\FilterAndCmdPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\HashDetailsWnd.xaml">
+    <Page Include="Views\HashDetailsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

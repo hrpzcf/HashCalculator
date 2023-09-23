@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Runtime.ConstrainedExecution;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml.Serialization;
@@ -32,7 +33,8 @@ namespace HashCalculator
         private bool noExportColumn = false;
         private bool noDurationColumn = false;
         private bool noFileSizeColumn = false;
-        private bool noExecutionTargetColumn = true;
+        private bool filterOrCmderEnabled = true;
+        private bool showExecutionTargetColumn = false;
         private bool runInMultiInstanceMode = false;
         private bool notSettingShellExtension = true;
         private bool preferAlgosInBasis = true;
@@ -346,15 +348,28 @@ namespace HashCalculator
         }
 
         [XmlIgnore]
-        public bool NoExecutionTargetColumn
+        public bool ShowExecutionTargetColumn
         {
             get
             {
-                return this.noExecutionTargetColumn;
+                return this.showExecutionTargetColumn;
             }
             set
             {
-                this.SetPropNotify(ref this.noExecutionTargetColumn, value);
+                this.SetPropNotify(ref this.showExecutionTargetColumn, value);
+            }
+        }
+
+        [XmlIgnore]
+        public bool FilterOrCmderEnabled
+        {
+            get
+            {
+                return this.filterOrCmderEnabled;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.filterOrCmderEnabled, value);
             }
         }
 

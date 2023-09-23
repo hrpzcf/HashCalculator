@@ -37,7 +37,7 @@ namespace HashCalculator
         private List<ModelArg> displayedFiles = new List<ModelArg>();
         private string hashCheckReport = string.Empty;
         private QueueState queueState = QueueState.None;
-        private CommandPanel commandPanelInst = null;
+        private FilterAndCmdPanel commandPanelInst = null;
         private readonly object displayingModelLock = new object();
         private readonly object displayModelRequestLock = new object();
         private readonly object tobeComputedModelsCountLock = new object();
@@ -356,7 +356,7 @@ namespace HashCalculator
             }
             else
             {
-                this.commandPanelInst = new CommandPanel((o, e) => { this.commandPanelInst = null; });
+                this.commandPanelInst = new FilterAndCmdPanel((o, e) => { this.commandPanelInst = null; });
                 this.commandPanelInst.Owner = MainWindow.This;
                 this.commandPanelInst.Show();
             }

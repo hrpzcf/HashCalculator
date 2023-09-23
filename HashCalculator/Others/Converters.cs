@@ -371,11 +371,11 @@ namespace HashCalculator
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             Debug.Assert(values.Length == 2);
-            if (values[0] is bool enabled && !enabled)
+            if (values[0] is QueueState state && state == QueueState.Started)
             {
                 return false;
             }
-            if (values[1] is QueueState state && state == QueueState.Started)
+            if (values[1] is bool filterOrCmderEnabled && !filterOrCmderEnabled)
             {
                 return false;
             }
@@ -393,6 +393,26 @@ namespace HashCalculator
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if ((bool)value)
+            {
+                return Visibility.Hidden;
+            }
+            else
+            {
+                return Visibility.Visible;
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class ShowColumnCvt : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (!(bool)value)
             {
                 return Visibility.Hidden;
             }

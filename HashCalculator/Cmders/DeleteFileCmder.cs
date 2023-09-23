@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -8,13 +9,14 @@ namespace HashCalculator
 {
     internal class DeleteFileCmder : HashViewCmder
     {
-        private RelayCommand cancelExecutionCmd;
-        private RelayCommand executeCommandCmd;
-        private RelayCommand prepareExecutionTargetCmd;
+        private RelayCommand moveToRecycleBinCmd;
+        private RelayCommand deleteFileDirectlyCmd;
 
-        public override string Display => "删除已勾选【操作目标】的文件";
+        public override string Display => "删除操作对象所指文件";
 
-        public override string Description => "把筛选出来的结果中已勾选【操作目标】的文件移动到回收站\n通常使用【相同哈希值】筛选器进行文件筛选后再使用此功能";
+        public override string Description => "直接删除操作对象所指的文件或移动到回收站\n通常使用【相同哈希值】筛选器进行文件筛选后再使用此功能";
+
+        public bool CheckIfUsingDistinctFilesFilter { get; set; } = true;
 
         public DeleteFileCmder() : this(MainWndViewModel.HashViewModels)
         {
@@ -24,104 +26,92 @@ namespace HashCalculator
         {
         }
 
-        public override void Reset()
+        private void DeleteMoveToRecycleBin(bool permanently)
         {
-            if (this.RefModels is IEnumerable<HashViewModel> models)
-            {
-                foreach (HashViewModel model in models)
-                {
-                    model.IsExecutionTarget = false;
-                }
-            }
-            Settings.Current.NoExecutionTargetColumn = true;
-        }
-
-        public ICommand CancelExecutionCmd
-        {
-            get
-            {
-                if (this.cancelExecutionCmd == null)
-                {
-                    this.cancelExecutionCmd = new RelayCommand(o => { this.Reset(); });
-                }
-                return this.cancelExecutionCmd;
-            }
-        }
-
-        private void ExecuteCommandAction(object param)
-        {
-            if (!Settings.Current.NoExecutionTargetColumn &&
+            if (Settings.Current.ShowExecutionTargetColumn &&
+                Settings.Current.FilterOrCmderEnabled &&
                 this.RefModels is ObservableCollection<HashViewModel> obsModels)
             {
+                Settings.Current.FilterOrCmderEnabled = false;
                 if (obsModels.Any(i => i.IsExecutionTarget))
                 {
-                    if (MessageBox.Show(MainWindow.This, "确定把【删除】列已勾选的文件移动到回收站吗？", "警告",
-                        MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
+                    string promptInfo = permanently ? "确定直接删除操作对象所指的文件吗？" :
+                        "确定把操作对象所指的文件移动到回收站吗？";
+                    if (MessageBox.Show(MainWindow.This, promptInfo, "警告", MessageBoxButton.OKCancel,
+                        MessageBoxImage.Warning) == MessageBoxResult.OK)
                     {
                         HashViewModel[] hashViewModels = new HashViewModel[obsModels.Count];
                         obsModels.CopyTo(hashViewModels, 0);
                         foreach (HashViewModel model in hashViewModels)
                         {
-                            if (model.IsExecutionTarget)
+                            if (model.IsExecutionTarget &&
+                                (!this.CheckIfUsingDistinctFilesFilter || model.FileIndex != null))
                             {
-                                model.ModelShutdownEvent += m =>
+                                try
                                 {
-                                    CommonUtils.SendToRecycleBin(MainWindow.WndHandle, m.FileInfo.FullName);
-                                };
-                                model.ShutdownModel();
-                                obsModels.Remove(model);
+                                    if (permanently)
+                                    {
+                                        model.ModelShutdownEvent += m => { m.FileInfo.Delete(); };
+                                    }
+                                    else
+                                    {
+                                        model.ModelShutdownEvent += m =>
+                                        {
+                                            CommonUtils.SendToRecycleBin(MainWindow.WndHandle, m.FileInfo.FullName);
+                                        };
+                                    }
+                                    model.ShutdownModel();
+                                    obsModels.Remove(model);
+                                    continue;
+                                }
+                                catch (Exception) { }
                             }
+                            model.IsExecutionTarget = false;
                         }
                         MainWndViewModel.CurrentModel.GenerateVerificationReport();
                     }
                 }
                 else
                 {
-                    MessageBox.Show(MainWindow.This, "没有找到任何已勾选的行，请刷新筛选或手动勾选要删除的行", "提示",
+                    MessageBox.Show(MainWindow.This, "没有找到任何操作对象，请刷新筛选或手动勾选要删除的对象", "提示",
                         MessageBoxButton.OK, MessageBoxImage.Information);
                 }
-                this.Reset();
+                Settings.Current.FilterOrCmderEnabled = true;
+                Settings.Current.ShowExecutionTargetColumn = false;
             }
         }
 
-        public ICommand ExecuteCommandCmd
+        private void MoveToRecycleBinAction(object param)
+        {
+            this.DeleteMoveToRecycleBin(false);
+        }
+
+        public ICommand MoveToRecycleBinCmd
         {
             get
             {
-                if (this.executeCommandCmd == null)
+                if (this.moveToRecycleBinCmd == null)
                 {
-                    this.executeCommandCmd = new RelayCommand(this.ExecuteCommandAction);
+                    this.moveToRecycleBinCmd = new RelayCommand(this.MoveToRecycleBinAction);
                 }
-                return this.executeCommandCmd;
+                return this.moveToRecycleBinCmd;
             }
         }
 
-        private void PrepareExecutionTargetAction(object param)
+        private void DeleteFileDirectlyAction(object param)
         {
-            if (this.RefModels is IEnumerable<HashViewModel> models)
-            {
-                IEnumerable<IGrouping<ComparableColor, HashViewModel>> byGroupId = models.Where(
-                    i => i.Matched && i.FileIndex != null && i.GroupId != null).GroupBy(i => i.GroupId);
-                foreach (IGrouping<ComparableColor, HashViewModel> group in byGroupId)
-                {
-                    foreach (HashViewModel model in group.Skip(1))
-                    {
-                        model.IsExecutionTarget = true;
-                    }
-                }
-                Settings.Current.NoExecutionTargetColumn = false;
-            }
+            this.DeleteMoveToRecycleBin(true);
         }
 
-        public ICommand PrepareExecutionTargetCmd
+        public ICommand DeleteFileDirectlyCmd
         {
             get
             {
-                if (this.prepareExecutionTargetCmd == null)
+                if (this.deleteFileDirectlyCmd == null)
                 {
-                    this.prepareExecutionTargetCmd = new RelayCommand(this.PrepareExecutionTargetAction);
+                    this.deleteFileDirectlyCmd = new RelayCommand(this.DeleteFileDirectlyAction);
                 }
-                return this.prepareExecutionTargetCmd;
+                return this.deleteFileDirectlyCmd;
             }
         }
     }

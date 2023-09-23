@@ -3,10 +3,13 @@ using System.Windows;
 
 namespace HashCalculator
 {
-    public partial class CommandPanel : Window
+    public partial class FilterAndCmdPanel : Window
     {
-        public CommandPanel(EventHandler handler)
+        public static FilterAndCmdPanel This { get; private set; }
+
+        public FilterAndCmdPanel(EventHandler handler)
         {
+            This = this;
             this.Closed += handler;
             this.Closed += this.PanelClosed;
             this.Loaded += (s, e) => { this.CheckPanelPosition(); };
