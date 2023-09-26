@@ -218,9 +218,9 @@
                 <Button
                     Grid.Column="20"
                     Margin="4,0,0,0"
-                    Command="{Binding OpenHelpBrowserWndCmd}"
+                    Command="{Binding OpenAboutWindowCmd}"
                     Style="{StaticResource ImageButtonStyle2}"
-                    ToolTip="使用浏览器打开离线帮助页面...">
+                    ToolTip="关于...">
                     <Image Source="/Images/using_help_32.png" />
                 </Button>
             </Grid>

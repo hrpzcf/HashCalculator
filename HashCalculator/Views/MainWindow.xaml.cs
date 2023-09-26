@@ -34,7 +34,7 @@ namespace HashCalculator
             this.Closed += this.MainWindowClosed;
             this.Loaded += this.MainWindowLoaded;
             this.InitializeComponent();
-            this.Title = $"{Info.Title} v{Info.Ver} by {Info.Author} @ {Info.Published}";
+            this.Title = $"{Info.Title} by {Info.Author} @ {Info.Published}";
         }
 
         private void InternalParseArguments(string[] args)

@@ -51,7 +51,7 @@ namespace HashCalculator
         private RelayCommand refreshCurHashForceCmd;
         private RelayCommand startVerifyHashValueCmd;
         private RelayCommand openSettingsPanelCmd;
-        private RelayCommand openHelpBrowserWndCmd;
+        private RelayCommand openAboutWindowCmd;
         private RelayCommand selectFilesToHashCmd;
         private RelayCommand selectFolderToHashCmd;
         private RelayCommand cancelDisplayedModelsCmd;
@@ -1178,8 +1178,7 @@ namespace HashCalculator
 
         private void OpenSettingsPanelAction(object param)
         {
-            Window settingsWindow = new SettingsPanel() { Owner = this.OwnerWnd };
-            settingsWindow.ShowDialog();
+            new SettingsPanel() { Owner = this.OwnerWnd }.ShowDialog();
         }
 
         public ICommand OpenSettingsPanelCmd
@@ -1194,42 +1193,20 @@ namespace HashCalculator
             }
         }
 
-        private void OpenHelpBrowserWndAction(object param)
+        private void OpenAboutWindowAction(object param)
         {
-            try
-            {
-                StreamResourceInfo sri = Application.GetResourceStream(
-                    new Uri("WebPages/Help.html", UriKind.Relative));
-                using (sri.Stream)
-                {
-                    string htmlPath = Path.ChangeExtension(Path.GetTempFileName(), "html");
-                    using (Stream fs = File.OpenWrite(htmlPath))
-                    {
-                        byte[] streamBuffer = new byte[sri.Stream.Length];
-                        sri.Stream.Read(streamBuffer, 0, streamBuffer.Length);
-                        fs.Write(streamBuffer, 0, streamBuffer.Length);
-                        NativeFunctions.ShellExecuteW(
-                            MainWindow.WndHandle, "open", htmlPath, null, null, ShowCmds.SW_NORMAL);
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                MessageBox.Show(
-                    this.OwnerWnd, "打开帮助页面失败~", "提示",
-                    MessageBoxButton.OK, MessageBoxImage.Information);
-            }
+            new AboutWindow() { Owner = MainWindow.This }.ShowDialog();
         }
 
-        public ICommand OpenHelpBrowserWndCmd
+        public ICommand OpenAboutWindowCmd
         {
             get
             {
-                if (this.openHelpBrowserWndCmd is null)
+                if (this.openAboutWindowCmd is null)
                 {
-                    this.openHelpBrowserWndCmd = new RelayCommand(this.OpenHelpBrowserWndAction);
+                    this.openAboutWindowCmd = new RelayCommand(this.OpenAboutWindowAction);
                 }
-                return this.openHelpBrowserWndCmd;
+                return this.openAboutWindowCmd;
             }
         }
 

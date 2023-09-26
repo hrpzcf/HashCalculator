@@ -144,6 +144,9 @@
     <Compile Include="Others\Converters.cs" />
     <Compile Include="Others\Enumerates.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
+    <Compile Include="Views\AboutWindow.xaml.cs">
+      <DependentUpon>AboutWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\AlgosPanel.xaml.cs">
       <DependentUpon>AlgosPanel.xaml</DependentUpon>
     </Compile>
@@ -205,6 +208,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\AboutWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\AlgosPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -252,7 +259,6 @@
     <EmbeddedResource Include="Assembly\Microsoft.Bcl.HashCode-License.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="WebPages\Help.html" />
     <Resource Include="Images\icon.ico" />
     <Resource Include="Images\start.png" />
     <Resource Include="Images\stop.png" />

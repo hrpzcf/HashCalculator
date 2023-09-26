@@ -16,7 +16,7 @@ namespace HashCalculator
         public const string ShlExtGuid = "{de95cac8-90d1-4c55-b81d-d7f6d527606c}";
         public static readonly string AppName = assembly.Name;
         public static readonly string Ver = $"{v.Major}.{v.Minor}.{v.Build}";
-        public const string Title = "文件哈希值批量计算器";
+        public const string Title = "哈希值批量计算器";
         public const string Author = "hrpzcf";
         public const string Published = "www.52pojie.cn";
         public const string Source = "https://github.com/hrpzcf/HashCalculator";
