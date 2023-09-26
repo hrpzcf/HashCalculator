@@ -20,7 +20,7 @@
 
 <br/>
 
- # 功能特点
+# 功能特点
 
 - 支持的哈希算法有：SHA1、SHA224、SHA256、SHA384、SHA512、SHA3 系列、MD5、Blake2b 系列、Blake2s 系列、Blake3 系列、Whirlpool。
 - 计算所得哈希值的输出方式可选择 Base64 或十六进制大/小写。
