@@ -5,7 +5,7 @@ using System.Windows;
 // 有关程序集的一般信息由以下
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("文件哈希值批量计算器")]
+[assembly: AssemblyTitle("哈希值批量计算器")]
 [assembly: AssemblyDescription("支持批量计算文件哈希值，也支持将结果导出为文本文件和批量校验哈希值功能")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("HashCalculator")]
@@ -49,5 +49,5 @@ using System.Windows;
 //可以指定所有这些值，也可以使用“生成号”和“修订号”的默认值
 //通过使用 "*"，如下所示:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("5.1.0.0")]
-[assembly: AssemblyFileVersion("5.1.0.0")]
+[assembly: AssemblyVersion("5.2.0.0")]
+[assembly: AssemblyFileVersion("5.2.0.0")]
