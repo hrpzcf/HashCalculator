@@ -24,10 +24,11 @@ constexpr auto IDM_COMPUTE_SHA3_384 = 8;
 constexpr auto IDM_COMPUTE_SHA3_512 = 9;
 constexpr auto IDM_COMPUTE_WHIRLPOOL = 10;
 constexpr auto IDM_COMPUTE_MD5 = 11;
-constexpr auto IDM_COMPUTE_BLAKE2S = 12;
-constexpr auto IDM_COMPUTE_BLAKE2B = 13;
-constexpr auto IDM_COMPUTE_BLAKE3 = 14;
-constexpr auto IDM_SUBMENUS_PARENT = 15;
+constexpr auto IDM_COMPUTE_CRC32 = 12;
+constexpr auto IDM_COMPUTE_BLAKE2S = 13;
+constexpr auto IDM_COMPUTE_BLAKE2B = 14;
+constexpr auto IDM_COMPUTE_BLAKE3 = 15;
+constexpr auto IDM_SUBMENUS_PARENT = 16;
 
 VOID CComputeHash::CreateGUIProcessComputeHash(LPCWSTR algo) {
 	if (nullptr == this->executable_path) {
@@ -203,6 +204,7 @@ STDMETHODIMP CComputeHash::QueryContextMenu(
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_SHA3_512, L"SHA3-512");
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_WHIRLPOOL, L"Whirlpool");
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_MD5, L"MD5");
+	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_CRC32, L"CRC32");
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_BLAKE2S, L"BLAKE2s-256");
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_BLAKE2B, L"BLAKE2b-512");
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_BLAKE3, L"BLAKE3-256");
@@ -266,6 +268,9 @@ STDMETHODIMP CComputeHash::InvokeCommand(CMINVOKECOMMANDINFO* pici) {
 		break;
 	case IDM_COMPUTE_MD5:
 		algo = L"MD5";
+		break;
+	case IDM_COMPUTE_CRC32:
+		algo = L"CRC32";
 		break;
 	case IDM_COMPUTE_BLAKE2S:
 		algo = L"BLAKE2S_256";
