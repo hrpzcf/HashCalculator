@@ -23,11 +23,14 @@ namespace HashCalculator
                 new AlgoInOutModel(new BouncyCastleSha3(224)),
                 new AlgoInOutModel(new BouncyCastleSha3(256)),
                 new AlgoInOutModel(new BouncyCastleSha3(384)),
-                new AlgoInOutModel( new BouncyCastleSha3(512)),
+                new AlgoInOutModel(new BouncyCastleSha3(512)),
                 // Whirlpool
                 new AlgoInOutModel(new BouncyCastleWhirlpool()),
                 // MD5
                 new AlgoInOutModel(new MicrosoftMD5Cng()),
+                // Crc32
+                new AlgoInOutModel(new ForceCrc32NetCrc32()),
+                new AlgoInOutModel(new ForceCrc32NetCrc32C()),
                 // Blake2s
                 new AlgoInOutModel(new BouncyCastleBlake2s(128)),
                 new AlgoInOutModel(new BouncyCastleBlake2s(160)),

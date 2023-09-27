@@ -173,6 +173,9 @@
         BLAKE3_512,
         // WHIRLPOOL
         WHIRLPOOL,
+        // Crc32
+        CRC32,
+        CRC32C,
         Unknown = -1,
     }
 

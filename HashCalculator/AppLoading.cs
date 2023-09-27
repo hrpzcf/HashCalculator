@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Threading;
@@ -8,6 +9,18 @@ namespace HashCalculator
 {
     public partial class AppLoading : Application
     {
+        private static readonly string[] reqAsmbs = new string[]
+        {
+            "BouncyCastle.Cryptography",
+            "CommandLine",
+            "Crc32.NET",
+            "Microsoft.Bcl.HashCode",
+            "Microsoft.WindowsAPICodePack",
+            "Microsoft.WindowsAPICodePack.Shell",
+            "XamlAnimatedGif",
+        };
+        private static readonly Assembly executingAsmb = Assembly.GetExecutingAssembly();
+
         [STAThread()]
         public static void Main(string[] args)
         {
@@ -17,30 +30,6 @@ namespace HashCalculator
             app.Startup += ApplicationStartup;
             AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
             app.RunApplication();
-        }
-
-        private static Assembly AssemblyResolve(object sender, ResolveEventArgs arg)
-        {
-            string asmbName = new AssemblyName(arg.Name).Name;
-            if (!(asmbName == "XamlAnimatedGif" ||
-                asmbName == "CommandLine" ||
-                asmbName == "BouncyCastle.Cryptography" ||
-                asmbName == "Microsoft.WindowsAPICodePack" ||
-                asmbName == "Microsoft.WindowsAPICodePack.Shell" ||
-                asmbName == "Microsoft.Bcl.HashCode"))
-            {
-                return default;
-            }
-            Assembly executingAsmb = Assembly.GetExecutingAssembly();
-            string resName = "HashCalculator.Assembly." + asmbName + ".dll";
-            if (!(executingAsmb.GetManifestResourceStream(resName) is Stream stream))
-            {
-                return default;
-            }
-            byte[] assemblyData = new byte[stream.Length];
-            stream.Read(assemblyData, 0, assemblyData.Length);
-            stream.Close();
-            return Assembly.Load(assemblyData);
         }
 
         private static void ApplicationExit(object sender, ExitEventArgs e)
@@ -53,6 +42,23 @@ namespace HashCalculator
         {
             Settings.LoadSettings();
             MappedFiler.PushArgs(Settings.StartupArgs);
+        }
+
+        private static Assembly AssemblyResolve(object sender, ResolveEventArgs arg)
+        {
+            string asmbName = new AssemblyName(arg.Name).Name;
+            if (reqAsmbs.Contains(asmbName))
+            {
+                if (executingAsmb.GetManifestResourceStream(
+                    string.Format("HashCalculator.Assembly.{0}.dll", asmbName)) is Stream stream)
+                {
+                    byte[] assemblyBytes = new byte[stream.Length];
+                    stream.Read(assemblyBytes, 0, assemblyBytes.Length);
+                    stream.Close();
+                    return Assembly.Load(assemblyBytes);
+                }
+            }
+            return default(Assembly);
         }
 
         private void RunApplication()

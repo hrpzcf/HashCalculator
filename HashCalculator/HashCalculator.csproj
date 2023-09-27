@@ -52,6 +52,10 @@
       <HintPath>Assembly\CommandLine.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Crc32.NET">
+      <HintPath>Assembly\Crc32.NET.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Microsoft.Bcl.HashCode, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Assembly\Microsoft.Bcl.HashCode.dll</HintPath>
@@ -98,6 +102,8 @@
     <Compile Include="HashAlgos\BouncyCastleDigest.cs" />
     <Compile Include="Globals\Settings.cs" />
     <Compile Include="HashAlgos\BouncyCastleWhirlpool.cs" />
+    <Compile Include="HashAlgos\ForceCrc32NetCrc32.cs" />
+    <Compile Include="HashAlgos\ForceCrc32NetCrc32C.cs" />
     <Compile Include="HashAlgos\IHashAlgoInfo.cs" />
     <Compile Include="HashAlgos\MicrosoftHashDigest.cs" />
     <Compile Include="HashAlgos\MicrosoftMD5Cng.cs" />
@@ -296,6 +302,11 @@
     <Resource Include="Images\refresh_64.png" />
     <Resource Include="Images\refresh_64_gray.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Assembly\Crc32.NET-License.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Assembly\Crc32.NET.dll" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
