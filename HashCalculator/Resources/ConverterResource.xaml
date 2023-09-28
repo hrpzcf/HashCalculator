@@ -41,4 +41,5 @@
     <local:MultiLineTextToStrArrayCvt x:Key="MultiLineTextToStrArrayCvt" />
     <local:GroupIdToSolidColorBrushCvt x:Key="GroupIdToSolidColorBrushCvt" />
     <local:ReverseBoolValueCvt x:Key="ReverseBoolValueCvt" />
+    <local:ActionMultiParameterCvt x:Key="ActionMultiParameterCvt" />
 </ResourceDictionary>

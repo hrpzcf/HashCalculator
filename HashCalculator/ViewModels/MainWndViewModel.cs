@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Resources;
 using System.Windows.Threading;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
@@ -71,6 +70,7 @@ namespace HashCalculator
         private ControlItem[] copyModelsHashMenuCmds;
         private ControlItem[] copyModelsAllAlgosMenuCmds;
         private ControlItem[] hashModelTasksCtrlCmds;
+        private ControlItem[] switchDisplayedAlgoCmds;
 
         public MainWndViewModel()
         {
@@ -1440,6 +1440,42 @@ namespace HashCalculator
                     this.stopEnumeratingPackageCmd = new RelayCommand(this.StopEnumeratingPackageAction);
                 }
                 return this.stopEnumeratingPackageCmd;
+            }
+        }
+
+        private void SwitchDisplayedAlgoAction(object param)
+        {
+            if (param is object[] actionParams && actionParams.Length == 2 &&
+                actionParams[0] is AlgoType algo && actionParams[1] is IList selectedModels)
+            {
+                foreach (HashViewModel model in selectedModels)
+                {
+                    if (model.AlgoInOutModels != null)
+                    {
+                        foreach (AlgoInOutModel algoModel in model.AlgoInOutModels)
+                        {
+                            if (algoModel.AlgoType == algo)
+                            {
+                                model.CurrentInOutModel = algoModel;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public ControlItem[] SwitchDisplayedAlgoCmds
+        {
+            get
+            {
+                if (this.switchDisplayedAlgoCmds == null)
+                {
+                    RelayCommand command = new RelayCommand(this.SwitchDisplayedAlgoAction);
+                    this.switchDisplayedAlgoCmds = AlgosPanelModel.ProvidedAlgos.Select(
+                        obj => new ControlItem(obj.AlgoName, obj.AlgoType, command)).ToArray();
+                }
+                return this.switchDisplayedAlgoCmds;
             }
         }
     }
