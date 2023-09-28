@@ -2,19 +2,19 @@
 
 namespace HashCalculator
 {
-    internal class MicrosoftSHA256Cng : MicrosoftHashDigest
+    internal class MsCryptCngSHA256 : MicrosoftHashDigest
     {
         public override string AlgoName => "SHA-256";
 
         public override AlgoType AlgoType => AlgoType.SHA256;
 
-        public MicrosoftSHA256Cng() : base(new SHA256Cng())
+        public MsCryptCngSHA256() : base(new SHA256Cng())
         {
         }
 
         public override IHashAlgoInfo NewInstance()
         {
-            return new MicrosoftSHA256Cng();
+            return new MsCryptCngSHA256();
         }
     }
 }

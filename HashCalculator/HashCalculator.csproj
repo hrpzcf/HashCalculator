@@ -52,10 +52,6 @@
       <HintPath>Assembly\CommandLine.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Crc32.NET">
-      <HintPath>Assembly\Crc32.NET.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Microsoft.Bcl.HashCode, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Assembly\Microsoft.Bcl.HashCode.dll</HintPath>
@@ -68,6 +64,25 @@
     <Reference Include="Microsoft.WindowsAPICodePack.Shell">
       <HintPath>Assembly\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Assembly\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Hashing">
+      <HintPath>Assembly\System.IO.Hashing.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Assembly\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Assembly\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Assembly\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="XamlAnimatedGif">
       <HintPath>Assembly\XamlAnimatedGif.dll</HintPath>
@@ -96,21 +111,22 @@
     <Compile Include="Globals\BufferSize.cs" />
     <Compile Include="Globals\MappedFiler.cs" />
     <Compile Include="Globals\MappedInfo.cs" />
-    <Compile Include="HashAlgos\BouncyCastleBlake2s.cs" />
-    <Compile Include="HashAlgos\BouncyCastleBlake2b.cs" />
-    <Compile Include="HashAlgos\BouncyCastleBlake3.cs" />
+    <Compile Include="HashAlgos\BCSharpBlake2s.cs" />
+    <Compile Include="HashAlgos\BCSharpBlake2b.cs" />
+    <Compile Include="HashAlgos\BCSharpBlake3.cs" />
     <Compile Include="HashAlgos\BouncyCastleDigest.cs" />
     <Compile Include="Globals\Settings.cs" />
-    <Compile Include="HashAlgos\BouncyCastleWhirlpool.cs" />
-    <Compile Include="HashAlgos\ForceCrc32NetCrc32.cs" />
-    <Compile Include="HashAlgos\ForceCrc32NetCrc32C.cs" />
+    <Compile Include="HashAlgos\BCSharpWhirlpool.cs" />
     <Compile Include="HashAlgos\IHashAlgoInfo.cs" />
     <Compile Include="HashAlgos\MicrosoftHashDigest.cs" />
-    <Compile Include="HashAlgos\MicrosoftMD5Cng.cs" />
-    <Compile Include="HashAlgos\MicrosoftSHA1Cng.cs" />
-    <Compile Include="HashAlgos\MicrosoftSHA256Cng.cs" />
-    <Compile Include="HashAlgos\MicrosoftSHA384Cng.cs" />
-    <Compile Include="HashAlgos\MicrosoftSHA512Cng.cs" />
+    <Compile Include="HashAlgos\HashingCrc32.cs" />
+    <Compile Include="HashAlgos\MsCryptCngMD5.cs" />
+    <Compile Include="HashAlgos\MsCryptCngSHA1.cs" />
+    <Compile Include="HashAlgos\MsCryptCngSHA256.cs" />
+    <Compile Include="HashAlgos\MsCryptCngSHA384.cs" />
+    <Compile Include="HashAlgos\MsCryptCngSHA512.cs" />
+    <Compile Include="HashAlgos\HashingXxHash32.cs" />
+    <Compile Include="HashAlgos\HashingXxHash64.cs" />
     <Compile Include="HashFilters\CmpResultFilter.cs" />
     <Compile Include="HashFilters\DistinctFilesFilter.cs" />
     <Compile Include="HashFilters\FileNameFilter.cs" />
@@ -139,8 +155,8 @@
     <Compile Include="Others\RegValue.cs" />
     <Compile Include="Others\RelayCommand.cs" />
     <Compile Include="Others\CommonUtils.cs" />
-    <Compile Include="HashAlgos\BouncyCastleSha3.cs" />
-    <Compile Include="HashAlgos\BouncyCastleSha224.cs" />
+    <Compile Include="HashAlgos\BCSharpSha3.cs" />
+    <Compile Include="HashAlgos\BCSharpSha224.cs" />
     <Compile Include="Others\ShellExtHelper.cs" />
     <Compile Include="ViewModels\AlgosPanelModel.cs" />
     <Compile Include="ViewModels\AlgoInOutModel.cs" />
@@ -303,10 +319,12 @@
     <Resource Include="Images\refresh_64_gray.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Assembly\Crc32.NET-License.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Assembly\Crc32.NET.dll" />
+    <EmbeddedResource Include="Assembly\System.Buffers.dll" />
+    <EmbeddedResource Include="Assembly\System.IO.Hashing-License.txt" />
+    <EmbeddedResource Include="Assembly\System.IO.Hashing.dll" />
+    <EmbeddedResource Include="Assembly\System.Memory.dll" />
+    <EmbeddedResource Include="Assembly\System.Numerics.Vectors.dll" />
+    <EmbeddedResource Include="Assembly\System.Runtime.CompilerServices.Unsafe.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

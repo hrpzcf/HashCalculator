@@ -2,19 +2,19 @@
 
 namespace HashCalculator
 {
-    internal class BouncyCastleWhirlpool : BouncyCastleDigest
+    internal class BCSharpWhirlpool : BouncyCastleDigest
     {
         public override string AlgoName => "Whirlpool";
 
         public override AlgoType AlgoGroup => AlgoType.WHIRLPOOL;
 
-        public BouncyCastleWhirlpool() : base(new WhirlpoolDigest(), 512)
+        public BCSharpWhirlpool() : base(new WhirlpoolDigest(), 512)
         {
         }
 
         public override IHashAlgoInfo NewInstance()
         {
-            return new BouncyCastleWhirlpool();
+            return new BCSharpWhirlpool();
         }
     }
 }
