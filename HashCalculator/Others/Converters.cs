@@ -841,9 +841,9 @@ namespace HashCalculator
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is Color color && color != default(Color))
+            if (value is ComparableColor color && color.Color != default(Color))
             {
-                return new SolidColorBrush(color);
+                return new SolidColorBrush(color.Color);
             }
             else
             {

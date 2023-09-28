@@ -378,7 +378,7 @@
                         <DataTemplate>
                             <CheckBox
                                 HorizontalAlignment="Center"
-                                Background="{Binding GroupId.Color, Converter={StaticResource GroupIdToSolidColorBrushCvt}}"
+                                Background="{Binding GroupId, Converter={StaticResource GroupIdToSolidColorBrushCvt}}"
                                 Foreground="#FFFFFFFF"
                                 IsChecked="{Binding IsExecutionTarget, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         </DataTemplate>
@@ -403,8 +403,12 @@
                                     Margin="4,0,4,0"
                                     Padding="4,0"
                                     VerticalContentAlignment="Center"
-                                    Background="{Binding GroupId.Color, Converter={StaticResource GroupIdToSolidColorBrushCvt}}"
+                                    Background="{Binding GroupId, Converter={StaticResource GroupIdToSolidColorBrushCvt}}"
                                     ToolTip="{Binding ModelDetails}">
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        Text="{Binding CurrentHashString}"
+                                        TextTrimming="CharacterEllipsis" />
                                     <Label.Visibility>
                                         <MultiBinding Converter="{StaticResource SubCtrlVisiblitySucceededCvt}">
                                             <Binding Path="State" />
@@ -414,14 +418,6 @@
                                     <Label.InputBindings>
                                         <MouseBinding Command="{Binding ShowHashDetailsWindowCmd}" MouseAction="LeftDoubleClick" />
                                     </Label.InputBindings>
-                                    <Label.ContentTemplate>
-                                        <DataTemplate>
-                                            <TextBlock
-                                                VerticalAlignment="Center"
-                                                Text="{Binding ElementName=hashStringLabel, Path=DataContext.CurrentHashString}"
-                                                TextTrimming="CharacterEllipsis" />
-                                        </DataTemplate>
-                                    </Label.ContentTemplate>
                                 </Label>
                                 <TextBlock
                                     Grid.Column="0"
