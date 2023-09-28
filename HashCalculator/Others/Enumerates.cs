@@ -176,8 +176,8 @@
         // Crc32
         CRC32,
         // XxHash
-        XxHash32,
-        XxHash64,
+        XXHASH32,
+        XXHASH64,
         Unknown = -1,
     }
 

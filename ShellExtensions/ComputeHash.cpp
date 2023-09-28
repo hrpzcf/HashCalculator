@@ -25,10 +25,12 @@ constexpr auto IDM_COMPUTE_SHA3_512 = 9;
 constexpr auto IDM_COMPUTE_WHIRLPOOL = 10;
 constexpr auto IDM_COMPUTE_MD5 = 11;
 constexpr auto IDM_COMPUTE_CRC32 = 12;
-constexpr auto IDM_COMPUTE_BLAKE2S = 13;
-constexpr auto IDM_COMPUTE_BLAKE2B = 14;
-constexpr auto IDM_COMPUTE_BLAKE3 = 15;
-constexpr auto IDM_SUBMENUS_PARENT = 16;
+constexpr auto IDM_COMPUTE_XXHASH32 = 13;
+constexpr auto IDM_COMPUTE_XXHASH64 = 14;
+constexpr auto IDM_COMPUTE_BLAKE2S = 15;
+constexpr auto IDM_COMPUTE_BLAKE2B = 16;
+constexpr auto IDM_COMPUTE_BLAKE3 = 17;
+constexpr auto IDM_SUBMENUS_PARENT = 18;
 
 VOID CComputeHash::CreateGUIProcessComputeHash(LPCWSTR algo) {
 	if (nullptr == this->executable_path) {
@@ -205,6 +207,8 @@ STDMETHODIMP CComputeHash::QueryContextMenu(
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_WHIRLPOOL, L"Whirlpool");
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_MD5, L"MD5");
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_CRC32, L"CRC32");
+	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_XXHASH32, L"XxHash32");
+	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_XXHASH64, L"XxHash64");
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_BLAKE2S, L"BLAKE2s-256");
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_BLAKE2B, L"BLAKE2b-512");
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_BLAKE3, L"BLAKE3-256");
@@ -271,6 +275,12 @@ STDMETHODIMP CComputeHash::InvokeCommand(CMINVOKECOMMANDINFO* pici) {
 		break;
 	case IDM_COMPUTE_CRC32:
 		algo = L"CRC32";
+		break;
+	case IDM_COMPUTE_XXHASH32:
+		algo = L"XXHASH32";
+		break;
+	case IDM_COMPUTE_XXHASH64:
+		algo = L"XXHASH64";
 		break;
 	case IDM_COMPUTE_BLAKE2S:
 		algo = L"BLAKE2S_256";

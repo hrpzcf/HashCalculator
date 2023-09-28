@@ -10,7 +10,7 @@ namespace HashCalculator
 
         public string AlgoName => "XxHash32";
 
-        public AlgoType AlgoType => AlgoType.XxHash32;
+        public AlgoType AlgoType => AlgoType.XXHASH32;
 
         public override void Initialize()
         {
