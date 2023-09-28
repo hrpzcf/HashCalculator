@@ -113,13 +113,13 @@ namespace HashCalculator
             return 0 == intResult2;
         }
 
-        public static string ToBase64String(byte[] bytesPassedIn)
+        public static string ToBase64String(byte[] passedInBytes)
         {
-            if (bytesPassedIn is null)
+            if (passedInBytes is null)
             {
                 return default;
             }
-            return Convert.ToBase64String(bytesPassedIn);
+            return Convert.ToBase64String(passedInBytes);
         }
 
         public static byte[] FromBase64String(string base64String)
@@ -138,27 +138,27 @@ namespace HashCalculator
             }
         }
 
-        public static string ToHexStringUpper(byte[] bytesPassedIn)
+        public static string ToHexStringUpper(byte[] passedInBytes)
         {
-            return ToHexString(bytesPassedIn, "X2");
+            return ToHexString(passedInBytes, "X2");
         }
 
-        public static string ToHexStringLower(byte[] bytesPassedIn)
+        public static string ToHexStringLower(byte[] passedInBytes)
         {
-            return ToHexString(bytesPassedIn, "x2");
+            return ToHexString(passedInBytes, "x2");
         }
 
-        private static string ToHexString(byte[] bytesPassedIn, string format)
+        private static string ToHexString(byte[] passedInBytes, string format)
         {
             Debug.Assert(new string[] { "x2", "X2" }.Contains(format));
-            if (bytesPassedIn is null)
+            if (passedInBytes is null)
             {
                 return default;
             }
-            StringBuilder stringBuilder = new StringBuilder(bytesPassedIn.Length * 2);
-            for (int i = 0; i < bytesPassedIn.Length; ++i)
+            StringBuilder stringBuilder = new StringBuilder(passedInBytes.Length * 2);
+            for (int i = 0; i < passedInBytes.Length; ++i)
             {
-                stringBuilder.Append(bytesPassedIn[i].ToString(format));
+                stringBuilder.Append(passedInBytes[i].ToString(format));
             }
             return stringBuilder.ToString();
         }

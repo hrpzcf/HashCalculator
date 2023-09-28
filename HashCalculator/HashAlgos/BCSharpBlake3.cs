@@ -2,7 +2,7 @@
 
 namespace HashCalculator
 {
-    internal class BouncyCastleBlake3 : BouncyCastleDigest
+    internal class BCSharpBlake3 : BouncyCastleDigest
     {
         private readonly int bitLength;
 
@@ -10,14 +10,14 @@ namespace HashCalculator
 
         public override AlgoType AlgoGroup => AlgoType.BLAKE3;
 
-        public BouncyCastleBlake3(int bitLength) : base(new Blake3Digest(bitLength), bitLength)
+        public BCSharpBlake3(int bitLength) : base(new Blake3Digest(bitLength), bitLength)
         {
             this.bitLength = bitLength;
         }
 
         public override IHashAlgoInfo NewInstance()
         {
-            return new BouncyCastleBlake3(this.bitLength);
+            return new BCSharpBlake3(this.bitLength);
         }
     }
 }

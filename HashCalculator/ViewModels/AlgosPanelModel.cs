@@ -10,47 +10,49 @@ namespace HashCalculator
         private RelayCommand checkBoxChangedCmd;
         private RelayCommand clearAllSelectedCmd;
 
-        public static AlgoInOutModel[] ProvidedAlgos { get; } =
-            new AlgoInOutModel[] {
-                // SHA1
-                new AlgoInOutModel(new MicrosoftSHA1Cng()),
-                // SHA2
-                new AlgoInOutModel(new BouncyCastleSha224()),
-                new AlgoInOutModel(new MicrosoftSHA256Cng()),
-                new AlgoInOutModel(new MicrosoftSHA384Cng()),
-                new AlgoInOutModel(new MicrosoftSHA512Cng()),
-                // SHA3
-                new AlgoInOutModel(new BouncyCastleSha3(224)),
-                new AlgoInOutModel(new BouncyCastleSha3(256)),
-                new AlgoInOutModel(new BouncyCastleSha3(384)),
-                new AlgoInOutModel(new BouncyCastleSha3(512)),
-                // Whirlpool
-                new AlgoInOutModel(new BouncyCastleWhirlpool()),
-                // MD5
-                new AlgoInOutModel(new MicrosoftMD5Cng()),
-                // Crc32
-                new AlgoInOutModel(new ForceCrc32NetCrc32()),
-                new AlgoInOutModel(new ForceCrc32NetCrc32C()),
-                // Blake2s
-                new AlgoInOutModel(new BouncyCastleBlake2s(128)),
-                new AlgoInOutModel(new BouncyCastleBlake2s(160)),
-                new AlgoInOutModel(new BouncyCastleBlake2s(224)),
-                new AlgoInOutModel(new BouncyCastleBlake2s(256)),
-                // Blake2b
-                new AlgoInOutModel(new BouncyCastleBlake2b(128)),
-                new AlgoInOutModel(new BouncyCastleBlake2b(160)),
-                new AlgoInOutModel(new BouncyCastleBlake2b(224)),
-                new AlgoInOutModel(new BouncyCastleBlake2b(256)),
-                new AlgoInOutModel(new BouncyCastleBlake2b(384)),
-                new AlgoInOutModel(new BouncyCastleBlake2b(512)),
-                // Blake3
-                new AlgoInOutModel(new BouncyCastleBlake3(128)),
-                new AlgoInOutModel(new BouncyCastleBlake3(160)),
-                new AlgoInOutModel(new BouncyCastleBlake3(224)),
-                new AlgoInOutModel(new BouncyCastleBlake3(256)),
-                new AlgoInOutModel(new BouncyCastleBlake3(384)),
-                new AlgoInOutModel(new BouncyCastleBlake3(512)),
-            };
+        public static AlgoInOutModel[] ProvidedAlgos { get; } = new AlgoInOutModel[]
+        {
+            // SHA1
+            new AlgoInOutModel(new MsCryptCngSHA1()),
+            // SHA2
+            new AlgoInOutModel(new BCSharpSha224()),
+            new AlgoInOutModel(new MsCryptCngSHA256()),
+            new AlgoInOutModel(new MsCryptCngSHA384()),
+            new AlgoInOutModel(new MsCryptCngSHA512()),
+            // SHA3
+            new AlgoInOutModel(new BCSharpSha3(224)),
+            new AlgoInOutModel(new BCSharpSha3(256)),
+            new AlgoInOutModel(new BCSharpSha3(384)),
+            new AlgoInOutModel(new BCSharpSha3(512)),
+            // Whirlpool
+            new AlgoInOutModel(new BCSharpWhirlpool()),
+            // MD5
+            new AlgoInOutModel(new MsCryptCngMD5()),
+            // Crc32
+            new AlgoInOutModel(new HashingCrc32()),
+            // XxHash
+            new AlgoInOutModel(new HashingXxHash32()),
+            new AlgoInOutModel(new HashingXxHash64()),
+            // Blake2s
+            new AlgoInOutModel(new BCSharpBlake2s(128)),
+            new AlgoInOutModel(new BCSharpBlake2s(160)),
+            new AlgoInOutModel(new BCSharpBlake2s(224)),
+            new AlgoInOutModel(new BCSharpBlake2s(256)),
+            // Blake2b
+            new AlgoInOutModel(new BCSharpBlake2b(128)),
+            new AlgoInOutModel(new BCSharpBlake2b(160)),
+            new AlgoInOutModel(new BCSharpBlake2b(224)),
+            new AlgoInOutModel(new BCSharpBlake2b(256)),
+            new AlgoInOutModel(new BCSharpBlake2b(384)),
+            new AlgoInOutModel(new BCSharpBlake2b(512)),
+            // Blake3
+            new AlgoInOutModel(new BCSharpBlake3(128)),
+            new AlgoInOutModel(new BCSharpBlake3(160)),
+            new AlgoInOutModel(new BCSharpBlake3(224)),
+            new AlgoInOutModel(new BCSharpBlake3(256)),
+            new AlgoInOutModel(new BCSharpBlake3(384)),
+            new AlgoInOutModel(new BCSharpBlake3(512)),
+        };
 
         public static AlgoInOutModel[] FromAlgoName(string name)
         {

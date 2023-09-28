@@ -175,7 +175,9 @@
         WHIRLPOOL,
         // Crc32
         CRC32,
-        CRC32C,
+        // XxHash
+        XxHash32,
+        XxHash64,
         Unknown = -1,
     }
 
