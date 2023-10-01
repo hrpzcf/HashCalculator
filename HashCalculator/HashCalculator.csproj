@@ -54,6 +54,10 @@
       <HintPath>Assembly\CommandLine.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Crc32.NET">
+      <HintPath>Assembly\Crc32.NET.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Microsoft.Bcl.HashCode, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Assembly\Microsoft.Bcl.HashCode.dll</HintPath>
@@ -65,30 +69,6 @@
     </Reference>
     <Reference Include="Microsoft.WindowsAPICodePack.Shell">
       <HintPath>Assembly\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Assembly\System.Buffers.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.IO.Hashing">
-      <HintPath>Assembly\System.IO.Hashing.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Assembly\System.Memory.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Assembly\System.Numerics.Vectors.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Assembly\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="XamlAnimatedGif">
@@ -129,14 +109,12 @@
     <Compile Include="HashAlgos\LibxxhashXxHash128.cs" />
     <Compile Include="HashAlgos\LibxxhashXxHash3.cs" />
     <Compile Include="HashAlgos\MsCryptCngDigest.cs" />
-    <Compile Include="HashAlgos\HashingCrc32.cs" />
+    <Compile Include="HashAlgos\ForceCrc32NetCrc32.cs" />
     <Compile Include="HashAlgos\MsCryptCngMD5.cs" />
     <Compile Include="HashAlgos\MsCryptCngSHA1.cs" />
     <Compile Include="HashAlgos\MsCryptCngSHA256.cs" />
     <Compile Include="HashAlgos\MsCryptCngSHA384.cs" />
     <Compile Include="HashAlgos\MsCryptCngSHA512.cs" />
-    <Compile Include="HashAlgos\HashingXxHash32.cs" />
-    <Compile Include="HashAlgos\HashingXxHash64.cs" />
     <Compile Include="HashAlgos\LibxxhashXxHash64.cs" />
     <Compile Include="HashFilters\CmpResultFilter.cs" />
     <Compile Include="HashFilters\DistinctFilesFilter.cs" />
@@ -280,16 +258,16 @@
     <EmbeddedResource Include="ShellExt\HashCalculator.dll" />
     <EmbeddedResource Include="ShellExt\HashCalculator32.dll" />
     <EmbeddedResource Include="Assembly\BouncyCastle.Cryptography.dll" />
-    <EmbeddedResource Include="Assembly\BouncyCastle.Cryptography-License.txt" />
+    <None Include="Assembly\BouncyCastle.Cryptography.txt" />
     <EmbeddedResource Include="Assembly\CommandLine.dll" />
-    <EmbeddedResource Include="Assembly\CommandLineParser-License.txt" />
+    <None Include="Assembly\CommandLineParser.txt" />
     <EmbeddedResource Include="Assembly\Microsoft.WindowsAPICodePack.dll" />
     <EmbeddedResource Include="Assembly\Microsoft.WindowsAPICodePack.Shell.dll" />
-    <EmbeddedResource Include="Assembly\WindowsAPICodePack-License.txt" />
+    <None Include="Assembly\Microsoft.WindowsAPICodePack.txt" />
     <EmbeddedResource Include="Assembly\XamlAnimatedGif.dll" />
-    <EmbeddedResource Include="Assembly\XamlAnimatedGif-License.txt" />
+    <None Include="Assembly\XamlAnimatedGif.txt" />
     <EmbeddedResource Include="Assembly\Microsoft.Bcl.HashCode.dll" />
-    <EmbeddedResource Include="Assembly\Microsoft.Bcl.HashCode-License.txt" />
+    <None Include="Assembly\Microsoft.Bcl.HashCode.txt" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\icon.ico" />
@@ -330,18 +308,12 @@
     <Resource Include="Images\refresh_64_gray.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Assembly\System.Buffers.dll" />
-    <EmbeddedResource Include="Assembly\System.IO.Hashing-License.txt" />
-    <EmbeddedResource Include="Assembly\System.IO.Hashing.dll" />
-    <EmbeddedResource Include="Assembly\System.Memory.dll" />
-    <EmbeddedResource Include="Assembly\System.Numerics.Vectors.dll" />
-    <EmbeddedResource Include="Assembly\System.Runtime.CompilerServices.Unsafe.dll" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="HashAlgos\XxHashDll\xxhash32.dll" />
     <EmbeddedResource Include="HashAlgos\XxHashDll\xxhash64.dll" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Assembly\Crc32.NET.dll" />
+    <None Include="Assembly\Crc32.NET.txt" />
     <Content Include="HashAlgos\XxHashDll\License.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
