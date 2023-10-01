@@ -635,6 +635,10 @@ namespace HashCalculator
                             this.SelectedOutputType = Settings.Current.SelectedOutputType;
                         }
                     });
+                    foreach (AlgoInOutModel model in this.AlgoInOutModels)
+                    {
+                        model.Algo.Initialize();
+                    }
                     int readedSize = 0;
                     byte[] buffer = new byte[BufferSize.Suggest(this.FileSize)];
                     Action<int> updateProgress = size => { this.Progress += size; };
@@ -738,7 +742,7 @@ namespace HashCalculator
         FinishingTouchesBeforeExiting:
             if (this.AlgoInOutModels != null)
             {
-                foreach (var model in this.AlgoInOutModels)
+                foreach (AlgoInOutModel model in this.AlgoInOutModels)
                 {
                     model.Algo.Dispose();
                 }

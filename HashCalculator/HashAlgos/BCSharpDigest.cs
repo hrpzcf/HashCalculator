@@ -4,13 +4,13 @@ using System.Security.Cryptography;
 
 namespace HashCalculator
 {
-    internal abstract class BouncyCastleDigest : HashAlgorithm, IHashAlgoInfo
+    internal abstract class BCSharpDigest : HashAlgorithm, IHashAlgoInfo
     {
         private readonly int bitLength;
         private readonly IDigest bouncyCastleDigest;
         private AlgoType algoType = AlgoType.Unknown;
 
-        public BouncyCastleDigest(IDigest digest, int bitLength)
+        public BCSharpDigest(IDigest digest, int bitLength)
         {
             this.bitLength = bitLength;
             this.bouncyCastleDigest = digest;

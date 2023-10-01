@@ -31,8 +31,8 @@ namespace HashCalculator
             // Crc32
             new AlgoInOutModel(new HashingCrc32()),
             // XxHash
-            new AlgoInOutModel(new HashingXxHash32()),
-            new AlgoInOutModel(new HashingXxHash64()),
+            new AlgoInOutModel(new LibxxhashXxHash32()),
+            new AlgoInOutModel(new LibxxhashXxHash64()),
             // Blake2s
             new AlgoInOutModel(new BCSharpBlake2s(128)),
             new AlgoInOutModel(new BCSharpBlake2s(160)),

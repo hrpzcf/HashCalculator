@@ -2,7 +2,7 @@
 
 namespace HashCalculator
 {
-    internal class BCSharpWhirlpool : BouncyCastleDigest
+    internal class BCSharpWhirlpool : BCSharpDigest
     {
         public override string AlgoName => "Whirlpool";
 

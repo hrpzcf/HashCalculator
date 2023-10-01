@@ -23,12 +23,14 @@ namespace HashCalculator
             "Microsoft.WindowsAPICodePack.Shell",
             "XamlAnimatedGif",
         };
-        private static readonly Assembly executingAsmb = Assembly.GetExecutingAssembly();
+        internal static readonly Assembly ExecutingAsmb = Assembly.GetExecutingAssembly();
 
         [STAThread()]
         public static void Main(string[] args)
         {
             Settings.StartupArgs = args;
+            Settings.SetProcessEnvVar();
+            Settings.ExtractXxHashDll(fore: false);
             AppLoading app = new AppLoading();
             app.Exit += ApplicationExit;
             app.Startup += ApplicationStartup;
@@ -53,7 +55,7 @@ namespace HashCalculator
             string asmbName = new AssemblyName(arg.Name).Name;
             if (reqAsmbs.Contains(asmbName))
             {
-                if (executingAsmb.GetManifestResourceStream(
+                if (ExecutingAsmb.GetManifestResourceStream(
                     string.Format("HashCalculator.Assembly.{0}.dll", asmbName)) is Stream stream)
                 {
                     byte[] assemblyBytes = new byte[stream.Length];
