@@ -126,6 +126,8 @@
     <Compile Include="HashAlgos\BCSharpWhirlpool.cs" />
     <Compile Include="HashAlgos\IHashAlgoInfo.cs" />
     <Compile Include="HashAlgos\LibxxhashXxHash32.cs" />
+    <Compile Include="HashAlgos\LibxxhashXxHash128.cs" />
+    <Compile Include="HashAlgos\LibxxhashXxHash3.cs" />
     <Compile Include="HashAlgos\MsCryptCngDigest.cs" />
     <Compile Include="HashAlgos\HashingCrc32.cs" />
     <Compile Include="HashAlgos\MsCryptCngMD5.cs" />
