@@ -13,9 +13,9 @@ namespace HashCalculator
         private IntPtr statePtr = IntPtr.Zero;
         private XXH_errorcode error = XXH_errorcode.XXH_OK;
 
-        public string AlgoName => "XxHash3-64";
+        public string AlgoName => "XxHash3";
 
-        public AlgoType AlgoType => AlgoType.XXHASH3_64;
+        public AlgoType AlgoType => AlgoType.XXHASH3;
 
         [DllImport("xxhash.dll", CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr XXH3_createState();
