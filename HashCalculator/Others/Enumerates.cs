@@ -178,6 +178,8 @@
         // XxHash
         XXHASH32,
         XXHASH64,
+        XXHASH3_64,
+        XXHASH3_128,
         Unknown = -1,
     }
 

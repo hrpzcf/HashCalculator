@@ -33,6 +33,8 @@ namespace HashCalculator
             // XxHash
             new AlgoInOutModel(new LibxxhashXxHash32()),
             new AlgoInOutModel(new LibxxhashXxHash64()),
+            new AlgoInOutModel(new LibxxhashXxHash3()),
+            new AlgoInOutModel(new LibxxhashXxHash128()),
             // Blake2s
             new AlgoInOutModel(new BCSharpBlake2s(128)),
             new AlgoInOutModel(new BCSharpBlake2s(160)),
