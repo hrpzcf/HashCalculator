@@ -2,7 +2,7 @@
 
 namespace HashCalculator
 {
-    internal class BCSharpBlake2s : BouncyCastleDigest
+    internal class BCSharpBlake2s : BCSharpDigest
     {
         private readonly int bitLength;
 

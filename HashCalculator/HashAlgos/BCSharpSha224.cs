@@ -2,7 +2,7 @@
 
 namespace HashCalculator
 {
-    internal class BCSharpSha224 : BouncyCastleDigest
+    internal class BCSharpSha224 : BCSharpDigest
     {
         public override string AlgoName => "SHA-224";
 

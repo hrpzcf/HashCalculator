@@ -32,7 +32,7 @@ namespace HashCalculator
 
         protected override byte[] HashFinal()
         {
-            return this.algo.GetCurrentHash();
+            return this.algo.GetHashAndReset();
         }
     }
 }

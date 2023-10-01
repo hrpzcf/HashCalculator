@@ -3,11 +3,11 @@ using System.Security.Cryptography;
 
 namespace HashCalculator
 {
-    internal abstract class MicrosoftHashDigest : HashAlgorithm, IHashAlgoInfo
+    internal abstract class MsCryptCngDigest : HashAlgorithm, IHashAlgoInfo
     {
         private readonly HashAlgorithm algorithm;
 
-        public MicrosoftHashDigest(HashAlgorithm algorithm)
+        public MsCryptCngDigest(HashAlgorithm algorithm)
         {
             this.algorithm = algorithm;
         }

@@ -25,6 +25,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -34,6 +35,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Images\icon.ico</ApplicationIcon>
@@ -119,11 +121,12 @@
     <Compile Include="HashAlgos\BCSharpBlake2s.cs" />
     <Compile Include="HashAlgos\BCSharpBlake2b.cs" />
     <Compile Include="HashAlgos\BCSharpBlake3.cs" />
-    <Compile Include="HashAlgos\BouncyCastleDigest.cs" />
+    <Compile Include="HashAlgos\BCSharpDigest.cs" />
     <Compile Include="Globals\Settings.cs" />
     <Compile Include="HashAlgos\BCSharpWhirlpool.cs" />
     <Compile Include="HashAlgos\IHashAlgoInfo.cs" />
-    <Compile Include="HashAlgos\MicrosoftHashDigest.cs" />
+    <Compile Include="HashAlgos\LibxxhashXxHash32.cs" />
+    <Compile Include="HashAlgos\MsCryptCngDigest.cs" />
     <Compile Include="HashAlgos\HashingCrc32.cs" />
     <Compile Include="HashAlgos\MsCryptCngMD5.cs" />
     <Compile Include="HashAlgos\MsCryptCngSHA1.cs" />
@@ -132,6 +135,7 @@
     <Compile Include="HashAlgos\MsCryptCngSHA512.cs" />
     <Compile Include="HashAlgos\HashingXxHash32.cs" />
     <Compile Include="HashAlgos\HashingXxHash64.cs" />
+    <Compile Include="HashAlgos\LibxxhashXxHash64.cs" />
     <Compile Include="HashFilters\CmpResultFilter.cs" />
     <Compile Include="HashFilters\DistinctFilesFilter.cs" />
     <Compile Include="HashFilters\FileNameFilter.cs" />
@@ -330,6 +334,13 @@
     <EmbeddedResource Include="Assembly\System.Memory.dll" />
     <EmbeddedResource Include="Assembly\System.Numerics.Vectors.dll" />
     <EmbeddedResource Include="Assembly\System.Runtime.CompilerServices.Unsafe.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="HashAlgos\XxHashDll\xxhash32.dll" />
+    <EmbeddedResource Include="HashAlgos\XxHashDll\xxhash64.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="HashAlgos\XxHashDll\License.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

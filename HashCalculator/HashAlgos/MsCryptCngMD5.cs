@@ -2,7 +2,7 @@
 
 namespace HashCalculator
 {
-    internal class MsCryptCngMD5 : MicrosoftHashDigest
+    internal class MsCryptCngMD5 : MsCryptCngDigest
     {
         public override string AlgoName => "MD5";
 

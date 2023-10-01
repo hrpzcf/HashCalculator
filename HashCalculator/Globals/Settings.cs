@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using System.Windows;
 using System.Xml.Serialization;
 
@@ -9,11 +10,13 @@ namespace HashCalculator
     {
         private static readonly XmlSerializer serializer =
             new XmlSerializer(typeof(SettingsViewModel));
-        private static readonly string appBaseDataPath =
+        private static readonly string configBaseDataPath =
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         public static readonly DirectoryInfo ConfigDir =
-            new DirectoryInfo(Path.Combine(appBaseDataPath, "HashCalculator"));
+            new DirectoryInfo(Path.Combine(configBaseDataPath, "HashCalculator"));
         private static readonly string configFile = Path.Combine(ConfigDir.FullName, "settings.xml");
+        private static readonly string libDir = Path.Combine(ConfigDir.FullName, "Library");
+        private static readonly string libXxHashPath = Path.Combine(libDir, "xxhash.dll");
 
         public static string[] StartupArgs { get; set; }
 
@@ -64,6 +67,53 @@ namespace HashCalculator
                 catch (Exception) { }
             }
             return executeResult;
+        }
+
+        public static void SetProcessEnvVar()
+        {
+            Environment.SetEnvironmentVariable("PATH", libDir);
+        }
+
+        public static string ExtractXxHashDll(bool fore)
+        {
+            if (!fore && File.Exists(libXxHashPath))
+            {
+                return $"文件已存在：{libXxHashPath}";
+            }
+            if (!Directory.Exists(libDir))
+            {
+                try
+                {
+                    Directory.CreateDirectory(libDir);
+                }
+                catch (Exception ex)
+                {
+                    return ex.Message;
+                }
+            }
+            string xxHashResName = Environment.Is64BitProcess ? "xxhash64.dll" : "xxhash32.dll";
+            try
+            {
+                if (AppLoading.ExecutingAsmb.GetManifestResourceStream(
+                    $"HashCalculator.HashAlgos.XxHashDll.{xxHashResName}") is Stream stream)
+                {
+                    using (stream)
+                    {
+                        byte[] dllBuffer = new byte[stream.Length];
+                        stream.Read(dllBuffer, 0, dllBuffer.Length);
+                        using (FileStream fs = File.OpenWrite(Path.Combine(libDir, libXxHashPath)))
+                        {
+                            fs.Write(dllBuffer, 0, dllBuffer.Length);
+                        }
+                    }
+                }
+                else
+                {
+                    return $"找不到程序内嵌的资源：{xxHashResName}";
+                }
+            }
+            catch (Exception ex) { return ex.Message; }
+            return default(string);
         }
     }
 }

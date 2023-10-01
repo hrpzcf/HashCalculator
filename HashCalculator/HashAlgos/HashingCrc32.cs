@@ -32,7 +32,7 @@ namespace HashCalculator
 
         protected override byte[] HashFinal()
         {
-            byte[] hashBytes = this.algo.GetCurrentHash();
+            byte[] hashBytes = this.algo.GetHashAndReset();
             Array.Reverse(hashBytes);
             return hashBytes;
         }

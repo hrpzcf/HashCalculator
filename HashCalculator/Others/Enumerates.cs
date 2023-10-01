@@ -268,4 +268,10 @@
         /// </summary>
         Cover,
     }
+
+    internal enum XXH_errorcode
+    {
+        XXH_OK,
+        XXH_ERROR
+    }
 }

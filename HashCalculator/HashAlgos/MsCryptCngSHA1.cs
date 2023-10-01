@@ -2,7 +2,7 @@
 
 namespace HashCalculator
 {
-    internal class MsCryptCngSHA1 : MicrosoftHashDigest
+    internal class MsCryptCngSHA1 : MsCryptCngDigest
     {
         public override string AlgoName => "SHA-1";
 
