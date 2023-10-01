@@ -11,13 +11,9 @@ namespace HashCalculator
     {
         private static readonly string[] reqAsmbs = new string[]
         {
-            "System.Buffers",
-            "System.IO.Hashing",
-            "System.Memory",
-            "System.Numerics.Vectors",
-            "System.Runtime.CompilerServices.Unsafe",
             "BouncyCastle.Cryptography",
             "CommandLine",
+            "Crc32.NET",
             "Microsoft.Bcl.HashCode",
             "Microsoft.WindowsAPICodePack",
             "Microsoft.WindowsAPICodePack.Shell",

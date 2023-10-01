@@ -29,7 +29,7 @@ namespace HashCalculator
             // MD5
             new AlgoInOutModel(new MsCryptCngMD5()),
             // Crc32
-            new AlgoInOutModel(new HashingCrc32()),
+            new AlgoInOutModel(new ForceCrc32NetCrc32()),
             // XxHash
             new AlgoInOutModel(new LibxxhashXxHash32()),
             new AlgoInOutModel(new LibxxhashXxHash64()),
