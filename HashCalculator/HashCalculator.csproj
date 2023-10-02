@@ -260,7 +260,7 @@
     <EmbeddedResource Include="Assembly\BouncyCastle.Cryptography.dll" />
     <None Include="Assembly\BouncyCastle.Cryptography.txt" />
     <EmbeddedResource Include="Assembly\CommandLine.dll" />
-    <None Include="Assembly\CommandLineParser.txt" />
+    <None Include="Assembly\CommandLine.txt" />
     <EmbeddedResource Include="Assembly\Microsoft.WindowsAPICodePack.dll" />
     <EmbeddedResource Include="Assembly\Microsoft.WindowsAPICodePack.Shell.dll" />
     <None Include="Assembly\Microsoft.WindowsAPICodePack.txt" />

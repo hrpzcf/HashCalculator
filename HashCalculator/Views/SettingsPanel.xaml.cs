@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 
 namespace HashCalculator
 {
@@ -28,6 +29,31 @@ namespace HashCalculator
         private void SettingsPanelClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             e.Cancel = !this.viewModel.NotSettingShellExtension;
+        }
+
+        private void OnTextBlockMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (sender is TextBlock textBlock)
+            {
+                if (textBlock.Text == SettingsViewModel.StringFix)
+                {
+                    string message = Settings.ExtractXxHashDll(force: true);
+                    if (!string.IsNullOrEmpty(message))
+                    {
+                        MessageBox.Show(this, $"修复失败：\n{message}",
+                            "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    else
+                    {
+                        MessageBox.Show(this, "已经成功更新 xxhash.dll",
+                            "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                }
+                else if (textBlock.Text == SettingsViewModel.StringDllDir)
+                {
+                    CommonUtils.OpenFolderAndSelectItem(Settings.libDir);
+                }
+            }
         }
     }
 }

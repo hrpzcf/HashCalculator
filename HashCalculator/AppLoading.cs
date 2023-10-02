@@ -26,7 +26,6 @@ namespace HashCalculator
         {
             Settings.StartupArgs = args;
             Settings.SetProcessEnvVar();
-            Settings.ExtractXxHashDll(fore: false);
             AppLoading app = new AppLoading();
             app.Exit += ApplicationExit;
             app.Startup += ApplicationStartup;
@@ -43,6 +42,7 @@ namespace HashCalculator
         private static void ApplicationStartup(object sender, StartupEventArgs e)
         {
             Settings.LoadSettings();
+            Settings.ExtractXxHashDll(false);
             MappedFiler.PushArgs(Settings.StartupArgs);
         }
 
