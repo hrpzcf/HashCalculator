@@ -11,6 +11,7 @@ namespace HashCalculator
     {
         private static readonly string[] reqAsmbs = new string[]
         {
+            "System.Buffers",
             "BouncyCastle.Cryptography",
             "CommandLine",
             "Crc32.NET",

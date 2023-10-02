@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -640,7 +641,8 @@ namespace HashCalculator
                         model.Algo.Initialize();
                     }
                     int readedSize = 0;
-                    byte[] buffer = new byte[BufferSize.Suggest(this.FileSize)];
+                    int bufferMinSize = BufferSize.Suggest(this.FileSize);
+                    byte[] buffer = ArrayPool<byte>.Shared.Rent(bufferMinSize);
                     Action<int> updateProgress = size => { this.Progress += size; };
                     bool terminateByCancellation = false;
                     if (Settings.Current.ParallelBetweenAlgos)
@@ -649,7 +651,7 @@ namespace HashCalculator
                         using (Barrier barrier = new Barrier(modelsCount, i =>
                             {
                                 this.manualPauseController.WaitOne();
-                                readedSize = fs.Read(buffer, 0, buffer.Length);
+                                readedSize = fs.Read(buffer, 0, bufferMinSize);
                                 synchronization.BeginInvoke(updateProgress, readedSize);
                             }))
                         {
@@ -686,10 +688,9 @@ namespace HashCalculator
                             this.manualPauseController.WaitOne();
                             if (this.cancellation.IsCancellationRequested)
                             {
-                                goto FinishingTouchesBeforeExiting;
+                                goto ReturnRentedBufferMemory;
                             }
-                            readedSize = fs.Read(buffer, 0, buffer.Length);
-                            if (readedSize <= 0)
+                            if ((readedSize = fs.Read(buffer, 0, bufferMinSize)) <= 0)
                             {
                                 break;
                             }
@@ -729,6 +730,8 @@ namespace HashCalculator
                             this.Result = HashResult.Succeeded;
                         });
                     }
+                ReturnRentedBufferMemory:
+                    ArrayPool<byte>.Shared.Return(buffer, clearArray: false);
                 }
             }
             catch
