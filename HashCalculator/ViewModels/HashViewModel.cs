@@ -617,7 +617,7 @@ namespace HashCalculator
                 synchronization.Invoke(() =>
                 {
                     this.Result = HashResult.Failed;
-                    this.TaskMessage = "此文件不存在或无法访问...";
+                    this.TaskMessage = "该文件不存在或无法访问...";
                 });
                 goto FinishingTouchesBeforeExiting;
             }
@@ -636,6 +636,15 @@ namespace HashCalculator
                             this.SelectedOutputType = Settings.Current.SelectedOutputType;
                         }
                     });
+                    if (fs.Length == 0 && Settings.Current.DoNotHashForEmptyFile)
+                    {
+                        synchronization.Invoke(() =>
+                        {
+                            this.Result = HashResult.Failed;
+                            this.TaskMessage = "是空文件，终止计算并标记为失败...";
+                        });
+                        goto FinishingTouchesBeforeExiting;
+                    }
                     foreach (AlgoInOutModel model in this.AlgoInOutModels)
                     {
                         model.Algo.Initialize();
@@ -739,7 +748,7 @@ namespace HashCalculator
                 synchronization.Invoke(() =>
                 {
                     this.Result = HashResult.Failed;
-                    this.TaskMessage = "此文件读取失败或计算出错...";
+                    this.TaskMessage = "文件读取失败或进行计算时出错...";
                 });
             }
         FinishingTouchesBeforeExiting:

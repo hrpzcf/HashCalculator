@@ -107,6 +107,8 @@ namespace HashCalculator
 
         public string PreviousVer { get; set; }
 
+        public bool DoNotHashForEmptyFile { get; set; } = true;
+
         public bool MainWndTopmost
         {
             get
