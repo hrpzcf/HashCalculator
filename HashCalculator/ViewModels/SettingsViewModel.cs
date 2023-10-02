@@ -41,6 +41,12 @@ namespace HashCalculator
         private RelayCommand installShellExtCmd;
         private RelayCommand unInstallShellExtCmd;
 
+        [XmlIgnore]
+        public static string StringFix { get; } = "点击修复";
+
+        [XmlIgnore]
+        public static string StringDllDir { get; } = "动态链接库目录";
+
         public SettingsViewModel()
         {
             if (double.IsNaN(this.mainWndLeft))
@@ -98,6 +104,8 @@ namespace HashCalculator
         {
             this.SelectedAlgos.CollectionChanged -= this.SelectedAlgosChanged;
         }
+
+        public string PreviousVer { get; set; }
 
         public bool MainWndTopmost
         {
