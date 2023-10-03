@@ -135,11 +135,11 @@ namespace HashCalculator
                 Settings.Current.RemoveSelectedAlgosChanged();
                 if (!model.Selected)
                 {
-                    Settings.Current.SelectedAlgos.Remove(model.AlgoName);
+                    Settings.Current.SelectedAlgos.Remove(model.AlgoType);
                 }
-                else if (!Settings.Current.SelectedAlgos.Contains(model.AlgoName))
+                else if (!Settings.Current.SelectedAlgos.Contains(model.AlgoType))
                 {
-                    Settings.Current.SelectedAlgos.Add(model.AlgoName);
+                    Settings.Current.SelectedAlgos.Add(model.AlgoType);
                 }
             }
         }

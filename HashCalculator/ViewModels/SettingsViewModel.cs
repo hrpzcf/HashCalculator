@@ -67,11 +67,11 @@ namespace HashCalculator
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
-                    if (e.NewItems.AnyItem() && e.NewItems[0] is string name1)
+                    if (e.NewItems.AnyItem() && e.NewItems[0] is AlgoType algo1)
                     {
                         foreach (AlgoInOutModel model in AlgosPanelModel.ProvidedAlgos)
                         {
-                            if (model.AlgoName == name1)
+                            if (model.AlgoType == algo1)
                             {
                                 model.Selected = true;
                                 break;
@@ -80,11 +80,11 @@ namespace HashCalculator
                     }
                     break;
                 case NotifyCollectionChangedAction.Remove:
-                    if (e.OldItems.AnyItem() && e.OldItems[0] is string name2)
+                    if (e.OldItems.AnyItem() && e.OldItems[0] is AlgoType algo2)
                     {
                         foreach (AlgoInOutModel model in AlgosPanelModel.ProvidedAlgos)
                         {
-                            if (model.AlgoName == name2)
+                            if (model.AlgoType == algo2)
                             {
                                 model.Selected = false;
                                 break;
@@ -277,8 +277,8 @@ namespace HashCalculator
             }
         }
 
-        public ObservableCollection<string> SelectedAlgos { get; } =
-            new ObservableCollection<string>();
+        public ObservableCollection<AlgoType> SelectedAlgos { get; } =
+            new ObservableCollection<AlgoType>();
 
         public OutputType SelectedOutputType
         {
