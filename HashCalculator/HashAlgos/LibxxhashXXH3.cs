@@ -5,52 +5,55 @@ using System.Security.Cryptography;
 
 namespace HashCalculator
 {
-    internal class LibxxhashXxHash64 : HashAlgorithm, IHashAlgoInfo
+    /// <summary>
+    /// xxhash3-64
+    /// </summary>
+    internal class LibXxHashXXH3 : HashAlgorithm, IHashAlgoInfo
     {
         private IntPtr statePtr = IntPtr.Zero;
         private XXH_errorcode error = XXH_errorcode.XXH_OK;
 
-        public string AlgoName => "XxHash64";
+        public string AlgoName => "XXH3";
 
-        public AlgoType AlgoType => AlgoType.XXHASH64;
-
-        [DllImport("xxhash.dll", CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr XXH64_createState();
+        public AlgoType AlgoType => AlgoType.XXHASH3;
 
         [DllImport("xxhash.dll", CallingConvention = CallingConvention.Cdecl)]
-        private static extern XXH_errorcode XXH64_freeState(IntPtr statePtr);
+        private static extern IntPtr XXH3_createState();
 
         [DllImport("xxhash.dll", CallingConvention = CallingConvention.Cdecl)]
-        private static extern XXH_errorcode XXH64_update(IntPtr statePtr, byte[] input, ulong length);
+        private static extern XXH_errorcode XXH3_freeState(IntPtr statePtr);
 
         [DllImport("xxhash.dll", CallingConvention = CallingConvention.Cdecl)]
-        private static extern ulong XXH64_digest(IntPtr statePtr);
+        private static extern XXH_errorcode XXH3_64bits_update(IntPtr statePtr, byte[] input, ulong length);
 
         [DllImport("xxhash.dll", CallingConvention = CallingConvention.Cdecl)]
-        private static extern XXH_errorcode XXH64_reset(IntPtr statePtr, ulong seed);
+        private static extern ulong XXH3_64bits_digest(IntPtr statePtr);
+
+        [DllImport("xxhash.dll", CallingConvention = CallingConvention.Cdecl)]
+        private static extern XXH_errorcode XXH3_64bits_reset(IntPtr statePtr);
 
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
             if (this.statePtr != IntPtr.Zero)
             {
-                XXH_errorcode _ = XXH64_freeState(this.statePtr);
+                XXH_errorcode _ = XXH3_freeState(this.statePtr);
                 this.statePtr = IntPtr.Zero;
             }
         }
 
         public override void Initialize()
         {
-            this.statePtr = XXH64_createState();
+            this.statePtr = XXH3_createState();
             if (this.statePtr != IntPtr.Zero)
             {
-                XXH_errorcode _ = XXH64_reset(this.statePtr, 0);
+                XXH_errorcode _ = XXH3_64bits_reset(this.statePtr);
             }
         }
 
         public IHashAlgoInfo NewInstance()
         {
-            return new LibxxhashXxHash64();
+            return new LibXxHashXXH3();
         }
 
         protected override void HashCore(byte[] array, int ibStart, int cbSize)
@@ -61,7 +64,7 @@ namespace HashCalculator
                 {
                     array = array.Skip(ibStart).Take(cbSize).ToArray();
                 }
-                this.error = XXH64_update(this.statePtr, array, (ulong)cbSize);
+                this.error = XXH3_64bits_update(this.statePtr, array, (ulong)cbSize);
             }
         }
 
@@ -71,7 +74,7 @@ namespace HashCalculator
             {
                 return Array.Empty<byte>();
             }
-            ulong hashResult = XXH64_digest(this.statePtr);
+            ulong hashResult = XXH3_64bits_digest(this.statePtr);
             byte[] hashBytes = BitConverter.GetBytes(hashResult);
             Array.Reverse(hashBytes);
             return hashBytes;

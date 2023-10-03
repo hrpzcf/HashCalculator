@@ -4,11 +4,13 @@ namespace HashCalculator
 {
     internal class BCSharpWhirlpool : BCSharpDigest
     {
+        private const int bitLength = 512;
+
         public override string AlgoName => "Whirlpool";
 
         public override AlgoType AlgoGroup => AlgoType.WHIRLPOOL;
 
-        public BCSharpWhirlpool() : base(new WhirlpoolDigest(), 512)
+        public BCSharpWhirlpool() : base(new WhirlpoolDigest(), bitLength)
         {
         }
 

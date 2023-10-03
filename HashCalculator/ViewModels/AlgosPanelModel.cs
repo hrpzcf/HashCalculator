@@ -13,12 +13,12 @@ namespace HashCalculator
         public static AlgoInOutModel[] ProvidedAlgos { get; } = new AlgoInOutModel[]
         {
             // SHA1
-            new AlgoInOutModel(new MsCryptCngSHA1()),
+            new AlgoInOutModel(new MsCryptoCngSHA1()),
             // SHA2
             new AlgoInOutModel(new BCSharpSha224()),
-            new AlgoInOutModel(new MsCryptCngSHA256()),
-            new AlgoInOutModel(new MsCryptCngSHA384()),
-            new AlgoInOutModel(new MsCryptCngSHA512()),
+            new AlgoInOutModel(new MsCryptoCngSHA256()),
+            new AlgoInOutModel(new MsCryptoCngSHA384()),
+            new AlgoInOutModel(new MsCryptoCngSHA512()),
             // SHA3
             new AlgoInOutModel(new BCSharpSha3(224)),
             new AlgoInOutModel(new BCSharpSha3(256)),
@@ -27,14 +27,14 @@ namespace HashCalculator
             // Whirlpool
             new AlgoInOutModel(new BCSharpWhirlpool()),
             // MD5
-            new AlgoInOutModel(new MsCryptCngMD5()),
+            new AlgoInOutModel(new MsCryptoCngMD5()),
             // Crc32
             new AlgoInOutModel(new ForceCrc32NetCrc32()),
             // XxHash
-            new AlgoInOutModel(new LibxxhashXxHash32()),
-            new AlgoInOutModel(new LibxxhashXxHash64()),
-            new AlgoInOutModel(new LibxxhashXxHash3()),
-            new AlgoInOutModel(new LibxxhashXxHash128()),
+            new AlgoInOutModel(new LibXxHashXXH32()),
+            new AlgoInOutModel(new LibXxHashXXH64()),
+            new AlgoInOutModel(new LibXxHashXXH3()),
+            new AlgoInOutModel(new LibXxHashXXH128()),
             // Blake2s
             new AlgoInOutModel(new BCSharpBlake2s(128)),
             new AlgoInOutModel(new BCSharpBlake2s(160)),
