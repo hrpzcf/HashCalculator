@@ -209,10 +209,10 @@ STDMETHODIMP CComputeHash::QueryContextMenu(
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_WHIRLPOOL, L"Whirlpool");
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_MD5, L"MD5");
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_CRC32, L"CRC32");
-	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_XXHASH32, L"XxHash32");
-	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_XXHASH64, L"XxHash64");
-	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_XXHASH3, L"XxHash3");
-	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_XXHASH128, L"XxHash128");
+	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_XXHASH32, L"XXH32");
+	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_XXHASH64, L"XXH64");
+	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_XXHASH3, L"XXH3");
+	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_XXHASH128, L"XXH128");
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_BLAKE2S, L"BLAKE2s-256");
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_BLAKE2B, L"BLAKE2b-512");
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_BLAKE3, L"BLAKE3-256");
