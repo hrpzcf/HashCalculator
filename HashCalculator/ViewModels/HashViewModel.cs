@@ -26,6 +26,7 @@ namespace HashCalculator
         private AlgoInOutModel _currentInOutModel = null;
         private AlgoInOutModel[] _algoInOutModels = null;
         private ComparableColor _groupId = null;
+        private ComparableColor _folderGroupId = null;
         private HashResult _currentResult = HashResult.NoResult;
         private HashState _currentState = HashState.NoState;
         private OutputType _selectedOutput = OutputType.Unknown;
@@ -150,6 +151,18 @@ namespace HashCalculator
             set
             {
                 this.SetPropNotify(ref this._groupId, value);
+            }
+        }
+
+        public ComparableColor FdGroupId
+        {
+            get
+            {
+                return this._folderGroupId;
+            }
+            set
+            {
+                this.SetPropNotify(ref this._folderGroupId, value);
             }
         }
 

@@ -837,7 +837,7 @@ namespace HashCalculator
         }
     }
 
-    internal class GroupIdToSolidColorBrushCvt : IValueConverter
+    internal class CmpColorToSolidColorBrushCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
