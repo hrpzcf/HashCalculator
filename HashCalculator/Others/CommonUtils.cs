@@ -347,12 +347,9 @@ namespace HashCalculator
             List<Color> colors = new List<Color>(number);
             // 函数 ColorHLSToRGB 三个参数范围都是 0~240
             double MAX_HLS = 240.0;
-            Random random = new Random();
             foreach (double H in new CyclingDouble(0.0, MAX_HLS, number))
             {
-                int L = random.Next(170, 190);
-                int S = random.Next(120, 180);
-                colors.Add(RgbDwordToColor(NativeFunctions.ColorHLSToRGB((int)H, L, S)));
+                colors.Add(RgbDwordToColor(NativeFunctions.ColorHLSToRGB((int)H, 200, 230)));
             }
             return colors.ToArray();
         }

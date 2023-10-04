@@ -90,6 +90,7 @@
                     <ColumnDefinition />
                     <ColumnDefinition />
                     <ColumnDefinition />
+                    <ColumnDefinition />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <!--  哈希算法筛选器  -->
@@ -224,75 +225,11 @@
                         </DockPanel>
                     </StackPanel>
                 </GroupBox>
-                <!--  相同哈希值筛选器  -->
-                <GroupBox
-                    Grid.Row="1"
-                    Grid.Column="0"
-                    Margin="0,4,0,0"
-                    Padding="0,6,0,2"
-                    BorderBrush="MediumPurple"
-                    DataContext="{Binding HashModelFilters[7]}">
-                    <GroupBox.Header>
-                        <CheckBox
-                            Margin="3,0,0,0"
-                            VerticalContentAlignment="Center"
-                            Command="{Binding ElementName=cmdPanel, Path=DataContext.FilterChangedCmd}"
-                            CommandParameter="{Binding}"
-                            Content="{Binding Display}"
-                            IsChecked="{Binding Selected, Mode=OneWayToSource}"
-                            ToolTip="{Binding Description}" />
-                    </GroupBox.Header>
-                    <DockPanel>
-                        <TextBlock
-                            Grid.Row="0"
-                            Grid.Column="0"
-                            VerticalAlignment="Center"
-                            DockPanel.Dock="Left"
-                            Text="关注的算法：" />
-                        <ComboBox
-                            Grid.Row="0"
-                            Grid.Column="1"
-                            VerticalAlignment="Center"
-                            DisplayMemberPath="AlgoName"
-                            DockPanel.Dock="Right"
-                            ItemsSource="{Binding Items}"
-                            SelectedItem="{Binding Param}" />
-                    </DockPanel>
-                </GroupBox>
-                <!--  有效的文件筛选器  -->
-                <GroupBox
-                    Grid.Row="1"
-                    Grid.Column="1"
-                    Margin="2,4,0,0"
-                    Padding="0,6,0,2"
-                    BorderBrush="Aquamarine"
-                    DataContext="{Binding HashModelFilters[6]}">
-                    <GroupBox.Header>
-                        <CheckBox
-                            Margin="3,0,0,0"
-                            VerticalContentAlignment="Center"
-                            Command="{Binding ElementName=cmdPanel, Path=DataContext.FilterChangedCmd}"
-                            CommandParameter="{Binding}"
-                            Content="{Binding Display}"
-                            IsChecked="{Binding Selected, Mode=OneWayToSource}"
-                            ToolTip="{Binding Description}" />
-                    </GroupBox.Header>
-                    <StackPanel VerticalAlignment="Center">
-                        <TextBlock
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Text="过滤掉不存在的文件" />
-                        <TextBlock
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Text="重复的文件只显示其中一行" />
-                    </StackPanel>
-                </GroupBox>
                 <!--  序号范围筛选器  -->
                 <GroupBox
-                    Grid.Row="1"
-                    Grid.Column="2"
-                    Margin="2,4,0,0"
+                    Grid.Row="0"
+                    Grid.Column="3"
+                    Margin="2,0,0,0"
                     Padding="0,6,0,2"
                     d:DataContext="{d:DesignInstance Type=local:SerialNumberFilter}"
                     BorderBrush="DarkGoldenrod"
@@ -330,14 +267,169 @@
                         </DockPanel>
                     </StackPanel>
                 </GroupBox>
-                <!--  哈希值筛选器  -->
+                <!--  相同哈希值筛选器  -->
+                <GroupBox
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Margin="0,4,0,0"
+                    Padding="0,6,0,2"
+                    BorderBrush="MediumPurple"
+                    DataContext="{Binding HashModelFilters[9]}">
+                    <GroupBox.Header>
+                        <CheckBox
+                            Margin="3,0,0,0"
+                            VerticalContentAlignment="Center"
+                            Command="{Binding ElementName=cmdPanel, Path=DataContext.FilterChangedCmd}"
+                            CommandParameter="{Binding}"
+                            Content="{Binding Display}"
+                            IsChecked="{Binding Selected, Mode=OneWayToSource}"
+                            ToolTip="{Binding Description}" />
+                    </GroupBox.Header>
+                    <DockPanel>
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            DockPanel.Dock="Left"
+                            Text="关注的算法：" />
+                        <ComboBox
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            DisplayMemberPath="AlgoName"
+                            DockPanel.Dock="Right"
+                            ItemsSource="{Binding Items}"
+                            SelectedItem="{Binding Param}" />
+                    </DockPanel>
+                </GroupBox>
+                <!--  有效的文件筛选器  -->
+                <GroupBox
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Margin="2,4,0,0"
+                    Padding="0,6,0,2"
+                    BorderBrush="Aquamarine"
+                    DataContext="{Binding HashModelFilters[4]}">
+                    <GroupBox.Header>
+                        <CheckBox
+                            Margin="3,0,0,0"
+                            VerticalContentAlignment="Center"
+                            Command="{Binding ElementName=cmdPanel, Path=DataContext.FilterChangedCmd}"
+                            CommandParameter="{Binding}"
+                            Content="{Binding Display}"
+                            IsChecked="{Binding Selected, Mode=OneWayToSource}"
+                            ToolTip="{Binding Description}" />
+                    </GroupBox.Header>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="不显示无法访问的文件" />
+                        <TextBlock Text="重复的文件只显示其中一行" />
+                    </StackPanel>
+                </GroupBox>
+                <!--  文件大小选择器  -->
+                <GroupBox
+                    Grid.Row="1"
+                    Grid.Column="2"
+                    Margin="2,4,0,0"
+                    Padding="0,6,0,2"
+                    d:DataContext="{d:DesignInstance Type=local:FileSizeFilter}"
+                    BorderBrush="Orange"
+                    DataContext="{Binding HashModelFilters[5]}">
+                    <GroupBox.Header>
+                        <CheckBox
+                            Margin="3,0,0,0"
+                            VerticalContentAlignment="Center"
+                            Command="{Binding ElementName=cmdPanel, Path=DataContext.FilterChangedCmd}"
+                            CommandParameter="{Binding}"
+                            Content="{Binding Display}"
+                            IsChecked="{Binding Selected, Mode=OneWayToSource}"
+                            ToolTip="{Binding Description}" />
+                    </GroupBox.Header>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            Text="最小：" />
+                        <TextBox
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Padding="0,2"
+                            VerticalAlignment="Center"
+                            Text="{Binding MinFileSize}" />
+                        <ComboBox
+                            Grid.Row="0"
+                            Grid.Column="2"
+                            MinWidth="47"
+                            Margin="4,0,0,0"
+                            VerticalAlignment="Center"
+                            DisplayMemberPath="Display"
+                            ItemsSource="{Binding Items}"
+                            SelectedItem="{Binding MinSizeUnit}" />
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Margin="0,4,0,0"
+                            VerticalAlignment="Center"
+                            Text="最大：" />
+                        <TextBox
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Margin="0,4,0,0"
+                            Padding="0,2"
+                            VerticalAlignment="Center"
+                            Text="{Binding MaxFileSize}" />
+                        <ComboBox
+                            Grid.Row="1"
+                            Grid.Column="2"
+                            MinWidth="47"
+                            Margin="4,4,0,0"
+                            VerticalAlignment="Center"
+                            DisplayMemberPath="Display"
+                            ItemsSource="{Binding Items}"
+                            SelectedItem="{Binding MaxSizeUnit}" />
+                    </Grid>
+                </GroupBox>
+                <!--  相同文件夹筛选器  -->
+                <GroupBox
+                    Grid.Row="1"
+                    Grid.Column="3"
+                    Margin="2,4,0,0"
+                    Padding="0,6,0,2"
+                    d:DataContext="{d:DesignInstance Type=local:SameDirFilesFilter}"
+                    BorderBrush="Salmon"
+                    DataContext="{Binding HashModelFilters[8]}">
+                    <GroupBox.Header>
+                        <CheckBox
+                            Margin="3,0,0,0"
+                            VerticalContentAlignment="Center"
+                            Command="{Binding ElementName=cmdPanel, Path=DataContext.FilterChangedCmd}"
+                            CommandParameter="{Binding}"
+                            Content="{Binding Display}"
+                            IsChecked="{Binding Selected, Mode=OneWayToSource}"
+                            ToolTip="{Binding Description}" />
+                    </GroupBox.Header>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="按文件夹对文件进行分组" />
+                        <TextBlock Text="视子文件夹为不同文件夹" />
+                    </StackPanel>
+                </GroupBox>
+                <!--  哈希值字符串筛选器  -->
                 <GroupBox
                     Grid.Row="2"
-                    Grid.ColumnSpan="3"
+                    Grid.ColumnSpan="4"
                     Margin="0,4,0,0"
                     Padding="0,6,0,2"
                     BorderBrush="DeepSkyBlue"
-                    DataContext="{Binding HashModelFilters[4]}">
+                    DataContext="{Binding HashModelFilters[6]}">
                     <GroupBox.Header>
                         <CheckBox
                             Margin="3,0,0,0"
@@ -397,12 +489,12 @@
                 <!--  文件名筛选器  -->
                 <GroupBox
                     Grid.Row="3"
-                    Grid.ColumnSpan="3"
+                    Grid.ColumnSpan="4"
                     Margin="0,4,0,0"
                     Padding="0,6,0,2"
                     d:DataContext="{d:DesignInstance Type=local:FileNameFilter}"
                     BorderBrush="DarkGoldenrod"
-                    DataContext="{Binding HashModelFilters[5]}">
+                    DataContext="{Binding HashModelFilters[7]}">
                     <GroupBox.Header>
                         <CheckBox
                             Margin="3,0,0,0"
@@ -454,7 +546,7 @@
                 <!--  筛选器的刷新按钮  -->
                 <Button
                     Grid.RowSpan="4"
-                    Grid.Column="3"
+                    Grid.Column="4"
                     Width="64"
                     Height="64"
                     Margin="4,0,0,0"

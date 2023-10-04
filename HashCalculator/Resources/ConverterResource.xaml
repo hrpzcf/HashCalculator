@@ -39,7 +39,7 @@
     <local:CommandPanelLeftCvt x:Key="CommandPanelLeftCvt" />
     <local:BtnRefreshFilterEnabledImgCvt x:Key="BtnRefreshFilterEnabledImgCvt" />
     <local:MultiLineTextToStrArrayCvt x:Key="MultiLineTextToStrArrayCvt" />
-    <local:GroupIdToSolidColorBrushCvt x:Key="GroupIdToSolidColorBrushCvt" />
+    <local:CmpColorToSolidColorBrushCvt x:Key="CmpColorToSolidColorBrushCvt" />
     <local:ReverseBoolValueCvt x:Key="ReverseBoolValueCvt" />
     <local:ActionMultiParameterCvt x:Key="ActionMultiParameterCvt" />
 </ResourceDictionary>

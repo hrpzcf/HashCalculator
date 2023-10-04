@@ -25,11 +25,13 @@ namespace HashCalculator
             new CmpResultFilter(),          // 1
             new HashingTaskResultFilter(),  // 2
             new SerialNumberFilter(),       // 3
-            new HashStringFilter(),         // 4
-            new FileNameFilter(),           // 5
-            new DistinctFilesFilter(),      // 6
+            new DistinctFilesFilter(),      // 4
+            new FileSizeFilter(),           // 5
+            new HashStringFilter(),         // 6
+            new FileNameFilter(),           // 7
             // 这个筛选器因其特殊性需最后应用，否则结果不正确
-            new EqualHashByteFilter(),      // 7
+            new SameDirFilesFilter(),       // 8
+            new EqualHashByteFilter(),      // 9
         };
 
         public CommandPanelModel(ICollectionView view)
@@ -89,6 +91,7 @@ namespace HashCalculator
                     model.Matched = true;
                     model.FileIndex = null;
                     model.GroupId = null;
+                    model.FdGroupId = null;
                 }
                 if (filteringShouldBeApplied)
                 {

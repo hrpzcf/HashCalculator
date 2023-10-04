@@ -349,7 +349,8 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock
-                                Padding="4,0"
+                                Padding="4"
+                                Background="{Binding FdGroupId, Converter={StaticResource CmpColorToSolidColorBrushCvt}}"
                                 Text="{Binding FileName}"
                                 ToolTip="{Binding FileInfo}" />
                         </DataTemplate>
@@ -394,7 +395,7 @@
                         <DataTemplate>
                             <CheckBox
                                 HorizontalAlignment="Center"
-                                Background="{Binding GroupId, Converter={StaticResource GroupIdToSolidColorBrushCvt}}"
+                                Background="{Binding GroupId, Converter={StaticResource CmpColorToSolidColorBrushCvt}}"
                                 Foreground="#FFFFFFFF"
                                 IsChecked="{Binding IsExecutionTarget, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         </DataTemplate>
@@ -416,10 +417,10 @@
                                 <Label
                                     x:Name="hashStringLabel"
                                     Grid.Column="0"
-                                    Margin="4,0,4,0"
+                                    Margin="4,0"
                                     Padding="4,0"
                                     VerticalContentAlignment="Center"
-                                    Background="{Binding GroupId, Converter={StaticResource GroupIdToSolidColorBrushCvt}}"
+                                    Background="{Binding GroupId, Converter={StaticResource CmpColorToSolidColorBrushCvt}}"
                                     ToolTip="{Binding ModelDetails}">
                                     <TextBlock
                                         VerticalAlignment="Center"
@@ -437,7 +438,7 @@
                                 </Label>
                                 <TextBlock
                                     Grid.Column="0"
-                                    Margin="4,0,4,0"
+                                    Margin="4,0"
                                     VerticalAlignment="Center"
                                     Text="{Binding TaskMessage}"
                                     TextTrimming="CharacterEllipsis">
@@ -454,7 +455,7 @@
                                     Grid.Column="0"
                                     Width="{Binding ElementName=hashStringLabel, Path=ActualWidth}"
                                     Height="6"
-                                    Margin="4,0,4,0"
+                                    Margin="4,0"
                                     HorizontalAlignment="Left"
                                     Foreground="#8000B4E7"
                                     Maximum="{Binding MaxProgress}"

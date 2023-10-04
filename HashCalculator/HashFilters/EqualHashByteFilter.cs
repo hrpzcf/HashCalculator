@@ -79,7 +79,7 @@ namespace HashCalculator
                             {
                                 if (algo.HashResult != null)
                                 {
-                                    if (groupByHashBytes.Keys.Contains(algo.HashResult, this.comparer))
+                                    if (groupByHashBytes.ContainsKey(algo.HashResult))
                                     {
                                         groupByHashBytes[algo.HashResult].Add(model, algo);
                                     }

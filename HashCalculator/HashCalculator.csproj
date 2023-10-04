@@ -124,13 +124,14 @@
     <Compile Include="HashFilters\CmpResultFilter.cs" />
     <Compile Include="HashFilters\DistinctFilesFilter.cs" />
     <Compile Include="HashFilters\FileNameFilter.cs" />
+    <Compile Include="HashFilters\FileSizeFilter.cs" />
     <Compile Include="HashFilters\HashBytesComparer.cs" />
     <Compile Include="HashFilters\HashingTaskResultFilter.cs" />
     <Compile Include="HashFilters\HashStringFilter.cs" />
     <Compile Include="HashFilters\HashAlgoFilter.cs" />
     <Compile Include="HashFilters\EqualHashByteFilter.cs" />
+    <Compile Include="HashFilters\SameDirFilesFilter.cs" />
     <Compile Include="HashFilters\SerialNumberFilter.cs" />
-    <Compile Include="HashFilters\StringComparer.cs" />
     <Compile Include="Others\CmdOptions.cs" />
     <Compile Include="Others\CommonExts.cs" />
     <Compile Include="HashFilters\HashViewFilter.cs" />
