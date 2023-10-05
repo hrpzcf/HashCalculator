@@ -38,7 +38,7 @@
             Grid.ColumnSpan="3"
             Padding="0,4,0,0"
             Foreground="#FF006FD6"
-            Header="对每个文件计算以下已勾选算法的结果">
+            Header="对每个文件使用以下已勾选算法计算其哈希值：">
             <ScrollViewer
                 Padding="4"
                 HorizontalScrollBarVisibility="Auto"

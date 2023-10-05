@@ -289,7 +289,7 @@
                         <TextBlock
                             DockPanel.Dock="Bottom"
                             Style="{StaticResource DescTextBlockStyle}"
-                            Text="按关注算法的相同哈希值进行分组" />
+                            Text="按关注算法的哈希值进行分组" />
                         <TextBlock
                             Grid.Row="0"
                             Grid.Column="0"
