@@ -857,6 +857,31 @@ namespace HashCalculator
         }
     }
 
+    internal class MultiCmpColorToSolidColorBrushCvt : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            Debug.Assert(values.Length == 2);
+            if (values[0] is ComparableColor color1 && color1.Color != default(Color))
+            {
+                return new SolidColorBrush(color1.Color);
+            }
+            else if (values[1] is ComparableColor color2 && color2.Color != default(Color))
+            {
+                return new SolidColorBrush(color2.Color);
+            }
+            else
+            {
+                return new SolidColorBrush(Colors.Transparent);
+            }
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     internal class ReverseBoolValueCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

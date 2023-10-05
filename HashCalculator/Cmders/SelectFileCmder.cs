@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace HashCalculator
@@ -12,7 +9,9 @@ namespace HashCalculator
         private RelayCommand selectAllModelsCmd = null;
         private RelayCommand deselectAllModelsCmd = null;
         private RelayCommand reverseSelectModelsCmd = null;
-        private RelayCommand selectGroupingsCmd = null;
+        private RelayCommand selectSameHashGroupCmd = null;
+        private RelayCommand selectSameFolderGroupCmd = null;
+        private RelayCommand selectSameFolderHashGroupCmd = null;
         private RelayCommand cancelSelectionCmd = null;
 
         public override string Display => "选择操作对象";
@@ -105,7 +104,7 @@ namespace HashCalculator
             }
         }
 
-        private void SelectGroupingsAction(object param)
+        private void SelectSameHashGroupAction(object param)
         {
             if (this.RefModels is IEnumerable<HashViewModel> models)
             {
@@ -126,15 +125,84 @@ namespace HashCalculator
             }
         }
 
-        public ICommand SelectGroupingsCmd
+        public ICommand SelectSameHashGroupCmd
         {
             get
             {
-                if (this.selectGroupingsCmd == null)
+                if (this.selectSameHashGroupCmd == null)
                 {
-                    this.selectGroupingsCmd = new RelayCommand(this.SelectGroupingsAction);
+                    this.selectSameHashGroupCmd = new RelayCommand(this.SelectSameHashGroupAction);
                 }
-                return this.selectGroupingsCmd;
+                return this.selectSameHashGroupCmd;
+            }
+        }
+
+        private void SelectSameFolderGroupAction(object param)
+        {
+            if (this.RefModels is IEnumerable<HashViewModel> models)
+            {
+                foreach (HashViewModel model in models)
+                {
+                    model.IsExecutionTarget = false;
+                }
+                IEnumerable<IGrouping<ComparableColor, HashViewModel>> byGroupId =
+                    models.Where(i => i.Matched && i.FdGroupId != null).GroupBy(i => i.FdGroupId);
+                foreach (IGrouping<ComparableColor, HashViewModel> group in byGroupId)
+                {
+                    foreach (HashViewModel model in group.Skip(1))
+                    {
+                        model.IsExecutionTarget = true;
+                    }
+                }
+                Settings.Current.ShowExecutionTargetColumn = true;
+            }
+        }
+
+        public ICommand SelectSameFolderGroupCmd
+        {
+            get
+            {
+                if (this.selectSameFolderGroupCmd == null)
+                {
+                    this.selectSameFolderGroupCmd = new RelayCommand(this.SelectSameFolderGroupAction);
+                }
+                return this.selectSameFolderGroupCmd;
+            }
+        }
+
+        private void SelectSameFolderHashGroupAction(object param)
+        {
+            if (this.RefModels is IEnumerable<HashViewModel> models)
+            {
+                foreach (HashViewModel model in models)
+                {
+                    model.IsExecutionTarget = false;
+                }
+                IEnumerable<IGrouping<ComparableColor, HashViewModel>> byFolderGroupId =
+                    models.Where(i => i.Matched && i.GroupId != null && i.FdGroupId != null).GroupBy(i => i.FdGroupId);
+                foreach (IGrouping<ComparableColor, HashViewModel> folderGroup in byFolderGroupId)
+                {
+                    foreach (IGrouping<ComparableColor, HashViewModel> hashGroup in folderGroup.GroupBy(i => i.GroupId))
+                    {
+                        foreach (HashViewModel model in hashGroup.Skip(1))
+                        {
+                            model.IsExecutionTarget = true;
+                        }
+                    }
+                }
+                Settings.Current.ShowExecutionTargetColumn = true;
+            }
+        }
+
+        public ICommand SelectSameFolderHashGroupCmd
+        {
+            get
+            {
+                if (this.selectSameFolderHashGroupCmd == null)
+                {
+                    this.selectSameFolderHashGroupCmd = new RelayCommand(this.SelectSameFolderHashGroupAction);
+                }
+                return this.selectSameFolderHashGroupCmd;
             }
         }
 
