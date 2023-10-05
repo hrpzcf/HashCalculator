@@ -349,6 +349,8 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock
+                                Width="{Binding MainWindowFileNameHeight, Mode=OneWayToSource}"
+                                Margin="1,0"
                                 Padding="4"
                                 Background="{Binding FdGroupId, Converter={StaticResource CmpColorToSolidColorBrushCvt}}"
                                 Text="{Binding FileName}"
@@ -393,11 +395,25 @@
                 <DataGridTemplateColumn Header="操作对象" Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowExecutionTargetColumn, Converter={StaticResource ShowColumnCvt}, Mode=OneWay}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <CheckBox
-                                HorizontalAlignment="Center"
-                                Background="{Binding GroupId, Converter={StaticResource CmpColorToSolidColorBrushCvt}}"
-                                Foreground="#FFFFFFFF"
-                                IsChecked="{Binding IsExecutionTarget, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <Grid>
+                                <TextBlock
+                                    Grid.Column="1"
+                                    Margin="1,0"
+                                    Padding="0,4">
+                                    <TextBlock.Background>
+                                        <MultiBinding Converter="{StaticResource MultiCmpColorToSolidColorBrushCvt}">
+                                            <Binding Path="GroupId" />
+                                            <Binding Path="FdGroupId" />
+                                        </MultiBinding>
+                                    </TextBlock.Background>
+                                </TextBlock>
+                                <CheckBox
+                                    Grid.ColumnSpan="2"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Foreground="#FFFFFFFF"
+                                    IsChecked="{Binding IsExecutionTarget, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            </Grid>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -407,38 +423,35 @@
                     SortMemberPath="CurrentHashString">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Grid VerticalAlignment="Center">
+                            <Grid Margin="1,0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition />
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
                                 <!--  不在计算状态  -->
-                                <Label
-                                    x:Name="hashStringLabel"
+                                <TextBlock
+                                    x:Name="hashStringTextBlock"
                                     Grid.Column="0"
-                                    Margin="4,0"
-                                    Padding="4,0"
-                                    VerticalContentAlignment="Center"
+                                    Margin="0,0,4,0"
+                                    Padding="4"
+                                    VerticalAlignment="Center"
                                     Background="{Binding GroupId, Converter={StaticResource CmpColorToSolidColorBrushCvt}}"
+                                    Text="{Binding CurrentHashString}"
+                                    TextTrimming="CharacterEllipsis"
                                     ToolTip="{Binding ModelDetails}">
-                                    <TextBlock
-                                        VerticalAlignment="Center"
-                                        Text="{Binding CurrentHashString}"
-                                        TextTrimming="CharacterEllipsis" />
-                                    <Label.Visibility>
+                                    <TextBlock.Visibility>
                                         <MultiBinding Converter="{StaticResource SubCtrlVisiblitySucceededCvt}">
                                             <Binding Path="State" />
                                             <Binding Path="Result" />
                                         </MultiBinding>
-                                    </Label.Visibility>
-                                    <Label.InputBindings>
+                                    </TextBlock.Visibility>
+                                    <TextBlock.InputBindings>
                                         <MouseBinding Command="{Binding ShowHashDetailsWindowCmd}" MouseAction="LeftDoubleClick" />
-                                    </Label.InputBindings>
-                                </Label>
+                                    </TextBlock.InputBindings>
+                                </TextBlock>
                                 <TextBlock
                                     Grid.Column="0"
-                                    Margin="4,0"
                                     VerticalAlignment="Center"
                                     Text="{Binding TaskMessage}"
                                     TextTrimming="CharacterEllipsis">
@@ -453,9 +466,8 @@
                                 <!--  ProgressBar的Value绑定需是OneWay，因为默认TwoWay和private set的Progress无法成功绑定  -->
                                 <ProgressBar
                                     Grid.Column="0"
-                                    Width="{Binding ElementName=hashStringLabel, Path=ActualWidth}"
+                                    Width="{Binding ElementName=hashStringTextBlock, Path=ActualWidth}"
                                     Height="6"
-                                    Margin="4,0"
                                     HorizontalAlignment="Left"
                                     Foreground="#8000B4E7"
                                     Maximum="{Binding MaxProgress}"

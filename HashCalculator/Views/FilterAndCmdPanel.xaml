@@ -287,6 +287,10 @@
                     </GroupBox.Header>
                     <DockPanel>
                         <TextBlock
+                            DockPanel.Dock="Bottom"
+                            Style="{StaticResource DescTextBlockStyle}"
+                            Text="按关注算法的相同哈希值进行分组" />
+                        <TextBlock
                             Grid.Row="0"
                             Grid.Column="0"
                             VerticalAlignment="Center"
@@ -321,8 +325,8 @@
                             ToolTip="{Binding Description}" />
                     </GroupBox.Header>
                     <StackPanel VerticalAlignment="Center">
-                        <TextBlock Text="不显示无法访问的文件" />
-                        <TextBlock Text="重复的文件只显示其中一行" />
+                        <TextBlock Style="{StaticResource DescTextBlockStyle}" Text="不显示无法访问的文件" />
+                        <TextBlock Style="{StaticResource DescTextBlockStyle}" Text="重复的文件只显示其中一行" />
                     </StackPanel>
                 </GroupBox>
                 <!--  文件大小选择器  -->
@@ -418,8 +422,8 @@
                             ToolTip="{Binding Description}" />
                     </GroupBox.Header>
                     <StackPanel VerticalAlignment="Center">
-                        <TextBlock Text="按文件夹对文件进行分组" />
-                        <TextBlock Text="视子文件夹为不同文件夹" />
+                        <TextBlock Style="{StaticResource DescTextBlockStyle}" Text="按文件所在文件夹进行分组" />
+                        <TextBlock Style="{StaticResource DescTextBlockStyle}" Text="将子文件夹视为不同文件夹" />
                     </StackPanel>
                 </GroupBox>
                 <!--  哈希值字符串筛选器  -->
@@ -590,6 +594,7 @@
                 <GroupBox
                     Grid.Row="0"
                     Grid.ColumnSpan="2"
+                    Padding="0,6,0,2"
                     d:DataContext="{d:DesignInstance Type=local:SelectFileCmder}"
                     BorderBrush="Violet"
                     DataContext="{Binding HashModelCmders[0]}">
@@ -604,59 +609,73 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition />
                         </Grid.ColumnDefinitions>
+                        <WrapPanel Grid.Column="0">
+                            <Button
+                                Padding="20,6"
+                                Background="DarkOliveGreen"
+                                BorderThickness="1"
+                                Command="{Binding SelectAllModelsCmd}"
+                                Content="全选"
+                                Foreground="WhiteSmoke"
+                                Style="{StaticResource IndepButtonStyle}"
+                                ToolTip="选择所有已通过筛选的行" />
+                            <Button
+                                Margin="4,0,0,0"
+                                Padding="20,6"
+                                Background="SaddleBrown"
+                                BorderThickness="1"
+                                Command="{Binding DeselectAllModelsCmd}"
+                                Content="全不选"
+                                Foreground="WhiteSmoke"
+                                Style="{StaticResource IndepButtonStyle}"
+                                ToolTip="取消选择所有行" />
+                            <Button
+                                Margin="4,0,0,0"
+                                Padding="20,6"
+                                Background="DarkBlue"
+                                BorderThickness="1"
+                                Command="{Binding ReverseSelectModelsCmd}"
+                                Content="反选"
+                                Foreground="WhiteSmoke"
+                                Style="{StaticResource IndepButtonStyle}"
+                                ToolTip="反向改变所有已通过筛选的行的选择状态" />
+                            <Button
+                                Margin="4,0,0,0"
+                                Padding="20,6"
+                                Background="DarkSlateBlue"
+                                BorderThickness="1"
+                                Command="{Binding SelectSameHashGroupCmd}"
+                                Content="按相同哈希值组选择"
+                                Foreground="WhiteSmoke"
+                                Style="{StaticResource IndepButtonStyle}"
+                                ToolTip="如果已经过【相同哈希值】筛选器分组，则每组选择除了第一行外的所有行，否则取消选择所有行" />
+                            <Button
+                                Margin="4,0,0,0"
+                                Padding="20,6"
+                                Background="DarkCyan"
+                                BorderThickness="1"
+                                Command="{Binding SelectSameFolderGroupCmd}"
+                                Content="按相同文件夹组选择"
+                                Foreground="WhiteSmoke"
+                                Style="{StaticResource IndepButtonStyle}"
+                                ToolTip="如果已经过【相同文件夹】筛选器分组，则每组选择除了第一行外的所有行，否则取消选择所有行" />
+                            <Button
+                                Margin="4,0,0,0"
+                                Padding="20,6"
+                                Background="DarkMagenta"
+                                BorderThickness="1"
+                                Command="{Binding SelectSameFolderHashGroupCmd}"
+                                Content="按混合组选择"
+                                Foreground="WhiteSmoke"
+                                Style="{StaticResource IndepButtonStyle}"
+                                ToolTip="如果已经过【相同文件夹】→【相同哈希值】筛选器分组，则每组选择除了第一行外的所有行，否则取消选择所有行" />
+                        </WrapPanel>
                         <Button
                             Grid.Column="1"
-                            Padding="20,6"
-                            Background="DarkOliveGreen"
-                            BorderThickness="1"
-                            Command="{Binding SelectAllModelsCmd}"
-                            Content="全选"
-                            Foreground="WhiteSmoke"
-                            Style="{StaticResource IndepButtonStyle}"
-                            ToolTip="选择所有已通过筛选的行" />
-                        <Button
-                            Grid.Column="2"
                             Margin="4,0,0,0"
                             Padding="20,6"
-                            Background="SaddleBrown"
-                            BorderThickness="1"
-                            Command="{Binding DeselectAllModelsCmd}"
-                            Content="全不选"
-                            Foreground="WhiteSmoke"
-                            Style="{StaticResource IndepButtonStyle}"
-                            ToolTip="取消选择所有行" />
-                        <Button
-                            Grid.Column="3"
-                            Margin="4,0,0,0"
-                            Padding="20,6"
-                            Background="DarkBlue"
-                            BorderThickness="1"
-                            Command="{Binding ReverseSelectModelsCmd}"
-                            Content="反选"
-                            Foreground="WhiteSmoke"
-                            Style="{StaticResource IndepButtonStyle}"
-                            ToolTip="反向改变所有已通过筛选的行的选择状态" />
-                        <Button
-                            Grid.Column="4"
-                            Margin="4,0,0,0"
-                            Padding="20,6"
-                            Background="DarkSlateBlue"
-                            BorderThickness="1"
-                            Command="{Binding SelectGroupingsCmd}"
-                            Content="按组选择"
-                            Foreground="WhiteSmoke"
-                            Style="{StaticResource IndepButtonStyle}"
-                            ToolTip="如果已经过【相同哈希值】等有分组功能的筛选器筛选，则每组选择除了第一行外的所有行，否则取消选择所有行" />
-                        <Button
-                            Grid.Column="5"
-                            Margin="4,0,0,0"
-                            Padding="20,6"
+                            VerticalAlignment="Center"
                             Background="DarkGreen"
                             BorderThickness="1"
                             Command="{Binding CancelSelectionCmd}"
