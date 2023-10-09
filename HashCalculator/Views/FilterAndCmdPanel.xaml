@@ -97,7 +97,10 @@
                                     Command="{Binding ElementName=cmdPanel, Path=DataContext.FilterChangedCmd}"
                                     CommandParameter="{Binding}"
                                     IsChecked="{Binding Selected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                <TextBlock Padding="8,1,32,1" Text="{Binding Display}" />
+                                <TextBlock
+                                    Padding="8,1,32,1"
+                                    Text="{Binding Display}"
+                                    ToolTip="{Binding Description}" />
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>

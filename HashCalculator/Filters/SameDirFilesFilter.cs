@@ -13,7 +13,7 @@ namespace HashCalculator
 
         public override string Display => "相同文件夹";
 
-        public override string Description => "将各行中位于相同文件夹的文件筛选出来";
+        public override string Description => "给各行中位于相同文件夹的行的文件名列打上相同的颜色标记";
 
         public override object Param { get; set; } = false;
 

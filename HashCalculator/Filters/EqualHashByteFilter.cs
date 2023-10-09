@@ -26,7 +26,7 @@ namespace HashCalculator
 
         public override string Display => "相同哈希值";
 
-        public override string Description => "将各行中含有相同哈希值的行筛选出来";
+        public override string Description => "筛选出各行中含有相同哈希值的行并给它们的哈希值列打上相同的颜色标记";
 
         public override object Param { get; set; }
 

@@ -629,62 +629,62 @@
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" Orientation="Horizontal">
                 <Image
-                    Width="20"
-                    Height="20"
+                    Width="21"
+                    Height="21"
                     Margin="0,0,12,0"
                     gif:AnimationBehavior.RepeatBehavior="Forever"
                     gif:AnimationBehavior.SourceUri="/Images/loading.gif"
                     Visibility="{Binding State, Converter={StaticResource LoadingImageVisiblityCvt}}" />
                 <Image
-                    VerticalAlignment="Center"
                     Source="/Images/list_count_16.png"
+                    Stretch="None"
                     ToolTip="表格中的总行数" />
-                <Label
-                    VerticalContentAlignment="Center"
-                    Content="{Binding Source={x:Static local:MainWndViewModel.HashViewModels}, Path=Count}"
+                <TextBlock
+                    Padding="4,0"
+                    VerticalAlignment="Center"
                     Foreground="Gray"
+                    Text="{Binding Source={x:Static local:MainWndViewModel.HashViewModels}, Path=Count}"
                     ToolTip="表格中的总行数" />
                 <Image
                     Margin="6,0,0,0"
-                    VerticalAlignment="Center"
                     Source="/Images/remaining_16.png"
+                    Stretch="None"
                     ToolTip="哈希值计算任务数" />
-                <Label
-                    VerticalContentAlignment="Center"
-                    Content="{Binding TobeComputedModelsCount}"
+                <TextBlock
+                    Padding="4,0"
+                    VerticalAlignment="Center"
                     Foreground="Gray"
+                    Text="{Binding TobeComputedModelsCount}"
                     ToolTip="哈希值计算任务数" />
             </StackPanel>
             <Grid Grid.Column="1" Margin="8,0,0,0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Label
-                    VerticalContentAlignment="Center"
+                <TextBlock
+                    Padding="4,0"
+                    VerticalAlignment="Center"
                     Panel.ZIndex="0"
-                    Content="哈希值校验依据：粘贴单个哈希值，或选择/粘贴哈希值校验依据文件的路径"
                     Foreground="#A0808080"
-                    Visibility="{Binding ElementName=uiTextBox_HashValueOrFilePath, Path=Text, Converter={StaticResource PlaceHolderTextVisibilityCvt}}" />
+                    Text="哈希值校验依据：粘贴单个哈希值，或选择/粘贴哈希值校验依据文件的路径"
+                    Visibility="{Binding ElementName=uiTextBoxHashStringOrBasisPath, Path=Text, Converter={StaticResource PlaceHolderTextVisibilityCvt}}" />
                 <TextBox
-                    x:Name="uiTextBox_HashValueOrFilePath"
+                    x:Name="uiTextBoxHashStringOrBasisPath"
+                    Padding="0,3"
                     Panel.ZIndex="1"
                     Background="Transparent"
-                    MaxLines="1"
                     PreviewDragOver="TextBoxHashValueOrFilePathPreviewDragOver"
                     PreviewDrop="TextBoxHashOrFilePathPreviewDrop" />
             </Grid>
             <Button
                 Grid.Column="2"
                 Margin="8,0,0,0"
-                Padding="8,1,8,1"
+                Padding="8,0"
                 Click="ButtonSelectBasisFileSetPathClick"
                 Content="..." />
             <Button
                 Grid.Column="3"
                 Margin="8,0,0,0"
-                Padding="16,1,16,1"
+                Padding="16,0"
                 Command="{Binding StartVerifyHashValueCmd}"
-                CommandParameter="{Binding ElementName=uiTextBox_HashValueOrFilePath, Path=Text}"
+                CommandParameter="{Binding ElementName=uiTextBoxHashStringOrBasisPath, Path=Text}"
                 Content="校验"
                 IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBoolCvt}}"
                 ToolTip="当面板为空时，如果校验依据选择的是通用格式的哈希值文本文件，则：&#10;点击 [校验] 后程序会自动解析文件并在相同目录下寻找要计算哈希值的文件完成计算并显示校验结果。&#10;通用格式的哈希值文件请参考程序 [导出结果] 功能导出的文件的内容排布格式。" />

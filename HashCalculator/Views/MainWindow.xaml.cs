@@ -177,7 +177,7 @@ namespace HashCalculator
             if (openFile.ShowDialog() == CommonFileDialogResult.Ok)
             {
                 Settings.Current.LastUsedPath = Path.GetDirectoryName(openFile.FileName);
-                this.uiTextBox_HashValueOrFilePath.Text = openFile.FileName;
+                this.uiTextBoxHashStringOrBasisPath.Text = openFile.FileName;
             }
         }
 
@@ -188,7 +188,7 @@ namespace HashCalculator
             {
                 return;
             }
-            this.uiTextBox_HashValueOrFilePath.Text = data[0];
+            this.uiTextBoxHashStringOrBasisPath.Text = data[0];
         }
 
         private void TextBoxHashValueOrFilePathPreviewDragOver(object sender, DragEventArgs e)
