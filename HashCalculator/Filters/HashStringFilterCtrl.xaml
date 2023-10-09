@@ -1,0 +1,64 @@
+﻿<UserControl
+    x:Class="HashCalculator.HashStringFilterCtrl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:HashCalculator"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DataContext="{d:DesignInstance Type=local:HashStringFilter}"
+    d:DesignHeight="160"
+    d:DesignWidth="300"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/ConverterResource.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <TextBlock
+            Grid.Row="0"
+            Grid.ColumnSpan="3"
+            Padding="4,0,0,0"
+            VerticalAlignment="Center"
+            Panel.ZIndex="0"
+            Foreground="#A0808080"
+            Text="每行一个哈希值，按回车换行"
+            Visibility="{Binding ElementName=hashStringsTextBox, Path=Text, Converter={StaticResource PlaceHolderTextVisibilityCvt}}" />
+        <TextBox
+            x:Name="hashStringsTextBox"
+            Grid.Row="0"
+            Grid.ColumnSpan="3"
+            Padding="0,2"
+            VerticalAlignment="Center"
+            AcceptsReturn="True"
+            Background="Transparent"
+            Text="{Binding Items, Mode=OneWayToSource, Converter={StaticResource MultiLineTextToStrArrayCvt}}"
+            TextWrapping="WrapWithOverflow" />
+        <TextBlock
+            Grid.Row="1"
+            Grid.Column="0"
+            Margin="0,4,0,0"
+            VerticalAlignment="Center"
+            Text="筛选逻辑：" />
+        <ComboBox
+            Grid.Row="1"
+            Grid.Column="1"
+            Margin="0,4,0,0"
+            DisplayMemberPath="Display"
+            ItemsSource="{Binding FilterLogics}"
+            SelectedValue="{Binding Param}"
+            SelectedValuePath="ItemValue"
+            ToolTip="[要求] 指的是上方输入框中已输入的哈希值集合&#10;[满足任意要求] 该行的所有哈希值中至少有一个哈希值满足了其中一个要求&#10;[严格满足要求] 该行的所有哈希值涵盖了要求中的所有哈希值，且不含要求以外的哈希值&#10;[在要求范围内] 该行的所有哈希值都在要求的多个哈希值所组成的范围之内&#10;[涵盖所有要求] 该行的所有哈希值涵盖了要求中的所有哈希值，可能含有要求以外的哈希值" />
+    </Grid>
+</UserControl>

@@ -2,7 +2,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:HashCalculator">
-    <!--<local:AlgoTypeBackgroundCvt x:Key="AlgoTypeBackgroundCvt" />-->
     <local:ToFriendlyFileSizeCvt x:Key="ToFriendlyFileSizeCvt" />
     <local:CmpResForegroundCvt x:Key="CmpResForegroundCvt" />
     <local:CmpResBackgroundCvt x:Key="CmpResBackgroundCvt" />

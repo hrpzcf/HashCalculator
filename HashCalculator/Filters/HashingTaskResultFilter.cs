@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Controls;
 
 namespace HashCalculator
 {
-    internal class HashingTaskResultFilter : HashViewFilter
+    internal class HashingTaskResultFilter : AbsHashViewFilter
     {
         private readonly ControlItem[] expResultCtrls = new ControlItem[]
         {
@@ -12,16 +13,19 @@ namespace HashCalculator
             new ControlItem("已成功", HashResult.Succeeded),
         };
 
+        public override ContentControl Settings { get; }
+
         public override string Display => "运行结果";
 
         public override string Description => "将各行中符合指定运行结果的行筛选出来";
 
         public override object Param { get; set; } = FilterLogic.Any;
 
-        public override object[] Items
+        public override object[] Items { get => this.expResultCtrls; set { } }
+
+        public HashingTaskResultFilter()
         {
-            get => this.expResultCtrls;
-            set { }
+            this.Settings = new HashingTaskResultFilterCtrl(this);
         }
 
         public override void FilterObjects(IEnumerable<HashViewModel> models)

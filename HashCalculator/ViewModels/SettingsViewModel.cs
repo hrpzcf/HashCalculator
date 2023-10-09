@@ -22,6 +22,8 @@ namespace HashCalculator
         private double algosPanelHeight = 360.0;
         private double hashDetailsWidth = 600.0;
         private double hashDetailsHeight = 700.0;
+        private double cmdPanelWidth = 590.0;
+        private double cmdPanelHeight = 565.0;
         private double cmdPanelTopRelToMainWnd = 0.0;
         private double cmdPanelLeftRelToMainWnd = 0.0;
         private TaskNum selectedTaskNumberLimit = TaskNum.One;
@@ -250,6 +252,30 @@ namespace HashCalculator
             set
             {
                 this.SetPropNotify(ref this.hashDetailsHeight, value);
+            }
+        }
+
+        public double CmdPanelWidth
+        {
+            get
+            {
+                return this.cmdPanelWidth;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.cmdPanelWidth, value);
+            }
+        }
+
+        public double CmdPanelHeight
+        {
+            get
+            {
+                return this.cmdPanelHeight;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.cmdPanelHeight, value);
             }
         }
 

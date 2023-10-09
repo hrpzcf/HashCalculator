@@ -1,28 +1,33 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace HashCalculator
 {
-    internal class SelectFileCmder : HashViewCmder
+    internal class SelectFileCmder : AbsHashesCmder
     {
+        private RelayCommand cancelSelectionCmd = null;
+        private RelayCommand selectSameHashGroupCmd = null;
+        private RelayCommand selectSameFolderGroupCmd = null;
+        private RelayCommand selectHybridGroupsCmd = null;
         private RelayCommand selectAllModelsCmd = null;
         private RelayCommand deselectAllModelsCmd = null;
         private RelayCommand reverseSelectModelsCmd = null;
-        private RelayCommand selectSameHashGroupCmd = null;
-        private RelayCommand selectSameFolderGroupCmd = null;
-        private RelayCommand selectSameFolderHashGroupCmd = null;
-        private RelayCommand cancelSelectionCmd = null;
+
+        private ICollectionView BoundDataGridView { get; }
 
         public override string Display => "选择操作对象";
 
         public override string Description => "提供不同的快速选择方法来选择行，供其他操作使用";
 
-        public SelectFileCmder() : this(MainWndViewModel.HashViewModels)
+        public SelectFileCmder(IEnumerable<HashViewModel> models, ICollectionView view) : base(models)
         {
+            this.BoundDataGridView = view;
         }
 
-        public SelectFileCmder(IEnumerable<HashViewModel> models) : base(models)
+        public SelectFileCmder() : this(MainWndViewModel.HashViewModels, MainWndViewModel.HashViewModelsView)
         {
         }
 
@@ -170,7 +175,28 @@ namespace HashCalculator
             }
         }
 
-        private void SelectSameFolderHashGroupAction(object param)
+        private void CheckCollectionViewGroupItems(IEnumerable<object> groups)
+        {
+            if (groups != null)
+            {
+                foreach (CollectionViewGroup group in groups.Cast<CollectionViewGroup>())
+                {
+                    if (group.IsBottomLevel)
+                    {
+                        foreach (HashViewModel model in group.Items.Skip(1).Cast<HashViewModel>())
+                        {
+                            model.IsExecutionTarget = true;
+                        }
+                    }
+                    else
+                    {
+                        this.CheckCollectionViewGroupItems(group.Items);
+                    }
+                }
+            }
+        }
+
+        private void SelectHybridGroupsAction(object param)
         {
             if (this.RefModels is IEnumerable<HashViewModel> models)
             {
@@ -178,31 +204,20 @@ namespace HashCalculator
                 {
                     model.IsExecutionTarget = false;
                 }
-                IEnumerable<IGrouping<ComparableColor, HashViewModel>> byFolderGroupId =
-                    models.Where(i => i.Matched && i.GroupId != null && i.FdGroupId != null).GroupBy(i => i.FdGroupId);
-                foreach (IGrouping<ComparableColor, HashViewModel> folderGroup in byFolderGroupId)
-                {
-                    foreach (IGrouping<ComparableColor, HashViewModel> hashGroup in folderGroup.GroupBy(i => i.GroupId))
-                    {
-                        foreach (HashViewModel model in hashGroup.Skip(1))
-                        {
-                            model.IsExecutionTarget = true;
-                        }
-                    }
-                }
+                this.CheckCollectionViewGroupItems(this.BoundDataGridView.Groups);
                 Settings.Current.ShowExecutionTargetColumn = true;
             }
         }
 
-        public ICommand SelectSameFolderHashGroupCmd
+        public ICommand SelectHybridGroupsCmd
         {
             get
             {
-                if (this.selectSameFolderHashGroupCmd == null)
+                if (this.selectHybridGroupsCmd == null)
                 {
-                    this.selectSameFolderHashGroupCmd = new RelayCommand(this.SelectSameFolderHashGroupAction);
+                    this.selectHybridGroupsCmd = new RelayCommand(this.SelectHybridGroupsAction);
                 }
-                return this.selectSameFolderHashGroupCmd;
+                return this.selectHybridGroupsCmd;
             }
         }
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows.Controls;
 using System.Windows.Data;
 
 namespace HashCalculator
@@ -16,10 +17,12 @@ namespace HashCalculator
         }
     }
 
-    internal class EqualHashByteFilter : HashViewFilter
+    internal class EqualHashByteFilter : AbsHashViewFilter
     {
         private AlgoInOutModel[] _algos;
         private readonly HashBytesComparer comparer = new HashBytesComparer();
+
+        public override ContentControl Settings { get; }
 
         public override string Display => "相同哈希值";
 
@@ -40,18 +43,16 @@ namespace HashCalculator
         }
 
         public override GroupDescription[] GroupDescriptions { get; } =
-            // 顺序不能反，分组优先级不一样
             new GroupDescription[] {
                 new PropertyGroupDescription(nameof(HashViewModel.GroupId)),
-                new PropertyGroupDescription(nameof(HashViewModel.FileIndex)),
-                new PropertyGroupDescription(nameof(HashViewModel.FileName)),
             };
 
         public EqualHashByteFilter()
         {
-            this._algos = AlgosPanelModel.ProvidedAlgos.Select(
-                i => i.NewAlgoInOutModel()).ToArray();
+            this._algos = AlgosPanelModel.ProvidedAlgos
+                .Select(i => i.NewAlgoInOutModel()).ToArray();
             this.Param = this._algos[0];
+            this.Settings = new EqualHashByteFilterCtrl(this);
         }
 
         public override void FilterObjects(IEnumerable<HashViewModel> models)

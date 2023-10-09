@@ -7,25 +7,21 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     x:Name="cmdPanel"
     Title="筛选与操作"
-    d:DataContext="{d:DesignInstance Type=local:CommandPanelModel}"
+    Width="{Binding Source={x:Static local:Settings.Current}, Path=CmdPanelWidth, Mode=TwoWay}"
+    Height="{Binding Source={x:Static local:Settings.Current}, Path=CmdPanelHeight, Mode=TwoWay}"
+    d:DataContext="{d:DesignInstance Type=local:FilterAndCmdPanelModel}"
     KeyDown="CommandPanelKeyDown"
-    ResizeMode="NoResize"
-    ShowInTaskbar="False"
-    SizeToContent="WidthAndHeight"
     UseLayoutRounding="True"
     mc:Ignorable="d">
     <Window.Resources>
         <ResourceDictionary>
-            <local:CommandPanelModel x:Key="CommandPanelModel" />
             <ResourceDictionary.MergedDictionaries>
-                <!--<ResourceDictionary Source="/Resources/ComboBoxStyle1.xaml" />-->
-                <!--<ResourceDictionary Source="/Resources/ComboBoxStyle2.xaml" />-->
                 <ResourceDictionary Source="/Resources/CmderButtonStyles.xaml" />
-                <ResourceDictionary Source="/Resources/ImageButtonStyles.xaml" />
                 <ResourceDictionary Source="/Resources/ConverterResource.xaml" />
+                <ResourceDictionary Source="/Resources/DataGridCellStyles.xaml" />
+                <ResourceDictionary Source="/Resources/DataGridRowStyles.xaml" />
                 <ResourceDictionary Source="/Resources/DescTextBlockStyles.xaml" />
-                <!--<ResourceDictionary Source="/Resources/DataGridCellStyles.xaml" />-->
-                <!--<ResourceDictionary Source="/Resources/DataGridRowStyles.xaml" />-->
+                <ResourceDictionary Source="/Resources/ImageButtonStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -63,12 +59,9 @@
                 UpdateSourceTrigger="PropertyChanged" />
         </MultiBinding>
     </Window.Left>
-    <Window.DataContext>
-        <Binding Source="{StaticResource CommandPanelModel}" />
-    </Window.DataContext>
     <Grid Margin="4">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
+            <RowDefinition />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <GroupBox Grid.Row="0" Padding="0,6,0,0">
@@ -76,495 +69,105 @@
                 <TextBlock
                     VerticalAlignment="Center"
                     Foreground="#FF006FD6"
-                    Text="可用的筛选器"
+                    Text="筛选器和设置"
                     ToolTip="勾选筛选器并点击【刷新】按钮以更新主窗口表格，勾选的筛选器之间为【且】关系&#10;警告：在主窗口发生任何更改后，都应该点击【刷新】按钮刷新筛选结果，否则结果是不可靠的" />
             </GroupBox.Header>
             <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <!--  哈希算法筛选器  -->
-                <GroupBox
-                    Grid.Row="0"
+                <ListBox
                     Grid.Column="0"
-                    Padding="0,6,0,2"
-                    BorderBrush="Green"
-                    DataContext="{Binding HashModelFilters[0]}">
-                    <GroupBox.Header>
-                        <CheckBox
-                            Margin="3,0,0,0"
-                            VerticalContentAlignment="Center"
-                            Command="{Binding ElementName=cmdPanel, Path=DataContext.FilterChangedCmd}"
-                            CommandParameter="{Binding}"
-                            Content="{Binding Display}"
-                            IsChecked="{Binding Selected, Mode=OneWayToSource}"
-                            ToolTip="{Binding Description}" />
-                    </GroupBox.Header>
-                    <StackPanel>
-                        <ComboBox ItemsSource="{Binding Items}" SelectedIndex="0">
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate>
-                                    <CheckBox
-                                        VerticalContentAlignment="Center"
-                                        Content="{Binding AlgoName}"
-                                        IsChecked="{Binding Selected}" />
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
-                        </ComboBox>
-                        <DockPanel Margin="0,4,0,0">
-                            <TextBlock
-                                VerticalAlignment="Center"
-                                DockPanel.Dock="Left"
-                                Text="筛选逻辑：" />
-                            <ComboBox
-                                DisplayMemberPath="Display"
-                                DockPanel.Dock="Right"
-                                ItemsSource="{Binding FilterLogics}"
-                                SelectedValue="{Binding Param}"
-                                SelectedValuePath="ItemValue"
-                                ToolTip="[要求] 指的是下拉列表中已勾选的哈希算法集合&#10;[满足任意要求] 该行的所有算法中至少有一个算法满足了其中一个要求&#10;[严格满足要求] 该行的所有算法涵盖了要求中的所有算法，且不含要求以外的算法&#10;[在要求范围内] 该行的所有算法都在要求的多个算法所组成的范围之内&#10;[涵盖所有要求] 该行的所有算法涵盖了要求中的所有算法，可能含有要求以外的算法" />
-                        </DockPanel>
-                    </StackPanel>
-                </GroupBox>
-                <!--  校验结果筛选器  -->
-                <GroupBox
-                    Grid.Row="0"
-                    Grid.Column="1"
-                    Margin="2,0,0,0"
-                    Padding="0,6,0,2"
-                    BorderBrush="LightCoral"
-                    DataContext="{Binding HashModelFilters[1]}">
-                    <GroupBox.Header>
-                        <CheckBox
-                            Margin="3,0,0,0"
-                            VerticalContentAlignment="Center"
-                            Command="{Binding ElementName=cmdPanel, Path=DataContext.FilterChangedCmd}"
-                            CommandParameter="{Binding}"
-                            Content="{Binding Display}"
-                            IsChecked="{Binding Selected, Mode=OneWayToSource}"
-                            ToolTip="{Binding Description}" />
-                    </GroupBox.Header>
-                    <StackPanel>
-                        <ComboBox ItemsSource="{Binding Items}" SelectedIndex="0">
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate>
-                                    <CheckBox
-                                        VerticalContentAlignment="Center"
-                                        Content="{Binding Display}"
-                                        IsChecked="{Binding Selected}" />
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
-                        </ComboBox>
-                        <DockPanel Margin="0,4,0,0">
-                            <TextBlock
-                                VerticalAlignment="Center"
-                                DockPanel.Dock="Left"
-                                Text="筛选逻辑：" />
-                            <ComboBox
-                                DisplayMemberPath="Display"
-                                DockPanel.Dock="Right"
-                                ItemsSource="{Binding FilterLogics}"
-                                SelectedValue="{Binding Param}"
-                                SelectedValuePath="ItemValue"
-                                ToolTip="[要求] 指的是下拉列表中已勾选的校验结果集合&#10;[满足任意要求] 该行的所有校验结果中至少有一个校验结果满足了其中一个要求&#10;[严格满足要求] 该行的所有校验结果涵盖了要求中的所有校验结果，且不含要求以外的校验结果&#10;[在要求范围内] 该行的所有校验结果都在要求的多个校验结果所组成的范围之内&#10;[涵盖所有要求] 该行的所有校验结果涵盖了要求中的所有校验结果，可能含有要求以外的校验结果" />
-                        </DockPanel>
-                    </StackPanel>
-                </GroupBox>
-                <!--  任务运行结果筛选器  -->
-                <GroupBox
-                    Grid.Row="0"
-                    Grid.Column="2"
-                    Margin="2,0,0,0"
-                    Padding="0,6,0,2"
-                    BorderBrush="Cyan"
-                    DataContext="{Binding HashModelFilters[2]}">
-                    <GroupBox.Header>
-                        <CheckBox
-                            Margin="3,0,0,0"
-                            VerticalContentAlignment="Center"
-                            Command="{Binding ElementName=cmdPanel, Path=DataContext.FilterChangedCmd}"
-                            CommandParameter="{Binding}"
-                            Content="{Binding Display}"
-                            IsChecked="{Binding Selected, Mode=OneWayToSource}"
-                            ToolTip="{Binding Description}" />
-                    </GroupBox.Header>
-                    <StackPanel>
-                        <ComboBox
-                            VerticalAlignment="Top"
-                            ItemsSource="{Binding Items}"
-                            SelectedIndex="0">
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate>
-                                    <CheckBox
-                                        VerticalContentAlignment="Center"
-                                        Content="{Binding Display}"
-                                        IsChecked="{Binding Selected}" />
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
-                        </ComboBox>
-                        <DockPanel Margin="0,4,0,0" DockPanel.Dock="Left">
-                            <TextBlock VerticalAlignment="Center" Text="筛选逻辑：" />
-                            <ComboBox
-                                DisplayMemberPath="Display"
-                                DockPanel.Dock="Right"
-                                Foreground="Gray"
-                                IsEnabled="False"
-                                ItemsSource="{Binding FilterLogics}"
-                                SelectedValue="{Binding Param}"
-                                SelectedValuePath="ItemValue" />
-                        </DockPanel>
-                    </StackPanel>
-                </GroupBox>
-                <!--  序号范围筛选器  -->
-                <GroupBox
-                    Grid.Row="0"
-                    Grid.Column="3"
-                    Margin="2,0,0,0"
-                    Padding="0,6,0,2"
-                    d:DataContext="{d:DesignInstance Type=local:SerialNumberFilter}"
-                    BorderBrush="DarkGoldenrod"
-                    DataContext="{Binding HashModelFilters[3]}">
-                    <GroupBox.Header>
-                        <CheckBox
-                            Margin="3,0,0,0"
-                            VerticalContentAlignment="Center"
-                            Command="{Binding ElementName=cmdPanel, Path=DataContext.FilterChangedCmd}"
-                            CommandParameter="{Binding}"
-                            Content="{Binding Display}"
-                            IsChecked="{Binding Selected, Mode=OneWayToSource}"
-                            ToolTip="{Binding Description}" />
-                    </GroupBox.Header>
-                    <StackPanel>
-                        <DockPanel>
-                            <TextBlock
-                                VerticalAlignment="Center"
-                                DockPanel.Dock="Left"
-                                Text="开始：" />
-                            <TextBox
-                                Padding="0,2"
-                                DockPanel.Dock="Right"
-                                Text="{Binding SerialLeft}" />
-                        </DockPanel>
-                        <DockPanel Margin="0,4,0,0">
-                            <TextBlock
-                                VerticalAlignment="Center"
-                                DockPanel.Dock="Left"
-                                Text="结束：" />
-                            <TextBox
-                                Padding="0,2"
-                                DockPanel.Dock="Right"
-                                Text="{Binding SerialRight}" />
-                        </DockPanel>
-                    </StackPanel>
-                </GroupBox>
-                <!--  相同哈希值筛选器  -->
-                <GroupBox
-                    Grid.Row="1"
-                    Grid.Column="0"
-                    Margin="0,4,0,0"
-                    Padding="0,6,0,2"
-                    BorderBrush="MediumPurple"
-                    DataContext="{Binding HashModelFilters[9]}">
-                    <GroupBox.Header>
-                        <CheckBox
-                            Margin="3,0,0,0"
-                            VerticalContentAlignment="Center"
-                            Command="{Binding ElementName=cmdPanel, Path=DataContext.FilterChangedCmd}"
-                            CommandParameter="{Binding}"
-                            Content="{Binding Display}"
-                            IsChecked="{Binding Selected, Mode=OneWayToSource}"
-                            ToolTip="{Binding Description}" />
-                    </GroupBox.Header>
-                    <DockPanel>
-                        <TextBlock
-                            DockPanel.Dock="Bottom"
-                            Style="{StaticResource DescTextBlockStyle}"
-                            Text="按关注算法的哈希值进行分组" />
-                        <TextBlock
-                            Grid.Row="0"
-                            Grid.Column="0"
-                            VerticalAlignment="Center"
-                            DockPanel.Dock="Left"
-                            Text="关注的算法：" />
-                        <ComboBox
-                            Grid.Row="0"
-                            Grid.Column="1"
-                            VerticalAlignment="Center"
-                            DisplayMemberPath="AlgoName"
-                            DockPanel.Dock="Right"
-                            ItemsSource="{Binding Items}"
-                            SelectedItem="{Binding Param}" />
-                    </DockPanel>
-                </GroupBox>
-                <!--  有效的文件筛选器  -->
-                <GroupBox
-                    Grid.Row="1"
-                    Grid.Column="1"
-                    Margin="2,4,0,0"
-                    Padding="0,6,0,2"
-                    BorderBrush="Aquamarine"
-                    DataContext="{Binding HashModelFilters[4]}">
-                    <GroupBox.Header>
-                        <CheckBox
-                            Margin="3,0,0,0"
-                            VerticalContentAlignment="Center"
-                            Command="{Binding ElementName=cmdPanel, Path=DataContext.FilterChangedCmd}"
-                            CommandParameter="{Binding}"
-                            Content="{Binding Display}"
-                            IsChecked="{Binding Selected, Mode=OneWayToSource}"
-                            ToolTip="{Binding Description}" />
-                    </GroupBox.Header>
-                    <StackPanel VerticalAlignment="Center">
-                        <TextBlock Style="{StaticResource DescTextBlockStyle}" Text="不显示无法访问的文件" />
-                        <TextBlock Style="{StaticResource DescTextBlockStyle}" Text="重复的文件只显示其中一行" />
-                    </StackPanel>
-                </GroupBox>
-                <!--  文件大小选择器  -->
-                <GroupBox
-                    Grid.Row="1"
-                    Grid.Column="2"
-                    Margin="2,4,0,0"
-                    Padding="0,6,0,2"
-                    d:DataContext="{d:DesignInstance Type=local:FileSizeFilter}"
-                    BorderBrush="Orange"
-                    DataContext="{Binding HashModelFilters[5]}">
-                    <GroupBox.Header>
-                        <CheckBox
-                            Margin="3,0,0,0"
-                            VerticalContentAlignment="Center"
-                            Command="{Binding ElementName=cmdPanel, Path=DataContext.FilterChangedCmd}"
-                            CommandParameter="{Binding}"
-                            Content="{Binding Display}"
-                            IsChecked="{Binding Selected, Mode=OneWayToSource}"
-                            ToolTip="{Binding Description}" />
-                    </GroupBox.Header>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition />
-                            <RowDefinition />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock
-                            Grid.Row="0"
-                            Grid.Column="0"
-                            VerticalAlignment="Center"
-                            Text="最小：" />
-                        <TextBox
-                            Grid.Row="0"
-                            Grid.Column="1"
-                            Padding="0,2"
-                            VerticalAlignment="Center"
-                            Text="{Binding MinFileSize}" />
-                        <ComboBox
-                            Grid.Row="0"
-                            Grid.Column="2"
-                            MinWidth="47"
-                            Margin="4,0,0,0"
-                            VerticalAlignment="Center"
-                            DisplayMemberPath="Display"
-                            ItemsSource="{Binding Items}"
-                            SelectedItem="{Binding MinSizeUnit}" />
-                        <TextBlock
-                            Grid.Row="1"
-                            Grid.Column="0"
-                            Margin="0,4,0,0"
-                            VerticalAlignment="Center"
-                            Text="最大：" />
-                        <TextBox
-                            Grid.Row="1"
-                            Grid.Column="1"
-                            Margin="0,4,0,0"
-                            Padding="0,2"
-                            VerticalAlignment="Center"
-                            Text="{Binding MaxFileSize}" />
-                        <ComboBox
-                            Grid.Row="1"
-                            Grid.Column="2"
-                            MinWidth="47"
-                            Margin="4,4,0,0"
-                            VerticalAlignment="Center"
-                            DisplayMemberPath="Display"
-                            ItemsSource="{Binding Items}"
-                            SelectedItem="{Binding MaxSizeUnit}" />
-                    </Grid>
-                </GroupBox>
-                <!--  相同文件夹筛选器  -->
-                <GroupBox
-                    Grid.Row="1"
-                    Grid.Column="3"
-                    Margin="2,4,0,0"
-                    Padding="0,6,0,2"
-                    d:DataContext="{d:DesignInstance Type=local:SameDirFilesFilter}"
-                    BorderBrush="Salmon"
-                    DataContext="{Binding HashModelFilters[8]}">
-                    <GroupBox.Header>
-                        <CheckBox
-                            Margin="3,0,0,0"
-                            VerticalContentAlignment="Center"
-                            Command="{Binding ElementName=cmdPanel, Path=DataContext.FilterChangedCmd}"
-                            CommandParameter="{Binding}"
-                            Content="{Binding Display}"
-                            IsChecked="{Binding Selected, Mode=OneWayToSource}"
-                            ToolTip="{Binding Description}" />
-                    </GroupBox.Header>
-                    <StackPanel VerticalAlignment="Center">
-                        <TextBlock Style="{StaticResource DescTextBlockStyle}" Text="按文件所在文件夹进行分组" />
-                        <TextBlock Style="{StaticResource DescTextBlockStyle}" Text="将子文件夹视为不同文件夹" />
-                    </StackPanel>
-                </GroupBox>
-                <!--  哈希值字符串筛选器  -->
-                <GroupBox
-                    Grid.Row="2"
-                    Grid.ColumnSpan="4"
-                    Margin="0,4,0,0"
-                    Padding="0,6,0,2"
-                    BorderBrush="DeepSkyBlue"
-                    DataContext="{Binding HashModelFilters[6]}">
-                    <GroupBox.Header>
-                        <CheckBox
-                            Margin="3,0,0,0"
-                            VerticalContentAlignment="Center"
-                            Command="{Binding ElementName=cmdPanel, Path=DataContext.FilterChangedCmd}"
-                            CommandParameter="{Binding}"
-                            Content="{Binding Display}"
-                            IsChecked="{Binding Selected, Mode=OneWayToSource}"
-                            ToolTip="{Binding Description}" />
-                    </GroupBox.Header>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock
-                            Grid.Row="0"
-                            Grid.ColumnSpan="3"
-                            Padding="4,0,0,0"
-                            VerticalAlignment="Center"
-                            Panel.ZIndex="0"
-                            Foreground="#A0808080"
-                            Text="每行一个哈希值，按回车换行"
-                            Visibility="{Binding ElementName=hashStringsTextBox, Path=Text, Converter={StaticResource PlaceHolderTextVisibilityCvt}}" />
-                        <TextBox
-                            x:Name="hashStringsTextBox"
-                            Grid.Row="0"
-                            Grid.ColumnSpan="3"
-                            Padding="0,2"
-                            VerticalAlignment="Center"
-                            AcceptsReturn="True"
-                            Background="Transparent"
-                            Text="{Binding Items, Mode=OneWayToSource, Converter={StaticResource MultiLineTextToStrArrayCvt}}"
-                            TextWrapping="WrapWithOverflow" />
-                        <TextBlock
-                            Grid.Row="1"
-                            Grid.Column="0"
-                            Margin="0,4,0,0"
-                            VerticalAlignment="Center"
-                            Text="筛选逻辑：" />
-                        <ComboBox
-                            Grid.Row="1"
-                            Grid.Column="1"
-                            Margin="0,4,0,0"
-                            DisplayMemberPath="Display"
-                            ItemsSource="{Binding FilterLogics}"
-                            SelectedValue="{Binding Param}"
-                            SelectedValuePath="ItemValue"
-                            ToolTip="[要求] 指的是上方输入框中已输入的哈希值集合&#10;[满足任意要求] 该行的所有哈希值中至少有一个哈希值满足了其中一个要求&#10;[严格满足要求] 该行的所有哈希值涵盖了要求中的所有哈希值，且不含要求以外的哈希值&#10;[在要求范围内] 该行的所有哈希值都在要求的多个哈希值所组成的范围之内&#10;[涵盖所有要求] 该行的所有哈希值涵盖了要求中的所有哈希值，可能含有要求以外的哈希值" />
-                    </Grid>
-                </GroupBox>
-                <!--  文件名筛选器  -->
-                <GroupBox
-                    Grid.Row="3"
-                    Grid.ColumnSpan="4"
-                    Margin="0,4,0,0"
-                    Padding="0,6,0,2"
-                    d:DataContext="{d:DesignInstance Type=local:FileNameFilter}"
-                    BorderBrush="DarkGoldenrod"
-                    DataContext="{Binding HashModelFilters[7]}">
-                    <GroupBox.Header>
-                        <CheckBox
-                            Margin="3,0,0,0"
-                            VerticalContentAlignment="Center"
-                            Command="{Binding ElementName=cmdPanel, Path=DataContext.FilterChangedCmd}"
-                            CommandParameter="{Binding}"
-                            Content="{Binding Display}"
-                            IsChecked="{Binding Selected, Mode=OneWayToSource}"
-                            ToolTip="{Binding Description}" />
-                    </GroupBox.Header>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <TextBlock
-                            Grid.Row="0"
-                            Padding="4,0,0,0"
-                            VerticalAlignment="Center"
-                            Panel.ZIndex="0"
-                            Foreground="#A0808080"
-                            Text="输入文件名片段或正则表达式 (C#)"
-                            Visibility="{Binding ElementName=patternTextBox, Path=Text, Converter={StaticResource PlaceHolderTextVisibilityCvt}}" />
-                        <TextBox
-                            x:Name="patternTextBox"
-                            Grid.Row="0"
-                            Padding="0,2"
-                            VerticalAlignment="Center"
-                            Background="Transparent"
-                            MaxLines="1"
-                            Text="{Binding Pattern, Mode=OneWayToSource}"
-                            TextWrapping="WrapWithOverflow" />
+                    d:ItemsSource="{d:SampleData}"
+                    ItemsSource="{Binding HashModelFilters}"
+                    SelectedIndex="0"
+                    SelectedItem="{Binding SelectedFilter}"
+                    SelectionMode="Single">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Margin" Value="1" />
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <CheckBox
+                                    VerticalAlignment="Center"
+                                    Command="{Binding ElementName=cmdPanel, Path=DataContext.FilterChangedCmd}"
+                                    CommandParameter="{Binding}"
+                                    IsChecked="{Binding Selected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Padding="8,1,32,1" Text="{Binding Display}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <DockPanel Grid.Column="1">
+                    <DockPanel Margin="4,0,0,0" DockPanel.Dock="Bottom">
                         <StackPanel
-                            Grid.Row="1"
-                            Margin="0,4,0,0"
+                            Margin="0,0,0,6"
+                            VerticalAlignment="Bottom"
+                            DockPanel.Dock="Left"
                             Orientation="Horizontal">
-                            <CheckBox
-                                VerticalContentAlignment="Center"
-                                Content="使用正则表达式"
-                                IsChecked="{Binding Param}" />
-                            <CheckBox
-                                Margin="8,0,0,0"
-                                VerticalContentAlignment="Center"
-                                Content="忽略大小写"
-                                IsChecked="{Binding IgnoreCase}" />
+                            <Button
+                                Width="32"
+                                Height="32"
+                                Command="{Binding MoveFilterUpCmd}"
+                                CommandParameter="{Binding}"
+                                Style="{StaticResource ImageButtonStyle2}"
+                                ToolTip="上移筛选器...">
+                                <Image Source="/Images/arrow_up_64.png" />
+                            </Button>
+                            <Button
+                                Width="32"
+                                Height="32"
+                                Margin="12,0,0,0"
+                                Command="{Binding MoveFilterDownCmd}"
+                                Style="{StaticResource ImageButtonStyle2}"
+                                ToolTip="下移筛选器...">
+                                <Image Source="/Images/arrow_down_64.png" />
+                            </Button>
+                            <Button
+                                Width="32"
+                                Height="32"
+                                Margin="12,0,0,0"
+                                Command="{Binding ClearFilterSelectionCmd}"
+                                Style="{StaticResource ImageButtonStyle2}"
+                                ToolTip="取消所有筛选器的启用状态...">
+                                <Image Source="/Images/clear_filter_64.png" />
+                            </Button>
                         </StackPanel>
-                    </Grid>
-                </GroupBox>
-                <!--  筛选器的刷新按钮  -->
-                <Button
-                    Grid.RowSpan="4"
-                    Grid.Column="4"
-                    Width="64"
-                    Height="64"
-                    Margin="4,0,0,0"
-                    Command="{Binding RefreshViewCmd}"
-                    Style="{StaticResource ImageButtonStyle2}"
-                    ToolTip="应用已勾选的筛选器并刷新主窗口表格视图">
-                    <Button.IsEnabled>
-                        <MultiBinding Converter="{StaticResource CmdPanelCriticalControlsEnabledCvt}">
-                            <Binding Path="State" Source="{x:Static local:MainWndViewModel.CurrentModel}" />
-                            <Binding Path="FilterOrCmderEnabled" Source="{x:Static local:Settings.Current}" />
-                        </MultiBinding>
-                    </Button.IsEnabled>
-                    <Image Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnRefreshFilterEnabledImgCvt}}" />
-                </Button>
+                        <!--  筛选器的刷新按钮  -->
+                        <Button
+                            Width="64"
+                            Height="64"
+                            HorizontalAlignment="Right"
+                            Command="{Binding RefreshViewCmd}"
+                            DockPanel.Dock="Right"
+                            Style="{StaticResource ImageButtonStyle2}"
+                            ToolTip="应用已勾选的筛选器并刷新主窗口表格视图...">
+                            <Button.IsEnabled>
+                                <MultiBinding Converter="{StaticResource CmdPanelCriticalControlsEnabledCvt}">
+                                    <Binding Path="State" Source="{x:Static local:MainWndViewModel.CurrentModel}" />
+                                    <Binding Path="FilterOrCmderEnabled" Source="{x:Static local:Settings.Current}" />
+                                </MultiBinding>
+                            </Button.IsEnabled>
+                            <Image Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnRefreshFilterEnabledImgCvt}}" />
+                        </Button>
+                    </DockPanel>
+                    <GroupBox
+                        Margin="4,0,0,0"
+                        Padding="4,6,4,4"
+                        DockPanel.Dock="Top">
+                        <GroupBox.Header>
+                            <TextBlock
+                                VerticalAlignment="Top"
+                                Foreground="#FF006FD6"
+                                Text="{Binding SelectedFilter.Display, StringFormat=[ {0} ] 筛选器参数：}" />
+                        </GroupBox.Header>
+                        <ContentControl Content="{Binding SelectedFilter.Settings}" />
+                    </GroupBox>
+                </DockPanel>
             </Grid>
         </GroupBox>
         <GroupBox Grid.Row="1" Margin="0,8,0,0">
@@ -587,7 +190,7 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <!--  操作对象选择器命令  -->
@@ -612,6 +215,37 @@
                         </Grid.ColumnDefinitions>
                         <WrapPanel Grid.Column="0">
                             <Button
+                                Margin="4"
+                                Padding="20,6"
+                                Background="DarkSlateBlue"
+                                BorderThickness="1"
+                                Command="{Binding SelectSameHashGroupCmd}"
+                                Content="按相同哈希值组选择"
+                                Foreground="WhiteSmoke"
+                                Style="{StaticResource IndepButtonStyle}"
+                                ToolTip="如果有【相同哈希值】筛选器的分组结果，则每组选择除了第一行外的所有行，否则取消选择所有行" />
+                            <Button
+                                Margin="4"
+                                Padding="20,6"
+                                Background="DarkCyan"
+                                BorderThickness="1"
+                                Command="{Binding SelectSameFolderGroupCmd}"
+                                Content="按相同文件夹组选择"
+                                Foreground="WhiteSmoke"
+                                Style="{StaticResource IndepButtonStyle}"
+                                ToolTip="如果有【相同文件夹】筛选器的分组结果，则每组选择除了第一行外的所有行，否则取消选择所有行" />
+                            <Button
+                                Margin="4"
+                                Padding="20,6"
+                                Background="DarkMagenta"
+                                BorderThickness="1"
+                                Command="{Binding SelectHybridGroupsCmd}"
+                                Content="按多个分组选择"
+                                Foreground="WhiteSmoke"
+                                Style="{StaticResource IndepButtonStyle}"
+                                ToolTip="如果有多个筛选器共同起作用的分组结果，则每组选择除了第一行外的所有行，否则取消选择所有行" />
+                            <Button
+                                Margin="4"
                                 Padding="20,6"
                                 Background="DarkOliveGreen"
                                 BorderThickness="1"
@@ -621,17 +255,7 @@
                                 Style="{StaticResource IndepButtonStyle}"
                                 ToolTip="选择所有已通过筛选的行" />
                             <Button
-                                Margin="4,0,0,0"
-                                Padding="20,6"
-                                Background="SaddleBrown"
-                                BorderThickness="1"
-                                Command="{Binding DeselectAllModelsCmd}"
-                                Content="全不选"
-                                Foreground="WhiteSmoke"
-                                Style="{StaticResource IndepButtonStyle}"
-                                ToolTip="取消选择所有行" />
-                            <Button
-                                Margin="4,0,0,0"
+                                Margin="4"
                                 Padding="20,6"
                                 Background="DarkBlue"
                                 BorderThickness="1"
@@ -641,35 +265,15 @@
                                 Style="{StaticResource IndepButtonStyle}"
                                 ToolTip="反向改变所有已通过筛选的行的选择状态" />
                             <Button
-                                Margin="4,0,0,0"
+                                Margin="4"
                                 Padding="20,6"
-                                Background="DarkSlateBlue"
+                                Background="SaddleBrown"
                                 BorderThickness="1"
-                                Command="{Binding SelectSameHashGroupCmd}"
-                                Content="按相同哈希值组选择"
+                                Command="{Binding DeselectAllModelsCmd}"
+                                Content="全不选"
                                 Foreground="WhiteSmoke"
                                 Style="{StaticResource IndepButtonStyle}"
-                                ToolTip="如果已经过【相同哈希值】筛选器分组，则每组选择除了第一行外的所有行，否则取消选择所有行" />
-                            <Button
-                                Margin="4,0,0,0"
-                                Padding="20,6"
-                                Background="DarkCyan"
-                                BorderThickness="1"
-                                Command="{Binding SelectSameFolderGroupCmd}"
-                                Content="按相同文件夹组选择"
-                                Foreground="WhiteSmoke"
-                                Style="{StaticResource IndepButtonStyle}"
-                                ToolTip="如果已经过【相同文件夹】筛选器分组，则每组选择除了第一行外的所有行，否则取消选择所有行" />
-                            <Button
-                                Margin="4,0,0,0"
-                                Padding="20,6"
-                                Background="DarkMagenta"
-                                BorderThickness="1"
-                                Command="{Binding SelectSameFolderHashGroupCmd}"
-                                Content="按混合组选择"
-                                Foreground="WhiteSmoke"
-                                Style="{StaticResource IndepButtonStyle}"
-                                ToolTip="如果已经过【相同文件夹】→【相同哈希值】筛选器分组，则每组选择除了第一行外的所有行，否则取消选择所有行" />
+                                ToolTip="取消选择所有行" />
                         </WrapPanel>
                         <Button
                             Grid.Column="1"
@@ -692,7 +296,7 @@
                     Margin="0,4,0,0"
                     Padding="0,6,0,2"
                     d:DataContext="{d:DesignInstance Type=local:DeleteFileCmder}"
-                    BorderBrush="Navy"
+                    BorderBrush="DarkCyan"
                     DataContext="{Binding HashModelCmders[1]}"
                     Foreground="Black">
                     <GroupBox.Header>
@@ -739,13 +343,13 @@
                             Foreground="White"
                             IsEnabled="{Binding Source={x:Static local:Settings.Current}, Path=ShowExecutionTargetColumn}"
                             Style="{StaticResource IndepButtonStyle}"
-                            ToolTip="把操作对象移动到回收站，删除前请确认是否正确勾选了要删除的文件" />
+                            ToolTip="把操作对象所指文件移动到回收站，删除前请确认是否正确勾选了要删除的文件" />
                         <CheckBox
                             Grid.Row="1"
                             Grid.ColumnSpan="3"
                             Margin="0,4,0,0"
                             VerticalContentAlignment="Center"
-                            Content="不删除没有经过【有效文件】筛选的文件"
+                            Content="检查是否全部经过【有效文件】的筛选"
                             IsChecked="{Binding CheckIfUsingDistinctFilesFilter}" />
                         <TextBlock
                             Grid.Row="2"
@@ -815,7 +419,7 @@
                                     DisplayMemberPath="Display"
                                     DockPanel.Dock="Right"
                                     ItemsSource="{Binding OutputTypes}"
-                                    SelectedValue="{Binding OutputBeingUsed}"
+                                    SelectedValue="{Binding BeingUsedOutput}"
                                     SelectedValuePath="ItemValue"
                                     ToolTip="把哈希值转换为该格式的字符串作为文件名，不支持 Base64 的原因是某些字符不能作为文件名" />
                             </DockPanel>
@@ -840,7 +444,7 @@
                             Grid.ColumnSpan="2"
                             Margin="0,4,0,0"
                             VerticalContentAlignment="Center"
-                            Content="不重命名没有经过【有效文件】筛选的文件"
+                            Content="检查是否全部经过【有效文件】的筛选"
                             IsChecked="{Binding CheckIfUsingDistinctFilesFilter}" />
                         <TextBlock
                             Grid.Row="2"

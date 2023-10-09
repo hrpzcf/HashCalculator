@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Windows.Controls;
 
 namespace HashCalculator
 {
-    internal class FileNameFilter : HashViewFilter
+    internal class FileNameFilter : AbsHashViewFilter
     {
+        public override ContentControl Settings { get; }
+
         public override string Display => "搜索文件名";
 
         public override string Description => "筛选出含有指定字符串或与指定正则表达式匹配的文件名";
@@ -20,6 +23,11 @@ namespace HashCalculator
         public override object Param { get; set; } = false;
 
         public override object[] Items { get; set; }
+
+        public FileNameFilter()
+        {
+            this.Settings = new FileNameFilterCtrl(this);
+        }
 
         public override void FilterObjects(IEnumerable<HashViewModel> models)
         {

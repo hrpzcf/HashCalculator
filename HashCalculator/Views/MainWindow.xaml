@@ -349,7 +349,6 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock
-                                Width="{Binding MainWindowFileNameHeight, Mode=OneWayToSource}"
                                 Margin="1,0"
                                 Padding="4"
                                 Background="{Binding FdGroupId, Converter={StaticResource CmpColorToSolidColorBrushCvt}}"

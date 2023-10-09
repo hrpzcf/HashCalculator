@@ -97,7 +97,7 @@
   <ItemGroup>
     <Compile Include="AppLoading.cs" />
     <Compile Include="Cmders\DeleteFileCmder.cs" />
-    <Compile Include="Cmders\HashViewCmder.cs" />
+    <Compile Include="Cmders\AbsHashesCmder.cs" />
     <Compile Include="Cmders\SelectFileCmder.cs" />
     <Compile Include="Cmders\RenameFileCmder.cs" />
     <Compile Include="Globals\BufferSize.cs" />
@@ -121,20 +121,50 @@
     <Compile Include="HashAlgos\MsCryptoCngSHA384.cs" />
     <Compile Include="HashAlgos\MsCryptoCngSHA512.cs" />
     <Compile Include="HashAlgos\LibXxHashXXH64.cs" />
-    <Compile Include="HashFilters\CmpResultFilter.cs" />
-    <Compile Include="HashFilters\DistinctFilesFilter.cs" />
-    <Compile Include="HashFilters\FileNameFilter.cs" />
-    <Compile Include="HashFilters\FileSizeFilter.cs" />
-    <Compile Include="HashFilters\HashBytesComparer.cs" />
-    <Compile Include="HashFilters\HashingTaskResultFilter.cs" />
-    <Compile Include="HashFilters\HashStringFilter.cs" />
-    <Compile Include="HashFilters\HashAlgoFilter.cs" />
-    <Compile Include="HashFilters\EqualHashByteFilter.cs" />
-    <Compile Include="HashFilters\SameDirFilesFilter.cs" />
-    <Compile Include="HashFilters\SerialNumberFilter.cs" />
+    <Compile Include="Filters\CmpResultFilter.cs" />
+    <Compile Include="Filters\CmpResultFilterCtrl.xaml.cs">
+      <DependentUpon>CmpResultFilterCtrl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Filters\FileIndexFilter.cs" />
+    <Compile Include="Filters\FileIndexFilterCtrl.xaml.cs">
+      <DependentUpon>FileIndexFilterCtrl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Filters\EqualHashByteFilterCtrl.xaml.cs">
+      <DependentUpon>EqualHashByteFilterCtrl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Filters\FileNameFilter.cs" />
+    <Compile Include="Filters\FileNameFilterCtrl.xaml.cs">
+      <DependentUpon>FileNameFilterCtrl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Filters\FileSizeFilter.cs" />
+    <Compile Include="Filters\FileSizeFilterCtrl.xaml.cs">
+      <DependentUpon>FileSizeFilterCtrl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Filters\HashAlgoFilterCtrl.xaml.cs">
+      <DependentUpon>HashAlgoFilterCtrl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Others\HashBytesComparer.cs" />
+    <Compile Include="Filters\HashingTaskResultFilter.cs" />
+    <Compile Include="Filters\HashingTaskResultFilterCtrl.xaml.cs">
+      <DependentUpon>HashingTaskResultFilterCtrl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Filters\HashStringFilter.cs" />
+    <Compile Include="Filters\HashAlgoFilter.cs" />
+    <Compile Include="Filters\EqualHashByteFilter.cs" />
+    <Compile Include="Filters\HashStringFilterCtrl.xaml.cs">
+      <DependentUpon>HashStringFilterCtrl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Filters\SameDirFilesFilter.cs" />
+    <Compile Include="Filters\SameDirFilesFilterCtrl.xaml.cs">
+      <DependentUpon>SameDirFilesFilterCtrl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Filters\SerialNumberFilter.cs" />
+    <Compile Include="Filters\SerialNumberFilterCtrl.xaml.cs">
+      <DependentUpon>SerialNumberFilterCtrl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Others\CmdOptions.cs" />
     <Compile Include="Others\CommonExts.cs" />
-    <Compile Include="HashFilters\HashViewFilter.cs" />
+    <Compile Include="Filters\AbsHashViewFilter.cs" />
     <Compile Include="Others\ComparableColor.cs" />
     <Compile Include="Others\CmpableFileIndex.cs" />
     <Compile Include="Others\MappedReader.cs" />
@@ -155,7 +185,7 @@
     <Compile Include="Others\ShellExtHelper.cs" />
     <Compile Include="ViewModels\AlgosPanelModel.cs" />
     <Compile Include="ViewModels\AlgoInOutModel.cs" />
-    <Compile Include="ViewModels\CommandPanelModel.cs" />
+    <Compile Include="ViewModels\FilterAndCmdPanelModel.cs" />
     <Compile Include="ViewModels\HashViewModel.cs" />
     <Compile Include="ViewModels\MainWndViewModel.cs" />
     <Compile Include="Others\Converters.cs" />
@@ -177,6 +207,46 @@
       <DependentUpon>SettingsPanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="Others\ModelArg.cs" />
+    <Page Include="Filters\CmpResultFilterCtrl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Filters\FileIndexFilterCtrl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Filters\EqualHashByteFilterCtrl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Filters\FileNameFilterCtrl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Filters\FileSizeFilterCtrl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Filters\HashAlgoFilterCtrl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Filters\HashingTaskResultFilterCtrl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Filters\HashStringFilterCtrl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Filters\SameDirFilesFilterCtrl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Filters\SerialNumberFilterCtrl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Resources\AlgosButtonStyles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -318,6 +388,9 @@
     <EmbeddedResource Include="HashAlgos\XxHashDll\xxhash64.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Images\clear_filter_64.png" />
+    <Resource Include="Images\arrow_up_64.png" />
+    <Resource Include="Images\arrow_down_64.png" />
     <EmbeddedResource Include="Assembly\Crc32.NET.dll" />
     <None Include="Assembly\Crc32.NET.txt" />
     <EmbeddedResource Include="Assembly\System.Buffers.dll" />

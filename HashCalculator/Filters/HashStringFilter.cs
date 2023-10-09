@@ -1,40 +1,37 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Controls;
 
 namespace HashCalculator
 {
-    internal class CmpResultFilter : HashViewFilter
+    internal class HashStringFilter : AbsHashViewFilter
     {
-        private readonly ControlItem[] expResultCtrls = new ControlItem[]
-        {
-            new ControlItem("未校验", CmpRes.NoResult),
-            new ControlItem("无关联", CmpRes.Unrelated),
-            new ControlItem("已匹配", CmpRes.Matched),
-            new ControlItem("不匹配", CmpRes.Mismatch),
-            new ControlItem("不确定", CmpRes.Uncertain),
-        };
+        public override ContentControl Settings { get; }
 
-        public override string Display => "校验结果";
+        public override string Display => "哈希值";
 
-        public override string Description => "将各行中含有指定校验结果的行筛选出来";
+        public override string Description => "将各行中包含指定哈希值的行筛选出来";
 
         public override object Param { get; set; } = FilterLogic.Any;
 
-        public override object[] Items
+        public override object[] Items { get; set; }
+
+        public HashStringFilter()
         {
-            get => this.expResultCtrls;
-            set { }
+            this.Settings = new HashStringFilterCtrl(this);
         }
 
         public override void FilterObjects(IEnumerable<HashViewModel> models)
         {
-            if (models == null || !(this.Param is FilterLogic filterLogic))
+            if (models == null || !(this.Param is FilterLogic filterLogic) ||
+                !(this.Items is string[] hashStrings))
             {
                 return;
             }
-            HashSet<CmpRes> expectedResults = this.expResultCtrls.Where(i => i.Selected)
-                .Select(i => (CmpRes)i.ItemValue).ToHashSet();
-            if (expectedResults.Any())
+            HashBytesComparer comparer = new HashBytesComparer();
+            HashSet<byte[]> expectedHashs = hashStrings.Select(i => CommonUtils.HashFromAnyString(i))
+                .Where(i => i != null).ToHashSet(comparer);
+            if (expectedHashs.Any())
             {
                 foreach (HashViewModel model in models)
                 {
@@ -48,31 +45,31 @@ namespace HashCalculator
                     }
                     else
                     {
-                        HashSet<CmpRes> modelResults = model.AlgoInOutModels.Select(i => i.HashCmpResult).ToHashSet();
+                        HashSet<byte[]> modelHashs = model.AlgoInOutModels.Select(i => i.HashResult).ToHashSet(comparer);
                         if (filterLogic == FilterLogic.Any)
                         {
-                            if (!modelResults.Overlaps(expectedResults))
+                            if (!modelHashs.Overlaps(expectedHashs))
                             {
                                 model.Matched = false;
                             }
                         }
                         else if (filterLogic == FilterLogic.Strict)
                         {
-                            if (!modelResults.SetEquals(expectedResults))
+                            if (!modelHashs.SetEquals(expectedHashs))
                             {
                                 model.Matched = false;
                             }
                         }
                         else if (filterLogic == FilterLogic.Within)
                         {
-                            if (!modelResults.IsSubsetOf(expectedResults))
+                            if (!modelHashs.IsSubsetOf(expectedHashs))
                             {
                                 model.Matched = false;
                             }
                         }
                         else if (filterLogic == FilterLogic.Cover)
                         {
-                            if (!modelResults.IsSupersetOf(expectedResults))
+                            if (!modelHashs.IsSupersetOf(expectedHashs))
                             {
                                 model.Matched = false;
                             }

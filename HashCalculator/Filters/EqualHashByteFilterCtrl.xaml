@@ -1,0 +1,51 @@
+﻿<UserControl
+    x:Class="HashCalculator.EqualHashByteFilterCtrl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:HashCalculator"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DataContext="{d:DesignInstance Type=local:EqualHashByteFilter}"
+    d:DesignHeight="160"
+    d:DesignWidth="300"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/DescTextBlockStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock
+                Grid.Row="0"
+                Grid.Column="0"
+                VerticalAlignment="Center"
+                DockPanel.Dock="Left"
+                Text="关注的算法：" />
+            <ComboBox
+                Grid.Row="0"
+                Grid.Column="1"
+                MinWidth="108"
+                VerticalAlignment="Center"
+                DisplayMemberPath="AlgoName"
+                DockPanel.Dock="Right"
+                ItemsSource="{Binding Items}"
+                SelectedItem="{Binding Param}" />
+        </StackPanel>
+        <TextBlock
+            Margin="0,4,0,0"
+            Style="{StaticResource DescTextBlockStyle}"
+            Text="按关注算法的哈希值对当前显示的行进行分组" />
+        <TextBlock
+            Margin="0,2,0,0"
+            Style="{StaticResource DescTextBlockStyle}"
+            Text="1. 此筛选器以其前面已启用筛选器的结果为基础进行分组，对筛选顺序敏感" />
+        <TextBlock
+            Margin="0,2,0,0"
+            Foreground="OrangeRed"
+            Style="{StaticResource DescTextBlockStyle}"
+            Text="2. 多数情况下建议作为最后一个筛选器，否则可能得不到预期结果" />
+    </StackPanel>
+</UserControl>

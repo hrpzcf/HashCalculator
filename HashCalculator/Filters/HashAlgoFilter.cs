@@ -1,29 +1,49 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Controls;
 
 namespace HashCalculator
 {
-    internal class HashStringFilter : HashViewFilter
+    internal class HashAlgoFilter : AbsHashViewFilter
     {
-        public override string Display => "哈希值";
+        private AlgoInOutModel[] _algos;
 
-        public override string Description => "将各行中包含指定哈希值的行筛选出来";
+        public override ContentControl Settings { get; }
+
+        public override string Display => "哈希算法";
+
+        public override string Description => "将各行中含有指定算法的行筛选出来";
 
         public override object Param { get; set; } = FilterLogic.Any;
 
-        public override object[] Items { get; set; }
+        public override object[] Items
+        {
+            get
+            {
+                return this._algos;
+            }
+            set
+            {
+                this._algos = value as AlgoInOutModel[];
+            }
+        }
+
+        public HashAlgoFilter()
+        {
+            this._algos = AlgosPanelModel.ProvidedAlgos.Select(
+                i => i.NewAlgoInOutModel()).ToArray();
+            this.Settings = new HashAlgoFilterCtrl(this);
+        }
 
         public override void FilterObjects(IEnumerable<HashViewModel> models)
         {
-            if (models == null || !(this.Param is FilterLogic filterLogic) ||
-                !(this.Items is string[] hashStrings))
+            if (models == null || !(this.Param is FilterLogic filterLogic))
             {
                 return;
             }
-            HashBytesComparer comparer = new HashBytesComparer();
-            HashSet<byte[]> expectedHashs = hashStrings.Select(i => CommonUtils.HashFromAnyString(i))
-                .Where(i => i != null).ToHashSet(comparer);
-            if (expectedHashs.Any())
+            HashSet<AlgoType> expectedAlgos = this._algos.Where(i => i.Selected)
+                .Select(i => i.AlgoType).ToHashSet();
+            if (expectedAlgos.Any())
             {
                 foreach (HashViewModel model in models)
                 {
@@ -37,31 +57,31 @@ namespace HashCalculator
                     }
                     else
                     {
-                        HashSet<byte[]> modelHashs = model.AlgoInOutModels.Select(i => i.HashResult).ToHashSet(comparer);
+                        HashSet<AlgoType> modelAlgos = model.AlgoInOutModels.Select(i => i.AlgoType).ToHashSet();
                         if (filterLogic == FilterLogic.Any)
                         {
-                            if (!modelHashs.Overlaps(expectedHashs))
+                            if (!modelAlgos.Overlaps(expectedAlgos))
                             {
                                 model.Matched = false;
                             }
                         }
                         else if (filterLogic == FilterLogic.Strict)
                         {
-                            if (!modelHashs.SetEquals(expectedHashs))
+                            if (!modelAlgos.SetEquals(expectedAlgos))
                             {
                                 model.Matched = false;
                             }
                         }
                         else if (filterLogic == FilterLogic.Within)
                         {
-                            if (!modelHashs.IsSubsetOf(expectedHashs))
+                            if (!modelAlgos.IsSubsetOf(expectedAlgos))
                             {
                                 model.Matched = false;
                             }
                         }
                         else if (filterLogic == FilterLogic.Cover)
                         {
-                            if (!modelHashs.IsSupersetOf(expectedHashs))
+                            if (!modelAlgos.IsSupersetOf(expectedAlgos))
                             {
                                 model.Matched = false;
                             }

@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 namespace HashCalculator
 {
-    internal class DeleteFileCmder : HashViewCmder
+    internal class DeleteFileCmder : AbsHashesCmder
     {
         private RelayCommand moveToRecycleBinCmd;
         private RelayCommand deleteFileDirectlyCmd;
@@ -40,12 +40,20 @@ namespace HashCalculator
                     if (MessageBox.Show(MainWindow.This, promptInfo, "警告", MessageBoxButton.OKCancel,
                         MessageBoxImage.Warning) == MessageBoxResult.OK)
                     {
+                        if (this.CheckIfUsingDistinctFilesFilter &&
+                            !obsModels.Where(i => i.Matched).All(i => i.FileIndex != null))
+                        {
+                            if (MessageBox.Show(MainWindow.This, "并非所有行都经过【有效文件】的筛选，继续吗？", "提示",
+                                MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+                            {
+                                goto FinishingTouches;
+                            }
+                        }
                         HashViewModel[] hashViewModels = new HashViewModel[obsModels.Count];
                         obsModels.CopyTo(hashViewModels, 0);
                         foreach (HashViewModel model in hashViewModels)
                         {
-                            if (model.IsExecutionTarget &&
-                                (!this.CheckIfUsingDistinctFilesFilter || model.FileIndex != null))
+                            if (model.IsExecutionTarget)
                             {
                                 try
                                 {
@@ -76,6 +84,7 @@ namespace HashCalculator
                     MessageBox.Show(MainWindow.This, "没有找到任何操作对象，请刷新筛选或手动勾选要删除的对象", "提示",
                         MessageBoxButton.OK, MessageBoxImage.Information);
                 }
+            FinishingTouches:
                 Settings.Current.FilterOrCmderEnabled = true;
                 Settings.Current.ShowExecutionTargetColumn = false;
             }
