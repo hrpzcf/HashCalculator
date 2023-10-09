@@ -5,10 +5,14 @@ namespace HashCalculator
 {
     public partial class FilterAndCmdPanel : Window
     {
+        private readonly FilterAndCmdPanelModel model;
+
         public static FilterAndCmdPanel This { get; private set; }
 
         public FilterAndCmdPanel(EventHandler handler)
         {
+            this.model = new FilterAndCmdPanelModel();
+            this.DataContext = this.model;
             This = this;
             this.Closed += handler;
             this.Closed += this.PanelClosed;
@@ -18,10 +22,7 @@ namespace HashCalculator
 
         private void PanelClosed(object sender, EventArgs e)
         {
-            if (this.DataContext is CommandPanelModel model)
-            {
-                model.ClearFiltersAndRefresh();
-            }
+            this.model.ClearFiltersAndRefresh();
         }
 
         public bool CheckPanelPosition()

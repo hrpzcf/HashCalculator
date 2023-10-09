@@ -2,7 +2,7 @@
 
 namespace HashCalculator
 {
-    internal abstract class HashViewCmder
+    internal abstract class AbsHashesCmder
     {
         protected object RefModels { get; }
 
@@ -14,7 +14,7 @@ namespace HashCalculator
 
         public virtual void Reset() { }
 
-        public HashViewCmder(IEnumerable<HashViewModel> models)
+        public AbsHashesCmder(IEnumerable<HashViewModel> models)
         {
             this.RefModels = models;
         }

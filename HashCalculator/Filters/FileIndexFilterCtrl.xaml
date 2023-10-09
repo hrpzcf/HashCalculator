@@ -1,0 +1,28 @@
+﻿<UserControl
+    x:Class="HashCalculator.FileIndexFilterCtrl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:HashCalculator"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="160"
+    d:DesignWidth="300"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/DescTextBlockStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <StackPanel>
+        <TextBlock
+            Margin="0,2,0,0"
+            Style="{StaticResource DescTextBlockStyle}"
+            Text="不显示不存在或无法访问的文件" />
+        <TextBlock
+            Margin="0,2,0,0"
+            Style="{StaticResource DescTextBlockStyle}"
+            Text="重复添加到表格的文件只显示其中一行" />
+    </StackPanel>
+</UserControl>

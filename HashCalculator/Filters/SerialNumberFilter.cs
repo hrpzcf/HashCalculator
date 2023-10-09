@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Controls;
 
 namespace HashCalculator
 {
-    internal class SerialNumberFilter : HashViewFilter
+    internal class SerialNumberFilter : AbsHashViewFilter
     {
+        public override ContentControl Settings { get; }
+
         public override string Display => "序号范围";
 
         public override string Description => "将指定序列号的行筛选出来";
@@ -16,6 +19,11 @@ namespace HashCalculator
         public int SerialLeft { get; set; }
 
         public int SerialRight { get; set; }
+
+        public SerialNumberFilter()
+        {
+            this.Settings = new SerialNumberFilterCtrl(this);
+        }
 
         public override void FilterObjects(IEnumerable<HashViewModel> models)
         {

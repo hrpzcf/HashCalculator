@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Windows.Controls;
 
 namespace HashCalculator
 {
-    internal class FileSizeFilter : HashViewFilter
+    internal class FileSizeFilter : AbsHashViewFilter
     {
+        public override ContentControl Settings { get; }
+
         public override string Display => "文件大小";
 
         public override string Description => "筛选出符合指定大小范围的文件";
@@ -30,6 +33,7 @@ namespace HashCalculator
         {
             this.MinSizeUnit = (ControlItem)this.Items[2];
             this.MaxSizeUnit = (ControlItem)this.Items[2];
+            this.Settings = new FileSizeFilterCtrl(this);
         }
 
         public override void FilterObjects(IEnumerable<HashViewModel> models)

@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Controls;
 
 namespace HashCalculator
 {
-    internal class DistinctFilesFilter : HashViewFilter
+    internal class FileIndexFilter : AbsHashViewFilter
     {
+        public override ContentControl Settings { get; }
+
         public override string Display => "有效的文件";
 
         public override string Description => "过滤重复计算和不存在的文件，重复文件只显示其中一行";
@@ -12,6 +15,12 @@ namespace HashCalculator
         public override object Param { get; set; }
 
         public override object[] Items { get; set; }
+
+        public FileIndexFilter()
+        {
+            this.Selected = true;
+            this.Settings = new FileIndexFilterCtrl(this);
+        }
 
         public override void FilterObjects(IEnumerable<HashViewModel> models)
         {

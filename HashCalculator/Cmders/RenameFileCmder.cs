@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace HashCalculator
 {
-    internal class RenameFileCmder : HashViewCmder
+    internal class RenameFileCmder : AbsHashesCmder
     {
         private readonly AlgoInOutModel[] _algos;
         private RelayCommand renameFilesCmd;
@@ -23,7 +23,7 @@ namespace HashCalculator
             new ControlItem("十六进制大写", OutputType.BinaryUpper),
         };
 
-        public OutputType OutputBeingUsed { get; set; } = OutputType.BinaryLower;
+        public OutputType BeingUsedOutput { get; set; } = OutputType.BinaryLower;
 
         public AlgoInOutModel[] AlgoInOutModels { get => this._algos; }
 
@@ -43,8 +43,7 @@ namespace HashCalculator
 
         private void RenameFilesAction(object param)
         {
-            if (Settings.Current.ShowExecutionTargetColumn &&
-                Settings.Current.FilterOrCmderEnabled &&
+            if (Settings.Current.ShowExecutionTargetColumn && Settings.Current.FilterOrCmderEnabled &&
                 this.RefModels is IEnumerable<HashViewModel> models)
             {
                 Settings.Current.FilterOrCmderEnabled = false;
@@ -52,25 +51,32 @@ namespace HashCalculator
                 {
                     MessageBox.Show(MainWindow.This, "没有任何可重命名的目标文件", "提示",
                         MessageBoxButton.OK, MessageBoxImage.Information);
-                    goto FinalizeAction;
+                    goto FinishingTouches;
                 }
-                else if (MessageBox.Show(MainWindow.This, "使用哈希值为文件名重命名操作对象所指的文件吗？", "确认",
+                else if (MessageBox.Show(MainWindow.This, "用哈希值作为文件名重命名操作对象所指的文件吗？", "确认",
                      MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
                 {
-                    goto FinalizeAction;
+                    goto FinishingTouches;
+                }
+                if (this.CheckIfUsingDistinctFilesFilter &&
+                    !models.Where(i => i.Matched).All(i => i.FileIndex != null))
+                {
+                    if (MessageBox.Show(MainWindow.This, "并非所有行都经过【有效文件】的筛选，继续吗？", "提示",
+                        MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+                    {
+                        goto FinishingTouches;
+                    }
                 }
                 foreach (HashViewModel model in models)
                 {
-                    if (model.IsExecutionTarget &&
-                        (!this.CheckIfUsingDistinctFilesFilter || model.FileIndex != null) &&
-                        model.AlgoInOutModels != null)
+                    if (model.IsExecutionTarget && model.AlgoInOutModels != null)
                     {
                         string newFileName = null;
                         foreach (AlgoInOutModel algo in model.AlgoInOutModels)
                         {
                             if (algo.AlgoType == this.SelectedAlgo)
                             {
-                                newFileName = BytesToStrByOutputTypeCvt.Convert(algo.HashResult, this.OutputBeingUsed);
+                                newFileName = BytesToStrByOutputTypeCvt.Convert(algo.HashResult, this.BeingUsedOutput);
                                 break;
                             }
                         }
@@ -103,7 +109,7 @@ namespace HashCalculator
                     }
                     model.IsExecutionTarget = false;
                 }
-            FinalizeAction:
+            FinishingTouches:
                 Settings.Current.FilterOrCmderEnabled = true;
                 Settings.Current.ShowExecutionTargetColumn = false;
             }

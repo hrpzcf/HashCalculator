@@ -1,34 +1,33 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Controls;
 
 namespace HashCalculator
 {
-    internal class HashAlgoFilter : HashViewFilter
+    internal class CmpResultFilter : AbsHashViewFilter
     {
-        private AlgoInOutModel[] _algos;
+        private readonly ControlItem[] expResultCtrls = new ControlItem[]
+        {
+            new ControlItem("未校验", CmpRes.NoResult),
+            new ControlItem("无关联", CmpRes.Unrelated),
+            new ControlItem("已匹配", CmpRes.Matched),
+            new ControlItem("不匹配", CmpRes.Mismatch),
+            new ControlItem("不确定", CmpRes.Uncertain),
+        };
 
-        public override string Display => "哈希算法";
+        public override ContentControl Settings { get; }
 
-        public override string Description => "将各行中含有指定算法的行筛选出来";
+        public override string Display => "校验结果";
+
+        public override string Description => "将各行中含有指定校验结果的行筛选出来";
 
         public override object Param { get; set; } = FilterLogic.Any;
 
-        public override object[] Items
-        {
-            get
-            {
-                return this._algos;
-            }
-            set
-            {
-                this._algos = value as AlgoInOutModel[];
-            }
-        }
+        public override object[] Items { get => this.expResultCtrls; set { } }
 
-        public HashAlgoFilter()
+        public CmpResultFilter()
         {
-            this._algos = AlgosPanelModel.ProvidedAlgos.Select(
-                i => i.NewAlgoInOutModel()).ToArray();
+            this.Settings = new CmpResultFilterCtrl(this);
         }
 
         public override void FilterObjects(IEnumerable<HashViewModel> models)
@@ -37,9 +36,9 @@ namespace HashCalculator
             {
                 return;
             }
-            HashSet<AlgoType> expectedAlgos = this._algos.Where(i => i.Selected)
-                .Select(i => i.AlgoType).ToHashSet();
-            if (expectedAlgos.Any())
+            HashSet<CmpRes> expectedResults = this.expResultCtrls.Where(i => i.Selected)
+                .Select(i => (CmpRes)i.ItemValue).ToHashSet();
+            if (expectedResults.Any())
             {
                 foreach (HashViewModel model in models)
                 {
@@ -53,31 +52,31 @@ namespace HashCalculator
                     }
                     else
                     {
-                        HashSet<AlgoType> modelAlgos = model.AlgoInOutModels.Select(i => i.AlgoType).ToHashSet();
+                        HashSet<CmpRes> modelResults = model.AlgoInOutModels.Select(i => i.HashCmpResult).ToHashSet();
                         if (filterLogic == FilterLogic.Any)
                         {
-                            if (!modelAlgos.Overlaps(expectedAlgos))
+                            if (!modelResults.Overlaps(expectedResults))
                             {
                                 model.Matched = false;
                             }
                         }
                         else if (filterLogic == FilterLogic.Strict)
                         {
-                            if (!modelAlgos.SetEquals(expectedAlgos))
+                            if (!modelResults.SetEquals(expectedResults))
                             {
                                 model.Matched = false;
                             }
                         }
                         else if (filterLogic == FilterLogic.Within)
                         {
-                            if (!modelAlgos.IsSubsetOf(expectedAlgos))
+                            if (!modelResults.IsSubsetOf(expectedResults))
                             {
                                 model.Matched = false;
                             }
                         }
                         else if (filterLogic == FilterLogic.Cover)
                         {
-                            if (!modelAlgos.IsSupersetOf(expectedAlgos))
+                            if (!modelResults.IsSupersetOf(expectedResults))
                             {
                                 model.Matched = false;
                             }

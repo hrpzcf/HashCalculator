@@ -1,10 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Windows.Controls;
 
 namespace HashCalculator
 {
-    internal abstract class HashViewFilter
+    internal abstract class AbsHashViewFilter : NotifiableModel
     {
+        private bool _selected = false;
+
+        public abstract ContentControl Settings { get; }
+
         public abstract string Display { get; }
 
         public abstract string Description { get; }
@@ -25,12 +30,22 @@ namespace HashCalculator
             new ControlItem("涵盖所有要求", FilterLogic.Cover),
         };
 
-        public bool Selected { get; set; }
-
         public virtual void Init() { }
 
         public virtual void Reset() { }
 
         public abstract void FilterObjects(IEnumerable<HashViewModel> models);
+
+        public bool Selected
+        {
+            get
+            {
+                return this._selected;
+            }
+            set
+            {
+                this.SetPropNotify(ref this._selected, value);
+            }
+        }
     }
 }

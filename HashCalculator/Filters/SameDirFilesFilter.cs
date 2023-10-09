@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows.Controls;
 using System.Windows.Data;
 
 namespace HashCalculator
 {
-    internal class SameDirFilesFilter : HashViewFilter
+    internal class SameDirFilesFilter : AbsHashViewFilter
     {
+        public override ContentControl Settings { get; }
+
         public override string Display => "相同文件夹";
 
         public override string Description => "将各行中位于相同文件夹的文件筛选出来";
@@ -21,6 +24,11 @@ namespace HashCalculator
             {
                 new PropertyGroupDescription(nameof(HashViewModel.FdGroupId)),
             };
+
+        public SameDirFilesFilter()
+        {
+            this.Settings = new SameDirFilesFilterCtrl(this);
+        }
 
         public override void FilterObjects(IEnumerable<HashViewModel> models)
         {
