@@ -10,7 +10,7 @@ namespace HashCalculator
     internal class FilterAndCmdPanelModel : NotifiableModel
     {
         private AbsHashViewFilter selectedFilter;
-        private RelayCommand refreshViewCmd;
+        private RelayCommand refreshFiltersCmd;
         private RelayCommand filterChangedCmd;
         private RelayCommand moveFilterUpCmd;
         private RelayCommand moveFilterDownCmd;
@@ -69,7 +69,7 @@ namespace HashCalculator
             {
                 filter.Reset();
             }
-            this.RefreshViewAction(false);  // 传入 false 表示不筛选
+            this.RefreshFiltersAction(false);  // 传入 false 表示不筛选
         }
 
         private void FilterChangedAction(object param)
@@ -166,7 +166,7 @@ namespace HashCalculator
             }
         }
 
-        private async void RefreshViewAction(object param)
+        private async void RefreshFiltersAction(object param)
         {
             if (!Settings.Current.FilterOrCmderEnabled)
             {
@@ -236,15 +236,15 @@ namespace HashCalculator
             Settings.Current.FilterOrCmderEnabled = true;
         }
 
-        public ICommand RefreshViewCmd
+        public ICommand RefreshFiltersCmd
         {
             get
             {
-                if (this.refreshViewCmd == null)
+                if (this.refreshFiltersCmd == null)
                 {
-                    this.refreshViewCmd = new RelayCommand(this.RefreshViewAction);
+                    this.refreshFiltersCmd = new RelayCommand(this.RefreshFiltersAction);
                 }
-                return this.refreshViewCmd;
+                return this.refreshFiltersCmd;
             }
         }
     }

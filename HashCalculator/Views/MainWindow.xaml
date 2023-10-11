@@ -135,37 +135,37 @@
                     Grid.Column="10"
                     Margin="4,0,0,0"
                     Command="{Binding ExportHashResultCmd}"
-                    IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBoolCvt}}"
+                    IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBooleanCvt}}"
                     Style="{StaticResource ImageButtonStyle2}"
                     ToolTip="导出哈希值：将表格中所有文件的哈希计算结果导出为文件&#10;导出的内容使用的输出方式受到 [默认输出方式] 的控制而不受各文件自己的 [输出方式] 的控制&#10;没有计算结果的行不会被导出，[导出] 列没有勾选的行也不会被导出">
-                    <Image Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnExportEnabledImgCvt}}" />
+                    <Image Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnExportEnabledImgSrcCvt}}" />
                 </Button>
                 <Button
                     Grid.Column="11"
                     Margin="4,0,0,0"
-                    Command="{Binding RefreshHashNewLinesCmd}"
-                    IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBoolCvt}}"
+                    Command="{Binding RestartModelsWithCopyCmd}"
+                    IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBooleanCvt}}"
                     Style="{StaticResource ImageButtonStyle2}"
                     ToolTip="新增哈希计算：根据 [默认哈希算法] 所选算法，计算表格中所有文件的哈希值，但不清除原来的计算结果，而是增加新的行来显示结果">
-                    <Image Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnNewLineEnabledImgCvt}}" />
+                    <Image Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnNewLineEnabledImgSrcCvt}}" />
                 </Button>
                 <Button
                     Grid.Column="12"
                     Margin="4,0,0,0"
-                    Command="{Binding RefreshCurrentHashCmd}"
-                    IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBoolCvt}}"
+                    Command="{Binding RefreshOriginalModelsCmd}"
+                    IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBooleanCvt}}"
                     Style="{StaticResource ImageButtonStyle2}"
                     ToolTip="计算未完成项：根据 [默认哈希算法] 所选算法，重新计算表格中未完成计算的文件的哈希值">
-                    <Image Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnRefreshEnabledImgCvt}}" />
+                    <Image Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnRefreshEnabledImgSrcCvt}}" />
                 </Button>
                 <Button
                     Grid.Column="13"
                     Margin="4,0,0,0"
-                    Command="{Binding RefreshCurHashForceCmd}"
-                    IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBoolCvt}}"
+                    Command="{Binding ForceRefreshOriginalModelsCmd}"
+                    IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBooleanCvt}}"
                     Style="{StaticResource ImageButtonStyle2}"
                     ToolTip="全部重新计算：根据 [默认哈希算法] 所选算法，重新计算表格中所有文件的哈希值">
-                    <Image Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnRefreshForceEnabledImgCvt}}" />
+                    <Image Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnForceRefreshEnabledImgSrcCvt}}" />
                 </Button>
                 <Button
                     Grid.Column="14"
@@ -205,7 +205,7 @@
                     Command="{Binding MainWindowTopmostCmd}"
                     Style="{StaticResource ImageButtonStyle2}"
                     ToolTip="切换窗口置顶：点击在 [置顶/非置顶] 之间切换主窗口置顶状态">
-                    <Image Source="{Binding Source={x:Static local:Settings.Current}, Path=MainWndTopmost, Converter={StaticResource BtnTopmostEnabledImgCvt}}" />
+                    <Image Source="{Binding Source={x:Static local:Settings.Current}, Path=MainWndTopmost, Converter={StaticResource BtnTopmostEnabledImgSrcCvt}}" />
                 </Button>
                 <Button
                     Grid.Column="19"
@@ -272,7 +272,7 @@
                                 <Setter Property="Command" Value="{Binding ItemValue}" />
                                 <Setter Property="CommandParameter">
                                     <Setter.Value>
-                                        <MultiBinding Converter="{StaticResource ActionMultiParameterCvt}">
+                                        <MultiBinding Converter="{StaticResource CloneParameterArrayCvt}">
                                             <Binding Path="Param" />
                                             <Binding Path="PlacementTarget.SelectedItems" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}" />
                                         </MultiBinding>
@@ -440,7 +440,7 @@
                                     TextTrimming="CharacterEllipsis"
                                     ToolTip="{Binding ModelDetails}">
                                     <TextBlock.Visibility>
-                                        <MultiBinding Converter="{StaticResource SubCtrlVisiblitySucceededCvt}">
+                                        <MultiBinding Converter="{StaticResource StateFinishedResultSucceededToVisiblityCvt}">
                                             <Binding Path="State" />
                                             <Binding Path="Result" />
                                         </MultiBinding>
@@ -455,7 +455,7 @@
                                     Text="{Binding TaskMessage}"
                                     TextTrimming="CharacterEllipsis">
                                     <TextBlock.Visibility>
-                                        <MultiBinding Converter="{StaticResource TaskMessageCtrlVisiblityCvt}">
+                                        <MultiBinding Converter="{StaticResource StateNotRunningResultSucceededToVisiblityCvt}">
                                             <Binding Path="State" />
                                             <Binding Path="Result" />
                                         </MultiBinding>
@@ -470,7 +470,7 @@
                                     HorizontalAlignment="Left"
                                     Foreground="#8000B4E7"
                                     Maximum="{Binding MaxProgress}"
-                                    Visibility="{Binding State, Converter={StaticResource SubBtnVisiblityRunningCvt}}"
+                                    Visibility="{Binding State, Converter={StaticResource StateRunningToVisiblityCvt}}"
                                     Value="{Binding Progress, Mode=OneWay}" />
                                 <Button
                                     Grid.Column="1"
@@ -478,7 +478,7 @@
                                     Command="{Binding ShutdownModelSelfCmd}"
                                     Style="{StaticResource ImageButtonStyle1}"
                                     ToolTip="停止..."
-                                    Visibility="{Binding State, Converter={StaticResource SubBtnVisiblityRunningCvt}}">
+                                    Visibility="{Binding State, Converter={StaticResource StateRunningToVisiblityCvt}}">
                                     <Image Source="/Images/stop.png" />
                                 </Button>
                                 <Button
@@ -487,7 +487,7 @@
                                     Command="{Binding PauseOrContinueModelSelfCmd}"
                                     Style="{StaticResource ImageButtonStyle1}"
                                     ToolTip="{Binding State, Converter={StaticResource SubBtnPauseToolTipCvt}}"
-                                    Visibility="{Binding State, Converter={StaticResource SubBtnVisiblityRunningCvt}}">
+                                    Visibility="{Binding State, Converter={StaticResource StateRunningToVisiblityCvt}}">
                                     <Image Source="{Binding State, Converter={StaticResource SubBtnPauseImageSrcCvt}}" />
                                 </Button>
                                 <!--  正排队  -->
@@ -497,7 +497,7 @@
                                     Command="{Binding ShutdownModelSelfCmd}"
                                     Style="{StaticResource ImageButtonStyle1}"
                                     ToolTip="取消..."
-                                    Visibility="{Binding State, Converter={StaticResource SubBtnVisiblityWaitingCvt}}">
+                                    Visibility="{Binding State, Converter={StaticResource StateWaitingToVisiblityCvt}}">
                                     <Image Source="/Images/cancel.png" />
                                 </Button>
                                 <!--  已成功  -->
@@ -508,7 +508,7 @@
                                     Style="{StaticResource ImageButtonStyle1}"
                                     ToolTip="复制...">
                                     <Button.Visibility>
-                                        <MultiBinding Converter="{StaticResource SubCtrlVisiblitySucceededCvt}">
+                                        <MultiBinding Converter="{StaticResource StateFinishedResultSucceededToVisiblityCvt}">
                                             <Binding Path="State" />
                                             <Binding Path="Result" />
                                         </MultiBinding>
@@ -522,7 +522,7 @@
                                     Style="{StaticResource ImageButtonStyle1}"
                                     ToolTip="详情...">
                                     <Button.Visibility>
-                                        <MultiBinding Converter="{StaticResource SubCtrlVisiblitySucceededCvt}">
+                                        <MultiBinding Converter="{StaticResource StateFinishedResultSucceededToVisiblityCvt}">
                                             <Binding Path="State" />
                                             <Binding Path="Result" />
                                         </MultiBinding>
@@ -537,7 +537,7 @@
                                     Style="{StaticResource ImageButtonStyle1}"
                                     ToolTip="开始...">
                                     <Button.Visibility>
-                                        <MultiBinding Converter="{StaticResource SubCtrlVisiblityNotSucceedCvt}">
+                                        <MultiBinding Converter="{StaticResource StateFinishedResultNotSucceedToVisiblityCvt}">
                                             <Binding Path="State" />
                                             <Binding Path="Result" />
                                         </MultiBinding>
@@ -686,7 +686,7 @@
                 Command="{Binding StartVerifyHashValueCmd}"
                 CommandParameter="{Binding ElementName=uiTextBoxHashStringOrBasisPath, Path=Text}"
                 Content="校验"
-                IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBoolCvt}}"
+                IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBooleanCvt}}"
                 ToolTip="当面板为空时，如果校验依据选择的是通用格式的哈希值文本文件，则：&#10;点击 [校验] 后程序会自动解析文件并在相同目录下寻找要计算哈希值的文件完成计算并显示校验结果。&#10;通用格式的哈希值文件请参考程序 [导出结果] 功能导出的文件的内容排布格式。" />
         </Grid>
     </Grid>

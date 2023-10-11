@@ -45,9 +45,9 @@ namespace HashCalculator
         private RelayCommand mainWindowTopmostCmd;
         private RelayCommand clearAllTableLinesCmd;
         private RelayCommand exportHashResultCmd;
-        private RelayCommand refreshHashNewLinesCmd;
-        private RelayCommand refreshCurrentHashCmd;
-        private RelayCommand refreshCurHashForceCmd;
+        private RelayCommand restartModelsWithCopyCmd;
+        private RelayCommand refreshOriginalModelsCmd;
+        private RelayCommand forceRefreshOriginalModelsCmd;
         private RelayCommand startVerifyHashValueCmd;
         private RelayCommand openSettingsPanelCmd;
         private RelayCommand openAboutWindowCmd;
@@ -1017,7 +1017,7 @@ namespace HashCalculator
             }
         }
 
-        public void RestartModels(bool newLines, bool force)
+        public void StartModels(bool newLines, bool force)
         {
             if (!newLines)
             {
@@ -1037,54 +1037,54 @@ namespace HashCalculator
             }
         }
 
-        private void RefreshHashNewLinesAction(object param)
+        private void RestartModelsWithCopyAction(object param)
         {
-            this.RestartModels(true, false);
+            this.StartModels(newLines: true, force: false);
         }
 
-        public ICommand RefreshHashNewLinesCmd
+        public ICommand RestartModelsWithCopyCmd
         {
             get
             {
-                if (this.refreshHashNewLinesCmd is null)
+                if (this.restartModelsWithCopyCmd is null)
                 {
-                    this.refreshHashNewLinesCmd = new RelayCommand(this.RefreshHashNewLinesAction);
+                    this.restartModelsWithCopyCmd = new RelayCommand(this.RestartModelsWithCopyAction);
                 }
-                return this.refreshHashNewLinesCmd;
+                return this.restartModelsWithCopyCmd;
             }
         }
 
-        private void RefreshCurrentHashAction(object param)
+        private void RefreshOriginalModelsAction(object param)
         {
-            this.RestartModels(false, false);
+            this.StartModels(newLines: false, force: false);
         }
 
-        public ICommand RefreshCurrentHashCmd
+        public ICommand RefreshOriginalModelsCmd
         {
             get
             {
-                if (this.refreshCurrentHashCmd is null)
+                if (this.refreshOriginalModelsCmd is null)
                 {
-                    this.refreshCurrentHashCmd = new RelayCommand(this.RefreshCurrentHashAction);
+                    this.refreshOriginalModelsCmd = new RelayCommand(this.RefreshOriginalModelsAction);
                 }
-                return this.refreshCurrentHashCmd;
+                return this.refreshOriginalModelsCmd;
             }
         }
 
-        private void RefreshCurHashForceAction(object param)
+        private void ForceRefreshOriginalModelsAction(object param)
         {
-            this.RestartModels(false, true);
+            this.StartModels(newLines: false, force: true);
         }
 
-        public ICommand RefreshCurHashForceCmd
+        public ICommand ForceRefreshOriginalModelsCmd
         {
             get
             {
-                if (this.refreshCurHashForceCmd is null)
+                if (this.forceRefreshOriginalModelsCmd is null)
                 {
-                    this.refreshCurHashForceCmd = new RelayCommand(this.RefreshCurHashForceAction);
+                    this.forceRefreshOriginalModelsCmd = new RelayCommand(this.ForceRefreshOriginalModelsAction);
                 }
-                return this.refreshCurHashForceCmd;
+                return this.forceRefreshOriginalModelsCmd;
             }
         }
 

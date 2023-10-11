@@ -117,59 +117,7 @@ namespace HashCalculator
         }
     }
 
-    //internal class AlgoTypeBackgroundCvt : IValueConverter
-    //{
-    //    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-    //    {
-    //        if (value is AlgoInOutModel model)
-    //        {
-    //            switch (model.Type)
-    //            {
-    //                case AlgoType.SHA1:
-    //                    return "#64FF0000";
-    //                case AlgoType.SHA224:
-    //                    return "#64ff5900";
-    //                case AlgoType.SHA256:
-    //                    return "#64ff8900";
-    //                case AlgoType.SHA384:
-    //                    return "#64ffaa00";
-    //                case AlgoType.SHA512:
-    //                    return "#64ffc600";
-    //                case AlgoType.SHA3_224:
-    //                    return "#64ffe100";
-    //                case AlgoType.SHA3_256:
-    //                    return "#64ffff00";
-    //                case AlgoType.SHA3_384:
-    //                    return "#64bdf400";
-    //                case AlgoType.SHA3_512:
-    //                    return "#647ce700";
-    //                case AlgoType.MD5:
-    //                    return "#6400cc00";
-    //                case AlgoType.BLAKE2S:
-    //                    return "#642618b1";
-    //                case AlgoType.BLAKE2B:
-    //                    return "#641240ab";
-    //                case AlgoType.BLAKE3:
-    //                    return "#647109aa";
-    //                case AlgoType.WHIRLPOOL:
-    //                    return "#6400a876";
-    //                default:
-    //                    return "#64A0A0A0";
-    //            }
-    //        }
-    //        else
-    //        {
-    //            return "Transparent";
-    //        }
-    //    }
-
-    //    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-    //    {
-    //        return AlgoType.SHA256; // 此处未使用，只返回默认值
-    //    }
-    //}
-
-    internal class SubBtnVisiblityRunningCvt : IValueConverter
+    internal class StateRunningToVisiblityCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -235,12 +183,12 @@ namespace HashCalculator
         }
     }
 
-    internal class SubCtrlVisiblitySucceededCvt : IMultiValueConverter
+    internal class StateFinishedResultSucceededToVisiblityCvt : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             Debug.Assert(values.Length == 2);
-            if ((HashState)values[0] != HashState.Finished ||
+            if (!(values[0] is HashState hashState) || hashState != HashState.Finished ||
                 !(values[1] is HashResult hashResult) || hashResult != HashResult.Succeeded)
             {
                 return Visibility.Hidden;
@@ -257,12 +205,12 @@ namespace HashCalculator
         }
     }
 
-    internal class SubCtrlVisiblityNotSucceedCvt : IMultiValueConverter
+    internal class StateFinishedResultNotSucceedToVisiblityCvt : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             Debug.Assert(values.Length == 2);
-            if ((HashState)values[0] != HashState.Finished)
+            if (!(values[0] is HashState hashState) || hashState != HashState.Finished)
             {
                 return Visibility.Hidden;
             }
@@ -283,7 +231,7 @@ namespace HashCalculator
         }
     }
 
-    internal class SubBtnVisiblityWaitingCvt : IValueConverter
+    internal class StateWaitingToVisiblityCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -303,34 +251,14 @@ namespace HashCalculator
         }
     }
 
-    internal class MenuCopyHashEnabledCvt : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if ((HashResult)value == HashResult.Succeeded)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    internal class TaskMessageCtrlVisiblityCvt : IMultiValueConverter
+    internal class StateNotRunningResultSucceededToVisiblityCvt : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             Debug.Assert(values.Length == 2);
-            HashState hashState = (HashState)values[0];
-            if (hashState == HashState.Running || hashState == HashState.Paused
-                || (values[1] is HashResult hashResult && hashResult == HashResult.Succeeded))
+            if (!(values[0] is HashState hashState) || hashState == HashState.Running ||
+                hashState == HashState.Paused ||
+                (values[1] is HashResult hashResult && hashResult == HashResult.Succeeded))
             {
                 return Visibility.Hidden;
             }
@@ -346,7 +274,7 @@ namespace HashCalculator
         }
     }
 
-    internal class MainModelStateToBoolCvt : IValueConverter
+    internal class MainModelStateToBooleanCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -448,7 +376,7 @@ namespace HashCalculator
         }
     }
 
-    internal class BtnExportEnabledImgCvt : IValueConverter
+    internal class BtnExportEnabledImgSrcCvt : IValueConverter
     {
         private static readonly BitmapImage enabled =
             new BitmapImage(new Uri("/Images/export_32.png", UriKind.Relative));
@@ -472,7 +400,7 @@ namespace HashCalculator
         }
     }
 
-    internal class BtnNewLineEnabledImgCvt : IValueConverter
+    internal class BtnNewLineEnabledImgSrcCvt : IValueConverter
     {
         private static readonly BitmapImage enabled =
             new BitmapImage(new Uri("/Images/new_line_32.png", UriKind.Relative));
@@ -496,7 +424,7 @@ namespace HashCalculator
         }
     }
 
-    internal class BtnRefreshEnabledImgCvt : IValueConverter
+    internal class BtnRefreshEnabledImgSrcCvt : IValueConverter
     {
         private static readonly BitmapImage enabled =
             new BitmapImage(new Uri("/Images/refresh_32.png", UriKind.Relative));
@@ -520,7 +448,7 @@ namespace HashCalculator
         }
     }
 
-    internal class BtnRefreshForceEnabledImgCvt : IValueConverter
+    internal class BtnForceRefreshEnabledImgSrcCvt : IValueConverter
     {
         private static readonly BitmapImage enabled =
             new BitmapImage(new Uri("/Images/refresh_force_32.png", UriKind.Relative));
@@ -544,7 +472,7 @@ namespace HashCalculator
         }
     }
 
-    internal class BtnTopmostEnabledImgCvt : IValueConverter
+    internal class BtnTopmostEnabledImgSrcCvt : IValueConverter
     {
         private static readonly BitmapImage enabled =
             new BitmapImage(new Uri("/Images/topmost_32.png", UriKind.Relative));
@@ -568,7 +496,7 @@ namespace HashCalculator
         }
     }
 
-    internal class BtnRefreshFilterEnabledImgCvt : IValueConverter
+    internal class BtnRefreshFiltersEnabledImgSrcCvt : IValueConverter
     {
         private static readonly BitmapImage enabled =
             new BitmapImage(new Uri("/Images/refresh_64.png", UriKind.Relative));
@@ -882,7 +810,7 @@ namespace HashCalculator
         }
     }
 
-    internal class ReverseBoolValueCvt : IValueConverter
+    internal class ReverseBooleanValueCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -895,7 +823,7 @@ namespace HashCalculator
         }
     }
 
-    internal class ActionMultiParameterCvt : IMultiValueConverter
+    internal class CloneParameterArrayCvt : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {

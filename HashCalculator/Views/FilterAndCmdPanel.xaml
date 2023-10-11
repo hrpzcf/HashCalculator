@@ -145,7 +145,7 @@
                             Width="64"
                             Height="64"
                             HorizontalAlignment="Right"
-                            Command="{Binding RefreshViewCmd}"
+                            Command="{Binding RefreshFiltersCmd}"
                             DockPanel.Dock="Right"
                             Style="{StaticResource ImageButtonStyle2}"
                             ToolTip="应用已勾选的筛选器并刷新主窗口表格视图...">
@@ -155,7 +155,7 @@
                                     <Binding Path="FilterOrCmderEnabled" Source="{x:Static local:Settings.Current}" />
                                 </MultiBinding>
                             </Button.IsEnabled>
-                            <Image Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnRefreshFilterEnabledImgCvt}}" />
+                            <Image Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnRefreshFiltersEnabledImgSrcCvt}}" />
                         </Button>
                     </DockPanel>
                     <GroupBox
