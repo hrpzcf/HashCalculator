@@ -54,11 +54,13 @@ namespace HashCalculator
                 }
                 if (groupByDirPath.Any())
                 {
-                    foreach (var tuple in CommonUtils.ColorGenerator(groupByDirPath.Count).ZipElements(groupByDirPath))
+                    IEnumerable<ComparableColor> colors =
+                        CommonUtils.ColorGenerator(groupByDirPath.Count).Select(i => new ComparableColor(i));
+                    foreach (var tuple in groupByDirPath.ZipElements(colors))
                     {
-                        foreach (HashViewModel model in tuple.Item2.Value)
+                        foreach (HashViewModel model in tuple.Item1.Value)
                         {
-                            model.FdGroupId = new ComparableColor(tuple.Item1);
+                            model.FdGroupId = tuple.Item2;
                         }
                     }
                 }
