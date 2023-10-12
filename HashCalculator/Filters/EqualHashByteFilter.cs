@@ -123,11 +123,13 @@ namespace HashCalculator
                 {
                     return;
                 }
-                foreach (var tuple in CommonUtils.ColorGenerator(finalHashModels.Count).ZipElements(finalHashModels))
+                IEnumerable<ComparableColor> colors =
+                    CommonUtils.ColorGenerator(finalHashModels.Count).Select(i => new ComparableColor(i));
+                foreach (var tuple in finalHashModels.ZipElements(colors))
                 {
-                    foreach (HashViewModel model in tuple.Item2.Value.Keys)
+                    foreach (HashViewModel model in tuple.Item1.Value.Keys)
                     {
-                        model.GroupId = new ComparableColor(tuple.Item1);
+                        model.GroupId = tuple.Item2;
                     }
                 }
             }
