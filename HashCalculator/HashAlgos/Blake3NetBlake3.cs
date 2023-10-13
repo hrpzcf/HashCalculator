@@ -9,8 +9,8 @@ namespace HashCalculator
     {
         private readonly int bitLength;
         private AlgoType algoType = AlgoType.Unknown;
-        private IntPtr hasher = IntPtr.Zero;
-        private const int defaultByteLength = 32;
+        private IntPtr _hasher = IntPtr.Zero;
+        private const int defaultOutputSize = 32;
 
         public string AlgoName => $"BLAKE3-{this.bitLength}";
 
@@ -54,10 +54,10 @@ namespace HashCalculator
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
-            if (this.hasher != IntPtr.Zero)
+            if (this._hasher != IntPtr.Zero)
             {
-                blake3_delete(this.hasher);
-                this.hasher = IntPtr.Zero;
+                blake3_delete(this._hasher);
+                this._hasher = IntPtr.Zero;
             }
         }
 
@@ -72,10 +72,10 @@ namespace HashCalculator
 
         public override void Initialize()
         {
-            this.hasher = blake3_new();
-            if (this.hasher != IntPtr.Zero)
+            this._hasher = blake3_new();
+            if (this._hasher != IntPtr.Zero)
             {
-                blake3_reset(this.hasher);
+                blake3_reset(this._hasher);
             }
         }
 
@@ -86,7 +86,7 @@ namespace HashCalculator
 
         protected override void HashCore(byte[] array, int ibStart, int cbSize)
         {
-            if (this.hasher == IntPtr.Zero)
+            if (this._hasher == IntPtr.Zero)
             {
                 throw new InvalidOperationException("Not initialized yet");
             }
@@ -94,24 +94,24 @@ namespace HashCalculator
             {
                 array = array.Skip(ibStart).ToArray();
             }
-            blake3_update(this.hasher, array, cbSize);
+            blake3_update(this._hasher, array, cbSize);
         }
 
         protected override byte[] HashFinal()
         {
-            if (this.hasher == IntPtr.Zero)
+            if (this._hasher == IntPtr.Zero)
             {
                 throw new InvalidOperationException("Not initialized yet");
             }
-            int outLength = this.bitLength / 8;
-            byte[] resultBytes = new byte[outLength];
-            if (outLength == defaultByteLength)
+            int outputSize = this.bitLength / 8;
+            byte[] resultBytes = new byte[outputSize];
+            if (outputSize == defaultOutputSize)
             {
-                blake3_finalize(this.hasher, resultBytes);
+                blake3_finalize(this._hasher, resultBytes);
             }
             else
             {
-                blake3_finalize_xof(this.hasher, resultBytes, outLength);
+                blake3_finalize_xof(this._hasher, resultBytes, outputSize);
             }
             return resultBytes;
         }
