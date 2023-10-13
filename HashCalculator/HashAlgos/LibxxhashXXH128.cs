@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 
@@ -17,7 +16,7 @@ namespace HashCalculator
     /// </summary>
     internal class LibXxHashXXH128 : HashAlgorithm, IHashAlgoInfo
     {
-        private IntPtr statePtr = IntPtr.Zero;
+        private IntPtr _statePtr = IntPtr.Zero;
         private XXH_errorcode error = XXH_errorcode.XXH_OK;
 
         public string AlgoName => "XXH128";
@@ -34,6 +33,9 @@ namespace HashCalculator
         private static extern XXH_errorcode XXH3_128bits_update(IntPtr statePtr, byte[] input, ulong length);
 
         [DllImport(DllName.XxHash, CallingConvention = CallingConvention.Cdecl)]
+        private static extern XXH_errorcode XXH3_128bits_update(IntPtr statePtr, ref byte input, ulong length);
+
+        [DllImport(DllName.XxHash, CallingConvention = CallingConvention.Cdecl)]
         private static extern XXH128Hash XXH3_128bits_digest(IntPtr statePtr);
 
         [DllImport(DllName.XxHash, CallingConvention = CallingConvention.Cdecl)]
@@ -42,20 +44,21 @@ namespace HashCalculator
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
-            if (this.statePtr != IntPtr.Zero)
+            if (this._statePtr != IntPtr.Zero)
             {
-                XXH_errorcode _ = XXH3_freeState(this.statePtr);
-                this.statePtr = IntPtr.Zero;
+                XXH_errorcode _ = XXH3_freeState(this._statePtr);
+                this._statePtr = IntPtr.Zero;
             }
         }
 
         public override void Initialize()
         {
-            this.statePtr = XXH3_createState();
-            if (this.statePtr != IntPtr.Zero)
+            this._statePtr = XXH3_createState();
+            if (this._statePtr == IntPtr.Zero)
             {
-                XXH_errorcode _ = XXH3_128bits_reset(this.statePtr);
+                throw new NullReferenceException("Initialization failed");
             }
+            XXH_errorcode _ = XXH3_128bits_reset(this._statePtr);
         }
 
         public IHashAlgoInfo NewInstance()
@@ -65,31 +68,45 @@ namespace HashCalculator
 
         protected override void HashCore(byte[] array, int ibStart, int cbSize)
         {
-            if (this.error != XXH_errorcode.XXH_ERROR && this.statePtr != IntPtr.Zero)
+            if (this._statePtr == IntPtr.Zero)
             {
-                if (ibStart != 0 || cbSize != array.Length)
-                {
-                    array = array.Skip(ibStart).Take(cbSize).ToArray();
-                }
-                this.error = XXH3_128bits_update(this.statePtr, array, (ulong)cbSize);
+                throw new InvalidOperationException("Not initialized yet");
+            }
+            else if (this.error == XXH_errorcode.XXH_ERROR)
+            {
+                throw new InvalidOperationException("An error has occurred");
+            }
+            if (ibStart != 0 || cbSize != array.Length)
+            {
+                ReadOnlySpan<byte> span = new ReadOnlySpan<byte>(array, ibStart, cbSize);
+                ref byte input = ref MemoryMarshal.GetReference(span);
+                this.error = XXH3_128bits_update(this._statePtr, ref input, (ulong)cbSize);
+            }
+            else
+            {
+                this.error = XXH3_128bits_update(this._statePtr, array, (ulong)cbSize);
             }
         }
 
         protected override byte[] HashFinal()
         {
-            if (this.error == XXH_errorcode.XXH_ERROR || this.statePtr == IntPtr.Zero)
+            if (this._statePtr == IntPtr.Zero)
             {
-                return Array.Empty<byte>();
+                throw new InvalidOperationException("Not initialized yet");
             }
-            XXH128Hash hashResult = XXH3_128bits_digest(this.statePtr);
+            else if (this.error == XXH_errorcode.XXH_ERROR)
+            {
+                throw new InvalidOperationException("An error has occurred");
+            }
+            XXH128Hash hashResult = XXH3_128bits_digest(this._statePtr);
             byte[] hashBytesLow = BitConverter.GetBytes(hashResult.low64);
             byte[] hashBytesHigh = BitConverter.GetBytes(hashResult.high64);
             Array.Reverse(hashBytesLow);
             Array.Reverse(hashBytesHigh);
-            byte[] hashBytesFinal = new byte[hashBytesLow.Length + hashBytesHigh.Length];
-            Array.Copy(hashBytesHigh, hashBytesFinal, hashBytesHigh.Length);
-            Array.Copy(hashBytesLow, 0, hashBytesFinal, hashBytesHigh.Length, hashBytesLow.Length);
-            return hashBytesFinal;
+            byte[] resultBuffer = new byte[hashBytesLow.Length + hashBytesHigh.Length];
+            Array.Copy(hashBytesHigh, resultBuffer, hashBytesHigh.Length);
+            Array.Copy(hashBytesLow, 0, resultBuffer, hashBytesHigh.Length, hashBytesLow.Length);
+            return resultBuffer;
         }
     }
 }
