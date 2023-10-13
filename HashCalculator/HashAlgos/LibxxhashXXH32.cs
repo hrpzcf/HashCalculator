@@ -14,19 +14,19 @@ namespace HashCalculator
 
         public AlgoType AlgoType => AlgoType.XXHASH32;
 
-        [DllImport("xxhash.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DllName.XxHash, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr XXH32_createState();
 
-        [DllImport("xxhash.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DllName.XxHash, CallingConvention = CallingConvention.Cdecl)]
         private static extern XXH_errorcode XXH32_freeState(IntPtr statePtr);
 
-        [DllImport("xxhash.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DllName.XxHash, CallingConvention = CallingConvention.Cdecl)]
         private static extern XXH_errorcode XXH32_update(IntPtr statePtr, byte[] input, ulong length);
 
-        [DllImport("xxhash.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DllName.XxHash, CallingConvention = CallingConvention.Cdecl)]
         private static extern uint XXH32_digest(IntPtr statePtr);
 
-        [DllImport("xxhash.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(DllName.XxHash, CallingConvention = CallingConvention.Cdecl)]
         private static extern XXH_errorcode XXH32_reset(IntPtr statePtr, uint seed);
 
         protected override void Dispose(bool disposing)

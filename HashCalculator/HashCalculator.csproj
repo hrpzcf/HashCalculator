@@ -76,6 +76,24 @@
       <HintPath>Assembly\System.Buffers.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Assembly\System.Memory.dll</HintPath>
+      <Private>False</Private>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Assembly\System.Numerics.Vectors.dll</HintPath>
+      <Private>False</Private>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Assembly\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+      <Private>False</Private>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
     <Reference Include="XamlAnimatedGif">
       <HintPath>Assembly\XamlAnimatedGif.dll</HintPath>
       <Private>False</Private>
@@ -101,15 +119,16 @@
     <Compile Include="Cmders\SelectFileCmder.cs" />
     <Compile Include="Cmders\RenameFileCmder.cs" />
     <Compile Include="Globals\BufferSize.cs" />
+    <Compile Include="Globals\DllName.cs" />
     <Compile Include="Globals\MappedFiler.cs" />
     <Compile Include="Globals\MappedInfo.cs" />
     <Compile Include="HashAlgos\BCSharpBlake2s.cs" />
     <Compile Include="HashAlgos\BCSharpBlake2b.cs" />
-    <Compile Include="HashAlgos\BCSharpBlake3.cs" />
     <Compile Include="HashAlgos\BCSharpDigest.cs" />
     <Compile Include="Globals\Settings.cs" />
     <Compile Include="HashAlgos\BCSharpWhirlpool.cs" />
     <Compile Include="HashAlgos\IHashAlgoInfo.cs" />
+    <Compile Include="HashAlgos\Blake3NetBlake3.cs" />
     <Compile Include="HashAlgos\LibXxHashXXH32.cs" />
     <Compile Include="HashAlgos\LibXxHashXXH128.cs" />
     <Compile Include="HashAlgos\LibXxHashXXH3.cs" />
@@ -384,8 +403,8 @@
     <Resource Include="Images\refresh_64_gray.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="HashAlgos\XxHashDll\xxhash32.dll" />
-    <EmbeddedResource Include="HashAlgos\XxHashDll\xxhash64.dll" />
+    <EmbeddedResource Include="HashAlgos\HashDlls\xxhash_x86.dll" />
+    <EmbeddedResource Include="HashAlgos\HashDlls\xxhash_x64.dll" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\clear_filter_64.png" />
@@ -394,8 +413,16 @@
     <EmbeddedResource Include="Assembly\Crc32.NET.dll" />
     <None Include="Assembly\Crc32.NET.txt" />
     <EmbeddedResource Include="Assembly\System.Buffers.dll" />
-    <None Include="Assembly\System.Buffers.txt" />
-    <Content Include="HashAlgos\XxHashDll\License.txt" />
+    <None Include="Assembly\System.txt" />
+    <None Include="HashAlgos\HashDlls\blake3.txt" />
+    <EmbeddedResource Include="HashAlgos\HashDlls\blake3_x86.dll" />
+    <EmbeddedResource Include="HashAlgos\HashDlls\blake3_x64.dll" />
+    <None Include="HashAlgos\HashDlls\xxhash.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Assembly\System.Memory.dll" />
+    <EmbeddedResource Include="Assembly\System.Numerics.Vectors.dll" />
+    <EmbeddedResource Include="Assembly\System.Runtime.CompilerServices.Unsafe.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

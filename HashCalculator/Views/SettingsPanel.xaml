@@ -275,18 +275,26 @@
             <StackPanel Margin="4">
                 <StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Style="{StaticResource DescTextBlockStyle}" Text="XxHash 系列算法总是计算失败？" />
+                        <TextBlock Style="{StaticResource DescTextBlockStyle}" Text="XXH 系列算法总是失败？" />
                         <TextBlock
                             Cursor="Hand"
                             Foreground="Blue"
                             MouseLeftButtonDown="OnTextBlockMouseLeftButtonDown"
-                            Text="{Binding Source={x:Static local:SettingsViewModel.StringFix}}" />
+                            Text="{Binding Source={x:Static local:SettingsViewModel.FixXxHash}}" />
+                    </StackPanel>
+                    <StackPanel Margin="0,4,0,0" Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource DescTextBlockStyle}" Text="Blake3 系列算法总是失败？" />
+                        <TextBlock
+                            Cursor="Hand"
+                            Foreground="Blue"
+                            MouseLeftButtonDown="OnTextBlockMouseLeftButtonDown"
+                            Text="{Binding Source={x:Static local:SettingsViewModel.FixBlake3}}" />
                     </StackPanel>
                     <StackPanel Margin="0,4,0,0" Orientation="Horizontal">
                         <TextBlock
                             FontSize="8pt"
                             Style="{StaticResource DescTextBlockStyle}"
-                            Text="原理：使用内嵌资源 xxhash.dll 覆盖 " />
+                            Text="原理：使用相关内嵌资源覆盖 " />
                         <TextBlock
                             Cursor="Hand"
                             FontSize="8pt"
