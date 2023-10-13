@@ -44,7 +44,10 @@ namespace HashCalculator
         private RelayCommand unInstallShellExtCmd;
 
         [XmlIgnore]
-        public static string StringFix { get; } = "点击修复";
+        public static string FixXxHash { get; } = "点击修复 XxHash";
+
+        [XmlIgnore]
+        public static string FixBlake3 { get; } = "点击修复 Blake3";
 
         [XmlIgnore]
         public static string StringDllDir { get; } = "动态链接库目录";

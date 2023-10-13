@@ -43,7 +43,7 @@ namespace HashCalculator
         private static void ApplicationStartup(object sender, StartupEventArgs e)
         {
             Settings.LoadSettings();
-            Settings.ExtractXxHashDll(false);
+            Settings.ExtractAllEmbeddedHashDllFiles();
             MappedFiler.PushArgs(Settings.StartupArgs);
         }
 

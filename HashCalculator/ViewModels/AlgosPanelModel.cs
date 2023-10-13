@@ -48,12 +48,12 @@ namespace HashCalculator
             new AlgoInOutModel(new BCSharpBlake2b(384)),
             new AlgoInOutModel(new BCSharpBlake2b(512)),
             // Blake3
-            new AlgoInOutModel(new BCSharpBlake3(128)),
-            new AlgoInOutModel(new BCSharpBlake3(160)),
-            new AlgoInOutModel(new BCSharpBlake3(224)),
-            new AlgoInOutModel(new BCSharpBlake3(256)),
-            new AlgoInOutModel(new BCSharpBlake3(384)),
-            new AlgoInOutModel(new BCSharpBlake3(512)),
+            new AlgoInOutModel(new Blake3NetBlake3(128)),
+            new AlgoInOutModel(new Blake3NetBlake3(160)),
+            new AlgoInOutModel(new Blake3NetBlake3(224)),
+            new AlgoInOutModel(new Blake3NetBlake3(256)),
+            new AlgoInOutModel(new Blake3NetBlake3(384)),
+            new AlgoInOutModel(new Blake3NetBlake3(512)),
         };
 
         public static AlgoInOutModel[] FromAlgoName(string name)

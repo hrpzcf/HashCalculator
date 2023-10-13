@@ -15,7 +15,6 @@ namespace HashCalculator
             new DirectoryInfo(Path.Combine(configBaseDataPath, "HashCalculator"));
         private static readonly string configFile = Path.Combine(ConfigDir.FullName, "settings.xml");
         public static readonly string libDir = Path.Combine(ConfigDir.FullName, "Library");
-        private static readonly string libXxHashFilePath = Path.Combine(libDir, "xxhash.dll");
 
         public static string[] StartupArgs { get; set; }
 
@@ -73,29 +72,28 @@ namespace HashCalculator
             Environment.SetEnvironmentVariable("PATH", libDir);
         }
 
-        public static string ExtractXxHashDll(bool force)
+        private static string ExtractDll(string fname, bool force)
         {
-            if (force || !File.Exists(libXxHashFilePath) || Current.PreviousVer != Info.Ver)
+            string userDllPath = Path.Combine(libDir, fname);
+            if (force || !File.Exists(userDllPath))
             {
-                if (Current.PreviousVer != Info.Ver)
-                {
-                    Current.PreviousVer = Info.Ver;
-                }
                 try
                 {
                     if (!Directory.Exists(libDir))
                     {
                         Directory.CreateDirectory(libDir);
                     }
-                    string name = Environment.Is64BitProcess ? "xxhash64.dll" : "xxhash32.dll";
-                    if (AppLoading.ExecutingAsmb.GetManifestResourceStream(
-                        $"HashCalculator.HashAlgos.XxHashDll.{name}") is Stream stream)
+                    string resPath = string.Format(
+                        "HashCalculator.HashAlgos.HashDlls.{0}_{1}.dll",
+                        Path.GetFileNameWithoutExtension(fname),
+                        Environment.Is64BitProcess ? "x64" : "x86");
+                    if (AppLoading.ExecutingAsmb.GetManifestResourceStream(resPath) is Stream stream)
                     {
                         using (stream)
                         {
                             byte[] dllBuffer = new byte[stream.Length];
                             stream.Read(dllBuffer, 0, dllBuffer.Length);
-                            using (FileStream fs = File.OpenWrite(Path.Combine(libDir, libXxHashFilePath)))
+                            using (FileStream fs = File.OpenWrite(userDllPath))
                             {
                                 fs.Write(dllBuffer, 0, dllBuffer.Length);
                             }
@@ -103,12 +101,32 @@ namespace HashCalculator
                     }
                     else
                     {
-                        return $"没有名为 [{name}] 的内嵌资源";
+                        return $"内嵌资源不存在： {resPath}";
                     }
                 }
-                catch (Exception ex) { return ex.Message; }
+                catch (Exception exception) { return exception.Message; }
             }
             return default(string);
+        }
+
+        public static string ExtractXxHashDll(bool force)
+        {
+            return ExtractDll(DllName.XxHash, force || Current.PreviousVer != Info.Ver);
+        }
+
+        public static string ExtractBlake3Dll(bool force)
+        {
+            return ExtractDll(DllName.Blake3, force || Current.PreviousVer != Info.Ver);
+        }
+
+        public static void ExtractAllEmbeddedHashDllFiles()
+        {
+            bool forceExtractHashLibraryFile = Current.PreviousVer != Info.Ver;
+            if (string.IsNullOrEmpty(ExtractXxHashDll(forceExtractHashLibraryFile))
+                && string.IsNullOrEmpty(ExtractBlake3Dll(forceExtractHashLibraryFile)))
+            {
+                Current.PreviousVer = Info.Ver;
+            }
         }
     }
 }

@@ -101,6 +101,7 @@
     <Compile Include="Cmders\SelectFileCmder.cs" />
     <Compile Include="Cmders\RenameFileCmder.cs" />
     <Compile Include="Globals\BufferSize.cs" />
+    <Compile Include="Globals\DllName.cs" />
     <Compile Include="Globals\MappedFiler.cs" />
     <Compile Include="Globals\MappedInfo.cs" />
     <Compile Include="HashAlgos\BCSharpBlake2s.cs" />
@@ -110,6 +111,7 @@
     <Compile Include="Globals\Settings.cs" />
     <Compile Include="HashAlgos\BCSharpWhirlpool.cs" />
     <Compile Include="HashAlgos\IHashAlgoInfo.cs" />
+    <Compile Include="HashAlgos\Blake3NetBlake3.cs" />
     <Compile Include="HashAlgos\LibXxHashXXH32.cs" />
     <Compile Include="HashAlgos\LibXxHashXXH128.cs" />
     <Compile Include="HashAlgos\LibXxHashXXH3.cs" />
@@ -384,8 +386,8 @@
     <Resource Include="Images\refresh_64_gray.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="HashAlgos\XxHashDll\xxhash32.dll" />
-    <EmbeddedResource Include="HashAlgos\XxHashDll\xxhash64.dll" />
+    <EmbeddedResource Include="HashAlgos\HashDlls\xxhash_x86.dll" />
+    <EmbeddedResource Include="HashAlgos\HashDlls\xxhash_x64.dll" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\clear_filter_64.png" />
@@ -395,7 +397,11 @@
     <None Include="Assembly\Crc32.NET.txt" />
     <EmbeddedResource Include="Assembly\System.Buffers.dll" />
     <None Include="Assembly\System.Buffers.txt" />
-    <Content Include="HashAlgos\XxHashDll\License.txt" />
+    <None Include="HashAlgos\HashDlls\blake3.txt" />
+    <EmbeddedResource Include="HashAlgos\HashDlls\blake3_x86.dll" />
+    <EmbeddedResource Include="HashAlgos\HashDlls\blake3_x64.dll" />
+    <None Include="HashAlgos\HashDlls\xxhash.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
