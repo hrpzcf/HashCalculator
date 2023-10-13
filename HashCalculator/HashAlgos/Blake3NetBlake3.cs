@@ -43,16 +43,16 @@ namespace HashCalculator
         private static extern void blake3_reset(IntPtr hasher);
 
         [DllImport(DllName.Blake3, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void blake3_update(IntPtr hasher, byte[] input, long size);
+        private static extern void blake3_update(IntPtr hasher, byte[] input, ulong size);
 
         [DllImport(DllName.Blake3, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void blake3_update(IntPtr hasher, ref byte input, long size);
+        private static extern void blake3_update(IntPtr hasher, ref byte input, ulong size);
 
         [DllImport(DllName.Blake3, CallingConvention = CallingConvention.Cdecl)]
         private static extern void blake3_finalize(IntPtr hasher, byte[] output);
 
         [DllImport(DllName.Blake3, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void blake3_finalize_xof(IntPtr hasher, byte[] output, int size);
+        private static extern void blake3_finalize_xof(IntPtr hasher, byte[] output, ulong size);
 
         protected override void Dispose(bool disposing)
         {
@@ -100,13 +100,13 @@ namespace HashCalculator
             }
             if (ibStart == 0 && cbSize == array.Length)
             {
-                blake3_update(this._hasher, array, cbSize);
+                blake3_update(this._hasher, array, (ulong)cbSize);
             }
             else
             {
                 ReadOnlySpan<byte> span = new ReadOnlySpan<byte>(array, ibStart, cbSize);
                 ref byte input = ref MemoryMarshal.GetReference(span);
-                blake3_update(this._hasher, ref input, cbSize);
+                blake3_update(this._hasher, ref input, (ulong)cbSize);
             }
         }
 
@@ -123,7 +123,7 @@ namespace HashCalculator
             }
             else
             {
-                blake3_finalize_xof(this._hasher, resultBuffer, this.outputSize);
+                blake3_finalize_xof(this._hasher, resultBuffer, (ulong)this.outputSize);
             }
             return resultBuffer;
         }
