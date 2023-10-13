@@ -76,6 +76,24 @@
       <HintPath>Assembly\System.Buffers.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Assembly\System.Memory.dll</HintPath>
+      <Private>False</Private>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Assembly\System.Numerics.Vectors.dll</HintPath>
+      <Private>False</Private>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Assembly\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+      <Private>False</Private>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
     <Reference Include="XamlAnimatedGif">
       <HintPath>Assembly\XamlAnimatedGif.dll</HintPath>
       <Private>False</Private>
@@ -395,12 +413,16 @@
     <EmbeddedResource Include="Assembly\Crc32.NET.dll" />
     <None Include="Assembly\Crc32.NET.txt" />
     <EmbeddedResource Include="Assembly\System.Buffers.dll" />
-    <None Include="Assembly\System.Buffers.txt" />
+    <None Include="Assembly\System.txt" />
     <None Include="HashAlgos\HashDlls\blake3.txt" />
     <EmbeddedResource Include="HashAlgos\HashDlls\blake3_x86.dll" />
     <EmbeddedResource Include="HashAlgos\HashDlls\blake3_x64.dll" />
     <None Include="HashAlgos\HashDlls\xxhash.txt" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Assembly\System.Memory.dll" />
+    <EmbeddedResource Include="Assembly\System.Numerics.Vectors.dll" />
+    <EmbeddedResource Include="Assembly\System.Runtime.CompilerServices.Unsafe.dll" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

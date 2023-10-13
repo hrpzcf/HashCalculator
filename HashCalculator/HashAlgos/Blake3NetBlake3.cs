@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 
@@ -8,6 +7,7 @@ namespace HashCalculator
     internal class Blake3NetBlake3 : HashAlgorithm, IHashAlgoInfo
     {
         private readonly int bitLength;
+        private readonly int outputSize;
         private AlgoType algoType = AlgoType.Unknown;
         private IntPtr _hasher = IntPtr.Zero;
         private const int defaultOutputSize = 32;
@@ -46,6 +46,9 @@ namespace HashCalculator
         private static extern void blake3_update(IntPtr hasher, byte[] input, long size);
 
         [DllImport(DllName.Blake3, CallingConvention = CallingConvention.Cdecl)]
+        private static extern void blake3_update(IntPtr hasher, ref byte input, long size);
+
+        [DllImport(DllName.Blake3, CallingConvention = CallingConvention.Cdecl)]
         private static extern void blake3_finalize(IntPtr hasher, byte[] output);
 
         [DllImport(DllName.Blake3, CallingConvention = CallingConvention.Cdecl)]
@@ -68,6 +71,7 @@ namespace HashCalculator
                 throw new ArgumentException($"Invalid {nameof(bitLength)}");
             }
             this.bitLength = bitLength;
+            this.outputSize = bitLength / 8;
         }
 
         public override void Initialize()
@@ -76,6 +80,10 @@ namespace HashCalculator
             if (this._hasher != IntPtr.Zero)
             {
                 blake3_reset(this._hasher);
+            }
+            else
+            {
+                throw new NullReferenceException("Initialization failed");
             }
         }
 
@@ -90,11 +98,16 @@ namespace HashCalculator
             {
                 throw new InvalidOperationException("Not initialized yet");
             }
-            if (ibStart != 0)
+            if (ibStart == 0 && cbSize == array.Length)
             {
-                array = array.Skip(ibStart).ToArray();
+                blake3_update(this._hasher, array, cbSize);
             }
-            blake3_update(this._hasher, array, cbSize);
+            else
+            {
+                ReadOnlySpan<byte> span = new ReadOnlySpan<byte>(array, ibStart, cbSize);
+                ref byte input = ref MemoryMarshal.GetReference(span);
+                blake3_update(this._hasher, ref input, cbSize);
+            }
         }
 
         protected override byte[] HashFinal()
@@ -103,17 +116,16 @@ namespace HashCalculator
             {
                 throw new InvalidOperationException("Not initialized yet");
             }
-            int outputSize = this.bitLength / 8;
-            byte[] resultBytes = new byte[outputSize];
-            if (outputSize == defaultOutputSize)
+            byte[] resultBuffer = new byte[this.outputSize];
+            if (this.outputSize == defaultOutputSize)
             {
-                blake3_finalize(this._hasher, resultBytes);
+                blake3_finalize(this._hasher, resultBuffer);
             }
             else
             {
-                blake3_finalize_xof(this._hasher, resultBytes, outputSize);
+                blake3_finalize_xof(this._hasher, resultBuffer, this.outputSize);
             }
-            return resultBytes;
+            return resultBuffer;
         }
     }
 }
