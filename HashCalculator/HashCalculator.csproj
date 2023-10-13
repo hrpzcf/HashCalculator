@@ -129,9 +129,10 @@
     <Compile Include="HashAlgos\BCSharpWhirlpool.cs" />
     <Compile Include="HashAlgos\IHashAlgoInfo.cs" />
     <Compile Include="HashAlgos\Blake3NetBlake3.cs" />
-    <Compile Include="HashAlgos\LibXxHashXXH32.cs" />
     <Compile Include="HashAlgos\LibXxHashXXH128.cs" />
     <Compile Include="HashAlgos\LibXxHashXXH3.cs" />
+    <Compile Include="HashAlgos\LibXxHashXXH32.cs" />
+    <Compile Include="HashAlgos\LibXxHashXXH64.cs" />
     <Compile Include="HashAlgos\MsCryptCngDigest.cs" />
     <Compile Include="HashAlgos\ForceCrc32NetCrc32.cs" />
     <Compile Include="HashAlgos\MsCryptoCngMD5.cs" />
@@ -139,7 +140,6 @@
     <Compile Include="HashAlgos\MsCryptoCngSHA256.cs" />
     <Compile Include="HashAlgos\MsCryptoCngSHA384.cs" />
     <Compile Include="HashAlgos\MsCryptoCngSHA512.cs" />
-    <Compile Include="HashAlgos\LibXxHashXXH64.cs" />
     <Compile Include="Filters\CmpResultFilter.cs" />
     <Compile Include="Filters\CmpResultFilterCtrl.xaml.cs">
       <DependentUpon>CmpResultFilterCtrl.xaml</DependentUpon>
@@ -350,21 +350,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ShellExt\HashCalculator.dll" />
-    <EmbeddedResource Include="ShellExt\HashCalculator32.dll" />
-    <EmbeddedResource Include="Assembly\BouncyCastle.Cryptography.dll" />
-    <None Include="Assembly\BouncyCastle.Cryptography.txt" />
-    <EmbeddedResource Include="Assembly\CommandLine.dll" />
-    <None Include="Assembly\CommandLine.txt" />
-    <EmbeddedResource Include="Assembly\Microsoft.WindowsAPICodePack.dll" />
-    <EmbeddedResource Include="Assembly\Microsoft.WindowsAPICodePack.Shell.dll" />
-    <None Include="Assembly\Microsoft.WindowsAPICodePack.txt" />
-    <EmbeddedResource Include="Assembly\XamlAnimatedGif.dll" />
-    <None Include="Assembly\XamlAnimatedGif.txt" />
-    <EmbeddedResource Include="Assembly\Microsoft.Bcl.HashCode.dll" />
-    <None Include="Assembly\Microsoft.Bcl.HashCode.txt" />
-  </ItemGroup>
-  <ItemGroup>
+    <Resource Include="Images\arrow_up_64.png" />
+    <Resource Include="Images\arrow_down_64.png" />
+    <Resource Include="Images\clear_filter_64.png" />
     <Resource Include="Images\icon.ico" />
     <Resource Include="Images\start.png" />
     <Resource Include="Images\stop.png" />
@@ -403,23 +391,33 @@
     <Resource Include="Images\refresh_64_gray.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="HashAlgos\HashDlls\xxhash_x86.dll" />
-    <EmbeddedResource Include="HashAlgos\HashDlls\xxhash_x64.dll" />
+    <EmbeddedResource Include="ShellExt\HashCalculator.dll" />
+    <EmbeddedResource Include="ShellExt\HashCalculator32.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\clear_filter_64.png" />
-    <Resource Include="Images\arrow_up_64.png" />
-    <Resource Include="Images\arrow_down_64.png" />
-    <EmbeddedResource Include="Assembly\Crc32.NET.dll" />
+    <None Include="Assembly\BouncyCastle.Cryptography.txt" />
+    <EmbeddedResource Include="Assembly\BouncyCastle.Cryptography.dll" />
+    <None Include="Assembly\CommandLine.txt" />
+    <EmbeddedResource Include="Assembly\CommandLine.dll" />
+    <None Include="Assembly\Microsoft.WindowsAPICodePack.txt" />
+    <EmbeddedResource Include="Assembly\Microsoft.WindowsAPICodePack.dll" />
+    <EmbeddedResource Include="Assembly\Microsoft.WindowsAPICodePack.Shell.dll" />
+    <None Include="Assembly\XamlAnimatedGif.txt" />
+    <EmbeddedResource Include="Assembly\XamlAnimatedGif.dll" />
+    <None Include="Assembly\Microsoft.Bcl.HashCode.txt" />
+    <EmbeddedResource Include="Assembly\Microsoft.Bcl.HashCode.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="HashAlgos\HashDlls\xxhash.txt" />
+    <EmbeddedResource Include="HashAlgos\HashDlls\xxhash_x86.dll" />
+    <EmbeddedResource Include="HashAlgos\HashDlls\xxhash_x64.dll" />
     <None Include="Assembly\Crc32.NET.txt" />
-    <EmbeddedResource Include="Assembly\System.Buffers.dll" />
-    <None Include="Assembly\System.txt" />
+    <EmbeddedResource Include="Assembly\Crc32.NET.dll" />
     <None Include="HashAlgos\HashDlls\blake3.txt" />
     <EmbeddedResource Include="HashAlgos\HashDlls\blake3_x86.dll" />
     <EmbeddedResource Include="HashAlgos\HashDlls\blake3_x64.dll" />
-    <None Include="HashAlgos\HashDlls\xxhash.txt" />
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="Assembly\System.txt" />
+    <EmbeddedResource Include="Assembly\System.Buffers.dll" />
     <EmbeddedResource Include="Assembly\System.Memory.dll" />
     <EmbeddedResource Include="Assembly\System.Numerics.Vectors.dll" />
     <EmbeddedResource Include="Assembly\System.Runtime.CompilerServices.Unsafe.dll" />
