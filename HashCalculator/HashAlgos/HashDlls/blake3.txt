@@ -1,4 +1,4 @@
-﻿HomePage: https://github.com/xoofx/Blake3.NET
+﻿Home Page: https://github.com/xoofx/Blake3.NET
 
 Copyright (c) 2020, Alexandre Mutel
 All rights reserved.
