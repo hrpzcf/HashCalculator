@@ -124,12 +124,18 @@ namespace HashCalculator
             return ExtractDll(DllName.Blake3, force || Current.PreviousVer != Info.Ver);
         }
 
+        public static string ExtractWhirlpoolDll(bool force)
+        {
+            return ExtractDll(DllName.Whirlpool, force || Current.PreviousVer != Info.Ver);
+        }
+
         public static void ExtractAllEmbeddedHashDllFiles()
         {
             bool forceExtractHashLibraryFile = Current.PreviousVer != Info.Ver;
             if (string.IsNullOrEmpty(ExtractXxHashDll(forceExtractHashLibraryFile))
                 && string.IsNullOrEmpty(ExtractBlake2Dll(forceExtractHashLibraryFile))
-                && string.IsNullOrEmpty(ExtractBlake3Dll(forceExtractHashLibraryFile)))
+                && string.IsNullOrEmpty(ExtractBlake3Dll(forceExtractHashLibraryFile))
+                && string.IsNullOrEmpty(ExtractWhirlpoolDll(forceExtractHashLibraryFile)))
             {
                 Current.PreviousVer = Info.Ver;
             }

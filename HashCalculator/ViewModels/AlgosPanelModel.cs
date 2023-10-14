@@ -25,7 +25,7 @@ namespace HashCalculator
             new AlgoInOutModel(new BCSharpSha3(384)),
             new AlgoInOutModel(new BCSharpSha3(512)),
             // Whirlpool
-            new AlgoInOutModel(new BCSharpWhirlpool()),
+            new AlgoInOutModel(new HashratWhirlpool()),
             // MD5
             new AlgoInOutModel(new MsCryptoCngMD5()),
             // Crc32
