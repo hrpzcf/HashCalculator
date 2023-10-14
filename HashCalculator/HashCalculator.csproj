@@ -123,8 +123,6 @@
     <Compile Include="Globals\MappedFiler.cs" />
     <Compile Include="Globals\MappedInfo.cs" />
     <Compile Include="HashAlgos\AbsOfficialBlake2.cs" />
-    <Compile Include="HashAlgos\BCSharpBlake2s.cs" />
-    <Compile Include="HashAlgos\BCSharpBlake2b.cs" />
     <Compile Include="HashAlgos\BCSharpDigest.cs" />
     <Compile Include="Globals\Settings.cs" />
     <Compile Include="HashAlgos\BCSharpWhirlpool.cs" />
