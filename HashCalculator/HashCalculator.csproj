@@ -431,5 +431,8 @@
     <EmbeddedResource Include="HashAlgos\HashDlls\blake2_x64.dll" />
     <EmbeddedResource Include="HashAlgos\HashDlls\blake2_x86.dll" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="HashAlgos\HashDlls\blake2.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
