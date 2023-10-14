@@ -114,6 +114,11 @@ namespace HashCalculator
             return ExtractDll(DllName.XxHash, force || Current.PreviousVer != Info.Ver);
         }
 
+        public static string ExtractBlake2Dll(bool force)
+        {
+            return ExtractDll(DllName.Blake2, force || Current.PreviousVer != Info.Ver);
+        }
+
         public static string ExtractBlake3Dll(bool force)
         {
             return ExtractDll(DllName.Blake3, force || Current.PreviousVer != Info.Ver);
@@ -123,6 +128,7 @@ namespace HashCalculator
         {
             bool forceExtractHashLibraryFile = Current.PreviousVer != Info.Ver;
             if (string.IsNullOrEmpty(ExtractXxHashDll(forceExtractHashLibraryFile))
+                && string.IsNullOrEmpty(ExtractBlake2Dll(forceExtractHashLibraryFile))
                 && string.IsNullOrEmpty(ExtractBlake3Dll(forceExtractHashLibraryFile)))
             {
                 Current.PreviousVer = Info.Ver;
