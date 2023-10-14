@@ -125,7 +125,7 @@
     <Compile Include="HashAlgos\AbsOfficialBlake2.cs" />
     <Compile Include="HashAlgos\BCSharpDigest.cs" />
     <Compile Include="Globals\Settings.cs" />
-    <Compile Include="HashAlgos\BCSharpWhirlpool.cs" />
+    <Compile Include="HashAlgos\HashratWhirlpool.cs" />
     <Compile Include="HashAlgos\OfficialBlake2b.cs" />
     <Compile Include="HashAlgos\IHashAlgoInfo.cs" />
     <Compile Include="HashAlgos\Blake3NetBlake3.cs" />
@@ -433,6 +433,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="HashAlgos\HashDlls\blake2.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="HashAlgos\HashDlls\whirlpool_x64.dll" />
+    <EmbeddedResource Include="HashAlgos\HashDlls\whirlpool_x86.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="HashAlgos\HashDlls\whirlpool.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
