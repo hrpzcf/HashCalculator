@@ -142,37 +142,15 @@
         SHA384,
         SHA512,
         // SHA3
-        SHA3, // 代表 SHA3 分组
+        SHA3, // 代表系列，下同
         SHA3_224,
         SHA3_256,
         SHA3_384,
         SHA3_512,
-        // MD5
-        MD5,
-        // BLAKE2S
-        BLAKE2S, // 代表 BLAKE2S 分组
-        BLAKE2S_128,
-        BLAKE2S_160,
-        BLAKE2S_224,
-        BLAKE2S_256,
-        // BLAKE2B
-        BLAKE2B, // 代表 BLAKE2B 分组
-        BLAKE2B_128,
-        BLAKE2B_160,
-        BLAKE2B_224,
-        BLAKE2B_256,
-        BLAKE2B_384,
-        BLAKE2B_512,
-        // BLAKE3
-        BLAKE3, // 代表 BLAKE3 分组
-        BLAKE3_128,
-        BLAKE3_160,
-        BLAKE3_224,
-        BLAKE3_256,
-        BLAKE3_384,
-        BLAKE3_512,
         // WHIRLPOOL
         WHIRLPOOL,
+        // MD5
+        MD5,
         // Crc32
         CRC32,
         // XxHash
@@ -180,6 +158,46 @@
         XXHASH64,
         XXHASH3,
         XXHASH128,
+        // BLAKE2S
+        BLAKE2S,
+        BLAKE2S_128,
+        BLAKE2S_160,
+        BLAKE2S_224,
+        BLAKE2S_256,
+        // BLAKE2SP
+        BLAKE2SP,
+        BLAKE2SP_128,
+        BLAKE2SP_160,
+        BLAKE2SP_224,
+        BLAKE2SP_256,
+        // BLAKE2XS
+        BLAKE2XS,
+        // BLAKE2B
+        BLAKE2B,
+        BLAKE2B_128,
+        BLAKE2B_160,
+        BLAKE2B_224,
+        BLAKE2B_256,
+        BLAKE2B_384,
+        BLAKE2B_512,
+        // BLAKE2BP
+        BLAKE2BP,
+        BLAKE2BP_128,
+        BLAKE2BP_160,
+        BLAKE2BP_224,
+        BLAKE2BP_256,
+        BLAKE2BP_384,
+        BLAKE2BP_512,
+        // BLAKE2XB
+        BLAKE2XB,
+        // BLAKE3
+        BLAKE3,
+        BLAKE3_128,
+        BLAKE3_160,
+        BLAKE3_224,
+        BLAKE3_256,
+        BLAKE3_384,
+        BLAKE3_512,
         Unknown = -1,
     }
 

@@ -3,39 +3,39 @@ using System.Runtime.InteropServices;
 
 namespace HashCalculator
 {
-    internal class OfficialImplBlake2b : AbsOfficialImplBlake2
+    internal class OfficialBlake2xb : AbsOfficialBlake2
     {
         [DllImport(DllName.Blake2, CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr blake2b_new();
+        private static extern IntPtr blake2xb_new();
 
         [DllImport(DllName.Blake2, CallingConvention = CallingConvention.Cdecl)]
         private static extern void blake2_delete_state(IntPtr statePtr);
 
         [DllImport(DllName.Blake2, CallingConvention = CallingConvention.Cdecl)]
-        private static extern int blake2b_init(IntPtr statePtr, ulong outlen);
+        private static extern int blake2xb_init(IntPtr statePtr, ulong outlen);
 
         [DllImport(DllName.Blake2, CallingConvention = CallingConvention.Cdecl)]
-        private static extern int blake2b_update(IntPtr statePtr, byte[] input, ulong inlen);
+        private static extern int blake2xb_update(IntPtr statePtr, byte[] input, ulong inlen);
 
         [DllImport(DllName.Blake2, CallingConvention = CallingConvention.Cdecl)]
-        private static extern int blake2b_update(IntPtr statePtr, ref byte input, ulong inlen);
+        private static extern int blake2xb_update(IntPtr statePtr, ref byte input, ulong inlen);
 
         [DllImport(DllName.Blake2, CallingConvention = CallingConvention.Cdecl)]
-        private static extern int blake2b_final(IntPtr statePtr, byte[] output, ulong outlen);
+        private static extern int blake2xb_final(IntPtr statePtr, byte[] output, ulong outlen);
 
-        public override int MaxOutputSize => 64;
+        public override ulong MaxOutputSize => 0xffffffffUL;
 
-        public override string NamePrefix => "BLAKE2b";
+        public override string NamePrefix => "BLAKE2xb";
 
-        public override AlgoType AlgoGroup => AlgoType.BLAKE2B;
+        public override AlgoType AlgoGroup => AlgoType.BLAKE2XB;
 
-        public OfficialImplBlake2b(int bitLength) : base(bitLength)
+        public OfficialBlake2xb(ulong bitLength) : base(bitLength)
         {
         }
 
         public override IHashAlgoInfo NewInstance()
         {
-            return new OfficialImplBlake2b(this.bitLength);
+            return new OfficialBlake2xb(this.bitLength);
         }
 
         public override void Blake2DeleteState(IntPtr statePtr)
@@ -45,27 +45,27 @@ namespace HashCalculator
 
         public override IntPtr Blake2New()
         {
-            return blake2b_new();
+            return blake2xb_new();
         }
 
         public override int Blake2Init(IntPtr statePtr, ulong outlen)
         {
-            return blake2b_init(statePtr, outlen);
+            return blake2xb_init(statePtr, outlen);
         }
 
         public override int Blake2Update(IntPtr statePtr, byte[] input, ulong inlen)
         {
-            return blake2b_update(statePtr, input, inlen);
+            return blake2xb_update(statePtr, input, inlen);
         }
 
         public override int Blake2Update(IntPtr statePtr, ref byte input, ulong inlen)
         {
-            return blake2b_update(statePtr, ref input, inlen);
+            return blake2xb_update(statePtr, ref input, inlen);
         }
 
         public override int Blake2Final(IntPtr statePtr, byte[] output, ulong outlen)
         {
-            return blake2b_final(statePtr, output, outlen);
+            return blake2xb_final(statePtr, output, outlen);
         }
     }
 }

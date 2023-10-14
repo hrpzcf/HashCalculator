@@ -4,19 +4,19 @@ using System.Security.Cryptography;
 
 namespace HashCalculator
 {
-    internal abstract class AbsOfficialImplBlake2 : HashAlgorithm, IHashAlgoInfo
+    internal abstract class AbsOfficialBlake2 : HashAlgorithm, IHashAlgoInfo
     {
-        private readonly int outputSize;
+        public readonly ulong bitLength;
+        private readonly ulong outputSize;
         private AlgoType algoType = AlgoType.Unknown;
         private int _errorCode = 0;
         private IntPtr _statePtr = IntPtr.Zero;
-        public readonly int bitLength;
-
-        public abstract int MaxOutputSize { get; }
 
         public abstract string NamePrefix { get; }
 
         public abstract AlgoType AlgoGroup { get; }
+
+        public abstract ulong MaxOutputSize { get; }
 
         public string AlgoName => $"{this.NamePrefix}-{this.bitLength}";
 
@@ -63,9 +63,9 @@ namespace HashCalculator
             }
         }
 
-        public AbsOfficialImplBlake2(int bitLength)
+        public AbsOfficialBlake2(ulong bitLength)
         {
-            int bytesNumber = bitLength / 8;
+            ulong bytesNumber = bitLength / 8;
             if (bitLength < 8 || bitLength % 8 != 0 || bytesNumber > this.MaxOutputSize)
             {
                 throw new ArgumentException($"Invalid bit length");
@@ -79,7 +79,7 @@ namespace HashCalculator
             this._statePtr = this.Blake2New();
             if (this._statePtr != IntPtr.Zero)
             {
-                this._errorCode = this.Blake2Init(this._statePtr, (ulong)this.outputSize);
+                this._errorCode = this.Blake2Init(this._statePtr, this.outputSize);
             }
             else
             {
@@ -120,7 +120,7 @@ namespace HashCalculator
                 throw new InvalidOperationException("An error has occurred");
             }
             byte[] resultBuffer = new byte[this.outputSize];
-            this._errorCode = this.Blake2Final(this._statePtr, resultBuffer, (ulong)resultBuffer.Length);
+            this._errorCode = this.Blake2Final(this._statePtr, resultBuffer, this.outputSize);
             return resultBuffer;
         }
     }

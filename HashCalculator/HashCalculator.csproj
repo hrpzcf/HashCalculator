@@ -122,13 +122,13 @@
     <Compile Include="Globals\DllName.cs" />
     <Compile Include="Globals\MappedFiler.cs" />
     <Compile Include="Globals\MappedInfo.cs" />
-    <Compile Include="HashAlgos\AbsOfficialImplBlake2.cs" />
+    <Compile Include="HashAlgos\AbsOfficialBlake2.cs" />
     <Compile Include="HashAlgos\BCSharpBlake2s.cs" />
     <Compile Include="HashAlgos\BCSharpBlake2b.cs" />
     <Compile Include="HashAlgos\BCSharpDigest.cs" />
     <Compile Include="Globals\Settings.cs" />
     <Compile Include="HashAlgos\BCSharpWhirlpool.cs" />
-    <Compile Include="HashAlgos\OfficialImplBlake2b.cs" />
+    <Compile Include="HashAlgos\OfficialBlake2b.cs" />
     <Compile Include="HashAlgos\IHashAlgoInfo.cs" />
     <Compile Include="HashAlgos\Blake3NetBlake3.cs" />
     <Compile Include="HashAlgos\LibXxHashXXH128.cs" />
@@ -164,7 +164,11 @@
     <Compile Include="Filters\HashAlgoFilterCtrl.xaml.cs">
       <DependentUpon>HashAlgoFilterCtrl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="HashAlgos\OfficialImplBlake2s.cs" />
+    <Compile Include="HashAlgos\OfficialBlake2bp.cs" />
+    <Compile Include="HashAlgos\OfficialBlake2s.cs" />
+    <Compile Include="HashAlgos\OfficialBlake2sp.cs" />
+    <Compile Include="HashAlgos\OfficialBlake2xb.cs" />
+    <Compile Include="HashAlgos\OfficialBlake2xs.cs" />
     <Compile Include="Others\HashBytesComparer.cs" />
     <Compile Include="Filters\HashingTaskResultFilter.cs" />
     <Compile Include="Filters\HashingTaskResultFilterCtrl.xaml.cs">
