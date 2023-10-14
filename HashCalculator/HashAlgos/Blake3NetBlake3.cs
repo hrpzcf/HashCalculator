@@ -68,7 +68,7 @@ namespace HashCalculator
         {
             if (bitLength < 8 || bitLength % 8 != 0)
             {
-                throw new ArgumentException($"Invalid {nameof(bitLength)}");
+                throw new ArgumentException($"Invalid bit length");
             }
             this.bitLength = bitLength;
             this.outputSize = bitLength / 8;
