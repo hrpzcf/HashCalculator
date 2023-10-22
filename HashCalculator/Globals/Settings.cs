@@ -84,7 +84,7 @@ namespace HashCalculator
                         Directory.CreateDirectory(libDir);
                     }
                     string resPath = string.Format(
-                        "HashCalculator.HashAlgos.HashDlls.{0}_{1}.dll",
+                        "HashCalculator.HashAlgos.AlgoDlls.{0}_{1}.dll",
                         Path.GetFileNameWithoutExtension(fname),
                         Environment.Is64BitProcess ? "x64" : "x86");
                     if (AppLoading.ExecutingAsmb.GetManifestResourceStream(resPath) is Stream stream)
@@ -129,13 +129,19 @@ namespace HashCalculator
             return ExtractDll(DllName.Whirlpool, force || Current.PreviousVer != Info.Ver);
         }
 
-        public static void ExtractAllEmbeddedHashDllFiles()
+        public static string ExtractKeccakDll(bool force)
+        {
+            return ExtractDll(DllName.Keccak, force || Current.PreviousVer != Info.Ver);
+        }
+
+        public static void ExtractAllEmbeddedAlgoDllFiles()
         {
             bool forceExtractHashLibraryFile = Current.PreviousVer != Info.Ver;
             if (string.IsNullOrEmpty(ExtractXxHashDll(forceExtractHashLibraryFile))
                 && string.IsNullOrEmpty(ExtractBlake2Dll(forceExtractHashLibraryFile))
                 && string.IsNullOrEmpty(ExtractBlake3Dll(forceExtractHashLibraryFile))
-                && string.IsNullOrEmpty(ExtractWhirlpoolDll(forceExtractHashLibraryFile)))
+                && string.IsNullOrEmpty(ExtractWhirlpoolDll(forceExtractHashLibraryFile))
+                && string.IsNullOrEmpty(ExtractKeccakDll(forceExtractHashLibraryFile)))
             {
                 Current.PreviousVer = Info.Ver;
             }

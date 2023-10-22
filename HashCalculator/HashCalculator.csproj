@@ -167,6 +167,7 @@
     <Compile Include="HashAlgos\OfficialBlake2sp.cs" />
     <Compile Include="HashAlgos\OfficialBlake2xb.cs" />
     <Compile Include="HashAlgos\OfficialBlake2xs.cs" />
+    <Compile Include="HashAlgos\ExtendedKCPSha3.cs" />
     <Compile Include="Others\HashBytesComparer.cs" />
     <Compile Include="Filters\HashingTaskResultFilter.cs" />
     <Compile Include="Filters\HashingTaskResultFilterCtrl.xaml.cs">
@@ -204,7 +205,6 @@
     <Compile Include="Others\RegValue.cs" />
     <Compile Include="Others\RelayCommand.cs" />
     <Compile Include="Others\CommonUtils.cs" />
-    <Compile Include="HashAlgos\BCSharpSha3.cs" />
     <Compile Include="HashAlgos\BCSharpSha224.cs" />
     <Compile Include="Others\ShellExtHelper.cs" />
     <Compile Include="ViewModels\AlgosPanelModel.cs" />
@@ -413,14 +413,14 @@
     <EmbeddedResource Include="Assembly\Microsoft.Bcl.HashCode.dll" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="HashAlgos\HashDlls\xxhash.txt" />
-    <EmbeddedResource Include="HashAlgos\HashDlls\xxhash_x86.dll" />
-    <EmbeddedResource Include="HashAlgos\HashDlls\xxhash_x64.dll" />
+    <None Include="HashAlgos\AlgoDlls\xxhash.txt" />
+    <EmbeddedResource Include="HashAlgos\AlgoDlls\xxhash_x86.dll" />
+    <EmbeddedResource Include="HashAlgos\AlgoDlls\xxhash_x64.dll" />
     <None Include="Assembly\Crc32.NET.txt" />
     <EmbeddedResource Include="Assembly\Crc32.NET.dll" />
-    <None Include="HashAlgos\HashDlls\blake3.txt" />
-    <EmbeddedResource Include="HashAlgos\HashDlls\blake3_x86.dll" />
-    <EmbeddedResource Include="HashAlgos\HashDlls\blake3_x64.dll" />
+    <None Include="HashAlgos\AlgoDlls\blake3.txt" />
+    <EmbeddedResource Include="HashAlgos\AlgoDlls\blake3_x86.dll" />
+    <EmbeddedResource Include="HashAlgos\AlgoDlls\blake3_x64.dll" />
     <None Include="Assembly\System.txt" />
     <EmbeddedResource Include="Assembly\System.Buffers.dll" />
     <EmbeddedResource Include="Assembly\System.Memory.dll" />
@@ -428,18 +428,25 @@
     <EmbeddedResource Include="Assembly\System.Runtime.CompilerServices.Unsafe.dll" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="HashAlgos\HashDlls\blake2_x64.dll" />
-    <EmbeddedResource Include="HashAlgos\HashDlls\blake2_x86.dll" />
+    <EmbeddedResource Include="HashAlgos\AlgoDlls\blake2_x64.dll" />
+    <EmbeddedResource Include="HashAlgos\AlgoDlls\blake2_x86.dll" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="HashAlgos\HashDlls\blake2.txt" />
+    <None Include="HashAlgos\AlgoDlls\blake2.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="HashAlgos\HashDlls\whirlpool_x64.dll" />
-    <EmbeddedResource Include="HashAlgos\HashDlls\whirlpool_x86.dll" />
+    <EmbeddedResource Include="HashAlgos\AlgoDlls\whirlpool_x64.dll" />
+    <EmbeddedResource Include="HashAlgos\AlgoDlls\whirlpool_x86.dll" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="HashAlgos\HashDlls\whirlpool.txt" />
+    <None Include="HashAlgos\AlgoDlls\whirlpool.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="HashAlgos\AlgoDlls\keccak_x64.dll" />
+    <EmbeddedResource Include="HashAlgos\AlgoDlls\keccak_x86.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="HashAlgos\AlgoDlls\keccak.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

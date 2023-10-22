@@ -46,7 +46,7 @@ namespace HashCalculator
         private static void ApplicationStartup(object sender, StartupEventArgs e)
         {
             Settings.LoadSettings();
-            Settings.ExtractAllEmbeddedHashDllFiles();
+            Settings.ExtractAllEmbeddedAlgoDllFiles();
             MappedFiler.PushArgs(Settings.StartupArgs);
         }
 
