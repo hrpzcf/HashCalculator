@@ -20,10 +20,10 @@ namespace HashCalculator
             new AlgoInOutModel(new MsCryptoCngSHA384()),
             new AlgoInOutModel(new MsCryptoCngSHA512()),
             // SHA3
-            new AlgoInOutModel(new BCSharpSha3(224)),
-            new AlgoInOutModel(new BCSharpSha3(256)),
-            new AlgoInOutModel(new BCSharpSha3(384)),
-            new AlgoInOutModel(new BCSharpSha3(512)),
+            new AlgoInOutModel(new ExtendedKCPSha3(224)),
+            new AlgoInOutModel(new ExtendedKCPSha3(256)),
+            new AlgoInOutModel(new ExtendedKCPSha3(384)),
+            new AlgoInOutModel(new ExtendedKCPSha3(512)),
             // Whirlpool
             new AlgoInOutModel(new HashratWhirlpool()),
             // MD5
