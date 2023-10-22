@@ -15,7 +15,6 @@ namespace HashCalculator
             "System.Memory",
             "System.Numerics.Vectors",
             "System.Runtime.CompilerServices.Unsafe",
-            "BouncyCastle.Cryptography",
             "CommandLine",
             "Crc32.NET",
             "Microsoft.Bcl.HashCode",

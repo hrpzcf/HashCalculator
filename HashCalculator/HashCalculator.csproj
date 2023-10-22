@@ -123,8 +123,8 @@
     <Compile Include="Globals\MappedFiler.cs" />
     <Compile Include="Globals\MappedInfo.cs" />
     <Compile Include="HashAlgos\AbsOfficialBlake2.cs" />
-    <Compile Include="HashAlgos\BCSharpDigest.cs" />
     <Compile Include="Globals\Settings.cs" />
+    <Compile Include="HashAlgos\HaclSha2Sha224.cs" />
     <Compile Include="HashAlgos\HashratWhirlpool.cs" />
     <Compile Include="HashAlgos\OfficialBlake2b.cs" />
     <Compile Include="HashAlgos\IHashAlgoInfo.cs" />
@@ -205,7 +205,6 @@
     <Compile Include="Others\RegValue.cs" />
     <Compile Include="Others\RelayCommand.cs" />
     <Compile Include="Others\CommonUtils.cs" />
-    <Compile Include="HashAlgos\BCSharpSha224.cs" />
     <Compile Include="Others\ShellExtHelper.cs" />
     <Compile Include="ViewModels\AlgosPanelModel.cs" />
     <Compile Include="ViewModels\AlgoInOutModel.cs" />
@@ -400,8 +399,6 @@
     <EmbeddedResource Include="ShellExt\HashCalculator32.dll" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assembly\BouncyCastle.Cryptography.txt" />
-    <EmbeddedResource Include="Assembly\BouncyCastle.Cryptography.dll" />
     <None Include="Assembly\CommandLine.txt" />
     <EmbeddedResource Include="Assembly\CommandLine.dll" />
     <None Include="Assembly\Microsoft.WindowsAPICodePack.txt" />
@@ -447,6 +444,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="HashAlgos\AlgoDlls\keccak.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="HashAlgos\AlgoDlls\sha2_x64.dll" />
+    <EmbeddedResource Include="HashAlgos\AlgoDlls\sha2_x86.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="HashAlgos\AlgoDlls\sha2.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

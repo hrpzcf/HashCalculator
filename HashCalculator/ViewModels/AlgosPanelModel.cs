@@ -15,7 +15,7 @@ namespace HashCalculator
             // SHA1
             new AlgoInOutModel(new MsCryptoCngSHA1()),
             // SHA2
-            new AlgoInOutModel(new BCSharpSha224()),
+            new AlgoInOutModel(new HaclSha2Sha224()),
             new AlgoInOutModel(new MsCryptoCngSHA256()),
             new AlgoInOutModel(new MsCryptoCngSHA384()),
             new AlgoInOutModel(new MsCryptoCngSHA512()),

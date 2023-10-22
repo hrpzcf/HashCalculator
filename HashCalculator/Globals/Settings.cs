@@ -109,11 +109,6 @@ namespace HashCalculator
             return default(string);
         }
 
-        public static string ExtractXxHashDll(bool force)
-        {
-            return ExtractDll(DllName.XxHash, force || Current.PreviousVer != Info.Ver);
-        }
-
         public static string ExtractBlake2Dll(bool force)
         {
             return ExtractDll(DllName.Blake2, force || Current.PreviousVer != Info.Ver);
@@ -124,24 +119,35 @@ namespace HashCalculator
             return ExtractDll(DllName.Blake3, force || Current.PreviousVer != Info.Ver);
         }
 
-        public static string ExtractWhirlpoolDll(bool force)
-        {
-            return ExtractDll(DllName.Whirlpool, force || Current.PreviousVer != Info.Ver);
-        }
-
         public static string ExtractKeccakDll(bool force)
         {
             return ExtractDll(DllName.Keccak, force || Current.PreviousVer != Info.Ver);
         }
 
+        public static string ExtractSha2Dll(bool force)
+        {
+            return ExtractDll(DllName.Sha2, force || Current.PreviousVer != Info.Ver);
+        }
+
+        public static string ExtractWhirlpoolDll(bool force)
+        {
+            return ExtractDll(DllName.Whirlpool, force || Current.PreviousVer != Info.Ver);
+        }
+
+        public static string ExtractXxHashDll(bool force)
+        {
+            return ExtractDll(DllName.XxHash, force || Current.PreviousVer != Info.Ver);
+        }
+
         public static void ExtractAllEmbeddedAlgoDllFiles()
         {
             bool forceExtractHashLibraryFile = Current.PreviousVer != Info.Ver;
-            if (string.IsNullOrEmpty(ExtractXxHashDll(forceExtractHashLibraryFile))
-                && string.IsNullOrEmpty(ExtractBlake2Dll(forceExtractHashLibraryFile))
-                && string.IsNullOrEmpty(ExtractBlake3Dll(forceExtractHashLibraryFile))
-                && string.IsNullOrEmpty(ExtractWhirlpoolDll(forceExtractHashLibraryFile))
-                && string.IsNullOrEmpty(ExtractKeccakDll(forceExtractHashLibraryFile)))
+            if (string.IsNullOrEmpty(ExtractBlake2Dll(forceExtractHashLibraryFile)) &&
+                string.IsNullOrEmpty(ExtractBlake3Dll(forceExtractHashLibraryFile)) &&
+                string.IsNullOrEmpty(ExtractKeccakDll(forceExtractHashLibraryFile)) &&
+                string.IsNullOrEmpty(ExtractSha2Dll(forceExtractHashLibraryFile)) &&
+                string.IsNullOrEmpty(ExtractWhirlpoolDll(forceExtractHashLibraryFile)) &&
+                string.IsNullOrEmpty(ExtractXxHashDll(forceExtractHashLibraryFile)))
             {
                 Current.PreviousVer = Info.Ver;
             }
