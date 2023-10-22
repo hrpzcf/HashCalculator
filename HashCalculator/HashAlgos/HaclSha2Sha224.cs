@@ -54,7 +54,7 @@ namespace HashCalculator
             this._state = sha224_new();
             if (this._state == IntPtr.Zero)
             {
-                throw new NullReferenceException("Initialization failed");
+                throw new Exception("Initialization failed");
             }
             sha224_init(this._state);
         }

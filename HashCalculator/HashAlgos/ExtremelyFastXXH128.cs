@@ -14,10 +14,10 @@ namespace HashCalculator
     /// <summary>
     /// xxhash3-128
     /// </summary>
-    internal class LibXxHashXXH128 : HashAlgorithm, IHashAlgoInfo
+    internal class ExtremelyFastXXH128 : HashAlgorithm, IHashAlgoInfo
     {
-        private IntPtr _statePtr = IntPtr.Zero;
-        private XXH_errorcode error = XXH_errorcode.XXH_OK;
+        private IntPtr _state = IntPtr.Zero;
+        private XXH_errorcode _errorCode = XXH_errorcode.XXH_OK;
 
         public string AlgoName => "XXH128";
 
@@ -27,52 +27,58 @@ namespace HashCalculator
         private static extern IntPtr XXH3_createState();
 
         [DllImport(DllName.XxHash, CallingConvention = CallingConvention.Cdecl)]
-        private static extern XXH_errorcode XXH3_freeState(IntPtr statePtr);
+        private static extern XXH_errorcode XXH3_freeState(IntPtr state);
 
         [DllImport(DllName.XxHash, CallingConvention = CallingConvention.Cdecl)]
-        private static extern XXH_errorcode XXH3_128bits_update(IntPtr statePtr, byte[] input, ulong length);
+        private static extern XXH_errorcode XXH3_128bits_update(IntPtr state, byte[] input, ulong length);
 
         [DllImport(DllName.XxHash, CallingConvention = CallingConvention.Cdecl)]
-        private static extern XXH_errorcode XXH3_128bits_update(IntPtr statePtr, ref byte input, ulong length);
+        private static extern XXH_errorcode XXH3_128bits_update(IntPtr state, ref byte input, ulong length);
 
         [DllImport(DllName.XxHash, CallingConvention = CallingConvention.Cdecl)]
-        private static extern XXH128Hash XXH3_128bits_digest(IntPtr statePtr);
+        private static extern XXH128Hash XXH3_128bits_digest(IntPtr state);
 
         [DllImport(DllName.XxHash, CallingConvention = CallingConvention.Cdecl)]
-        private static extern XXH_errorcode XXH3_128bits_reset(IntPtr statePtr);
+        private static extern XXH_errorcode XXH3_128bits_reset(IntPtr state);
+
+        private void DeleteState()
+        {
+            if (this._state != IntPtr.Zero)
+            {
+                XXH3_freeState(this._state);
+                this._state = IntPtr.Zero;
+            }
+        }
 
         protected override void Dispose(bool disposing)
         {
+            this.DeleteState();
             base.Dispose(disposing);
-            if (this._statePtr != IntPtr.Zero)
-            {
-                XXH_errorcode _ = XXH3_freeState(this._statePtr);
-                this._statePtr = IntPtr.Zero;
-            }
         }
 
         public override void Initialize()
         {
-            this._statePtr = XXH3_createState();
-            if (this._statePtr == IntPtr.Zero)
+            this.DeleteState();
+            this._state = XXH3_createState();
+            if (this._state == IntPtr.Zero)
             {
-                throw new NullReferenceException("Initialization failed");
+                throw new Exception("Initialization failed");
             }
-            XXH_errorcode _ = XXH3_128bits_reset(this._statePtr);
+            this._errorCode = XXH3_128bits_reset(this._state);
         }
 
         public IHashAlgoInfo NewInstance()
         {
-            return new LibXxHashXXH128();
+            return new ExtremelyFastXXH128();
         }
 
         protected override void HashCore(byte[] array, int ibStart, int cbSize)
         {
-            if (this._statePtr == IntPtr.Zero)
+            if (this._state == IntPtr.Zero)
             {
                 throw new InvalidOperationException("Not initialized yet");
             }
-            else if (this.error == XXH_errorcode.XXH_ERROR)
+            else if (this._errorCode == XXH_errorcode.XXH_ERROR)
             {
                 throw new InvalidOperationException("An error has occurred");
             }
@@ -80,25 +86,25 @@ namespace HashCalculator
             {
                 ReadOnlySpan<byte> span = new ReadOnlySpan<byte>(array, ibStart, cbSize);
                 ref byte input = ref MemoryMarshal.GetReference(span);
-                this.error = XXH3_128bits_update(this._statePtr, ref input, (ulong)cbSize);
+                this._errorCode = XXH3_128bits_update(this._state, ref input, (ulong)cbSize);
             }
             else
             {
-                this.error = XXH3_128bits_update(this._statePtr, array, (ulong)cbSize);
+                this._errorCode = XXH3_128bits_update(this._state, array, (ulong)cbSize);
             }
         }
 
         protected override byte[] HashFinal()
         {
-            if (this._statePtr == IntPtr.Zero)
+            if (this._state == IntPtr.Zero)
             {
                 throw new InvalidOperationException("Not initialized yet");
             }
-            else if (this.error == XXH_errorcode.XXH_ERROR)
+            else if (this._errorCode == XXH_errorcode.XXH_ERROR)
             {
                 throw new InvalidOperationException("An error has occurred");
             }
-            XXH128Hash hashResult = XXH3_128bits_digest(this._statePtr);
+            XXH128Hash hashResult = XXH3_128bits_digest(this._state);
             byte[] hashBytesLow = BitConverter.GetBytes(hashResult.low64);
             byte[] hashBytesHigh = BitConverter.GetBytes(hashResult.high64);
             Array.Reverse(hashBytesLow);

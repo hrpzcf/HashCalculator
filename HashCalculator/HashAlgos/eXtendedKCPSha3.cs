@@ -89,7 +89,7 @@ namespace HashCalculator
             this._state = keccak_new();
             if (this._state == IntPtr.Zero || sha3_init(this._state, this.bitLength) > 0)
             {
-                throw new NullReferenceException("Initialization failed");
+                throw new Exception("Initialization failed");
             }
         }
 
@@ -104,7 +104,7 @@ namespace HashCalculator
             {
                 throw new InvalidOperationException("Not initialized yet");
             }
-            if (this._errorCode > 0)
+            else if (this._errorCode > 0)
             {
                 throw new InvalidOperationException("An error has occurred");
             }
@@ -125,6 +125,10 @@ namespace HashCalculator
             if (this._state == IntPtr.Zero)
             {
                 throw new InvalidOperationException("Not initialized yet");
+            }
+            else if (this._errorCode > 0)
+            {
+                throw new InvalidOperationException("An error has occurred");
             }
             byte[] resultBuffer = new byte[this.outputSize];
             if (sha3_final(this._state, resultBuffer, (ulong)this.outputSize) > 0)

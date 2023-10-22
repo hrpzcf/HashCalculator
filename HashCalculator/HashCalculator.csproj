@@ -122,24 +122,24 @@
     <Compile Include="Globals\DllName.cs" />
     <Compile Include="Globals\MappedFiler.cs" />
     <Compile Include="Globals\MappedInfo.cs" />
-    <Compile Include="HashAlgos\AbsOfficialBlake2.cs" />
+    <Compile Include="HashAlgos\OfficialImplBlake2.cs" />
     <Compile Include="Globals\Settings.cs" />
     <Compile Include="HashAlgos\HaclSha2Sha224.cs" />
     <Compile Include="HashAlgos\HashratWhirlpool.cs" />
-    <Compile Include="HashAlgos\OfficialBlake2b.cs" />
+    <Compile Include="HashAlgos\OfficialImplBlake2b.cs" />
     <Compile Include="HashAlgos\IHashAlgoInfo.cs" />
     <Compile Include="HashAlgos\Blake3NetBlake3.cs" />
-    <Compile Include="HashAlgos\LibXxHashXXH128.cs" />
-    <Compile Include="HashAlgos\LibXxHashXXH3.cs" />
-    <Compile Include="HashAlgos\LibXxHashXXH32.cs" />
-    <Compile Include="HashAlgos\LibXxHashXXH64.cs" />
-    <Compile Include="HashAlgos\MsCryptCngDigest.cs" />
+    <Compile Include="HashAlgos\ExtremelyFastXXH128.cs" />
+    <Compile Include="HashAlgos\ExtremelyFastXXH3.cs" />
+    <Compile Include="HashAlgos\ExtremelyFastXXH32.cs" />
+    <Compile Include="HashAlgos\ExtremelyFastXXH64.cs" />
+    <Compile Include="HashAlgos\NetCryptoCngAbs.cs" />
     <Compile Include="HashAlgos\ForceCrc32NetCrc32.cs" />
-    <Compile Include="HashAlgos\MsCryptoCngMD5.cs" />
-    <Compile Include="HashAlgos\MsCryptoCngSHA1.cs" />
-    <Compile Include="HashAlgos\MsCryptoCngSHA256.cs" />
-    <Compile Include="HashAlgos\MsCryptoCngSHA384.cs" />
-    <Compile Include="HashAlgos\MsCryptoCngSHA512.cs" />
+    <Compile Include="HashAlgos\NetCryptoCngMD5.cs" />
+    <Compile Include="HashAlgos\NetCryptoCngSHA1.cs" />
+    <Compile Include="HashAlgos\NetCryptoCngSHA256.cs" />
+    <Compile Include="HashAlgos\NetCryptoCngSHA384.cs" />
+    <Compile Include="HashAlgos\NetCryptoCngSHA512.cs" />
     <Compile Include="Filters\CmpResultFilter.cs" />
     <Compile Include="Filters\CmpResultFilterCtrl.xaml.cs">
       <DependentUpon>CmpResultFilterCtrl.xaml</DependentUpon>
@@ -162,11 +162,11 @@
     <Compile Include="Filters\HashAlgoFilterCtrl.xaml.cs">
       <DependentUpon>HashAlgoFilterCtrl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="HashAlgos\OfficialBlake2bp.cs" />
-    <Compile Include="HashAlgos\OfficialBlake2s.cs" />
-    <Compile Include="HashAlgos\OfficialBlake2sp.cs" />
-    <Compile Include="HashAlgos\OfficialBlake2xb.cs" />
-    <Compile Include="HashAlgos\OfficialBlake2xs.cs" />
+    <Compile Include="HashAlgos\OfficialImplBlake2bp.cs" />
+    <Compile Include="HashAlgos\OfficialImplBlake2s.cs" />
+    <Compile Include="HashAlgos\OfficialImplBlake2sp.cs" />
+    <Compile Include="HashAlgos\OfficialImplBlake2xb.cs" />
+    <Compile Include="HashAlgos\OfficialImplBlake2xs.cs" />
     <Compile Include="HashAlgos\ExtendedKCPSha3.cs" />
     <Compile Include="Others\HashBytesComparer.cs" />
     <Compile Include="Filters\HashingTaskResultFilter.cs" />

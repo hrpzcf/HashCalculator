@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 
 namespace HashCalculator
 {
-    internal abstract class AbsOfficialBlake2 : HashAlgorithm, IHashAlgoInfo
+    internal abstract class OfficialImplBlake2 : HashAlgorithm, IHashAlgoInfo
     {
         public readonly ulong bitLength;
         private readonly ulong outputSize;
@@ -53,9 +53,8 @@ namespace HashCalculator
 
         public abstract IHashAlgoInfo NewInstance();
 
-        protected override void Dispose(bool disposing)
+        private void DeleteState()
         {
-            base.Dispose(disposing);
             if (this._statePtr != IntPtr.Zero)
             {
                 this.Blake2DeleteState(this._statePtr);
@@ -63,7 +62,13 @@ namespace HashCalculator
             }
         }
 
-        public AbsOfficialBlake2(ulong bitLength)
+        protected override void Dispose(bool disposing)
+        {
+            this.DeleteState();
+            base.Dispose(disposing);
+        }
+
+        public OfficialImplBlake2(ulong bitLength)
         {
             ulong bytesNumber = bitLength / 8;
             if (bitLength < 8 || bitLength % 8 != 0 || bytesNumber > this.MaxOutputSize)
@@ -76,6 +81,8 @@ namespace HashCalculator
 
         public override void Initialize()
         {
+            this._errorCode = 0;
+            this.DeleteState();
             this._statePtr = this.Blake2New();
             if (this._statePtr != IntPtr.Zero)
             {
@@ -83,7 +90,7 @@ namespace HashCalculator
             }
             else
             {
-                throw new NullReferenceException("Initialization failed");
+                throw new Exception("Initialization failed");
             }
         }
 
@@ -120,7 +127,10 @@ namespace HashCalculator
                 throw new InvalidOperationException("An error has occurred");
             }
             byte[] resultBuffer = new byte[this.outputSize];
-            this._errorCode = this.Blake2Final(this._statePtr, resultBuffer, this.outputSize);
+            if (this.Blake2Final(this._statePtr, resultBuffer, this.outputSize) != 0)
+            {
+                throw new InvalidOperationException("An error has occurred");
+            }
             return resultBuffer;
         }
     }

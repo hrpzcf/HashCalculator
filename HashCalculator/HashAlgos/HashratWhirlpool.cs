@@ -7,41 +7,54 @@ namespace HashCalculator
     internal class HashratWhirlpool : HashAlgorithm, IHashAlgoInfo
     {
         private const int outputSize = 64;
-        private IntPtr _statePtr = IntPtr.Zero;
+        private IntPtr _state = IntPtr.Zero;
 
         [DllImport(DllName.Whirlpool, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr whirlpool_new();
 
         [DllImport(DllName.Whirlpool, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void whirlpool_delete(IntPtr statePtr);
+        private static extern void whirlpool_delete(IntPtr state);
 
         [DllImport(DllName.Whirlpool, CallingConvention = CallingConvention.Cdecl)]
-        private static extern int whirlpool_init(IntPtr statePtr);
+        private static extern int whirlpool_init(IntPtr state);
 
         [DllImport(DllName.Whirlpool, CallingConvention = CallingConvention.Cdecl)]
-        private static extern int whirlpool_update(IntPtr statePtr, byte[] input, ulong inlen);
+        private static extern int whirlpool_update(IntPtr state, byte[] input, ulong inlen);
 
         [DllImport(DllName.Whirlpool, CallingConvention = CallingConvention.Cdecl)]
-        private static extern int whirlpool_update(IntPtr statePtr, ref byte input, ulong inlen);
+        private static extern int whirlpool_update(IntPtr state, ref byte input, ulong inlen);
 
         [DllImport(DllName.Whirlpool, CallingConvention = CallingConvention.Cdecl)]
-        private static extern int whirlpool_final(IntPtr statePtr, byte[] output, ulong outlen);
+        private static extern int whirlpool_final(IntPtr state, byte[] output, ulong outlen);
 
         public string AlgoName => "Whirlpool";
 
         public AlgoType AlgoType => AlgoType.WHIRLPOOL;
 
+        private void DeleState()
+        {
+            if (this._state != IntPtr.Zero)
+            {
+                whirlpool_delete(this._state);
+                this._state = IntPtr.Zero;
+            }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            this.DeleState();
+            base.Dispose(disposing);
+        }
+
         public override void Initialize()
         {
-            this._statePtr = whirlpool_new();
-            if (this._statePtr == IntPtr.Zero)
+            this.DeleState();
+            this._state = whirlpool_new();
+            if (this._state == IntPtr.Zero)
             {
-                throw new NullReferenceException("Initialization failed");
+                throw new Exception("Initialization failed");
             }
-            else
-            {
-                whirlpool_init(this._statePtr);
-            }
+            whirlpool_init(this._state);
         }
 
         public IHashAlgoInfo NewInstance()
@@ -51,30 +64,30 @@ namespace HashCalculator
 
         protected override void HashCore(byte[] array, int ibStart, int cbSize)
         {
-            if (this._statePtr == IntPtr.Zero)
+            if (this._state == IntPtr.Zero)
             {
                 throw new InvalidOperationException("Not initialized yet");
             }
             if (ibStart == 0 && cbSize == array.Length)
             {
-                whirlpool_update(this._statePtr, array, (ulong)cbSize);
+                whirlpool_update(this._state, array, (ulong)cbSize);
             }
             else
             {
                 ReadOnlySpan<byte> span = new ReadOnlySpan<byte>(array, ibStart, cbSize);
                 ref byte input = ref MemoryMarshal.GetReference(span);
-                whirlpool_update(this._statePtr, ref input, (ulong)cbSize);
+                whirlpool_update(this._state, ref input, (ulong)cbSize);
             }
         }
 
         protected override byte[] HashFinal()
         {
-            if (this._statePtr == IntPtr.Zero)
+            if (this._state == IntPtr.Zero)
             {
                 throw new InvalidOperationException("Not initialized yet");
             }
             byte[] resultBuffer = new byte[outputSize];
-            whirlpool_final(this._statePtr, resultBuffer, outputSize);
+            whirlpool_final(this._state, resultBuffer, outputSize);
             return resultBuffer;
         }
     }

@@ -2,19 +2,19 @@
 
 namespace HashCalculator
 {
-    internal class MsCryptoCngSHA512 : MsCryptCngDigest
+    internal class NetCryptoCngSHA512 : NetCryptoCngAbs
     {
         public override string AlgoName => "SHA-512";
 
         public override AlgoType AlgoType => AlgoType.SHA512;
 
-        public MsCryptoCngSHA512() : base(new SHA512Cng())
+        public NetCryptoCngSHA512() : base(new SHA512Cng())
         {
         }
 
         public override IHashAlgoInfo NewInstance()
         {
-            return new MsCryptoCngSHA512();
+            return new NetCryptoCngSHA512();
         }
     }
 }

@@ -13,12 +13,12 @@ namespace HashCalculator
         public static AlgoInOutModel[] ProvidedAlgos { get; } = new AlgoInOutModel[]
         {
             // SHA1
-            new AlgoInOutModel(new MsCryptoCngSHA1()),
+            new AlgoInOutModel(new NetCryptoCngSHA1()),
             // SHA2
             new AlgoInOutModel(new HaclSha2Sha224()),
-            new AlgoInOutModel(new MsCryptoCngSHA256()),
-            new AlgoInOutModel(new MsCryptoCngSHA384()),
-            new AlgoInOutModel(new MsCryptoCngSHA512()),
+            new AlgoInOutModel(new NetCryptoCngSHA256()),
+            new AlgoInOutModel(new NetCryptoCngSHA384()),
+            new AlgoInOutModel(new NetCryptoCngSHA512()),
             // SHA3
             new AlgoInOutModel(new ExtendedKCPSha3(224)),
             new AlgoInOutModel(new ExtendedKCPSha3(256)),
@@ -27,38 +27,38 @@ namespace HashCalculator
             // Whirlpool
             new AlgoInOutModel(new HashratWhirlpool()),
             // MD5
-            new AlgoInOutModel(new MsCryptoCngMD5()),
+            new AlgoInOutModel(new NetCryptoCngMD5()),
             // Crc32
             new AlgoInOutModel(new ForceCrc32NetCrc32()),
             // XxHash
-            new AlgoInOutModel(new LibXxHashXXH32()),
-            new AlgoInOutModel(new LibXxHashXXH64()),
-            new AlgoInOutModel(new LibXxHashXXH3()),
-            new AlgoInOutModel(new LibXxHashXXH128()),
+            new AlgoInOutModel(new ExtremelyFastXXH32()),
+            new AlgoInOutModel(new ExtremelyFastXXH64()),
+            new AlgoInOutModel(new ExtremelyFastXXH3()),
+            new AlgoInOutModel(new ExtremelyFastXXH128()),
             // Blake2s
-            new AlgoInOutModel(new OfficialBlake2s(128)),
-            new AlgoInOutModel(new OfficialBlake2s(160)),
-            new AlgoInOutModel(new OfficialBlake2s(224)),
-            new AlgoInOutModel(new OfficialBlake2s(256)),
+            new AlgoInOutModel(new OfficialImplBlake2s(128)),
+            new AlgoInOutModel(new OfficialImplBlake2s(160)),
+            new AlgoInOutModel(new OfficialImplBlake2s(224)),
+            new AlgoInOutModel(new OfficialImplBlake2s(256)),
             // Blake2sp
-            new AlgoInOutModel(new OfficialBlake2sp(128)),
-            new AlgoInOutModel(new OfficialBlake2sp(160)),
-            new AlgoInOutModel(new OfficialBlake2sp(224)),
-            new AlgoInOutModel(new OfficialBlake2sp(256)),
+            new AlgoInOutModel(new OfficialImplBlake2sp(128)),
+            new AlgoInOutModel(new OfficialImplBlake2sp(160)),
+            new AlgoInOutModel(new OfficialImplBlake2sp(224)),
+            new AlgoInOutModel(new OfficialImplBlake2sp(256)),
             // Blake2b
-            new AlgoInOutModel(new OfficialBlake2b(128)),
-            new AlgoInOutModel(new OfficialBlake2b(160)),
-            new AlgoInOutModel(new OfficialBlake2b(224)),
-            new AlgoInOutModel(new OfficialBlake2b(256)),
-            new AlgoInOutModel(new OfficialBlake2b(384)),
-            new AlgoInOutModel(new OfficialBlake2b(512)),
+            new AlgoInOutModel(new OfficialImplBlake2b(128)),
+            new AlgoInOutModel(new OfficialImplBlake2b(160)),
+            new AlgoInOutModel(new OfficialImplBlake2b(224)),
+            new AlgoInOutModel(new OfficialImplBlake2b(256)),
+            new AlgoInOutModel(new OfficialImplBlake2b(384)),
+            new AlgoInOutModel(new OfficialImplBlake2b(512)),
             // Blake2bp
-            new AlgoInOutModel(new OfficialBlake2bp(128)),
-            new AlgoInOutModel(new OfficialBlake2bp(160)),
-            new AlgoInOutModel(new OfficialBlake2bp(224)),
-            new AlgoInOutModel(new OfficialBlake2bp(256)),
-            new AlgoInOutModel(new OfficialBlake2bp(384)),
-            new AlgoInOutModel(new OfficialBlake2bp(512)),
+            new AlgoInOutModel(new OfficialImplBlake2bp(128)),
+            new AlgoInOutModel(new OfficialImplBlake2bp(160)),
+            new AlgoInOutModel(new OfficialImplBlake2bp(224)),
+            new AlgoInOutModel(new OfficialImplBlake2bp(256)),
+            new AlgoInOutModel(new OfficialImplBlake2bp(384)),
+            new AlgoInOutModel(new OfficialImplBlake2bp(512)),
             // Blake3
             new AlgoInOutModel(new Blake3NetBlake3(128)),
             new AlgoInOutModel(new Blake3NetBlake3(160)),

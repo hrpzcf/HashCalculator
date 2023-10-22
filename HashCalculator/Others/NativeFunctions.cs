@@ -77,7 +77,7 @@ namespace HashCalculator
         /// </summary>
         FOF_NOCONFIRMMKDIR = 0x200,
         /// <summary>
-        /// Don't put up error UI
+        /// Don't put up _errorCode UI
         /// </summary>
         FOF_NOERRORUI = 0x400,
         /// <summary>
