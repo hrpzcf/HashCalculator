@@ -129,6 +129,11 @@ namespace HashCalculator
             return ExtractDll(DllName.Sha2, force || Current.PreviousVer != Info.Ver);
         }
 
+        public static string ExtractStreebogDll(bool force)
+        {
+            return ExtractDll(DllName.Streebog, force || Current.PreviousVer != Info.Ver);
+        }
+
         public static string ExtractWhirlpoolDll(bool force)
         {
             return ExtractDll(DllName.Whirlpool, force || Current.PreviousVer != Info.Ver);
@@ -146,6 +151,7 @@ namespace HashCalculator
                 string.IsNullOrEmpty(ExtractBlake3Dll(forceExtractHashLibraryFile)) &&
                 string.IsNullOrEmpty(ExtractKeccakDll(forceExtractHashLibraryFile)) &&
                 string.IsNullOrEmpty(ExtractSha2Dll(forceExtractHashLibraryFile)) &&
+                string.IsNullOrEmpty(ExtractStreebogDll(forceExtractHashLibraryFile)) &&
                 string.IsNullOrEmpty(ExtractWhirlpoolDll(forceExtractHashLibraryFile)) &&
                 string.IsNullOrEmpty(ExtractXxHashDll(forceExtractHashLibraryFile)))
             {

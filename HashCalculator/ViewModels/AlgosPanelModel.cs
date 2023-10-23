@@ -24,6 +24,9 @@ namespace HashCalculator
             new AlgoInOutModel(new ExtendedKCPSha3(256)),
             new AlgoInOutModel(new ExtendedKCPSha3(384)),
             new AlgoInOutModel(new ExtendedKCPSha3(512)),
+            // Streebog
+            new AlgoInOutModel(new Gost34112012Streebog(256)),
+            new AlgoInOutModel(new Gost34112012Streebog(512)),
             // Whirlpool
             new AlgoInOutModel(new HashratWhirlpool()),
             // MD5

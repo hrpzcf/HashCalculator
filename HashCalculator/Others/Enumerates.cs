@@ -147,6 +147,10 @@
         SHA3_256,
         SHA3_384,
         SHA3_512,
+        // Streebog
+        STREEBOG,
+        STREEBOG_256,
+        STREEBOG_512,
         // WHIRLPOOL
         WHIRLPOOL,
         // MD5
