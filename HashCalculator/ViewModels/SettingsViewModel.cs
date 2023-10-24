@@ -50,6 +50,9 @@ namespace HashCalculator
         public static string FixBlake3 { get; } = "修复 Blake3 系列";
 
         [XmlIgnore]
+        public static string FixQuickXor { get; } = "修复 QuickXor 算法";
+
+        [XmlIgnore]
         public static string FixSha224 { get; } = "修复 SHA224 算法";
 
         [XmlIgnore]

@@ -134,6 +134,19 @@
     /// </summary>
     public enum AlgoType
     {
+        // XxHash
+        XXHASH32,
+        XXHASH64,
+        XXHASH3,
+        XXHASH128,
+        // MD5
+        MD5,
+        // Crc32
+        CRC32,
+        // QuickXor
+        QUICKXOR,
+        // WHIRLPOOL
+        WHIRLPOOL,
         // SHA1
         SHA1,
         // SHA2
@@ -147,35 +160,6 @@
         SHA3_256,
         SHA3_384,
         SHA3_512,
-        // Streebog
-        STREEBOG,
-        STREEBOG_256,
-        STREEBOG_512,
-        // WHIRLPOOL
-        WHIRLPOOL,
-        // MD5
-        MD5,
-        // Crc32
-        CRC32,
-        // XxHash
-        XXHASH32,
-        XXHASH64,
-        XXHASH3,
-        XXHASH128,
-        // BLAKE2S
-        BLAKE2S,
-        BLAKE2S_128,
-        BLAKE2S_160,
-        BLAKE2S_224,
-        BLAKE2S_256,
-        // BLAKE2SP
-        BLAKE2SP,
-        BLAKE2SP_128,
-        BLAKE2SP_160,
-        BLAKE2SP_224,
-        BLAKE2SP_256,
-        // BLAKE2XS
-        BLAKE2XS,
         // BLAKE2B
         BLAKE2B,
         BLAKE2B_128,
@@ -194,6 +178,20 @@
         BLAKE2BP_512,
         // BLAKE2XB
         BLAKE2XB,
+        // BLAKE2S
+        BLAKE2S,
+        BLAKE2S_128,
+        BLAKE2S_160,
+        BLAKE2S_224,
+        BLAKE2S_256,
+        // BLAKE2SP
+        BLAKE2SP,
+        BLAKE2SP_128,
+        BLAKE2SP_160,
+        BLAKE2SP_224,
+        BLAKE2SP_256,
+        // BLAKE2XS
+        BLAKE2XS,
         // BLAKE3
         BLAKE3,
         BLAKE3_128,
@@ -202,6 +200,10 @@
         BLAKE3_256,
         BLAKE3_384,
         BLAKE3_512,
+        // Streebog
+        STREEBOG,
+        STREEBOG_256,
+        STREEBOG_512,
         Unknown = -1,
     }
 

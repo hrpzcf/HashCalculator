@@ -25,6 +25,8 @@ namespace HashCalculator
                 new AlgoInOutModel(new NetCryptoCngMD5()),
                 // Crc32
                 new AlgoInOutModel(new ForceCrc32NetCrc32()),
+                // QuickXor
+                new AlgoInOutModel(new NamazsoQuickXor()),
                 // Whirlpool
                 new AlgoInOutModel(new HashratWhirlpool()),
             });

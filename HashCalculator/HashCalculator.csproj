@@ -123,6 +123,7 @@
     <Compile Include="Globals\MappedFiler.cs" />
     <Compile Include="Globals\MappedInfo.cs" />
     <Compile Include="HashAlgos\Gost34112012Streebog.cs" />
+    <Compile Include="HashAlgos\NamazsoQuickXor.cs" />
     <Compile Include="HashAlgos\OfficialImplBlake2.cs" />
     <Compile Include="Globals\Settings.cs" />
     <Compile Include="HashAlgos\HaclSha2Sha224.cs" />
@@ -460,6 +461,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="HashAlgos\AlgoDlls\streebog.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="HashAlgos\AlgoDlls\quickxor_x64.dll" />
+    <EmbeddedResource Include="HashAlgos\AlgoDlls\quickxor_x86.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="HashAlgos\AlgoDlls\quickxor.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

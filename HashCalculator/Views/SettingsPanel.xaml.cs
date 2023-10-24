@@ -45,6 +45,10 @@ namespace HashCalculator
                 {
                     message = Settings.ExtractBlake3Dll(force: true);
                 }
+                else if (textBlock.Text == SettingsViewModel.FixQuickXor)
+                {
+                    message = Settings.ExtractQuickXorDll(force: true);
+                }
                 else if (textBlock.Text == SettingsViewModel.FixSha224)
                 {
                     message = Settings.ExtractSha2Dll(force: true);

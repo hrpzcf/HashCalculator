@@ -115,6 +115,7 @@ namespace HashCalculator
                 ExtractBlake2Dll(force),
                 ExtractBlake3Dll(force),
                 ExtractKeccakDll(force),
+                ExtractQuickXorDll(force),
                 ExtractSha2Dll(force),
                 ExtractStreebogDll(force),
                 ExtractWhirlpoolDll(force),
@@ -139,6 +140,11 @@ namespace HashCalculator
         public static string ExtractKeccakDll(bool force)
         {
             return ExtractDll(DllName.Keccak, Current.PreviousVer != Info.Ver || force);
+        }
+
+        public static string ExtractQuickXorDll(bool force)
+        {
+            return ExtractDll(DllName.QuickXor, Current.PreviousVer != Info.Ver || force);
         }
 
         public static string ExtractSha2Dll(bool force)
