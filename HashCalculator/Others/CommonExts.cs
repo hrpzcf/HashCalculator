@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace HashCalculator
@@ -27,7 +28,7 @@ namespace HashCalculator
         }
 
         /// <summary>
-        /// 为 FileInfo 对象提供检查父目录路径与指定字符串是否相同的方法
+        /// 为 FileInfo 对象提供检查父目录路径与指定字符串是否相同的扩展方法
         /// </summary>
         /// <param name="info"></param>
         /// <param name="toCompare"></param>
@@ -38,7 +39,31 @@ namespace HashCalculator
         }
 
         /// <summary>
-        /// 为 HashViewModel 的 ModelCapturedEvent 和 ModelReleasedEvent 事件提供异步执行方法 
+        /// 为 string 对象提供扩展方法，该方法以该对象自身为连接符，将若干非 null 非空的字符串连接起来
+        /// </summary>
+        /// <param name="seperator"></param>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        public static string Join(this string seperator, params string[] values)
+        {
+            int indexOftheLast = values.Length - 1;
+            var cleanlyJoinValuesStringBuilder = new StringBuilder();
+            for (int i = 0; i < values.Length; ++i)
+            {
+                if (!string.IsNullOrEmpty(values[i]))
+                {
+                    cleanlyJoinValuesStringBuilder.Append(values[i]);
+                    if (i != indexOftheLast)
+                    {
+                        cleanlyJoinValuesStringBuilder.Append(seperator);
+                    }
+                }
+            }
+            return cleanlyJoinValuesStringBuilder.ToString();
+        }
+
+        /// <summary>
+        /// 为 HashViewModel 的 ModelCapturedEvent 和 ModelReleasedEvent 事件提供异步执行的扩展方法 
         /// </summary>
         /// <param name="action"></param>
         /// <param name="model"></param>

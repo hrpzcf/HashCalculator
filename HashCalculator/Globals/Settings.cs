@@ -106,57 +106,59 @@ namespace HashCalculator
                 }
                 catch (Exception exception) { return exception.Message; }
             }
-            return default(string);
+            return string.Empty;
+        }
+
+        public static string ExtractEmbeddedAlgoDlls(bool force)
+        {
+            string message = "\n".Join(
+                ExtractBlake2Dll(force),
+                ExtractBlake3Dll(force),
+                ExtractKeccakDll(force),
+                ExtractSha2Dll(force),
+                ExtractStreebogDll(force),
+                ExtractWhirlpoolDll(force),
+                ExtractXxHashDll(force));
+            if (string.IsNullOrEmpty(message))
+            {
+                Current.PreviousVer = Info.Ver;
+            }
+            return message;
         }
 
         public static string ExtractBlake2Dll(bool force)
         {
-            return ExtractDll(DllName.Blake2, force || Current.PreviousVer != Info.Ver);
+            return ExtractDll(DllName.Blake2, Current.PreviousVer != Info.Ver || force);
         }
 
         public static string ExtractBlake3Dll(bool force)
         {
-            return ExtractDll(DllName.Blake3, force || Current.PreviousVer != Info.Ver);
+            return ExtractDll(DllName.Blake3, Current.PreviousVer != Info.Ver || force);
         }
 
         public static string ExtractKeccakDll(bool force)
         {
-            return ExtractDll(DllName.Keccak, force || Current.PreviousVer != Info.Ver);
+            return ExtractDll(DllName.Keccak, Current.PreviousVer != Info.Ver || force);
         }
 
         public static string ExtractSha2Dll(bool force)
         {
-            return ExtractDll(DllName.Sha2, force || Current.PreviousVer != Info.Ver);
+            return ExtractDll(DllName.Sha2, Current.PreviousVer != Info.Ver || force);
         }
 
         public static string ExtractStreebogDll(bool force)
         {
-            return ExtractDll(DllName.Streebog, force || Current.PreviousVer != Info.Ver);
+            return ExtractDll(DllName.Streebog, Current.PreviousVer != Info.Ver || force);
         }
 
         public static string ExtractWhirlpoolDll(bool force)
         {
-            return ExtractDll(DllName.Whirlpool, force || Current.PreviousVer != Info.Ver);
+            return ExtractDll(DllName.Whirlpool, Current.PreviousVer != Info.Ver || force);
         }
 
         public static string ExtractXxHashDll(bool force)
         {
-            return ExtractDll(DllName.XxHash, force || Current.PreviousVer != Info.Ver);
-        }
-
-        public static void ExtractAllEmbeddedAlgoDllFiles()
-        {
-            bool forceExtractHashLibraryFile = Current.PreviousVer != Info.Ver;
-            if (string.IsNullOrEmpty(ExtractBlake2Dll(forceExtractHashLibraryFile)) &&
-                string.IsNullOrEmpty(ExtractBlake3Dll(forceExtractHashLibraryFile)) &&
-                string.IsNullOrEmpty(ExtractKeccakDll(forceExtractHashLibraryFile)) &&
-                string.IsNullOrEmpty(ExtractSha2Dll(forceExtractHashLibraryFile)) &&
-                string.IsNullOrEmpty(ExtractStreebogDll(forceExtractHashLibraryFile)) &&
-                string.IsNullOrEmpty(ExtractWhirlpoolDll(forceExtractHashLibraryFile)) &&
-                string.IsNullOrEmpty(ExtractXxHashDll(forceExtractHashLibraryFile)))
-            {
-                Current.PreviousVer = Info.Ver;
-            }
+            return ExtractDll(DllName.XxHash, Current.PreviousVer != Info.Ver || force);
         }
     }
 }

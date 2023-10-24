@@ -274,21 +274,56 @@
             Style="{StaticResource TabItemStyle1}">
             <StackPanel Margin="4">
                 <StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Style="{StaticResource DescTextBlockStyle}" Text="XXH 系列算法总是失败？" />
+                    <TextBlock Style="{StaticResource DescTextBlockStyle}" Text="某个 (系列) 算法总是计算失败？" />
+                    <StackPanel>
                         <TextBlock
+                            Margin="0,4,0,0"
                             Cursor="Hand"
                             Foreground="Blue"
                             MouseLeftButtonDown="OnTextBlockMouseLeftButtonDown"
-                            Text="{Binding Source={x:Static local:SettingsViewModel.FixXxHash}}" />
-                    </StackPanel>
-                    <StackPanel Margin="0,4,0,0" Orientation="Horizontal">
-                        <TextBlock Style="{StaticResource DescTextBlockStyle}" Text="Blake3 系列算法总是失败？" />
+                            Text="{Binding Source={x:Static local:SettingsViewModel.FixBlake2}}" />
                         <TextBlock
+                            Margin="0,4,0,0"
                             Cursor="Hand"
                             Foreground="Blue"
                             MouseLeftButtonDown="OnTextBlockMouseLeftButtonDown"
                             Text="{Binding Source={x:Static local:SettingsViewModel.FixBlake3}}" />
+                        <TextBlock
+                            Margin="0,4,0,0"
+                            Cursor="Hand"
+                            Foreground="Blue"
+                            MouseLeftButtonDown="OnTextBlockMouseLeftButtonDown"
+                            Text="{Binding Source={x:Static local:SettingsViewModel.FixSha224}}" />
+                        <TextBlock
+                            Margin="0,4,0,0"
+                            Cursor="Hand"
+                            Foreground="Blue"
+                            MouseLeftButtonDown="OnTextBlockMouseLeftButtonDown"
+                            Text="{Binding Source={x:Static local:SettingsViewModel.FixSha3}}" />
+                        <TextBlock
+                            Margin="0,4,0,0"
+                            Cursor="Hand"
+                            Foreground="Blue"
+                            MouseLeftButtonDown="OnTextBlockMouseLeftButtonDown"
+                            Text="{Binding Source={x:Static local:SettingsViewModel.FixStreebog}}" />
+                        <TextBlock
+                            Margin="0,4,0,0"
+                            Cursor="Hand"
+                            Foreground="Blue"
+                            MouseLeftButtonDown="OnTextBlockMouseLeftButtonDown"
+                            Text="{Binding Source={x:Static local:SettingsViewModel.FixWhirlpool}}" />
+                        <TextBlock
+                            Margin="0,4,0,0"
+                            Cursor="Hand"
+                            Foreground="Blue"
+                            MouseLeftButtonDown="OnTextBlockMouseLeftButtonDown"
+                            Text="{Binding Source={x:Static local:SettingsViewModel.FixXxHash}}" />
+                        <TextBlock
+                            Margin="0,4,0,0"
+                            Cursor="Hand"
+                            Foreground="Blue"
+                            MouseLeftButtonDown="OnTextBlockMouseLeftButtonDown"
+                            Text="{Binding Source={x:Static local:SettingsViewModel.FixAlgoDlls}}" />
                     </StackPanel>
                     <StackPanel Margin="0,4,0,0" Orientation="Horizontal">
                         <TextBlock

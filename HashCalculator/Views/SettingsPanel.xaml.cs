@@ -35,23 +35,47 @@ namespace HashCalculator
         {
             if (sender is TextBlock textBlock)
             {
-                if (textBlock.Text == SettingsViewModel.FixXxHash)
+                bool showMessage = true;
+                string message = string.Empty;
+                if (textBlock.Text == SettingsViewModel.FixBlake2)
                 {
-                    string message = Settings.ExtractXxHashDll(force: true);
-                    if (!string.IsNullOrEmpty(message))
-                    {
-                        MessageBox.Show(this, $"修复失败：\n{message}", "错误",
-                            MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                    else
-                    {
-                        MessageBox.Show(this, $"已经成功更新 {DllName.XxHash}", "提示",
-                            MessageBoxButton.OK, MessageBoxImage.Information);
-                    }
+                    message = Settings.ExtractBlake2Dll(force: true);
                 }
                 else if (textBlock.Text == SettingsViewModel.FixBlake3)
                 {
-                    string message = Settings.ExtractBlake3Dll(force: true);
+                    message = Settings.ExtractBlake3Dll(force: true);
+                }
+                else if (textBlock.Text == SettingsViewModel.FixSha224)
+                {
+                    message = Settings.ExtractSha2Dll(force: true);
+                }
+                else if (textBlock.Text == SettingsViewModel.FixSha3)
+                {
+                    message = Settings.ExtractKeccakDll(force: true);
+                }
+                else if (textBlock.Text == SettingsViewModel.FixStreebog)
+                {
+                    message = Settings.ExtractStreebogDll(force: true);
+                }
+                else if (textBlock.Text == SettingsViewModel.FixWhirlpool)
+                {
+                    message = Settings.ExtractWhirlpoolDll(force: true);
+                }
+                else if (textBlock.Text == SettingsViewModel.FixXxHash)
+                {
+                    message = Settings.ExtractXxHashDll(force: true);
+                }
+                else if (textBlock.Text == SettingsViewModel.FixAlgoDlls)
+                {
+                    message = Settings.ExtractEmbeddedAlgoDlls(force: true);
+                }
+                else if (textBlock.Text == SettingsViewModel.StringDllDir)
+                {
+                    showMessage = false;
+                    CommonUtils.OpenFolderAndSelectItem(Settings.libDir);
+                }
+                if (showMessage)
+                {
                     if (!string.IsNullOrEmpty(message))
                     {
                         MessageBox.Show(this, $"修复失败：\n{message}", "错误",
@@ -59,13 +83,9 @@ namespace HashCalculator
                     }
                     else
                     {
-                        MessageBox.Show(this, $"已经成功更新 {DllName.Blake3}", "提示",
+                        MessageBox.Show(this, $"已经成功更新相关文件", "提示",
                             MessageBoxButton.OK, MessageBoxImage.Information);
                     }
-                }
-                else if (textBlock.Text == SettingsViewModel.StringDllDir)
-                {
-                    CommonUtils.OpenFolderAndSelectItem(Settings.libDir);
                 }
             }
         }
