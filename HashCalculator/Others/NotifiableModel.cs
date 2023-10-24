@@ -3,10 +3,8 @@ using System.Runtime.CompilerServices;
 
 namespace HashCalculator
 {
-    public class NotifiableModel : INotifyPropertyChanged
+    public abstract class NotifiableModel : INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         public void NotifyPropertyChanged([CallerMemberName] string name = null)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
@@ -17,5 +15,7 @@ namespace HashCalculator
             property = value;
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

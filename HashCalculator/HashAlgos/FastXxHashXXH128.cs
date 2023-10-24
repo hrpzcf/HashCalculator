@@ -4,35 +4,42 @@ using System.Security.Cryptography;
 
 namespace HashCalculator
 {
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct XXH128Hash
+    {
+        public ulong low64;
+        public ulong high64;
+    }
+
     /// <summary>
-    /// xxhash3-64
+    /// xxhash3-128
     /// </summary>
-    internal class ExtremelyFastXXH3 : HashAlgorithm, IHashAlgoInfo
+    internal class FastXxHashXXH128 : HashAlgorithm, IHashAlgoInfo
     {
         private IntPtr _state = IntPtr.Zero;
         private XXH_errorcode _errorCode = XXH_errorcode.XXH_OK;
 
-        public string AlgoName => "XXH3";
+        public string AlgoName => "XXH128";
 
-        public AlgoType AlgoType => AlgoType.XXHASH3;
+        public AlgoType AlgoType => AlgoType.XXHASH128;
 
         [DllImport(DllName.XxHash, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr XXH3_createState();
 
         [DllImport(DllName.XxHash, CallingConvention = CallingConvention.Cdecl)]
-        private static extern XXH_errorcode XXH3_freeState(IntPtr statePtr);
+        private static extern XXH_errorcode XXH3_freeState(IntPtr state);
 
         [DllImport(DllName.XxHash, CallingConvention = CallingConvention.Cdecl)]
-        private static extern XXH_errorcode XXH3_64bits_update(IntPtr statePtr, byte[] input, ulong length);
+        private static extern XXH_errorcode XXH3_128bits_update(IntPtr state, byte[] input, ulong length);
 
         [DllImport(DllName.XxHash, CallingConvention = CallingConvention.Cdecl)]
-        private static extern XXH_errorcode XXH3_64bits_update(IntPtr statePtr, ref byte input, ulong length);
+        private static extern XXH_errorcode XXH3_128bits_update(IntPtr state, ref byte input, ulong length);
 
         [DllImport(DllName.XxHash, CallingConvention = CallingConvention.Cdecl)]
-        private static extern ulong XXH3_64bits_digest(IntPtr statePtr);
+        private static extern XXH128Hash XXH3_128bits_digest(IntPtr state);
 
         [DllImport(DllName.XxHash, CallingConvention = CallingConvention.Cdecl)]
-        private static extern XXH_errorcode XXH3_64bits_reset(IntPtr statePtr);
+        private static extern XXH_errorcode XXH3_128bits_reset(IntPtr state);
 
         private void DeleteState()
         {
@@ -51,19 +58,18 @@ namespace HashCalculator
 
         public override void Initialize()
         {
-            this._errorCode = XXH_errorcode.XXH_OK;
             this.DeleteState();
             this._state = XXH3_createState();
             if (this._state == IntPtr.Zero)
             {
                 throw new Exception("Initialization failed");
             }
-            this._errorCode = XXH3_64bits_reset(this._state);
+            this._errorCode = XXH3_128bits_reset(this._state);
         }
 
         public IHashAlgoInfo NewInstance()
         {
-            return new ExtremelyFastXXH3();
+            return new FastXxHashXXH128();
         }
 
         protected override void HashCore(byte[] array, int ibStart, int cbSize)
@@ -80,11 +86,11 @@ namespace HashCalculator
             {
                 ReadOnlySpan<byte> span = new ReadOnlySpan<byte>(array, ibStart, cbSize);
                 ref byte input = ref MemoryMarshal.GetReference(span);
-                this._errorCode = XXH3_64bits_update(this._state, ref input, (ulong)cbSize);
+                this._errorCode = XXH3_128bits_update(this._state, ref input, (ulong)cbSize);
             }
             else
             {
-                this._errorCode = XXH3_64bits_update(this._state, array, (ulong)cbSize);
+                this._errorCode = XXH3_128bits_update(this._state, array, (ulong)cbSize);
             }
         }
 
@@ -98,9 +104,14 @@ namespace HashCalculator
             {
                 throw new InvalidOperationException("An error has occurred");
             }
-            ulong hashResult = XXH3_64bits_digest(this._state);
-            byte[] resultBuffer = BitConverter.GetBytes(hashResult);
-            Array.Reverse(resultBuffer);
+            XXH128Hash hashResult = XXH3_128bits_digest(this._state);
+            byte[] hashBytesLow = BitConverter.GetBytes(hashResult.low64);
+            byte[] hashBytesHigh = BitConverter.GetBytes(hashResult.high64);
+            Array.Reverse(hashBytesLow);
+            Array.Reverse(hashBytesHigh);
+            byte[] resultBuffer = new byte[hashBytesLow.Length + hashBytesHigh.Length];
+            Array.Copy(hashBytesHigh, resultBuffer, hashBytesHigh.Length);
+            Array.Copy(hashBytesLow, 0, resultBuffer, hashBytesHigh.Length, hashBytesLow.Length);
             return resultBuffer;
         }
     }

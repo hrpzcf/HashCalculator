@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 
 namespace HashCalculator
 {
-    internal class ExtremelyFastXXH32 : HashAlgorithm, IHashAlgoInfo
+    internal class FastXxHashXXH32 : HashAlgorithm, IHashAlgoInfo
     {
         private IntPtr _state = IntPtr.Zero;
         private XXH_errorcode _errorCode = XXH_errorcode.XXH_OK;
@@ -60,7 +60,7 @@ namespace HashCalculator
 
         public IHashAlgoInfo NewInstance()
         {
-            return new ExtremelyFastXXH32();
+            return new FastXxHashXXH32();
         }
 
         protected override void HashCore(byte[] array, int ibStart, int cbSize)

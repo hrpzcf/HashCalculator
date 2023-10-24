@@ -39,29 +39,64 @@
             Padding="0,4,0,0"
             Foreground="#FF006FD6"
             Header="对每个文件使用以下已勾选算法计算其哈希值：">
-            <ScrollViewer
-                Padding="4"
-                HorizontalScrollBarVisibility="Auto"
-                VerticalScrollBarVisibility="Disabled">
-                <ItemsControl ItemsSource="{Binding Path=(local:AlgosPanelModel.ProvidedAlgos)}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel HorizontalAlignment="Center" Orientation="Vertical" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*" />
+                    <ColumnDefinition Width="5*" />
+                </Grid.ColumnDefinitions>
+                <ListBox
+                    Grid.Column="0"
+                    HorizontalContentAlignment="Stretch"
+                    Grid.IsSharedSizeScope="True"
+                    ItemsSource="{Binding Path=(local:AlgosPanelModel.AlgoGroups)}"
+                    SelectedItem="{Binding SelectedAlgoGroup}">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Margin" Value="1" />
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <CheckBox
-                                Margin="16,4"
-                                VerticalContentAlignment="Center"
-                                Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.CheckBoxChangedCmd}"
-                                CommandParameter="{Binding}"
-                                Content="{Binding AlgoName}"
-                                IsChecked="{Binding Selected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <Grid Margin="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="name" />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="{Binding GroupName}" />
+                                <TextBlock
+                                    Grid.Column="2"
+                                    Foreground="Gray"
+                                    Text="{Binding SelectedAlgoCount, StringFormat=已选：{0}}" />
+                            </Grid>
                         </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </ScrollViewer>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <ScrollViewer
+                    Grid.Column="1"
+                    Margin="4,0,0,0"
+                    HorizontalScrollBarVisibility="Auto"
+                    VerticalScrollBarVisibility="Disabled">
+                    <ItemsControl ItemsSource="{Binding SelectedAlgoGroup.Items}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Vertical" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <CheckBox
+                                    Margin="16,4"
+                                    VerticalContentAlignment="Center"
+                                    Command="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.CheckBoxChangedCmd}"
+                                    CommandParameter="{Binding}"
+                                    Content="{Binding AlgoName}"
+                                    IsChecked="{Binding Selected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
         </GroupBox>
         <TextBlock
             Grid.Row="1"
