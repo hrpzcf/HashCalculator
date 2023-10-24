@@ -14,15 +14,15 @@
 
 # 软件简介
 
-- 本软件主要是为了批量计算、批量校验文件的哈希值而设计，减少批量计算、校验、统计的麻烦。
-- 用来计算单个文件的哈希值也很方便。
-- 本软件是开源软件，源代码在 [GitHub](https://github.com/hrpzcf/HashCalculator) 和 [Gitee](https://gitee.com/hrpzcf/HashCalculator) 上。 
+- HashCalculator 是一个文件哈希值计算工具，为批量计算、批量校验文件的哈希值而优化设计，旨在减少批量计算、校验、统计、查找、筛选方面的麻烦。
+- HashCalculator 是开源软件，源代码在 [GitHub](https://github.com/hrpzcf/HashCalculator) 和 [Gitee](https://gitee.com/hrpzcf/HashCalculator) 上。 
 
 <br/>
 
 # 功能特点
 
-- 支持的哈希算法有：SHA1、SHA224、SHA256、SHA384、SHA512、SHA3、MD5、Crc32、XxHash、Blake2b、Blake2s、Blake3、Whirlpool。
+- 内建多种筛选器，支持对大批量的哈希结果进行筛选、查找。
+- 支持的哈希算法有：XxHash 系列、MD5、Crc32、QuickXor、Whirlpool、SHA1、SHA2 系列、SHA3 系列、Blake2b、Blake2bp、Blake2s、Blake2sp、Blake3、Streebog。
 - 计算所得哈希值的输出方式可选择 Base64 或十六进制大/小写。
 - 支持导出计算结果到文件。
 - 支持同时运行多个计算文件哈希值的任务 (1 ~ 8 个)。
@@ -32,15 +32,6 @@
 - 支持将 HashCalculator 的快捷菜单集成到系统右键菜单，可以在设置面板中打开或关闭。快捷菜单有：计算所选对象的哈希值、执行指定的哈希算法、作为哈希校验依据打开。`(校验依据：内容包含哈希值和文件名的文本文件)`
 - 支持把计算所得的结果导出为文本文件，可选 .txt 扩展名或 .hcb 扩展名，其中 .hcb 扩展名的文件支持直接双击自动打开 HashCalculator 进行校验(在设置中打开了文件关联后)。
 - 其他未列出的功能...
-
-<br/>
-
-# 适用用户
-
-+ 需要对文件夹下大量文件名混乱的文件计算哈希值以找出相同文件的用户
-+ 需要快速对一批文件生成哈希值并发布的用户
-+ 需要快速校验一批文件的哈希值是否与文件发布者公布的哈希值一致的用户
-+ 等等...
 
 <br/>
 
