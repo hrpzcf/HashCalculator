@@ -68,7 +68,7 @@ namespace HashCalculator
         public static string FixXxHash { get; } = "修复 XxHash 系列";
 
         [XmlIgnore]
-        public static string FixAlgoDlls { get; } = "修复以上列出的所有算法";
+        public static string FixAlgoDlls { get; } = "修复以上列出的算法";
 
         [XmlIgnore]
         public static string StringDllDir { get; } = "动态链接库目录";
