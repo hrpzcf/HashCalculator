@@ -207,11 +207,11 @@ STDMETHODIMP CComputeHash::QueryContextMenu(
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_MD5, L"MD5");
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_CRC32, L"CRC32");
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_WHIRLPOOL, L"Whirlpool");
-	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_SHA1, L"SHA1");
-	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_SHA224, L"SHA224");
-	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_SHA256, L"SHA256");
-	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_SHA384, L"SHA384");
-	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_SHA512, L"SHA512");
+	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_SHA1, L"SHA-1");
+	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_SHA224, L"SHA-224");
+	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_SHA256, L"SHA-256");
+	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_SHA384, L"SHA-384");
+	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_SHA512, L"SHA-512");
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_SHA3_224, L"SHA3-224");
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_SHA3_256, L"SHA3-256");
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_SHA3_384, L"SHA3-384");
