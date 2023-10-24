@@ -130,10 +130,10 @@
     <Compile Include="HashAlgos\OfficialImplBlake2b.cs" />
     <Compile Include="HashAlgos\IHashAlgoInfo.cs" />
     <Compile Include="HashAlgos\Blake3NetBlake3.cs" />
-    <Compile Include="HashAlgos\ExtremelyFastXXH128.cs" />
-    <Compile Include="HashAlgos\ExtremelyFastXXH3.cs" />
-    <Compile Include="HashAlgos\ExtremelyFastXXH32.cs" />
-    <Compile Include="HashAlgos\ExtremelyFastXXH64.cs" />
+    <Compile Include="HashAlgos\FastXxHashXXH128.cs" />
+    <Compile Include="HashAlgos\FastXxHashXXH3.cs" />
+    <Compile Include="HashAlgos\FastXxHashXXH32.cs" />
+    <Compile Include="HashAlgos\FastXxHashXXH64.cs" />
     <Compile Include="HashAlgos\NetCryptoCngAbs.cs" />
     <Compile Include="HashAlgos\ForceCrc32NetCrc32.cs" />
     <Compile Include="HashAlgos\NetCryptoCngMD5.cs" />
@@ -207,6 +207,7 @@
     <Compile Include="Others\RelayCommand.cs" />
     <Compile Include="Others\CommonUtils.cs" />
     <Compile Include="Others\ShellExtHelper.cs" />
+    <Compile Include="ViewModels\AlgoGroupModel.cs" />
     <Compile Include="ViewModels\AlgosPanelModel.cs" />
     <Compile Include="ViewModels\AlgoInOutModel.cs" />
     <Compile Include="ViewModels\FilterAndCmdPanelModel.cs" />
@@ -456,6 +457,9 @@
   <ItemGroup>
     <EmbeddedResource Include="HashAlgos\AlgoDlls\streebog_x64.dll" />
     <EmbeddedResource Include="HashAlgos\AlgoDlls\streebog_x86.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="HashAlgos\AlgoDlls\streebog.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

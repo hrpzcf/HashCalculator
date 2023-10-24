@@ -47,7 +47,10 @@ namespace HashCalculator
             }
             set
             {
-                this.SetPropNotify(ref this._selected, value);
+                if (value != this._selected)
+                {
+                    this.SetPropNotify(ref this._selected, value);
+                }
             }
         }
 
