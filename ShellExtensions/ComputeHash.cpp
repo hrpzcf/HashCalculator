@@ -13,28 +13,28 @@ CONST SIZE_T MAX_CMD_CHARS = 32767;
 LPCWSTR EXECUTABLE = L"HashCalculator.exe";
 
 constexpr auto IDM_COMPUTE_HASH = 0;
-constexpr auto IDM_COMPUTE_SHA1 = 1;
-constexpr auto IDM_COMPUTE_SHA224 = 2;
-constexpr auto IDM_COMPUTE_SHA256 = 3;
-constexpr auto IDM_COMPUTE_SHA384 = 4;
-constexpr auto IDM_COMPUTE_SHA512 = 5;
-constexpr auto IDM_COMPUTE_SHA3_224 = 6;
-constexpr auto IDM_COMPUTE_SHA3_256 = 7;
-constexpr auto IDM_COMPUTE_SHA3_384 = 8;
-constexpr auto IDM_COMPUTE_SHA3_512 = 9;
-constexpr auto IDM_COMPUTE_STREEBOG_256 = 10;
-constexpr auto IDM_COMPUTE_WHIRLPOOL = 11;
-constexpr auto IDM_COMPUTE_MD5 = 12;
-constexpr auto IDM_COMPUTE_CRC32 = 13;
-constexpr auto IDM_COMPUTE_XXHASH32 = 14;
-constexpr auto IDM_COMPUTE_XXHASH64 = 15;
-constexpr auto IDM_COMPUTE_XXHASH3 = 16;
-constexpr auto IDM_COMPUTE_XXHASH128 = 17;
-constexpr auto IDM_COMPUTE_BLAKE2S = 18;
-constexpr auto IDM_COMPUTE_BLAKE2SP = 19;
-constexpr auto IDM_COMPUTE_BLAKE2B = 20;
-constexpr auto IDM_COMPUTE_BLAKE2BP = 21;
-constexpr auto IDM_COMPUTE_BLAKE3 = 22;
+constexpr auto IDM_COMPUTE_XXHASH32 = 1;
+constexpr auto IDM_COMPUTE_XXHASH64 = 2;
+constexpr auto IDM_COMPUTE_XXHASH3 = 3;
+constexpr auto IDM_COMPUTE_XXHASH128 = 4;
+constexpr auto IDM_COMPUTE_MD5 = 5;
+constexpr auto IDM_COMPUTE_CRC32 = 6;
+constexpr auto IDM_COMPUTE_WHIRLPOOL = 7;
+constexpr auto IDM_COMPUTE_SHA1 = 8;
+constexpr auto IDM_COMPUTE_SHA224 = 9;
+constexpr auto IDM_COMPUTE_SHA256 = 10;
+constexpr auto IDM_COMPUTE_SHA384 = 11;
+constexpr auto IDM_COMPUTE_SHA512 = 12;
+constexpr auto IDM_COMPUTE_SHA3_224 = 13;
+constexpr auto IDM_COMPUTE_SHA3_256 = 14;
+constexpr auto IDM_COMPUTE_SHA3_384 = 15;
+constexpr auto IDM_COMPUTE_SHA3_512 = 16;
+constexpr auto IDM_COMPUTE_BLAKE2B = 17;
+constexpr auto IDM_COMPUTE_BLAKE2BP = 18;
+constexpr auto IDM_COMPUTE_BLAKE2S = 19;
+constexpr auto IDM_COMPUTE_BLAKE2SP = 20;
+constexpr auto IDM_COMPUTE_BLAKE3 = 21;
+constexpr auto IDM_COMPUTE_STREEBOG_256 = 22;
 constexpr auto IDM_SUBMENUS_PARENT = 23;
 
 VOID CComputeHash::CreateGUIProcessComputeHash(LPCWSTR algo) {
@@ -200,6 +200,13 @@ STDMETHODIMP CComputeHash::QueryContextMenu(
 	}
 	HMENU submenu_handle = CreatePopupMenu();
 	LONG flag = MF_STRING | MF_POPUP;
+	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_XXHASH32, L"XXH32");
+	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_XXHASH64, L"XXH64");
+	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_XXHASH3, L"XXH3");
+	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_XXHASH128, L"XXH128");
+	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_MD5, L"MD5");
+	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_CRC32, L"CRC32");
+	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_WHIRLPOOL, L"Whirlpool");
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_SHA1, L"SHA1");
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_SHA224, L"SHA224");
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_SHA256, L"SHA256");
@@ -209,19 +216,12 @@ STDMETHODIMP CComputeHash::QueryContextMenu(
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_SHA3_256, L"SHA3-256");
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_SHA3_384, L"SHA3-384");
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_SHA3_512, L"SHA3-512");
-	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_MD5, L"MD5");
-	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_CRC32, L"CRC32");
-	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_XXHASH32, L"XXH32");
-	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_XXHASH64, L"XXH64");
-	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_XXHASH3, L"XXH3");
-	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_XXHASH128, L"XXH128");
-	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_BLAKE2S, L"BLAKE2s-256");
-	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_BLAKE2SP, L"BLAKE2sp-256");
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_BLAKE2B, L"BLAKE2b-512");
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_BLAKE2BP, L"BLAKE2bp-512");
+	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_BLAKE2S, L"BLAKE2s-256");
+	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_BLAKE2SP, L"BLAKE2sp-256");
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_BLAKE3, L"BLAKE3-256");
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_STREEBOG_256, L"Streebog-256");
-	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_WHIRLPOOL, L"Whirlpool");
 	// 方法退出后 compute_hash_res 会被析构，compute_hash_text 会被 delete
 	// menu_info.dwTypeData = compute_hash_text 安全? InsertMenuItemW 是否复制数据?
 	CResStringW compute_hash_res = CResStringW(this->module_inst, IDS_MENU_COMPUTE_HASH);
@@ -251,6 +251,27 @@ STDMETHODIMP CComputeHash::InvokeCommand(CMINVOKECOMMANDINFO* pici) {
 	LPCWSTR algo = nullptr;
 	switch (LOWORD(pici->lpVerb))
 	{
+	case IDM_COMPUTE_XXHASH32:
+		algo = L"XXHASH32";
+		break;
+	case IDM_COMPUTE_XXHASH64:
+		algo = L"XXHASH64";
+		break;
+	case IDM_COMPUTE_XXHASH3:
+		algo = L"XXHASH3";
+		break;
+	case IDM_COMPUTE_XXHASH128:
+		algo = L"XXHASH128";
+		break;
+	case IDM_COMPUTE_MD5:
+		algo = L"MD5";
+		break;
+	case IDM_COMPUTE_CRC32:
+		algo = L"CRC32";
+		break;
+	case IDM_COMPUTE_WHIRLPOOL:
+		algo = L"WHIRLPOOL";
+		break;
 	case IDM_COMPUTE_HASH:
 		break;
 	case IDM_COMPUTE_SHA1:
@@ -280,23 +301,11 @@ STDMETHODIMP CComputeHash::InvokeCommand(CMINVOKECOMMANDINFO* pici) {
 	case IDM_COMPUTE_SHA3_512:
 		algo = L"SHA3_512";
 		break;
-	case IDM_COMPUTE_MD5:
-		algo = L"MD5";
+	case IDM_COMPUTE_BLAKE2B:
+		algo = L"BLAKE2B_512";
 		break;
-	case IDM_COMPUTE_CRC32:
-		algo = L"CRC32";
-		break;
-	case IDM_COMPUTE_XXHASH32:
-		algo = L"XXHASH32";
-		break;
-	case IDM_COMPUTE_XXHASH64:
-		algo = L"XXHASH64";
-		break;
-	case IDM_COMPUTE_XXHASH3:
-		algo = L"XXHASH3";
-		break;
-	case IDM_COMPUTE_XXHASH128:
-		algo = L"XXHASH128";
+	case IDM_COMPUTE_BLAKE2BP:
+		algo = L"BLAKE2BP_512";
 		break;
 	case IDM_COMPUTE_BLAKE2S:
 		algo = L"BLAKE2S_256";
@@ -304,20 +313,11 @@ STDMETHODIMP CComputeHash::InvokeCommand(CMINVOKECOMMANDINFO* pici) {
 	case IDM_COMPUTE_BLAKE2SP:
 		algo = L"BLAKE2SP_256";
 		break;
-	case IDM_COMPUTE_BLAKE2B:
-		algo = L"BLAKE2B_512";
-		break;
-	case IDM_COMPUTE_BLAKE2BP:
-		algo = L"BLAKE2BP_512";
-		break;
 	case IDM_COMPUTE_BLAKE3:
 		algo = L"BLAKE3_256";
 		break;
 	case IDM_COMPUTE_STREEBOG_256:
 		algo = L"STREEBOG_256";
-		break;
-	case IDM_COMPUTE_WHIRLPOOL:
-		algo = L"WHIRLPOOL";
 		break;
 	default:
 		return E_INVALIDARG;
