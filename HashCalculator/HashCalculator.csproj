@@ -44,18 +44,9 @@
     <StartupObject>HashCalculator.AppLoading</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BouncyCastle.Cryptography, Version=2.0.0.0, Culture=neutral, PublicKeyToken=072edcf4a5328938, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Assembly\BouncyCastle.Cryptography.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="CommandLine, Version=2.9.1.0, Culture=neutral, PublicKeyToken=5a870481e358d379, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Assembly\CommandLine.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Crc32.NET">
-      <HintPath>Assembly\Crc32.NET.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.Bcl.HashCode, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -136,7 +127,6 @@
     <Compile Include="HashAlgos\FastXxHashXXH32.cs" />
     <Compile Include="HashAlgos\FastXxHashXXH64.cs" />
     <Compile Include="HashAlgos\NetCryptoCngAbs.cs" />
-    <Compile Include="HashAlgos\ForceCrc32NetCrc32.cs" />
     <Compile Include="HashAlgos\NetCryptoCngMD5.cs" />
     <Compile Include="HashAlgos\NetCryptoCngSHA1.cs" />
     <Compile Include="HashAlgos\NetCryptoCngSHA256.cs" />
@@ -170,6 +160,8 @@
     <Compile Include="HashAlgos\OfficialImplBlake2xb.cs" />
     <Compile Include="HashAlgos\OfficialImplBlake2xs.cs" />
     <Compile Include="HashAlgos\ExtendedKCPSha3.cs" />
+    <Compile Include="HashAlgos\OpenHashTabCrc64.cs" />
+    <Compile Include="HashAlgos\StbrummeRepoCrc32.cs" />
     <Compile Include="Others\HashBytesComparer.cs" />
     <Compile Include="Filters\HashingTaskResultFilter.cs" />
     <Compile Include="Filters\HashingTaskResultFilterCtrl.xaml.cs">
@@ -416,8 +408,6 @@
     <None Include="HashAlgos\AlgoDlls\xxhash.txt" />
     <EmbeddedResource Include="HashAlgos\AlgoDlls\xxhash_x86.dll" />
     <EmbeddedResource Include="HashAlgos\AlgoDlls\xxhash_x64.dll" />
-    <None Include="Assembly\Crc32.NET.txt" />
-    <EmbeddedResource Include="Assembly\Crc32.NET.dll" />
     <None Include="HashAlgos\AlgoDlls\blake3.txt" />
     <EmbeddedResource Include="HashAlgos\AlgoDlls\blake3_x86.dll" />
     <EmbeddedResource Include="HashAlgos\AlgoDlls\blake3_x64.dll" />
@@ -453,7 +443,7 @@
     <EmbeddedResource Include="HashAlgos\AlgoDlls\sha2_x86.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="HashAlgos\AlgoDlls\sha2.txt" />
+    <None Include="HashAlgos\AlgoDlls\sha2.txt" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="HashAlgos\AlgoDlls\streebog_x64.dll" />
@@ -467,7 +457,14 @@
     <EmbeddedResource Include="HashAlgos\AlgoDlls\quickxor_x86.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="HashAlgos\AlgoDlls\quickxor.txt" />
+    <None Include="HashAlgos\AlgoDlls\quickxor.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="HashAlgos\AlgoDlls\crchash_x64.dll" />
+    <EmbeddedResource Include="HashAlgos\AlgoDlls\crchash_x86.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="HashAlgos\AlgoDlls\crchash.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

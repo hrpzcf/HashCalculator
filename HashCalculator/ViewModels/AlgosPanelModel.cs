@@ -23,8 +23,9 @@ namespace HashCalculator
                 new AlgoInOutModel(new FastXxHashXXH128()),
                 // MD5
                 new AlgoInOutModel(new NetCryptoCngMD5()),
-                // Crc32
-                new AlgoInOutModel(new ForceCrc32NetCrc32()),
+                // CrcHash
+                new AlgoInOutModel(new StbrummeRepoCrc32()),
+                new AlgoInOutModel(new OpenHashTabCrc64()),
                 // QuickXor
                 new AlgoInOutModel(new NamazsoQuickXor()),
                 // Whirlpool

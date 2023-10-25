@@ -141,8 +141,9 @@
         XXHASH128,
         // MD5
         MD5,
-        // Crc32
+        // CrcHash
         CRC32,
+        CRC64,
         // QuickXor
         QUICKXOR,
         // WHIRLPOOL

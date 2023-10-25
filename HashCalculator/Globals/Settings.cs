@@ -114,6 +114,7 @@ namespace HashCalculator
             string message = "\n".Join(
                 ExtractBlake2Dll(force),
                 ExtractBlake3Dll(force),
+                ExtractCrcHashDll(force),
                 ExtractKeccakDll(force),
                 ExtractQuickXorDll(force),
                 ExtractSha2Dll(force),
@@ -135,6 +136,11 @@ namespace HashCalculator
         public static string ExtractBlake3Dll(bool force)
         {
             return ExtractDll(DllName.Blake3, Current.PreviousVer != Info.Ver || force);
+        }
+
+        public static string ExtractCrcHashDll(bool force)
+        {
+            return ExtractDll(DllName.CrcHash, Current.PreviousVer != Info.Ver || force);
         }
 
         public static string ExtractKeccakDll(bool force)
