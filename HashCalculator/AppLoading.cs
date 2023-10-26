@@ -16,7 +16,6 @@ namespace HashCalculator
             "System.Numerics.Vectors",
             "System.Runtime.CompilerServices.Unsafe",
             "CommandLine",
-            "Crc32.NET",
             "Microsoft.Bcl.HashCode",
             "Microsoft.WindowsAPICodePack",
             "Microsoft.WindowsAPICodePack.Shell",
