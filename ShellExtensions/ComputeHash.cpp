@@ -19,24 +19,25 @@ constexpr auto IDM_COMPUTE_XXHASH3 = 3;
 constexpr auto IDM_COMPUTE_XXHASH128 = 4;
 constexpr auto IDM_COMPUTE_MD5 = 5;
 constexpr auto IDM_COMPUTE_CRC32 = 6;
-constexpr auto IDM_COMPUTE_QUICKXOR = 7;
-constexpr auto IDM_COMPUTE_WHIRLPOOL = 8;
-constexpr auto IDM_COMPUTE_SHA1 = 9;
-constexpr auto IDM_COMPUTE_SHA224 = 10;
-constexpr auto IDM_COMPUTE_SHA256 = 11;
-constexpr auto IDM_COMPUTE_SHA384 = 12;
-constexpr auto IDM_COMPUTE_SHA512 = 13;
-constexpr auto IDM_COMPUTE_SHA3_224 = 14;
-constexpr auto IDM_COMPUTE_SHA3_256 = 15;
-constexpr auto IDM_COMPUTE_SHA3_384 = 16;
-constexpr auto IDM_COMPUTE_SHA3_512 = 17;
-constexpr auto IDM_COMPUTE_BLAKE2B = 18;
-constexpr auto IDM_COMPUTE_BLAKE2BP = 19;
-constexpr auto IDM_COMPUTE_BLAKE2S = 20;
-constexpr auto IDM_COMPUTE_BLAKE2SP = 21;
-constexpr auto IDM_COMPUTE_BLAKE3 = 22;
-constexpr auto IDM_COMPUTE_STREEBOG_256 = 23;
-constexpr auto IDM_SUBMENUS_PARENT = 24;
+constexpr auto IDM_COMPUTE_CRC64 = 7;
+constexpr auto IDM_COMPUTE_QUICKXOR = 8;
+constexpr auto IDM_COMPUTE_WHIRLPOOL = 9;
+constexpr auto IDM_COMPUTE_SHA1 = 10;
+constexpr auto IDM_COMPUTE_SHA224 = 11;
+constexpr auto IDM_COMPUTE_SHA256 = 12;
+constexpr auto IDM_COMPUTE_SHA384 = 13;
+constexpr auto IDM_COMPUTE_SHA512 = 14;
+constexpr auto IDM_COMPUTE_SHA3_224 = 15;
+constexpr auto IDM_COMPUTE_SHA3_256 = 16;
+constexpr auto IDM_COMPUTE_SHA3_384 = 17;
+constexpr auto IDM_COMPUTE_SHA3_512 = 18;
+constexpr auto IDM_COMPUTE_BLAKE2B = 19;
+constexpr auto IDM_COMPUTE_BLAKE2BP = 20;
+constexpr auto IDM_COMPUTE_BLAKE2S = 21;
+constexpr auto IDM_COMPUTE_BLAKE2SP = 22;
+constexpr auto IDM_COMPUTE_BLAKE3 = 23;
+constexpr auto IDM_COMPUTE_STREEBOG_256 = 24;
+constexpr auto IDM_SUBMENUS_PARENT = 25;
 
 VOID CComputeHash::CreateGUIProcessComputeHash(LPCWSTR algo) {
 	if (nullptr == this->executable_path) {
@@ -207,6 +208,7 @@ STDMETHODIMP CComputeHash::QueryContextMenu(
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_XXHASH128, L"XXH128");
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_MD5, L"MD5");
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_CRC32, L"CRC32");
+	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_CRC64, L"CRC64");
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_QUICKXOR, L"QuickXor");
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_WHIRLPOOL, L"Whirlpool");
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_SHA1, L"SHA-1");
@@ -270,6 +272,9 @@ STDMETHODIMP CComputeHash::InvokeCommand(CMINVOKECOMMANDINFO* pici) {
 		break;
 	case IDM_COMPUTE_CRC32:
 		algo = L"CRC32";
+		break;
+	case IDM_COMPUTE_CRC64:
+		algo = L"CRC64";
 		break;
 	case IDM_COMPUTE_QUICKXOR:
 		algo = L"QUICKXOR";
