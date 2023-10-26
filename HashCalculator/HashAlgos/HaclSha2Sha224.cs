@@ -10,22 +10,22 @@ namespace HashCalculator
         private byte _errorCode = 0;
         private IntPtr _state = IntPtr.Zero;
 
-        [DllImport(DllName.Sha2, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr sha224_new();
 
-        [DllImport(DllName.Sha2, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
         private static extern void sha224_delete(IntPtr state);
 
-        [DllImport(DllName.Sha2, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
         private static extern void sha224_init(IntPtr state);
 
-        [DllImport(DllName.Sha2, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
         private static extern byte sha224_update(IntPtr state, byte[] input, uint size);
 
-        [DllImport(DllName.Sha2, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
         private static extern byte sha224_update(IntPtr state, ref byte input, uint size);
 
-        [DllImport(DllName.Sha2, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
         private static extern void sha224_final(IntPtr state, byte[] output, uint size);
 
         public string AlgoName => "SHA-224";

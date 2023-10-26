@@ -13,22 +13,22 @@ namespace HashCalculator
 
         public AlgoType AlgoType => AlgoType.XXHASH64;
 
-        [DllImport(DllName.XxHash, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.XxHash, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr XXH64_createState();
 
-        [DllImport(DllName.XxHash, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.XxHash, CallingConvention = CallingConvention.Cdecl)]
         private static extern XXH_errorcode XXH64_freeState(IntPtr statePtr);
 
-        [DllImport(DllName.XxHash, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.XxHash, CallingConvention = CallingConvention.Cdecl)]
         private static extern XXH_errorcode XXH64_update(IntPtr statePtr, byte[] input, ulong length);
 
-        [DllImport(DllName.XxHash, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.XxHash, CallingConvention = CallingConvention.Cdecl)]
         private static extern XXH_errorcode XXH64_update(IntPtr statePtr, ref byte input, ulong length);
 
-        [DllImport(DllName.XxHash, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.XxHash, CallingConvention = CallingConvention.Cdecl)]
         private static extern ulong XXH64_digest(IntPtr statePtr);
 
-        [DllImport(DllName.XxHash, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.XxHash, CallingConvention = CallingConvention.Cdecl)]
         private static extern XXH_errorcode XXH64_reset(IntPtr statePtr, ulong seed);
 
         private void DeleteState()

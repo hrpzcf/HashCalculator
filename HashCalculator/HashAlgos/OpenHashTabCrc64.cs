@@ -8,11 +8,11 @@ namespace HashCalculator
     {
         private ulong previousCrc64 = 0ul;
 
-        [DllImport(DllName.CrcHash, CallingConvention = CallingConvention.Cdecl)]
-        private static extern ulong crc64(ulong prevCrc32, byte[] input, ulong in_len);
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        private static extern ulong crc64_update(ulong prevCrc32, byte[] input, ulong in_len);
 
-        [DllImport(DllName.CrcHash, CallingConvention = CallingConvention.Cdecl)]
-        private static extern ulong crc64(ulong prevCrc32, ref byte input, ulong in_len);
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        private static extern ulong crc64_update(ulong prevCrc32, ref byte input, ulong in_len);
 
         public string AlgoName => "Crc64";
 
@@ -32,13 +32,13 @@ namespace HashCalculator
         {
             if (ibStart == 0 && cbSize == array.Length)
             {
-                this.previousCrc64 = crc64(this.previousCrc64, array, (ulong)cbSize);
+                this.previousCrc64 = crc64_update(this.previousCrc64, array, (ulong)cbSize);
             }
             else
             {
                 ReadOnlySpan<byte> span = new ReadOnlySpan<byte>(array, ibStart, cbSize);
                 ref byte input = ref MemoryMarshal.GetReference(span);
-                this.previousCrc64 = crc64(this.previousCrc64, ref input, (ulong)cbSize);
+                this.previousCrc64 = crc64_update(this.previousCrc64, ref input, (ulong)cbSize);
             }
         }
 

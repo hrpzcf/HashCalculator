@@ -8,10 +8,10 @@ namespace HashCalculator
     {
         private uint previousCrc32 = 0u;
 
-        [DllImport(DllName.CrcHash, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
         private static extern uint crc32_16bytes(byte[] input, ulong in_len, uint prevCrc32);
 
-        [DllImport(DllName.CrcHash, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
         private static extern uint crc32_16bytes(ref byte input, ulong in_len, uint prevCrc32);
 
         public string AlgoName => "Crc32";

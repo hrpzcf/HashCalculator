@@ -44,31 +44,7 @@ namespace HashCalculator
         private RelayCommand unInstallShellExtCmd;
 
         [XmlIgnore]
-        public static string FixBlake2 { get; } = "修复 Blake2 系列";
-
-        [XmlIgnore]
-        public static string FixBlake3 { get; } = "修复 Blake3 系列";
-
-        [XmlIgnore]
-        public static string FixQuickXor { get; } = "修复 QuickXor 算法";
-
-        [XmlIgnore]
-        public static string FixSha224 { get; } = "修复 SHA224 算法";
-
-        [XmlIgnore]
-        public static string FixSha3 { get; } = "修复 SHA3 系列";
-
-        [XmlIgnore]
-        public static string FixStreebog { get; } = "修复 Streebog 系列";
-
-        [XmlIgnore]
-        public static string FixWhirlpool { get; } = "修复 Whirlpool 算法";
-
-        [XmlIgnore]
-        public static string FixXxHash { get; } = "修复 XxHash 系列";
-
-        [XmlIgnore]
-        public static string FixAlgoDlls { get; } = "修复以上列出的算法";
+        public static string FixAlgoDlls { get; } = "更新动态链接库";
 
         [XmlIgnore]
         public static string StringDllDir { get; } = "动态链接库目录";

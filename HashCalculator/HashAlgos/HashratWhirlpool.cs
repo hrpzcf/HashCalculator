@@ -9,22 +9,22 @@ namespace HashCalculator
         private const int outputSize = 64;
         private IntPtr _state = IntPtr.Zero;
 
-        [DllImport(DllName.Whirlpool, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr whirlpool_new();
 
-        [DllImport(DllName.Whirlpool, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
         private static extern void whirlpool_delete(IntPtr state);
 
-        [DllImport(DllName.Whirlpool, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
         private static extern int whirlpool_init(IntPtr state);
 
-        [DllImport(DllName.Whirlpool, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
         private static extern int whirlpool_update(IntPtr state, byte[] input, ulong inlen);
 
-        [DllImport(DllName.Whirlpool, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
         private static extern int whirlpool_update(IntPtr state, ref byte input, ulong inlen);
 
-        [DllImport(DllName.Whirlpool, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
         private static extern int whirlpool_final(IntPtr state, byte[] output, ulong outlen);
 
         public string AlgoName => "Whirlpool";

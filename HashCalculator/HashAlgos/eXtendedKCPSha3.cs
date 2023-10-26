@@ -12,22 +12,22 @@ namespace HashCalculator
         private AlgoType algoType = AlgoType.Unknown;
         private IntPtr _state = IntPtr.Zero;
 
-        [DllImport(DllName.Keccak, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr keccak_new();
 
-        [DllImport(DllName.Keccak, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
         private static extern void keccak_delete(IntPtr state);
 
-        [DllImport(DllName.Keccak, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
         private static extern int sha3_init(IntPtr state, int bitLength);
 
-        [DllImport(DllName.Keccak, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
         private static extern int sha3_update(IntPtr state, byte[] input, ulong size);
 
-        [DllImport(DllName.Keccak, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
         private static extern int sha3_update(IntPtr state, ref byte input, ulong size);
 
-        [DllImport(DllName.Keccak, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
         private static extern int sha3_final(IntPtr state, byte[] output, ulong size);
 
         public string AlgoName => $"SHA3-{this.bitLength}";

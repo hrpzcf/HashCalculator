@@ -5,22 +5,22 @@ namespace HashCalculator
 {
     internal class OfficialImplBlake2s : OfficialImplBlake2
     {
-        [DllImport(DllName.Blake2, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr blake2s_new();
 
-        [DllImport(DllName.Blake2, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void blake2_delete_state(IntPtr statePtr);
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        private static extern void blake2_delete(IntPtr statePtr);
 
-        [DllImport(DllName.Blake2, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
         private static extern int blake2s_init(IntPtr statePtr, ulong outlen);
 
-        [DllImport(DllName.Blake2, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
         private static extern int blake2s_update(IntPtr statePtr, byte[] input, ulong inlen);
 
-        [DllImport(DllName.Blake2, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
         private static extern int blake2s_update(IntPtr statePtr, ref byte input, ulong inlen);
 
-        [DllImport(DllName.Blake2, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
         private static extern int blake2s_final(IntPtr statePtr, byte[] output, ulong outlen);
 
         public override ulong MaxOutputSize => 32;
@@ -40,7 +40,7 @@ namespace HashCalculator
 
         public override void Blake2DeleteState(IntPtr statePtr)
         {
-            blake2_delete_state(statePtr);
+            blake2_delete(statePtr);
         }
 
         public override int Blake2Final(IntPtr statePtr, byte[] output, ulong outlen)

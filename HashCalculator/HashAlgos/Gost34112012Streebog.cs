@@ -32,22 +32,22 @@ namespace HashCalculator
             }
         }
 
-        [DllImport(DllName.Streebog, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr streebog_new();
 
-        [DllImport(DllName.Streebog, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
         private static extern void streebog_delete(IntPtr state);
 
-        [DllImport(DllName.Streebog, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
         private static extern int streebog_init(IntPtr state, uint bitLength);
 
-        [DllImport(DllName.Streebog, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
         private static extern void streebog_update(IntPtr state, byte[] input, ulong size);
 
-        [DllImport(DllName.Streebog, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
         private static extern void streebog_update(IntPtr state, ref byte input, ulong size);
 
-        [DllImport(DllName.Streebog, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
         private static extern void streebog_final(IntPtr state, byte[] output, ulong size);
 
         public Gost34112012Streebog(int bitLength)

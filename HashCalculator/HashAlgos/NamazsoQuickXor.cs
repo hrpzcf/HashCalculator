@@ -13,22 +13,22 @@ namespace HashCalculator
 
         public AlgoType AlgoType => AlgoType.QUICKXOR;
 
-        [DllImport(DllName.QuickXor, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr qxhash_new();
 
-        [DllImport(DllName.QuickXor, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
         private static extern void qxhash_delete(IntPtr state);
 
-        [DllImport(DllName.QuickXor, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
         private static extern void qxhash_init(IntPtr state);
 
-        [DllImport(DllName.QuickXor, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
         private static extern void qxhash_update(IntPtr state, byte[] input, ulong size);
 
-        [DllImport(DllName.QuickXor, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
         private static extern void qxhash_update(IntPtr state, ref byte input, ulong size);
 
-        [DllImport(DllName.QuickXor, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
         private static extern void qxhash_final(IntPtr state, byte[] output);
 
         private void DeleteState()

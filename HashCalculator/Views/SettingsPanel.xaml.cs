@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System;
+using System.IO;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace HashCalculator
@@ -35,61 +37,40 @@ namespace HashCalculator
         {
             if (sender is TextBlock textBlock)
             {
-                bool showMessage = true;
-                string message = string.Empty;
-                if (textBlock.Text == SettingsViewModel.FixBlake2)
+                if (textBlock.Text == SettingsViewModel.FixAlgoDlls)
                 {
-                    message = Settings.ExtractBlake2Dll(force: true);
-                }
-                else if (textBlock.Text == SettingsViewModel.FixBlake3)
-                {
-                    message = Settings.ExtractBlake3Dll(force: true);
-                }
-                else if (textBlock.Text == SettingsViewModel.FixQuickXor)
-                {
-                    message = Settings.ExtractQuickXorDll(force: true);
-                }
-                else if (textBlock.Text == SettingsViewModel.FixSha224)
-                {
-                    message = Settings.ExtractSha2Dll(force: true);
-                }
-                else if (textBlock.Text == SettingsViewModel.FixSha3)
-                {
-                    message = Settings.ExtractKeccakDll(force: true);
-                }
-                else if (textBlock.Text == SettingsViewModel.FixStreebog)
-                {
-                    message = Settings.ExtractStreebogDll(force: true);
-                }
-                else if (textBlock.Text == SettingsViewModel.FixWhirlpool)
-                {
-                    message = Settings.ExtractWhirlpoolDll(force: true);
-                }
-                else if (textBlock.Text == SettingsViewModel.FixXxHash)
-                {
-                    message = Settings.ExtractXxHashDll(force: true);
-                }
-                else if (textBlock.Text == SettingsViewModel.FixAlgoDlls)
-                {
-                    message = Settings.ExtractEmbeddedAlgoDlls(force: true);
-                }
-                else if (textBlock.Text == SettingsViewModel.StringDllDir)
-                {
-                    showMessage = false;
-                    CommonUtils.OpenFolderAndSelectItem(Settings.libDir);
-                }
-                if (showMessage)
-                {
+                    if (Directory.Exists(Settings.libDir))
+                    {
+                        try
+                        {
+                            foreach (string path in Directory.GetFiles(
+                                Settings.libDir, "*.dll", SearchOption.TopDirectoryOnly))
+                            {
+                                try
+                                {
+                                    File.Delete(path);
+                                }
+                                catch (Exception)
+                                {
+                                    continue;
+                                }
+                            }
+                        }
+                        catch (Exception) { }
+                    }
+                    string message = Settings.ExtractEmbeddedAlgoDlls(force: true);
                     if (!string.IsNullOrEmpty(message))
                     {
-                        MessageBox.Show(this, $"修复失败：\n{message}", "错误",
-                            MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show(this, $"修复失败：\n{message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                     else
                     {
-                        MessageBox.Show(this, $"已经成功更新相关文件", "提示",
-                            MessageBoxButton.OK, MessageBoxImage.Information);
+                        MessageBox.Show(this, $"已经成功更新相关文件", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
+                }
+                else if (textBlock.Text == SettingsViewModel.StringDllDir)
+                {
+                    CommonUtils.OpenFolderAndSelectItem(Settings.libDir);
                 }
             }
         }

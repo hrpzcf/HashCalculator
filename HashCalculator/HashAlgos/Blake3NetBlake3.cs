@@ -33,25 +33,25 @@ namespace HashCalculator
             }
         }
 
-        [DllImport(DllName.Blake3, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Blake3, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr blake3_new();
 
-        [DllImport(DllName.Blake3, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Blake3, CallingConvention = CallingConvention.Cdecl)]
         private static extern void blake3_delete(IntPtr state);
 
-        [DllImport(DllName.Blake3, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Blake3, CallingConvention = CallingConvention.Cdecl)]
         private static extern void blake3_reset(IntPtr state);
 
-        [DllImport(DllName.Blake3, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Blake3, CallingConvention = CallingConvention.Cdecl)]
         private static extern void blake3_update(IntPtr state, byte[] input, ulong size);
 
-        [DllImport(DllName.Blake3, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Blake3, CallingConvention = CallingConvention.Cdecl)]
         private static extern void blake3_update(IntPtr state, ref byte input, ulong size);
 
-        [DllImport(DllName.Blake3, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Blake3, CallingConvention = CallingConvention.Cdecl)]
         private static extern void blake3_finalize(IntPtr state, byte[] output);
 
-        [DllImport(DllName.Blake3, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Blake3, CallingConvention = CallingConvention.Cdecl)]
         private static extern void blake3_finalize_xof(IntPtr state, byte[] output, ulong size);
 
         private void DeleteState()

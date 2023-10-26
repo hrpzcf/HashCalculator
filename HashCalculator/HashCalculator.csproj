@@ -110,7 +110,7 @@
     <Compile Include="Cmders\SelectFileCmder.cs" />
     <Compile Include="Cmders\RenameFileCmder.cs" />
     <Compile Include="Globals\BufferSize.cs" />
-    <Compile Include="Globals\DllName.cs" />
+    <Compile Include="Globals\Embedded.cs" />
     <Compile Include="Globals\MappedFiler.cs" />
     <Compile Include="Globals\MappedInfo.cs" />
     <Compile Include="HashAlgos\Gost34112012Streebog.cs" />
@@ -403,12 +403,11 @@
     <EmbeddedResource Include="Assembly\XamlAnimatedGif.dll" />
     <None Include="Assembly\Microsoft.Bcl.HashCode.txt" />
     <EmbeddedResource Include="Assembly\Microsoft.Bcl.HashCode.dll" />
+    <EmbeddedResource Include="HashAlgos\AlgoDlls\README.md" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="HashAlgos\AlgoDlls\xxhash.txt" />
     <EmbeddedResource Include="HashAlgos\AlgoDlls\xxhash_x86.dll" />
     <EmbeddedResource Include="HashAlgos\AlgoDlls\xxhash_x64.dll" />
-    <None Include="HashAlgos\AlgoDlls\blake3.txt" />
     <EmbeddedResource Include="HashAlgos\AlgoDlls\blake3_x86.dll" />
     <EmbeddedResource Include="HashAlgos\AlgoDlls\blake3_x64.dll" />
     <None Include="Assembly\System.txt" />
@@ -418,53 +417,8 @@
     <EmbeddedResource Include="Assembly\System.Runtime.CompilerServices.Unsafe.dll" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="HashAlgos\AlgoDlls\blake2_x64.dll" />
-    <EmbeddedResource Include="HashAlgos\AlgoDlls\blake2_x86.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="HashAlgos\AlgoDlls\blake2.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="HashAlgos\AlgoDlls\whirlpool_x64.dll" />
-    <EmbeddedResource Include="HashAlgos\AlgoDlls\whirlpool_x86.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="HashAlgos\AlgoDlls\whirlpool.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="HashAlgos\AlgoDlls\keccak_x64.dll" />
-    <EmbeddedResource Include="HashAlgos\AlgoDlls\keccak_x86.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="HashAlgos\AlgoDlls\keccak.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="HashAlgos\AlgoDlls\sha2_x64.dll" />
-    <EmbeddedResource Include="HashAlgos\AlgoDlls\sha2_x86.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="HashAlgos\AlgoDlls\sha2.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="HashAlgos\AlgoDlls\streebog_x64.dll" />
-    <EmbeddedResource Include="HashAlgos\AlgoDlls\streebog_x86.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="HashAlgos\AlgoDlls\streebog.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="HashAlgos\AlgoDlls\quickxor_x64.dll" />
-    <EmbeddedResource Include="HashAlgos\AlgoDlls\quickxor_x86.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="HashAlgos\AlgoDlls\quickxor.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="HashAlgos\AlgoDlls\crchash_x64.dll" />
-    <EmbeddedResource Include="HashAlgos\AlgoDlls\crchash_x86.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="HashAlgos\AlgoDlls\crchash.txt" />
+    <EmbeddedResource Include="HashAlgos\AlgoDlls\hashes_x64.dll" />
+    <EmbeddedResource Include="HashAlgos\AlgoDlls\hashes_x86.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
