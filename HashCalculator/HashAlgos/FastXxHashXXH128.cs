@@ -23,29 +23,29 @@ namespace HashCalculator
 
         public AlgoType AlgoType => AlgoType.XXHASH128;
 
-        [DllImport(Embedded.XxHash, CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr XXH3_createState();
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        private static extern IntPtr xxh3_128_new();
 
-        [DllImport(Embedded.XxHash, CallingConvention = CallingConvention.Cdecl)]
-        private static extern XXH_errorcode XXH3_freeState(IntPtr state);
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        private static extern XXH_errorcode xxh3_128_delete(IntPtr state);
 
-        [DllImport(Embedded.XxHash, CallingConvention = CallingConvention.Cdecl)]
-        private static extern XXH_errorcode XXH3_128bits_update(IntPtr state, byte[] input, ulong length);
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        private static extern XXH_errorcode xxh3_128_update(IntPtr state, byte[] input, ulong length);
 
-        [DllImport(Embedded.XxHash, CallingConvention = CallingConvention.Cdecl)]
-        private static extern XXH_errorcode XXH3_128bits_update(IntPtr state, ref byte input, ulong length);
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        private static extern XXH_errorcode xxh3_128_update(IntPtr state, ref byte input, ulong length);
 
-        [DllImport(Embedded.XxHash, CallingConvention = CallingConvention.Cdecl)]
-        private static extern XXH128Hash XXH3_128bits_digest(IntPtr state);
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        private static extern XXH128Hash xxh3_128_final(IntPtr state);
 
-        [DllImport(Embedded.XxHash, CallingConvention = CallingConvention.Cdecl)]
-        private static extern XXH_errorcode XXH3_128bits_reset(IntPtr state);
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        private static extern XXH_errorcode xxh3_128_init(IntPtr state);
 
         private void DeleteState()
         {
             if (this._state != IntPtr.Zero)
             {
-                XXH3_freeState(this._state);
+                xxh3_128_delete(this._state);
                 this._state = IntPtr.Zero;
             }
         }
@@ -59,12 +59,12 @@ namespace HashCalculator
         public override void Initialize()
         {
             this.DeleteState();
-            this._state = XXH3_createState();
+            this._state = xxh3_128_new();
             if (this._state == IntPtr.Zero)
             {
                 throw new Exception("Initialization failed");
             }
-            this._errorCode = XXH3_128bits_reset(this._state);
+            this._errorCode = xxh3_128_init(this._state);
         }
 
         public IHashAlgoInfo NewInstance()
@@ -86,11 +86,11 @@ namespace HashCalculator
             {
                 ReadOnlySpan<byte> span = new ReadOnlySpan<byte>(array, ibStart, cbSize);
                 ref byte input = ref MemoryMarshal.GetReference(span);
-                this._errorCode = XXH3_128bits_update(this._state, ref input, (ulong)cbSize);
+                this._errorCode = xxh3_128_update(this._state, ref input, (ulong)cbSize);
             }
             else
             {
-                this._errorCode = XXH3_128bits_update(this._state, array, (ulong)cbSize);
+                this._errorCode = xxh3_128_update(this._state, array, (ulong)cbSize);
             }
         }
 
@@ -104,7 +104,7 @@ namespace HashCalculator
             {
                 throw new InvalidOperationException("An error has occurred");
             }
-            XXH128Hash hashResult = XXH3_128bits_digest(this._state);
+            XXH128Hash hashResult = xxh3_128_final(this._state);
             byte[] hashBytesLow = BitConverter.GetBytes(hashResult.low64);
             byte[] hashBytesHigh = BitConverter.GetBytes(hashResult.high64);
             Array.Reverse(hashBytesLow);

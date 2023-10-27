@@ -13,29 +13,29 @@ namespace HashCalculator
 
         public AlgoType AlgoType => AlgoType.XXHASH64;
 
-        [DllImport(Embedded.XxHash, CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr XXH64_createState();
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        private static extern IntPtr xxh64_new();
 
-        [DllImport(Embedded.XxHash, CallingConvention = CallingConvention.Cdecl)]
-        private static extern XXH_errorcode XXH64_freeState(IntPtr statePtr);
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        private static extern XXH_errorcode xxh64_delete(IntPtr state);
 
-        [DllImport(Embedded.XxHash, CallingConvention = CallingConvention.Cdecl)]
-        private static extern XXH_errorcode XXH64_update(IntPtr statePtr, byte[] input, ulong length);
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        private static extern XXH_errorcode xxh64_update(IntPtr state, byte[] input, ulong length);
 
-        [DllImport(Embedded.XxHash, CallingConvention = CallingConvention.Cdecl)]
-        private static extern XXH_errorcode XXH64_update(IntPtr statePtr, ref byte input, ulong length);
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        private static extern XXH_errorcode xxh64_update(IntPtr state, ref byte input, ulong length);
 
-        [DllImport(Embedded.XxHash, CallingConvention = CallingConvention.Cdecl)]
-        private static extern ulong XXH64_digest(IntPtr statePtr);
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        private static extern ulong xxh64_final(IntPtr state);
 
-        [DllImport(Embedded.XxHash, CallingConvention = CallingConvention.Cdecl)]
-        private static extern XXH_errorcode XXH64_reset(IntPtr statePtr, ulong seed);
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        private static extern XXH_errorcode xxh64_init(IntPtr state);
 
         private void DeleteState()
         {
             if (this._state != IntPtr.Zero)
             {
-                XXH64_freeState(this._state);
+                xxh64_delete(this._state);
                 this._state = IntPtr.Zero;
             }
         }
@@ -50,12 +50,12 @@ namespace HashCalculator
         {
             this._errorCode = XXH_errorcode.XXH_OK;
             this.DeleteState();
-            this._state = XXH64_createState();
+            this._state = xxh64_new();
             if (this._state == IntPtr.Zero)
             {
                 throw new Exception("Initialization failed");
             }
-            this._errorCode = XXH64_reset(this._state, 0);
+            this._errorCode = xxh64_init(this._state);
         }
 
         public IHashAlgoInfo NewInstance()
@@ -75,13 +75,13 @@ namespace HashCalculator
             }
             if (ibStart == 0 && cbSize == array.Length)
             {
-                this._errorCode = XXH64_update(this._state, array, (ulong)cbSize);
+                this._errorCode = xxh64_update(this._state, array, (ulong)cbSize);
             }
             else
             {
                 ReadOnlySpan<byte> span = new ReadOnlySpan<byte>(array, ibStart, cbSize);
                 ref byte input = ref MemoryMarshal.GetReference(span);
-                this._errorCode = XXH64_update(this._state, ref input, (ulong)cbSize);
+                this._errorCode = xxh64_update(this._state, ref input, (ulong)cbSize);
             }
         }
 
@@ -95,7 +95,7 @@ namespace HashCalculator
             {
                 throw new InvalidOperationException("An error has occurred");
             }
-            ulong hashResult = XXH64_digest(this._state);
+            ulong hashResult = xxh64_final(this._state);
             byte[] resultBuffer = BitConverter.GetBytes(hashResult);
             Array.Reverse(resultBuffer);
             return resultBuffer;

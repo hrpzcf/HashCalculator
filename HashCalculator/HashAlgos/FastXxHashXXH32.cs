@@ -13,29 +13,29 @@ namespace HashCalculator
 
         public AlgoType AlgoType => AlgoType.XXHASH32;
 
-        [DllImport(Embedded.XxHash, CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr XXH32_createState();
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        private static extern IntPtr xxh32_new();
 
-        [DllImport(Embedded.XxHash, CallingConvention = CallingConvention.Cdecl)]
-        private static extern XXH_errorcode XXH32_freeState(IntPtr statePtr);
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        private static extern XXH_errorcode xxh32_delete(IntPtr statePtr);
 
-        [DllImport(Embedded.XxHash, CallingConvention = CallingConvention.Cdecl)]
-        private static extern XXH_errorcode XXH32_update(IntPtr statePtr, byte[] input, ulong length);
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        private static extern XXH_errorcode xxh32_update(IntPtr statePtr, byte[] input, ulong length);
 
-        [DllImport(Embedded.XxHash, CallingConvention = CallingConvention.Cdecl)]
-        private static extern XXH_errorcode XXH32_update(IntPtr statePtr, ref byte input, ulong length);
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        private static extern XXH_errorcode xxh32_update(IntPtr statePtr, ref byte input, ulong length);
 
-        [DllImport(Embedded.XxHash, CallingConvention = CallingConvention.Cdecl)]
-        private static extern uint XXH32_digest(IntPtr statePtr);
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        private static extern uint xxh32_final(IntPtr statePtr);
 
-        [DllImport(Embedded.XxHash, CallingConvention = CallingConvention.Cdecl)]
-        private static extern XXH_errorcode XXH32_reset(IntPtr statePtr, uint seed);
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        private static extern XXH_errorcode xxh32_init(IntPtr statePtr);
 
         private void DeleteState()
         {
             if (this._state != IntPtr.Zero)
             {
-                XXH32_freeState(this._state);
+                xxh32_delete(this._state);
                 this._state = IntPtr.Zero;
             }
         }
@@ -50,12 +50,12 @@ namespace HashCalculator
         {
             this._errorCode = XXH_errorcode.XXH_OK;
             this.DeleteState();
-            this._state = XXH32_createState();
+            this._state = xxh32_new();
             if (this._state == IntPtr.Zero)
             {
                 throw new Exception("Initialization failed");
             }
-            this._errorCode = XXH32_reset(this._state, 0);
+            this._errorCode = xxh32_init(this._state);
         }
 
         public IHashAlgoInfo NewInstance()
@@ -75,13 +75,13 @@ namespace HashCalculator
             }
             if (ibStart == 0 && cbSize == array.Length)
             {
-                this._errorCode = XXH32_update(this._state, array, (ulong)cbSize);
+                this._errorCode = xxh32_update(this._state, array, (ulong)cbSize);
             }
             else
             {
                 ReadOnlySpan<byte> span = new ReadOnlySpan<byte>(array, ibStart, cbSize);
                 ref byte input = ref MemoryMarshal.GetReference(span);
-                this._errorCode = XXH32_update(this._state, ref input, (ulong)cbSize);
+                this._errorCode = xxh32_update(this._state, ref input, (ulong)cbSize);
             }
         }
 
@@ -95,7 +95,7 @@ namespace HashCalculator
             {
                 throw new InvalidOperationException("An error has occurred");
             }
-            uint hashResult = XXH32_digest(this._state);
+            uint hashResult = xxh32_final(this._state);
             byte[] resultBuffer = BitConverter.GetBytes(hashResult);
             Array.Reverse(resultBuffer);
             return resultBuffer;

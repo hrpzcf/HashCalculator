@@ -406,8 +406,6 @@
     <EmbeddedResource Include="HashAlgos\AlgoDlls\README.md" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="HashAlgos\AlgoDlls\xxhash_x86.dll" />
-    <EmbeddedResource Include="HashAlgos\AlgoDlls\xxhash_x64.dll" />
     <EmbeddedResource Include="HashAlgos\AlgoDlls\blake3_x86.dll" />
     <EmbeddedResource Include="HashAlgos\AlgoDlls\blake3_x64.dll" />
     <None Include="Assembly\System.txt" />

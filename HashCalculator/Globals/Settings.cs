@@ -127,18 +127,12 @@ namespace HashCalculator
             return ExtractFile(Embedded.Hashes, Current.PreviousVer != Info.Ver || force);
         }
 
-        private static string ExtractXxHashDll(bool force)
-        {
-            return ExtractFile(Embedded.XxHash, Current.PreviousVer != Info.Ver || force);
-        }
-
         public static string ExtractEmbeddedAlgoDlls(bool force)
         {
             string message = "\n".Join(
                 ExtractFile(Embedded.Readme, Current.PreviousVer != Info.Ver || force, false),
                 ExtractBlake3Dll(force),
-                ExtractBridgeDll(force),
-                ExtractXxHashDll(force));
+                ExtractBridgeDll(force));
             if (string.IsNullOrEmpty(message))
             {
                 Current.PreviousVer = Info.Ver;
