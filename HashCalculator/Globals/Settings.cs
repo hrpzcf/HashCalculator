@@ -117,11 +117,6 @@ namespace HashCalculator
             return string.Empty;
         }
 
-        public static string ExtractBlake3Dll(bool force)
-        {
-            return ExtractFile(Embedded.Blake3, Current.PreviousVer != Info.Ver || force);
-        }
-
         private static string ExtractBridgeDll(bool force)
         {
             return ExtractFile(Embedded.Hashes, Current.PreviousVer != Info.Ver || force);
@@ -131,7 +126,6 @@ namespace HashCalculator
         {
             string message = "\n".Join(
                 ExtractFile(Embedded.Readme, Current.PreviousVer != Info.Ver || force, false),
-                ExtractBlake3Dll(force),
                 ExtractBridgeDll(force));
             if (string.IsNullOrEmpty(message))
             {

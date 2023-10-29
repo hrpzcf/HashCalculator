@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 
 namespace HashCalculator
 {
-    internal class ExtendedKCPSha3 : HashAlgorithm, IHashAlgoInfo
+    internal class ExtendedKcpSha3 : HashAlgorithm, IHashAlgoInfo
     {
         private readonly int bitLength;
         private readonly int outputSize;
@@ -51,7 +51,7 @@ namespace HashCalculator
             }
         }
 
-        public ExtendedKCPSha3(int bitLength)
+        public ExtendedKcpSha3(int bitLength)
         {
             switch (bitLength)
             {
@@ -95,7 +95,7 @@ namespace HashCalculator
 
         public IHashAlgoInfo NewInstance()
         {
-            return new ExtendedKCPSha3(this.bitLength);
+            return new ExtendedKcpSha3(this.bitLength);
         }
 
         protected override void HashCore(byte[] array, int ibStart, int cbSize)

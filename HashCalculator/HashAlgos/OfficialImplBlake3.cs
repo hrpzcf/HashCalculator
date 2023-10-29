@@ -4,13 +4,12 @@ using System.Security.Cryptography;
 
 namespace HashCalculator
 {
-    internal class Blake3NetBlake3 : HashAlgorithm, IHashAlgoInfo
+    internal class OfficialImplBlake3 : HashAlgorithm, IHashAlgoInfo
     {
         private readonly int bitLength;
         private readonly int outputSize;
         private AlgoType algoType = AlgoType.Unknown;
         private IntPtr _state = IntPtr.Zero;
-        private const int defaultOutputSize = 32;
 
         public string AlgoName => $"BLAKE3-{this.bitLength}";
 
@@ -33,26 +32,23 @@ namespace HashCalculator
             }
         }
 
-        [DllImport(Embedded.Blake3, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr blake3_new();
 
-        [DllImport(Embedded.Blake3, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
         private static extern void blake3_delete(IntPtr state);
 
-        [DllImport(Embedded.Blake3, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void blake3_reset(IntPtr state);
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        private static extern void blake3_init(IntPtr state);
 
-        [DllImport(Embedded.Blake3, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
         private static extern void blake3_update(IntPtr state, byte[] input, ulong size);
 
-        [DllImport(Embedded.Blake3, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
         private static extern void blake3_update(IntPtr state, ref byte input, ulong size);
 
-        [DllImport(Embedded.Blake3, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void blake3_finalize(IntPtr state, byte[] output);
-
-        [DllImport(Embedded.Blake3, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void blake3_finalize_xof(IntPtr state, byte[] output, ulong size);
+        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        private static extern void blake3_final(IntPtr state, byte[] output, ulong size);
 
         private void DeleteState()
         {
@@ -69,7 +65,7 @@ namespace HashCalculator
             base.Dispose(disposing);
         }
 
-        public Blake3NetBlake3(int bitLength)
+        public OfficialImplBlake3(int bitLength)
         {
             if (bitLength < 8 || bitLength % 8 != 0)
             {
@@ -87,12 +83,12 @@ namespace HashCalculator
             {
                 throw new Exception("Initialization failed");
             }
-            blake3_reset(this._state);
+            blake3_init(this._state);
         }
 
         public IHashAlgoInfo NewInstance()
         {
-            return new Blake3NetBlake3(this.bitLength);
+            return new OfficialImplBlake3(this.bitLength);
         }
 
         protected override void HashCore(byte[] array, int ibStart, int cbSize)
@@ -107,8 +103,8 @@ namespace HashCalculator
             }
             else
             {
-                ReadOnlySpan<byte> span = new ReadOnlySpan<byte>(array, ibStart, cbSize);
-                ref byte input = ref MemoryMarshal.GetReference(span);
+                ReadOnlySpan<byte> sp = new ReadOnlySpan<byte>(array, ibStart, cbSize);
+                ref byte input = ref MemoryMarshal.GetReference(sp);
                 blake3_update(this._state, ref input, (ulong)cbSize);
             }
         }
@@ -120,14 +116,7 @@ namespace HashCalculator
                 throw new InvalidOperationException("Not initialized yet");
             }
             byte[] resultBuffer = new byte[this.outputSize];
-            if (this.outputSize == defaultOutputSize)
-            {
-                blake3_finalize(this._state, resultBuffer);
-            }
-            else
-            {
-                blake3_finalize_xof(this._state, resultBuffer, (ulong)this.outputSize);
-            }
+            blake3_final(this._state, resultBuffer, (ulong)this.outputSize);
             return resultBuffer;
         }
     }

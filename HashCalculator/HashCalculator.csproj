@@ -121,7 +121,7 @@
     <Compile Include="HashAlgos\HashratWhirlpool.cs" />
     <Compile Include="HashAlgos\OfficialImplBlake2b.cs" />
     <Compile Include="HashAlgos\IHashAlgoInfo.cs" />
-    <Compile Include="HashAlgos\Blake3NetBlake3.cs" />
+    <Compile Include="HashAlgos\OfficialImplBlake3.cs" />
     <Compile Include="HashAlgos\FastXxHashXXH128.cs" />
     <Compile Include="HashAlgos\FastXxHashXXH3.cs" />
     <Compile Include="HashAlgos\FastXxHashXXH32.cs" />
@@ -159,7 +159,7 @@
     <Compile Include="HashAlgos\OfficialImplBlake2sp.cs" />
     <Compile Include="HashAlgos\OfficialImplBlake2xb.cs" />
     <Compile Include="HashAlgos\OfficialImplBlake2xs.cs" />
-    <Compile Include="HashAlgos\ExtendedKCPSha3.cs" />
+    <Compile Include="HashAlgos\ExtendedKcpSha3.cs" />
     <Compile Include="HashAlgos\OpenHashTabCrc64.cs" />
     <Compile Include="HashAlgos\StbrummeRepoCrc32.cs" />
     <Compile Include="Others\HashBytesComparer.cs" />
@@ -406,8 +406,6 @@
     <EmbeddedResource Include="HashAlgos\AlgoDlls\README.md" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="HashAlgos\AlgoDlls\blake3_x86.dll" />
-    <EmbeddedResource Include="HashAlgos\AlgoDlls\blake3_x64.dll" />
     <None Include="Assembly\System.txt" />
     <EmbeddedResource Include="Assembly\System.Buffers.dll" />
     <EmbeddedResource Include="Assembly\System.Memory.dll" />

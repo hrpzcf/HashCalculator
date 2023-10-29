@@ -44,10 +44,10 @@ namespace HashCalculator
                 new AlgoInOutModel(new NetCryptoCngSHA384()),
                 new AlgoInOutModel(new NetCryptoCngSHA512()),
                 // SHA3
-                new AlgoInOutModel(new ExtendedKCPSha3(224)),
-                new AlgoInOutModel(new ExtendedKCPSha3(256)),
-                new AlgoInOutModel(new ExtendedKCPSha3(384)),
-                new AlgoInOutModel(new ExtendedKCPSha3(512)),
+                new AlgoInOutModel(new ExtendedKcpSha3(224)),
+                new AlgoInOutModel(new ExtendedKcpSha3(256)),
+                new AlgoInOutModel(new ExtendedKcpSha3(384)),
+                new AlgoInOutModel(new ExtendedKcpSha3(512)),
             });
 
         public static AlgoGroupModel GroupBlake2b { get; } = new AlgoGroupModel(
@@ -98,12 +98,12 @@ namespace HashCalculator
             "BLAKE3",
             new AlgoInOutModel[]
             {
-                new AlgoInOutModel(new Blake3NetBlake3(128)),
-                new AlgoInOutModel(new Blake3NetBlake3(160)),
-                new AlgoInOutModel(new Blake3NetBlake3(224)),
-                new AlgoInOutModel(new Blake3NetBlake3(256)),
-                new AlgoInOutModel(new Blake3NetBlake3(384)),
-                new AlgoInOutModel(new Blake3NetBlake3(512)),
+                new AlgoInOutModel(new OfficialImplBlake3(128)),
+                new AlgoInOutModel(new OfficialImplBlake3(160)),
+                new AlgoInOutModel(new OfficialImplBlake3(224)),
+                new AlgoInOutModel(new OfficialImplBlake3(256)),
+                new AlgoInOutModel(new OfficialImplBlake3(384)),
+                new AlgoInOutModel(new OfficialImplBlake3(512)),
             });
 
         public static AlgoGroupModel GroupStreebog { get; } = new AlgoGroupModel(
