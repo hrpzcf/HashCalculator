@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Input;
 
 namespace HashCalculator
 {
@@ -10,12 +11,17 @@ namespace HashCalculator
             this.InitializeComponent();
         }
 
-        private void HashDetailsWndKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private void HashDetailsWndKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == System.Windows.Input.Key.Escape)
+            if (e.Key == Key.Escape)
             {
                 this.Close();
             }
+        }
+
+        private void OnHashDetailsLostFocus(object sender, RoutedEventArgs e)
+        {
+            this.hashDetails.SelectedItem = null;
         }
     }
 }

@@ -8,6 +8,8 @@
     Width="{Binding Source={x:Static local:Settings.Current}, Path=HashDetailsWndWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     Height="{Binding Source={x:Static local:Settings.Current}, Path=HashDetailsWndHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     d:DataContext="{d:DesignInstance Type=local:HashViewModel}"
+    d:Height="300"
+    d:Width="500"
     KeyDown="HashDetailsWndKeyDown"
     ShowInTaskbar="False"
     UseLayoutRounding="True"
@@ -17,128 +19,170 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Resources/ConverterResource.xaml" />
+                <ResourceDictionary Source="/Resources/DataGridCellStyles.xaml" />
+                <ResourceDictionary Source="/Resources/DataGridRowStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-    <ScrollViewer
-        Margin="4"
-        Padding="4"
-        HorizontalScrollBarVisibility="Disabled"
-        VerticalScrollBarVisibility="Auto">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <Grid Grid.Row="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <TextBlock
-                    Grid.Column="0"
-                    VerticalAlignment="Center"
-                    Text="文件路径：" />
-                <TextBox
-                    Grid.Column="1"
-                    Padding="0,2,0,2"
-                    IsReadOnly="True"
-                    Text="{Binding FileInfo.FullName, Mode=OneWay}"
-                    TextWrapping="Wrap" />
-            </Grid>
-            <Grid Grid.Row="1" Margin="0,8,0,0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <TextBlock
-                    Grid.Column="0"
-                    VerticalAlignment="Center"
-                    Text="文件大小：" />
-                <TextBox
-                    Grid.Column="1"
-                    Margin="0,0,8,0"
-                    Padding="0,2,0,2"
-                    IsReadOnly="True"
-                    Text="{Binding FileSize, Converter={StaticResource HashDetailsFileSizeExCvt}, Mode=OneWay}" />
-                <TextBlock
-                    Grid.Column="2"
-                    Margin="8,0,0,0"
-                    VerticalAlignment="Center"
-                    Text="任务耗时：" />
-                <TextBox
-                    Grid.Column="3"
-                    Padding="0,2,0,2"
-                    IsReadOnly="True"
-                    Text="{Binding DurationofTask, StringFormat={}{0:F2} 秒, Mode=OneWay}" />
-            </Grid>
-            <GroupBox
-                Grid.Row="2"
-                Margin="0,8,0,0"
-                Padding="4,0,4,4"
-                Foreground="#FF006FD6">
-                <GroupBox.Header>
-                    <TextBlock VerticalAlignment="Center" Text="{Binding AlgoInOutModels.Length, StringFormat=所有 {0} 个已计算的哈希值和校验结果}" />
-                </GroupBox.Header>
-                <ItemsControl Grid.IsSharedSizeScope="True" ItemsSource="{Binding AlgoInOutModels}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Margin="0,8,0,0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" SharedSizeGroup="algoNameGroup" />
-                                    <ColumnDefinition />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <TextBlock
-                                    Grid.Column="0"
-                                    HorizontalAlignment="Right"
-                                    VerticalAlignment="Center"
-                                    Foreground="Black"
-                                    Text="{Binding AlgoName, StringFormat={}{0}：}" />
-                                <TextBox
-                                    Grid.Column="1"
-                                    Padding="0,2"
-                                    VerticalContentAlignment="Center"
-                                    IsReadOnly="True"
-                                    TextWrapping="Wrap">
-                                    <TextBox.Text>
-                                        <MultiBinding Converter="{StaticResource BytesToStrByOutputTypeCvt}">
-                                            <Binding Mode="OneWay" Path="HashResult" />
-                                            <Binding
-                                                Mode="OneWay"
-                                                Path="DataContext.SelectedOutputType"
-                                                RelativeSource="{RelativeSource Mode=FindAncestor,
-                                                                                AncestorType={x:Type Window}}" />
-                                        </MultiBinding>
-                                    </TextBox.Text>
-                                </TextBox>
-                                <Label
-                                    Grid.Column="2"
-                                    Margin="8,0,0,0"
-                                    Padding="8,2"
-                                    VerticalAlignment="Center"
-                                    HorizontalContentAlignment="Center"
-                                    VerticalContentAlignment="Center"
-                                    Background="{Binding HashCmpResult, Converter={StaticResource CmpResBackgroundCvt}}"
-                                    BorderBrush="#FF0091FF"
-                                    BorderThickness="1"
-                                    Content="{Binding HashCmpResult, Converter={StaticResource CmpResTextCvt}}"
-                                    ToolTip="{Binding HashCmpResult, Converter={StaticResource CmpResTextCvt}}">
-                                    <Label.Foreground>
-                                        <MultiBinding Converter="{StaticResource CmpResForegroundCvt}">
-                                            <Binding Path="ShowResultText" Source="{x:Static local:Settings.Current}" />
-                                            <Binding Path="HashCmpResult" />
-                                        </MultiBinding>
-                                    </Label.Foreground>
-                                </Label>
-                            </Grid>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </GroupBox>
+    <Grid Margin="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                Grid.Column="0"
+                VerticalAlignment="Center"
+                Foreground="#FF006FD6"
+                Text="文件路径：" />
+            <TextBox
+                Grid.Column="1"
+                Padding="2,4"
+                IsReadOnly="True"
+                Text="{Binding FileInfo.FullName, Mode=OneWay}"
+                TextWrapping="Wrap" />
         </Grid>
-    </ScrollViewer>
+        <Grid Grid.Row="1" Margin="0,8,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="4*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                Grid.Column="0"
+                VerticalAlignment="Center"
+                Foreground="#FF006FD6"
+                Text="哈希数量：" />
+            <TextBox
+                Grid.Column="1"
+                Padding="2,4"
+                IsReadOnly="True"
+                Text="{Binding AlgoInOutModels.Length, Mode=OneWay}" />
+            <TextBlock
+                Grid.Column="2"
+                Margin="8,0,0,0"
+                VerticalAlignment="Center"
+                Foreground="#FF006FD6"
+                Text="文件大小：" />
+            <TextBox
+                Grid.Column="3"
+                Padding="2,4"
+                IsReadOnly="True"
+                Text="{Binding FileSize, Converter={StaticResource HashDetailsFileSizeExCvt}, Mode=OneWay}" />
+            <TextBlock
+                Grid.Column="4"
+                Margin="8,0,0,0"
+                VerticalAlignment="Center"
+                Foreground="#FF006FD6"
+                Text="任务耗时：" />
+            <TextBox
+                Grid.Column="5"
+                Padding="2,4"
+                IsReadOnly="True"
+                Text="{Binding DurationofTask, StringFormat={}{0:F2} 秒, Mode=OneWay}" />
+        </Grid>
+        <DataGrid
+            x:Name="hashDetails"
+            Grid.Row="2"
+            Margin="0,8,0,4"
+            AutoGenerateColumns="False"
+            CellStyle="{StaticResource CellStyleNormal}"
+            Grid.IsSharedSizeScope="True"
+            HeadersVisibility="Column"
+            HorizontalGridLinesBrush="#FF969696"
+            IsReadOnly="True"
+            ItemsSource="{Binding AlgoInOutModels}"
+            LostFocus="OnHashDetailsLostFocus"
+            RowStyle="{StaticResource RowStyleNormal}"
+            SelectionMode="Single"
+            VerticalGridLinesBrush="#FF969696">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="算法">
+                    <DataGridTemplateColumn.HeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="HorizontalContentAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTemplateColumn.HeaderStyle>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock
+                                Padding="4,0"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Foreground="Black"
+                                Text="{Binding AlgoName}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="*" Header="哈希值">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox
+                                Margin="2"
+                                Padding="2,4"
+                                VerticalContentAlignment="Center"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                IsReadOnly="True"
+                                TextWrapping="Wrap">
+                                <TextBox.Text>
+                                    <MultiBinding Converter="{StaticResource BytesToStrByOutputTypeCvt}">
+                                        <Binding Mode="OneWay" Path="HashResult" />
+                                        <Binding
+                                            Mode="OneWay"
+                                            Path="DataContext.SelectedOutputType"
+                                            RelativeSource="{RelativeSource Mode=FindAncestor,
+                                                                            AncestorType={x:Type Window}}" />
+                                    </MultiBinding>
+                                </TextBox.Text>
+                            </TextBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="导出">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox
+                                HorizontalAlignment="Center"
+                                VerticalContentAlignment="Center"
+                                IsChecked="{Binding Export, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="校验结果">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Label
+                                Grid.Column="3"
+                                Margin="4,2"
+                                Padding="4,2"
+                                VerticalAlignment="Center"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center"
+                                Background="{Binding HashCmpResult, Converter={StaticResource CmpResBackgroundCvt}}"
+                                BorderBrush="#FF0091FF"
+                                BorderThickness="1"
+                                Content="{Binding HashCmpResult, Converter={StaticResource CmpResTextCvt}}"
+                                ToolTip="{Binding HashCmpResult, Converter={StaticResource CmpResTextCvt}}">
+                                <Label.Foreground>
+                                    <MultiBinding Converter="{StaticResource CmpResForegroundCvt}">
+                                        <Binding Path="ShowResultText" Source="{x:Static local:Settings.Current}" />
+                                        <Binding Path="HashCmpResult" />
+                                    </MultiBinding>
+                                </Label.Foreground>
+                            </Label>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
 </Window>

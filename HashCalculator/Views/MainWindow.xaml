@@ -596,7 +596,7 @@
                         <DataTemplate>
                             <Label
                                 Margin="2"
-                                Padding="4,2,4,2"
+                                Padding="4,2"
                                 HorizontalContentAlignment="Center"
                                 VerticalContentAlignment="Center"
                                 Background="{Binding CurrentInOutModel.HashCmpResult, Converter={StaticResource CmpResBackgroundCvt}}"
