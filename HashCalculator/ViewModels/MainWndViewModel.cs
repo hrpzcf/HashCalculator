@@ -71,6 +71,8 @@ namespace HashCalculator
         private ControlItem[] copyModelsAllAlgosMenuCmds;
         private ControlItem[] hashModelTasksCtrlCmds;
         private ControlItem[] switchDisplayedAlgoCmds;
+        private string hashValueStringOrBasisPath = null;
+        private int lastSetTextOnBasisPathTickCount = 0;
 
         public MainWndViewModel()
         {
@@ -183,6 +185,25 @@ namespace HashCalculator
                     this._cancellation = value;
                 }
             }
+        }
+
+        public void SetTextOnHashStringOrBasisPath()
+        {
+            if (!Settings.Current.SetClipboardTextBySelf && 
+                Environment.TickCount - this.lastSetTextOnBasisPathTickCount > 600)
+            {
+                string clipboardText = Clipboard.GetText();
+                if (CommonUtils.HashFromAnyString(clipboardText) != null)
+                {
+                    this.HashStringOrBasisPath = clipboardText;
+                    if (this.State != QueueState.Started)
+                    {
+                        this.StartVerificationAction(null);
+                    }
+                }
+            }
+            Settings.Current.SetClipboardTextBySelf = false;
+            this.lastSetTextOnBasisPathTickCount = Environment.TickCount;
         }
 
         private void ModelCapturedAction(HashViewModel model)
@@ -434,6 +455,7 @@ namespace HashCalculator
                 if (stringBuilder.Length > 0)
                 {
                     Clipboard.SetText(stringBuilder.ToString());
+                    Settings.Current.SetClipboardTextBySelf = true;
                 }
             }
         }
@@ -503,6 +525,7 @@ namespace HashCalculator
                 if (stringBuilder.Length > 0)
                 {
                     Clipboard.SetText(stringBuilder.ToString());
+                    Settings.Current.SetClipboardTextBySelf = true;
                 }
             }
         }
@@ -588,6 +611,7 @@ namespace HashCalculator
                 if (stringBuilder.Length != 0)
                 {
                     Clipboard.SetText(stringBuilder.ToString());
+                    Settings.Current.SetClipboardTextBySelf = true;
                 }
             }
         }
@@ -1090,30 +1114,29 @@ namespace HashCalculator
 
         private void StartVerificationAction(object param)
         {
-            string pathOrHash = param as string;
-            if (string.IsNullOrEmpty(pathOrHash))
+            if (string.IsNullOrEmpty(this.HashStringOrBasisPath))
             {
                 MessageBox.Show(this.OwnerWnd, "没有输入哈希值校验依据。", "提示");
                 return;
             }
             string updateFailedMessage;
-            // pathOrHash 不是一个文件
-            if (!File.Exists(pathOrHash))
+            // HashStringOrBasisPath 不是一个文件
+            if (!File.Exists(this.HashStringOrBasisPath))
             {
-                updateFailedMessage = this.MainBasis.UpdateWithHash(pathOrHash);
+                updateFailedMessage = this.MainBasis.UpdateWithHash(this.HashStringOrBasisPath);
             }
-            // pathOrHash 是一个文件，但哈希结果列表不是空
+            // HashStringOrBasisPath 是一个文件，但哈希结果列表不是空
             else if (HashViewModels.Any())
             {
-                updateFailedMessage = this.MainBasis.UpdateWithFile(pathOrHash);
+                updateFailedMessage = this.MainBasis.UpdateWithFile(this.HashStringOrBasisPath);
             }
-            // pathOrHash 是一个文件，且哈希结果列表也是空
+            // HashStringOrBasisPath 是一个文件，且哈希结果列表也是空
             else
             {
-                HashBasis newBasis = new HashBasis(pathOrHash);
+                HashBasis newBasis = new HashBasis(this.HashStringOrBasisPath);
                 if (newBasis.ReasonForFailure == null)
                 {
-                    this.BeginDisplayModels(new PathPackage(Path.GetDirectoryName(pathOrHash),
+                    this.BeginDisplayModels(new PathPackage(Path.GetDirectoryName(this.HashStringOrBasisPath),
                         Settings.Current.SelectedQVSPolicy, newBasis));
                 }
                 else
@@ -1476,6 +1499,18 @@ namespace HashCalculator
                         obj => new ControlItem(obj.AlgoName, obj.AlgoType, command)).ToArray();
                 }
                 return this.switchDisplayedAlgoCmds;
+            }
+        }
+
+        public string HashStringOrBasisPath
+        {
+            get
+            {
+                return this.hashValueStringOrBasisPath;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.hashValueStringOrBasisPath, value);
             }
         }
     }

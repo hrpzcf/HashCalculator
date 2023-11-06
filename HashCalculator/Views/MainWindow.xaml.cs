@@ -14,6 +14,7 @@ namespace HashCalculator
 {
     public partial class MainWindow : Window
     {
+        private bool listenerAdded = false;
         private readonly MainWndViewModel viewModel = new MainWndViewModel();
         private static readonly int maxAlgoEnumInt =
             Enum.GetNames(typeof(AlgoType)).Length - 1;
@@ -33,8 +34,51 @@ namespace HashCalculator
             this.DataContext = this.viewModel;
             this.Closed += this.MainWindowClosed;
             this.Loaded += this.MainWindowLoaded;
-            this.InitializeComponent();
+            this.ContentRendered += this.MainWindowRendered;
             this.Title = $"{Info.Title} by {Info.Author} @ {Info.Published}";
+            this.InitializeComponent();
+        }
+
+        private void MainWindowClosed(object sender, EventArgs e)
+        {
+            if (this.listenerAdded && WndHandle != IntPtr.Zero)
+            {
+                NativeFunctions.RemoveClipboardFormatListener(WndHandle);
+            }
+            this.ProcIdMonitorFlag = false;
+            MappedFiler.PIdSynchronizer.Set();
+        }
+
+        private void MainWindowLoaded(object sender, RoutedEventArgs e)
+        {
+            WndHandle = new WindowInteropHelper(this).Handle;
+            if (startupArgs != null)
+            {
+                this.ComputeInProcessFiles(startupArgs);
+            }
+            Thread thread = new Thread(this.ProcessIdMonitorProc);
+            thread.IsBackground = true;
+            thread.Start();
+        }
+
+        private void MainWindowRendered(object sender, EventArgs e)
+        {
+            if (PresentationSource.FromVisual(this) is HwndSource hwndSrc)
+            {
+                hwndSrc.AddHook(new HwndSourceHook(this.DefWndProc));
+                this.listenerAdded = NativeFunctions.AddClipboardFormatListener(WndHandle);
+            }
+        }
+
+        private IntPtr DefWndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        {
+            switch (msg)
+            {
+                case WM.WM_CLIPBOARDUPDATE:
+                    this.viewModel.SetTextOnHashStringOrBasisPath();
+                    break;
+            }
+            return IntPtr.Zero;
         }
 
         private void InternalParseArguments(string[] args)
@@ -130,24 +174,6 @@ namespace HashCalculator
             }
         }
 
-        private void MainWindowClosed(object sender, EventArgs e)
-        {
-            this.ProcIdMonitorFlag = false;
-            MappedFiler.PIdSynchronizer.Set();
-        }
-
-        private void MainWindowLoaded(object sender, RoutedEventArgs e)
-        {
-            WndHandle = new WindowInteropHelper(this).Handle;
-            if (startupArgs != null)
-            {
-                this.ComputeInProcessFiles(startupArgs);
-            }
-            Thread thread = new Thread(this.ProcessIdMonitorProc);
-            thread.IsBackground = true;
-            thread.Start();
-        }
-
         private void DataGridHashingFilesDrop(object sender, DragEventArgs e)
         {
             if (!e.Data.GetDataPresent(DataFormats.FileDrop) ||
@@ -177,18 +203,18 @@ namespace HashCalculator
             if (openFile.ShowDialog() == CommonFileDialogResult.Ok)
             {
                 Settings.Current.LastUsedPath = Path.GetDirectoryName(openFile.FileName);
-                this.uiTextBoxHashStringOrBasisPath.Text = openFile.FileName;
+                this.viewModel.HashStringOrBasisPath = openFile.FileName;
             }
         }
 
         private void TextBoxHashOrFilePathPreviewDrop(object sender, DragEventArgs e)
         {
-            if (!e.Data.GetDataPresent(DataFormats.FileDrop) || 
+            if (!e.Data.GetDataPresent(DataFormats.FileDrop) ||
                 !(e.Data.GetData(DataFormats.FileDrop) is string[] data) || !data.Any())
             {
                 return;
             }
-            this.uiTextBoxHashStringOrBasisPath.Text = data[0];
+            this.viewModel.HashStringOrBasisPath = data[0];
         }
 
         private void TextBoxHashValueOrFilePathPreviewDragOver(object sender, DragEventArgs e)

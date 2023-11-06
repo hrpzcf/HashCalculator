@@ -44,6 +44,9 @@ namespace HashCalculator
         private RelayCommand unInstallShellExtCmd;
 
         [XmlIgnore]
+        public bool SetClipboardTextBySelf { get; set; }
+
+        [XmlIgnore]
         public static string FixAlgoDlls { get; } = "更新动态链接库";
 
         [XmlIgnore]

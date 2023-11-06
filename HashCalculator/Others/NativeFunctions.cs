@@ -147,6 +147,24 @@ namespace HashCalculator
         SEE_MASK_FLAG_LOG_USAGE = 0x04000000,
     }
 
+    internal static class WM
+    {
+        /// <summary>
+        /// https://learn.microsoft.com/en-us/windows/win32/dataxchg/wm-copydata
+        /// </summary>
+        public const int WM_COPYDATA = 0x004A;
+
+        /// <summary>
+        /// https://learn.microsoft.com/en-us/windows/win32/dataxchg/wm-clipboardupdate
+        /// </summary>
+        public const int WM_CLIPBOARDUPDATE = 0x031D;
+
+        /// <summary>
+        /// https://learn.microsoft.com/en-us/windows/win32/dataxchg/wm-destroyclipboard
+        /// </summary>
+        public const int WM_DESTROYCLIPBOARD = 0x0307;
+    }
+
     /// <summary>
     /// https://learn.microsoft.com/en-us/windows/win32/api/shellapi/ns-shellapi-shellexecuteinfow
     /// </summary>
@@ -573,5 +591,17 @@ namespace HashCalculator
         /// </summary>
         [DllImport("shell32.dll")]
         internal static extern void SHChangeNotify(HChangeNotifyEventID wEventId, HChangeNotifyFlags uFlags, IntPtr dwItem1, IntPtr dwItem2);
+
+        /// <summary>
+        /// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-addclipboardformatlistener
+        /// </summary>
+        [DllImport("user32.dll")]
+        internal static extern bool AddClipboardFormatListener(IntPtr handle);
+
+        /// <summary>
+        /// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-removeclipboardformatlistener
+        /// </summary>
+        [DllImport("user32.dll")]
+        internal static extern bool RemoveClipboardFormatListener(IntPtr handle);
     }
 }
