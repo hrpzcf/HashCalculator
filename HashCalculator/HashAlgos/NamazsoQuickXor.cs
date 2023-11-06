@@ -13,22 +13,22 @@ namespace HashCalculator
 
         public AlgoType AlgoType => AlgoType.QUICKXOR;
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr quickxor_new();
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern void quickxor_delete(IntPtr state);
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern void quickxor_init(IntPtr state);
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern void quickxor_update(IntPtr state, byte[] input, ulong size);
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern void quickxor_update(IntPtr state, ref byte input, ulong size);
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern void quickxor_final(IntPtr state, byte[] output);
 
         private void DeleteState()

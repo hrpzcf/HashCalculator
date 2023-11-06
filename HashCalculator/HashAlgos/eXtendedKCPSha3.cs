@@ -12,22 +12,22 @@ namespace HashCalculator
         private AlgoType algoType = AlgoType.Unknown;
         private IntPtr _state = IntPtr.Zero;
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr keccak_new();
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        private static extern IntPtr sha3_new();
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void keccak_delete(IntPtr state);
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        private static extern void sha3_delete(IntPtr state);
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern int sha3_init(IntPtr state, int bitLength);
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern int sha3_update(IntPtr state, byte[] input, ulong size);
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern int sha3_update(IntPtr state, ref byte input, ulong size);
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern int sha3_final(IntPtr state, byte[] output, ulong size);
 
         public string AlgoName => $"SHA3-{this.bitLength}";
@@ -71,7 +71,7 @@ namespace HashCalculator
         {
             if (this._state != IntPtr.Zero)
             {
-                keccak_delete(this._state);
+                sha3_delete(this._state);
                 this._state = IntPtr.Zero;
             }
         }
@@ -86,7 +86,7 @@ namespace HashCalculator
         {
             this.DeleteState();
             this._errorCode = 0;
-            this._state = keccak_new();
+            this._state = sha3_new();
             if (this._state == IntPtr.Zero || sha3_init(this._state, this.bitLength) > 0)
             {
                 throw new Exception("Initialization failed");

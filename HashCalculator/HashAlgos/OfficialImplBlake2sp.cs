@@ -5,22 +5,22 @@ namespace HashCalculator
 {
     internal class OfficialImplBlake2sp : OfficialImplBlake2
     {
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr blake2sp_new();
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void blake2_delete(IntPtr statePtr);
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        private static extern void blake2sp_delete(IntPtr statePtr);
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern int blake2sp_init(IntPtr statePtr, ulong outlen);
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern int blake2sp_update(IntPtr statePtr, byte[] input, ulong inlen);
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern int blake2sp_update(IntPtr statePtr, ref byte input, ulong inlen);
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern int blake2sp_final(IntPtr statePtr, byte[] output, ulong outlen);
 
         public override ulong MaxOutputSize => 32;
@@ -40,7 +40,7 @@ namespace HashCalculator
 
         public override void Blake2DeleteState(IntPtr statePtr)
         {
-            blake2_delete(statePtr);
+            blake2sp_delete(statePtr);
         }
 
         public override int Blake2Final(IntPtr statePtr, byte[] output, ulong outlen)

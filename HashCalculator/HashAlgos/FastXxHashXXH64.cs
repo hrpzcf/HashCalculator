@@ -13,23 +13,23 @@ namespace HashCalculator
 
         public AlgoType AlgoType => AlgoType.XXHASH64;
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr xxh64_new();
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
-        private static extern XXH_errorcode xxh64_delete(IntPtr state);
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        private static extern XXH_errorcode xxh64_init(IntPtr state);
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern XXH_errorcode xxh64_update(IntPtr state, byte[] input, ulong length);
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern XXH_errorcode xxh64_update(IntPtr state, ref byte input, ulong length);
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern ulong xxh64_final(IntPtr state);
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
-        private static extern XXH_errorcode xxh64_init(IntPtr state);
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        private static extern XXH_errorcode xxh64_delete(IntPtr state);
 
         private void DeleteState()
         {

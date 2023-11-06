@@ -8,11 +8,11 @@ namespace HashCalculator
     {
         private uint previousCrc32 = 0u;
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
-        private static extern uint crc32_16bytes(byte[] input, ulong in_len, uint prevCrc32);
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        private static extern uint crc32_update(byte[] input, ulong in_len, uint prevCrc32);
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
-        private static extern uint crc32_16bytes(ref byte input, ulong in_len, uint prevCrc32);
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        private static extern uint crc32_update(ref byte input, ulong in_len, uint prevCrc32);
 
         public string AlgoName => "Crc32";
 
@@ -32,13 +32,13 @@ namespace HashCalculator
         {
             if (ibStart == 0 && cbSize == array.Length)
             {
-                this.previousCrc32 = crc32_16bytes(array, (ulong)cbSize, this.previousCrc32);
+                this.previousCrc32 = crc32_update(array, (ulong)cbSize, this.previousCrc32);
             }
             else
             {
                 ReadOnlySpan<byte> span = new ReadOnlySpan<byte>(array, ibStart, cbSize);
                 ref byte input = ref MemoryMarshal.GetReference(span);
-                this.previousCrc32 = crc32_16bytes(ref input, (ulong)cbSize, this.previousCrc32);
+                this.previousCrc32 = crc32_update(ref input, (ulong)cbSize, this.previousCrc32);
             }
         }
 

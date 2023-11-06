@@ -6,26 +6,26 @@ namespace HashCalculator
 {
     internal class HashratWhirlpool : HashAlgorithm, IHashAlgoInfo
     {
-        private const int outputSize = 64;
+        private const int _size = 64;
         private IntPtr _state = IntPtr.Zero;
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr whirlpool_new();
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern void whirlpool_delete(IntPtr state);
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern int whirlpool_init(IntPtr state);
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern int whirlpool_update(IntPtr state, byte[] input, ulong inlen);
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern int whirlpool_update(IntPtr state, ref byte input, ulong inlen);
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
-        private static extern int whirlpool_final(IntPtr state, byte[] output, ulong outlen);
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        private static extern int whirlpool_final(IntPtr state, byte[] output);
 
         public string AlgoName => "Whirlpool";
 
@@ -86,8 +86,8 @@ namespace HashCalculator
             {
                 throw new InvalidOperationException("Not initialized yet");
             }
-            byte[] resultBuffer = new byte[outputSize];
-            whirlpool_final(this._state, resultBuffer, outputSize);
+            byte[] resultBuffer = new byte[_size];
+            whirlpool_final(this._state, resultBuffer);
             return resultBuffer;
         }
     }

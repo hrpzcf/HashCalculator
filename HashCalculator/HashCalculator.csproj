@@ -413,8 +413,8 @@
     <EmbeddedResource Include="Assembly\System.Runtime.CompilerServices.Unsafe.dll" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="HashAlgos\AlgoDlls\hashes_x64.dll" />
-    <EmbeddedResource Include="HashAlgos\AlgoDlls\hashes_x86.dll" />
+    <EmbeddedResource Include="HashAlgos\AlgoDlls\hashalgs64.dll" />
+    <EmbeddedResource Include="HashAlgos\AlgoDlls\hashalgs32.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

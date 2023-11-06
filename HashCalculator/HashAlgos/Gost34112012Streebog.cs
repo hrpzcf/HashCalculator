@@ -32,27 +32,27 @@ namespace HashCalculator
             }
         }
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr streebog_new();
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern void streebog_delete(IntPtr state);
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
-        private static extern int streebog_init(IntPtr state, uint bitLength);
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        private static extern void streebog_init(IntPtr state, uint bitLength);
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern void streebog_update(IntPtr state, byte[] input, ulong size);
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern void streebog_update(IntPtr state, ref byte input, ulong size);
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void streebog_final(IntPtr state, byte[] output, ulong size);
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        private static extern void streebog_final(IntPtr state, byte[] output);
 
         public Gost34112012Streebog(int bitLength)
         {
-            if (bitLength < 8 || bitLength % 8 != 0)
+            if (bitLength != 256 && bitLength != 512)
             {
                 throw new ArgumentException($"Invalid bit length");
             }
@@ -79,11 +79,11 @@ namespace HashCalculator
         {
             this.DeleteState();
             this._state = streebog_new();
-            if (this._state == IntPtr.Zero ||
-                streebog_init(this._state, (uint)this.bitLength) > 0)
+            if (this._state == IntPtr.Zero)
             {
                 throw new Exception("Initialization failed");
             }
+            streebog_init(this._state, (uint)this.bitLength);
         }
 
         public IHashAlgoInfo NewInstance()
@@ -116,7 +116,7 @@ namespace HashCalculator
                 throw new InvalidOperationException("Not initialized yet");
             }
             byte[] resultBuffer = new byte[this.outputSize];
-            streebog_final(this._state, resultBuffer, (ulong)this.outputSize);
+            streebog_final(this._state, resultBuffer);
             return resultBuffer;
         }
     }

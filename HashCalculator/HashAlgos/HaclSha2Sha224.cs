@@ -6,27 +6,27 @@ namespace HashCalculator
 {
     internal class HaclSha2Sha224 : HashAlgorithm, IHashAlgoInfo
     {
-        private const int outputSize = 28;
+        private const int _size = 28;
         private byte _errorCode = 0;
         private IntPtr _state = IntPtr.Zero;
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr sha224_new();
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern void sha224_delete(IntPtr state);
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern void sha224_init(IntPtr state);
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern byte sha224_update(IntPtr state, byte[] input, uint size);
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern byte sha224_update(IntPtr state, ref byte input, uint size);
 
-        [DllImport(Embedded.Hashes, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void sha224_final(IntPtr state, byte[] output, uint size);
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        private static extern void sha224_final(IntPtr state, byte[] output);
 
         public string AlgoName => "SHA-224";
 
@@ -96,8 +96,8 @@ namespace HashCalculator
             {
                 throw new InvalidOperationException("An error has occurred");
             }
-            byte[] resultBuffer = new byte[outputSize];
-            sha224_final(this._state, resultBuffer, outputSize);
+            byte[] resultBuffer = new byte[_size];
+            sha224_final(this._state, resultBuffer);
             return resultBuffer;
         }
     }

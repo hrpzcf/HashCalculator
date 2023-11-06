@@ -39,25 +39,6 @@ namespace HashCalculator
             {
                 if (textBlock.Text == SettingsViewModel.FixAlgoDlls)
                 {
-                    if (Directory.Exists(Settings.libDir))
-                    {
-                        try
-                        {
-                            foreach (string path in Directory.GetFiles(
-                                Settings.libDir, "*.dll", SearchOption.TopDirectoryOnly))
-                            {
-                                try
-                                {
-                                    File.Delete(path);
-                                }
-                                catch (Exception)
-                                {
-                                    continue;
-                                }
-                            }
-                        }
-                        catch (Exception) { }
-                    }
                     string message = Settings.ExtractEmbeddedAlgoDlls(force: true);
                     if (!string.IsNullOrEmpty(message))
                     {

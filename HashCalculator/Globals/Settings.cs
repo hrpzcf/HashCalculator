@@ -7,6 +7,7 @@ namespace HashCalculator
 {
     internal static class Settings
     {
+        private const string resPrefix = "HashCalculator.HashAlgos.AlgoDlls";
         private static readonly XmlSerializer serializer =
             new XmlSerializer(typeof(SettingsViewModel));
         private static readonly string configBaseDataPath =
@@ -86,14 +87,13 @@ namespace HashCalculator
                     string resPath;
                     if (!dll)
                     {
-                        resPath = string.Format("HashCalculator.HashAlgos.AlgoDlls.{0}", fname);
+                        resPath = string.Format("{0}.{1}", resPrefix, fname);
                     }
                     else
                     {
-                        resPath = string.Format(
-                            "HashCalculator.HashAlgos.AlgoDlls.{0}_{1}.dll",
+                        resPath = string.Format("{0}.{1}{2}.dll", resPrefix,
                             Path.GetFileNameWithoutExtension(fname),
-                            Environment.Is64BitProcess ? "x64" : "x86");
+                            Environment.Is64BitProcess ? "64" : "32");
                     }
                     if (AppLoading.ExecutingAsmb.GetManifestResourceStream(resPath) is Stream stream)
                     {
@@ -117,16 +117,35 @@ namespace HashCalculator
             return string.Empty;
         }
 
-        private static string ExtractBridgeDll(bool force)
+        private static string ExtractHashAlgDll(bool force)
         {
-            return ExtractFile(Embedded.Hashes, Current.PreviousVer != Info.Ver || force);
+            return ExtractFile(Embedded.HashAlgs, Current.PreviousVer != Info.Ver || force);
         }
 
         public static string ExtractEmbeddedAlgoDlls(bool force)
         {
+            if (Current.PreviousVer != Info.Ver)
+            {
+                try
+                {
+                    foreach (string path in Directory.GetFiles(libDir, "*",
+                        SearchOption.TopDirectoryOnly))
+                    {
+                        try
+                        {
+                            File.Delete(path);
+                        }
+                        catch (Exception)
+                        {
+                            continue;
+                        }
+                    }
+                }
+                catch (Exception) { }
+            }
             string message = "\n".Join(
                 ExtractFile(Embedded.Readme, Current.PreviousVer != Info.Ver || force, false),
-                ExtractBridgeDll(force));
+                ExtractHashAlgDll(force));
             if (string.IsNullOrEmpty(message))
             {
                 Current.PreviousVer = Info.Ver;
