@@ -15,7 +15,7 @@ namespace HashCalculator
         {
             if (!string.IsNullOrEmpty(link))
             {
-                NativeFunctions.ShellExecuteW(MainWindow.WndHandle, "open", link, null, null, ShowCmds.SW_NORMAL);
+                NativeFunctions.ShellExecuteW(MainWindow.WndHandle, "open", link, null, null, ShowCmd.SW_NORMAL);
             }
         }
 

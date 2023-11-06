@@ -103,7 +103,7 @@ namespace HashCalculator
         FOF_NORECURSEREPARSE = 0x8000
     }
 
-    internal enum ShowCmds : int
+    internal enum ShowCmd : int
     {
         SW_HIDE = 0,
         SW_SHOWNORMAL = 1,
@@ -164,7 +164,7 @@ namespace HashCalculator
         public string lpParameters;
         [MarshalAs(UnmanagedType.LPWStr)]
         public string lpDirectory;
-        public ShowCmds nShow;
+        public ShowCmd nShow;
         public IntPtr hInstApp;
         public IntPtr lpIDList;
         [MarshalAs(UnmanagedType.LPWStr)]
@@ -474,7 +474,7 @@ namespace HashCalculator
         /// https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shellexecutew
         /// </summary>
         [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
-        internal static extern IntPtr ShellExecuteW(IntPtr hwnd, string lpOperation, string lpFile, string lpParameters, string lpDirectory, ShowCmds nShowCmd);
+        internal static extern IntPtr ShellExecuteW(IntPtr hwnd, string lpOperation, string lpFile, string lpParameters, string lpDirectory, ShowCmd nShowCmd);
 
         /// <summary>
         /// https://learn.microsoft.com/zh-cn/windows/win32/api/shellapi/nf-shellapi-shellexecuteexw

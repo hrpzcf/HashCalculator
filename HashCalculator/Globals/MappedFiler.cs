@@ -81,22 +81,7 @@ namespace HashCalculator
                     try
                     {
                         Process process = Process.GetProcessById(processId);
-                        IntPtr mainWndHandle = process.MainWindowHandle;
-                        if (NativeFunctions.IsWindowVisible(mainWndHandle))
-                        {
-                            if (NativeFunctions.IsIconic(mainWndHandle))
-                            {
-                                NativeFunctions.ShowWindow(mainWndHandle, 9); // 9: SW_RESTORE
-                            }
-                            else
-                            {
-                                NativeFunctions.SetForegroundWindow(mainWndHandle);
-                            }
-                        }
-                        else
-                        {
-                            NativeFunctions.ShowWindow(mainWndHandle, 5); // 5: SW_SHOW
-                        }
+                        CommonUtils.ShowWindowForeground(process.MainWindowHandle);
                     }
                     catch (Exception) { }
                 }

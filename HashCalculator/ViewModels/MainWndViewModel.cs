@@ -693,7 +693,7 @@ namespace HashCalculator
                         MainWindow.WndHandle, "open",
                         model.FileInfo.FullName, null,
                         Path.GetDirectoryName(model.FileInfo.FullName),
-                        ShowCmds.SW_SHOWNORMAL);
+                        ShowCmd.SW_SHOWNORMAL);
                 }
             }
         }
@@ -729,7 +729,7 @@ namespace HashCalculator
                     shellExecuteInfo.lpVerb = "properties";
                     shellExecuteInfo.lpFile = model.FileInfo.FullName;
                     shellExecuteInfo.lpDirectory = model.FileInfo.DirectoryName;
-                    shellExecuteInfo.nShow = ShowCmds.SW_SHOWNORMAL;
+                    shellExecuteInfo.nShow = ShowCmd.SW_SHOWNORMAL;
                     NativeFunctions.ShellExecuteExW(ref shellExecuteInfo);
                 }
             }

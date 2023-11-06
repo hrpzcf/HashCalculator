@@ -353,5 +353,29 @@ namespace HashCalculator
             }
             return colors.ToArray();
         }
+
+        public static bool ShowWindowForeground(IntPtr windowHandle)
+        {
+            bool result = false;
+            if (windowHandle != IntPtr.Zero)
+            {
+                if (!NativeFunctions.IsWindowVisible(windowHandle))
+                {
+                    result = NativeFunctions.ShowWindow(windowHandle, (int)ShowCmd.SW_SHOW);
+                }
+                else
+                {
+                    if (!NativeFunctions.IsIconic(windowHandle))
+                    {
+                        result = NativeFunctions.SetForegroundWindow(windowHandle);
+                    }
+                    else
+                    {
+                        result = NativeFunctions.ShowWindow(windowHandle, (int)ShowCmd.SW_RESTORE);
+                    }
+                }
+            }
+            return result;
+        }
     }
 }
