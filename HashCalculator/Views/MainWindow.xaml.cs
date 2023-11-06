@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -14,7 +15,8 @@ namespace HashCalculator
 {
     public partial class MainWindow : Window
     {
-        private bool listenerAdded = false;
+        private bool clipboardListenerAdded = false;
+        private bool hwndSourceHookAdded = false;
         private readonly MainWndViewModel viewModel = new MainWndViewModel();
         private static readonly int maxAlgoEnumInt =
             Enum.GetNames(typeof(AlgoType)).Length - 1;
@@ -41,10 +43,7 @@ namespace HashCalculator
 
         private void MainWindowClosed(object sender, EventArgs e)
         {
-            if (this.listenerAdded && WndHandle != IntPtr.Zero)
-            {
-                NativeFunctions.RemoveClipboardFormatListener(WndHandle);
-            }
+            this.RemoveClipboardListener();
             this.ProcIdMonitorFlag = false;
             MappedFiler.PIdSynchronizer.Set();
         }
@@ -66,7 +65,45 @@ namespace HashCalculator
             if (PresentationSource.FromVisual(this) is HwndSource hwndSrc)
             {
                 hwndSrc.AddHook(new HwndSourceHook(this.DefWndProc));
-                this.listenerAdded = NativeFunctions.AddClipboardFormatListener(WndHandle);
+                this.hwndSourceHookAdded = true;
+                if (Settings.Current.MonitorNewHashStringInClipboard)
+                {
+                    this.AddClipboardListener();
+                }
+            }
+            Settings.Current.PropertyChanged += this.SettingsPropertyChanged;
+        }
+
+        private void SettingsPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(Settings.Current.MonitorNewHashStringInClipboard))
+            {
+                if (Settings.Current.MonitorNewHashStringInClipboard)
+                {
+                    this.AddClipboardListener();
+                }
+                else
+                {
+                    this.RemoveClipboardListener();
+                }
+            }
+        }
+
+        public void AddClipboardListener()
+        {
+            if (this.hwndSourceHookAdded && WndHandle != IntPtr.Zero &&
+                !this.clipboardListenerAdded)
+            {
+                this.clipboardListenerAdded = NativeFunctions.AddClipboardFormatListener(WndHandle);
+            }
+        }
+
+        public void RemoveClipboardListener()
+        {
+            if (this.clipboardListenerAdded && WndHandle != IntPtr.Zero)
+            {
+                NativeFunctions.RemoveClipboardFormatListener(WndHandle);
+                this.clipboardListenerAdded = false;
             }
         }
 

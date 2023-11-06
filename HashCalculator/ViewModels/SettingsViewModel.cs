@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Security.Policy;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml.Serialization;
@@ -40,6 +41,7 @@ namespace HashCalculator
         private bool notSettingShellExtension = true;
         private bool preferAlgosInBasis = true;
         private bool parallelBetweenAlgos = false;
+        private bool monitorNewHashStringInClipboard = true;
         private RelayCommand installShellExtCmd;
         private RelayCommand unInstallShellExtCmd;
 
@@ -486,6 +488,18 @@ namespace HashCalculator
             set
             {
                 this.SetPropNotify(ref this.parallelBetweenAlgos, value);
+            }
+        }
+
+        public bool MonitorNewHashStringInClipboard
+        {
+            get
+            {
+                return this.monitorNewHashStringInClipboard;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.monitorNewHashStringInClipboard, value);
             }
         }
 

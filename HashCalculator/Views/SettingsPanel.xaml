@@ -84,6 +84,11 @@
                     Padding="4,0,0,0"
                     Content="不要计算空文件的哈希值以避免造成文件内容相同的误导"
                     IsChecked="{Binding DoNotHashForEmptyFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <CheckBox
+                    Margin="0,8,0,0"
+                    Padding="4,0,0,0"
+                    Content="剪贴板中有新复制的哈希值时填充校验依据文本框并校验"
+                    IsChecked="{Binding MonitorNewHashStringInClipboard, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </StackPanel>
         </TabItem>
         <TabItem
