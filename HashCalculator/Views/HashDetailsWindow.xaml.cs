@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace HashCalculator
@@ -19,9 +20,12 @@ namespace HashCalculator
             }
         }
 
-        private void OnHashDetailsLostFocus(object sender, RoutedEventArgs e)
+        private void OnHashResultDataGridLostFocus(object sender, RoutedEventArgs e)
         {
-            this.hashDetails.SelectedItem = null;
+            if (sender is DataGrid hashTable)
+            {
+                hashTable.SelectedItem = null;
+            }
         }
     }
 }

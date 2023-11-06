@@ -90,9 +90,8 @@
                 Text="{Binding DurationofTask, StringFormat={}{0:F2} 秒, Mode=OneWay}" />
         </Grid>
         <DataGrid
-            x:Name="hashDetails"
             Grid.Row="2"
-            Margin="0,8,0,4"
+            Margin="0,8,0,0"
             AutoGenerateColumns="False"
             CellStyle="{StaticResource CellStyleNormal}"
             Grid.IsSharedSizeScope="True"
@@ -100,7 +99,7 @@
             HorizontalGridLinesBrush="#FF969696"
             IsReadOnly="True"
             ItemsSource="{Binding AlgoInOutModels}"
-            LostFocus="OnHashDetailsLostFocus"
+            LostFocus="OnHashResultDataGridLostFocus"
             RowStyle="{StaticResource RowStyleNormal}"
             SelectionMode="Single"
             VerticalGridLinesBrush="#FF969696">
