@@ -15,13 +15,14 @@ namespace HashCalculator
 {
     public partial class MainWindow : Window
     {
-        private bool clipboardListenerAdded = false;
+        private bool listenerAdded = false;
         private bool hwndSourceHookAdded = false;
         private readonly MainWndViewModel viewModel = new MainWndViewModel();
         private static readonly int maxAlgoEnumInt =
             Enum.GetNames(typeof(AlgoType)).Length - 1;
         private static string[] startupArgs = null;
         private static readonly int curProcId = Process.GetCurrentProcess().Id;
+        private int tickCountWhenTextOrBasisPathWasLastSet = 0;
 
         private bool ProcIdMonitorFlag { get; set; } = true;
 
@@ -64,7 +65,7 @@ namespace HashCalculator
         {
             if (PresentationSource.FromVisual(this) is HwndSource hwndSrc)
             {
-                hwndSrc.AddHook(new HwndSourceHook(this.DefWndProc));
+                hwndSrc.AddHook(new HwndSourceHook(this.WndProc));
                 this.hwndSourceHookAdded = true;
                 if (Settings.Current.MonitorNewHashStringInClipboard)
                 {
@@ -92,27 +93,33 @@ namespace HashCalculator
         public void AddClipboardListener()
         {
             if (this.hwndSourceHookAdded && WndHandle != IntPtr.Zero &&
-                !this.clipboardListenerAdded)
+                !this.listenerAdded)
             {
-                this.clipboardListenerAdded = NativeFunctions.AddClipboardFormatListener(WndHandle);
+                this.listenerAdded = NativeFunctions.AddClipboardFormatListener(WndHandle);
             }
         }
 
         public void RemoveClipboardListener()
         {
-            if (this.clipboardListenerAdded && WndHandle != IntPtr.Zero)
+            if (this.listenerAdded && WndHandle != IntPtr.Zero)
             {
                 NativeFunctions.RemoveClipboardFormatListener(WndHandle);
-                this.clipboardListenerAdded = false;
+                this.listenerAdded = false;
             }
         }
 
-        private IntPtr DefWndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wp, IntPtr lp, ref bool handled)
         {
             switch (msg)
             {
                 case WM.WM_CLIPBOARDUPDATE:
-                    this.viewModel.SetTextOnHashStringOrBasisPath();
+                    if (!Settings.Current.ClipboardUpdatedByMe &&
+                        Environment.TickCount - this.tickCountWhenTextOrBasisPathWasLastSet > 600)
+                    {
+                        this.viewModel.SetTextOnHashStringOrBasisPath();
+                    }
+                    Settings.Current.ClipboardUpdatedByMe = false;
+                    this.tickCountWhenTextOrBasisPathWasLastSet = Environment.TickCount;
                     break;
             }
             return IntPtr.Zero;

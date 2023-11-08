@@ -35,6 +35,7 @@ namespace HashCalculator
         private CancellationTokenSource searchCancellation = new CancellationTokenSource();
         private List<ModelArg> displayedFiles = new List<ModelArg>();
         private string hashCheckReport = string.Empty;
+        private string hashValueStringOrBasisPath = null;
         private QueueState queueState = QueueState.None;
         private FilterAndCmdPanel commandPanelInst = null;
         private readonly object displayingModelLock = new object();
@@ -71,8 +72,6 @@ namespace HashCalculator
         private ControlItem[] copyModelsAllAlgosMenuCmds;
         private ControlItem[] hashModelTasksCtrlCmds;
         private ControlItem[] switchDisplayedAlgoCmds;
-        private string hashValueStringOrBasisPath = null;
-        private int lastSetTextOnBasisPathTickCount = 0;
 
         public MainWndViewModel()
         {
@@ -189,21 +188,15 @@ namespace HashCalculator
 
         public void SetTextOnHashStringOrBasisPath()
         {
-            if (!Settings.Current.SetClipboardTextBySelf && 
-                Environment.TickCount - this.lastSetTextOnBasisPathTickCount > 600)
+            string clipboardText = Clipboard.GetText();
+            if (CommonUtils.HashFromAnyString(clipboardText) != null)
             {
-                string clipboardText = Clipboard.GetText();
-                if (CommonUtils.HashFromAnyString(clipboardText) != null)
+                this.HashStringOrBasisPath = clipboardText;
+                if (this.State != QueueState.Started)
                 {
-                    this.HashStringOrBasisPath = clipboardText;
-                    if (this.State != QueueState.Started)
-                    {
-                        this.StartVerificationAction(null);
-                    }
+                    this.StartVerificationAction(null);
                 }
             }
-            Settings.Current.SetClipboardTextBySelf = false;
-            this.lastSetTextOnBasisPathTickCount = Environment.TickCount;
         }
 
         private void ModelCapturedAction(HashViewModel model)
@@ -455,7 +448,7 @@ namespace HashCalculator
                 if (stringBuilder.Length > 0)
                 {
                     Clipboard.SetText(stringBuilder.ToString());
-                    Settings.Current.SetClipboardTextBySelf = true;
+                    Settings.Current.ClipboardUpdatedByMe = true;
                 }
             }
         }
@@ -525,7 +518,7 @@ namespace HashCalculator
                 if (stringBuilder.Length > 0)
                 {
                     Clipboard.SetText(stringBuilder.ToString());
-                    Settings.Current.SetClipboardTextBySelf = true;
+                    Settings.Current.ClipboardUpdatedByMe = true;
                 }
             }
         }
@@ -611,7 +604,7 @@ namespace HashCalculator
                 if (stringBuilder.Length != 0)
                 {
                     Clipboard.SetText(stringBuilder.ToString());
-                    Settings.Current.SetClipboardTextBySelf = true;
+                    Settings.Current.ClipboardUpdatedByMe = true;
                 }
             }
         }
@@ -1123,7 +1116,7 @@ namespace HashCalculator
             // HashStringOrBasisPath 不是一个文件
             if (!File.Exists(this.HashStringOrBasisPath))
             {
-                updateFailedMessage = this.MainBasis.UpdateWithHash(this.HashStringOrBasisPath);
+                updateFailedMessage = this.MainBasis.UpdateWithLines(this.HashStringOrBasisPath);
             }
             // HashStringOrBasisPath 是一个文件，但哈希结果列表不是空
             else if (HashViewModels.Any())

@@ -78,6 +78,8 @@ namespace HashCalculator
 
     internal class HashBasis
     {
+        private static readonly char[] charsToTrim = { ' ', '*', '#', '\r', '\n' };
+
         public string ReasonForFailure { get; private set; }
 
         public Dictionary<string, FileAlgosHashs> FileHashDict { get; } =
@@ -103,26 +105,52 @@ namespace HashCalculator
             return false;
         }
 
-        private bool AddAlgoHashFile(string algoName, string hashString, string fileName)
+        /// <summary>
+        /// 向校验依据对象添加一条以 <算法名>、<哈希字符串>、<文件名> 组成的依据
+        /// </summary>
+        private bool AddBasisItem(string algoName, string hashString, string fileName)
         {
-            if (algoName is null || hashString is null || fileName is null)
+            if (!(algoName is null || hashString is null || fileName is null))
             {
-                return false;
+                hashString = hashString.Trim(charsToTrim);
+                if (CommonUtils.HashFromAnyString(hashString) is byte[] hash)
+                {
+                    // 虽然查询时会忽略文件名的大小写，但也要避免储存仅大小写不同的键
+                    // 因为查询时有可能每次都随机匹配到它们其中的一个(取决于 Keys 顺序是否固定)
+                    algoName = algoName.Trim(charsToTrim);
+                    fileName = fileName.Trim(charsToTrim);
+                    string fnameForKey = fileName.ToLower();
+                    if (this.FileHashDict.TryGetValue(fnameForKey, out FileAlgosHashs algosHashs1))
+                    {
+                        algosHashs1.AddFileAlgoHash(fileName, algoName, hash);
+                    }
+                    else
+                    {
+                        this.FileHashDict[fnameForKey] = new FileAlgosHashs(fileName, algoName, hash);
+                    }
+                    return true;
+                }
             }
-            if (CommonUtils.HashFromAnyString(hashString) is byte[] hash)
+            return false;
+        }
+
+        private bool AddBasisItemWithLine(string basisLine)
+        {
+            string[] items = basisLine.Split(
+                new char[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
+            // 对应格式：hash-string
+            if (items.Length == 1)
             {
-                // 虽然查询时会忽略文件名的大小写，但也要避免储存仅大小写不同的键
-                // 因为查询时有可能每次都随机匹配到它们其中的一个(取决于 Keys 顺序是否固定)
-                fileName = fileName.Trim(new char[] { '*', ' ', '\n' });
-                string key = fileName.ToLower();
-                if (this.FileHashDict.TryGetValue(key, out FileAlgosHashs algosHashs1))
-                {
-                    algosHashs1.AddFileAlgoHash(fileName, algoName, hash);
-                }
-                else
-                {
-                    this.FileHashDict[key] = new FileAlgosHashs(fileName, algoName, hash);
-                }
+                return this.AddBasisItem(string.Empty, items[0], string.Empty);
+            }
+            // 对应格式：hash-string *file-fileName
+            else if (items.Length == 2)
+            {
+                return this.AddBasisItem(string.Empty, items[0], items[1]);
+            }
+            // 对应格式：#hash-name *hash-string *file-name
+            else if (items.Length == 3 && this.AddBasisItem(items[0], items[1], items[2]))
+            {
                 return true;
             }
             return false;
@@ -142,25 +170,12 @@ namespace HashCalculator
                         int readedLineCount = 0;
                         while ((basisTextLine = reader.ReadLine()) != null)
                         {
-                            string[] items = basisTextLine.Split(new char[] { ' ' }, 3,
-                                StringSplitOptions.RemoveEmptyEntries);
-                            // 对应格式：hash-string *file-fileName
-                            if (items.Length == 2 && this.AddAlgoHashFile(string.Empty, items[0], items[1]))
+                            if (this.AddBasisItemWithLine(basisTextLine))
                             {
                                 ++readedLineCount;
-                            }
-                            // 对应格式：#hash-name *hash-string *file-name
-                            else if (items.Length == 3 && this.AddAlgoHashFile(items[0].Trim(new char[] { '#', ' ' }),
-                                items[1].Trim(new char[] { ' ', '*' }), items[2]))
-                            {
-                                ++readedLineCount;
-                            }
-                            else
-                            {
-                                break;
                             }
                         }
-                        if (readedLineCount <= 0)
+                        if (readedLineCount == 0)
                         {
                             this.ReasonForFailure = "没有收集到任何校验依据，请检查校验依据文件内容";
                         }
@@ -174,18 +189,28 @@ namespace HashCalculator
             return this.ReasonForFailure;
         }
 
-        public string UpdateWithHash(string hash)
+        public string UpdateWithLines(string hashParagraph)
         {
             this.FileHashDict.Clear();
-            this.ReasonForFailure = this.AddAlgoHashFile(string.Empty, hash.Trim(), string.Empty) ?
-                null : "收集校验依据失败，可能哈希值格式不正确或不存在该校验依据文件";
+            int readedLineCount = 0;
+            this.ReasonForFailure = null;
+            foreach (string line in hashParagraph.Split('\r', '\n'))
+            {
+                if (this.AddBasisItemWithLine(line))
+                {
+                    ++readedLineCount;
+                }
+            }
+            if (readedLineCount == 0)
+            {
+                this.ReasonForFailure = "没有收集到任何校验依据，请检查校验依据文件内容";
+            }
             return this.ReasonForFailure;
         }
 
         public CmpRes VerifyHash(string fileName, string algoName, byte[] hash)
         {
-            if (fileName == null || algoName == null || hash == null
-                || !this.FileHashDict.Any())
+            if (fileName == null || algoName == null || hash == null || !this.FileHashDict.Any())
             {
                 return CmpRes.Unrelated;
             }

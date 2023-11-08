@@ -304,7 +304,7 @@ namespace HashCalculator
             if (this.Result == HashResult.Succeeded && !string.IsNullOrEmpty(this.CurrentHashString))
             {
                 Clipboard.SetText(this.CurrentHashString);
-                Settings.Current.SetClipboardTextBySelf = true;
+                Settings.Current.ClipboardUpdatedByMe = true;
             }
         }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using MS.WindowsAPICodePack.Internal;
 
 namespace HashCalculator
 {
@@ -149,6 +150,11 @@ namespace HashCalculator
 
     internal static class WM
     {
+        /// <summary>
+        /// https://learn.microsoft.com/en-us/windows/win32/dataxchg/wm-changecbchain
+        /// </summary>
+        public const int WM_CHANGECBCHAIN = 0x030D;
+
         /// <summary>
         /// https://learn.microsoft.com/en-us/windows/win32/dataxchg/wm-copydata
         /// </summary>
@@ -591,6 +597,36 @@ namespace HashCalculator
         /// </summary>
         [DllImport("shell32.dll")]
         internal static extern void SHChangeNotify(HChangeNotifyEventID wEventId, HChangeNotifyFlags uFlags, IntPtr dwItem1, IntPtr dwItem2);
+
+        /// <summary>
+        /// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-sendmessagew
+        /// </summary>
+        [DllImport("user32.dll")]
+        internal static extern int SendMessageW(IntPtr hWnd, uint msg, int wParam, int lParam);
+
+        /// <summary>
+        /// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setclipboardviewer
+        /// </summary>
+        [DllImport("user32.dll")]
+        internal static extern IntPtr SetClipboardViewer(IntPtr hWndNewViewer);
+
+        /// <summary>
+        /// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-changeclipboardchain
+        /// </summary>
+        [DllImport("user32.dll")]
+        internal static extern bool ChangeClipboardChain(IntPtr hWndRemove, IntPtr hWndNewNext);
+
+        /// <summary>
+        /// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclipboardowner
+        /// </summary>
+        [DllImport("user32.dll")]
+        internal static extern IntPtr GetClipboardOwner();
+
+        /// <summary>
+        /// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getopenclipboardwindow
+        /// </summary>
+        [DllImport("user32.dll")]
+        internal static extern IntPtr GetOpenClipboardWindow();
 
         /// <summary>
         /// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-addclipboardformatlistener
