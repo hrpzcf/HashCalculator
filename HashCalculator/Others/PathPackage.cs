@@ -97,12 +97,12 @@ namespace HashCalculator
                         }
                         if (this.hashBasis != null)
                         {
-                            foreach (FileAlgosHashs value in this.hashBasis.FileHashDict.Values)
+                            foreach ( KeyValuePair<string, FileAlgosHashs> pair in this.hashBasis.FileHashDict)
                             {
                                 // 此属性由 HashBasis.IsNameInBasis 方法标记
-                                if (!value.NameInBasisExist)
+                                if (!pair.Value.NameInBasisExist)
                                 {
-                                    yield return new ModelArg(value.OriginFileName, true, this.PresetAlgoType);
+                                    yield return new ModelArg(pair.Key, true, this.PresetAlgoType);
                                 }
                                 if (this.StopSearchingToken != null && this.StopSearchingToken.IsCancellationRequested)
                                 {

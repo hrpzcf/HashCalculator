@@ -174,36 +174,49 @@ namespace HashCalculator
             return default(AlgoInOutModel[]);
         }
 
-        public static AlgoInOutModel[] GetAlgosFromBasis(string fileName, HashBasis basis)
+        public static AlgoInOutModel NewInOutModelByType(AlgoType algoType)
+        {
+            if (algoType != AlgoType.Unknown)
+            {
+                foreach (AlgoInOutModel model in ProvidedAlgos)
+                {
+                    if (model.AlgoType == algoType)
+                    {
+                        return model.NewAlgoInOutModel();
+                    }
+                }
+            }
+            return default(AlgoInOutModel);
+        }
+
+        public static AlgoInOutModel NewInOutModelByName(string algoName)
+        {
+            if (!string.IsNullOrEmpty(algoName))
+            {
+                foreach (AlgoInOutModel model in ProvidedAlgos)
+                {
+                    if (model.AlgoName.Equals(algoName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return model.NewAlgoInOutModel();
+                    }
+                }
+            }
+            return default(AlgoInOutModel);
+        }
+
+        public static AlgoInOutModel[] GetAlgosFromBasis(HashBasis basis, string fileName)
         {
             if (basis != null)
             {
                 List<AlgoInOutModel> algoInOutModels = new List<AlgoInOutModel>();
-                string matchedFileName = null;
-                foreach (string nameInBasis in basis.FileHashDict.Keys)
+                if (basis.FileHashDict.ContainsKey(fileName))
                 {
-                    if (nameInBasis.Equals(fileName, StringComparison.OrdinalIgnoreCase))
+                    foreach (string existing in basis.FileHashDict[fileName].GetExistingAlgoNames())
                     {
-                        matchedFileName = nameInBasis;
-                        break;
+                        algoInOutModels.Add(NewInOutModelByName(existing));
                     }
                 }
-                if (matchedFileName != null)
-                {
-                    foreach (string name in basis
-                        .FileHashDict[matchedFileName].GetExistsAlgoNames())
-                    {
-                        foreach (AlgoInOutModel model in ProvidedAlgos)
-                        {
-                            if (model.AlgoName.Equals(name, StringComparison.OrdinalIgnoreCase))
-                            {
-                                algoInOutModels.Add(model.NewAlgoInOutModel());
-                                break;
-                            }
-                        }
-                    }
-                }
-                return algoInOutModels.ToArray();
+                return algoInOutModels.Where(i => i != null).ToArray();
             }
             return default(AlgoInOutModel[]);
         }

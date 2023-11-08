@@ -10,11 +10,9 @@ namespace HashCalculator
         private bool FileIndependent { get; set; }
 
         private Dictionary<string, List<byte[]>> AlgosHashs { get; } =
-            new Dictionary<string, List<byte[]>>();
+            new Dictionary<string, List<byte[]>>(StringComparer.OrdinalIgnoreCase);
 
         public bool NameInBasisExist { get; set; }
-
-        public string OriginFileName { get; private set; }
 
         public FileAlgosHashs(string fileName, string algoName, byte[] hashBytes)
         {
@@ -23,7 +21,6 @@ namespace HashCalculator
 
         public bool AddFileAlgoHash(string fileName, string algoName, byte[] hashBytes)
         {
-            this.OriginFileName = fileName;
             this.FileIndependent = fileName == string.Empty;
             if (algoName == null || hashBytes == null)
             {
@@ -70,7 +67,7 @@ namespace HashCalculator
             return CmpRes.Unrelated;
         }
 
-        public string[] GetExistsAlgoNames()
+        public string[] GetExistingAlgoNames()
         {
             return this.AlgosHashs.Keys.Where(i => i != string.Empty).ToArray();
         }
@@ -83,24 +80,21 @@ namespace HashCalculator
         public string ReasonForFailure { get; private set; }
 
         public Dictionary<string, FileAlgosHashs> FileHashDict { get; } =
-            new Dictionary<string, FileAlgosHashs>();
+            new Dictionary<string, FileAlgosHashs>(StringComparer.OrdinalIgnoreCase);
+
+        public HashBasis() { }
 
         public HashBasis(string filePath)
         {
             this.UpdateWithFile(filePath);
         }
 
-        public HashBasis() { }
-
         public bool IsNameInBasis(string fileName)
         {
-            foreach (string nameInBasis in this.FileHashDict.Keys)
+            if (this.FileHashDict.ContainsKey(fileName))
             {
-                if (nameInBasis.Equals(fileName, StringComparison.OrdinalIgnoreCase))
-                {
-                    this.FileHashDict[nameInBasis].NameInBasisExist = true;
-                    return true;
-                }
+                this.FileHashDict[fileName].NameInBasisExist = true;
+                return true;
             }
             return false;
         }
@@ -119,14 +113,13 @@ namespace HashCalculator
                     // 因为查询时有可能每次都随机匹配到它们其中的一个(取决于 Keys 顺序是否固定)
                     algoName = algoName.Trim(charsToTrim);
                     fileName = fileName.Trim(charsToTrim);
-                    string fnameForKey = fileName.ToLower();
-                    if (this.FileHashDict.TryGetValue(fnameForKey, out FileAlgosHashs algosHashs1))
+                    if (this.FileHashDict.TryGetValue(fileName, out FileAlgosHashs algosHashs1))
                     {
                         algosHashs1.AddFileAlgoHash(fileName, algoName, hash);
                     }
                     else
                     {
-                        this.FileHashDict[fnameForKey] = new FileAlgosHashs(fileName, algoName, hash);
+                        this.FileHashDict[fileName] = new FileAlgosHashs(fileName, algoName, hash);
                     }
                     return true;
                 }
@@ -134,7 +127,7 @@ namespace HashCalculator
             return false;
         }
 
-        private bool AddBasisItemWithLine(string basisLine)
+        private bool AddBasisItemFromLine(string basisLine)
         {
             string[] items = basisLine.Split(
                 new char[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
@@ -170,7 +163,7 @@ namespace HashCalculator
                         int readedLineCount = 0;
                         while ((basisTextLine = reader.ReadLine()) != null)
                         {
-                            if (this.AddBasisItemWithLine(basisTextLine))
+                            if (this.AddBasisItemFromLine(basisTextLine))
                             {
                                 ++readedLineCount;
                             }
@@ -196,7 +189,7 @@ namespace HashCalculator
             this.ReasonForFailure = null;
             foreach (string line in hashParagraph.Split('\r', '\n'))
             {
-                if (this.AddBasisItemWithLine(line))
+                if (this.AddBasisItemFromLine(line))
                 {
                     ++readedLineCount;
                 }
@@ -227,18 +220,15 @@ namespace HashCalculator
             {
                 return default(FileAlgosHashs);
             }
-            if (this.FileHashDict.Count == 1 &&
+            if (this.FileHashDict.Count == 1 && 
                 this.FileHashDict.TryGetValue(string.Empty, out var algosHashs))
             {
                 return algosHashs;
             }
-            foreach (string fileNameInDict in this.FileHashDict.Keys)
+            // Windows 文件名不区分大小写 (FileHashDict 使用了忽略大小写的比较器)
+            if (this.FileHashDict.TryGetValue(fileName, out FileAlgosHashs fileAlgosHashs))
             {
-                // Windows 文件名不区分大小写，查找时忽略大小写
-                if (fileNameInDict.Equals(fileName, StringComparison.OrdinalIgnoreCase))
-                {
-                    return this.FileHashDict[fileNameInDict];
-                }
+                return fileAlgosHashs;
             }
             return default(FileAlgosHashs);
         }

@@ -73,7 +73,7 @@ namespace HashCalculator
             if (arg.HashBasis != null && Settings.Current.PreferAlgosInBasis)
             {
                 this.AlgoInOutModels =
-                    AlgosPanelModel.GetAlgosFromBasis(this.FileName, arg.HashBasis);
+                    AlgosPanelModel.GetAlgosFromBasis(arg.HashBasis, this.FileName);
             }
             else if (arg.PresetAlgo != AlgoType.Unknown)
             {

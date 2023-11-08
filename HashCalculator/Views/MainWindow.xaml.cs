@@ -143,7 +143,7 @@ namespace HashCalculator
                                     package.PresetAlgoType = (AlgoType)(algo - 1);
                                 }
                             }
-                            else if (Enum.TryParse(option.Algo.ToUpper(), out AlgoType algoType))
+                            else if (Enum.TryParse(option.Algo, true, out AlgoType algoType))
                             {
                                 package.PresetAlgoType = algoType;
                             }
