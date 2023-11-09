@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
-using MS.WindowsAPICodePack.Internal;
 
 namespace HashCalculator
 {
@@ -597,6 +596,12 @@ namespace HashCalculator
         /// </summary>
         [DllImport("shell32.dll")]
         internal static extern void SHChangeNotify(HChangeNotifyEventID wEventId, HChangeNotifyFlags uFlags, IntPtr dwItem1, IntPtr dwItem2);
+
+        /// <summary>
+        /// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messageboxw
+        /// </summary>
+        [DllImport("user32.dll")]
+        internal static extern int MessageBoxW(IntPtr hWnd, string lpText, string lpCaption, uint uType);
 
         /// <summary>
         /// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-sendmessagew
