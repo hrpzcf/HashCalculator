@@ -15,20 +15,20 @@ namespace HashCalculator
 {
     public partial class MainWindow : Window
     {
-        private bool listenerAdded = false;
         private bool hwndSourceHookAdded = false;
-        private readonly MainWndViewModel viewModel = new MainWndViewModel();
-        private static readonly int maxAlgoEnumInt =
-            Enum.GetNames(typeof(AlgoType)).Length - 1;
-        private static string[] startupArgs = null;
-        private static readonly int curProcId = Process.GetCurrentProcess().Id;
+        private bool listenerAdded = false;
         private int tickCountWhenTextOrBasisPathWasLastSet = 0;
-
-        private bool ProcIdMonitorFlag { get; set; } = true;
+        private readonly MainWndViewModel viewModel = new MainWndViewModel();
+        private static readonly int maxAlgoEnumInt = Enum.GetNames(typeof(AlgoType)).Length - 1;
+        private static string[] startupArgs = null;
 
         public static MainWindow This { get; private set; }
 
         public static IntPtr WndHandle { get; private set; }
+
+        public static int ProcessId { get; } = Process.GetCurrentProcess().Id;
+
+        private bool ProcIdMonitorFlag { get; set; } = true;
 
         public MainWindow()
         {
@@ -192,7 +192,7 @@ namespace HashCalculator
         /// </summary>
         private void ComputeCrossProcessFiles()
         {
-            MappedFiler.ExistingProcessId = curProcId;
+            MappedFiler.ExistingProcessId = ProcessId;
             while (true)
             {
                 MappedFiler.Synchronizer.Wait();

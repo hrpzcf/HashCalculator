@@ -220,6 +220,25 @@ namespace HashCalculator
     }
 
     /// <summary>
+    /// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowlongptrw
+    /// </summary>
+    public static class GWL
+    {
+        public const int GWL_EXSTYLE = -20; // 检索 扩展窗口样式
+        public const int GWLP_HINSTANCE = -6; // 检索应用程序实例的句柄
+        public const int GWLP_HWNDPARENT = -8; // 检索父窗口的句柄（如果有）
+        public const int GWLP_ID = -12; // 检索窗口的标识符
+        public const int GWL_STYLE = -16; // 检索 窗口样式
+        public const int GWLP_USERDATA = -21; // 检索与窗口关联的用户数据。此数据供创建窗口的应用程序使用。其值最初为零
+        public const int GWLP_WNDPROC = -4; // 检索指向窗口过程的指针，或表示指向窗口过程的指针的句柄。必须使用CallWindowProc函数调用窗口过程
+    }
+
+    public static class WS
+    {
+        public const int WS_EX_TOPMOST = 0x00000008;
+    }
+
+    /// <summary>
     /// https://learn.microsoft.com/en-us/windows/win32/api/shellapi/ns-shellapi-shellexecuteinfow
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
@@ -633,6 +652,12 @@ namespace HashCalculator
         /// </summary>
         [DllImport("user32.dll")]
         internal static extern bool IsWindowVisible(IntPtr hWnd);
+
+        /// <summary>
+        /// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowlongptrw
+        /// </summary>
+        [DllImport("user32.dll")]
+        internal static extern int GetWindowLongPtrW(IntPtr hWnd, int nIndex);
 
         /// <summary>
         /// https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shfileoperationw

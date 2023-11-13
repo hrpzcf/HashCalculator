@@ -198,7 +198,7 @@ namespace HashCalculator
                 }
                 if (Settings.Current.SwitchMainWndFgWhenNewHashCopied)
                 {
-                    CommonUtils.ShowWindowForeground(MainWindow.WndHandle);
+                    CommonUtils.ShowWindowForeground(MainWindow.ProcessId);
                 }
             }
         }

@@ -355,21 +355,31 @@ namespace HashCalculator
             return colors.ToArray();
         }
 
-        public static bool ShowWindowForeground(IntPtr windowHandle)
+        public static bool ShowWindowForeground(int processId)
         {
-            if (windowHandle != IntPtr.Zero)
+            IntPtr handle;
+            try
             {
-                if (NativeFunctions.IsIconic(windowHandle))
+                handle = Process.GetProcessById(processId).MainWindowHandle;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            if (handle != IntPtr.Zero)
+            {
+                if (NativeFunctions.IsIconic(handle))
                 {
-                    return NativeFunctions.ShowWindow(windowHandle, SW.SW_RESTORE);
+                    return NativeFunctions.ShowWindow(handle, SW.SW_RESTORE);
                 }
-                else if (NativeFunctions.IsWindowVisible(windowHandle))
+                else if (NativeFunctions.IsWindowVisible(handle))
                 {
-                    bool executionResult = NativeFunctions.ShowWindow(windowHandle, SW.SW_SHOW);
-                    if (!Settings.Current.MainWndTopmost)
+                    bool executionResult = NativeFunctions.ShowWindow(handle, SW.SW_SHOW);
+                    if ((NativeFunctions.GetWindowLongPtrW(handle, GWL.GWL_EXSTYLE) & WS.WS_EX_TOPMOST) != WS.WS_EX_TOPMOST)
                     {
-                        Settings.Current.MainWndTopmost = true;
-                        Settings.Current.MainWndTopmost = false;
+                        uint uFlags = SWP.SWP_NOMOVE | SWP.SWP_NOSIZE;
+                        NativeFunctions.SetWindowPos(handle, SWP.HWND_TOPMOST, 0, 0, 0, 0, uFlags);
+                        NativeFunctions.SetWindowPos(handle, SWP.HWND_NOTOPMOST, 0, 0, 0, 0, uFlags);
                     }
                     return executionResult;
                 }

@@ -80,8 +80,7 @@ namespace HashCalculator
                 {
                     try
                     {
-                        Process process = Process.GetProcessById(processId);
-                        CommonUtils.ShowWindowForeground(process.MainWindowHandle);
+                        CommonUtils.ShowWindowForeground(processId);
                     }
                     catch (Exception) { }
                 }
