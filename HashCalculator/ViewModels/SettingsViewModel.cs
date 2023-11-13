@@ -42,6 +42,7 @@ namespace HashCalculator
         private bool preferAlgosInBasis = true;
         private bool parallelBetweenAlgos = false;
         private bool monitorNewHashStringInClipboard = true;
+        private bool switchMainWndFgWhenNewHashCopied = false;
         private RelayCommand installShellExtCmd;
         private RelayCommand unInstallShellExtCmd;
 
@@ -500,6 +501,18 @@ namespace HashCalculator
             set
             {
                 this.SetPropNotify(ref this.monitorNewHashStringInClipboard, value);
+            }
+        }
+
+        public bool SwitchMainWndFgWhenNewHashCopied
+        {
+            get
+            {
+                return this.switchMainWndFgWhenNewHashCopied;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.switchMainWndFgWhenNewHashCopied, value);
             }
         }
 

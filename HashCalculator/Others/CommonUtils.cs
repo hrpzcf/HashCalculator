@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Media;
 
 namespace HashCalculator
@@ -356,26 +357,24 @@ namespace HashCalculator
 
         public static bool ShowWindowForeground(IntPtr windowHandle)
         {
-            bool result = false;
             if (windowHandle != IntPtr.Zero)
             {
-                if (!NativeFunctions.IsWindowVisible(windowHandle))
+                if (NativeFunctions.IsIconic(windowHandle))
                 {
-                    result = NativeFunctions.ShowWindow(windowHandle, (int)ShowCmd.SW_SHOW);
+                    return NativeFunctions.ShowWindow(windowHandle, SW.SW_RESTORE);
                 }
-                else
+                else if (NativeFunctions.IsWindowVisible(windowHandle))
                 {
-                    if (!NativeFunctions.IsIconic(windowHandle))
+                    bool executionResult = NativeFunctions.ShowWindow(windowHandle, SW.SW_SHOW);
+                    if (!Settings.Current.MainWndTopmost)
                     {
-                        result = NativeFunctions.SetForegroundWindow(windowHandle);
+                        Settings.Current.MainWndTopmost = true;
+                        Settings.Current.MainWndTopmost = false;
                     }
-                    else
-                    {
-                        result = NativeFunctions.ShowWindow(windowHandle, (int)ShowCmd.SW_RESTORE);
-                    }
+                    return executionResult;
                 }
             }
-            return result;
+            return false;
         }
     }
 }

@@ -171,6 +171,55 @@ namespace HashCalculator
     }
 
     /// <summary>
+    /// SetWindowPos 函数的参数
+    /// https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowpos
+    /// </summary>
+    public static class SWP
+    {
+        public const uint SWP_ASYNCWINDOWPOS = 0x4000;
+        public const uint SWP_DEFERERASE = 0x2000;
+        public const uint SWP_DRAWFRAME = 0x0020;
+        public const uint SWP_FRAMECHANGED = 0x0020;
+        public const uint SWP_HIDEWINDOW = 0x0080;
+        public const uint SWP_NOACTIVATE = 0x0010;
+        public const uint SWP_NOCOPYBITS = 0x0100;
+        public const uint SWP_NOMOVE = 0x0002;
+        public const uint SWP_NOOWNERZORDER = 0x0200;
+        public const uint SWP_NOREDRAW = 0x0008;
+        public const uint SWP_NOREPOSITION = 0x0200;
+        public const uint SWP_NOSENDCHANGING = 0x0400;
+        public const uint SWP_NOSIZE = 0x0001;
+        public const uint SWP_NOZORDER = 0x0004;
+        public const uint SWP_SHOWWINDOW = 0x0040;
+        public static readonly IntPtr HWND_BOTTOM = new IntPtr(1);
+        public static readonly IntPtr HWND_TOP = new IntPtr(0);
+        public static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
+        public static readonly IntPtr HWND_NOTOPMOST = new IntPtr(-2);
+    }
+
+    /// <summary>
+    /// ShowWindow 函数参数
+    /// https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showwindow
+    /// </summary>
+    public static class SW
+    {
+        public const int SW_HIDE = 0; // 隐藏窗口并激活另一个窗口
+        public const int SW_SHOWNORMAL = 1; // 激活并显示一个窗口,应用程序应在第一次显示窗口时指定此标志
+        public const int SW_NORMAL = 1; // 激活并显示一个窗口,应用程序应在第一次显示窗口时指定此标志
+        public const int SW_SHOWMINIMIZED = 2; // 激活窗口并将其显示为最小化窗口
+        public const int SW_SHOWMAXIMIZED = 3; // 激活窗口并将其显示为最大化窗口
+        public const int SW_MAXIMIZE = 3; // 激活窗口并将其显示为最大化窗口
+        public const int SW_SHOWNOACTIVATE = 4; // 以最近的大小和位置显示窗口但不激活
+        public const int SW_SHOW = 5; // 激活窗口并以其当前大小和位置显示它
+        public const int SW_MINIMIZE = 6; // 最小化指定窗口并激活Z顺序中的下一个顶级窗口
+        public const int SW_SHOWMINNOACTIVE = 7; // 将窗口显示为最小化窗口但不激活
+        public const int SW_SHOWNA = 8; // 以当前大小和位置显示窗口但不激活
+        public const int SW_RESTORE = 9; // 激活并显示窗口,应用程序在恢复最小化窗口时应指定此标志
+        public const int SW_SHOWDEFAULT = 10; // 根据启动应用程序的程序传递给CreateProcess函数的STARTUPINFO结构中指定的SW_值设置
+        public const int SW_FORCEMINIMIZE = 11; // 最小化一个窗口，即使拥有该窗口的线程没有响应
+    }
+
+    /// <summary>
     /// https://learn.microsoft.com/en-us/windows/win32/api/shellapi/ns-shellapi-shellexecuteinfow
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
@@ -560,6 +609,12 @@ namespace HashCalculator
         /// </summary>
         [DllImport("user32.dll")]
         internal static extern bool IsZoomed(IntPtr hWnd);
+
+        /// <summary>
+        /// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setactivewindow
+        /// </summary>
+        [DllImport("user32.dll")]
+        internal static extern IntPtr SetActiveWindow(IntPtr hWnd);
 
         /// <summary>
         /// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setforegroundwindow

@@ -89,6 +89,11 @@
                     Padding="4,0,0,0"
                     Content="剪贴板中有新复制的哈希值时填充校验依据文本框并校验"
                     IsChecked="{Binding MonitorNewHashStringInClipboard, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <CheckBox
+                    Margin="0,8,0,0"
+                    Padding="4,0,0,0"
+                    Content="用剪贴板哈希填充校验依据文本框并校验后把主窗带到前台"
+                    IsChecked="{Binding SwitchMainWndFgWhenNewHashCopied, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </StackPanel>
         </TabItem>
         <TabItem

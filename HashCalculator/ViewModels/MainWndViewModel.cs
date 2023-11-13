@@ -196,6 +196,10 @@ namespace HashCalculator
                 {
                     this.StartVerificationAction(null);
                 }
+                if (Settings.Current.SwitchMainWndFgWhenNewHashCopied)
+                {
+                    CommonUtils.ShowWindowForeground(MainWindow.WndHandle);
+                }
             }
         }
 
