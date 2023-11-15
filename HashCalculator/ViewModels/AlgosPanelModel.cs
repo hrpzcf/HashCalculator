@@ -54,8 +54,6 @@ namespace HashCalculator
             "BLAKE2B",
             new AlgoInOutModel[]
             {
-                new AlgoInOutModel(new OfficialImplBlake2b(128)),
-                new AlgoInOutModel(new OfficialImplBlake2b(160)),
                 new AlgoInOutModel(new OfficialImplBlake2b(224)),
                 new AlgoInOutModel(new OfficialImplBlake2b(256)),
                 new AlgoInOutModel(new OfficialImplBlake2b(384)),
@@ -66,8 +64,6 @@ namespace HashCalculator
             "BLAKE2BP",
             new AlgoInOutModel[]
             {
-                new AlgoInOutModel(new OfficialImplBlake2bp(128)),
-                new AlgoInOutModel(new OfficialImplBlake2bp(160)),
                 new AlgoInOutModel(new OfficialImplBlake2bp(224)),
                 new AlgoInOutModel(new OfficialImplBlake2bp(256)),
                 new AlgoInOutModel(new OfficialImplBlake2bp(384)),
@@ -78,8 +74,6 @@ namespace HashCalculator
             "BLAKE2S",
             new AlgoInOutModel[]
             {
-                new AlgoInOutModel(new OfficialImplBlake2s(128)),
-                new AlgoInOutModel(new OfficialImplBlake2s(160)),
                 new AlgoInOutModel(new OfficialImplBlake2s(224)),
                 new AlgoInOutModel(new OfficialImplBlake2s(256)),
             });
@@ -88,8 +82,6 @@ namespace HashCalculator
             "BLAKE2SP",
             new AlgoInOutModel[]
             {
-                new AlgoInOutModel(new OfficialImplBlake2sp(128)),
-                new AlgoInOutModel(new OfficialImplBlake2sp(160)),
                 new AlgoInOutModel(new OfficialImplBlake2sp(224)),
                 new AlgoInOutModel(new OfficialImplBlake2sp(256)),
             });
@@ -98,8 +90,6 @@ namespace HashCalculator
             "BLAKE3",
             new AlgoInOutModel[]
             {
-                new AlgoInOutModel(new OfficialImplBlake3(128)),
-                new AlgoInOutModel(new OfficialImplBlake3(160)),
                 new AlgoInOutModel(new OfficialImplBlake3(224)),
                 new AlgoInOutModel(new OfficialImplBlake3(256)),
                 new AlgoInOutModel(new OfficialImplBlake3(384)),
@@ -139,8 +129,8 @@ namespace HashCalculator
         public static AlgoInOutModel[] FromAlgoName(string name)
         {
             return ProvidedAlgos.Where(
-                i => i.AlgoName.Equals(name, StringComparison.OrdinalIgnoreCase))
-                .Select(i => i.NewAlgoInOutModel()).ToArray();
+                i => i.AlgoName.Equals(name, StringComparison.OrdinalIgnoreCase)).Select(
+                i => i.NewAlgoInOutModel()).ToArray();
         }
 
         public static AlgoInOutModel[] FromAlgoType(AlgoType algoType)
