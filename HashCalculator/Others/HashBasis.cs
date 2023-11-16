@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace HashCalculator
 {
@@ -43,8 +44,10 @@ namespace HashCalculator
             {
                 return CmpRes.Unrelated;
             }
+            bool algoNameIndependent = false;
             if (!this.AlgosHashs.TryGetValue(algoName, out List<byte[]> hashValues))
             {
+                algoNameIndependent = true;
                 this.AlgosHashs.TryGetValue(string.Empty, out hashValues);
             }
             if (hashValues != null)
@@ -53,16 +56,30 @@ namespace HashCalculator
                 {
                     return CmpRes.Uncertain;
                 }
-                byte[] first = hashValues[0];
-                if (hashValues.Count > 1)
+                if (algoNameIndependent)
                 {
-                    if (!hashValues.Skip(1).All(i => i.SequenceEqual(first)))
+                    if (hashValues.Contains(hashBytes, BytesComparer.Default))
                     {
-                        return CmpRes.Uncertain;
+                        return CmpRes.Matched;
+                    }
+                    else
+                    {
+                        return CmpRes.Unrelated;
                     }
                 }
-                return first.SequenceEqual(hashBytes) ?
-                    CmpRes.Matched : this.FileIndependent ? CmpRes.Unrelated : CmpRes.Mismatch;
+                else
+                {
+                    byte[] first = hashValues[0];
+                    if (hashValues.Count > 1)
+                    {
+                        if (!hashValues.Skip(1).All(i => i.SequenceEqual(first)))
+                        {
+                            return CmpRes.Uncertain;
+                        }
+                    }
+                    return first.SequenceEqual(hashBytes) ?
+                        CmpRes.Matched : this.FileIndependent ? CmpRes.Unrelated : CmpRes.Mismatch;
+                }
             }
             return CmpRes.Unrelated;
         }
@@ -220,15 +237,14 @@ namespace HashCalculator
             {
                 return default(FileAlgosHashs);
             }
-            if (this.FileHashDict.Count == 1 && 
-                this.FileHashDict.TryGetValue(string.Empty, out var algosHashs))
-            {
-                return algosHashs;
-            }
             // Windows 文件名不区分大小写 (FileHashDict 使用了忽略大小写的比较器)
             if (this.FileHashDict.TryGetValue(fileName, out FileAlgosHashs fileAlgosHashs))
             {
                 return fileAlgosHashs;
+            }
+            else if (this.FileHashDict.TryGetValue(string.Empty, out FileAlgosHashs nonFileAlgosHashs))
+            {
+                return nonFileAlgosHashs;
             }
             return default(FileAlgosHashs);
         }

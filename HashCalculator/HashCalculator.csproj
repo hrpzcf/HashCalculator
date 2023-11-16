@@ -162,7 +162,7 @@
     <Compile Include="HashAlgos\ExtendedKcpSha3.cs" />
     <Compile Include="HashAlgos\OpenHashTabCrc64.cs" />
     <Compile Include="HashAlgos\StbrummeRepoCrc32.cs" />
-    <Compile Include="Others\HashBytesComparer.cs" />
+    <Compile Include="Others\BytesComparer.cs" />
     <Compile Include="Filters\HashingTaskResultFilter.cs" />
     <Compile Include="Filters\HashingTaskResultFilterCtrl.xaml.cs">
       <DependentUpon>HashingTaskResultFilterCtrl.xaml</DependentUpon>

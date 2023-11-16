@@ -20,7 +20,6 @@ namespace HashCalculator
     internal class EqualHashByteFilter : AbsHashViewFilter
     {
         private AlgoInOutModel[] _algos;
-        private readonly HashBytesComparer comparer = new HashBytesComparer();
 
         public override ContentControl Settings { get; }
 
@@ -60,7 +59,7 @@ namespace HashCalculator
             if (models != null && this.Param is AlgoInOutModel focusedAlgo)
             {
                 Dictionary<byte[], ModelCurAlgoDict> groupByHashBytes =
-                    new Dictionary<byte[], ModelCurAlgoDict>(this.comparer);
+                    new Dictionary<byte[], ModelCurAlgoDict>(BytesComparer.Default);
                 foreach (HashViewModel model in models)
                 {
                     if (!model.Matched)
@@ -100,7 +99,7 @@ namespace HashCalculator
                     }
                 }
                 Dictionary<byte[], ModelCurAlgoDict> finalHashModels =
-                    new Dictionary<byte[], ModelCurAlgoDict>(this.comparer);
+                    new Dictionary<byte[], ModelCurAlgoDict>(BytesComparer.Default);
                 foreach (KeyValuePair<byte[], ModelCurAlgoDict> pair in groupByHashBytes)
                 {
                     if (pair.Value.Count < 2)

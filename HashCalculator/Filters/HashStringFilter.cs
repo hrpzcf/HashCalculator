@@ -28,9 +28,8 @@ namespace HashCalculator
             {
                 return;
             }
-            HashBytesComparer comparer = new HashBytesComparer();
-            HashSet<byte[]> expectedHashs = hashStrings.Select(i => CommonUtils.HashFromAnyString(i))
-                .Where(i => i != null).ToHashSet(comparer);
+            HashSet<byte[]> expectedHashs = hashStrings.Select(i => CommonUtils.HashFromAnyString(i)).Where(
+                i => i != null).ToHashSet<byte[]>(BytesComparer.Default);
             if (expectedHashs.Any())
             {
                 foreach (HashViewModel model in models)
@@ -45,7 +44,7 @@ namespace HashCalculator
                     }
                     else
                     {
-                        HashSet<byte[]> modelHashs = model.AlgoInOutModels.Select(i => i.HashResult).ToHashSet(comparer);
+                        HashSet<byte[]> modelHashs = model.AlgoInOutModels.Select(i => i.HashResult).ToHashSet<byte[]>(BytesComparer.Default);
                         if (filterLogic == FilterLogic.Any)
                         {
                             if (!modelHashs.Overlaps(expectedHashs))
