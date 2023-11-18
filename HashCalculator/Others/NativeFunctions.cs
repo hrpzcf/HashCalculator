@@ -150,6 +150,26 @@ namespace HashCalculator
     internal static class WM
     {
         /// <summary>
+        /// https://learn.microsoft.com/en-us/windows/win32/dataxchg/wm-clear
+        /// </summary>
+        public const int WM_CLEAR = 0x0303;
+
+        /// <summary>
+        /// https://learn.microsoft.com/en-us/windows/win32/dataxchg/wm-copy
+        /// </summary>
+        public const int WM_COPY = 0x0301;
+
+        /// <summary>
+        /// https://learn.microsoft.com/en-us/windows/win32/dataxchg/wm-cut
+        /// </summary>
+        public const int WM_CUT = 0x0300;
+
+        /// <summary>
+        /// https://learn.microsoft.com/en-us/windows/win32/dataxchg/wm-paste
+        /// </summary>
+        public const int WM_PASTE = 0x0302;
+
+        /// <summary>
         /// https://learn.microsoft.com/en-us/windows/win32/dataxchg/wm-changecbchain
         /// </summary>
         public const int WM_CHANGECBCHAIN = 0x030D;
@@ -568,13 +588,13 @@ namespace HashCalculator
         internal static extern IntPtr ShellExecuteW(IntPtr hwnd, string lpOperation, string lpFile, string lpParameters, string lpDirectory, ShowCmd nShowCmd);
 
         /// <summary>
-        /// https://learn.microsoft.com/zh-cn/windows/win32/api/shellapi/nf-shellapi-shellexecuteexw
+        /// https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shellexecuteexw
         /// </summary>
         [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
         internal static extern bool ShellExecuteExW(ref SHELLEXECUTEINFOW lpExecInfo);
 
         /// <summary>
-        /// https://learn.microsoft.com/zh-cn/windows/win32/api/handleapi/nf-handleapi-closehandle
+        /// https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle
         /// </summary>
         [DllImport("kernel32.dll", SetLastError = true)]
         internal static extern bool CloseHandle(IntPtr hObject);
@@ -612,7 +632,7 @@ namespace HashCalculator
         internal static extern bool GetFileInformationByHandle(IntPtr hFile, out BY_HANDLE_FILE_INFORMATION lpFileInformation);
 
         /// <summary>
-        /// https://learn.microsoft.com/zh-cn/windows/win32/api/winuser/nf-winuser-setwindowpos
+        /// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowpos
         /// </summary>
         [DllImport("user32.dll")]
         internal static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
