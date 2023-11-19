@@ -20,7 +20,7 @@ namespace HashCalculator
         private double settingsWndWidth = 600.0;
         private double settingsWndHeight = 500.0;
         private double algosPanelWidth = 450.0;
-        private double algosPanelHeight = 380.0;
+        private double algosPanelHeight = 400.0;
         private double hashDetailsWidth = 1200.0;
         private double hashDetailsHeight = 800.0;
         private double cmdPanelWidth = 590.0;

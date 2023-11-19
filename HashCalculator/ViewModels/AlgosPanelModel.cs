@@ -32,18 +32,21 @@ namespace HashCalculator
                 new AlgoInOutModel(new HashratWhirlpool()),
             });
 
-        public static AlgoGroupModel GroupSHA { get; } = new AlgoGroupModel(
-            "SHA",
+        public static AlgoGroupModel GroupSHA2 { get; } = new AlgoGroupModel(
+            "SHA1/2",
             new AlgoInOutModel[]
             {
-                // SHA1
-                new AlgoInOutModel(new NetCryptoCngSHA1()),
-                // SHA2
+                new AlgoInOutModel(new NetCryptoCngSHA1()), // SHA1
                 new AlgoInOutModel(new HaclSha2Sha224()),
                 new AlgoInOutModel(new NetCryptoCngSHA256()),
                 new AlgoInOutModel(new NetCryptoCngSHA384()),
                 new AlgoInOutModel(new NetCryptoCngSHA512()),
-                // SHA3
+            });
+
+        public static AlgoGroupModel GroupSHA3 { get; } = new AlgoGroupModel(
+            "SHA3",
+            new AlgoInOutModel[]
+            {
                 new AlgoInOutModel(new ExtendedKcpSha3(224)),
                 new AlgoInOutModel(new ExtendedKcpSha3(256)),
                 new AlgoInOutModel(new ExtendedKcpSha3(384)),
@@ -108,7 +111,8 @@ namespace HashCalculator
             new AlgoGroupModel[]
             {
                 GroupOthers,
-                GroupSHA,
+                GroupSHA2,
+                GroupSHA3,
                 GroupBlake2b,
                 GroupBlake2bp,
                 GroupBlake2s,
@@ -118,7 +122,8 @@ namespace HashCalculator
             };
 
         public static AlgoInOutModel[] ProvidedAlgos { get; } = GroupOthers.Items
-            .Concat(GroupSHA.Items)
+            .Concat(GroupSHA2.Items)
+            .Concat(GroupSHA3.Items)
             .Concat(GroupBlake2b.Items)
             .Concat(GroupBlake2bp.Items)
             .Concat(GroupBlake2s.Items)
