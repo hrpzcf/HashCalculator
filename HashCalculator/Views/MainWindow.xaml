@@ -204,7 +204,7 @@
                     Margin="28,0,0,0"
                     Command="{Binding MainWindowTopmostCmd}"
                     Style="{StaticResource ImageButtonStyle2}"
-                    ToolTip="切换窗口置顶：点击在 [置顶/非置顶] 之间切换主窗口置顶状态">
+                    ToolTip="切换置顶状态：点击在 [置顶/非置顶] 之间切换主窗口置顶状态">
                     <Image Source="{Binding Source={x:Static local:Settings.Current}, Path=MainWndTopmost, Converter={StaticResource BtnTopmostEnabledImgSrcCvt}}" />
                 </Button>
                 <Button
