@@ -47,8 +47,8 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
@@ -92,7 +92,15 @@
                     Style="{StaticResource ComboBoxStyle1}"
                     ToolTip="此选项影响新加入的文件、[刷新输出方式] 按钮、[导出哈希值] 按钮的结果&#10;Base64 格式：以 Base64 编码字符显示计算结果，某些软件配置需要此格式&#10;十六进制大写：常用的显示方式，以十六进制大写字母方式显示计算结果&#10;十六进制小写：常用的显示方式，以十六进制小写字母方式显示计算结果" />
                 <Button
-                    Grid.Column="5"
+                    Grid.Column="4"
+                    Margin="4,0,0,0"
+                    Command="{Binding RefreshAllOutputTypeCmd}"
+                    Style="{StaticResource ImageButtonStyle2}"
+                    ToolTip="刷新输出方式：以 [默认输出方式] 下拉列表选择的输出方式更新表格内所有文件的哈希值显示方式">
+                    <Image Source="/Images/refresh_output_24.png" />
+                </Button>
+                <Button
+                    Grid.Column="6"
                     Margin="28,0,0,0"
                     Command="{Binding OpenCommandPanelCmd}"
                     Style="{StaticResource ImageButtonStyle2}"
@@ -100,7 +108,7 @@
                     <Image Source="/Images/filter_32.png" />
                 </Button>
                 <Button
-                    Grid.Column="6"
+                    Grid.Column="7"
                     Margin="28,0,0,0"
                     Command="{Binding SelectFilesToHashCmd}"
                     Style="{StaticResource ImageButtonStyle2}"
@@ -108,7 +116,7 @@
                     <Image Source="/Images/select_file_32.png" />
                 </Button>
                 <Button
-                    Grid.Column="7"
+                    Grid.Column="8"
                     Margin="4,0,0,0"
                     Command="{Binding SelectFolderToHashCmd}"
                     Style="{StaticResource ImageButtonStyle2}"
@@ -116,24 +124,16 @@
                     <Image Source="/Images/select_folder_32.png" />
                 </Button>
                 <Button
-                    Grid.Column="8"
+                    Grid.Column="9"
                     Margin="4,0,0,0"
                     Command="{Binding StopEnumeratingPackageCmd}"
                     Style="{StaticResource ImageButtonStyle2}"
                     ToolTip="停止搜索文件：如果表格正持续增加新文件，则立即停止向表格添加新文件，但不停止哈希值计算。">
-                    <Image Source="/Images/search_files_32.png" />
-                </Button>
-                <Button
-                    Grid.Column="9"
-                    Margin="28,0,0,0"
-                    Command="{Binding RefreshAllOutputTypeCmd}"
-                    Style="{StaticResource ImageButtonStyle2}"
-                    ToolTip="刷新输出方式：以 [默认输出方式] 下拉列表选择的输出方式更新表格内所有文件的哈希值显示方式">
-                    <Image Source="/Images/refresh_output_32.png" />
+                    <Image Source="/Images/stop_searching_32.png" />
                 </Button>
                 <Button
                     Grid.Column="10"
-                    Margin="4,0,0,0"
+                    Margin="28,0,0,0"
                     Command="{Binding ExportHashResultCmd}"
                     IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBooleanCvt}}"
                     Style="{StaticResource ImageButtonStyle2}"

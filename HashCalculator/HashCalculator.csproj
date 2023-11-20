@@ -379,11 +379,11 @@
     <Resource Include="Images\topmost_32_gray.png" />
     <Resource Include="Images\output_type_32.png" />
     <Resource Include="Images\list_count_16.png" />
-    <Resource Include="Images\refresh_output_32.png" />
+    <Resource Include="Images\refresh_output_24.png" />
     <Resource Include="Images\remaining_16.png" />
     <Resource Include="Images\finished_16.png" />
     <Resource Include="Images\loading.gif" />
-    <Resource Include="Images\search_files_32.png" />
+    <Resource Include="Images\stop_searching_32.png" />
     <Resource Include="Images\details_16.png" />
     <Resource Include="Images\filter_32.png" />
     <Resource Include="Images\refresh_64.png" />
