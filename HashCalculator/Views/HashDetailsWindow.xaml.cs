@@ -6,8 +6,11 @@ namespace HashCalculator
 {
     public partial class HashDetailsWnd : Window
     {
+        public static HashDetailsWnd This { get; private set; }
+
         internal HashDetailsWnd(HashViewModel model)
         {
+            This = this;
             this.DataContext = model;
             this.InitializeComponent();
         }

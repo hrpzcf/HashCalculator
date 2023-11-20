@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="详情"
     Width="{Binding Source={x:Static local:Settings.Current}, Path=HashDetailsWndWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     Height="{Binding Source={x:Static local:Settings.Current}, Path=HashDetailsWndHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     d:DataContext="{d:DesignInstance Type=local:HashViewModel}"
@@ -21,6 +22,7 @@
                 <ResourceDictionary Source="/Resources/ConverterResource.xaml" />
                 <ResourceDictionary Source="/Resources/DataGridCellStyles.xaml" />
                 <ResourceDictionary Source="/Resources/DataGridRowStyles.xaml" />
+                <ResourceDictionary Source="/Resources/ImageButtonStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -124,25 +126,38 @@
                 <DataGridTemplateColumn Width="*" Header="哈希值">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBox
-                                Margin="2"
-                                Padding="2,4"
-                                VerticalContentAlignment="Center"
-                                Background="Transparent"
-                                BorderThickness="0"
-                                IsReadOnly="True"
-                                TextWrapping="Wrap">
-                                <TextBox.Text>
-                                    <MultiBinding Converter="{StaticResource BytesToStrByOutputTypeCvt}">
-                                        <Binding Mode="OneWay" Path="HashResult" />
-                                        <Binding
-                                            Mode="OneWay"
-                                            Path="DataContext.SelectedOutputType"
-                                            RelativeSource="{RelativeSource Mode=FindAncestor,
-                                                                            AncestorType={x:Type Window}}" />
-                                    </MultiBinding>
-                                </TextBox.Text>
-                            </TextBox>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Margin="2"
+                                    Padding="2,4"
+                                    Background="Transparent"
+                                    TextWrapping="Wrap">
+                                    <TextBlock.Text>
+                                        <MultiBinding Converter="{StaticResource BytesToStrByOutputTypeCvt}">
+                                            <Binding Mode="OneWay" Path="HashResult" />
+                                            <Binding
+                                                Mode="OneWay"
+                                                Path="DataContext.SelectedOutputType"
+                                                RelativeSource="{RelativeSource Mode=FindAncestor,
+                                                                                AncestorType={x:Type Window}}" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                                <Button
+                                    Grid.Column="1"
+                                    Padding="4"
+                                    Command="{Binding CopyHashResultCmd}"
+                                    CommandParameter="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+                                    Style="{StaticResource ImageButtonStyle1}"
+                                    ToolTip="复制...">
+                                    <Image Source="/Images/copy.png" />
+                                </Button>
+                            </Grid>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

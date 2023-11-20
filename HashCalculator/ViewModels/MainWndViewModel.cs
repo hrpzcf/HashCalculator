@@ -451,8 +451,7 @@ namespace HashCalculator
                 }
                 if (stringBuilder.Length > 0)
                 {
-                    Clipboard.SetText(stringBuilder.ToString());
-                    Settings.Current.ClipboardUpdatedByMe = true;
+                    CommonUtils.ClipboardSetText(MainWindow.This, stringBuilder.ToString());
                 }
             }
         }
@@ -521,8 +520,7 @@ namespace HashCalculator
                 }
                 if (stringBuilder.Length > 0)
                 {
-                    Clipboard.SetText(stringBuilder.ToString());
-                    Settings.Current.ClipboardUpdatedByMe = true;
+                    CommonUtils.ClipboardSetText(MainWindow.This, stringBuilder.ToString());
                 }
             }
         }
@@ -607,8 +605,7 @@ namespace HashCalculator
                 }
                 if (stringBuilder.Length != 0)
                 {
-                    Clipboard.SetText(stringBuilder.ToString());
-                    Settings.Current.ClipboardUpdatedByMe = true;
+                    CommonUtils.ClipboardSetText(MainWindow.This, stringBuilder.ToString());
                 }
             }
         }

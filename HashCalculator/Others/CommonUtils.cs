@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media;
 
 namespace HashCalculator
@@ -385,6 +385,28 @@ namespace HashCalculator
                 }
             }
             return false;
+        }
+
+        public static void ClipboardSetText(string text)
+        {
+            ClipboardSetText(null, text);
+        }
+
+        public static void ClipboardSetText(Window owner, string text)
+        {
+            if (text == null)
+            {
+                return;
+            }
+            try
+            {
+                Settings.Current.ClipboardUpdatedByMe = true;
+                Clipboard.SetText(text);
+            }
+            catch (COMException e)
+            {
+                MessageBox.Show(owner ?? MainWindow.This, $"错误详情：{e.Message}", "复制失败", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }
