@@ -38,7 +38,6 @@ namespace HashCalculator
             this.Closed += this.MainWindowClosed;
             this.Loaded += this.MainWindowLoaded;
             this.ContentRendered += this.MainWindowRendered;
-            this.Title = $"{Info.Title} by {Info.Author} @ {Info.Published}";
             this.InitializeComponent();
         }
 
