@@ -1,6 +1,6 @@
 <div align="center">
 
-# 文件哈希值批量计算器 (HashCalculator)
+# 哈希值批量计算器 (HashCalculator)
 
 [![GitHub stars](https://img.shields.io/github/stars/hrpzcf/HashCalculator?label=Stars&logo=github)](https://github.com/hrpzcf/HashCalculator/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/hrpzcf/HashCalculator?label=Forks&logo=github)](https://github.com/hrpzcf/HashCalculator/network)
