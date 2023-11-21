@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Security.Policy;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml.Serialization;
@@ -57,6 +56,7 @@ namespace HashCalculator
 
         public SettingsViewModel()
         {
+            this.AddSelectedAlgosChanged();
             if (double.IsNaN(this.mainWndLeft))
             {
                 this.mainWndLeft = (SystemParameters.PrimaryScreenWidth
@@ -67,7 +67,6 @@ namespace HashCalculator
                 this.mainWndTop = (SystemParameters.PrimaryScreenHeight
                     - this.mainWndHeight) / 2;
             }
-            this.AddSelectedAlgosChanged();
         }
 
         private void SelectedAlgosChanged(object sender, NotifyCollectionChangedEventArgs e)
