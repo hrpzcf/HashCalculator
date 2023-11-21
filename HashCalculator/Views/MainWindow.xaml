@@ -669,7 +669,7 @@
                     VerticalAlignment="Center"
                     Panel.ZIndex="0"
                     Foreground="#A0808080"
-                    Text="哈希值校验依据：粘贴单/多个哈希值，或选择/粘贴哈希值校验依据文件的路径，或粘贴依据文件的单/多行内容"
+                    Text="哈希值校验依据：粘贴单/多个哈希值(每行一个)、选择/粘贴哈希值校验依据文件路径、粘贴依据文件的单/多行内容"
                     Visibility="{Binding HashStringOrBasisPath, Converter={StaticResource PlaceHolderTextVisibilityCvt}}" />
                 <TextBox
                     Padding="0,3"
