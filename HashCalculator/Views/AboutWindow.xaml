@@ -25,9 +25,9 @@
             VerticalAlignment="Bottom"
             Orientation="Horizontal">
             <Image
-                Width="48"
-                Height="48"
-                Source="/Images/Icon.ico" />
+                Width="64"
+                Height="64"
+                Source="/Images/icon.ico" />
             <StackPanel Margin="8,0,0,0" VerticalAlignment="Center">
                 <TextBlock
                     FontSize="16"
