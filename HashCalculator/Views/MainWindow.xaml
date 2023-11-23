@@ -271,7 +271,7 @@
                             </Style>
                         </MenuItem.ItemContainerStyle>
                     </MenuItem>
-                    <MenuItem Header="批量切换算法" ItemsSource="{Binding SwitchDisplayedAlgoCmds}">
+                    <MenuItem Header="当前显示的算法切换为" ItemsSource="{Binding SwitchDisplayedAlgoCmds}">
                         <MenuItem.ItemContainerStyle>
                             <Style TargetType="MenuItem">
                                 <Setter Property="Header" Value="{Binding Display}" />
@@ -295,14 +295,9 @@
                     <MenuItem
                         Command="{Binding CopyFilesFullPathCmd}"
                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
-                        Header="复制路径" />
+                        Header="复制全路径" />
                     <MenuItem
-                        Command="{Binding CopyModelsHashStringCmd}"
-                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
-                        Header="复制多行当前结果"
-                        IsEnabled="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems, Converter={StaticResource CopyModelsHashMenuEnabledCvt}}" />
-                    <MenuItem
-                        Header="复制多行当前结果"
+                        Header="复制所选行当前哈希值"
                         IsEnabled="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems, Converter={StaticResource CopyModelsHashMenuEnabledCvt}}"
                         ItemsSource="{Binding CopyModelsHashMenuCmds}">
                         <MenuItem.ItemContainerStyle>
@@ -314,12 +309,7 @@
                         </MenuItem.ItemContainerStyle>
                     </MenuItem>
                     <MenuItem
-                        Command="{Binding CopyModelsAllAlgosValueCmd}"
-                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
-                        Header="复制多行所有算法结果"
-                        IsEnabled="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems, Converter={StaticResource CopyModelsHashMenuEnabledCvt}}" />
-                    <MenuItem
-                        Header="复制多行所有算法结果"
+                        Header="复制所选行所有哈希值"
                         IsEnabled="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems, Converter={StaticResource CopyModelsHashMenuEnabledCvt}}"
                         ItemsSource="{Binding CopyModelsAllAlgosMenuCmds}">
                         <MenuItem.ItemContainerStyle>
@@ -338,7 +328,7 @@
                     <MenuItem
                         Command="{Binding RemoveSelectedModelsCmd}"
                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
-                        Header="移除所选项" />
+                        Header="移除所选行" />
                     <Separator />
                     <MenuItem
                         Command="{Binding OpenFilesPropertyCmd}"

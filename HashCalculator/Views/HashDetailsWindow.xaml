@@ -62,7 +62,7 @@
                 Grid.Column="0"
                 VerticalAlignment="Center"
                 Foreground="#FF006FD6"
-                Text="哈希数量：" />
+                Text="算法数量：" />
             <TextBox
                 Grid.Column="1"
                 Padding="2,4"

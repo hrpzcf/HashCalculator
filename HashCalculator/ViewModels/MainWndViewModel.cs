@@ -57,8 +57,6 @@ namespace HashCalculator
         private RelayCommand cancelDisplayedModelsCmd;
         private RelayCommand pauseDisplayedModelsCmd;
         private RelayCommand continueDisplayedModelsCmd;
-        private RelayCommand copyModelsHashStringCmd;
-        private RelayCommand copyModelsAllAlgosValueCmd;
         private RelayCommand copyFilesNameCmd;
         private RelayCommand copyFilesFullPathCmd;
         private RelayCommand openFolderSelectItemsCmd;
@@ -409,21 +407,6 @@ namespace HashCalculator
             }
         }
 
-        private void CopyModelsHashBase64Action(object param)
-        {
-            this.CopyModelsHashValueAction(param, OutputType.BASE64);
-        }
-
-        private void CopyModelsHashBinUpperAction(object param)
-        {
-            this.CopyModelsHashValueAction(param, OutputType.BinaryUpper);
-        }
-
-        private void CopyModelsHashBinLowerAction(object param)
-        {
-            this.CopyModelsHashValueAction(param, OutputType.BinaryLower);
-        }
-
         private void CopyModelsHashValueAction(object param, OutputType output)
         {
             if (param is IList selectedModels && selectedModels.AnyItem())
@@ -456,6 +439,21 @@ namespace HashCalculator
             }
         }
 
+        private void CopyModelsHashBase64Action(object param)
+        {
+            this.CopyModelsHashValueAction(param, OutputType.BASE64);
+        }
+
+        private void CopyModelsHashBinUpperAction(object param)
+        {
+            this.CopyModelsHashValueAction(param, OutputType.BinaryUpper);
+        }
+
+        private void CopyModelsHashBinLowerAction(object param)
+        {
+            this.CopyModelsHashValueAction(param, OutputType.BinaryLower);
+        }
+
         public ControlItem[] CopyModelsHashMenuCmds
         {
             get
@@ -470,23 +468,6 @@ namespace HashCalculator
                     };
                 }
                 return this.copyModelsHashMenuCmds;
-            }
-        }
-
-        private void CopyModelsHashStringAction(object param)
-        {
-            this.CopyModelsHashValueAction(param, OutputType.Unknown);
-        }
-
-        public ICommand CopyModelsHashStringCmd
-        {
-            get
-            {
-                if (this.copyModelsHashStringCmd is null)
-                {
-                    this.copyModelsHashStringCmd = new RelayCommand(this.CopyModelsHashStringAction);
-                }
-                return this.copyModelsHashStringCmd;
             }
         }
 
@@ -554,23 +535,6 @@ namespace HashCalculator
                     };
                 }
                 return this.copyModelsAllAlgosMenuCmds;
-            }
-        }
-
-        private void CopyModelsAllAlgosStringAction(object param)
-        {
-            this.CopyModelsAllAlgosValueAction(param, OutputType.Unknown);
-        }
-
-        public ICommand CopyModelsAllAlgosValueCmd
-        {
-            get
-            {
-                if (this.copyModelsAllAlgosValueCmd == null)
-                {
-                    this.copyModelsAllAlgosValueCmd = new RelayCommand(this.CopyModelsAllAlgosStringAction);
-                }
-                return this.copyModelsAllAlgosValueCmd;
             }
         }
 
@@ -1433,7 +1397,7 @@ namespace HashCalculator
                         new ControlItem("继续任务", new RelayCommand(this.ContinueSelectedModelsAction)),
                         new ControlItem("取消任务", new RelayCommand(this.CancelSelectedModelsAction)),
                         new ControlItem("新增计算", new RelayCommand(this.RestartSelectedModelsNewLineAction)),
-                        new ControlItem("启动未成功项", new RelayCommand(this.RestartSelectedUnsucceededModelsAction)),
+                        new ControlItem("启动未成功行", new RelayCommand(this.RestartSelectedUnsucceededModelsAction)),
                         new ControlItem("重新计算", new RelayCommand(this.RestartSelectedModelsForceAction)),
                     };
                 }
