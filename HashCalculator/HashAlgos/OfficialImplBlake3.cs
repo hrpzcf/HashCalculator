@@ -7,9 +7,28 @@ namespace HashCalculator
     internal class OfficialImplBlake3 : HashAlgorithm, IHashAlgoInfo
     {
         private readonly int bitLength;
-        private readonly int outputSize;
         private AlgoType algoType = AlgoType.Unknown;
         private IntPtr _state = IntPtr.Zero;
+
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        private static extern IntPtr blake3_new();
+
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        private static extern void blake3_delete(IntPtr state);
+
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        private static extern void blake3_init(IntPtr state);
+
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        private static extern void blake3_update(IntPtr state, byte[] input, ulong size);
+
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        private static extern void blake3_update(IntPtr state, ref byte input, ulong size);
+
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        private static extern void blake3_final(IntPtr state, byte[] output, ulong size);
+
+        public int DigestLength { get; }
 
         public string AlgoName => $"BLAKE3-{this.bitLength}";
 
@@ -31,24 +50,6 @@ namespace HashCalculator
                 return this.algoType;
             }
         }
-
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr blake3_new();
-
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void blake3_delete(IntPtr state);
-
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void blake3_init(IntPtr state);
-
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void blake3_update(IntPtr state, byte[] input, ulong size);
-
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void blake3_update(IntPtr state, ref byte input, ulong size);
-
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void blake3_final(IntPtr state, byte[] output, ulong size);
 
         private void DeleteState()
         {
@@ -72,7 +73,7 @@ namespace HashCalculator
                 throw new ArgumentException($"Invalid bit length");
             }
             this.bitLength = bitLength;
-            this.outputSize = bitLength / 8;
+            this.DigestLength = bitLength / 8;
         }
 
         public override void Initialize()
@@ -115,8 +116,8 @@ namespace HashCalculator
             {
                 throw new InvalidOperationException("Not initialized yet");
             }
-            byte[] resultBuffer = new byte[this.outputSize];
-            blake3_final(this._state, resultBuffer, (ulong)this.outputSize);
+            byte[] resultBuffer = new byte[this.DigestLength];
+            blake3_final(this._state, resultBuffer, (ulong)this.DigestLength);
             return resultBuffer;
         }
     }

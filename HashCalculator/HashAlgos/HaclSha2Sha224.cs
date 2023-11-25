@@ -6,7 +6,6 @@ namespace HashCalculator
 {
     internal class HaclSha2Sha224 : HashAlgorithm, IHashAlgoInfo
     {
-        private const int _size = 28;
         private byte _errorCode = 0;
         private IntPtr _state = IntPtr.Zero;
 
@@ -27,6 +26,8 @@ namespace HashCalculator
 
         [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern void sha224_final(IntPtr state, byte[] output);
+
+        public int DigestLength { get; } = 28;
 
         public string AlgoName => "SHA-224";
 
@@ -96,7 +97,7 @@ namespace HashCalculator
             {
                 throw new InvalidOperationException("An error has occurred");
             }
-            byte[] resultBuffer = new byte[_size];
+            byte[] resultBuffer = new byte[this.DigestLength];
             sha224_final(this._state, resultBuffer);
             return resultBuffer;
         }

@@ -6,12 +6,7 @@ namespace HashCalculator
 {
     internal class NamazsoQuickXor : HashAlgorithm, IHashAlgoInfo
     {
-        private const int _size = 20;
         private IntPtr _state = IntPtr.Zero;
-
-        public string AlgoName => "QuickXor";
-
-        public AlgoType AlgoType => AlgoType.QUICKXOR;
 
         [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr quickxor_new();
@@ -30,6 +25,12 @@ namespace HashCalculator
 
         [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern void quickxor_final(IntPtr state, byte[] output);
+
+        public int DigestLength { get; } = 20;
+
+        public string AlgoName => "QuickXor";
+
+        public AlgoType AlgoType => AlgoType.QUICKXOR;
 
         private void DeleteState()
         {
@@ -86,7 +87,7 @@ namespace HashCalculator
             {
                 throw new InvalidOperationException("Not initialized yet");
             }
-            byte[] resultBuffer = new byte[_size];
+            byte[] resultBuffer = new byte[this.DigestLength];
             quickxor_final(this._state, resultBuffer);
             return resultBuffer;
         }

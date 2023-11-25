@@ -9,10 +9,6 @@ namespace HashCalculator
         private IntPtr _state = IntPtr.Zero;
         private XXH_errorcode _errorCode = XXH_errorcode.XXH_OK;
 
-        public string AlgoName => "XXH32";
-
-        public AlgoType AlgoType => AlgoType.XXHASH32;
-
         [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr xxh32_new();
 
@@ -30,6 +26,12 @@ namespace HashCalculator
 
         [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern XXH_errorcode xxh32_delete(IntPtr statePtr);
+
+        public int DigestLength => 4;
+
+        public string AlgoName => "XXH32";
+
+        public AlgoType AlgoType => AlgoType.XXHASH32;
 
         private void DeleteState()
         {
