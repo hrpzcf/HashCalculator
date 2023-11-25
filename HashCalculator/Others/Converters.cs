@@ -14,7 +14,7 @@ namespace HashCalculator
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            Debug.Assert(values.Length == 2);
+            Debug.Assert(values != null && values.Length == 2);
             if (!(bool)values[0])
             {
                 return new SolidColorBrush(Colors.Transparent);
@@ -187,7 +187,7 @@ namespace HashCalculator
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            Debug.Assert(values.Length == 2);
+            Debug.Assert(values != null && values.Length == 2);
             if (!(values[0] is HashState hashState) || hashState != HashState.Finished ||
                 !(values[1] is HashResult hashResult) || hashResult != HashResult.Succeeded)
             {
@@ -209,7 +209,7 @@ namespace HashCalculator
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            Debug.Assert(values.Length == 2);
+            Debug.Assert(values != null && values.Length == 2);
             if (!(values[0] is HashState hashState) || hashState != HashState.Finished)
             {
                 return Visibility.Hidden;
@@ -255,7 +255,7 @@ namespace HashCalculator
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            Debug.Assert(values.Length == 2);
+            Debug.Assert(values != null && values.Length == 2);
             if (!(values[0] is HashState hashState) || hashState == HashState.Running ||
                 hashState == HashState.Paused ||
                 (values[1] is HashResult hashResult && hashResult == HashResult.Succeeded))
@@ -298,7 +298,7 @@ namespace HashCalculator
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            Debug.Assert(values.Length == 2);
+            Debug.Assert(values != null && values.Length == 2);
             if (values[0] is QueueState state && state == QueueState.Started)
             {
                 return false;
@@ -544,7 +544,7 @@ namespace HashCalculator
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            Debug.Assert(values.Length == 2);
+            Debug.Assert(values != null && values.Length == 2);
             return Convert(values[0], values[1]);
         }
 
@@ -789,7 +789,7 @@ namespace HashCalculator
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            Debug.Assert(values.Length == 2);
+            Debug.Assert(values != null && values.Length == 2);
             if (values[0] is ComparableColor color1 && color1.Color != default(Color))
             {
                 return new SolidColorBrush(color1.Color);
@@ -828,6 +828,42 @@ namespace HashCalculator
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             return values.Clone();
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class SelectSmallerDoubleCvt : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            Debug.Assert(values != null && values.Length == 2);
+            if (values[0] is double double1 && values[1] is double double2 && double1 * double2 != 0)
+            {
+                return Math.Min(double1, double2);
+            }
+            return double.NaN;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class RadiusFromSideLengthCvt : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            Debug.Assert(values != null && values.Length == 2);
+            if (values[0] is double double1 && values[1] is double double2 && double1 * double2 != 0)
+            {
+                return new CornerRadius(Math.Min(double1, double2) / 2);
+            }
+            return new CornerRadius();
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

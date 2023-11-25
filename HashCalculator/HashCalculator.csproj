@@ -384,7 +384,6 @@
     <Resource Include="Images\finished_16.png" />
     <Resource Include="Images\loading.gif" />
     <Resource Include="Images\stop_searching_32.png" />
-    <Resource Include="Images\details_16.png" />
     <Resource Include="Images\filter_32.png" />
     <Resource Include="Images\refresh_64.png" />
     <Resource Include="Images\refresh_64_gray.png" />

@@ -498,6 +498,21 @@
                                 </Button>
                                 <!--  已成功  -->
                                 <Button
+                                    Grid.Column="1"
+                                    Margin="2"
+                                    d:DataContext="{d:DesignInstance local:HashViewModel}"
+                                    Command="{Binding ShowHashDetailsWindowCmd}"
+                                    Content="{Binding AlgoInOutModels.Length}"
+                                    Style="{StaticResource GrayRoundTipButton1}"
+                                    ToolTip="详情...">
+                                    <Button.Visibility>
+                                        <MultiBinding Converter="{StaticResource StateFinishedResultSucceededToVisiblityCvt}">
+                                            <Binding Path="State" />
+                                            <Binding Path="Result" />
+                                        </MultiBinding>
+                                    </Button.Visibility>
+                                </Button>
+                                <Button
                                     Grid.Column="2"
                                     Padding="4"
                                     Command="{Binding CopyOneModelHashValueCmd}"
@@ -510,20 +525,6 @@
                                         </MultiBinding>
                                     </Button.Visibility>
                                     <Image Source="/Images/copy.png" />
-                                </Button>
-                                <Button
-                                    Grid.Column="1"
-                                    Padding="4"
-                                    Command="{Binding ShowHashDetailsWindowCmd}"
-                                    Style="{StaticResource ImageButtonStyle1}"
-                                    ToolTip="详情...">
-                                    <Button.Visibility>
-                                        <MultiBinding Converter="{StaticResource StateFinishedResultSucceededToVisiblityCvt}">
-                                            <Binding Path="State" />
-                                            <Binding Path="Result" />
-                                        </MultiBinding>
-                                    </Button.Visibility>
-                                    <Image Source="/Images/details_16.png" />
                                 </Button>
                                 <!--  未成功  -->
                                 <Button

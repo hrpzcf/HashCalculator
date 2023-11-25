@@ -41,4 +41,6 @@
     <local:CmpColorToSolidColorBrushCvt x:Key="CmpColorToSolidColorBrushCvt" />
     <local:MultiCmpColorToSolidColorBrushCvt x:Key="MultiCmpColorToSolidColorBrushCvt" />
     <local:CloneParameterArrayCvt x:Key="CloneParameterArrayCvt" />
+    <local:SelectSmallerDoubleCvt x:Key="SelectSmallerDoubleCvt" />
+    <local:RadiusFromSideLengthCvt x:Key="RadiusFromSideLengthCvt" />
 </ResourceDictionary>
