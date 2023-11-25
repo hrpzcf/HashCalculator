@@ -12,6 +12,8 @@ namespace HashCalculator
             this.algorithm = algorithm;
         }
 
+        public abstract int DigestLength { get; }
+
         public abstract string AlgoName { get; }
 
         public abstract AlgoType AlgoType { get; }

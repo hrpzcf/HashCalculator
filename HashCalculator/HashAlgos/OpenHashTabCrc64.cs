@@ -14,6 +14,8 @@ namespace HashCalculator
         [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern ulong crc64_update(ulong prevCrc32, ref byte input, ulong in_len);
 
+        public int DigestLength => 8;
+
         public string AlgoName => "Crc64";
 
         public AlgoType AlgoType => AlgoType.CRC64;

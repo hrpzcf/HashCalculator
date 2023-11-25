@@ -7,9 +7,28 @@ namespace HashCalculator
     internal class Gost34112012Streebog : HashAlgorithm, IHashAlgoInfo
     {
         private readonly int bitLength;
-        private readonly int outputSize;
         private AlgoType algoType = AlgoType.Unknown;
         private IntPtr _state = IntPtr.Zero;
+
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        private static extern IntPtr streebog_new();
+
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        private static extern void streebog_delete(IntPtr state);
+
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        private static extern void streebog_init(IntPtr state, uint bitLength);
+
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        private static extern void streebog_update(IntPtr state, byte[] input, ulong size);
+
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        private static extern void streebog_update(IntPtr state, ref byte input, ulong size);
+
+        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        private static extern void streebog_final(IntPtr state, byte[] output);
+
+        public int DigestLength { get; }
 
         public string AlgoName => $"Streebog-{this.bitLength}";
 
@@ -32,24 +51,6 @@ namespace HashCalculator
             }
         }
 
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr streebog_new();
-
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void streebog_delete(IntPtr state);
-
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void streebog_init(IntPtr state, uint bitLength);
-
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void streebog_update(IntPtr state, byte[] input, ulong size);
-
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void streebog_update(IntPtr state, ref byte input, ulong size);
-
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void streebog_final(IntPtr state, byte[] output);
-
         public Gost34112012Streebog(int bitLength)
         {
             if (bitLength != 256 && bitLength != 512)
@@ -57,7 +58,7 @@ namespace HashCalculator
                 throw new ArgumentException($"Invalid bit length");
             }
             this.bitLength = bitLength;
-            this.outputSize = bitLength / 8;
+            this.DigestLength = bitLength / 8;
         }
 
         private void DeleteState()
@@ -115,7 +116,7 @@ namespace HashCalculator
             {
                 throw new InvalidOperationException("Not initialized yet");
             }
-            byte[] resultBuffer = new byte[this.outputSize];
+            byte[] resultBuffer = new byte[this.DigestLength];
             streebog_final(this._state, resultBuffer);
             return resultBuffer;
         }

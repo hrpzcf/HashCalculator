@@ -23,13 +23,14 @@ namespace HashCalculator
         [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern int blake2xb_final(IntPtr statePtr, byte[] output, ulong outlen);
 
-        public override ulong MaxOutputSize => 0xffffffffUL;
+        // 最大摘要长度本是0xFFFFFFFF，但此处受int最大值限制故设为int.MaxValue
+        public override int MaxOutputSize => int.MaxValue;
 
         public override string NamePrefix => "BLAKE2xb";
 
         public override AlgoType AlgoGroup => AlgoType.BLAKE2XB;
 
-        public OfficialImplBlake2xb(ulong bitLength) : base(bitLength)
+        public OfficialImplBlake2xb(int bitLength) : base(bitLength)
         {
         }
 

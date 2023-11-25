@@ -6,8 +6,7 @@ namespace HashCalculator
 {
     internal abstract class OfficialImplBlake2 : HashAlgorithm, IHashAlgoInfo
     {
-        public readonly ulong bitLength;
-        private readonly ulong outputSize;
+        public readonly int bitLength;
         private AlgoType algoType = AlgoType.Unknown;
         private int _errorCode = 0;
         private IntPtr _statePtr = IntPtr.Zero;
@@ -16,7 +15,9 @@ namespace HashCalculator
 
         public abstract AlgoType AlgoGroup { get; }
 
-        public abstract ulong MaxOutputSize { get; }
+        public abstract int MaxOutputSize { get; }
+
+        public int DigestLength { get; }
 
         public string AlgoName => $"{this.NamePrefix}-{this.bitLength}";
 
@@ -68,15 +69,15 @@ namespace HashCalculator
             base.Dispose(disposing);
         }
 
-        public OfficialImplBlake2(ulong bitLength)
+        public OfficialImplBlake2(int bitLength)
         {
-            ulong bytesNumber = bitLength / 8;
+            int bytesNumber = bitLength / 8;
             if (bitLength < 8 || bitLength % 8 != 0 || bytesNumber > this.MaxOutputSize)
             {
                 throw new ArgumentException($"Invalid bit length");
             }
             this.bitLength = bitLength;
-            this.outputSize = bytesNumber;
+            this.DigestLength = bytesNumber;
         }
 
         public override void Initialize()
@@ -86,7 +87,7 @@ namespace HashCalculator
             this._statePtr = this.Blake2New();
             if (this._statePtr != IntPtr.Zero)
             {
-                this._errorCode = this.Blake2Init(this._statePtr, this.outputSize);
+                this._errorCode = this.Blake2Init(this._statePtr, (ulong)this.DigestLength);
             }
             else
             {
@@ -126,8 +127,8 @@ namespace HashCalculator
             {
                 throw new InvalidOperationException("An error has occurred");
             }
-            byte[] resultBuffer = new byte[this.outputSize];
-            if (this.Blake2Final(this._statePtr, resultBuffer, this.outputSize) != 0)
+            byte[] resultBuffer = new byte[this.DigestLength];
+            if (this.Blake2Final(this._statePtr, resultBuffer, (ulong)this.DigestLength) != 0)
             {
                 throw new InvalidOperationException("An error has occurred");
             }

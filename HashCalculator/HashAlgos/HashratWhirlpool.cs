@@ -6,7 +6,6 @@ namespace HashCalculator
 {
     internal class HashratWhirlpool : HashAlgorithm, IHashAlgoInfo
     {
-        private const int _size = 64;
         private IntPtr _state = IntPtr.Zero;
 
         [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
@@ -26,6 +25,8 @@ namespace HashCalculator
 
         [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern int whirlpool_final(IntPtr state, byte[] output);
+
+        public int DigestLength { get; } = 64;
 
         public string AlgoName => "Whirlpool";
 
@@ -86,7 +87,7 @@ namespace HashCalculator
             {
                 throw new InvalidOperationException("Not initialized yet");
             }
-            byte[] resultBuffer = new byte[_size];
+            byte[] resultBuffer = new byte[this.DigestLength];
             whirlpool_final(this._state, resultBuffer);
             return resultBuffer;
         }

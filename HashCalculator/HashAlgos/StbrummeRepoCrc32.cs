@@ -14,6 +14,8 @@ namespace HashCalculator
         [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern uint crc32_update(ref byte input, ulong in_len, uint prevCrc32);
 
+        public int DigestLength => 4;
+
         public string AlgoName => "Crc32";
 
         public AlgoType AlgoType => AlgoType.CRC32;

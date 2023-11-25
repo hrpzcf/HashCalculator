@@ -7,7 +7,6 @@ namespace HashCalculator
     internal class ExtendedKcpSha3 : HashAlgorithm, IHashAlgoInfo
     {
         private readonly int bitLength;
-        private readonly int outputSize;
         private int _errorCode = 0;
         private AlgoType algoType = AlgoType.Unknown;
         private IntPtr _state = IntPtr.Zero;
@@ -29,6 +28,8 @@ namespace HashCalculator
 
         [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern int sha3_final(IntPtr state, byte[] output, ulong size);
+
+        public int DigestLength { get; }
 
         public string AlgoName => $"SHA3-{this.bitLength}";
 
@@ -64,7 +65,7 @@ namespace HashCalculator
                     throw new ArgumentException($"Invalid bit length");
             }
             this.bitLength = bitLength;
-            this.outputSize = bitLength / 8;
+            this.DigestLength = bitLength / 8;
         }
 
         private void DeleteState()
@@ -130,10 +131,10 @@ namespace HashCalculator
             {
                 throw new InvalidOperationException("An error has occurred");
             }
-            byte[] resultBuffer = new byte[this.outputSize];
-            if (sha3_final(this._state, resultBuffer, (ulong)this.outputSize) > 0)
+            byte[] resultBuffer = new byte[this.DigestLength];
+            if (sha3_final(this._state, resultBuffer, (ulong)this.DigestLength) > 0)
             {
-                throw new Exception("Finalize hash fialed");
+                throw new Exception("Finalize hash failed");
             }
             return resultBuffer;
         }

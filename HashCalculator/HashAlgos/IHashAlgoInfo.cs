@@ -6,6 +6,8 @@
 
         AlgoType AlgoType { get; }
 
+        int DigestLength { get; }
+
         IHashAlgoInfo NewInstance();
     }
 }
