@@ -42,6 +42,7 @@ namespace HashCalculator
         private bool parallelBetweenAlgos = false;
         private bool monitorNewHashStringInClipboard = true;
         private bool switchMainWndFgWhenNewHashCopied = false;
+        private FetchAlgoOption fetchAlgorithmOption = FetchAlgoOption.TATSAMSHDL;
         private RelayCommand installShellExtCmd;
         private RelayCommand unInstallShellExtCmd;
 
@@ -515,6 +516,18 @@ namespace HashCalculator
             }
         }
 
+        public FetchAlgoOption FetchAlgorithmOption
+        {
+            get
+            {
+                return this.fetchAlgorithmOption;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.fetchAlgorithmOption, value);
+            }
+        }
+
         [XmlIgnore]
         public bool NotSettingShellExtension
         {
@@ -640,6 +653,14 @@ namespace HashCalculator
         {
             new ControlItem("搜索依据所在目录的一代子文件", SearchPolicy.Children),
             new ControlItem("搜索依据所在目录的所有子文件", SearchPolicy.Descendants),
+        };
+
+        [XmlIgnore]
+        public ControlItem[] AvailableFetchAlgoOptions { get; } =
+        {
+            new ControlItem("使用默认算法中已被勾选的算法", FetchAlgoOption.SELECTED),
+            new ControlItem("使用被勾选且可产生相应哈希长度的算法", FetchAlgoOption.TATSAMSHDL),
+            new ControlItem("使用所有可产生相应哈希长度的算法", FetchAlgoOption.TATMSHDL),
         };
     }
 }

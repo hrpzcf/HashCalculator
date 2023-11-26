@@ -296,9 +296,30 @@
         Cover,
     }
 
-    internal enum XXH_errorcode
+    internal enum XXHErrorCode
     {
         XXH_OK,
         XXH_ERROR
+    }
+
+    public enum FetchAlgoOption
+    {
+        /// <summary>
+        /// Those algorithms that have been selected<br/>
+        /// 那些已被选择的算法
+        /// </summary>
+        SELECTED,
+
+        /// <summary>
+        /// Those algorithms that have been selected and meet the specified hash digest length<br/>
+        /// 那些已被选择且符合指定哈希摘要长度的算法
+        /// </summary>
+        TATSAMSHDL,
+
+        /// <summary>
+        /// Those algorithms that meet the specified hash digest length<br/>
+        /// 那些符合指定哈希摘要长度的算法
+        /// </summary>
+        TATMSHDL,
     }
 }
