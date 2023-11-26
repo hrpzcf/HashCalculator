@@ -184,34 +184,85 @@ namespace HashCalculator
             return default(AlgoInOutModel);
         }
 
-        public static AlgoInOutModel NewInOutModelByName(string algoName)
+        public static List<AlgoInOutModel> NewInOutModelsByNames(string[] algoNames)
         {
-            if (!string.IsNullOrEmpty(algoName))
+            if (algoNames != null)
             {
+                List<AlgoInOutModel> algoInstances = new List<AlgoInOutModel>();
                 foreach (AlgoInOutModel model in ProvidedAlgos)
                 {
-                    if (model.AlgoName.Equals(algoName, StringComparison.OrdinalIgnoreCase))
+                    if (algoNames.Contains(model.AlgoName, StringComparer.OrdinalIgnoreCase))
                     {
-                        return model.NewAlgoInOutModel();
+                        algoInstances.Add(model.NewAlgoInOutModel());
                     }
                 }
+                return algoInstances;
             }
-            return default(AlgoInOutModel);
+            return default(List<AlgoInOutModel>);
+        }
+
+        public static List<AlgoInOutModel> NewInOutModelsByDigestLengths(int[] lengths)
+        {
+            if (lengths != null)
+            {
+                List<AlgoInOutModel> algoInstances = new List<AlgoInOutModel>();
+                switch (Settings.Current.FetchAlgorithmOption)
+                {
+                    case FetchAlgoOption.SELECTED:
+                        // 当 HashViewModel 内检查算法列表为空时，
+                        // 会自动通过此类的 GetSelectedAlgos 方法获取已选择的算法
+                        break;
+                    case FetchAlgoOption.TATMSHDL:
+                        foreach (AlgoInOutModel model in ProvidedAlgos)
+                        {
+                            if (lengths.Contains(model.IAlgo.DigestLength))
+                            {
+                                algoInstances.Add(model.NewAlgoInOutModel());
+                            }
+                        }
+                        break;
+                    case FetchAlgoOption.TATSAMSHDL:
+                        foreach (AlgoInOutModel model in ProvidedAlgos)
+                        {
+                            if (model.Selected && lengths.Contains(model.IAlgo.DigestLength))
+                            {
+                                algoInstances.Add(model.NewAlgoInOutModel());
+                            }
+                        }
+                        break;
+                }
+                return algoInstances;
+            }
+            return default(List<AlgoInOutModel>);
         }
 
         public static AlgoInOutModel[] GetAlgosFromBasis(HashBasis basis, string fileName)
         {
             if (basis != null)
             {
-                List<AlgoInOutModel> algoInOutModels = new List<AlgoInOutModel>();
+                List<AlgoInOutModel> finalInOutModels = new List<AlgoInOutModel>();
                 if (basis.FileHashDict.ContainsKey(fileName))
                 {
-                    foreach (string existing in basis.FileHashDict[fileName].GetExistingAlgoNames())
+                    List<AlgoInOutModel> inOutModels;
+                    string[] algoNames = basis.FileHashDict[fileName].GetExistingAlgoNames();
+                    if (algoNames.Length != 0)
                     {
-                        algoInOutModels.Add(NewInOutModelByName(existing));
+                        inOutModels = NewInOutModelsByNames(algoNames);
+                        if (inOutModels != null)
+                        {
+                            finalInOutModels.AddRange(inOutModels);
+                        }
+                    }
+                    else
+                    {
+                        inOutModels = NewInOutModelsByDigestLengths(basis.FileHashDict[fileName].GetExistingDigestLengths());
+                        if (inOutModels != null)
+                        {
+                            finalInOutModels.AddRange(inOutModels);
+                        }
                     }
                 }
-                return algoInOutModels.Where(i => i != null).ToArray();
+                return finalInOutModels.ToArray();
             }
             return default(AlgoInOutModel[]);
         }

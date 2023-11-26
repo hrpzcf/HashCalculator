@@ -17,25 +17,25 @@ namespace HashCalculator
     internal class FastXxHashXXH128 : HashAlgorithm, IHashAlgoInfo
     {
         private IntPtr _state = IntPtr.Zero;
-        private XXH_errorcode _errorCode = XXH_errorcode.XXH_OK;
+        private XXHErrorCode _errorCode = XXHErrorCode.XXH_OK;
 
         [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr xxh3_128_new();
 
         [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern XXH_errorcode xxh3_128_init(IntPtr state);
+        private static extern XXHErrorCode xxh3_128_init(IntPtr state);
 
         [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern XXH_errorcode xxh3_128_update(IntPtr state, byte[] input, ulong length);
+        private static extern XXHErrorCode xxh3_128_update(IntPtr state, byte[] input, ulong length);
 
         [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern XXH_errorcode xxh3_128_update(IntPtr state, ref byte input, ulong length);
+        private static extern XXHErrorCode xxh3_128_update(IntPtr state, ref byte input, ulong length);
 
         [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern XXH128Hash xxh3_128_final(IntPtr state);
 
         [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern XXH_errorcode xxh3_128_delete(IntPtr state);
+        private static extern XXHErrorCode xxh3_128_delete(IntPtr state);
 
         public int DigestLength => 16;
 
@@ -80,7 +80,7 @@ namespace HashCalculator
             {
                 throw new InvalidOperationException("Not initialized yet");
             }
-            else if (this._errorCode == XXH_errorcode.XXH_ERROR)
+            else if (this._errorCode == XXHErrorCode.XXH_ERROR)
             {
                 throw new InvalidOperationException("An error has occurred");
             }
@@ -102,7 +102,7 @@ namespace HashCalculator
             {
                 throw new InvalidOperationException("Not initialized yet");
             }
-            else if (this._errorCode == XXH_errorcode.XXH_ERROR)
+            else if (this._errorCode == XXHErrorCode.XXH_ERROR)
             {
                 throw new InvalidOperationException("An error has occurred");
             }

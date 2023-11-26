@@ -87,6 +87,11 @@ namespace HashCalculator
         {
             return this.AlgosHashs.Keys.Where(i => i != string.Empty).ToArray();
         }
+
+        public int[] GetExistingDigestLengths()
+        {
+            return this.AlgosHashs.Values.SelectMany(i => i).Select(j => j.Length).Distinct().ToArray();
+        }
     }
 
     internal class HashBasis
