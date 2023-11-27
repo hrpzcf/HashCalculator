@@ -155,19 +155,33 @@ namespace HashCalculator
                     if (File.Exists(option.BasisPath))
                     {
                         HashBasis newBasis = new HashBasis(option.BasisPath);
-                        if (newBasis.ReasonForFailure == null)
-                        {
-                            this.viewModel.BeginDisplayModels(
-                                new PathPackage(Path.GetDirectoryName(option.BasisPath),
-                                    Settings.Current.SelectedQVSPolicy, newBasis));
-                        }
-                        else
+                        if (newBasis.ReasonForFailure != null)
                         {
                             Application.Current.Dispatcher.Invoke(() =>
                             {
                                 MessageBox.Show(this, newBasis.ReasonForFailure, "错误",
                                     MessageBoxButton.OK, MessageBoxImage.Error);
                             });
+                        }
+                        else
+                        {
+                            PathPackage package = new PathPackage(
+                                Path.GetDirectoryName(option.BasisPath), Settings.Current.SelectedQVSPolicy, newBasis);
+                            if (!string.IsNullOrEmpty(option.Algo))
+                            {
+                                if (int.TryParse(option.Algo, out int algo))
+                                {
+                                    if (algo > 0 && algo <= maxAlgoEnumInt)
+                                    {
+                                        newBasis.PreferredAlgo = (AlgoType)(algo - 1);
+                                    }
+                                }
+                                else if (Enum.TryParse(option.Algo, true, out AlgoType algoType))
+                                {
+                                    newBasis.PreferredAlgo = algoType;
+                                }
+                            }
+                            this.viewModel.BeginDisplayModels(package);
                         }
                     }
                 });

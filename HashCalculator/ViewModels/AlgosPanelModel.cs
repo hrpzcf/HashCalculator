@@ -241,6 +241,11 @@ namespace HashCalculator
             if (basis != null)
             {
                 List<AlgoInOutModel> finalInOutModels = new List<AlgoInOutModel>();
+                if (basis.PreferredAlgo != AlgoType.Unknown)
+                {
+                    finalInOutModels.Add(NewInOutModelByType(basis.PreferredAlgo));
+                    return finalInOutModels.ToArray();
+                }
                 if (basis.FileHashDict.ContainsKey(fileName))
                 {
                     List<AlgoInOutModel> inOutModels;
