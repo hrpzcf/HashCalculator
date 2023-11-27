@@ -16,7 +16,7 @@ namespace HashCalculator
         private double mainWndTop = double.NaN;
         private double mainWndLeft = double.NaN;
         private WindowState mainWindowState = WindowState.Normal;
-        private double settingsWndWidth = 600.0;
+        private double settingsWndWidth = 620.0;
         private double settingsWndHeight = 500.0;
         private double algosPanelWidth = 450.0;
         private double algosPanelHeight = 400.0;
