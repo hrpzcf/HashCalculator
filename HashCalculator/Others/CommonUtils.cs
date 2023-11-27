@@ -31,7 +31,7 @@ namespace HashCalculator
             byteLenInUnits = bytesLength / gb;
             if (byteLenInUnits >= 1)
             {
-                return $"{byteLenInUnits:f1} GB";
+                return $"{byteLenInUnits:f2} GB";
             }
             byteLenInUnits = bytesLength / mb;
             if (byteLenInUnits >= 1)

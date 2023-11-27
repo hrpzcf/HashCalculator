@@ -2,7 +2,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:HashCalculator">
-    <local:ToFriendlyFileSizeCvt x:Key="ToFriendlyFileSizeCvt" />
     <local:CmpResForegroundCvt x:Key="CmpResForegroundCvt" />
     <local:CmpResBackgroundCvt x:Key="CmpResBackgroundCvt" />
     <local:CmpResTextCvt x:Key="CmpResTextCvt" />
@@ -34,7 +33,7 @@
     <local:RadioExportAsHcbFileCvt x:Key="RadioExportAsHcbFileCvt" />
     <local:RadioExportCurrentAlgoCvt x:Key="RadioExportCurrentAlgoCvt" />
     <local:RadioExportAllCalculatedAlgosCvt x:Key="RadioExportAllCalculatedAlgosCvt" />
-    <local:HashDetailsFileSizeExCvt x:Key="HashDetailsFileSizeExCvt" />
+    <local:BytesToIntuitiveFileSizeCvt x:Key="BytesToIntuitiveFileSizeCvt" />
     <local:CommandPanelTopCvt x:Key="CommandPanelTopCvt" />
     <local:CommandPanelLeftCvt x:Key="CommandPanelLeftCvt" />
     <local:MultiLineTextToStrArrayCvt x:Key="MultiLineTextToStrArrayCvt" />

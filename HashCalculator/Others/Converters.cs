@@ -675,24 +675,7 @@ namespace HashCalculator
         }
     }
 
-    internal class HashDetailsFileSizeExCvt : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value is long bytesLength)
-            {
-                return $"{CommonUtils.FileSizeCvt(bytesLength)} ({bytesLength} 字节)";
-            }
-            return "未知字节数";
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    internal class ToFriendlyFileSizeCvt : IValueConverter
+    internal class BytesToIntuitiveFileSizeCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -700,7 +683,7 @@ namespace HashCalculator
             {
                 return CommonUtils.FileSizeCvt(bytesLength);
             }
-            return "未知字节数";
+            return "未知大小";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

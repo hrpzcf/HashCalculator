@@ -77,8 +77,14 @@
             <TextBox
                 Grid.Column="3"
                 Padding="2,4"
-                IsReadOnly="True"
-                Text="{Binding FileSize, Converter={StaticResource HashDetailsFileSizeExCvt}, Mode=OneWay}" />
+                IsReadOnly="True">
+                <TextBox.Text>
+                    <MultiBinding Mode="OneWay" StringFormat="{}{1} ({0} 字节)">
+                        <Binding Path="FileSize" />
+                        <Binding Converter="{StaticResource BytesToIntuitiveFileSizeCvt}" Path="FileSize" />
+                    </MultiBinding>
+                </TextBox.Text>
+            </TextBox>
             <TextBlock
                 Grid.Column="4"
                 Margin="8,0,0,0"

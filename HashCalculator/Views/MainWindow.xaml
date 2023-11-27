@@ -354,15 +354,24 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn
-                    Header="文件大小 (字节)"
+                    Header="文件大小"
                     SortMemberPath="FileSize"
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoFileSizeColumn, Converter={StaticResource NoColumnCvt}, Mode=OneWay}">
+                    <DataGridTemplateColumn.HeaderStyle>
+                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="HorizontalContentAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTemplateColumn.HeaderStyle>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock
-                                Padding="4,0"
-                                Text="{Binding FileSize}"
-                                ToolTip="{Binding FileSize, Converter={StaticResource ToFriendlyFileSizeCvt}}" />
+                                Padding="8,0"
+                                HorizontalAlignment="Right"
+                                Text="{Binding FileSize, Converter={StaticResource BytesToIntuitiveFileSizeCvt}}">
+                                <TextBlock.ToolTip>
+                                    <ToolTip Content="{Binding FileSize, Mode=OneWay}" ContentStringFormat="{}{0} 字节" />
+                                </TextBlock.ToolTip>
+                            </TextBlock>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
