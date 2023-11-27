@@ -53,12 +53,13 @@ VOID COpenAsBasis::CreateGUIProcessVerifyHash(LPWSTR algo) {
     if (nullptr != algo) {
         command_line += wstring(L" --algo ") + algo;
     }
-    command_line += L" --basis ";
-    SIZE_T cmd_characters = command_line.length() + wcslen(this->basis_path) + 1;
+    command_line += L" --basis";
+    // 为什么 +4：basis_path 前面 1 个空格和前后 2 个引号，1 个终止字符
+    SIZE_T cmd_characters = command_line.length() + wcslen(this->basis_path) + 4;
     if (cmd_characters > MAX_CMD_CHARS) {
         return;
     }
-    command_line += this->basis_path;
+    command_line += L" \"" + wstring(this->basis_path) + L"\"";
     LPWSTR commandline_buffer;
     try {
         commandline_buffer = new WCHAR[cmd_characters];
