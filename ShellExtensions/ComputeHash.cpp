@@ -37,7 +37,7 @@ constexpr auto IDM_COMPUTE_BLAKE2S = 21;
 constexpr auto IDM_COMPUTE_BLAKE2SP = 22;
 constexpr auto IDM_COMPUTE_BLAKE3 = 23;
 constexpr auto IDM_COMPUTE_STREEBOG_256 = 24;
-constexpr auto IDM_SUBMENUS_PARENT = 25;
+constexpr auto IDM_COMPUTE_PARENT = 25;
 
 VOID CComputeHash::CreateGUIProcessComputeHash(LPCWSTR algo) {
 	if (nullptr == this->executable_path) {
@@ -46,29 +46,33 @@ VOID CComputeHash::CreateGUIProcessComputeHash(LPCWSTR algo) {
 		MessageBoxW(nullptr, text.String(), title.String(), MB_TOPMOST | MB_ICONERROR);
 		return;
 	}
-	wstring command_line = wstring(EXECUTABLE);
-	command_line += L" compute";
+	// 此处的字符 'p' 不是传给 HashCalculator 的命令，仅作为占位符，C# 程序接收不到此字符。
+	// 因为 C# 程序 Main 函数的 string[] args 参数仅从 CreateProcessW 第二个参数解析得来，
+	// 且 C# Main 函数的 string[] args 参数为了不带可执行文件名，CLR 又无脑地删除了解析得到的列表的第一项，
+	// 它以为第一项一定是可执行文件名，但在此函数末尾作者根本没有把可执行文件名和命令合并放在 CreateProcessW 第二个参数，
+	// 就造成了 C# CLR 错误地把命令行参数的第一项（也就是此处的字符 'p'）当作可执行文件名给删了。
+	wstring command_line = wstring(L"p compute");
 	if (nullptr != algo) {
 		command_line += wstring(L" --algo ") + algo;
 	}
 	SIZE_T cmd_characters = command_line.length() + 1;
 	for (SIZE_T i = 0; i < this->filepath_list.size(); ++i) {
-		if (this->filepath_list[i][this->filepath_list[i].length() - 1] == L'\\') {
+		if (this->filepath_list[i].back() == L'\\') {
 			this->filepath_list[i] += L'\\';
 		}
-		wstring current_cmd = L" \"" + this->filepath_list[i] + L"\"";
-		SIZE_T cmd_characters_temp = cmd_characters + current_cmd.length();
-		if (cmd_characters_temp < MAX_CMD_CHARS)
+		wstring file_path = L" \"" + this->filepath_list[i] + L"\"";
+		SIZE_T file_path_characters = cmd_characters + file_path.length();
+		if (file_path_characters < MAX_CMD_CHARS)
 		{
-			command_line += current_cmd;
-			cmd_characters = cmd_characters_temp;
+			command_line += file_path;
+			cmd_characters = file_path_characters;
 		}
-		else if (cmd_characters_temp > MAX_CMD_CHARS) {
+		else if (file_path_characters > MAX_CMD_CHARS) {
 			break;
 		}
-		else if (cmd_characters_temp == MAX_CMD_CHARS) {
-			command_line += current_cmd;
-			cmd_characters = cmd_characters_temp;
+		else if (file_path_characters == MAX_CMD_CHARS) {
+			command_line += file_path;
+			cmd_characters = file_path_characters;
 			break;
 		}
 	}
@@ -194,14 +198,10 @@ STDMETHODIMP CComputeHash::QueryContextMenu(
 	{
 		return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, 0);
 	}
-	ResWString resource = ResWString(this->module_inst, IDS_MENU_COMPUTE);
-	InsertMenuW(hmenu, indexMenu, MF_BYPOSITION | MF_STRING | MF_POPUP,
-		idCmdFirst + IDM_COMPUTE_AUTO, resource.String());
-	if (this->bitmap_menu1 != nullptr) {
-		SetMenuItemBitmaps(hmenu, indexMenu, MF_BYPOSITION, this->bitmap_menu1, this->bitmap_menu1);
-	}
 	HMENU submenu_handle = CreatePopupMenu();
 	LONG flag = MF_STRING | MF_POPUP;
+	ResWString autoAlgoRes = ResWString(this->module_inst, IDS_MENU_COMPUTE_AUTO);
+	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_AUTO, autoAlgoRes.String());
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_XXHASH32, L"XXH32");
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_XXHASH64, L"XXH64");
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_XXHASH3, L"XXH3");
@@ -226,25 +226,25 @@ STDMETHODIMP CComputeHash::QueryContextMenu(
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_BLAKE2SP, L"BLAKE2sp-256");
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_BLAKE3, L"BLAKE3-256");
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_STREEBOG_256, L"Streebog-256");
-	// 方法退出后 compute_hash_res 会被析构，compute_hash_text 会被 delete
-	// menu_info.dwTypeData = compute_hash_text 安全? InsertMenuItemW 是否复制数据?
-	ResWString compute_hash_res = ResWString(this->module_inst, IDS_MENU_COMPUTE_HASH);
-	LPWSTR compute_hash_text = compute_hash_res.String();
+	// 方法退出后 parentMenuRes 会被析构，parentMenuText 会被 delete
+	// menu_info.dwTypeData = parentMenuText 安全? InsertMenuItemW 是否复制数据?
+	ResWString parentMenuRes = ResWString(this->module_inst, IDS_MENU_COMPUTE);
+	LPWSTR parentMenuText = parentMenuRes.String();
 	MENUITEMINFOW menu_info = { 0 };
 	menu_info.cbSize = sizeof(MENUITEMINFOW);
 	menu_info.fMask = MIIM_ID | MIIM_SUBMENU | MIIM_TYPE;
 	menu_info.fType = MFT_STRING;
-	menu_info.wID = idCmdFirst + IDM_SUBMENUS_PARENT;
+	menu_info.wID = idCmdFirst + IDM_COMPUTE_PARENT;
 	menu_info.hSubMenu = submenu_handle;
-	menu_info.dwTypeData = compute_hash_text;
-	menu_info.cch = (UINT)wcslen(compute_hash_text);
+	menu_info.dwTypeData = parentMenuText;
+	menu_info.cch = (UINT)wcslen(parentMenuText);
 	if (nullptr != this->bitmap_menu2) {
 		menu_info.fMask |= MIIM_CHECKMARKS;
 		menu_info.hbmpChecked = this->bitmap_menu2;
 		menu_info.hbmpUnchecked = this->bitmap_menu2;
 	}
 	InsertMenuItemW(hmenu, indexMenu + 1, true, &menu_info);
-	return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, IDM_SUBMENUS_PARENT + 1);
+	return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, IDM_COMPUTE_PARENT + 1);
 }
 
 STDMETHODIMP CComputeHash::InvokeCommand(CMINVOKECOMMANDINFO* pici) {
