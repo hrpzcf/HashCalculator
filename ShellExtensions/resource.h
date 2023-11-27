@@ -4,7 +4,7 @@
 //
 #define IDS_PROJNAME                    100
 #define IDS_MENU_COMPUTE                101
-#define IDS_MENU_COMPUTE_HASH           102
+#define IDS_MENU_COMPUTE_AUTO           102
 #define IDS_MENU_VERIFY                 103
 #define IDS_MENU_VERIFY_AUTO            104
 #define IDS_NO_EXECUTABLE_PATH          105
