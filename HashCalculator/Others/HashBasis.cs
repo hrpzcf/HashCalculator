@@ -100,6 +100,8 @@ namespace HashCalculator
 
         public string ReasonForFailure { get; private set; }
 
+        public AlgoType PreferredAlgo { get; set; } = AlgoType.Unknown;
+
         public Dictionary<string, FileAlgosHashs> FileHashDict { get; } =
             new Dictionary<string, FileAlgosHashs>(StringComparer.OrdinalIgnoreCase);
 
