@@ -7,43 +7,76 @@
 #include "OpenAsBasis.h"
 #include "ResString.h"
 
-constexpr auto IDM_VERIFY_HASH = 0;
+constexpr auto IDM_VERIFY_AUTO = 0;
+constexpr auto IDM_VERIFY_XXHASH32 = 1;
+constexpr auto IDM_VERIFY_XXHASH64 = 2;
+constexpr auto IDM_VERIFY_XXHASH3 = 3;
+constexpr auto IDM_VERIFY_XXHASH128 = 4;
+constexpr auto IDM_VERIFY_MD5 = 5;
+constexpr auto IDM_VERIFY_CRC32 = 6;
+constexpr auto IDM_VERIFY_CRC64 = 7;
+constexpr auto IDM_VERIFY_QUICKXOR = 8;
+constexpr auto IDM_VERIFY_WHIRLPOOL = 9;
+constexpr auto IDM_VERIFY_SHA1 = 10;
+constexpr auto IDM_VERIFY_SHA224 = 11;
+constexpr auto IDM_VERIFY_SHA256 = 12;
+constexpr auto IDM_VERIFY_SHA384 = 13;
+constexpr auto IDM_VERIFY_SHA512 = 14;
+constexpr auto IDM_VERIFY_SHA3_224 = 15;
+constexpr auto IDM_VERIFY_SHA3_256 = 16;
+constexpr auto IDM_VERIFY_SHA3_384 = 17;
+constexpr auto IDM_VERIFY_SHA3_512 = 18;
+constexpr auto IDM_VERIFY_BLAKE2B = 19;
+constexpr auto IDM_VERIFY_BLAKE2BP = 20;
+constexpr auto IDM_VERIFY_BLAKE2S = 21;
+constexpr auto IDM_VERIFY_BLAKE2SP = 22;
+constexpr auto IDM_VERIFY_BLAKE3 = 23;
+constexpr auto IDM_VERIFY_STREEBOG256 = 24;
+constexpr auto IDM_VERIFY_PARENT = 25;
 
-VOID COpenAsBasis::CreateGUIProcessVerifyHash() {
+VOID COpenAsBasis::CreateGUIProcessVerifyHash(LPWSTR algo) {
     if (nullptr == this->basis_path) {
         return;
     }
     if (nullptr == this->executable_path) {
-        CResStringW title = CResStringW(this->module_inst, IDS_TITLE_ERROR);
-        CResStringW text = CResStringW(this->module_inst, IDS_NO_EXECUTABLE_PATH);
+        ResWString title = ResWString(this->module_inst, IDS_TITLE_ERROR);
+        ResWString text = ResWString(this->module_inst, IDS_NO_EXECUTABLE_PATH);
         MessageBoxW(nullptr, text.String(), title.String(), MB_TOPMOST | MB_ICONERROR);
         return;
     }
-    LPCWSTR format = L"%s verify -b \"%s\"";
-    SIZE_T cch_cmd = wcslen(format) + wcslen(EXECUTABLE) + wcslen(this->basis_path);
-    if (cch_cmd > MAX_CMD_CHARS) {
+    // 此处的字符 'p' 不是传给 HashCalculator 的命令，仅作为占位符，C# 程序接收不到此字符。
+    // 因为 C# 程序 Main 函数的 string[] args 参数仅从 CreateProcessW 第二个参数解析得来，
+    // 且 C# Main 函数的 string[] args 参数为了不带可执行文件名，CLR 又无脑地删除了解析得到的列表的第一项，
+    // 它以为第一项一定是可执行文件名，但在此函数末尾作者根本没有把可执行文件名和命令合并放在 CreateProcessW 第二个参数，
+    // 就造成了 C# CLR 错误地把命令行参数的第一项（也就是此处的字符 'p'）当作可执行文件名给删了。
+    wstring command_line = wstring(L"p verify");
+    if (nullptr != algo) {
+        command_line += wstring(L" --algo ") + algo;
+    }
+    command_line += L" --basis ";
+    SIZE_T cmd_characters = command_line.length() + wcslen(this->basis_path) + 1;
+    if (cmd_characters > MAX_CMD_CHARS) {
         return;
     }
-    LPWSTR buffer;
+    command_line += this->basis_path;
+    LPWSTR commandline_buffer;
     try {
-        buffer = new WCHAR[cch_cmd]; // 无需 +1：wcslen(format) 已经多算了 %s
+        commandline_buffer = new WCHAR[cmd_characters];
     }
     catch (const std::bad_alloc&) {
         return;
     }
-    if (FAILED(StringCchPrintfW(buffer, cch_cmd, format, EXECUTABLE, this->basis_path))) {
-        return;
-    }
+    StringCchCopyW(commandline_buffer, cmd_characters, command_line.c_str());
     STARTUPINFO startup_info = { 0 };
     startup_info.cb = sizeof(startup_info);
     PROCESS_INFORMATION proc_info = { 0 };
-    if (CreateProcessW(this->executable_path, buffer, NULL, NULL, FALSE, NORMAL_PRIORITY_CLASS,
+    if (CreateProcessW(this->executable_path, commandline_buffer, NULL, NULL, FALSE, NORMAL_PRIORITY_CLASS,
         NULL, NULL, &startup_info, &proc_info))
     {
         CloseHandle(proc_info.hThread);
         CloseHandle(proc_info.hProcess);
     }
-    delete[] buffer;
+    delete[] commandline_buffer;
 }
 
 COpenAsBasis::COpenAsBasis() {
@@ -151,13 +184,53 @@ STDMETHODIMP COpenAsBasis::QueryContextMenu(
     {
         return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, 0);
     }
-    CResStringW resource = CResStringW(this->module_inst, IDS_MENU_VERIFY);
-    InsertMenuW(hmenu, indexMenu, MF_BYPOSITION | MF_STRING | MF_POPUP,
-        idCmdFirst + IDM_VERIFY_HASH, resource.String());
-    if (this->bitmap_menu != nullptr) {
-        SetMenuItemBitmaps(hmenu, indexMenu, MF_BYPOSITION, this->bitmap_menu, this->bitmap_menu);
+    HMENU hParentMenu = CreatePopupMenu();
+    LONG flag = MF_STRING | MF_POPUP;
+    ResWString autoAlgoRes = ResWString(this->module_inst, IDS_MENU_VERIFY_AUTO);
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_AUTO, autoAlgoRes.String());
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_XXHASH32, L"XXH32");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_XXHASH64, L"XXH64");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_XXHASH3, L"XXH3");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_XXHASH128, L"XXH128");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_MD5, L"MD5");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_CRC32, L"CRC32");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_CRC64, L"CRC64");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_QUICKXOR, L"QuickXor");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_WHIRLPOOL, L"Whirlpool");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_SHA1, L"SHA-1");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_SHA224, L"SHA-224");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_SHA256, L"SHA-256");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_SHA384, L"SHA-384");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_SHA512, L"SHA-512");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_SHA3_224, L"SHA3-224");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_SHA3_256, L"SHA3-256");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_SHA3_384, L"SHA3-384");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_SHA3_512, L"SHA3-512");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_BLAKE2B, L"BLAKE2b-512");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_BLAKE2BP, L"BLAKE2bp-512");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_BLAKE2S, L"BLAKE2s-256");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_BLAKE2SP, L"BLAKE2sp-256");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_BLAKE3, L"BLAKE3-256");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_STREEBOG256, L"Streebog-256");
+    // 方法退出后 parentMenuRes 会被析构，parentMenuText 会被 delete
+    // menuInfo.dwTypeData = parentMenuText 安全? InsertMenuItemW 是否复制数据?
+    ResWString parentMenuRes = ResWString(this->module_inst, IDS_MENU_VERIFY);
+    LPWSTR parentMenuText = parentMenuRes.String();
+    MENUITEMINFOW menuInfo = { 0 };
+    menuInfo.cbSize = sizeof(MENUITEMINFOW);
+    menuInfo.fMask = MIIM_ID | MIIM_SUBMENU | MIIM_TYPE;
+    menuInfo.fType = MFT_STRING;
+    menuInfo.wID = idCmdFirst + IDM_VERIFY_PARENT;
+    menuInfo.hSubMenu = hParentMenu;
+    menuInfo.dwTypeData = parentMenuText;
+    menuInfo.cch = (UINT)wcslen(parentMenuText);
+    if (nullptr != this->bitmap_menu) {
+        menuInfo.fMask |= MIIM_CHECKMARKS;
+        menuInfo.hbmpChecked = this->bitmap_menu;
+        menuInfo.hbmpUnchecked = this->bitmap_menu;
     }
-    return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, IDM_VERIFY_HASH + 1);
+    InsertMenuItemW(hmenu, indexMenu + 1, true, &menuInfo);
+    return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, IDM_VERIFY_PARENT + 1);
 }
 
 STDMETHODIMP COpenAsBasis::InvokeCommand(CMINVOKECOMMANDINFO* pici) {
@@ -165,13 +238,88 @@ STDMETHODIMP COpenAsBasis::InvokeCommand(CMINVOKECOMMANDINFO* pici) {
     {
         return E_INVALIDARG;
     }
+    LPWSTR algo = nullptr;
     switch (LOWORD(pici->lpVerb))
     {
-    case IDM_VERIFY_HASH:
-        this->CreateGUIProcessVerifyHash();
-        return S_OK;
+    case IDM_VERIFY_AUTO:
+        break;
+    case IDM_VERIFY_XXHASH32:
+        algo = L"XXHASH32";
+        break;
+    case IDM_VERIFY_XXHASH64:
+        algo = L"XXHASH64";
+        break;
+    case IDM_VERIFY_XXHASH3:
+        algo = L"XXHASH3";
+        break;
+    case IDM_VERIFY_XXHASH128:
+        algo = L"XXHASH128";
+        break;
+    case IDM_VERIFY_MD5:
+        algo = L"MD5";
+        break;
+    case IDM_VERIFY_CRC32:
+        algo = L"CRC32";
+        break;
+    case IDM_VERIFY_CRC64:
+        algo = L"CRC64";
+        break;
+    case IDM_VERIFY_QUICKXOR:
+        algo = L"QUICKXOR";
+        break;
+    case IDM_VERIFY_WHIRLPOOL:
+        algo = L"WHIRLPOOL";
+        break;
+    case IDM_VERIFY_SHA1:
+        algo = L"SHA1";
+        break;
+    case IDM_VERIFY_SHA224:
+        algo = L"SHA224";
+        break;
+    case IDM_VERIFY_SHA256:
+        algo = L"SHA256";
+        break;
+    case IDM_VERIFY_SHA384:
+        algo = L"SHA384";
+        break;
+    case IDM_VERIFY_SHA512:
+        algo = L"SHA512";
+        break;
+    case IDM_VERIFY_SHA3_224:
+        algo = L"SHA3_224";
+        break;
+    case IDM_VERIFY_SHA3_256:
+        algo = L"SHA3_256";
+        break;
+    case IDM_VERIFY_SHA3_384:
+        algo = L"SHA3_384";
+        break;
+    case IDM_VERIFY_SHA3_512:
+        algo = L"SHA3_512";
+        break;
+    case IDM_VERIFY_BLAKE2B:
+        algo = L"BLAKE2B_512";
+        break;
+    case IDM_VERIFY_BLAKE2BP:
+        algo = L"BLAKE2BP_512";
+        break;
+    case IDM_VERIFY_BLAKE2S:
+        algo = L"BLAKE2S_256";
+        break;
+    case IDM_VERIFY_BLAKE2SP:
+        algo = L"BLAKE2SP_256";
+        break;
+    case IDM_VERIFY_BLAKE3:
+        algo = L"BLAKE3_256";
+        break;
+    case IDM_VERIFY_STREEBOG256:
+        algo = L"STREEBOG_256";
+        break;
+    default:
+        return E_INVALIDARG;
     }
-    return E_INVALIDARG;
+    this->CreateGUIProcessVerifyHash(algo);
+    return S_OK;
 }
 
 STDMETHODIMP COpenAsBasis::GetCommandString(
