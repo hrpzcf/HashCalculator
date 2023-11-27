@@ -25,7 +25,7 @@ class ATL_NO_VTABLE COpenAsBasis :
     LPWSTR basis_path = nullptr;
     LPWSTR executable_path = nullptr;
     HINSTANCE module_inst = nullptr;
-    VOID CreateGUIProcessVerifyHash();
+    VOID CreateGUIProcessVerifyHash(LPWSTR);
 public:
     COpenAsBasis();
     ~COpenAsBasis();

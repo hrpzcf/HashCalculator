@@ -12,7 +12,7 @@
 CONST SIZE_T MAX_CMD_CHARS = 32767;
 LPCWSTR EXECUTABLE = L"HashCalculator.exe";
 
-constexpr auto IDM_COMPUTE_HASH = 0;
+constexpr auto IDM_COMPUTE_AUTO = 0;
 constexpr auto IDM_COMPUTE_XXHASH32 = 1;
 constexpr auto IDM_COMPUTE_XXHASH64 = 2;
 constexpr auto IDM_COMPUTE_XXHASH3 = 3;
@@ -41,8 +41,8 @@ constexpr auto IDM_SUBMENUS_PARENT = 25;
 
 VOID CComputeHash::CreateGUIProcessComputeHash(LPCWSTR algo) {
 	if (nullptr == this->executable_path) {
-		CResStringW title = CResStringW(this->module_inst, IDS_TITLE_ERROR);
-		CResStringW text = CResStringW(this->module_inst, IDS_NO_EXECUTABLE_PATH);
+		ResWString title = ResWString(this->module_inst, IDS_TITLE_ERROR);
+		ResWString text = ResWString(this->module_inst, IDS_NO_EXECUTABLE_PATH);
 		MessageBoxW(nullptr, text.String(), title.String(), MB_TOPMOST | MB_ICONERROR);
 		return;
 	}
@@ -194,9 +194,9 @@ STDMETHODIMP CComputeHash::QueryContextMenu(
 	{
 		return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, 0);
 	}
-	CResStringW resource = CResStringW(this->module_inst, IDS_MENU_COMPUTE);
+	ResWString resource = ResWString(this->module_inst, IDS_MENU_COMPUTE);
 	InsertMenuW(hmenu, indexMenu, MF_BYPOSITION | MF_STRING | MF_POPUP,
-		idCmdFirst + IDM_COMPUTE_HASH, resource.String());
+		idCmdFirst + IDM_COMPUTE_AUTO, resource.String());
 	if (this->bitmap_menu1 != nullptr) {
 		SetMenuItemBitmaps(hmenu, indexMenu, MF_BYPOSITION, this->bitmap_menu1, this->bitmap_menu1);
 	}
@@ -228,7 +228,7 @@ STDMETHODIMP CComputeHash::QueryContextMenu(
 	AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_STREEBOG_256, L"Streebog-256");
 	// 方法退出后 compute_hash_res 会被析构，compute_hash_text 会被 delete
 	// menu_info.dwTypeData = compute_hash_text 安全? InsertMenuItemW 是否复制数据?
-	CResStringW compute_hash_res = CResStringW(this->module_inst, IDS_MENU_COMPUTE_HASH);
+	ResWString compute_hash_res = ResWString(this->module_inst, IDS_MENU_COMPUTE_HASH);
 	LPWSTR compute_hash_text = compute_hash_res.String();
 	MENUITEMINFOW menu_info = { 0 };
 	menu_info.cbSize = sizeof(MENUITEMINFOW);
@@ -255,6 +255,8 @@ STDMETHODIMP CComputeHash::InvokeCommand(CMINVOKECOMMANDINFO* pici) {
 	LPCWSTR algo = nullptr;
 	switch (LOWORD(pici->lpVerb))
 	{
+	case IDM_COMPUTE_AUTO:
+		break;
 	case IDM_COMPUTE_XXHASH32:
 		algo = L"XXHASH32";
 		break;
@@ -281,8 +283,6 @@ STDMETHODIMP CComputeHash::InvokeCommand(CMINVOKECOMMANDINFO* pici) {
 		break;
 	case IDM_COMPUTE_WHIRLPOOL:
 		algo = L"WHIRLPOOL";
-		break;
-	case IDM_COMPUTE_HASH:
 		break;
 	case IDM_COMPUTE_SHA1:
 		algo = L"SHA1";
