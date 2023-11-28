@@ -201,6 +201,8 @@
         BLAKE3_256,
         BLAKE3_384,
         BLAKE3_512,
+        // SM3
+        SM3,
         // Streebog
         STREEBOG,
         STREEBOG_256,

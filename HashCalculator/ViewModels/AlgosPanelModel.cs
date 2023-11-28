@@ -21,6 +21,8 @@ namespace HashCalculator
                 new AlgoInOutModel(new FastXxHashXXH64()),
                 new AlgoInOutModel(new FastXxHashXXH3()),
                 new AlgoInOutModel(new FastXxHashXXH128()),
+                // SM3
+                new AlgoInOutModel(new GmSslSM3()),
                 // MD5
                 new AlgoInOutModel(new NetCryptoCngMD5()),
                 // CrcHash

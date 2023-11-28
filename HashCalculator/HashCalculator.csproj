@@ -113,6 +113,7 @@
     <Compile Include="Globals\Embedded.cs" />
     <Compile Include="Globals\MappedFiler.cs" />
     <Compile Include="Globals\MappedInfo.cs" />
+    <Compile Include="HashAlgos\GmSslSM3.cs" />
     <Compile Include="HashAlgos\Gost34112012Streebog.cs" />
     <Compile Include="HashAlgos\NamazsoQuickXor.cs" />
     <Compile Include="HashAlgos\OfficialImplBlake2.cs" />
