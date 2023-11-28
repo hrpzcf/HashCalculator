@@ -7,32 +7,6 @@
 #include "OpenAsBasis.h"
 #include "ResString.h"
 
-constexpr auto IDM_VERIFY_AUTO = 0;
-constexpr auto IDM_VERIFY_XXHASH32 = 1;
-constexpr auto IDM_VERIFY_XXHASH64 = 2;
-constexpr auto IDM_VERIFY_XXHASH3 = 3;
-constexpr auto IDM_VERIFY_XXHASH128 = 4;
-constexpr auto IDM_VERIFY_MD5 = 5;
-constexpr auto IDM_VERIFY_CRC32 = 6;
-constexpr auto IDM_VERIFY_CRC64 = 7;
-constexpr auto IDM_VERIFY_QUICKXOR = 8;
-constexpr auto IDM_VERIFY_WHIRLPOOL = 9;
-constexpr auto IDM_VERIFY_SHA1 = 10;
-constexpr auto IDM_VERIFY_SHA224 = 11;
-constexpr auto IDM_VERIFY_SHA256 = 12;
-constexpr auto IDM_VERIFY_SHA384 = 13;
-constexpr auto IDM_VERIFY_SHA512 = 14;
-constexpr auto IDM_VERIFY_SHA3_224 = 15;
-constexpr auto IDM_VERIFY_SHA3_256 = 16;
-constexpr auto IDM_VERIFY_SHA3_384 = 17;
-constexpr auto IDM_VERIFY_SHA3_512 = 18;
-constexpr auto IDM_VERIFY_BLAKE2B = 19;
-constexpr auto IDM_VERIFY_BLAKE2BP = 20;
-constexpr auto IDM_VERIFY_BLAKE2S = 21;
-constexpr auto IDM_VERIFY_BLAKE2SP = 22;
-constexpr auto IDM_VERIFY_BLAKE3 = 23;
-constexpr auto IDM_VERIFY_STREEBOG256 = 24;
-constexpr auto IDM_VERIFY_PARENT = 25;
 
 VOID COpenAsBasis::CreateGUIProcessVerifyHash(LPWSTR algo) {
     if (nullptr == this->basis_path) {
@@ -188,31 +162,32 @@ STDMETHODIMP COpenAsBasis::QueryContextMenu(
     HMENU hParentMenu = CreatePopupMenu();
     LONG flag = MF_STRING | MF_POPUP;
     ResWString autoAlgoRes = ResWString(this->module_inst, IDS_MENU_VERIFY_AUTO);
-    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_AUTO, autoAlgoRes.String());
-    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_XXHASH32, L"XXH32");
-    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_XXHASH64, L"XXH64");
-    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_XXHASH3, L"XXH3");
-    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_XXHASH128, L"XXH128");
-    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_MD5, L"MD5");
-    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_CRC32, L"CRC32");
-    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_CRC64, L"CRC64");
-    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_QUICKXOR, L"QuickXor");
-    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_WHIRLPOOL, L"Whirlpool");
-    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_SHA1, L"SHA-1");
-    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_SHA224, L"SHA-224");
-    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_SHA256, L"SHA-256");
-    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_SHA384, L"SHA-384");
-    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_SHA512, L"SHA-512");
-    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_SHA3_224, L"SHA3-224");
-    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_SHA3_256, L"SHA3-256");
-    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_SHA3_384, L"SHA3-384");
-    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_SHA3_512, L"SHA3-512");
-    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_BLAKE2B, L"BLAKE2b-512");
-    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_BLAKE2BP, L"BLAKE2bp-512");
-    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_BLAKE2S, L"BLAKE2s-256");
-    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_BLAKE2SP, L"BLAKE2sp-256");
-    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_BLAKE3, L"BLAKE3-256");
-    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_VERIFY_STREEBOG256, L"Streebog-256");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_COMPUTE_AUTO, autoAlgoRes.String());
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_COMPUTE_XXHASH32, L"XXH32");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_COMPUTE_XXHASH64, L"XXH64");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_COMPUTE_XXHASH3, L"XXH3");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_COMPUTE_XXHASH128, L"XXH128");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_COMPUTE_SM3, L"SM3");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_COMPUTE_MD5, L"MD5");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_COMPUTE_CRC32, L"CRC32");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_COMPUTE_CRC64, L"CRC64");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_COMPUTE_QUICKXOR, L"QuickXor");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_COMPUTE_WHIRLPOOL, L"Whirlpool");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_COMPUTE_SHA1, L"SHA-1");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_COMPUTE_SHA224, L"SHA-224");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_COMPUTE_SHA256, L"SHA-256");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_COMPUTE_SHA384, L"SHA-384");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_COMPUTE_SHA512, L"SHA-512");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_COMPUTE_SHA3_224, L"SHA3-224");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_COMPUTE_SHA3_256, L"SHA3-256");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_COMPUTE_SHA3_384, L"SHA3-384");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_COMPUTE_SHA3_512, L"SHA3-512");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_COMPUTE_BLAKE2B, L"BLAKE2b-512");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_COMPUTE_BLAKE2BP, L"BLAKE2bp-512");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_COMPUTE_BLAKE2S, L"BLAKE2s-256");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_COMPUTE_BLAKE2SP, L"BLAKE2sp-256");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_COMPUTE_BLAKE3, L"BLAKE3-256");
+    AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_COMPUTE_STREEBOG_256, L"Streebog-256");
     // 方法退出后 parentMenuRes 会被析构，parentMenuText 会被 delete
     // menuInfo.dwTypeData = parentMenuText 安全? InsertMenuItemW 是否复制数据?
     ResWString parentMenuRes = ResWString(this->module_inst, IDS_MENU_VERIFY);
@@ -221,7 +196,7 @@ STDMETHODIMP COpenAsBasis::QueryContextMenu(
     menuInfo.cbSize = sizeof(MENUITEMINFOW);
     menuInfo.fMask = MIIM_ID | MIIM_SUBMENU | MIIM_TYPE;
     menuInfo.fType = MFT_STRING;
-    menuInfo.wID = idCmdFirst + IDM_VERIFY_PARENT;
+    menuInfo.wID = idCmdFirst + IDM_COMPUTE_PARENT;
     menuInfo.hSubMenu = hParentMenu;
     menuInfo.dwTypeData = parentMenuText;
     menuInfo.cch = (UINT)wcslen(parentMenuText);
@@ -231,7 +206,7 @@ STDMETHODIMP COpenAsBasis::QueryContextMenu(
         menuInfo.hbmpUnchecked = this->bitmap_menu;
     }
     InsertMenuItemW(hmenu, indexMenu + 1, true, &menuInfo);
-    return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, IDM_VERIFY_PARENT + 1);
+    return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, IDM_COMPUTE_PARENT + 1);
 }
 
 STDMETHODIMP COpenAsBasis::InvokeCommand(CMINVOKECOMMANDINFO* pici) {
@@ -242,78 +217,81 @@ STDMETHODIMP COpenAsBasis::InvokeCommand(CMINVOKECOMMANDINFO* pici) {
     LPWSTR algo = nullptr;
     switch (LOWORD(pici->lpVerb))
     {
-    case IDM_VERIFY_AUTO:
+    case IDM_COMPUTE_AUTO:
         break;
-    case IDM_VERIFY_XXHASH32:
+    case IDM_COMPUTE_XXHASH32:
         algo = L"XXHASH32";
         break;
-    case IDM_VERIFY_XXHASH64:
+    case IDM_COMPUTE_XXHASH64:
         algo = L"XXHASH64";
         break;
-    case IDM_VERIFY_XXHASH3:
+    case IDM_COMPUTE_XXHASH3:
         algo = L"XXHASH3";
         break;
-    case IDM_VERIFY_XXHASH128:
+    case IDM_COMPUTE_XXHASH128:
         algo = L"XXHASH128";
         break;
-    case IDM_VERIFY_MD5:
+    case IDM_COMPUTE_SM3:
+        algo = L"SM3";
+        break;
+    case IDM_COMPUTE_MD5:
         algo = L"MD5";
         break;
-    case IDM_VERIFY_CRC32:
+    case IDM_COMPUTE_CRC32:
         algo = L"CRC32";
         break;
-    case IDM_VERIFY_CRC64:
+    case IDM_COMPUTE_CRC64:
         algo = L"CRC64";
         break;
-    case IDM_VERIFY_QUICKXOR:
+    case IDM_COMPUTE_QUICKXOR:
         algo = L"QUICKXOR";
         break;
-    case IDM_VERIFY_WHIRLPOOL:
+    case IDM_COMPUTE_WHIRLPOOL:
         algo = L"WHIRLPOOL";
         break;
-    case IDM_VERIFY_SHA1:
+    case IDM_COMPUTE_SHA1:
         algo = L"SHA1";
         break;
-    case IDM_VERIFY_SHA224:
+    case IDM_COMPUTE_SHA224:
         algo = L"SHA224";
         break;
-    case IDM_VERIFY_SHA256:
+    case IDM_COMPUTE_SHA256:
         algo = L"SHA256";
         break;
-    case IDM_VERIFY_SHA384:
+    case IDM_COMPUTE_SHA384:
         algo = L"SHA384";
         break;
-    case IDM_VERIFY_SHA512:
+    case IDM_COMPUTE_SHA512:
         algo = L"SHA512";
         break;
-    case IDM_VERIFY_SHA3_224:
+    case IDM_COMPUTE_SHA3_224:
         algo = L"SHA3_224";
         break;
-    case IDM_VERIFY_SHA3_256:
+    case IDM_COMPUTE_SHA3_256:
         algo = L"SHA3_256";
         break;
-    case IDM_VERIFY_SHA3_384:
+    case IDM_COMPUTE_SHA3_384:
         algo = L"SHA3_384";
         break;
-    case IDM_VERIFY_SHA3_512:
+    case IDM_COMPUTE_SHA3_512:
         algo = L"SHA3_512";
         break;
-    case IDM_VERIFY_BLAKE2B:
+    case IDM_COMPUTE_BLAKE2B:
         algo = L"BLAKE2B_512";
         break;
-    case IDM_VERIFY_BLAKE2BP:
+    case IDM_COMPUTE_BLAKE2BP:
         algo = L"BLAKE2BP_512";
         break;
-    case IDM_VERIFY_BLAKE2S:
+    case IDM_COMPUTE_BLAKE2S:
         algo = L"BLAKE2S_256";
         break;
-    case IDM_VERIFY_BLAKE2SP:
+    case IDM_COMPUTE_BLAKE2SP:
         algo = L"BLAKE2SP_256";
         break;
-    case IDM_VERIFY_BLAKE3:
+    case IDM_COMPUTE_BLAKE3:
         algo = L"BLAKE3_256";
         break;
-    case IDM_VERIFY_STREEBOG256:
+    case IDM_COMPUTE_STREEBOG_256:
         algo = L"STREEBOG_256";
         break;
     default:
