@@ -186,19 +186,37 @@ namespace HashCalculator
 
         public void SetTextOnHashStringOrBasisPath()
         {
-            string clipboardText = Clipboard.GetText();
-            if (CommonUtils.HashFromAnyString(clipboardText) != null)
+            try
             {
-                this.HashStringOrBasisPath = clipboardText;
-                if (this.State != QueueState.Started)
+                if (Clipboard.ContainsText())
                 {
-                    this.StartVerificationAction(null);
-                }
-                if (Settings.Current.SwitchMainWndFgWhenNewHashCopied)
-                {
-                    CommonUtils.ShowWindowForeground(MainWindow.ProcessId);
+                    string clipboardText = Clipboard.GetText();
+                    if (Settings.Current.MinCharsNumRequiredForMonitoringClipboard >
+                        Settings.Current.MaxCharsNumRequiredForMonitoringClipboard)
+                    {
+                        CommonUtils.Swap(ref Settings.Current.minCharsNumRequiredForMonitoringClipboard,
+                            ref Settings.Current.maxCharsNumRequiredForMonitoringClipboard);
+                    }
+                    if (clipboardText.Length < Settings.Current.MinCharsNumRequiredForMonitoringClipboard ||
+                        clipboardText.Length > Settings.Current.MaxCharsNumRequiredForMonitoringClipboard)
+                    {
+                        return;
+                    }
+                    if (CommonUtils.HashFromAnyString(clipboardText) != null)
+                    {
+                        this.HashStringOrBasisPath = clipboardText;
+                        if (this.State != QueueState.Started)
+                        {
+                            this.StartVerificationAction(null);
+                            if (Settings.Current.SwitchMainWndFgWhenNewHashCopied)
+                            {
+                                CommonUtils.ShowWindowForeground(MainWindow.ProcessId);
+                            }
+                        }
+                    }
                 }
             }
+            catch (Exception) { }
         }
 
         private void ModelCapturedAction(HashViewModel model)

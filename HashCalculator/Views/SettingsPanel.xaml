@@ -122,11 +122,32 @@
                                 Content="剪贴板中有新复制的哈希值时填充校验依据文本框并校验"
                                 IsChecked="{Binding MonitorNewHashStringInClipboard, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             <CheckBox
-                                Margin="20,8,0,4"
+                                Margin="20,8,0,0"
                                 Padding="4,0,0,0"
                                 Content="完成哈希值校验后把主窗口带到前台"
                                 IsChecked="{Binding SwitchMainWndFgWhenNewHashCopied, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 IsEnabled="{Binding ElementName=checkBoxVerifyWhenClipbaordNewHash, Path=IsChecked}" />
+                            <StackPanel IsEnabled="{Binding ElementName=checkBoxVerifyWhenClipbaordNewHash, Path=IsChecked}" Orientation="Horizontal">
+                                <TextBlock
+                                    Margin="20,8,0,4"
+                                    VerticalAlignment="Center"
+                                    Foreground="Black"
+                                    Text="复制的字符数在此范围内时才触发 (默认8~128)：" />
+                                <TextBox
+                                    MinWidth="50"
+                                    Padding="0,2"
+                                    VerticalAlignment="Center"
+                                    Text="{Binding MinCharsNumRequiredForMonitoringClipboard, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock
+                                    VerticalAlignment="Center"
+                                    Foreground="Black"
+                                    Text=" ~ " />
+                                <TextBox
+                                    MinWidth="50"
+                                    Padding="0,2"
+                                    VerticalAlignment="Center"
+                                    Text="{Binding MaxCharsNumRequiredForMonitoringClipboard, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            </StackPanel>
                         </StackPanel>
                     </GroupBox>
                     <CheckBox

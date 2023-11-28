@@ -17,7 +17,7 @@ namespace HashCalculator
         private double mainWndLeft = double.NaN;
         private WindowState mainWindowState = WindowState.Normal;
         private double settingsWndWidth = 620.0;
-        private double settingsWndHeight = 500.0;
+        private double settingsWndHeight = 510.0;
         private double algosPanelWidth = 450.0;
         private double algosPanelHeight = 400.0;
         private double hashDetailsWidth = 1200.0;
@@ -43,6 +43,8 @@ namespace HashCalculator
         private bool monitorNewHashStringInClipboard = true;
         private bool switchMainWndFgWhenNewHashCopied = false;
         private FetchAlgoOption fetchAlgorithmOption = FetchAlgoOption.TATSAMSHDL;
+        public int minCharsNumRequiredForMonitoringClipboard = 8;
+        public int maxCharsNumRequiredForMonitoringClipboard = 128;
         private RelayCommand installShellExtCmd;
         private RelayCommand unInstallShellExtCmd;
 
@@ -525,6 +527,30 @@ namespace HashCalculator
             set
             {
                 this.SetPropNotify(ref this.fetchAlgorithmOption, value);
+            }
+        }
+
+        public int MinCharsNumRequiredForMonitoringClipboard
+        {
+            get
+            {
+                return this.minCharsNumRequiredForMonitoringClipboard;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.minCharsNumRequiredForMonitoringClipboard, value);
+            }
+        }
+
+        public int MaxCharsNumRequiredForMonitoringClipboard
+        {
+            get
+            {
+                return this.maxCharsNumRequiredForMonitoringClipboard;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.maxCharsNumRequiredForMonitoringClipboard, value);
             }
         }
 
