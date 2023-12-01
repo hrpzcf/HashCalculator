@@ -19,8 +19,8 @@ namespace HashCalculator
                 // XxHash
                 new AlgoInOutModel(new FastXxHashXXH32()),
                 new AlgoInOutModel(new FastXxHashXXH64()),
-                new AlgoInOutModel(new FastXxHashXXH3()),
-                new AlgoInOutModel(new FastXxHashXXH128()),
+                new AlgoInOutModel(new FastXxHashXXH3_64()),
+                new AlgoInOutModel(new FastXxHashXXH3_128()),
                 // SM3
                 new AlgoInOutModel(new GmSslSM3()),
                 // MD4/MD5

@@ -135,10 +135,10 @@
     public enum AlgoType
     {
         // XxHash
-        XXHASH32,
-        XXHASH64,
-        XXHASH3,
-        XXHASH128,
+        XXH32,
+        XXH64,
+        XXH3_64,
+        XXH3_128,
         // MD4
         MD4,
         // MD5

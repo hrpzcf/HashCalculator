@@ -31,7 +31,7 @@ namespace HashCalculator
 
         public string AlgoName => "XXH32";
 
-        public AlgoType AlgoType => AlgoType.XXHASH32;
+        public AlgoType AlgoType => AlgoType.XXH32;
 
         private void DeleteState()
         {

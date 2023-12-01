@@ -1,10 +1,10 @@
 #pragma once
 
 #define IDM_COMPUTE_AUTO            0
-#define IDM_COMPUTE_XXHASH32        1
-#define IDM_COMPUTE_XXHASH64        2
-#define IDM_COMPUTE_XXHASH3         3
-#define IDM_COMPUTE_XXHASH128       4
+#define IDM_COMPUTE_XXH32           1
+#define IDM_COMPUTE_XXH64           2
+#define IDM_COMPUTE_XXH3_64         3
+#define IDM_COMPUTE_XXH3_128        4
 #define IDM_COMPUTE_SM3             5
 #define IDM_COMPUTE_MD5             6
 #define IDM_COMPUTE_CRC32           7

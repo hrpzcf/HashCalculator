@@ -4,10 +4,7 @@ using System.Security.Cryptography;
 
 namespace HashCalculator
 {
-    /// <summary>
-    /// xxhash3-64
-    /// </summary>
-    internal class FastXxHashXXH3 : HashAlgorithm, IHashAlgoInfo
+    internal class FastXxHashXXH3_64 : HashAlgorithm, IHashAlgoInfo
     {
         private IntPtr _state = IntPtr.Zero;
         private XXHErrorCode _errorCode = XXHErrorCode.XXH_OK;
@@ -32,9 +29,9 @@ namespace HashCalculator
 
         public int DigestLength => 8;
 
-        public string AlgoName => "XXH3";
+        public string AlgoName => "XXH3-64";
 
-        public AlgoType AlgoType => AlgoType.XXHASH3;
+        public AlgoType AlgoType => AlgoType.XXH3_64;
 
         private void DeleteState()
         {
@@ -65,7 +62,7 @@ namespace HashCalculator
 
         public IHashAlgoInfo NewInstance()
         {
-            return new FastXxHashXXH3();
+            return new FastXxHashXXH3_64();
         }
 
         protected override void HashCore(byte[] array, int ibStart, int cbSize)

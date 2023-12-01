@@ -127,8 +127,8 @@
     <Compile Include="HashAlgos\OfficialImplBlake2b.cs" />
     <Compile Include="HashAlgos\IHashAlgoInfo.cs" />
     <Compile Include="HashAlgos\OfficialImplBlake3.cs" />
-    <Compile Include="HashAlgos\FastXxHashXXH128.cs" />
-    <Compile Include="HashAlgos\FastXxHashXXH3.cs" />
+    <Compile Include="HashAlgos\FastXxHashXXH3_128.cs" />
+    <Compile Include="HashAlgos\FastXxHashXXH3_64.cs" />
     <Compile Include="HashAlgos\FastXxHashXXH32.cs" />
     <Compile Include="HashAlgos\FastXxHashXXH64.cs" />
     <Compile Include="HashAlgos\NetCryptoCngAbs.cs" />

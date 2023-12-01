@@ -173,10 +173,10 @@ STDMETHODIMP CComputeHash::QueryContextMenu(
     LONG flag = MF_STRING | MF_POPUP;
     ResWString autoAlgoRes = ResWString(this->module_inst, IDS_MENU_COMPUTE_AUTO);
     AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_AUTO, autoAlgoRes.String());
-    AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_XXHASH32, L"XXH32");
-    AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_XXHASH64, L"XXH64");
-    AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_XXHASH3, L"XXH3");
-    AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_XXHASH128, L"XXH128");
+    AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_XXH32, L"XXH32");
+    AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_XXH64, L"XXH64");
+    AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_XXH3_64, L"XXH3-64");
+    AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_XXH3_128, L"XXH3-128");
     AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_SM3, L"SM3");
     AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_MD5, L"MD5");
     AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_CRC32, L"CRC32");
@@ -229,17 +229,17 @@ STDMETHODIMP CComputeHash::InvokeCommand(CMINVOKECOMMANDINFO* pici) {
     {
     case IDM_COMPUTE_AUTO:
         break;
-    case IDM_COMPUTE_XXHASH32:
-        algo = L"XXHASH32";
+    case IDM_COMPUTE_XXH32:
+        algo = L"XXH32";
         break;
-    case IDM_COMPUTE_XXHASH64:
-        algo = L"XXHASH64";
+    case IDM_COMPUTE_XXH64:
+        algo = L"XXH64";
         break;
-    case IDM_COMPUTE_XXHASH3:
-        algo = L"XXHASH3";
+    case IDM_COMPUTE_XXH3_64:
+        algo = L"XXH3_64";
         break;
-    case IDM_COMPUTE_XXHASH128:
-        algo = L"XXHASH128";
+    case IDM_COMPUTE_XXH3_128:
+        algo = L"XXH3_128";
         break;
     case IDM_COMPUTE_SM3:
         algo = L"SM3";

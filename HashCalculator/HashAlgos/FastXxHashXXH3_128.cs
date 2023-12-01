@@ -11,10 +11,7 @@ namespace HashCalculator
         public ulong high64;
     }
 
-    /// <summary>
-    /// xxhash3-128
-    /// </summary>
-    internal class FastXxHashXXH128 : HashAlgorithm, IHashAlgoInfo
+    internal class FastXxHashXXH3_128 : HashAlgorithm, IHashAlgoInfo
     {
         private IntPtr _state = IntPtr.Zero;
         private XXHErrorCode _errorCode = XXHErrorCode.XXH_OK;
@@ -39,9 +36,9 @@ namespace HashCalculator
 
         public int DigestLength => 16;
 
-        public string AlgoName => "XXH128";
+        public string AlgoName => "XXH3-128";
 
-        public AlgoType AlgoType => AlgoType.XXHASH128;
+        public AlgoType AlgoType => AlgoType.XXH3_128;
 
         private void DeleteState()
         {
@@ -71,7 +68,7 @@ namespace HashCalculator
 
         public IHashAlgoInfo NewInstance()
         {
-            return new FastXxHashXXH128();
+            return new FastXxHashXXH3_128();
         }
 
         protected override void HashCore(byte[] array, int ibStart, int cbSize)
