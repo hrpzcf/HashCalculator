@@ -115,6 +115,8 @@
     <Compile Include="Globals\MappedInfo.cs" />
     <Compile Include="HashAlgos\GmSslSM3.cs" />
     <Compile Include="HashAlgos\Gost34112012Streebog.cs" />
+    <Compile Include="HashAlgos\LibRHashMD4.cs" />
+    <Compile Include="HashAlgos\LibRHashRipeMD160.cs" />
     <Compile Include="HashAlgos\LibRHashED2K.cs" />
     <Compile Include="HashAlgos\NamazsoQuickXor.cs" />
     <Compile Include="HashAlgos\OfficialImplBlake2.cs" />

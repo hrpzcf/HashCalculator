@@ -139,6 +139,8 @@
         XXHASH64,
         XXHASH3,
         XXHASH128,
+        // MD4
+        MD4,
         // MD5
         MD5,
         // CrcHash
@@ -209,6 +211,8 @@
         STREEBOG,
         STREEBOG_256,
         STREEBOG_512,
+        // RipeMD160
+        RIPEMD160,
         Unknown = -1,
     }
 

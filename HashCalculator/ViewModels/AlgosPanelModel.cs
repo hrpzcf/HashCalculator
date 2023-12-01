@@ -23,17 +23,20 @@ namespace HashCalculator
                 new AlgoInOutModel(new FastXxHashXXH128()),
                 // SM3
                 new AlgoInOutModel(new GmSslSM3()),
-                // MD5
+                // MD4/MD5
+                new AlgoInOutModel(new LibRHashMD4()),
                 new AlgoInOutModel(new NetCryptoCngMD5()),
                 // CrcHash
                 new AlgoInOutModel(new StbrummeRepoCrc32()),
                 new AlgoInOutModel(new OpenHashTabCrc64()),
-                // ED2k
-                new AlgoInOutModel(new LibRHashED2K()),
                 // QuickXor
                 new AlgoInOutModel(new NamazsoQuickXor()),
                 // Whirlpool
                 new AlgoInOutModel(new LibRHashWhirlpool()),
+                // ED2k
+                new AlgoInOutModel(new LibRHashED2K()),
+                // RipeMD160
+                new AlgoInOutModel(new LibRHashRipeMD160()),
             });
 
         public static AlgoGroupModel GroupSHA2 { get; } = new AlgoGroupModel(
