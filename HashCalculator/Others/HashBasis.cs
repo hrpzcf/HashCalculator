@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace HashCalculator
 {
@@ -180,6 +182,37 @@ namespace HashCalculator
             {
                 using (FileStream fileStream = File.OpenRead(filePath))
                 {
+                    if (fileStream.Length > 0x400000L)
+                    {
+                        byte[] buffer = new byte[4096];
+                        int readed = fileStream.Read(buffer, 0, buffer.Length);
+                        fileStream.Position = 0;
+                        if (readed != buffer.Length)
+                        {
+                            this.ReasonForFailure = "无法对文件采样以检测文件的有效性";
+                            goto StopUpdating;
+                        }
+                        bool isValidTextFile = true;
+                        foreach (EncodingInfo encodingInfo in Encoding.GetEncodings())
+                        {
+                            try
+                            {
+                                Encoding encoding = encodingInfo.GetEncoding();
+                                string testString = encoding.GetString(buffer, 0, buffer.Length);
+                                if (!testString.Contains("\n"))
+                                {
+                                    isValidTextFile = false;
+                                }
+                                break;
+                            }
+                            catch (Exception) { }
+                        }
+                        if (!isValidTextFile)
+                        {
+                            this.ReasonForFailure = "这个校验依据文件好像不是文本文档~";
+                            goto StopUpdating;
+                        }
+                    }
                     using (StreamReader reader = new StreamReader(fileStream))
                     {
                         string basisTextLine;
@@ -202,6 +235,7 @@ namespace HashCalculator
             {
                 this.ReasonForFailure = $"出现异常导致收集校验依据失败：\n{ex.Message}";
             }
+        StopUpdating:
             return this.ReasonForFailure;
         }
 
