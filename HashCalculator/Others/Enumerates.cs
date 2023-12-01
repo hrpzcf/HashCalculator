@@ -144,6 +144,8 @@
         // CrcHash
         CRC32,
         CRC64,
+        // ED2K
+        ED2K,
         // QuickXor
         QUICKXOR,
         // WHIRLPOOL

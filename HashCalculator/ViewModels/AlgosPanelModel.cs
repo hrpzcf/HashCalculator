@@ -28,6 +28,8 @@ namespace HashCalculator
                 // CrcHash
                 new AlgoInOutModel(new StbrummeRepoCrc32()),
                 new AlgoInOutModel(new OpenHashTabCrc64()),
+                // ED2k
+                new AlgoInOutModel(new LibRHashED2K()),
                 // QuickXor
                 new AlgoInOutModel(new NamazsoQuickXor()),
                 // Whirlpool
