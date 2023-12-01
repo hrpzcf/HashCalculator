@@ -16,7 +16,7 @@ namespace HashCalculator
 
         public int DigestLength => 4;
 
-        public string AlgoName => "Crc32";
+        public string AlgoName => "CRC32";
 
         public AlgoType AlgoType => AlgoType.CRC32;
 
