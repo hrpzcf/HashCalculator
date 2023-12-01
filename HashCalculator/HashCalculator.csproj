@@ -118,8 +118,8 @@
     <Compile Include="HashAlgos\NamazsoQuickXor.cs" />
     <Compile Include="HashAlgos\OfficialImplBlake2.cs" />
     <Compile Include="Globals\Settings.cs" />
-    <Compile Include="HashAlgos\HaclSha2Sha224.cs" />
-    <Compile Include="HashAlgos\HashratWhirlpool.cs" />
+    <Compile Include="HashAlgos\LibRHashSHA224.cs" />
+    <Compile Include="HashAlgos\LibRHashWhirlpool.cs" />
     <Compile Include="HashAlgos\OfficialImplBlake2b.cs" />
     <Compile Include="HashAlgos\IHashAlgoInfo.cs" />
     <Compile Include="HashAlgos\OfficialImplBlake3.cs" />

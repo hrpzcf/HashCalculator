@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 
 namespace HashCalculator
 {
-    internal class HashratWhirlpool : HashAlgorithm, IHashAlgoInfo
+    internal class LibRHashWhirlpool : HashAlgorithm, IHashAlgoInfo
     {
         private IntPtr _state = IntPtr.Zero;
 
@@ -15,16 +15,16 @@ namespace HashCalculator
         private static extern void whirlpool_delete(IntPtr state);
 
         [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern int whirlpool_init(IntPtr state);
+        private static extern void whirlpool_init(IntPtr state);
 
         [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern int whirlpool_update(IntPtr state, byte[] input, ulong inlen);
+        private static extern void whirlpool_update(IntPtr state, byte[] input, ulong inlen);
 
         [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern int whirlpool_update(IntPtr state, ref byte input, ulong inlen);
+        private static extern void whirlpool_update(IntPtr state, ref byte input, ulong inlen);
 
         [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern int whirlpool_final(IntPtr state, byte[] output);
+        private static extern void whirlpool_final(IntPtr state, byte[] output);
 
         public int DigestLength { get; } = 64;
 
@@ -60,7 +60,7 @@ namespace HashCalculator
 
         public IHashAlgoInfo NewInstance()
         {
-            return new HashratWhirlpool();
+            return new LibRHashWhirlpool();
         }
 
         protected override void HashCore(byte[] array, int ibStart, int cbSize)

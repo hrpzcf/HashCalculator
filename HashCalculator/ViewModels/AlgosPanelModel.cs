@@ -31,7 +31,7 @@ namespace HashCalculator
                 // QuickXor
                 new AlgoInOutModel(new NamazsoQuickXor()),
                 // Whirlpool
-                new AlgoInOutModel(new HashratWhirlpool()),
+                new AlgoInOutModel(new LibRHashWhirlpool()),
             });
 
         public static AlgoGroupModel GroupSHA2 { get; } = new AlgoGroupModel(
@@ -39,7 +39,7 @@ namespace HashCalculator
             new AlgoInOutModel[]
             {
                 new AlgoInOutModel(new NetCryptoCngSHA1()), // SHA1
-                new AlgoInOutModel(new HaclSha2Sha224()),
+                new AlgoInOutModel(new LibRHashSHA224()),
                 new AlgoInOutModel(new NetCryptoCngSHA256()),
                 new AlgoInOutModel(new NetCryptoCngSHA384()),
                 new AlgoInOutModel(new NetCryptoCngSHA512()),
