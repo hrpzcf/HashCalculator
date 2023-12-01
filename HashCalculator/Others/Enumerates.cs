@@ -211,6 +211,8 @@
         STREEBOG,
         STREEBOG_256,
         STREEBOG_512,
+        // HASH160
+        HAS160,
         // RipeMD160
         RIPEMD160,
         Unknown = -1,

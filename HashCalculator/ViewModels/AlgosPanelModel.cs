@@ -33,8 +33,10 @@ namespace HashCalculator
                 new AlgoInOutModel(new NamazsoQuickXor()),
                 // Whirlpool
                 new AlgoInOutModel(new LibRHashWhirlpool()),
-                // ED2k
+                // eD2k
                 new AlgoInOutModel(new LibRHashED2K()),
+                // Has160
+                new AlgoInOutModel(new LibRHashHas160()),
                 // RipeMD160
                 new AlgoInOutModel(new LibRHashRipeMD160()),
             });
