@@ -13,16 +13,16 @@ namespace HashCalculator
     {
         static ShellExtHelper()
         {
-            basisSuffixNode = new RegNode(basisFileSuffix)
+            checklistSuffixNode = new RegNode(checklistFileSuffix)
             {
                 Values = new RegValue[]
                 {
-                    new RegValue("", progIdBasis),
+                    new RegValue("", checklistProgId),
                     new RegValue("Content Type", "text/plain"),
                     new RegValue("PerceivedType", "text")
                 }
             };
-            progIdBasisNode = new RegNode(progIdBasis)
+            checklistProgIdNode = new RegNode(checklistProgId)
             {
                 Nodes = new RegNode[]
                 {
@@ -61,8 +61,8 @@ namespace HashCalculator
             };
             applicationNode = new RegNode(executableName)
             {
-                Nodes = progIdBasisNode.Nodes,
-                Values = progIdBasisNode.Values
+                Nodes = checklistProgIdNode.Nodes,
+                Values = checklistProgIdNode.Values
             };
             appPathsNode = new RegNode(executableName)
             {
@@ -204,13 +204,13 @@ namespace HashCalculator
                         {
                             return new Exception($"无法打开注册表键：{regPathSoftClasses}");
                         }
-                        if (RegNode.WriteRegNode(classes, progIdBasisNode))
+                        if (RegNode.WriteRegNode(classes, checklistProgIdNode))
                         {
                             string[] keyNames = classes.GetSubKeyNames();
                             bool fileExtExists = false;
                             foreach (string keyName in keyNames)
                             {
-                                if (basisFileSuffix.Equals(keyName, StringComparison.OrdinalIgnoreCase))
+                                if (checklistFileSuffix.Equals(keyName, StringComparison.OrdinalIgnoreCase))
                                 {
                                     fileExtExists = true;
                                     break;
@@ -218,11 +218,11 @@ namespace HashCalculator
                             }
                             if (fileExtExists)
                             {
-                                using (RegistryKey fileExtKey = classes.OpenSubKey(basisFileSuffix, true))
+                                using (RegistryKey fileExtKey = classes.OpenSubKey(checklistFileSuffix, true))
                                 {
                                     if (fileExtKey != null)
                                     {
-                                        foreach (RegValue regValue in basisSuffixNode.Values)
+                                        foreach (RegValue regValue in checklistSuffixNode.Values)
                                         {
                                             if (regValue.Name != string.Empty)
                                             {
@@ -230,22 +230,22 @@ namespace HashCalculator
                                             }
                                         }
                                         if (fileExtKey.GetValue("") is string prevDefaultVal &&
-                                            !prevDefaultVal.Equals(progIdBasis, StringComparison.OrdinalIgnoreCase))
+                                            !prevDefaultVal.Equals(checklistProgId, StringComparison.OrdinalIgnoreCase))
                                         {
                                             using (RegistryKey progIdsKey = fileExtKey.CreateSubKey(regPathOpenWith, true))
                                             {
                                                 progIdsKey?.SetValue(prevDefaultVal, string.Empty);
                                             }
-                                            fileExtKey.SetValue(string.Empty, progIdBasis, RegistryValueKind.String);
+                                            fileExtKey.SetValue(string.Empty, checklistProgId, RegistryValueKind.String);
                                         }
                                     }
                                 }
                             }
                             else
                             {
-                                if (!RegNode.WriteRegNode(classes, basisSuffixNode))
+                                if (!RegNode.WriteRegNode(classes, checklistSuffixNode))
                                 {
-                                    return new Exception($"写入注册表子键失败：{basisSuffixNode.Name}");
+                                    return new Exception($"写入注册表子键失败：{checklistSuffixNode.Name}");
                                 }
                             }
                             NativeFunctions.SHChangeNotify(
@@ -254,7 +254,7 @@ namespace HashCalculator
                         }
                         else
                         {
-                            return new Exception($"写入注册表子键失败：{progIdBasisNode.Name}");
+                            return new Exception($"写入注册表子键失败：{checklistProgIdNode.Name}");
                         }
                     }
                 }
@@ -278,7 +278,7 @@ namespace HashCalculator
                             string[] subKeyNames = root.GetSubKeyNames();
                             foreach (string keyName in subKeyNames)
                             {
-                                if (keyName.Equals(progIdBasis, StringComparison.OrdinalIgnoreCase))
+                                if (keyName.Equals(checklistProgId, StringComparison.OrdinalIgnoreCase))
                                 {
                                     root.DeleteSubKeyTree(keyName);
                                     NativeFunctions.SHChangeNotify(
@@ -374,8 +374,8 @@ namespace HashCalculator
             return await DeleteRegNodeFromRegPath(regPathApplications, applicationNode);
         }
 
-        private const string progIdBasis = "HashCalculator.Basis";
-        private const string basisFileSuffix = ".hcb";
+        private const string checklistProgId = "HashCalculator.Basis";
+        private const string checklistFileSuffix = ".hcb";
         private const string executableName = "HashCalculator.exe";
         private const string regPathSoftClasses = "Software\\Classes";
         private const string regPathOpenWith = "OpenWithProgids";
@@ -383,8 +383,8 @@ namespace HashCalculator
         private const string regPathAppPaths = "Software\\Microsoft\\Windows\\CurrentVersion\\App Paths";
         private static readonly RegNode applicationNode;
         private static readonly RegNode appPathsNode;
-        private static readonly RegNode progIdBasisNode;
-        private static readonly RegNode basisSuffixNode;
+        private static readonly RegNode checklistProgIdNode;
+        private static readonly RegNode checklistSuffixNode;
         private static readonly string executablePath = Assembly.GetExecutingAssembly().Location;
         private static readonly string executableFolder = Path.GetDirectoryName(executablePath);
         private static readonly string shellExtensionName = Environment.Is64BitOperatingSystem ?

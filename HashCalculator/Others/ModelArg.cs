@@ -7,11 +7,13 @@
     {
         public string FilePath { get; }
 
+        public bool InvalidFileName { get; }
+
         public bool Deprecated { get; }
 
         public AlgoType PresetAlgo { get; set; }
 
-        public HashBasis HashBasis { get; set; }
+        public HashChecklist HashChecklist { get; set; }
 
         public ModelArg(string path, AlgoType algo)
         {
@@ -19,10 +21,10 @@
             this.PresetAlgo = algo;
         }
 
-        public ModelArg(HashBasis basis, string path, AlgoType algo)
+        public ModelArg(HashChecklist checklist, string path, AlgoType algo)
         {
             this.FilePath = path;
-            this.HashBasis = basis;
+            this.HashChecklist = checklist;
             this.PresetAlgo = algo;
         }
 
@@ -30,6 +32,13 @@
         {
             this.FilePath = path;
             this.Deprecated = deprecated;
+            this.PresetAlgo = algo;
+        }
+
+        public ModelArg(bool deprecated, bool invalidFname, AlgoType algo)
+        {
+            this.Deprecated = deprecated;
+            this.InvalidFileName = invalidFname;
             this.PresetAlgo = algo;
         }
     }

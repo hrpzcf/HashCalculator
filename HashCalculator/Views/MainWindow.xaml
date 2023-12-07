@@ -348,6 +348,7 @@
                                 Margin="1,0"
                                 Padding="4"
                                 Background="{Binding FdGroupId, Converter={StaticResource CmpColorToSolidColorBrushCvt}}"
+                                Foreground="{Binding InvalidFileName, Converter={StaticResource InvalidFileNameForegroundCvt}}"
                                 Text="{Binding FileName}"
                                 ToolTip="{Binding FileInfo}" />
                         </DataTemplate>
@@ -670,7 +671,7 @@
                     Panel.ZIndex="0"
                     Foreground="#A0808080"
                     Text="哈希值校验依据：粘贴单/多个哈希值(每行一个)、选择/粘贴哈希值校验依据文件路径、粘贴依据文件的单/多行内容"
-                    Visibility="{Binding HashStringOrBasisPath, Converter={StaticResource PlaceHolderTextVisibilityCvt}}" />
+                    Visibility="{Binding HashStringOrChecklistPath, Converter={StaticResource PlaceHolderTextVisibilityCvt}}" />
                 <TextBox
                     Padding="0,3"
                     Panel.ZIndex="1"
@@ -679,7 +680,7 @@
                     MaxLines="3"
                     PreviewDragOver="TextBoxHashValueOrFilePathPreviewDragOver"
                     PreviewDrop="TextBoxHashOrFilePathPreviewDrop"
-                    Text="{Binding HashStringOrBasisPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    Text="{Binding HashStringOrChecklistPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     VerticalScrollBarVisibility="Auto" />
             </Grid>
             <Button
@@ -687,7 +688,7 @@
                 Margin="8,0,0,0"
                 Padding="8,4"
                 VerticalAlignment="Center"
-                Click="ButtonSelectBasisFileSetPathClick"
+                Click="ButtonSelectChecklistSetPathClick"
                 Content="..." />
             <Button
                 Grid.Column="3"

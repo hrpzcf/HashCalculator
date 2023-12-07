@@ -68,12 +68,20 @@ namespace HashCalculator
         {
             this.ModelArg = arg;
             this.SerialNumber = serial;
-            this.FileInfo = new FileInfo(arg.FilePath);
+            this.InvalidFileName = arg.InvalidFileName;
+            if (arg.InvalidFileName)
+            {
+                this.FileInfo = new FileInfo("无效的文件名");
+            }
+            else
+            {
+                this.FileInfo = new FileInfo(arg.FilePath);
+            }
             this.FileName = this.FileInfo.Name;
-            if (arg.HashBasis != null && Settings.Current.PreferAlgosInBasis)
+            if (arg.HashChecklist != null && Settings.Current.PreferChecklistAlgs)
             {
                 this.AlgoInOutModels =
-                    AlgosPanelModel.GetAlgosFromBasis(arg.HashBasis, this.FileName);
+                    AlgosPanelModel.GetAlgsFromChecklist(arg.HashChecklist, this.FileName);
             }
             else if (arg.PresetAlgo != AlgoType.Unknown)
             {
@@ -85,6 +93,8 @@ namespace HashCalculator
         public int SerialNumber { get; }
 
         public FileInfo FileInfo { get; }
+
+        public bool InvalidFileName { get; }
 
         public ModelArg ModelArg { get; }
 
@@ -734,15 +744,15 @@ namespace HashCalculator
                         {
                             i.HashCmpResult = c;
                         };
-                        FileAlgosHashs algosHashs =
-                            this.ModelArg.HashBasis?.GetFileAlgosHashs(this.FileName);
+                        AlgHashMap algoHashMap =
+                            this.ModelArg.HashChecklist?.GetAlgHashMapOfFile(this.FileName);
                         foreach (AlgoInOutModel item in this.AlgoInOutModels)
                         {
                             item.Algo.TransformFinalBlock(buffer, 0, 0);
                             synchronization.Invoke(updateHashBytes, item);
-                            if (algosHashs != null)
+                            if (algoHashMap != null)
                             {
-                                CmpRes bytesComparisonResult = algosHashs.CompareHash(
+                                CmpRes bytesComparisonResult = algoHashMap.CompareHash(
                                     item.AlgoName, item.HashResult);
                                 synchronization.Invoke(updateModel, item, bytesComparisonResult);
                             }

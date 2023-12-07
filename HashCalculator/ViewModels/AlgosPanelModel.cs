@@ -245,20 +245,20 @@ namespace HashCalculator
             return default(List<AlgoInOutModel>);
         }
 
-        public static AlgoInOutModel[] GetAlgosFromBasis(HashBasis basis, string fileName)
+        public static AlgoInOutModel[] GetAlgsFromChecklist(HashChecklist checklist, string fileName)
         {
-            if (basis != null)
+            if (checklist != null)
             {
                 List<AlgoInOutModel> finalInOutModels = new List<AlgoInOutModel>();
-                if (basis.PreferredAlgo != AlgoType.Unknown)
+                if (checklist.PreferredAlgo != AlgoType.Unknown)
                 {
-                    finalInOutModels.Add(NewInOutModelByType(basis.PreferredAlgo));
+                    finalInOutModels.Add(NewInOutModelByType(checklist.PreferredAlgo));
                     return finalInOutModels.ToArray();
                 }
-                if (basis.FileHashDict.ContainsKey(fileName))
+                if (checklist.FileHashDict.ContainsKey(fileName))
                 {
                     List<AlgoInOutModel> inOutModels;
-                    string[] algoNames = basis.FileHashDict[fileName].GetExistingAlgoNames();
+                    string[] algoNames = checklist.FileHashDict[fileName].GetExistingAlgoNames();
                     if (algoNames.Length != 0)
                     {
                         inOutModels = NewInOutModelsByNames(algoNames);
@@ -269,7 +269,7 @@ namespace HashCalculator
                     }
                     else
                     {
-                        inOutModels = NewInOutModelsByDigestLengths(basis.FileHashDict[fileName].GetExistingDigestLengths());
+                        inOutModels = NewInOutModelsByDigestLengths(checklist.FileHashDict[fileName].GetExistingDigestLengths());
                         if (inOutModels != null)
                         {
                             finalInOutModels.AddRange(inOutModels);
