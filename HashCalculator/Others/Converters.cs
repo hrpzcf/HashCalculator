@@ -10,6 +10,26 @@ using System.Windows.Media.Imaging;
 
 namespace HashCalculator
 {
+    internal class InvalidFileNameForegroundCvt : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is bool invalidFileName && invalidFileName)
+            {
+                return "#FF0000";
+            }
+            else
+            {
+                return Binding.DoNothing;
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     internal class CmpResForegroundCvt : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)

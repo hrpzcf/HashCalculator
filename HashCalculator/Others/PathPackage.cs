@@ -8,24 +8,27 @@ namespace HashCalculator
 {
     internal class PathPackage : IEnumerable<ModelArg>
     {
+        private static readonly char[] invalidPathChars = Path.GetInvalidPathChars();
+        private static readonly char[] invalidFnameChars = Path.GetInvalidFileNameChars();
+
         public PathPackage(IEnumerable<string> paths, SearchPolicy policy)
         {
             this.paths = paths;
             this.searchPolicy = policy;
         }
 
-        public PathPackage(string path, SearchPolicy policy, HashBasis basis)
+        public PathPackage(string path, SearchPolicy policy, HashChecklist checklist)
         {
             this.paths = new string[] { path };
             this.searchPolicy = policy;
-            this.hashBasis = basis;
+            this.hashChecklist = checklist;
         }
 
-        public PathPackage(IEnumerable<string> paths, SearchPolicy policy, HashBasis basis)
+        public PathPackage(IEnumerable<string> paths, SearchPolicy policy, HashChecklist checklist)
         {
             this.paths = paths;
             this.searchPolicy = policy;
-            this.hashBasis = basis;
+            this.hashChecklist = checklist;
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -82,25 +85,37 @@ namespace HashCalculator
                                 // 那么下次 MoveNext 结果肯定是 false(?)，使用 continue 没有意义
                                 break;
                             }
-                            if (this.hashBasis == null)
+                            if (this.hashChecklist == null)
                             {
                                 yield return new ModelArg(fileInfoEnum.Current.FullName, this.PresetAlgoType);
                             }
-                            else if (this.hashBasis.IsNameInBasis(fileInfoEnum.Current.Name))
+                            else if (this.hashChecklist.IsNameInChecklist(fileInfoEnum.Current.Name))
                             {
-                                yield return new ModelArg(this.hashBasis, fileInfoEnum.Current.FullName, this.PresetAlgoType);
+                                yield return new ModelArg(this.hashChecklist, fileInfoEnum.Current.FullName, this.PresetAlgoType);
                             }
                             if (this.StopSearchingToken != null && this.StopSearchingToken.IsCancellationRequested)
                             {
                                 yield break;
                             }
                         }
-                        if (this.hashBasis != null)
+                        if (this.hashChecklist != null)
                         {
-                            foreach ( KeyValuePair<string, FileAlgosHashs> pair in this.hashBasis.FileHashDict)
+                            foreach (KeyValuePair<string, AlgHashMap> pair in this.hashChecklist.FileHashDict)
                             {
-                                // 此属性由 HashBasis.IsNameInBasis 方法标记
-                                if (!pair.Value.NameInBasisExist)
+                                bool isValidPathString = false;
+                                try
+                                {
+                                    isValidPathString =
+                                        Path.GetFileName(pair.Key).IndexOfAny(invalidFnameChars) < 0 &&
+                                        Path.GetDirectoryName(pair.Key).IndexOfAny(invalidPathChars) < 0;
+                                }
+                                catch (Exception) { }
+                                if (!isValidPathString)
+                                {
+                                    yield return new ModelArg(true, true, this.PresetAlgoType);
+                                }
+                                // 此属性由 HashChecklist.IsNameInChecklist 方法更改
+                                else if (!pair.Value.IsExistingFile)
                                 {
                                     yield return new ModelArg(pair.Key, true, this.PresetAlgoType);
                                 }
@@ -115,14 +130,14 @@ namespace HashCalculator
                 }
                 else if (File.Exists(path))
                 {
-                    yield return new ModelArg(this.hashBasis, path, this.PresetAlgoType);
+                    yield return new ModelArg(this.hashChecklist, path, this.PresetAlgoType);
                 }
             }
         }
 
         private readonly IEnumerable<string> paths;
         private readonly SearchPolicy searchPolicy;
-        private readonly HashBasis hashBasis = null;
+        private readonly HashChecklist hashChecklist = null;
 
         public CancellationToken StopSearchingToken { get; set; }
 

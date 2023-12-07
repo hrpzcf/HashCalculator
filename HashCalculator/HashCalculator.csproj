@@ -195,7 +195,7 @@
     <Compile Include="Others\MappedWriter.cs" />
     <Compile Include="Others\NativeFunctions.cs" />
     <Compile Include="Others\NotifiableModel.cs" />
-    <Compile Include="Others\HashBasis.cs" />
+    <Compile Include="Others\HashChecklist.cs" />
     <Compile Include="Others\ControlItem.cs" />
     <Compile Include="Others\ModelStarter.cs" />
     <Compile Include="Others\PathPackage.cs" />

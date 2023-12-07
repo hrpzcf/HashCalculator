@@ -22,7 +22,7 @@ namespace HashCalculator
     {
         private const string hashLineForCopyFormat = "{0}\n";
         private const string exportHashFormat = "#{0} *{1} *{2}\n";
-        private readonly HashBasis MainBasis = new HashBasis();
+        private readonly HashChecklist MainChecklist = new HashChecklist();
         private readonly ModelStarter starter =
             new ModelStarter((int)Settings.Current.SelectedTaskNumberLimit, 8);
         private static readonly Dispatcher synchronization =
@@ -35,7 +35,7 @@ namespace HashCalculator
         private CancellationTokenSource searchCancellation = new CancellationTokenSource();
         private List<ModelArg> displayedFiles = new List<ModelArg>();
         private string hashCheckReport = string.Empty;
-        private string hashValueStringOrBasisPath = null;
+        private string hashValueStringOrChecklistPath = null;
         private QueueState queueState = QueueState.None;
         private FilterAndCmdPanel commandPanelInst = null;
         private readonly object displayingModelLock = new object();
@@ -147,7 +147,7 @@ namespace HashCalculator
                 }
                 else if (this.queueState == QueueState.Started && value == QueueState.Stopped)
                 {
-                    this.GenerateVerificationReport();
+                    this.GenerateFileHashCheckReport();
                     this.SetPropNotify(ref this.queueState, value);
                 }
             }
@@ -184,7 +184,7 @@ namespace HashCalculator
             }
         }
 
-        public void SetTextOnHashStringOrBasisPath()
+        public void SetTextOnHashStringOrChecklistPath()
         {
             try
             {
@@ -204,10 +204,10 @@ namespace HashCalculator
                     }
                     if (CommonUtils.HashFromAnyString(clipboardText) != null)
                     {
-                        this.HashStringOrBasisPath = clipboardText;
+                        this.HashStringOrChecklistPath = clipboardText;
                         if (this.State != QueueState.Started)
                         {
-                            this.StartVerificationAction(null);
+                            this.CheckFileHashValueAction(null);
                             if (Settings.Current.SwitchMainWndFgWhenNewHashCopied)
                             {
                                 CommonUtils.ShowWindowForeground(MainWindow.ProcessId);
@@ -309,7 +309,7 @@ namespace HashCalculator
             }, token);
         }
 
-        public void GenerateVerificationReport()
+        public void GenerateFileHashCheckReport()
         {
             int noresult, unrelated, matched, mismatch,
                 uncertain, succeeded, canceled, hasFailed, totalHash;
@@ -831,7 +831,7 @@ namespace HashCalculator
                     model.ShutdownModel();
                     HashViewModels.Remove(model);
                 }
-                this.GenerateVerificationReport();
+                this.GenerateFileHashCheckReport();
             }
         }
 
@@ -858,7 +858,7 @@ namespace HashCalculator
                     // 对 HashViewModels 的增删操作是在主线程上进行的，不用加锁
                     HashViewModels.Remove(model);
                 }
-                this.GenerateVerificationReport();
+                this.GenerateFileHashCheckReport();
             }
         }
 
@@ -1088,41 +1088,41 @@ namespace HashCalculator
             }
         }
 
-        private void StartVerificationAction(object param)
+        private void CheckFileHashValueAction(object param)
         {
-            if (string.IsNullOrEmpty(this.HashStringOrBasisPath))
+            if (string.IsNullOrEmpty(this.HashStringOrChecklistPath))
             {
                 MessageBox.Show(this.OwnerWnd, "没有输入哈希值校验依据。", "提示");
                 return;
             }
-            string updateFailedMessage;
-            // HashStringOrBasisPath 不是一个文件
-            if (!File.Exists(this.HashStringOrBasisPath))
+            string messageOfFailure;
+            // HashStringOrChecklistPath 不是一个文件
+            if (!File.Exists(this.HashStringOrChecklistPath))
             {
-                updateFailedMessage = this.MainBasis.UpdateWithLines(this.HashStringOrBasisPath);
+                messageOfFailure = this.MainChecklist.UpdateWithParagraph(this.HashStringOrChecklistPath);
             }
-            // HashStringOrBasisPath 是一个文件，但哈希结果列表不是空
+            // HashStringOrChecklistPath 是一个文件，但哈希结果列表不是空
             else if (HashViewModels.Any())
             {
-                updateFailedMessage = this.MainBasis.UpdateWithFile(this.HashStringOrBasisPath);
+                messageOfFailure = this.MainChecklist.UpdateWithFile(this.HashStringOrChecklistPath);
             }
-            // HashStringOrBasisPath 是一个文件，且哈希结果列表也是空
+            // HashStringOrChecklistPath 是一个文件，且哈希结果列表也是空
             else
             {
-                HashBasis newBasis = new HashBasis(this.HashStringOrBasisPath);
-                if (newBasis.ReasonForFailure == null)
+                HashChecklist newChecklist = new HashChecklist(this.HashStringOrChecklistPath);
+                if (newChecklist.ReasonForFailure == null)
                 {
-                    this.BeginDisplayModels(new PathPackage(Path.GetDirectoryName(this.HashStringOrBasisPath),
-                        Settings.Current.SelectedQVSPolicy, newBasis));
+                    this.BeginDisplayModels(new PathPackage(Path.GetDirectoryName(this.HashStringOrChecklistPath),
+                        Settings.Current.SelectedQVSPolicy, newChecklist));
                 }
                 else
                 {
-                    MessageBox.Show(MainWindow.This, newBasis.ReasonForFailure, "错误",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(MainWindow.This, newChecklist.ReasonForFailure, "错误", MessageBoxButton.OK,
+                        MessageBoxImage.Error);
                 }
                 return;
             }
-            if (updateFailedMessage == null)
+            if (messageOfFailure == null)
             {
                 foreach (HashViewModel hm in HashViewModels)
                 {
@@ -1137,7 +1137,7 @@ namespace HashCalculator
                         }
                         else
                         {
-                            if (!(this.MainBasis.GetFileAlgosHashs(hm.FileName) is FileAlgosHashs algosHashs))
+                            if (!(this.MainChecklist.GetAlgHashMapOfFile(hm.FileName) is AlgHashMap algoHashMap))
                             {
                                 foreach (AlgoInOutModel model in hm.AlgoInOutModels)
                                 {
@@ -1148,17 +1148,28 @@ namespace HashCalculator
                             {
                                 foreach (AlgoInOutModel model in hm.AlgoInOutModels)
                                 {
-                                    model.HashCmpResult = algosHashs.CompareHash(model.AlgoName, model.HashResult);
+                                    model.HashCmpResult = algoHashMap.CompareHash(model.AlgoName, model.HashResult);
                                 }
                             }
                         }
                     }
                 }
-                this.GenerateVerificationReport();
+                this.GenerateFileHashCheckReport();
             }
             else
             {
-                MessageBox.Show(MainWindow.This, updateFailedMessage, "错误", MessageBoxButton.OK,
+                foreach (HashViewModel hm in HashViewModels)
+                {
+                    if (hm.AlgoInOutModels != null)
+                    {
+                        foreach (AlgoInOutModel model in hm.AlgoInOutModels)
+                        {
+                            model.HashCmpResult = CmpRes.NoResult;
+                        }
+                    }
+                }
+                this.GenerateFileHashCheckReport();
+                MessageBox.Show(MainWindow.This, messageOfFailure, "错误", MessageBoxButton.OK,
                     MessageBoxImage.Error);
             }
         }
@@ -1169,7 +1180,7 @@ namespace HashCalculator
             {
                 if (this.startVerifyHashValueCmd is null)
                 {
-                    this.startVerifyHashValueCmd = new RelayCommand(this.StartVerificationAction);
+                    this.startVerifyHashValueCmd = new RelayCommand(this.CheckFileHashValueAction);
                 }
                 return this.startVerifyHashValueCmd;
             }
@@ -1478,15 +1489,15 @@ namespace HashCalculator
             }
         }
 
-        public string HashStringOrBasisPath
+        public string HashStringOrChecklistPath
         {
             get
             {
-                return this.hashValueStringOrBasisPath;
+                return this.hashValueStringOrChecklistPath;
             }
             set
             {
-                this.SetPropNotify(ref this.hashValueStringOrBasisPath, value);
+                this.SetPropNotify(ref this.hashValueStringOrChecklistPath, value);
             }
         }
     }

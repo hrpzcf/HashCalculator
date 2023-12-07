@@ -38,7 +38,7 @@ namespace HashCalculator
         private bool showExecutionTargetColumn = false;
         private bool runInMultiInstanceMode = false;
         private bool notSettingShellExtension = true;
-        private bool preferAlgosInBasis = true;
+        private bool preferChecklistAlgs = true;
         private bool parallelBetweenAlgos = false;
         private bool monitorNewHashStringInClipboard = true;
         private bool switchMainWndFgWhenNewHashCopied = false;
@@ -470,15 +470,15 @@ namespace HashCalculator
             }
         }
 
-        public bool PreferAlgosInBasis
+        public bool PreferChecklistAlgs
         {
             get
             {
-                return this.preferAlgosInBasis;
+                return this.preferChecklistAlgs;
             }
             set
             {
-                this.SetPropNotify(ref this.preferAlgosInBasis, value);
+                this.SetPropNotify(ref this.preferChecklistAlgs, value);
             }
         }
 

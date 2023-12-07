@@ -91,11 +91,11 @@
                         Header="使用校验依据文件时如何选择算法">
                         <StackPanel>
                             <CheckBox
-                                x:Name="preferAlgosInBasisCheckBox"
+                                x:Name="checkBoxPreferChecklistAlgs"
                                 Margin="0,8,0,0"
                                 Padding="4,0,0,0"
                                 Content="直接使用校验依据进行校验时首选依据算法而非默认算法"
-                                IsChecked="{Binding PreferAlgosInBasis, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                IsChecked="{Binding PreferChecklistAlgs, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             <StackPanel Margin="20,8,0,4" Orientation="Horizontal">
                                 <TextBlock
                                     VerticalAlignment="Center"
@@ -103,7 +103,7 @@
                                     Text="当校验依据中未指明算法时：" />
                                 <ComboBox
                                     DisplayMemberPath="Display"
-                                    IsEnabled="{Binding ElementName=preferAlgosInBasisCheckBox, Path=IsChecked}"
+                                    IsEnabled="{Binding ElementName=checkBoxPreferChecklistAlgs, Path=IsChecked}"
                                     ItemsSource="{Binding AvailableFetchAlgoOptions}"
                                     SelectedValue="{Binding FetchAlgorithmOption, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                     SelectedValuePath="ItemValue" />

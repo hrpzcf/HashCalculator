@@ -76,7 +76,7 @@ namespace HashCalculator
                             }
                             model.IsExecutionTarget = false;
                         }
-                        MainWndViewModel.CurrentModel.GenerateVerificationReport();
+                        MainWndViewModel.CurrentModel.GenerateFileHashCheckReport();
                     }
                 }
                 else

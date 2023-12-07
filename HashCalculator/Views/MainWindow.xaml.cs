@@ -17,7 +17,7 @@ namespace HashCalculator
     {
         private bool hwndSourceHookAdded = false;
         private bool listenerAdded = false;
-        private int tickCountWhenTextOrBasisPathWasLastSet = 0;
+        private int tickCountWhenHashStringOrChecklistPathWasLastSet = 0;
         private readonly MainWndViewModel viewModel = new MainWndViewModel();
         private static readonly int maxAlgoEnumInt = Enum.GetNames(typeof(AlgoType)).Length - 1;
         private static string[] startupArgs = null;
@@ -113,12 +113,12 @@ namespace HashCalculator
             {
                 case WM.WM_CLIPBOARDUPDATE:
                     if (!Settings.Current.ClipboardUpdatedByMe &&
-                        Environment.TickCount - this.tickCountWhenTextOrBasisPathWasLastSet > 600)
+                        Environment.TickCount - this.tickCountWhenHashStringOrChecklistPathWasLastSet > 600)
                     {
-                        this.viewModel.SetTextOnHashStringOrBasisPath();
+                        this.viewModel.SetTextOnHashStringOrChecklistPath();
                     }
                     Settings.Current.ClipboardUpdatedByMe = false;
-                    this.tickCountWhenTextOrBasisPathWasLastSet = Environment.TickCount;
+                    this.tickCountWhenHashStringOrChecklistPathWasLastSet = Environment.TickCount;
                     break;
             }
             return IntPtr.Zero;
@@ -152,33 +152,33 @@ namespace HashCalculator
                 })
                 .WithParsed<VerifyHash>(option =>
                 {
-                    if (File.Exists(option.BasisPath))
+                    if (File.Exists(option.ChecklistPath))
                     {
-                        HashBasis newBasis = new HashBasis(option.BasisPath);
-                        if (newBasis.ReasonForFailure != null)
+                        HashChecklist newChecklist = new HashChecklist(option.ChecklistPath);
+                        if (newChecklist.ReasonForFailure != null)
                         {
                             Application.Current.Dispatcher.Invoke(() =>
                             {
-                                MessageBox.Show(this, newBasis.ReasonForFailure, "错误",
+                                MessageBox.Show(this, newChecklist.ReasonForFailure, "错误",
                                     MessageBoxButton.OK, MessageBoxImage.Error);
                             });
                         }
                         else
                         {
                             PathPackage package = new PathPackage(
-                                Path.GetDirectoryName(option.BasisPath), Settings.Current.SelectedQVSPolicy, newBasis);
+                                Path.GetDirectoryName(option.ChecklistPath), Settings.Current.SelectedQVSPolicy, newChecklist);
                             if (!string.IsNullOrEmpty(option.Algo))
                             {
                                 if (int.TryParse(option.Algo, out int algo))
                                 {
                                     if (algo > 0 && algo <= maxAlgoEnumInt)
                                     {
-                                        newBasis.PreferredAlgo = (AlgoType)(algo - 1);
+                                        newChecklist.PreferredAlgo = (AlgoType)(algo - 1);
                                     }
                                 }
                                 else if (Enum.TryParse(option.Algo, true, out AlgoType algoType))
                                 {
-                                    newBasis.PreferredAlgo = algoType;
+                                    newChecklist.PreferredAlgo = algoType;
                                 }
                             }
                             this.viewModel.BeginDisplayModels(package);
@@ -250,7 +250,7 @@ namespace HashCalculator
             }
         }
 
-        private void ButtonSelectBasisFileSetPathClick(object sender, RoutedEventArgs e)
+        private void ButtonSelectChecklistSetPathClick(object sender, RoutedEventArgs e)
         {
             CommonOpenFileDialog openFile = new CommonOpenFileDialog
             {
@@ -260,7 +260,7 @@ namespace HashCalculator
             if (openFile.ShowDialog() == CommonFileDialogResult.Ok)
             {
                 Settings.Current.LastUsedPath = Path.GetDirectoryName(openFile.FileName);
-                this.viewModel.HashStringOrBasisPath = openFile.FileName;
+                this.viewModel.HashStringOrChecklistPath = openFile.FileName;
             }
         }
 
@@ -271,7 +271,7 @@ namespace HashCalculator
             {
                 return;
             }
-            this.viewModel.HashStringOrBasisPath = data[0];
+            this.viewModel.HashStringOrChecklistPath = data[0];
         }
 
         private void TextBoxHashValueOrFilePathPreviewDragOver(object sender, DragEventArgs e)
