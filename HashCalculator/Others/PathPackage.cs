@@ -8,7 +8,6 @@ namespace HashCalculator
 {
     internal class PathPackage : IEnumerable<ModelArg>
     {
-        private static readonly char[] invalidPathChars = Path.GetInvalidPathChars();
         private static readonly char[] invalidFnameChars = Path.GetInvalidFileNameChars();
 
         public PathPackage(IEnumerable<string> paths, SearchPolicy policy)
@@ -100,17 +99,9 @@ namespace HashCalculator
                         }
                         if (this.hashChecklist != null)
                         {
-                            foreach (KeyValuePair<string, AlgHashMap> pair in this.hashChecklist.FileHashDict)
+                            foreach (KeyValuePair<string, AlgHashMap> pair in this.hashChecklist)
                             {
-                                bool isValidPathString = false;
-                                try
-                                {
-                                    isValidPathString =
-                                        Path.GetFileName(pair.Key).IndexOfAny(invalidFnameChars) < 0 &&
-                                        Path.GetDirectoryName(pair.Key).IndexOfAny(invalidPathChars) < 0;
-                                }
-                                catch (Exception) { }
-                                if (!isValidPathString)
+                                if (pair.Key.IndexOfAny(invalidFnameChars) != -1)
                                 {
                                     yield return new ModelArg(true, true, this.PresetAlgoType);
                                 }

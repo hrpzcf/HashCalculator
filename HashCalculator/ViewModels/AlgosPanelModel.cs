@@ -255,10 +255,10 @@ namespace HashCalculator
                     finalInOutModels.Add(NewInOutModelByType(checklist.PreferredAlgo));
                     return finalInOutModels.ToArray();
                 }
-                if (checklist.FileHashDict.ContainsKey(fileName))
+                if (checklist.TryGetAlgHashMapOfFile(fileName, out AlgHashMap algHashMap))
                 {
                     List<AlgoInOutModel> inOutModels;
-                    string[] algoNames = checklist.FileHashDict[fileName].GetExistingAlgoNames();
+                    string[] algoNames = algHashMap.GetExistingAlgoNames();
                     if (algoNames.Length != 0)
                     {
                         inOutModels = NewInOutModelsByNames(algoNames);
@@ -269,7 +269,7 @@ namespace HashCalculator
                     }
                     else
                     {
-                        inOutModels = NewInOutModelsByDigestLengths(checklist.FileHashDict[fileName].GetExistingDigestLengths());
+                        inOutModels = NewInOutModelsByDigestLengths(algHashMap.GetExistingDigestLengths());
                         if (inOutModels != null)
                         {
                             finalInOutModels.AddRange(inOutModels);
