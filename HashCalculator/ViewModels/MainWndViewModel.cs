@@ -188,21 +188,21 @@ namespace HashCalculator
         {
             try
             {
-                if (Clipboard.ContainsText())
+                if (CommonUtils.ClipboardGetText(out string clipboardText))
                 {
-                    string clipboardText = Clipboard.GetText();
-                    if (Settings.Current.MinCharsNumRequiredForMonitoringClipboard >
-                        Settings.Current.MaxCharsNumRequiredForMonitoringClipboard)
+                    if (Settings.Current.MinCharsNumRequiredForMonitoringClipboard
+                        > Settings.Current.MaxCharsNumRequiredForMonitoringClipboard)
                     {
-                        CommonUtils.Swap(ref Settings.Current.minCharsNumRequiredForMonitoringClipboard,
+                        CommonUtils.Swap(
+                            ref Settings.Current.minCharsNumRequiredForMonitoringClipboard,
                             ref Settings.Current.maxCharsNumRequiredForMonitoringClipboard);
                     }
-                    if (clipboardText.Length < Settings.Current.MinCharsNumRequiredForMonitoringClipboard ||
-                        clipboardText.Length > Settings.Current.MaxCharsNumRequiredForMonitoringClipboard)
+                    if (clipboardText.Length < Settings.Current.MinCharsNumRequiredForMonitoringClipboard
+                        || clipboardText.Length > Settings.Current.MaxCharsNumRequiredForMonitoringClipboard)
                     {
                         return;
                     }
-                    if (CommonUtils.HashFromAnyString(clipboardText) != null)
+                    if (CommonUtils.IsValidHashBytesString(clipboardText))
                     {
                         this.HashStringOrChecklistPath = clipboardText;
                         if (this.State != QueueState.Started)
@@ -452,7 +452,7 @@ namespace HashCalculator
                 }
                 if (stringBuilder.Length > 0)
                 {
-                    CommonUtils.ClipboardSetText(MainWindow.This, stringBuilder.ToString());
+                    CommonUtils.ClipboardSetText(stringBuilder.ToString());
                 }
             }
         }
@@ -519,7 +519,7 @@ namespace HashCalculator
                 }
                 if (stringBuilder.Length > 0)
                 {
-                    CommonUtils.ClipboardSetText(MainWindow.This, stringBuilder.ToString());
+                    CommonUtils.ClipboardSetText(stringBuilder.ToString());
                 }
             }
         }
@@ -587,7 +587,7 @@ namespace HashCalculator
                 }
                 if (stringBuilder.Length != 0)
                 {
-                    CommonUtils.ClipboardSetText(MainWindow.This, stringBuilder.ToString());
+                    CommonUtils.ClipboardSetText(stringBuilder.ToString());
                 }
             }
         }

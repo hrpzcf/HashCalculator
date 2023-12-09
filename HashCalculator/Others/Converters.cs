@@ -576,13 +576,13 @@ namespace HashCalculator
             }
             switch ((OutputType)outputType)
             {
+                case OutputType.BASE64:
+                    return CommonUtils.ToBase64String(hashBytes);
                 default:
                 case OutputType.BinaryUpper:
                     return CommonUtils.ToHexStringUpper(hashBytes);
                 case OutputType.BinaryLower:
                     return CommonUtils.ToHexStringLower(hashBytes);
-                case OutputType.BASE64:
-                    return System.Convert.ToBase64String(hashBytes);
                 // 返回值可能被复制所以不返回 null，上同
                 case OutputType.Unknown:
                     return string.Empty;

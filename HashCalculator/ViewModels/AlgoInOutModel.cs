@@ -111,8 +111,7 @@ namespace HashCalculator
                 {
                     outputType = OutputType.BinaryLower;
                 }
-                CommonUtils.ClipboardSetText(
-                    HashDetailsWnd.This, BytesToStrByOutputTypeCvt.Convert(this.HashResult, outputType));
+                CommonUtils.ClipboardSetText(BytesToStrByOutputTypeCvt.Convert(this.HashResult, outputType));
             }
         }
 

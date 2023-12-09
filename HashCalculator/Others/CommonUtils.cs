@@ -116,27 +116,11 @@ namespace HashCalculator
 
         public static string ToBase64String(byte[] passedInBytes)
         {
-            if (passedInBytes is null)
+            if (passedInBytes != null)
             {
-                return default;
+                return Convert.ToBase64String(passedInBytes);
             }
-            return Convert.ToBase64String(passedInBytes);
-        }
-
-        public static byte[] FromBase64String(string base64String)
-        {
-            if (string.IsNullOrEmpty(base64String))
-            {
-                return default;
-            }
-            try
-            {
-                return Convert.FromBase64String(base64String);
-            }
-            catch (Exception)
-            {
-                return default;
-            }
+            return default(string);
         }
 
         public static string ToHexStringUpper(byte[] passedInBytes)
@@ -152,50 +136,72 @@ namespace HashCalculator
         private static string ToHexString(byte[] passedInBytes, string format)
         {
             Debug.Assert(new string[] { "x2", "X2" }.Contains(format));
-            if (passedInBytes is null)
+            if (passedInBytes != null)
             {
-                return default;
+                StringBuilder stringBuilder = new StringBuilder(passedInBytes.Length * 2);
+                for (int i = 0; i < passedInBytes.Length; ++i)
+                {
+                    stringBuilder.Append(passedInBytes[i].ToString(format));
+                }
+                return stringBuilder.ToString();
             }
-            StringBuilder stringBuilder = new StringBuilder(passedInBytes.Length * 2);
-            for (int i = 0; i < passedInBytes.Length; ++i)
-            {
-                stringBuilder.Append(passedInBytes[i].ToString(format));
-            }
-            return stringBuilder.ToString();
+            return default(string);
         }
 
-        public static byte[] FromHexString(string hexString)
+        private static byte[] FromBase64String(string base64String)
         {
-            if (string.IsNullOrEmpty(hexString) || hexString.Length % 2 != 0)
+            if (!string.IsNullOrEmpty(base64String))
             {
-                return default;
-            }
-            byte[] resultBytes = new byte[hexString.Length / 2];
-            try
-            {
-                for (int i = 0; i < resultBytes.Length; ++i)
+                try
                 {
-                    resultBytes[i] = Convert.ToByte(hexString.Substring(i * 2, 2), 16);
+                    return Convert.FromBase64String(base64String);
+                }
+                catch { }
+            }
+            return default(byte[]);
+        }
+
+        private static byte[] FromHexString(string hexString)
+        {
+            if (!string.IsNullOrEmpty(hexString) && hexString.Length % 2 == 0)
+            {
+                try
+                {
+                    byte[] resultBytes = new byte[hexString.Length / 2];
+                    for (int i = 0; i < resultBytes.Length; ++i)
+                    {
+                        resultBytes[i] = Convert.ToByte(hexString.Substring(i * 2, 2), 16);
+                    }
+                    return resultBytes;
+                }
+                catch { }
+            }
+            return default(byte[]);
+        }
+
+        public static byte[] HashBytesFromString(string hashString)
+        {
+            if (!string.IsNullOrEmpty(hashString))
+            {
+                hashString = hashString.Trim(' ', '\r', '\n');
+                if (!hashString.Contains(' '))
+                {
+                    if (FromHexString(hashString) is byte[] bytesGuessFromHex)
+                    {
+                        return bytesGuessFromHex;
+                    }
+                    else if (FromBase64String(hashString) is byte[] bytesGuessFromBase64)
+                    {
+                        return bytesGuessFromBase64;
+                    }
                 }
             }
-            catch (Exception)
-            {
-                return default;
-            }
-            return resultBytes;
+            return default(byte[]);
         }
 
-        public static byte[] HashFromAnyString(string hashString)
+        public static bool IsValidHashBytesString(string hashString)
         {
-            if (FromHexString(hashString) is byte[] bytesGuessFromHex)
-            {
-                return bytesGuessFromHex;
-            }
-            else if (FromBase64String(hashString) is byte[] bytesGuessFromBase64)
-            {
-                return bytesGuessFromBase64;
-            }
-            return default;
+            return HashBytesFromString(hashString) != default(byte[]);
         }
 
         public static bool SendToRecycleBin(IntPtr hParent, string path, bool silent = true)
@@ -387,26 +393,87 @@ namespace HashCalculator
             return false;
         }
 
-        public static void ClipboardSetText(string text)
+        public static bool ClipboardSetText(string text)
         {
-            ClipboardSetText(null, text);
+            return ClipboardSetText(null, text);
         }
 
-        public static void ClipboardSetText(Window owner, string text)
+        public static bool ClipboardSetText(Window owner, string text)
         {
-            if (text == null)
+            string reasonForFailure = text != null ? null : "要复制的内容为空";
+            if (reasonForFailure == null)
             {
-                return;
+                reasonForFailure = NativeFunctions.OpenClipboard(MainWindow.WndHandle) ?
+                    null : "打开剪贴板失败，剪贴板可能正被其他程序占用";
+                if (reasonForFailure == null)
+                {
+                    IntPtr hMem = IntPtr.Zero;
+                    try
+                    {
+                        hMem = Marshal.StringToHGlobalUni(text);
+                    }
+                    catch (Exception e)
+                    {
+                        reasonForFailure = $"错误详情：{e.Message}";
+                    }
+                    if (reasonForFailure == null)
+                    {
+                        reasonForFailure = hMem != IntPtr.Zero && NativeFunctions.EmptyClipboard() ?
+                            null : "无法为内容分配内存或无法取得剪贴板所有权";
+                        if (reasonForFailure == null)
+                        {
+                            reasonForFailure = NativeFunctions.SetClipboardData(CF.CF_UNICODETEXT, hMem) == hMem ?
+                                null : "无法将内容更新到剪贴板上";
+                            if (reasonForFailure == null)
+                            {
+                                Settings.Current.ClipboardUpdatedByMe = true;
+                            }
+                        }
+                    }
+                    NativeFunctions.CloseClipboard();
+                }
             }
-            try
+            if (!string.IsNullOrEmpty(reasonForFailure))
             {
-                Settings.Current.ClipboardUpdatedByMe = true;
-                Clipboard.SetText(text);
+                MessageBox.Show(owner ?? MainWindow.This, reasonForFailure, "复制失败",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            catch (COMException e)
+            return reasonForFailure == null;
+        }
+
+        public static bool ClipboardGetText(out string text)
+        {
+            return ClipboardGetText(null, out text);
+        }
+
+        public static bool ClipboardGetText(Window owner, out string text)
+        {
+            if (NativeFunctions.OpenClipboard(MainWindow.WndHandle))
             {
-                MessageBox.Show(owner ?? MainWindow.This, $"错误详情：{e.Message}", "复制失败", MessageBoxButton.OK, MessageBoxImage.Error);
+                try
+                {
+                    if (NativeFunctions.IsClipboardFormatAvailable(CF.CF_UNICODETEXT))
+                    {
+                        IntPtr hMem = NativeFunctions.GetClipboardData(CF.CF_UNICODETEXT);
+                        if (hMem != IntPtr.Zero)
+                        {
+                            text = Marshal.PtrToStringUni(hMem);
+                            return true;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(owner ?? MainWindow.This, $"错误详情：{e.Message}", "读取剪贴板失败", MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                }
+                finally
+                {
+                    NativeFunctions.CloseClipboard();
+                }
             }
+            text = default(string);
+            return false;
         }
     }
 }
