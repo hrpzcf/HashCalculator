@@ -28,7 +28,7 @@ namespace HashCalculator
             {
                 return;
             }
-            HashSet<byte[]> expectedHashs = hashStrings.Select(i => CommonUtils.HashFromAnyString(i)).Where(
+            HashSet<byte[]> expectedHashs = hashStrings.Select(i => CommonUtils.HashBytesFromString(i)).Where(
                 i => i != null).ToHashSet<byte[]>(BytesComparer.Default);
             if (!expectedHashs.Any())
             {

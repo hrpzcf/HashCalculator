@@ -313,7 +313,7 @@ namespace HashCalculator
         {
             if (this.Result == HashResult.Succeeded && !string.IsNullOrEmpty(this.CurrentHashString))
             {
-                CommonUtils.ClipboardSetText(MainWindow.This, this.CurrentHashString);
+                CommonUtils.ClipboardSetText(this.CurrentHashString);
             }
         }
 

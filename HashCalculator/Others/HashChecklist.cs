@@ -146,7 +146,7 @@ namespace HashCalculator
             if (!(algoName is null || hashString is null || fileName is null))
             {
                 hashString = hashString.Trim(charsToTrim);
-                if (CommonUtils.HashFromAnyString(hashString) is byte[] hash)
+                if (CommonUtils.HashBytesFromString(hashString) is byte[] hash)
                 {
                     algoName = algoName.Trim(charsToTrim);
                     fileName = fileName.Trim(charsToTrim);
