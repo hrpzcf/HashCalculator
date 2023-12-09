@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 
 namespace HashCalculator
 {
-    internal class ExtendedKcpSha3 : HashAlgorithm, IHashAlgoInfo
+    internal class ExtendedKcpSHA3 : HashAlgorithm, IHashAlgoInfo
     {
         private readonly int bitLength;
         private int _errorCode = 0;
@@ -21,13 +21,13 @@ namespace HashCalculator
         private static extern int sha3_init(IntPtr state, int bitLength);
 
         [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern int sha3_update(IntPtr state, byte[] input, ulong size);
+        private static extern int sha3_update(IntPtr state, byte[] input, ulong bitLength);
 
         [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern int sha3_update(IntPtr state, ref byte input, ulong size);
+        private static extern int sha3_update(IntPtr state, ref byte input, ulong bitLength);
 
         [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern int sha3_final(IntPtr state, byte[] output, ulong size);
+        private static extern int sha3_final(IntPtr state, byte[] output);
 
         public int DigestLength { get; }
 
@@ -52,7 +52,7 @@ namespace HashCalculator
             }
         }
 
-        public ExtendedKcpSha3(int bitLength)
+        public ExtendedKcpSHA3(int bitLength)
         {
             switch (bitLength)
             {
@@ -96,7 +96,7 @@ namespace HashCalculator
 
         public IHashAlgoInfo NewInstance()
         {
-            return new ExtendedKcpSha3(this.bitLength);
+            return new ExtendedKcpSHA3(this.bitLength);
         }
 
         protected override void HashCore(byte[] array, int ibStart, int cbSize)
@@ -111,13 +111,13 @@ namespace HashCalculator
             }
             if (ibStart == 0 && cbSize == array.Length)
             {
-                this._errorCode = sha3_update(this._state, array, (ulong)cbSize);
+                this._errorCode = sha3_update(this._state, array, (ulong)cbSize << 3);
             }
             else
             {
                 ReadOnlySpan<byte> span = new ReadOnlySpan<byte>(array, ibStart, cbSize);
                 ref byte input = ref MemoryMarshal.GetReference(span);
-                this._errorCode = sha3_update(this._state, ref input, (ulong)cbSize);
+                this._errorCode = sha3_update(this._state, ref input, (ulong)cbSize << 3);
             }
         }
 
@@ -132,7 +132,7 @@ namespace HashCalculator
                 throw new InvalidOperationException("An error has occurred");
             }
             byte[] resultBuffer = new byte[this.DigestLength];
-            if (sha3_final(this._state, resultBuffer, (ulong)this.DigestLength) > 0)
+            if (sha3_final(this._state, resultBuffer) > 0)
             {
                 throw new Exception("Finalize hash failed");
             }

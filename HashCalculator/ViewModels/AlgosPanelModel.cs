@@ -56,10 +56,10 @@ namespace HashCalculator
             "SHA3",
             new AlgoInOutModel[]
             {
-                new AlgoInOutModel(new ExtendedKcpSha3(224)),
-                new AlgoInOutModel(new ExtendedKcpSha3(256)),
-                new AlgoInOutModel(new ExtendedKcpSha3(384)),
-                new AlgoInOutModel(new ExtendedKcpSha3(512)),
+                new AlgoInOutModel(new ExtendedKcpSHA3(224)),
+                new AlgoInOutModel(new ExtendedKcpSHA3(256)),
+                new AlgoInOutModel(new ExtendedKcpSHA3(384)),
+                new AlgoInOutModel(new ExtendedKcpSHA3(512)),
             });
 
         public static AlgoGroupModel GroupBlake2b { get; } = new AlgoGroupModel(
