@@ -13,9 +13,7 @@ namespace HashCalculator
 
         public abstract string NamePrefix { get; }
 
-        public abstract AlgoType AlgoGroup { get; }
-
-        public abstract int MaxOutputSize { get; }
+        public abstract int MaxOutputLength { get; }
 
         public int DigestLength { get; }
 
@@ -25,16 +23,10 @@ namespace HashCalculator
         {
             get
             {
-                if (this.algoType == AlgoType.Unknown)
+                if (this.algoType == AlgoType.Unknown &&
+                    Enum.TryParse($"{this.NamePrefix}_{this.bitLength}", true, out AlgoType algo))
                 {
-                    if (Enum.TryParse($"{this.AlgoGroup}_{this.bitLength}", true, out AlgoType algo))
-                    {
-                        this.algoType = algo;
-                    }
-                    else
-                    {
-                        this.algoType = this.AlgoGroup;
-                    }
+                    this.algoType = algo;
                 }
                 return this.algoType;
             }
@@ -71,13 +63,13 @@ namespace HashCalculator
 
         public OfficialImplBlake2(int bitLength)
         {
-            int bytesNumber = bitLength / 8;
-            if (bitLength < 8 || bitLength % 8 != 0 || bytesNumber > this.MaxOutputSize)
+            int lengthInByte = bitLength / 8;
+            if (bitLength < 8 || bitLength % 8 != 0 || lengthInByte > this.MaxOutputLength)
             {
                 throw new ArgumentException($"Invalid bit length");
             }
             this.bitLength = bitLength;
-            this.DigestLength = bytesNumber;
+            this.DigestLength = lengthInByte;
         }
 
         public override void Initialize()
@@ -85,14 +77,11 @@ namespace HashCalculator
             this._errorCode = 0;
             this.DeleteState();
             this._statePtr = this.Blake2New();
-            if (this._statePtr != IntPtr.Zero)
-            {
-                this._errorCode = this.Blake2Init(this._statePtr, (ulong)this.DigestLength);
-            }
-            else
+            if (this._statePtr == IntPtr.Zero)
             {
                 throw new Exception("Initialization failed");
             }
+            this._errorCode = this.Blake2Init(this._statePtr, (ulong)this.DigestLength);
         }
 
         protected override void HashCore(byte[] array, int ibStart, int cbSize)

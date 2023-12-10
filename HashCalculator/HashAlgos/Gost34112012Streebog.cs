@@ -36,16 +36,10 @@ namespace HashCalculator
         {
             get
             {
-                if (this.algoType == AlgoType.Unknown)
+                if (this.algoType == AlgoType.Unknown &&
+                    Enum.TryParse($"STREEBOG_{this.bitLength}", true, out AlgoType algo))
                 {
-                    if (Enum.TryParse($"STREEBOG_{this.bitLength}", true, out AlgoType algo))
-                    {
-                        this.algoType = algo;
-                    }
-                    else
-                    {
-                        this.algoType = AlgoType.STREEBOG;
-                    }
+                    this.algoType = algo;
                 }
                 return this.algoType;
             }

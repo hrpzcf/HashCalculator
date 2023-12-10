@@ -23,11 +23,9 @@ namespace HashCalculator
         [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern int blake2b_final(IntPtr statePtr, byte[] output, ulong outlen);
 
-        public override int MaxOutputSize => 64;
+        public override int MaxOutputLength => 64;
 
         public override string NamePrefix => "BLAKE2b";
-
-        public override AlgoType AlgoGroup => AlgoType.BLAKE2B;
 
         public OfficialImplBlake2b(int bitLength) : base(bitLength)
         {

@@ -162,8 +162,6 @@
     <Compile Include="HashAlgos\OfficialImplBlake2bp.cs" />
     <Compile Include="HashAlgos\OfficialImplBlake2s.cs" />
     <Compile Include="HashAlgos\OfficialImplBlake2sp.cs" />
-    <Compile Include="HashAlgos\OfficialImplBlake2xb.cs" />
-    <Compile Include="HashAlgos\OfficialImplBlake2xs.cs" />
     <Compile Include="HashAlgos\ExtendedKcpSHA3.cs" />
     <Compile Include="HashAlgos\OpenHashTabCrc64.cs" />
     <Compile Include="HashAlgos\StbrummeRepoCrc32.cs" />

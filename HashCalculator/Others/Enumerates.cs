@@ -160,13 +160,11 @@
         SHA384,
         SHA512,
         // SHA3
-        SHA3, // 代表系列，下同
         SHA3_224,
         SHA3_256,
         SHA3_384,
         SHA3_512,
         // BLAKE2B
-        BLAKE2B,
         BLAKE2B_128,
         BLAKE2B_160,
         BLAKE2B_224,
@@ -174,31 +172,23 @@
         BLAKE2B_384,
         BLAKE2B_512,
         // BLAKE2BP
-        BLAKE2BP,
         BLAKE2BP_128,
         BLAKE2BP_160,
         BLAKE2BP_224,
         BLAKE2BP_256,
         BLAKE2BP_384,
         BLAKE2BP_512,
-        // BLAKE2XB
-        BLAKE2XB,
         // BLAKE2S
-        BLAKE2S,
         BLAKE2S_128,
         BLAKE2S_160,
         BLAKE2S_224,
         BLAKE2S_256,
         // BLAKE2SP
-        BLAKE2SP,
         BLAKE2SP_128,
         BLAKE2SP_160,
         BLAKE2SP_224,
         BLAKE2SP_256,
-        // BLAKE2XS
-        BLAKE2XS,
         // BLAKE3
-        BLAKE3,
         BLAKE3_128,
         BLAKE3_160,
         BLAKE3_224,
@@ -208,7 +198,6 @@
         // SM3
         SM3,
         // Streebog
-        STREEBOG,
         STREEBOG_256,
         STREEBOG_512,
         // HASH160

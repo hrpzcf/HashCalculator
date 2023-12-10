@@ -37,16 +37,10 @@ namespace HashCalculator
         {
             get
             {
-                if (this.algoType == AlgoType.Unknown)
+                if (this.algoType == AlgoType.Unknown &&
+                    Enum.TryParse($"SHA3_{this.bitLength}", true, out AlgoType algo))
                 {
-                    if (Enum.TryParse($"SHA3_{this.bitLength}", true, out AlgoType algo))
-                    {
-                        this.algoType = algo;
-                    }
-                    else
-                    {
-                        this.algoType = AlgoType.BLAKE3;
-                    }
+                    this.algoType = algo;
                 }
                 return this.algoType;
             }
