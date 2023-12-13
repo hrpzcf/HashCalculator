@@ -1,11 +1,11 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Resources;
 using System.Threading.Tasks;
+using Microsoft.Win32;
 
 namespace HashCalculator
 {
@@ -13,58 +13,7 @@ namespace HashCalculator
     {
         static ShellExtHelper()
         {
-            checklistSuffixNode = new RegNode(checklistFileSuffix)
-            {
-                Values = new RegValue[]
-                {
-                    new RegValue("", checklistProgId),
-                    new RegValue("Content Type", "text/plain"),
-                    new RegValue("PerceivedType", "text")
-                }
-            };
-            checklistProgIdNode = new RegNode(checklistProgId)
-            {
-                Nodes = new RegNode[]
-                {
-                    new RegNode("shell")
-                    {
-                        Nodes = new RegNode[]
-                        {
-                            new RegNode("open")
-                            {
-                                Nodes = new RegNode[]
-                                {
-                                    new RegNode("command")
-                                    {
-                                        Values = new RegValue[]
-                                        {
-                                            new RegValue("", $"{executableName} verify -b \"%1\"",
-                                                RegistryValueKind.String)
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    new RegNode("DefaultIcon")
-                    {
-                        Values = new RegValue[]
-                        {
-                            new RegValue("", $"{shellExtensionPath},-203", RegistryValueKind.String)
-                        }
-                    }
-                },
-                Values = new RegValue[]
-                {
-                    new RegValue("FriendlyTypeName", $"@{shellExtensionPath},-107", RegistryValueKind.String)
-                }
-            };
-            applicationNode = new RegNode(executableName)
-            {
-                Nodes = checklistProgIdNode.Nodes,
-                Values = checklistProgIdNode.Values
-            };
-            appPathsNode = new RegNode(executableName)
+            nodeHashCalculatorAppPaths = new RegNode(hashCalculatorFile)
             {
                 Values = new RegValue[]
                 {
@@ -76,18 +25,18 @@ namespace HashCalculator
 
         private static Exception RegisterShellExtDll(string path, bool register)
         {
-            ProcessStartInfo startInfo = new ProcessStartInfo();
-            startInfo.FileName = "regsvr32";
-            startInfo.Arguments = register ?
-                $"/s /n /i:user \"{path}\"" : $"/s /u /n /i:user \"{path}\"";
-            startInfo.WindowStyle = ProcessWindowStyle.Hidden;
             try
             {
+                string verbStr = register ? "注册" : "反注册";
+                ProcessStartInfo startInfo = new ProcessStartInfo();
+                startInfo.FileName = "regsvr32";
+                startInfo.Arguments = register ? $"/s /n /i:user \"{path}\"" : $"/s /u /n /i:user \"{path}\"";
+                startInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 Process process = new Process();
                 process.StartInfo = startInfo;
                 process.Start();
                 process.WaitForExit();
-                return process.ExitCode == 0 ? null : new Exception("注册或反注册 Shell 扩展失败(regsvr32)");
+                return process.ExitCode == 0 ? null : new Exception($"使用 regsvr32 命令{verbStr}外壳扩展失败");
             }
             catch (Exception exception)
             {
@@ -95,21 +44,28 @@ namespace HashCalculator
             }
         }
 
-        private static void TerminateAndRestartExplorer()
+        private static void TerminateExplorer()
         {
-            List<Process> killedProcesses = new List<Process>();
-            Process[] processes = Process.GetProcesses();
-            foreach (Process process in processes)
+            List<Process> killedExplorerProcessList = new List<Process>();
+            foreach (Process process in Process.GetProcesses())
             {
                 if (process.ProcessName.Equals("explorer", StringComparison.OrdinalIgnoreCase))
                 {
-                    process.Kill();
-                    killedProcesses.Add(process);
+                    try
+                    {
+                        process.Kill();
+                    }
+                    catch (Exception) { }
+                    killedExplorerProcessList.Add(process);
                 }
             }
-            foreach (Process singleKilledProcess in killedProcesses)
+            foreach (Process killedExplorerProcess in killedExplorerProcessList)
             {
-                singleKilledProcess.WaitForExit();
+                try
+                {
+                    killedExplorerProcess.WaitForExit(3000);
+                }
+                catch (Exception) { }
             }
         }
 
@@ -123,7 +79,7 @@ namespace HashCalculator
                     {
                         return new FileNotFoundException("没有获取到当前程序的可执行文件路径");
                     }
-                    if (File.Exists(shellExtensionPath))
+                    if (File.Exists(shellExtensionsPath))
                     {
                         await UninstallShellExtension();
                     }
@@ -134,17 +90,23 @@ namespace HashCalculator
                         {
                             byte[] shellExtBuffer = new byte[stream.Length];
                             stream.Read(shellExtBuffer, 0, shellExtBuffer.Length);
-                            using (FileStream fs = File.OpenWrite(shellExtensionPath))
+                            using (FileStream fs = File.OpenWrite(shellExtensionsPath))
                             {
                                 fs.Write(shellExtBuffer, 0, shellExtBuffer.Length);
                             }
                         }
-                        return RegisterShellExtDll(shellExtensionPath, true) ?? await CreateAppPath() ??
-                            await CreateApplication() ?? await CreateProgIdAndFileType(true);
+                        Exception exception;
+                        if ((exception = RegisterShellExtDll(shellExtensionsPath, true)) != null)
+                        {
+                            return exception;
+                        }
+                        NativeFunctions.SHChangeNotify(
+                            HChangeNotifyEventID.SHCNE_ASSOCCHANGED, HChangeNotifyFlags.SHCNF_IDLIST, IntPtr.Zero, IntPtr.Zero);
+                        return await RegUpdateAppPathAsync();
                     }
                     else
                     {
-                        return new MissingManifestResourceException("找不到内嵌的 Shell 扩展模块资源");
+                        return new MissingManifestResourceException("找不到内嵌的外壳扩展模块资源");
                     }
                 }
                 catch (Exception exception)
@@ -158,238 +120,116 @@ namespace HashCalculator
         {
             return await Task.Run(async () =>
             {
-                try
+                if (File.Exists(shellExtensionsPath))
                 {
-                    if (File.Exists(shellExtensionPath))
+                    Exception exception;
+                    if ((exception = RegisterShellExtDll(shellExtensionsPath, false)) != null)
                     {
-                        Exception exception = RegisterShellExtDll(shellExtensionPath, false);
-                        if (exception != null)
-                        {
-                            return exception;
-                        }
+                        return exception;
+                    }
+                    try
+                    {
+                        File.Delete(shellExtensionsPath);
+                    }
+                    catch (Exception e) when (e is IOException || e is UnauthorizedAccessException)
+                    {
+                        TerminateExplorer();
                         try
                         {
-                            File.Delete(shellExtensionPath);
+                            File.Delete(shellExtensionsPath);
                         }
-                        catch (Exception e) when (e is IOException || e is UnauthorizedAccessException)
-                        {
-                            TerminateAndRestartExplorer();
-                            File.Delete(shellExtensionPath);
-                        }
-                        return await DeleteProgIdButNotFileType() ??
-                            await DeleteApplication() ?? await DeleteAppPath();
+                        catch { }
                     }
-                    else
-                    {
-                        return new FileNotFoundException("没有在程序所在目录找到 Shell 扩展模块");
-                    }
+                    NativeFunctions.SHChangeNotify(
+                        HChangeNotifyEventID.SHCNE_ASSOCCHANGED, HChangeNotifyFlags.SHCNF_IDLIST, IntPtr.Zero, IntPtr.Zero);
+                    return await RegDeleteAppPathAsync();
                 }
-                catch (Exception exception)
+                else
                 {
-                    return exception;
+                    return new FileNotFoundException("没有在程序所在目录找到外壳扩展模块");
                 }
             });
         }
 
-        private static async Task<Exception> CreateProgIdAndFileType(bool user)
+        private static async Task<Exception> HKCUWriteNode(string regPath, RegNode regNode)
         {
-            RegistryKey root = user ? Registry.CurrentUser : Registry.LocalMachine;
-            return await Task.Run(() =>
+            Debug.Assert(regNode != null, $"Argument can not be null: {nameof(regNode)}");
+            if (!string.IsNullOrEmpty(regPath))
             {
-                try
+                return await Task.Run(() =>
                 {
-                    using (RegistryKey classes = root.OpenSubKey(regPathSoftClasses, true))
+                    try
                     {
-                        if (classes == null)
+                        using (RegistryKey parent = Registry.CurrentUser.CreateSubKey(regPath, true))
                         {
-                            return new Exception($"无法打开注册表键：{regPathSoftClasses}");
-                        }
-                        if (RegNode.WriteRegNode(classes, checklistProgIdNode))
-                        {
-                            string[] keyNames = classes.GetSubKeyNames();
-                            bool fileExtExists = false;
-                            foreach (string keyName in keyNames)
+                            if (parent == null)
                             {
-                                if (checklistFileSuffix.Equals(keyName, StringComparison.OrdinalIgnoreCase))
-                                {
-                                    fileExtExists = true;
-                                    break;
-                                }
+                                return new Exception($"无法打开注册表节点：{regPath}");
                             }
-                            if (fileExtExists)
+                            if (!parent.WriteNode(regNode))
                             {
-                                using (RegistryKey fileExtKey = classes.OpenSubKey(checklistFileSuffix, true))
-                                {
-                                    if (fileExtKey != null)
-                                    {
-                                        foreach (RegValue regValue in checklistSuffixNode.Values)
-                                        {
-                                            if (regValue.Name != string.Empty)
-                                            {
-                                                fileExtKey.SetValue(regValue.Name, regValue.Data, regValue.Kind);
-                                            }
-                                        }
-                                        if (fileExtKey.GetValue("") is string prevDefaultVal &&
-                                            !prevDefaultVal.Equals(checklistProgId, StringComparison.OrdinalIgnoreCase))
-                                        {
-                                            using (RegistryKey progIdsKey = fileExtKey.CreateSubKey(regPathOpenWith, true))
-                                            {
-                                                progIdsKey?.SetValue(prevDefaultVal, string.Empty);
-                                            }
-                                            fileExtKey.SetValue(string.Empty, checklistProgId, RegistryValueKind.String);
-                                        }
-                                    }
-                                }
+                                return new Exception($"写入注册表节点失败：{regNode.Name}");
+                            }
+                        }
+                        return null;
+                    }
+                    catch (Exception exception)
+                    {
+                        return exception;
+                    }
+                });
+            }
+            return new Exception($"需要打开的注册表节点为空");
+        }
+
+        private static async Task<Exception> HKCUDeleteNode(string regPath, RegNode regNode)
+        {
+            Debug.Assert(regNode != null, $"Argument can not be null: {nameof(regNode)}");
+            if (!string.IsNullOrEmpty(regPath))
+            {
+                return await Task.Run(() =>
+                {
+                    try
+                    {
+                        using (RegistryKey parent = Registry.CurrentUser.OpenSubKey(regPath, true))
+                        {
+                            if (parent != null)
+                            {
+                                parent.DeleteSubKeyTree(regNode.Name, false);
+                                return null;
                             }
                             else
                             {
-                                if (!RegNode.WriteRegNode(classes, checklistSuffixNode))
-                                {
-                                    return new Exception($"写入注册表子键失败：{checklistSuffixNode.Name}");
-                                }
-                            }
-                            NativeFunctions.SHChangeNotify(
-                                HChangeNotifyEventID.SHCNE_ASSOCCHANGED, HChangeNotifyFlags.SHCNF_IDLIST, IntPtr.Zero, IntPtr.Zero);
-                            return null;
-                        }
-                        else
-                        {
-                            return new Exception($"写入注册表子键失败：{checklistProgIdNode.Name}");
-                        }
-                    }
-                }
-                catch (Exception exception)
-                {
-                    return exception;
-                }
-            });
-        }
-
-        private static async Task<Exception> DeleteProgIdButNotFileType()
-        {
-            return await Task.Run(() =>
-            {
-                try
-                {
-                    using (RegistryKey root = Registry.CurrentUser.OpenSubKey(regPathSoftClasses, true))
-                    {
-                        if (root != null)
-                        {
-                            string[] subKeyNames = root.GetSubKeyNames();
-                            foreach (string keyName in subKeyNames)
-                            {
-                                if (keyName.Equals(checklistProgId, StringComparison.OrdinalIgnoreCase))
-                                {
-                                    root.DeleteSubKeyTree(keyName);
-                                    NativeFunctions.SHChangeNotify(
-                                        HChangeNotifyEventID.SHCNE_ASSOCCHANGED, HChangeNotifyFlags.SHCNF_IDLIST, IntPtr.Zero, IntPtr.Zero);
-                                    break;
-                                }
+                                return new Exception($"无法打开注册表节点：{regPath}");
                             }
                         }
                     }
-                    return null;
-                }
-                catch (Exception exception)
-                {
-                    return exception;
-                }
-            });
-        }
-
-        private static async Task<Exception> WriteRegNodeToRegPath(string regPath, RegNode regNode)
-        {
-            if (string.IsNullOrEmpty(regPath))
-            {
-                return new Exception($"需要打开的注册表路径为空");
-            }
-            return await Task.Run(() =>
-            {
-                try
-                {
-                    using (RegistryKey parent = Registry.CurrentUser.CreateSubKey(regPath, true))
+                    catch (Exception exception)
                     {
-                        if (parent == null)
-                        {
-                            return new Exception($"无法打开注册表键：{regPath}");
-                        }
-                        if (!RegNode.WriteRegNode(parent, regNode))
-                        {
-                            return new Exception($"写入注册表子键失败：{regNode.Name}");
-                        }
+                        return exception;
                     }
-                    return null;
-                }
-                catch (Exception exception)
-                {
-                    return exception;
-                }
-            });
-        }
-
-        private static async Task<Exception> DeleteRegNodeFromRegPath(string regPath, RegNode regNode)
-        {
-            if (string.IsNullOrEmpty(regPath))
-            {
-                return new Exception($"需要打开的注册表路径为空");
+                });
             }
-            return await Task.Run(() =>
-            {
-                try
-                {
-                    using (RegistryKey parent = Registry.CurrentUser.OpenSubKey(regPath, true))
-                    {
-                        if (parent != null)
-                        {
-                            parent.DeleteSubKeyTree(regNode.Name, false);
-                            return null;
-                        }
-                        return new Exception($"无法打开注册表键或注册表键不存在：{regPath}");
-                    }
-                }
-                catch (Exception exception)
-                {
-                    return exception;
-                }
-            });
+            return new Exception($"需要打开的注册表节点为空");
         }
 
-        private static async Task<Exception> CreateAppPath()
+        public static async Task<Exception> RegUpdateAppPathAsync()
         {
-            return await WriteRegNodeToRegPath(regPathAppPaths, appPathsNode);
+            return await HKCUWriteNode(regPathAppPaths, nodeHashCalculatorAppPaths);
         }
 
-        private static async Task<Exception> DeleteAppPath()
+        public static async Task<Exception> RegDeleteAppPathAsync()
         {
-            return await DeleteRegNodeFromRegPath(regPathAppPaths, appPathsNode);
+            return await HKCUDeleteNode(regPathAppPaths, nodeHashCalculatorAppPaths);
         }
 
-        private static async Task<Exception> CreateApplication()
-        {
-            return await WriteRegNodeToRegPath(regPathApplications, applicationNode);
-        }
-
-        private static async Task<Exception> DeleteApplication()
-        {
-            return await DeleteRegNodeFromRegPath(regPathApplications, applicationNode);
-        }
-
-        private const string checklistProgId = "HashCalculator.Basis";
-        private const string checklistFileSuffix = ".hcb";
-        private const string executableName = "HashCalculator.exe";
-        private const string regPathSoftClasses = "Software\\Classes";
-        private const string regPathOpenWith = "OpenWithProgids";
-        private static readonly string regPathApplications = $"{regPathSoftClasses}\\Applications";
+        private const string hashCalculatorFile = "HashCalculator.exe";
         private const string regPathAppPaths = "Software\\Microsoft\\Windows\\CurrentVersion\\App Paths";
-        private static readonly RegNode applicationNode;
-        private static readonly RegNode appPathsNode;
-        private static readonly RegNode checklistProgIdNode;
-        private static readonly RegNode checklistSuffixNode;
+        private static readonly RegNode nodeHashCalculatorAppPaths;
         private static readonly string executablePath = Assembly.GetExecutingAssembly().Location;
         private static readonly string executableFolder = Path.GetDirectoryName(executablePath);
-        private static readonly string shellExtensionName = Environment.Is64BitOperatingSystem ?
-            "HashCalculator.dll" : "HashCalculator32.dll";
+        private static readonly string shellExtensionName = Environment.Is64BitOperatingSystem ? "HashCalculator.dll" : "HashCalculator32.dll";
         private static readonly string embeddedResourcePath = $"HashCalculator.ShellExt.{shellExtensionName}";
-        private static readonly string shellExtensionPath = Path.Combine(executableFolder, shellExtensionName);
+        private static readonly string shellExtensionsPath = Path.Combine(executableFolder, shellExtensionName);
     }
 }

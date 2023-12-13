@@ -1,15 +1,13 @@
-﻿// OpenAsBasis.cpp: COpenAsBasis 的实现
-
-#include "pch.h"
+﻿#include "pch.h"
 #include <shlobj_core.h>
 #include <strsafe.h>
 #include "commons.h"
-#include "OpenAsBasis.h"
+#include "OpenAsChecklist.h"
 #include "ResString.h"
 
 
-VOID COpenAsBasis::CreateGUIProcessVerifyHash(LPWSTR algo) {
-    if (nullptr == this->basis_path) {
+VOID COpenAsChecklist::CreateGUIProcessVerifyHash(LPWSTR algo) {
+    if (nullptr == this->checklist_path) {
         return;
     }
     if (nullptr == this->executable_path) {
@@ -27,13 +25,13 @@ VOID COpenAsBasis::CreateGUIProcessVerifyHash(LPWSTR algo) {
     if (nullptr != algo) {
         command_line += wstring(L" --algo ") + algo;
     }
-    command_line += L" --basis";
-    // 为什么 +4：basis_path 前面 1 个空格和前后 2 个引号，1 个终止字符
-    SIZE_T cmd_characters = command_line.length() + wcslen(this->basis_path) + 4;
+    command_line += L" --list";
+    // 为什么 +4：checklist_path 前面 1 个空格和前后 2 个引号，1 个终止字符
+    SIZE_T cmd_characters = command_line.length() + wcslen(this->checklist_path) + 4;
     if (cmd_characters > MAX_CMD_CHARS) {
         return;
     }
-    command_line += L" \"" + wstring(this->basis_path) + L"\"";
+    command_line += L" \"" + wstring(this->checklist_path) + L"\"";
     LPWSTR commandline_buffer;
     try {
         commandline_buffer = new WCHAR[cmd_characters];
@@ -54,7 +52,7 @@ VOID COpenAsBasis::CreateGUIProcessVerifyHash(LPWSTR algo) {
     delete[] commandline_buffer;
 }
 
-COpenAsBasis::COpenAsBasis() {
+COpenAsChecklist::COpenAsChecklist() {
     this->module_inst = _AtlBaseModule.GetModuleInstance();
     try
     {
@@ -90,19 +88,19 @@ COpenAsBasis::COpenAsBasis() {
     this->bitmap_menu = LoadBitmapW(module_inst, MAKEINTRESOURCEW(IDB_BITMAP_MENU3));
 }
 
-COpenAsBasis::~COpenAsBasis() {
+COpenAsChecklist::~COpenAsChecklist() {
+    delete[] this->checklist_path;
     delete[] this->executable_path;
-    delete[] this->basis_path;
     DeleteObject(this->bitmap_menu);
 }
 
-STDMETHODIMP COpenAsBasis::Initialize(
+STDMETHODIMP COpenAsChecklist::Initialize(
     PCIDLIST_ABSOLUTE pidlFolder, IDataObject* pdtobj, HKEY hkeyProgID) {
     if (nullptr == pdtobj) {
         return E_INVALIDARG;
     }
-    delete[] this->basis_path;
-    this->basis_path = nullptr;
+    delete[] this->checklist_path;
+    this->checklist_path = nullptr;
     STGMEDIUM	stg = { TYMED_HGLOBAL };
     FORMATETC	fmt = {
         CF_HDROP,
@@ -134,18 +132,18 @@ STDMETHODIMP COpenAsBasis::Initialize(
         return E_INVALIDARG;
     }
     try {
-        this->basis_path = new WCHAR[chars];
+        this->checklist_path = new WCHAR[chars];
     }
     catch (const std::bad_alloc&) {
         GlobalUnlock(stg.hGlobal);
         ReleaseStgMedium(&stg);
         return E_FAIL;
     }
-    if (0 == DragQueryFileW(drop_handle, 0, this->basis_path, chars)) {
+    if (0 == DragQueryFileW(drop_handle, 0, this->checklist_path, chars)) {
         GlobalUnlock(stg.hGlobal);
         ReleaseStgMedium(&stg);
-        delete[] this->basis_path;
-        this->basis_path = nullptr;
+        delete[] this->checklist_path;
+        this->checklist_path = nullptr;
         return E_FAIL;
     }
     GlobalUnlock(stg.hGlobal);
@@ -153,7 +151,7 @@ STDMETHODIMP COpenAsBasis::Initialize(
     return S_OK;
 }
 
-STDMETHODIMP COpenAsBasis::QueryContextMenu(
+STDMETHODIMP COpenAsChecklist::QueryContextMenu(
     HMENU hmenu, UINT indexMenu, UINT idCmdFirst, UINT idCmdLast, UINT uFlags) {
     if (uFlags & CMF_DEFAULTONLY)
     {
@@ -209,7 +207,7 @@ STDMETHODIMP COpenAsBasis::QueryContextMenu(
     return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, IDM_COMPUTE_PARENT + 1);
 }
 
-STDMETHODIMP COpenAsBasis::InvokeCommand(CMINVOKECOMMANDINFO* pici) {
+STDMETHODIMP COpenAsChecklist::InvokeCommand(CMINVOKECOMMANDINFO* pici) {
     if (0 != HIWORD(pici->lpVerb))
     {
         return E_INVALIDARG;
@@ -301,7 +299,7 @@ STDMETHODIMP COpenAsBasis::InvokeCommand(CMINVOKECOMMANDINFO* pici) {
     return S_OK;
 }
 
-STDMETHODIMP COpenAsBasis::GetCommandString(
+STDMETHODIMP COpenAsChecklist::GetCommandString(
     UINT_PTR idCmd,
     UINT uType,
     UINT* pReserved,

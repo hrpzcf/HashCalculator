@@ -1,6 +1,4 @@
-﻿// OpenAsBasis.h: COpenAsBasis 的声明
-
-#pragma once
+﻿#pragma once
 #include "resource.h"       // 主符号
 #include "ShellExtensions_i.h"
 #include <vector>
@@ -14,26 +12,26 @@ using namespace ATL;
 using std::vector;
 using std::wstring;
 
-class ATL_NO_VTABLE COpenAsBasis :
+class ATL_NO_VTABLE COpenAsChecklist :
     public CComObjectRootEx<CComSingleThreadModel>,
-    public CComCoClass<COpenAsBasis, &CLSID_OpenAsBasis>,
-    public IDispatchImpl<IOpenAsBasis, &IID_IOpenAsBasis, &LIBID_ShellExtensionsLib, /*wMajor =*/ 1, /*wMinor =*/ 0>,
+    public CComCoClass<COpenAsChecklist, &CLSID_OpenAsChecklist>,
+    public IDispatchImpl<IOpenAsChecklist, &IID_IOpenAsChecklist, &LIBID_ShellExtensionsLib, /*wMajor =*/ 1, /*wMinor =*/ 0>,
     public IShellExtInit,
     public IContextMenu
 {
-    HBITMAP bitmap_menu = nullptr;
-    LPWSTR basis_path = nullptr;
+    LPWSTR checklist_path = nullptr;
     LPWSTR executable_path = nullptr;
+    HBITMAP bitmap_menu = nullptr;
     HINSTANCE module_inst = nullptr;
     VOID CreateGUIProcessVerifyHash(LPWSTR);
 public:
-    COpenAsBasis();
-    ~COpenAsBasis();
+    COpenAsChecklist();
+    ~COpenAsChecklist();
 
-    DECLARE_REGISTRY_RESOURCEID(IDR_OPENASBASIS)
+    DECLARE_REGISTRY_RESOURCEID(IDR_OPENASCHECKLIST)
 
-    BEGIN_COM_MAP(COpenAsBasis)
-        COM_INTERFACE_ENTRY(IOpenAsBasis)
+    BEGIN_COM_MAP(COpenAsChecklist)
+        COM_INTERFACE_ENTRY(IOpenAsChecklist)
         COM_INTERFACE_ENTRY(IDispatch)
         COM_INTERFACE_ENTRY(IShellExtInit)
         COM_INTERFACE_ENTRY(IContextMenu)
@@ -49,4 +47,4 @@ public:
     STDMETHOD(GetCommandString)(UINT_PTR, UINT, UINT*, CHAR*, UINT);
 };
 
-OBJECT_ENTRY_AUTO(__uuidof(OpenAsBasis), COpenAsBasis)
+OBJECT_ENTRY_AUTO(__uuidof(OpenAsChecklist), COpenAsChecklist)

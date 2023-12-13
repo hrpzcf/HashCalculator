@@ -570,26 +570,21 @@ namespace HashCalculator
         private async void InstallShellExtAction(object param)
         {
             if (MessageBox.Show(
-                SettingsPanel.This,
-                "安装 Shell 扩展可能需要重启资源管理器，确定现在安装吗？",
-                "询问",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Question,
-                MessageBoxResult.No) == MessageBoxResult.No)
+                SettingsPanel.This, "安装外壳扩展可能需要重启资源管理器，确定现在安装吗？", "询问",
+                MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No)
+                == MessageBoxResult.No)
             {
                 return;
             }
             this.NotSettingShellExtension = false;
             if (await ShellExtHelper.InstallShellExtension() is Exception exception)
             {
-                MessageBox.Show(
-                    SettingsPanel.This, $"安装 Shell 扩展失败：\n{exception.Message}", "提示",
+                MessageBox.Show(SettingsPanel.This, exception.Message, "安装外壳扩展失败",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
             }
             else
             {
-                MessageBox.Show(
-                    SettingsPanel.This, $"安装 Shell 扩展成功！", "提示", MessageBoxButton.OK,
+                MessageBox.Show(SettingsPanel.This, $"安装外壳扩展成功！", "提示", MessageBoxButton.OK,
                     MessageBoxImage.Information);
             }
             this.NotSettingShellExtension = true;
@@ -611,26 +606,21 @@ namespace HashCalculator
         private async void UnInstallShellExtAction(object param)
         {
             if (MessageBox.Show(
-                SettingsPanel.This,
-                "卸载 Shell 扩展可能需要重启资源管理器，确定现在卸载吗？",
-                "询问",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Question,
-                MessageBoxResult.No) == MessageBoxResult.No)
+                SettingsPanel.This, "卸载外壳扩展可能需要重启资源管理器，确定现在卸载吗？", "询问",
+                MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No)
+                == MessageBoxResult.No)
             {
                 return;
             }
             this.NotSettingShellExtension = false;
             if (await ShellExtHelper.UninstallShellExtension() is Exception exception)
             {
-                MessageBox.Show(
-                    SettingsPanel.This, $"卸载 Shell 扩展失败：\n{exception.Message}", "提示",
+                MessageBox.Show(SettingsPanel.This, exception.Message, "卸载外壳扩展失败",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
             }
             else
             {
-                MessageBox.Show(
-                    SettingsPanel.This, $"卸载 Shell 扩展成功！", "提示", MessageBoxButton.OK,
+                MessageBox.Show(SettingsPanel.This, $"卸载外壳扩展成功！", "提示", MessageBoxButton.OK,
                     MessageBoxImage.Information);
             }
             this.NotSettingShellExtension = true;

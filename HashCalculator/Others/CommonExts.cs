@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Win32;
 
 namespace HashCalculator
 {
@@ -168,6 +169,59 @@ namespace HashCalculator
                     collection.Add(description);
                 }
             }
+        }
+
+        public static bool DeleteNode(this RegistryKey root, RegNode regNode)
+        {
+            if (root != null)
+            {
+                try
+                {
+                    if (regNode.Name != string.Empty)
+                    {
+                        root.DeleteSubKeyTree(regNode.Name, false);
+                        return true;
+                    }
+                }
+                catch (Exception) { }
+            }
+            return false;
+        }
+
+        public static bool WriteNode(this RegistryKey root, RegNode regNode)
+        {
+            if (root != null)
+            {
+                try
+                {
+                    using (RegistryKey parent = root.CreateSubKey(regNode.Name, true))
+                    {
+                        if (parent != null)
+                        {
+                            if (regNode.Nodes != null)
+                            {
+                                foreach (RegNode nextNode in regNode.Nodes)
+                                {
+                                    if (!parent.WriteNode(nextNode))
+                                    {
+                                        return false;
+                                    }
+                                }
+                            }
+                            if (regNode.Values != null)
+                            {
+                                foreach (RegValue nextValue in regNode.Values)
+                                {
+                                    parent.SetValue(nextValue.Name, nextValue.Data, nextValue.Kind);
+                                }
+                            }
+                        }
+                    }
+                    return true;
+                }
+                catch (Exception) { }
+            }
+            return false;
         }
     }
 }

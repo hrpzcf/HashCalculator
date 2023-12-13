@@ -40,7 +40,7 @@
     <ClInclude Include="ResString.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="OpenAsBasis.h">
+    <ClInclude Include="OpenAsChecklist.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="commons.h">
@@ -63,7 +63,7 @@
     <ClCompile Include="pch.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="OpenAsBasis.cpp">
+    <ClCompile Include="OpenAsChecklist.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="ComputeHash.cpp">
@@ -82,7 +82,7 @@
     <None Include="ShellExtensions.def">
       <Filter>源文件</Filter>
     </None>
-    <None Include="OpenAsBasis.rgs">
+    <None Include="OpenAsChecklist.rgs">
       <Filter>资源文件</Filter>
     </None>
     <None Include="ComputeHash.rgs">
@@ -105,6 +105,9 @@
       <Filter>资源文件</Filter>
     </Image>
     <Image Include="icon_3.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="app_icon.ico">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>

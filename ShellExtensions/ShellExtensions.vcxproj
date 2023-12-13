@@ -235,7 +235,7 @@
     <ClInclude Include="ComputeHash.h" />
     <ClInclude Include="dllmain.h" />
     <ClInclude Include="framework.h" />
-    <ClInclude Include="OpenAsBasis.h" />
+    <ClInclude Include="OpenAsChecklist.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ResString.h" />
@@ -258,7 +258,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="OpenAsBasis.cpp" />
+    <ClCompile Include="OpenAsChecklist.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -286,7 +286,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ComputeHash.rgs" />
-    <None Include="OpenAsBasis.rgs" />
+    <None Include="OpenAsChecklist.rgs" />
     <None Include="ShellExtensions.def" />
     <None Include="ShellExtensions.rgs" />
   </ItemGroup>
@@ -294,6 +294,7 @@
     <Midl Include="ShellExtensions.idl" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="app_icon.ico" />
     <Image Include="file_icon.ico" />
     <Image Include="icon_1.bmp" />
     <Image Include="icon_2.bmp" />

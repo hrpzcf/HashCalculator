@@ -8,46 +8,46 @@ import "oaidl.idl";
 import "ocidl.idl";
 
 [
-	object,
-	uuid(57b88730-55b6-479a-b0cd-738a32db4a3e),
-	dual,
-	nonextensible,
-	pointer_default(unique)
+    object,
+        uuid(57b88730-55b6-479a-b0cd-738a32db4a3e),
+        dual,
+        nonextensible,
+        pointer_default(unique)
 ]
 interface IComputeHash : IDispatch
 {
 };
 [
-	object,
-	uuid(50ec1af6-e853-48ea-8db8-4b732a8c595b),
-	dual,
-	nonextensible,
-	pointer_default(unique)
+    object,
+        uuid(50ec1af6-e853-48ea-8db8-4b732a8c595b),
+        dual,
+        nonextensible,
+        pointer_default(unique)
 ]
-interface IOpenAsBasis : IDispatch
+interface IOpenAsChecklist : IDispatch
 {
 };
 [
-	uuid(18d6b7f2-f466-481f-adfc-849b5f9fbd0b),
-	version(1.0),
+    uuid(18d6b7f2-f466-481f-adfc-849b5f9fbd0b),
+        version(1.0),
 ]
 library ShellExtensionsLib
 {
-	importlib("stdole2.tlb");
-	[
-		uuid(de95cac8-90d1-4c55-b81d-d7f6d527606c)
-	]
-	coclass ComputeHash
-	{
-		[default] interface IComputeHash;
-	};
-	[
-		uuid(50b22df9-3ff8-428e-900f-f6ee89f1a18b)
-	]
-	coclass OpenAsBasis
-	{
-		[default] interface IOpenAsBasis;
-	};
+    importlib("stdole2.tlb");
+    [
+        uuid(de95cac8-90d1-4c55-b81d-d7f6d527606c)
+    ]
+        coclass ComputeHash
+    {
+        [default] interface IComputeHash;
+    };
+    [
+        uuid(50b22df9-3ff8-428e-900f-f6ee89f1a18b)
+    ]
+        coclass OpenAsChecklist
+    {
+        [default] interface IOpenAsChecklist;
+    };
 };
 
 import "shobjidl.idl";

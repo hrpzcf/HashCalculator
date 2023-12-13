@@ -1,0 +1,72 @@
+HKCR
+{
+	NoRemove Applications
+	{
+		HashCalculator.exe
+		{
+			ForceRemove val FriendlyAppName = s '@"%MODULE%",-108'
+			
+			ForceRemove DefaultIcon = s '"%MODULE%",-205'
+			ForceRemove SupportedTypes
+			{
+				val .hcb = s ''
+				val .txt = s ''
+			}
+			shell
+			{
+				open
+				{
+					ForceRemove command = s 'HashCalculator.exe verify --list "%%1"'
+				}
+			}
+		}
+	}
+
+	HashCalculator.Checklist = s 'HashCalculator Checklist'
+	{
+		ForceRemove val FriendlyTypeName = s '@"%MODULE%",-107'
+
+		ForceRemove CLSID = s '{50b22df9-3ff8-428e-900f-f6ee89f1a18b}'
+		ForceRemove DefaultIcon = s '"%MODULE%",-203'
+		shell
+		{
+			open
+			{
+				ForceRemove command = s 'HashCalculator.exe verify --list "%%1"'
+			}
+		}
+	}
+
+	.hcb = s 'HashCalculator.Checklist'
+	{
+		val 'Content Type' = s 'text/plain'
+		val 'PerceivedType' = s 'text'
+	}
+
+	NoRemove CLSID
+	{
+		ForceRemove {50b22df9-3ff8-428e-900f-f6ee89f1a18b} = s 'HashCalculator OpenAsChecklist'
+		{
+			ProgID = s 'HashCalculator.Checklist'
+			VersionIndependentProgID = s 'HashCalculator.Checklist'
+			ForceRemove Programmable
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			TypeLib = s '{18d6b7f2-f466-481f-adfc-849b5f9fbd0b}'
+			Version = s '1.0'
+		}
+	}
+
+	NoRemove *
+	{
+		NoRemove shellex
+		{
+			NoRemove ContextMenuHandlers
+			{
+				ForceRemove 'HashCalculator OpenAsChecklist' = s '{50b22df9-3ff8-428e-900f-f6ee89f1a18b}'
+			}
+		}
+	}
+}

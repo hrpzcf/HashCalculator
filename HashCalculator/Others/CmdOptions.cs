@@ -19,7 +19,7 @@ namespace HashCalculator
         [Option('a', "algo", HelpText = "要使用的哈希算法，可以是数字或算法名称，例如：1(代表算法列表第一个算法 sha1)、sha3_256 等")]
         public string Algo { get; set; }
 
-        [Option('b', "basis", Required = true)]
+        [Option('l', "list", Required = true)]
         public string ChecklistPath { get; set; }
     }
 }
