@@ -55,7 +55,13 @@ namespace HashCalculator
         public static string FixAlgoDlls { get; } = "更新动态链接库";
 
         [XmlIgnore]
-        public static string StringDllDir { get; } = "动态链接库目录";
+        public static string ShellExtDir { get; } = "用户目录";
+
+        [XmlIgnore]
+        public static string FixExePath { get; } = "修复程序路径";
+
+        [XmlIgnore]
+        public static string AlgosDllDir { get; } = "动态链接库目录";
 
         public SettingsViewModel()
         {

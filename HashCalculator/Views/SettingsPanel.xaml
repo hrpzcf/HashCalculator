@@ -235,46 +235,62 @@
                         Grid.Row="1"
                         Grid.ColumnSpan="2"
                         Margin="0,8,0,0">
-                        <TextBlock
-                            FontSize="8pt"
-                            Style="{StaticResource DescTextBlockStyle}"
-                            Text="1. 安装右键菜单后，程序会在同目录下释放菜单扩展模块 (HashCalculator[32].dll 文件)" />
-                        <TextBlock
-                            Margin="0,4,0,0"
-                            FontSize="8pt"
-                            Style="{StaticResource DescTextBlockStyle}"
-                            Text="2. 不可移动、删除、重命名 HashCalculator[32].dll 文件，否则右键菜单将失效" />
-                        <TextBlock
-                            Margin="0,4,0,0"
-                            FontSize="8pt"
-                            Style="{StaticResource DescTextBlockStyle}"
-                            Text="3. 不可重命名 HashCalculator.exe 文件，否则将无法被右键菜单唤起" />
-                        <TextBlock
-                            Margin="0,4,0,0"
-                            FontSize="8pt"
-                            Style="{StaticResource DescTextBlockStyle}"
-                            Text="4. 安装右键扩展菜单后不能移动 HashCalculator.exe，否则将无法被右键菜单唤起" />
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock
+                                FontSize="8pt"
+                                Style="{StaticResource DescTextBlockStyle}"
+                                Text="1. 安装右键菜单后，程序会在 " />
+                            <TextBlock
+                                Cursor="Hand"
+                                Foreground="Blue"
+                                MouseLeftButtonDown="OnTextBlockMouseLeftButtonDown"
+                                Text="{Binding Source={x:Static local:SettingsViewModel.ShellExtDir}}" />
+                            <TextBlock
+                                FontSize="8pt"
+                                Style="{StaticResource DescTextBlockStyle}"
+                                Text=" 下释放外壳扩展模块 (HashCalculator[32].dll 文件)" />
+                        </StackPanel>
                         <TextBlock
                             Margin="0,4,0,0"
                             FontSize="8pt"
                             Style="{StaticResource DescTextBlockStyle}"
-                            Text="5. 移动或删除 HashCalculator.exe 前先卸载右键菜单，程序会清理注册表并删除菜单扩展模块" />
+                            Text="2. 不可强制移动、删除、重命名 HashCalculator[32].dll 文件，否则右键菜单将失效" />
+                        <StackPanel Margin="0,4,0,0" Orientation="Horizontal">
+                            <TextBlock
+                                FontSize="8pt"
+                                Style="{StaticResource DescTextBlockStyle}"
+                                Text="3. 移动或重命名 HashCalculator.exe 文件后，需 " />
+                            <TextBlock
+                                Cursor="Hand"
+                                Foreground="Red"
+                                MouseLeftButtonDown="OnTextBlockMouseLeftButtonDown"
+                                Text="{Binding Source={x:Static local:SettingsViewModel.FixExePath}}" />
+                            <TextBlock
+                                FontSize="8pt"
+                                Style="{StaticResource DescTextBlockStyle}"
+                                Text="，否则将无法被右键菜单唤起" />
+                        </StackPanel>
                         <TextBlock
                             Margin="0,4,0,0"
                             FontSize="8pt"
-                            Foreground="MediumVioletRed"
                             Style="{StaticResource DescTextBlockStyle}"
-                            Text="6. 下载新版本后先在旧版本上卸载右键菜单再打开新版本安装右键菜单以避免出现兼容问题" />
+                            Text="4. 删除 HashCalculator.exe 前先卸载右键菜单，程序会清理注册表并删除菜单扩展模块" />
+                        <TextBlock
+                            Margin="0,4,0,0"
+                            FontSize="8pt"
+                            Foreground="LightSeaGreen"
+                            Style="{StaticResource DescTextBlockStyle}"
+                            Text="5. 下载新版本后先在旧版本上卸载右键菜单再打开新版本安装右键菜单以避免出现兼容问题" />
                         <TextBlock
                             Margin="0,4,0,0"
                             FontSize="8pt"
                             Style="{StaticResource DescTextBlockStyle}"
-                            Text="7. 关联 .hcb 文件后，通过 HashCalculator 导出的 .hcb 哈希结果文件可通过双击进行校验" />
+                            Text="6. 关联 .hcb 文件后，通过 HashCalculator 导出的 .hcb 文件可通过双击进行快捷校验" />
                         <TextBlock
                             Margin="0,4,0,0"
                             FontSize="8pt"
                             Style="{StaticResource DescTextBlockStyle}"
-                            Text="8. 通过双击打开 .hcb 文件进行校验的要求是待被校验的文件要与 .hcb 文件在同一文件夹下" />
+                            Text="7. 通过双击打开 .hcb 文件进行快捷校验要求待被计算哈希值的文件与 .hcb 文件在同一目录下" />
                     </StackPanel>
                 </Grid>
             </GroupBox>
@@ -372,7 +388,7 @@
                             Cursor="Hand"
                             FontSize="8pt"
                             MouseLeftButtonDown="OnTextBlockMouseLeftButtonDown"
-                            Text="{Binding Source={x:Static local:SettingsViewModel.StringDllDir}}" />
+                            Text="{Binding Source={x:Static local:SettingsViewModel.AlgosDllDir}}" />
                         <TextBlock
                             FontSize="8pt"
                             Style="{StaticResource DescTextBlockStyle}"

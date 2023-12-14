@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -33,7 +32,7 @@ namespace HashCalculator
             e.Cancel = !this.viewModel.NotSettingShellExtension;
         }
 
-        private void OnTextBlockMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private async void OnTextBlockMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (sender is TextBlock textBlock)
             {
@@ -49,7 +48,23 @@ namespace HashCalculator
                         MessageBox.Show(this, $"已经成功更新相关文件", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                 }
-                else if (textBlock.Text == SettingsViewModel.StringDllDir)
+                else if (textBlock.Text == SettingsViewModel.ShellExtDir)
+                {
+                    CommonUtils.OpenFolderAndSelectItem(Settings.ConfigDir.FullName);
+                }
+                else if (textBlock.Text == SettingsViewModel.FixExePath)
+                {
+                    Exception exception = await ShellExtHelper.RegUpdateAppPathAsync();
+                    if (exception == null)
+                    {
+                        MessageBox.Show(this, $"修复成功！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show(this, $"修复失败：{exception.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+                else if (textBlock.Text == SettingsViewModel.AlgosDllDir)
                 {
                     CommonUtils.OpenFolderAndSelectItem(Settings.libDir);
                 }
