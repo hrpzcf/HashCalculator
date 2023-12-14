@@ -28,5 +28,9 @@
 #define IDM_COMPUTE_STREEBOG_256    25
 #define IDM_COMPUTE_PARENT          26
 
-#define EXECUTABLE                  L"hashcalculator.exe"
+#define HC_EXECUTABLE               L"HashCalculator.exe"
+#define HCEXE_REGPATH               L"Software\\Microsoft\\Windows\\CurrentVersion\\App Paths"
 #define MAX_CMD_CHARS               32767
+
+BOOL GetHashCalculatorPath(LPWSTR* buffer, LPDWORD bufsize);
+VOID ShowMessageType(HMODULE hModule, UINT titleID, UINT messageID, UINT uType);

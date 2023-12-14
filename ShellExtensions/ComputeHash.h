@@ -25,11 +25,10 @@ class ATL_NO_VTABLE CComputeHash :
     public IShellExtInit,
     public IContextMenu
 {
-    HBITMAP bitmap_menu1 = nullptr;
-    HBITMAP bitmap_menu2 = nullptr;
-    vector<wstring> filepath_list;
-    LPWSTR executable_path = nullptr;
-    HINSTANCE module_inst = nullptr;
+    vector<wstring> vFilepathList;
+    HINSTANCE hModule = nullptr;
+    HBITMAP hBitmapMenu1 = nullptr;
+    HBITMAP hBitmapMenu2 = nullptr;
     VOID CreateGUIProcessComputeHash(LPCWSTR);
 
 public:

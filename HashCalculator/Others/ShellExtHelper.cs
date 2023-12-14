@@ -13,12 +13,12 @@ namespace HashCalculator
     {
         static ShellExtHelper()
         {
-            nodeHashCalculatorAppPaths = new RegNode(hashCalculatorFile)
+            nodeHashCalculatorAppPaths = new RegNode(keyNameHashCalculator)
             {
                 Values = new RegValue[]
                 {
                     new RegValue("", executablePath, RegistryValueKind.String),
-                    new RegValue("Path", executableFolder, RegistryValueKind.String)
+                    new RegValue("Path", executableDir, RegistryValueKind.String)
                 }
             };
         }
@@ -75,6 +75,17 @@ namespace HashCalculator
             {
                 try
                 {
+                    if (!Directory.Exists(shellExtensionsDir))
+                    {
+                        try
+                        {
+                            Directory.CreateDirectory(shellExtensionsDir);
+                        }
+                        catch
+                        {
+                            return new FileNotFoundException($"创建 \"{shellExtensionsDir}\" 目录失败");
+                        }
+                    }
                     if (string.IsNullOrEmpty(executablePath))
                     {
                         return new FileNotFoundException("没有获取到当前程序的可执行文件路径");
@@ -84,7 +95,7 @@ namespace HashCalculator
                         await UninstallShellExtension();
                     }
                     Assembly executing = Assembly.GetExecutingAssembly();
-                    if (executing.GetManifestResourceStream(embeddedResourcePath) is Stream stream)
+                    if (executing.GetManifestResourceStream(embeddedShellExtPath) is Stream stream)
                     {
                         using (stream)
                         {
@@ -146,7 +157,7 @@ namespace HashCalculator
                 }
                 else
                 {
-                    return new FileNotFoundException("没有在程序所在目录找到外壳扩展模块");
+                    return new FileNotFoundException($"没有在 \"{shellExtensionsDir}\" 目录找到外壳扩展模块");
                 }
             });
         }
@@ -223,13 +234,14 @@ namespace HashCalculator
             return await HKCUDeleteNode(regPathAppPaths, nodeHashCalculatorAppPaths);
         }
 
-        private const string hashCalculatorFile = "HashCalculator.exe";
+        private const string keyNameHashCalculator = "HashCalculator.exe";
         private const string regPathAppPaths = "Software\\Microsoft\\Windows\\CurrentVersion\\App Paths";
         private static readonly RegNode nodeHashCalculatorAppPaths;
         private static readonly string executablePath = Assembly.GetExecutingAssembly().Location;
-        private static readonly string executableFolder = Path.GetDirectoryName(executablePath);
+        private static readonly string executableDir = Path.GetDirectoryName(executablePath);
         private static readonly string shellExtensionName = Environment.Is64BitOperatingSystem ? "HashCalculator.dll" : "HashCalculator32.dll";
-        private static readonly string embeddedResourcePath = $"HashCalculator.ShellExt.{shellExtensionName}";
-        private static readonly string shellExtensionsPath = Path.Combine(executableFolder, shellExtensionName);
+        private static readonly string embeddedShellExtPath = $"HashCalculator.ShellExt.{shellExtensionName}";
+        private static readonly string shellExtensionsDir = Settings.ConfigDir.FullName;
+        private static readonly string shellExtensionsPath = Path.Combine(shellExtensionsDir, shellExtensionName);
     }
 }

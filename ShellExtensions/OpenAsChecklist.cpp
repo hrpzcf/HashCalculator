@@ -6,14 +6,15 @@
 #include "ResString.h"
 
 
-VOID COpenAsChecklist::CreateGUIProcessVerifyHash(LPWSTR algo) {
-    if (nullptr == this->checklist_path) {
+VOID COpenAsChecklist::CreateGUIProcessVerifyHash(LPCWSTR algo) const {
+    if (nullptr == this->checklistPath) {
         return;
     }
-    if (nullptr == this->executable_path) {
-        ResWString title = ResWString(this->module_inst, IDS_TITLE_ERROR);
-        ResWString text = ResWString(this->module_inst, IDS_NO_EXECUTABLE_PATH);
-        MessageBoxW(nullptr, text.String(), title.String(), MB_TOPMOST | MB_ICONERROR);
+    DWORD bufferSize = MAX_PATH;
+    LPWSTR exePathBuffer = new WCHAR[bufferSize]();
+    if (!GetHashCalculatorPath(&exePathBuffer, &bufferSize) || !PathFileExistsW(exePathBuffer)) {
+        delete[] exePathBuffer;
+        ShowMessageType(this->hModule, IDS_TITLE_ERROR, IDS_NO_EXECUTABLE_PATH, MB_TOPMOST | MB_ICONERROR);
         return;
     }
     // 此处的字符 'p' 不是传给 HashCalculator 的命令，仅作为占位符，C# 程序接收不到此字符。
@@ -27,71 +28,34 @@ VOID COpenAsChecklist::CreateGUIProcessVerifyHash(LPWSTR algo) {
     }
     command_line += L" --list";
     // 为什么 +4：checklist_path 前面 1 个空格和前后 2 个引号，1 个终止字符
-    SIZE_T cmd_characters = command_line.length() + wcslen(this->checklist_path) + 4;
+    SIZE_T cmd_characters = command_line.length() + wcslen(this->checklistPath) + 4;
     if (cmd_characters > MAX_CMD_CHARS) {
         return;
     }
-    command_line += L" \"" + wstring(this->checklist_path) + L"\"";
-    LPWSTR commandline_buffer;
-    try {
-        commandline_buffer = new WCHAR[cmd_characters];
-    }
-    catch (const std::bad_alloc&) {
-        return;
-    }
-    StringCchCopyW(commandline_buffer, cmd_characters, command_line.c_str());
+    command_line += L" \"" + wstring(this->checklistPath) + L"\"";
+    LPWSTR commandlineBuffer = new WCHAR[cmd_characters];
+    StringCchCopyW(commandlineBuffer, cmd_characters, command_line.c_str());
     STARTUPINFO startup_info = { 0 };
     startup_info.cb = sizeof(startup_info);
     PROCESS_INFORMATION proc_info = { 0 };
-    if (CreateProcessW(this->executable_path, commandline_buffer, NULL, NULL, FALSE, NORMAL_PRIORITY_CLASS,
-        NULL, NULL, &startup_info, &proc_info))
+    if (CreateProcessW(exePathBuffer, commandlineBuffer, NULL, NULL, FALSE, NORMAL_PRIORITY_CLASS, NULL,
+        NULL, &startup_info, &proc_info))
     {
         CloseHandle(proc_info.hThread);
         CloseHandle(proc_info.hProcess);
     }
-    delete[] commandline_buffer;
+    delete[] exePathBuffer;
+    delete[] commandlineBuffer;
 }
 
 COpenAsChecklist::COpenAsChecklist() {
-    this->module_inst = _AtlBaseModule.GetModuleInstance();
-    try
-    {
-        DWORD bufsize = MAX_PATH;
-        LPWSTR  module_dirpath = new WCHAR[bufsize];
-        while (true)
-        {
-            DWORD size = GetModuleFileNameW(module_inst, module_dirpath, bufsize);
-            if (GetLastError() == ERROR_INSUFFICIENT_BUFFER) {
-                delete[]  module_dirpath;
-                bufsize += MAX_PATH;
-                module_dirpath = new WCHAR[bufsize];
-                continue;
-            }
-            if (!PathRemoveFileSpecW(module_dirpath)) {
-                break;
-            }
-            SIZE_T moduledir_chars = wcslen(module_dirpath);
-            if (moduledir_chars == 0) {
-                break;
-            }
-            SIZE_T exec_total_chars = moduledir_chars + 2 + wcslen(EXECUTABLE);
-            this->executable_path = new WCHAR[exec_total_chars]();
-            StringCchCatW(this->executable_path, exec_total_chars, module_dirpath);
-            StringCchCatW(this->executable_path, exec_total_chars, L"\\");
-            StringCchCatW(this->executable_path, exec_total_chars, EXECUTABLE);
-            break;
-        }
-        delete[] module_dirpath;
-    }
-    catch (const std::bad_alloc&) {
-    }
-    this->bitmap_menu = LoadBitmapW(module_inst, MAKEINTRESOURCEW(IDB_BITMAP_MENU3));
+    this->hModule = _AtlBaseModule.GetModuleInstance();
+    this->hBitmapMenu = LoadBitmapW(this->hModule, MAKEINTRESOURCEW(IDB_BITMAP_MENU3));
 }
 
 COpenAsChecklist::~COpenAsChecklist() {
-    delete[] this->checklist_path;
-    delete[] this->executable_path;
-    DeleteObject(this->bitmap_menu);
+    delete[] this->checklistPath;
+    DeleteObject(this->hBitmapMenu);
 }
 
 STDMETHODIMP COpenAsChecklist::Initialize(
@@ -99,8 +63,8 @@ STDMETHODIMP COpenAsChecklist::Initialize(
     if (nullptr == pdtobj) {
         return E_INVALIDARG;
     }
-    delete[] this->checklist_path;
-    this->checklist_path = nullptr;
+    delete[] this->checklistPath;
+    this->checklistPath = nullptr;
     STGMEDIUM	stg = { TYMED_HGLOBAL };
     FORMATETC	fmt = {
         CF_HDROP,
@@ -108,12 +72,11 @@ STDMETHODIMP COpenAsChecklist::Initialize(
         DVASPECT_CONTENT,
         -1,
         TYMED_HGLOBAL };
-    HDROP		drop_handle = nullptr;
     if (FAILED(pdtobj->GetData(&fmt, &stg)))
     {
         return E_INVALIDARG;
     }
-    drop_handle = (HDROP)GlobalLock(stg.hGlobal);
+    HDROP drop_handle = (HDROP)GlobalLock(stg.hGlobal);
     if (nullptr == drop_handle)
     {
         ReleaseStgMedium(&stg);
@@ -126,24 +89,17 @@ STDMETHODIMP COpenAsChecklist::Initialize(
         return E_INVALIDARG;
     }
     UINT chars = DragQueryFileW(drop_handle, 0, nullptr, 0) + 1;
-    if (0 == chars) {
+    if (1 >= chars) {
         GlobalUnlock(stg.hGlobal);
         ReleaseStgMedium(&stg);
         return E_INVALIDARG;
     }
-    try {
-        this->checklist_path = new WCHAR[chars];
-    }
-    catch (const std::bad_alloc&) {
+    this->checklistPath = new WCHAR[chars];
+    if (0 == DragQueryFileW(drop_handle, 0, this->checklistPath, chars)) {
         GlobalUnlock(stg.hGlobal);
         ReleaseStgMedium(&stg);
-        return E_FAIL;
-    }
-    if (0 == DragQueryFileW(drop_handle, 0, this->checklist_path, chars)) {
-        GlobalUnlock(stg.hGlobal);
-        ReleaseStgMedium(&stg);
-        delete[] this->checklist_path;
-        this->checklist_path = nullptr;
+        delete[] this->checklistPath;
+        this->checklistPath = nullptr;
         return E_FAIL;
     }
     GlobalUnlock(stg.hGlobal);
@@ -159,7 +115,7 @@ STDMETHODIMP COpenAsChecklist::QueryContextMenu(
     }
     HMENU hParentMenu = CreatePopupMenu();
     LONG flag = MF_STRING | MF_POPUP;
-    ResWString autoAlgoRes = ResWString(this->module_inst, IDS_MENU_VERIFY_AUTO);
+    ResWString autoAlgoRes = ResWString(this->hModule, IDS_MENU_VERIFY_AUTO);
     AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_COMPUTE_AUTO, autoAlgoRes.String());
     AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_COMPUTE_XXH32, L"XXH32");
     AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_COMPUTE_XXH64, L"XXH64");
@@ -188,7 +144,7 @@ STDMETHODIMP COpenAsChecklist::QueryContextMenu(
     AppendMenuW(hParentMenu, flag, idCmdFirst + IDM_COMPUTE_STREEBOG_256, L"Streebog-256");
     // 方法退出后 parentMenuRes 会被析构，parentMenuText 会被 delete
     // menuInfo.dwTypeData = parentMenuText 安全? InsertMenuItemW 是否复制数据?
-    ResWString parentMenuRes = ResWString(this->module_inst, IDS_MENU_VERIFY);
+    ResWString parentMenuRes = ResWString(this->hModule, IDS_MENU_VERIFY);
     LPWSTR parentMenuText = parentMenuRes.String();
     MENUITEMINFOW menuInfo = { 0 };
     menuInfo.cbSize = sizeof(MENUITEMINFOW);
@@ -198,10 +154,10 @@ STDMETHODIMP COpenAsChecklist::QueryContextMenu(
     menuInfo.hSubMenu = hParentMenu;
     menuInfo.dwTypeData = parentMenuText;
     menuInfo.cch = (UINT)wcslen(parentMenuText);
-    if (nullptr != this->bitmap_menu) {
+    if (nullptr != this->hBitmapMenu) {
         menuInfo.fMask |= MIIM_CHECKMARKS;
-        menuInfo.hbmpChecked = this->bitmap_menu;
-        menuInfo.hbmpUnchecked = this->bitmap_menu;
+        menuInfo.hbmpChecked = this->hBitmapMenu;
+        menuInfo.hbmpUnchecked = this->hBitmapMenu;
     }
     InsertMenuItemW(hmenu, indexMenu + 1, true, &menuInfo);
     return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, IDM_COMPUTE_PARENT + 1);
@@ -299,11 +255,6 @@ STDMETHODIMP COpenAsChecklist::InvokeCommand(CMINVOKECOMMANDINFO* pici) {
     return S_OK;
 }
 
-STDMETHODIMP COpenAsChecklist::GetCommandString(
-    UINT_PTR idCmd,
-    UINT uType,
-    UINT* pReserved,
-    _Out_writes_bytes_((uType& GCS_UNICODE) ? (cchMax * sizeof(wchar_t)) : cchMax) _When_(!(uType& (GCS_VALIDATEA | GCS_VALIDATEW)), _Null_terminated_) CHAR* pszName,
-    UINT cchMax) {
+STDMETHODIMP COpenAsChecklist::GetCommandString(UINT_PTR idCmd, UINT uType, UINT* pReserved, CHAR* pszName, UINT cchMax) {
     return E_NOTIMPL;
 }

@@ -11,10 +11,14 @@
 
 
 VOID CComputeHash::CreateGUIProcessComputeHash(LPCWSTR algo) {
-    if (nullptr == this->executable_path) {
-        ResWString title = ResWString(this->module_inst, IDS_TITLE_ERROR);
-        ResWString text = ResWString(this->module_inst, IDS_NO_EXECUTABLE_PATH);
-        MessageBoxW(nullptr, text.String(), title.String(), MB_TOPMOST | MB_ICONERROR);
+    if (this->vFilepathList.empty()) {
+        return;
+    }
+    DWORD bufferSize = MAX_PATH;
+    LPWSTR exePathBuffer = new WCHAR[bufferSize]();
+    if (!GetHashCalculatorPath(&exePathBuffer, &bufferSize) || !PathFileExistsW(exePathBuffer)) {
+        delete[] exePathBuffer;
+        ShowMessageType(this->hModule, IDS_TITLE_ERROR, IDS_NO_EXECUTABLE_PATH, MB_TOPMOST | MB_ICONERROR);
         return;
     }
     // 此处的字符 'p' 不是传给 HashCalculator 的命令，仅作为占位符，C# 程序接收不到此字符。
@@ -27,11 +31,11 @@ VOID CComputeHash::CreateGUIProcessComputeHash(LPCWSTR algo) {
         command_line += wstring(L" --algo ") + algo;
     }
     SIZE_T cmd_characters = command_line.length() + 1;
-    for (SIZE_T i = 0; i < this->filepath_list.size(); ++i) {
-        if (this->filepath_list[i].back() == L'\\') {
-            this->filepath_list[i] += L'\\';
+    for (SIZE_T i = 0; i < this->vFilepathList.size(); ++i) {
+        if (this->vFilepathList[i].back() == L'\\') {
+            this->vFilepathList[i] += L'\\';
         }
-        wstring file_path = L" \"" + this->filepath_list[i] + L"\"";
+        wstring file_path = L" \"" + this->vFilepathList[i] + L"\"";
         SIZE_T file_path_characters = cmd_characters + file_path.length();
         if (file_path_characters < MAX_CMD_CHARS)
         {
@@ -47,21 +51,13 @@ VOID CComputeHash::CreateGUIProcessComputeHash(LPCWSTR algo) {
             break;
         }
     }
-    LPWSTR commandline_buffer;
-    try
-    {
-        commandline_buffer = new WCHAR[cmd_characters];
-    }
-    catch (const std::bad_alloc&)
-    {
-        return;
-    }
+    LPWSTR commandline_buffer = new WCHAR[cmd_characters];
     StringCchCopyW(commandline_buffer, cmd_characters, command_line.c_str());
     STARTUPINFO startup_info = { 0 };
     startup_info.cb = sizeof(startup_info);
     PROCESS_INFORMATION proc_info = { 0 };
-    if (CreateProcessW(this->executable_path, commandline_buffer, NULL, NULL, FALSE, NORMAL_PRIORITY_CLASS,
-        NULL, NULL, &startup_info, &proc_info))
+    if (CreateProcessW(exePathBuffer, commandline_buffer, NULL, NULL, FALSE, NORMAL_PRIORITY_CLASS, NULL,
+        NULL, &startup_info, &proc_info))
     {
         CloseHandle(proc_info.hThread);
         CloseHandle(proc_info.hProcess);
@@ -70,57 +66,28 @@ VOID CComputeHash::CreateGUIProcessComputeHash(LPCWSTR algo) {
 }
 
 CComputeHash::CComputeHash() {
-    this->module_inst = _AtlBaseModule.GetModuleInstance();
-    try
-    {
-        DWORD bufsize = MAX_PATH;
-        LPWSTR  module_dirpath = new WCHAR[bufsize];
-        while (true)
-        {
-            DWORD size = GetModuleFileNameW(module_inst, module_dirpath, bufsize);
-            if (GetLastError() == ERROR_INSUFFICIENT_BUFFER) {
-                delete[]  module_dirpath;
-                bufsize += MAX_PATH;
-                module_dirpath = new WCHAR[bufsize];
-                continue;
-            }
-            if (!PathRemoveFileSpecW(module_dirpath)) {
-                break;
-            }
-            SIZE_T moduledir_chars = wcslen(module_dirpath);
-            if (moduledir_chars == 0) {
-                break;
-            }
-            SIZE_T exec_total_chars = moduledir_chars + 2 + wcslen(EXECUTABLE);
-            this->executable_path = new WCHAR[exec_total_chars]();
-            StringCchCatW(this->executable_path, exec_total_chars, module_dirpath);
-            StringCchCatW(this->executable_path, exec_total_chars, L"\\");
-            StringCchCatW(this->executable_path, exec_total_chars, EXECUTABLE);
-            break;
-        }
-        delete[] module_dirpath;
-    }
-    catch (const std::bad_alloc&) {
-    }
-    this->bitmap_menu1 = LoadBitmapW(module_inst, MAKEINTRESOURCEW(IDB_BITMAP_MENU1));
-    this->bitmap_menu2 = LoadBitmapW(module_inst, MAKEINTRESOURCEW(IDB_BITMAP_MENU2));
+    this->hModule = _AtlBaseModule.GetModuleInstance();
+    this->hBitmapMenu1 = LoadBitmapW(this->hModule, MAKEINTRESOURCEW(IDB_BITMAP_MENU1));
+    this->hBitmapMenu2 = LoadBitmapW(this->hModule, MAKEINTRESOURCEW(IDB_BITMAP_MENU2));
 }
 
 CComputeHash::~CComputeHash() {
-    delete[] this->executable_path;
-    DeleteObject(this->bitmap_menu1);
-    DeleteObject(this->bitmap_menu2);
+    DeleteObject(this->hBitmapMenu1);
+    DeleteObject(this->hBitmapMenu2);
 }
 
 STDMETHODIMP CComputeHash::Initialize(
     PCIDLIST_ABSOLUTE pidlFolder, IDataObject* pdtobj, HKEY hkeyProgID) {
     WCHAR filepath_buffer[MAX_PATH];
-    this->filepath_list.clear();
+    this->vFilepathList.clear();
     if (nullptr != pidlFolder) {
         if (SHGetPathFromIDListW(pidlFolder, filepath_buffer)) {
-            this->filepath_list.push_back(filepath_buffer);
+            this->vFilepathList.push_back(filepath_buffer);
             return S_OK;
         }
+        return E_INVALIDARG;
+    }
+    if (nullptr == pdtobj) {
         return E_INVALIDARG;
     }
     STGMEDIUM	stg = { TYMED_HGLOBAL };
@@ -130,15 +97,11 @@ STDMETHODIMP CComputeHash::Initialize(
         DVASPECT_CONTENT,
         -1,
         TYMED_HGLOBAL };
-    HDROP		drop_handle = nullptr;
-    if (nullptr == pdtobj) {
-        return E_INVALIDARG;
-    }
     if (FAILED(pdtobj->GetData(&fmt, &stg)))
     {
         return E_INVALIDARG;
     }
-    drop_handle = (HDROP)GlobalLock(stg.hGlobal);
+    HDROP drop_handle = (HDROP)GlobalLock(stg.hGlobal);
     if (nullptr == drop_handle)
     {
         ReleaseStgMedium(&stg);
@@ -155,7 +118,7 @@ STDMETHODIMP CComputeHash::Initialize(
     {
         if (0 != DragQueryFileW(drop_handle, index, filepath_buffer, MAX_PATH))
         {
-            this->filepath_list.push_back(filepath_buffer);
+            this->vFilepathList.push_back(filepath_buffer);
         }
     }
     GlobalUnlock(stg.hGlobal);
@@ -171,7 +134,7 @@ STDMETHODIMP CComputeHash::QueryContextMenu(
     }
     HMENU submenu_handle = CreatePopupMenu();
     LONG flag = MF_STRING | MF_POPUP;
-    ResWString autoAlgoRes = ResWString(this->module_inst, IDS_MENU_COMPUTE_AUTO);
+    ResWString autoAlgoRes = ResWString(this->hModule, IDS_MENU_COMPUTE_AUTO);
     AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_AUTO, autoAlgoRes.String());
     AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_XXH32, L"XXH32");
     AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_XXH64, L"XXH64");
@@ -200,7 +163,7 @@ STDMETHODIMP CComputeHash::QueryContextMenu(
     AppendMenuW(submenu_handle, flag, idCmdFirst + IDM_COMPUTE_STREEBOG_256, L"Streebog-256");
     // 方法退出后 parentMenuRes 会被析构，parentMenuText 会被 delete
     // menu_info.dwTypeData = parentMenuText 安全? InsertMenuItemW 是否复制数据?
-    ResWString parentMenuRes = ResWString(this->module_inst, IDS_MENU_COMPUTE);
+    ResWString parentMenuRes = ResWString(this->hModule, IDS_MENU_COMPUTE);
     LPWSTR parentMenuText = parentMenuRes.String();
     MENUITEMINFOW menu_info = { 0 };
     menu_info.cbSize = sizeof(MENUITEMINFOW);
@@ -210,10 +173,10 @@ STDMETHODIMP CComputeHash::QueryContextMenu(
     menu_info.hSubMenu = submenu_handle;
     menu_info.dwTypeData = parentMenuText;
     menu_info.cch = (UINT)wcslen(parentMenuText);
-    if (nullptr != this->bitmap_menu2) {
+    if (nullptr != this->hBitmapMenu2) {
         menu_info.fMask |= MIIM_CHECKMARKS;
-        menu_info.hbmpChecked = this->bitmap_menu2;
-        menu_info.hbmpUnchecked = this->bitmap_menu2;
+        menu_info.hbmpChecked = this->hBitmapMenu2;
+        menu_info.hbmpUnchecked = this->hBitmapMenu2;
     }
     InsertMenuItemW(hmenu, indexMenu + 1, true, &menu_info);
     return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, IDM_COMPUTE_PARENT + 1);
@@ -311,11 +274,6 @@ STDMETHODIMP CComputeHash::InvokeCommand(CMINVOKECOMMANDINFO* pici) {
     return S_OK;
 }
 
-STDMETHODIMP CComputeHash::GetCommandString(
-    UINT_PTR idCmd,
-    UINT uType,
-    UINT* pReserved,
-    _Out_writes_bytes_((uType& GCS_UNICODE) ? (cchMax * sizeof(wchar_t)) : cchMax) _When_(!(uType& (GCS_VALIDATEA | GCS_VALIDATEW)), _Null_terminated_) CHAR* pszName,
-    UINT cchMax) {
+STDMETHODIMP CComputeHash::GetCommandString(UINT_PTR idCmd, UINT uType, UINT* pReserved, CHAR* pszName, UINT cchMax) {
     return E_NOTIMPL;
 }

@@ -19,11 +19,10 @@ class ATL_NO_VTABLE COpenAsChecklist :
     public IShellExtInit,
     public IContextMenu
 {
-    LPWSTR checklist_path = nullptr;
-    LPWSTR executable_path = nullptr;
-    HBITMAP bitmap_menu = nullptr;
-    HINSTANCE module_inst = nullptr;
-    VOID CreateGUIProcessVerifyHash(LPWSTR);
+    HINSTANCE hModule = nullptr;
+    LPWSTR checklistPath = nullptr;
+    HBITMAP hBitmapMenu = nullptr;
+    VOID CreateGUIProcessVerifyHash(LPCWSTR) const;
 public:
     COpenAsChecklist();
     ~COpenAsChecklist();
