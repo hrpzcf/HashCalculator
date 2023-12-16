@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 
 namespace HashCalculator
 {
-    internal class ShellMenuModifierModel : NotifiableModel
+    internal class ShellMenuEditorModel : NotifiableModel
     {
         private HcCtxMenuModel _selectedMenu;
         private RelayCommand _resetMenusCmd;
@@ -22,7 +22,7 @@ namespace HashCalculator
         private ObservableCollection<HcCtxMenuModel> _menuList =
             new ObservableCollection<HcCtxMenuModel>();
 
-        public ShellMenuModifier Parent { get; }
+        public ShellMenuEditor Parent { get; }
 
         public ObservableCollection<HcCtxMenuModel> MenuList
         {
@@ -201,9 +201,9 @@ namespace HashCalculator
         {
             if (this.SelectedMenu != null)
             {
-                ShellSubmenuModifier modifier = new ShellSubmenuModifier(this.SelectedMenu);
-                modifier.Owner = this.Parent;
-                modifier.ShowDialog();
+                ShellSubmenuEditor editor = new ShellSubmenuEditor(this.SelectedMenu);
+                editor.Owner = this.Parent;
+                editor.ShowDialog();
             }
             else
             {
@@ -224,7 +224,7 @@ namespace HashCalculator
             }
         }
 
-        public ShellMenuModifierModel(ShellMenuModifier parent)
+        public ShellMenuEditorModel(ShellMenuEditor parent)
         {
             this.Parent = parent;
             this.LoadMenuListFromJsonFile();

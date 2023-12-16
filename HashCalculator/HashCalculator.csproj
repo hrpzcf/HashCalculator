@@ -217,7 +217,7 @@
     <Compile Include="Others\Converters.cs" />
     <Compile Include="Others\Enumerates.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
-    <Compile Include="ViewModels\ShellMenuModifierModel.cs" />
+    <Compile Include="ViewModels\ShellMenuEditorModel.cs" />
     <Compile Include="Views\AboutWindow.xaml.cs">
       <DependentUpon>AboutWindow.xaml</DependentUpon>
     </Compile>
@@ -234,11 +234,11 @@
       <DependentUpon>SettingsPanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="Others\ModelArg.cs" />
-    <Compile Include="Views\ShellMenuModifier.xaml.cs">
-      <DependentUpon>ShellMenuModifier.xaml</DependentUpon>
+    <Compile Include="Views\ShellMenuEditor.xaml.cs">
+      <DependentUpon>ShellMenuEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ShellSubmenuModifier.xaml.cs">
-      <DependentUpon>ShellSubmenuModifier.xaml</DependentUpon>
+    <Compile Include="Views\ShellSubmenuEditor.xaml.cs">
+      <DependentUpon>ShellSubmenuEditor.xaml</DependentUpon>
     </Compile>
     <Page Include="Filters\CmpResultFilterCtrl.xaml">
       <SubType>Designer</SubType>
@@ -357,11 +357,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ShellMenuModifier.xaml">
+    <Page Include="Views\ShellMenuEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ShellSubmenuModifier.xaml">
+    <Page Include="Views\ShellSubmenuEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

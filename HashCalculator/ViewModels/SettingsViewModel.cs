@@ -26,6 +26,10 @@ namespace HashCalculator
         private double cmdPanelHeight = 565.0;
         private double cmdPanelTopRelToMainWnd = 0.0;
         private double cmdPanelLeftRelToMainWnd = 0.0;
+        private double shellMenuEditorWidth = 600.0;
+        private double shellMenuEditorHeight = 400.0;
+        private double shellSubmenuEditorWidth = 400.0;
+        private double shellSubmenuEditorHeight = 600.0;
         private TaskNum selectedTaskNumberLimit = TaskNum.One;
         private ExportType resultFileTypeExportAs = ExportType.TxtFile;
         private ExportAlgos howToExportHashValues = ExportAlgos.Current;
@@ -315,6 +319,54 @@ namespace HashCalculator
             set
             {
                 this.SetPropNotify(ref this.cmdPanelLeftRelToMainWnd, value);
+            }
+        }
+
+        public double ShellMenuEditorWidth
+        {
+            get
+            {
+                return this.shellMenuEditorWidth;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.shellMenuEditorWidth, value);
+            }
+        }
+
+        public double ShellMenuEditorHeight
+        {
+            get
+            {
+                return this.shellMenuEditorHeight;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.shellMenuEditorHeight, value);
+            }
+        }
+
+        public double ShellSubmenuEditorWidth
+        {
+            get
+            {
+                return this.shellSubmenuEditorWidth;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.shellSubmenuEditorWidth, value);
+            }
+        }
+
+        public double ShellSubmenuEditorHeight
+        {
+            get
+            {
+                return this.shellSubmenuEditorHeight;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.shellSubmenuEditorHeight, value);
             }
         }
 
@@ -649,11 +701,11 @@ namespace HashCalculator
         private void OpenEditContextMenuAction(object param)
         {
             SettingsPanel.This.Close();
-            ShellMenuModifier shellextModifier = new ShellMenuModifier()
+            ShellMenuEditor shellextEditor = new ShellMenuEditor()
             {
                 Owner = MainWindow.This
             };
-            shellextModifier.ShowDialog();
+            shellextEditor.ShowDialog();
         }
 
         [XmlIgnore]
