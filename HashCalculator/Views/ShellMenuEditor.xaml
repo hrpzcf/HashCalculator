@@ -1,14 +1,14 @@
 ﻿<Window
-    x:Class="HashCalculator.ShellMenuModifier"
+    x:Class="HashCalculator.ShellMenuEditor"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="快捷菜单配置文件编辑器"
-    Width="600"
-    Height="400"
-    d:DataContext="{d:DesignInstance Type=local:ShellMenuModifierModel}"
+    Width="{Binding Source={x:Static local:Settings.Current}, Path=ShellMenuEditorWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+    Height="{Binding Source={x:Static local:Settings.Current}, Path=ShellMenuEditorHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+    d:DataContext="{d:DesignInstance Type=local:ShellMenuEditorModel}"
     WindowStartupLocation="CenterOwner"
     mc:Ignorable="d">
     <Window.Resources>
@@ -56,7 +56,7 @@
                                 <ComboBox
                                     Margin="2"
                                     DisplayMemberPath="Display"
-                                    ItemsSource="{Binding Source={x:Static local:ShellMenuModifierModel.AvailableMenuTypes}}"
+                                    ItemsSource="{Binding Source={x:Static local:ShellMenuEditorModel.AvailableMenuTypes}}"
                                     SelectedValue="{Binding MenuType, UpdateSourceTrigger=PropertyChanged}"
                                     SelectedValuePath="ItemValue" />
                             </DataTemplate>
@@ -79,7 +79,7 @@
                                     Margin="2"
                                     DisplayMemberPath="Display"
                                     IsEnabled="{Binding HasSubmenus, Converter={StaticResource ReverseBooleanValueCvt}}"
-                                    ItemsSource="{Binding Source={x:Static local:ShellMenuModifierModel.AvailableAlgoTypes}}"
+                                    ItemsSource="{Binding Source={x:Static local:ShellMenuEditorModel.AvailableAlgoTypes}}"
                                     SelectedValue="{Binding AlgType, UpdateSourceTrigger=PropertyChanged}"
                                     SelectedValuePath="ItemValue" />
                             </DataTemplate>
