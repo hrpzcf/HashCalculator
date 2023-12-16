@@ -15,7 +15,8 @@ namespace HashCalculator
         public static readonly DirectoryInfo ConfigDir =
             new DirectoryInfo(Path.Combine(configBaseDataPath, "HashCalculator"));
         private static readonly string configFile = Path.Combine(ConfigDir.FullName, "settings.xml");
-        public static readonly string libDir = Path.Combine(ConfigDir.FullName, "Library");
+        public static readonly string MenuConfigFile = Path.Combine(ConfigDir.FullName, "menus.json");
+        public static readonly string LibraryDir = Path.Combine(ConfigDir.FullName, "Library");
 
         public static string[] StartupArgs { get; set; }
 
@@ -70,19 +71,19 @@ namespace HashCalculator
 
         public static void SetProcessEnvVar()
         {
-            Environment.SetEnvironmentVariable("PATH", libDir);
+            Environment.SetEnvironmentVariable("PATH", LibraryDir);
         }
 
         private static string ExtractFile(string fname, bool force, bool dll = true)
         {
-            string userDllPath = Path.Combine(libDir, fname);
+            string userDllPath = Path.Combine(LibraryDir, fname);
             if (force || !File.Exists(userDllPath))
             {
                 try
                 {
-                    if (!Directory.Exists(libDir))
+                    if (!Directory.Exists(LibraryDir))
                     {
-                        Directory.CreateDirectory(libDir);
+                        Directory.CreateDirectory(LibraryDir);
                     }
                     string resPath;
                     if (!dll)
@@ -128,7 +129,7 @@ namespace HashCalculator
             {
                 try
                 {
-                    foreach (string path in Directory.GetFiles(libDir, "*",
+                    foreach (string path in Directory.GetFiles(LibraryDir, "*",
                         SearchOption.TopDirectoryOnly))
                     {
                         try

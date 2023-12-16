@@ -62,6 +62,10 @@
       <HintPath>Assembly\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>Assembly\Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Assembly\System.Buffers.dll</HintPath>
@@ -206,12 +210,14 @@
     <Compile Include="ViewModels\AlgoGroupModel.cs" />
     <Compile Include="ViewModels\AlgosPanelModel.cs" />
     <Compile Include="ViewModels\AlgoInOutModel.cs" />
+    <Compile Include="ViewModels\HcCtxMenuModel.cs" />
     <Compile Include="ViewModels\FilterAndCmdPanelModel.cs" />
     <Compile Include="ViewModels\HashViewModel.cs" />
     <Compile Include="ViewModels\MainWndViewModel.cs" />
     <Compile Include="Others\Converters.cs" />
     <Compile Include="Others\Enumerates.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
+    <Compile Include="ViewModels\ShellMenuModifierModel.cs" />
     <Compile Include="Views\AboutWindow.xaml.cs">
       <DependentUpon>AboutWindow.xaml</DependentUpon>
     </Compile>
@@ -228,6 +234,12 @@
       <DependentUpon>SettingsPanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="Others\ModelArg.cs" />
+    <Compile Include="Views\ShellMenuModifier.xaml.cs">
+      <DependentUpon>ShellMenuModifier.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ShellSubmenuModifier.xaml.cs">
+      <DependentUpon>ShellSubmenuModifier.xaml</DependentUpon>
+    </Compile>
     <Page Include="Filters\CmpResultFilterCtrl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -345,6 +357,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\ShellMenuModifier.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ShellSubmenuModifier.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -417,6 +437,12 @@
   <ItemGroup>
     <EmbeddedResource Include="HashAlgos\AlgoDlls\hashalgs64.dll" />
     <EmbeddedResource Include="HashAlgos\AlgoDlls\hashalgs32.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Assembly\Newtonsoft.Json.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assembly\Newtonsoft.Json.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
