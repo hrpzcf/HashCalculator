@@ -203,7 +203,7 @@ namespace HashCalculator
         }
     }
 
-    internal class StateFinishedResultSucceededToVisiblityCvt : IMultiValueConverter
+    internal class StateFinishedResultSucceededToVisibilityCvt : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
@@ -225,7 +225,7 @@ namespace HashCalculator
         }
     }
 
-    internal class StateFinishedResultNotSucceedToVisiblityCvt : IMultiValueConverter
+    internal class StateFinishedResultNotSucceedToVisibilityCvt : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
@@ -271,7 +271,7 @@ namespace HashCalculator
         }
     }
 
-    internal class StateNotRunningResultSucceededToVisiblityCvt : IMultiValueConverter
+    internal class StateNotRunningResultSucceededToVisibilityCvt : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
@@ -376,17 +376,17 @@ namespace HashCalculator
         }
     }
 
-    internal class ReverseNoColumnCvt : IValueConverter
+    internal class BooleanFlaseToVisibilityCollapsedCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (!(bool)value)
+            if ((bool)value)
             {
-                return Visibility.Hidden;
+                return Visibility.Visible;
             }
             else
             {
-                return Visibility.Visible;
+                return Visibility.Collapsed;
             }
         }
 
@@ -867,6 +867,20 @@ namespace HashCalculator
                 return new CornerRadius(Math.Min(double1, double2) / 2);
             }
             return new CornerRadius();
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class EditSubmenusButtonEnabledCvt : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            Debug.Assert(values.Length == 2);
+            return values[0] != null && values[1] is bool result && result;
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

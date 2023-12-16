@@ -321,4 +321,25 @@
         /// </summary>
         TATMSHDL,
     }
+
+    /// <summary>
+    /// HashCalculator 的系统右键扩展菜单类型
+    /// </summary>
+    public enum MenuType
+    {
+        /// <summary>
+        /// 默认值
+        /// </summary>
+        Unknown,
+
+        /// <summary>
+        /// 菜单属于计算文件哈希值菜单
+        /// </summary>
+        Compute,
+
+        /// <summary>
+        /// 菜单属于校验文件哈希值菜单
+        /// </summary>
+        CheckHash,
+    }
 }

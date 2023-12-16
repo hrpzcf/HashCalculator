@@ -9,13 +9,12 @@
     <local:CmpResBorderBrushCvt x:Key="CmpResBorderBrushCvt" />
     <local:StateRunningToVisiblityCvt x:Key="StateRunningToVisiblityCvt" />
     <local:StateWaitingToVisiblityCvt x:Key="StateWaitingToVisiblityCvt" />
-    <local:StateFinishedResultSucceededToVisiblityCvt x:Key="StateFinishedResultSucceededToVisiblityCvt" />
-    <local:StateNotRunningResultSucceededToVisiblityCvt x:Key="StateNotRunningResultSucceededToVisiblityCvt" />
-    <local:StateFinishedResultNotSucceedToVisiblityCvt x:Key="StateFinishedResultNotSucceedToVisiblityCvt" />
+    <local:StateFinishedResultSucceededToVisibilityCvt x:Key="StateFinishedResultSucceededToVisibilityCvt" />
+    <local:StateNotRunningResultSucceededToVisibilityCvt x:Key="StateNotRunningResultSucceededToVisibilityCvt" />
+    <local:StateFinishedResultNotSucceedToVisibilityCvt x:Key="StateFinishedResultNotSucceedToVisibilityCvt" />
     <local:MainModelStateToBooleanCvt x:Key="MainModelStateToBooleanCvt" />
     <local:CmdPanelCriticalControlsEnabledCvt x:Key="CmdPanelCriticalControlsEnabledCvt" />
     <local:NoColumnCvt x:Key="NoColumnCvt" />
-    <local:ReverseNoColumnCvt x:Key="ReverseNoColumnCvt" />
     <local:ShowColumnCvt x:Key="ShowColumnCvt" />
     <local:ReverseBooleanValueCvt x:Key="ReverseBooleanValueCvt" />
     <local:SubBtnPauseImageSrcCvt x:Key="SubBtnPauseImageSrcCvt" />
@@ -43,4 +42,6 @@
     <local:CloneParameterArrayCvt x:Key="CloneParameterArrayCvt" />
     <local:SelectSmallerDoubleCvt x:Key="SelectSmallerDoubleCvt" />
     <local:RadiusFromSideLengthCvt x:Key="RadiusFromSideLengthCvt" />
+    <local:BooleanFlaseToVisibilityCollapsedCvt x:Key="BooleanFlaseToVisibilityCollapsedCvt" />
+    <local:EditSubmenusButtonEnabledCvt x:Key="EditSubmenusButtonEnabledCvt" />
 </ResourceDictionary>

@@ -66,7 +66,7 @@ namespace HashCalculator
                 }
                 else if (textBlock.Text == SettingsViewModel.AlgosDllDir)
                 {
-                    CommonUtils.OpenFolderAndSelectItem(Settings.libDir);
+                    CommonUtils.OpenFolderAndSelectItem(Settings.LibraryDir);
                 }
             }
         }

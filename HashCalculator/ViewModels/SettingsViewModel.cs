@@ -34,8 +34,8 @@ namespace HashCalculator
         private bool noExportColumn = false;
         private bool noDurationColumn = false;
         private bool noFileSizeColumn = false;
-        private bool filterOrCmderEnabled = true;
         private bool showExecutionTargetColumn = false;
+        private bool filterOrCmderEnabled = true;
         private bool runInMultiInstanceMode = false;
         private bool notSettingShellExtension = true;
         private bool preferChecklistAlgs = true;
@@ -47,6 +47,7 @@ namespace HashCalculator
         public int maxCharsNumRequiredForMonitoringClipboard = 128;
         private RelayCommand installShellExtCmd;
         private RelayCommand unInstallShellExtCmd;
+        private RelayCommand openEditContextMenuCmd;
 
         [XmlIgnore]
         public bool ClipboardUpdatedByMe { get; set; }
@@ -642,6 +643,29 @@ namespace HashCalculator
                     this.unInstallShellExtCmd = new RelayCommand(this.UnInstallShellExtAction);
                 }
                 return this.unInstallShellExtCmd;
+            }
+        }
+
+        private void OpenEditContextMenuAction(object param)
+        {
+            SettingsPanel.This.Close();
+            ShellMenuModifier shellextModifier = new ShellMenuModifier()
+            {
+                Owner = MainWindow.This
+            };
+            shellextModifier.ShowDialog();
+        }
+
+        [XmlIgnore]
+        public ICommand OpenEditContextMenuCmd
+        {
+            get
+            {
+                if (this.openEditContextMenuCmd == null)
+                {
+                    this.openEditContextMenuCmd = new RelayCommand(this.OpenEditContextMenuAction);
+                }
+                return this.openEditContextMenuCmd;
             }
         }
 

@@ -446,7 +446,7 @@
                                     TextTrimming="CharacterEllipsis"
                                     ToolTip="{Binding ModelDetails}">
                                     <TextBlock.Visibility>
-                                        <MultiBinding Converter="{StaticResource StateFinishedResultSucceededToVisiblityCvt}">
+                                        <MultiBinding Converter="{StaticResource StateFinishedResultSucceededToVisibilityCvt}">
                                             <Binding Path="State" />
                                             <Binding Path="Result" />
                                         </MultiBinding>
@@ -461,7 +461,7 @@
                                     Text="{Binding TaskMessage}"
                                     TextTrimming="CharacterEllipsis">
                                     <TextBlock.Visibility>
-                                        <MultiBinding Converter="{StaticResource StateNotRunningResultSucceededToVisiblityCvt}">
+                                        <MultiBinding Converter="{StaticResource StateNotRunningResultSucceededToVisibilityCvt}">
                                             <Binding Path="State" />
                                             <Binding Path="Result" />
                                         </MultiBinding>
@@ -516,7 +516,7 @@
                                     Style="{StaticResource GrayRoundTipButton1}"
                                     ToolTip="详情...">
                                     <Button.Visibility>
-                                        <MultiBinding Converter="{StaticResource StateFinishedResultSucceededToVisiblityCvt}">
+                                        <MultiBinding Converter="{StaticResource StateFinishedResultSucceededToVisibilityCvt}">
                                             <Binding Path="State" />
                                             <Binding Path="Result" />
                                         </MultiBinding>
@@ -529,7 +529,7 @@
                                     Style="{StaticResource ImageButtonStyle1}"
                                     ToolTip="复制...">
                                     <Button.Visibility>
-                                        <MultiBinding Converter="{StaticResource StateFinishedResultSucceededToVisiblityCvt}">
+                                        <MultiBinding Converter="{StaticResource StateFinishedResultSucceededToVisibilityCvt}">
                                             <Binding Path="State" />
                                             <Binding Path="Result" />
                                         </MultiBinding>
@@ -544,7 +544,7 @@
                                     Style="{StaticResource ImageButtonStyle1}"
                                     ToolTip="开始...">
                                     <Button.Visibility>
-                                        <MultiBinding Converter="{StaticResource StateFinishedResultNotSucceedToVisiblityCvt}">
+                                        <MultiBinding Converter="{StaticResource StateFinishedResultNotSucceedToVisibilityCvt}">
                                             <Binding Path="State" />
                                             <Binding Path="Result" />
                                         </MultiBinding>
