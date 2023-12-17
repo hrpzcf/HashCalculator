@@ -93,6 +93,7 @@
                     Grid.Column="2"
                     Padding="8,4"
                     Background="{x:Null}"
+                    BorderBrush="Blue"
                     Command="{Binding SaveMenuListCmd}"
                     Content="保存配置" />
                 <Button
@@ -100,7 +101,7 @@
                     Padding="8,4"
                     Background="{x:Null}"
                     Command="{Binding AddMenuListCmd}"
-                    Content="增加菜单" />
+                    Content="新建菜单" />
                 <Button
                     Margin="0,8,0,0"
                     Padding="8,4"
@@ -118,13 +119,6 @@
                     Margin="0,8,0,0"
                     Padding="8,4"
                     Background="{x:Null}"
-                    BorderBrush="Red"
-                    Command="{Binding DeleteMenuCmd}"
-                    Content="移除所选" />
-                <Button
-                    Margin="0,8,0,0"
-                    Padding="8,4"
-                    Background="{x:Null}"
                     Command="{Binding MoveMenuUpCmd}"
                     Content="上移所选" />
                 <Button
@@ -134,13 +128,20 @@
                     Command="{Binding MoveMenuDownCmd}"
                     Content="下移所选" />
                 <Button
+                    Margin="0,8,0,0"
+                    Padding="8,4"
+                    Background="{x:Null}"
+                    BorderBrush="Red"
+                    Command="{Binding DeleteMenuCmd}"
+                    Content="移除所选" />
+                <Button
                     Grid.Column="1"
                     Margin="0,32,0,0"
                     Padding="8,4"
                     Background="{x:Null}"
                     BorderBrush="Red"
                     Command="{Binding ResetMenuListCmd}"
-                    Content="重置列表" />
+                    Content="恢复默认" />
             </StackPanel>
         </Grid>
     </ScrollViewer>

@@ -306,7 +306,7 @@
                             HorizontalAlignment="Left"
                             Background="{x:Null}"
                             Command="{Binding OpenEditContextMenuCmd}"
-                            Content="快捷菜单配置文件编辑器" />
+                            Content="打开快捷菜单配置文件编辑器" />
                         <TextBlock
                             Margin="0,4,0,0"
                             Style="{StaticResource DescTextBlockStyle}"

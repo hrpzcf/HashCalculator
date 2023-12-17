@@ -71,7 +71,7 @@
                 Padding="16,4"
                 Background="{x:Null}"
                 Command="{Binding AddSubmenuCmd}"
-                Content="增加" />
+                Content="新建" />
             <Button
                 Margin="0,8,0,0"
                 Padding="16,4"
