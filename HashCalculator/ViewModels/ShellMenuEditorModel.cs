@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using Newtonsoft.Json;
@@ -274,7 +275,7 @@ namespace HashCalculator
                 {
                     JsonSerializer jsonSerializer = new JsonSerializer();
                     jsonSerializer.NullValueHandling = NullValueHandling.Ignore;
-                    using (StreamReader sr = new StreamReader(Settings.MenuConfigFile))
+                    using (StreamReader sr = new StreamReader(Settings.MenuConfigFile, Encoding.Default))
                     using (JsonTextReader jsonTextReader = new JsonTextReader(sr))
                     {
                         this.MenuList = jsonSerializer.Deserialize<ObservableCollection<HcCtxMenuModel>>(jsonTextReader);
@@ -353,7 +354,7 @@ namespace HashCalculator
                 }
                 JsonSerializer jsonSerializer = new JsonSerializer();
                 jsonSerializer.NullValueHandling = NullValueHandling.Ignore;
-                using (StreamWriter sw = new StreamWriter(Settings.MenuConfigFile))
+                using (StreamWriter sw = new StreamWriter(Settings.MenuConfigFile, false, Encoding.Default))
                 using (JsonTextWriter jsonTextWriter = new JsonTextWriter(sw))
                 {
                     if (this.MenuList == null || !this.MenuList.Any())
