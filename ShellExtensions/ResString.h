@@ -2,32 +2,32 @@
 #include <strsafe.h>
 #include <Windows.h>
 
-class ResWString
+class ResString
 {
-    LPWSTR resource_str = nullptr;
+    LPSTR resource_str = nullptr;
 public:
-    LPWSTR String() const {
+    LPSTR String() const {
         return this->resource_str;
     }
 
-    ResWString(HMODULE h_module, UINT res_id) {
-        LPWSTR message = nullptr;
-        int length = LoadStringW(h_module, res_id, (LPWSTR)&message, 0);
+    ResString(HMODULE h_module, UINT res_id) {
+        LPSTR message = nullptr;
+        int length = LoadStringA(h_module, res_id, (LPSTR)&message, 0);
         if (0 == length) {
-            this->resource_str = new WCHAR[1];
+            this->resource_str = new CHAR[1];
         }
         else
         {
-            this->resource_str = new WCHAR[length + 1];
-            if (FAILED(StringCchCopyNW(this->resource_str, length + 1, message, length))) {
+            this->resource_str = new CHAR[length + 1];
+            if (FAILED(StringCchCopyNA(this->resource_str, length + 1, message, length))) {
                 delete[] this->resource_str;
                 this->resource_str = nullptr;
-                this->resource_str = new WCHAR[1];
+                this->resource_str = new CHAR[1];
             }
         }
     }
 
-    ~ResWString() {
+    ~ResString() {
         delete[] this->resource_str;
     }
 };

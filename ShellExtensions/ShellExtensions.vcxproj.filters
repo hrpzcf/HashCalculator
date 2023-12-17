@@ -17,6 +17,9 @@
       <UniqueIdentifier>{6286a547-3710-45c2-96ca-e2175cd79ce9}</UniqueIdentifier>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
+    <Filter Include="TinyJson">
+      <UniqueIdentifier>{729d0601-957a-4ecb-b129-bb4e620540cb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -49,6 +52,9 @@
     <ClInclude Include="ComputeHash.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="tiny-json.h">
+      <Filter>TinyJson</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ShellExtensions.cpp">
@@ -71,6 +77,9 @@
     </ClCompile>
     <ClCompile Include="commons.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="tiny-json.c">
+      <Filter>TinyJson</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
