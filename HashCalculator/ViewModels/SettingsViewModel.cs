@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml.Serialization;
@@ -645,6 +646,16 @@ namespace HashCalculator
             {
                 MessageBox.Show(SettingsPanel.This, $"安装外壳扩展成功！", "提示", MessageBoxButton.OK,
                     MessageBoxImage.Information);
+            }
+            if (!File.Exists(Settings.MenuConfigFile))
+            {
+                string exception1 = new ShellMenuEditorModel(SettingsPanel.This).SaveMenuListToJsonFile();
+                if (!string.IsNullOrEmpty(exception1))
+                {
+                    MessageBox.Show(
+                        SettingsPanel.This, exception1, "外壳扩展模块配置文件创建失败，快捷菜单可能无法显示",
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
             }
             this.NotSettingShellExtension = true;
         }

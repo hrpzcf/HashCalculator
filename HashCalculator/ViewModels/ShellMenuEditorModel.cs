@@ -22,7 +22,7 @@ namespace HashCalculator
         private ObservableCollection<HcCtxMenuModel> _menuList =
             new ObservableCollection<HcCtxMenuModel>();
 
-        public ShellMenuEditor Parent { get; }
+        public Window Parent { get; }
 
         public ObservableCollection<HcCtxMenuModel> MenuList
         {
@@ -224,7 +224,7 @@ namespace HashCalculator
             }
         }
 
-        public ShellMenuEditorModel(ShellMenuEditor parent)
+        public ShellMenuEditorModel(Window parent)
         {
             this.Parent = parent;
             this.LoadMenuListFromJsonFile();
@@ -320,13 +320,17 @@ namespace HashCalculator
             return default(string);
         }
 
-        private string SaveMenuListToJsonFile()
+        public string SaveMenuListToJsonFile()
         {
             try
             {
                 if (!Directory.Exists(Settings.ConfigDir.FullName))
                 {
                     Settings.ConfigDir.Create();
+                }
+                if (this.MenuList == null || !this.MenuList.Any())
+                {
+                    this.ManuallyResetMenuList();
                 }
                 string checkMenuResult = this.CheckIfMenuListAllValid();
                 if (!string.IsNullOrEmpty(checkMenuResult))
@@ -339,10 +343,6 @@ namespace HashCalculator
                 using (StreamWriter sw = new StreamWriter(Settings.MenuConfigFile, false, Encoding.Default))
                 using (JsonTextWriter jsonTextWriter = new JsonTextWriter(sw))
                 {
-                    if (this.MenuList == null || !this.MenuList.Any())
-                    {
-                        this.ManuallyResetMenuList();
-                    }
                     jsonSerializer.Serialize(jsonTextWriter, this.MenuList, typeof(ObservableCollection<HcCtxMenuModel>));
                     return default(string);
                 }
