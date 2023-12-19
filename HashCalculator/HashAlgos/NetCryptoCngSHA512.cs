@@ -8,7 +8,7 @@ namespace HashCalculator
 
         public override string AlgoName => "SHA-512";
 
-        public override AlgoType AlgoType => AlgoType.SHA512;
+        public override AlgoType AlgoType => AlgoType.SHA_512;
 
         public override IHashAlgoInfo NewInstance()
         {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -19,7 +20,6 @@ namespace HashCalculator
         private bool listenerAdded = false;
         private int tickCountWhenHashStringOrChecklistPathWasLastSet = 0;
         private readonly MainWndViewModel viewModel = new MainWndViewModel();
-        private static readonly int maxAlgoEnumInt = Enum.GetNames(typeof(AlgoType)).Length - 1;
         private static string[] startupArgs = null;
 
         public static MainWindow This { get; private set; }
@@ -124,6 +124,26 @@ namespace HashCalculator
             return IntPtr.Zero;
         }
 
+        private IEnumerable<AlgoType> GetAlgoTypesFromOption(IOptions option)
+        {
+            if (option != null && !string.IsNullOrEmpty(option.Algos))
+            {
+                List<AlgoType> resolvedAlgoTypeList = new List<AlgoType>();
+                foreach (string algoTypeStr in option.Algos.Split(','))
+                {
+                    if (Enum.TryParse(algoTypeStr, true, out AlgoType algoType))
+                    {
+                        resolvedAlgoTypeList.Add(algoType);
+                    }
+                }
+                if (resolvedAlgoTypeList.Any())
+                {
+                    return resolvedAlgoTypeList;
+                }
+            }
+            return default(IEnumerable<AlgoType>);
+        }
+
         private void InternalParseArguments(string[] args)
         {
             Parser.Default.ParseArguments<ComputeHash, VerifyHash>(args)
@@ -133,20 +153,7 @@ namespace HashCalculator
                     {
                         PathPackage package = new PathPackage(
                             option.FilePaths, Settings.Current.SelectedSearchPolicy);
-                        if (!string.IsNullOrEmpty(option.Algo))
-                        {
-                            if (int.TryParse(option.Algo, out int algo))
-                            {
-                                if (algo > 0 && algo <= maxAlgoEnumInt)
-                                {
-                                    package.PresetAlgoType = (AlgoType)(algo - 1);
-                                }
-                            }
-                            else if (Enum.TryParse(option.Algo, true, out AlgoType algoType))
-                            {
-                                package.PresetAlgoType = algoType;
-                            }
-                        }
+                        package.PresetAlgoTypes = this.GetAlgoTypesFromOption(option);
                         this.viewModel.BeginDisplayModels(package);
                     }
                 })
@@ -167,20 +174,7 @@ namespace HashCalculator
                         {
                             PathPackage package = new PathPackage(
                                 Path.GetDirectoryName(option.ChecklistPath), Settings.Current.SelectedQVSPolicy, newChecklist);
-                            if (!string.IsNullOrEmpty(option.Algo))
-                            {
-                                if (int.TryParse(option.Algo, out int algo))
-                                {
-                                    if (algo > 0 && algo <= maxAlgoEnumInt)
-                                    {
-                                        newChecklist.PreferredAlgo = (AlgoType)(algo - 1);
-                                    }
-                                }
-                                else if (Enum.TryParse(option.Algo, true, out AlgoType algoType))
-                                {
-                                    newChecklist.PreferredAlgo = algoType;
-                                }
-                            }
+                            package.PresetAlgoTypes = this.GetAlgoTypesFromOption(option);
                             this.viewModel.BeginDisplayModels(package);
                         }
                     }

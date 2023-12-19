@@ -78,14 +78,14 @@ namespace HashCalculator
                 this.FileInfo = new FileInfo(arg.FilePath);
             }
             this.FileName = this.FileInfo.Name;
-            if (arg.HashChecklist != null && Settings.Current.PreferChecklistAlgs)
+            if (arg.PresetAlgos != null)
+            {
+                this.AlgoInOutModels = AlgosPanelModel.GetKnownAlgos(arg.PresetAlgos);
+            }
+            else if (Settings.Current.PreferChecklistAlgs && arg.HashChecklist != null)
             {
                 this.AlgoInOutModels =
                     AlgosPanelModel.GetAlgsFromChecklist(arg.HashChecklist, this.FileName);
-            }
-            else if (arg.PresetAlgo != AlgoType.Unknown)
-            {
-                this.AlgoInOutModels = AlgosPanelModel.GetKnownAlgos(arg.PresetAlgo);
             }
             this.PropertyChanged += this.CurrentHashStringHandler;
         }
@@ -402,18 +402,18 @@ namespace HashCalculator
             }
         }
 
-        public ControlItem[] AvailableOutputTypes { get; } =
+        public GenericItemModel[] AvailableOutputTypes { get; } =
         {
-            new ControlItem("Base64", OutputType.BASE64),
-            new ControlItem("Hex大写", OutputType.BinaryUpper),
-            new ControlItem("Hex小写", OutputType.BinaryLower),
+            new GenericItemModel("Base64", OutputType.BASE64),
+            new GenericItemModel("Hex大写", OutputType.BinaryUpper),
+            new GenericItemModel("Hex小写", OutputType.BinaryLower),
         };
 
         private void MakeSureAlgoModelArrayNotEmpty()
         {
             if (!this.AlgoInOutModels?.Any() ?? true)
             {
-                this.AlgoInOutModels = AlgosPanelModel.GetSelectedAlgos();
+                this.AlgoInOutModels = AlgosPanelModel.GetSelectedAlgos().ToArray();
             }
             this.CurrentInOutModel = this.AlgoInOutModels[0];
             foreach (AlgoInOutModel model in this.AlgoInOutModels)

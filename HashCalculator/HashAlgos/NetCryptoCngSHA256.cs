@@ -8,7 +8,7 @@ namespace HashCalculator
 
         public override string AlgoName => "SHA-256";
 
-        public override AlgoType AlgoType => AlgoType.SHA256;
+        public override AlgoType AlgoType => AlgoType.SHA_256;
 
         public override IHashAlgoInfo NewInstance()
         {

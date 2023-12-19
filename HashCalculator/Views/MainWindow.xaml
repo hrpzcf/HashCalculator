@@ -262,7 +262,7 @@
                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
                         Header="打开位置" />
                     <Separator />
-                    <MenuItem Header="任务控制" ItemsSource="{Binding HashModelTasksCtrlCmds}">
+                    <MenuItem Header="任务控制" ItemsSource="{Binding CtrlHashViewModelTaskCmds}">
                         <MenuItem.ItemContainerStyle>
                             <Style TargetType="MenuItem">
                                 <Setter Property="Header" Value="{Binding Display}" />

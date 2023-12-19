@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -229,13 +228,6 @@ namespace HashCalculator
         {
             this.Parent = parent;
             this.LoadMenuListFromJsonFile();
-            this.InitAvailableAlgTypes();
-        }
-
-        private void InitAvailableAlgTypes()
-        {
-            AvailableAlgoTypes.AddRange(
-                AlgosPanelModel.ProvidedAlgos.Select(i => new ControlItem(i.AlgoName, i.AlgoType.ToString())));
         }
 
         private void ManuallyResetMenuList()
@@ -251,12 +243,12 @@ namespace HashCalculator
             HcCtxMenuModel menuCompute = new HcCtxMenuModel("计算所选对象的哈希值", true, MenuType.Compute);
             menuCompute.Submenus = new ObservableCollection<HcCtxMenuModel>
             {
-                new HcCtxMenuModel("默认算法", string.Empty),
+                new HcCtxMenuModel("默认算法"),
             };
             HcCtxMenuModel menuCheckHash = new HcCtxMenuModel("作为哈希校验依据打开", true, MenuType.CheckHash);
             menuCheckHash.Submenus = new ObservableCollection<HcCtxMenuModel>
             {
-                new HcCtxMenuModel("自动选择", string.Empty),
+                new HcCtxMenuModel("自动选择"),
             };
             foreach (AlgoInOutModel model in AlgosPanelModel.ProvidedAlgos)
             {
@@ -275,14 +267,11 @@ namespace HashCalculator
                 {
                     JsonSerializer jsonSerializer = new JsonSerializer();
                     jsonSerializer.NullValueHandling = NullValueHandling.Ignore;
+                    jsonSerializer.DefaultValueHandling = DefaultValueHandling.Populate;
                     using (StreamReader sr = new StreamReader(Settings.MenuConfigFile, Encoding.Default))
                     using (JsonTextReader jsonTextReader = new JsonTextReader(sr))
                     {
                         this.MenuList = jsonSerializer.Deserialize<ObservableCollection<HcCtxMenuModel>>(jsonTextReader);
-                        if (this.MenuList == null || !this.MenuList.Any())
-                        {
-                            this.ManuallyResetMenuList();
-                        }
                         return true;
                     }
                 }
@@ -308,9 +297,13 @@ namespace HashCalculator
                 {
                     return $"主菜单项<{hcCtxMenuModel.Title}>没有选择有效的菜单类型！";
                 }
-                if (hcCtxMenuModel.HasSubmenus)
+                if (!hcCtxMenuModel.HasSubmenus)
                 {
-                    hcCtxMenuModel.AlgType = null;
+                    hcCtxMenuModel.Submenus = null;
+                }
+                else
+                {
+                    hcCtxMenuModel.AlgTypes = null;
                     if (hcCtxMenuModel.Submenus == null || !hcCtxMenuModel.Submenus.Any())
                     {
                         return $"主菜单项<{hcCtxMenuModel.Title}>设置为\"有子菜单\"但未添加任何子菜单！";
@@ -321,18 +314,6 @@ namespace HashCalculator
                         {
                             return $"主菜单<{hcCtxMenuModel.Title}>的某项子菜单标题为空！";
                         }
-                        if (submenu.AlgType == null)
-                        {
-                            return $"主菜单<{hcCtxMenuModel.Title}>的某项子菜单没有设置算法！";
-                        }
-                    }
-                }
-                else
-                {
-                    hcCtxMenuModel.Submenus = null;
-                    if (hcCtxMenuModel.AlgType == null)
-                    {
-                        return $"主菜单项<{hcCtxMenuModel.Title}>设置为\"没有子菜单\"但未指定任何算法！";
                     }
                 }
             }
@@ -354,6 +335,7 @@ namespace HashCalculator
                 }
                 JsonSerializer jsonSerializer = new JsonSerializer();
                 jsonSerializer.NullValueHandling = NullValueHandling.Ignore;
+                jsonSerializer.DefaultValueHandling = DefaultValueHandling.Ignore;
                 using (StreamWriter sw = new StreamWriter(Settings.MenuConfigFile, false, Encoding.Default))
                 using (JsonTextWriter jsonTextWriter = new JsonTextWriter(sw))
                 {
@@ -371,17 +353,11 @@ namespace HashCalculator
             }
         }
 
-        public static ControlItem[] AvailableMenuTypes { get; } =
-            new ControlItem[]
+        public static GenericItemModel[] AvailableMenuTypes { get; } =
+            new GenericItemModel[]
             {
-                new ControlItem("计算哈希菜单", MenuType.Compute),
-                new ControlItem("校验依据菜单", MenuType.CheckHash),
-            };
-
-        public static List<ControlItem> AvailableAlgoTypes { get; } =
-            new List<ControlItem>
-            {
-                new ControlItem("不指定算法", string.Empty),
+                new GenericItemModel("计算哈希菜单", MenuType.Compute),
+                new GenericItemModel("校验依据菜单", MenuType.CheckHash),
             };
     }
 }

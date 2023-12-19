@@ -722,43 +722,43 @@ namespace HashCalculator
         }
 
         [XmlIgnore]
-        public ControlItem[] AvailableOutputTypes { get; } =
+        public GenericItemModel[] AvailableOutputTypes { get; } =
         {
-            new ControlItem("Base64 格式", OutputType.BASE64),
-            new ControlItem("十六进制大写", OutputType.BinaryUpper),
-            new ControlItem("十六进制小写", OutputType.BinaryLower),
+            new GenericItemModel("Base64 格式", OutputType.BASE64),
+            new GenericItemModel("十六进制大写", OutputType.BinaryUpper),
+            new GenericItemModel("十六进制小写", OutputType.BinaryLower),
         };
 
         [XmlIgnore]
-        public ControlItem[] AvailableTaskNumLimits { get; } =
+        public GenericItemModel[] AvailableTaskNumLimits { get; } =
         {
-            new ControlItem("1 个：大多数文件很大", TaskNum.One),
-            new ControlItem("2 个：大多数文件较大", TaskNum.Two),
-            new ControlItem("4 个：大多数文件较小", TaskNum.Four),
-            new ControlItem("8 个：大多数文件很小", TaskNum.Eight),
+            new GenericItemModel("1 个：大多数文件很大", TaskNum.One),
+            new GenericItemModel("2 个：大多数文件较大", TaskNum.Two),
+            new GenericItemModel("4 个：大多数文件较小", TaskNum.Four),
+            new GenericItemModel("8 个：大多数文件很小", TaskNum.Eight),
         };
 
         [XmlIgnore]
-        public ControlItem[] AvailableDroppedSearchPolicies { get; } =
+        public GenericItemModel[] AvailableDroppedSearchPolicies { get; } =
         {
-            new ControlItem("搜索一代子文件", SearchPolicy.Children),
-            new ControlItem("搜索全部子文件", SearchPolicy.Descendants),
-            new ControlItem("不搜索该文件夹", SearchPolicy.DontSearch),
+            new GenericItemModel("搜索一代子文件", SearchPolicy.Children),
+            new GenericItemModel("搜索全部子文件", SearchPolicy.Descendants),
+            new GenericItemModel("不搜索该文件夹", SearchPolicy.DontSearch),
         };
 
         [XmlIgnore]
-        public ControlItem[] AvailableQVSearchPolicies { get; } =
+        public GenericItemModel[] AvailableQVSearchPolicies { get; } =
         {
-            new ControlItem("搜索依据所在目录的一代子文件", SearchPolicy.Children),
-            new ControlItem("搜索依据所在目录的所有子文件", SearchPolicy.Descendants),
+            new GenericItemModel("搜索依据所在目录的一代子文件", SearchPolicy.Children),
+            new GenericItemModel("搜索依据所在目录的所有子文件", SearchPolicy.Descendants),
         };
 
         [XmlIgnore]
-        public ControlItem[] AvailableFetchAlgoOptions { get; } =
+        public GenericItemModel[] AvailableFetchAlgoOptions { get; } =
         {
-            new ControlItem("使用默认算法中已被勾选的算法", FetchAlgoOption.SELECTED),
-            new ControlItem("使用被勾选且可产生相应哈希长度的算法", FetchAlgoOption.TATSAMSHDL),
-            new ControlItem("使用所有可产生相应哈希长度的算法", FetchAlgoOption.TATMSHDL),
+            new GenericItemModel("使用默认算法中已被勾选的算法", FetchAlgoOption.SELECTED),
+            new GenericItemModel("使用被勾选且可产生相应哈希长度的算法", FetchAlgoOption.TATSAMSHDL),
+            new GenericItemModel("使用所有可产生相应哈希长度的算法", FetchAlgoOption.TATMSHDL),
         };
     }
 }

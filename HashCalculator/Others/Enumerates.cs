@@ -153,12 +153,12 @@
         // WHIRLPOOL
         WHIRLPOOL,
         // SHA1
-        SHA1,
+        SHA_1,
         // SHA2
-        SHA224,
-        SHA256,
-        SHA384,
-        SHA512,
+        SHA_224,
+        SHA_256,
+        SHA_384,
+        SHA_512,
         // SHA3
         SHA3_224,
         SHA3_256,

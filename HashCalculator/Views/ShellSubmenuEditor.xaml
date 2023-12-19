@@ -53,12 +53,16 @@
                 <DataGridTemplateColumn Header="算法">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <ComboBox
-                                Margin="2"
-                                DisplayMemberPath="Display"
-                                ItemsSource="{Binding Source={x:Static local:ShellMenuEditorModel.AvailableAlgoTypes}}"
-                                SelectedValue="{Binding AlgType, UpdateSourceTrigger=PropertyChanged}"
-                                SelectedValuePath="ItemValue" />
+                            <ComboBox ItemsSource="{Binding AvailableAlgTypes}" SelectedItem="{Binding CurrentAlgoType}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <CheckBox
+                                            VerticalAlignment="Center"
+                                            Content="{Binding Display}"
+                                            IsChecked="{Binding Selected}" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

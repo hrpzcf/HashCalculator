@@ -13,26 +13,26 @@ namespace HashCalculator
 
         public override object Param { get; set; }
 
-        public override object[] Items { get; set; } = new ControlItem[]
+        public override object[] Items { get; set; } = new GenericItemModel[]
         {
-            new ControlItem("B", 1),
-            new ControlItem("KB", 1024),
-            new ControlItem("MB", 1024*1024),
-            new ControlItem("GB", 1024*1024*1024),
+            new GenericItemModel("B", 1),
+            new GenericItemModel("KB", 1024),
+            new GenericItemModel("MB", 1024*1024),
+            new GenericItemModel("GB", 1024*1024*1024),
         };
 
         public double MinFileSize { get; set; }
 
         public double MaxFileSize { get; set; }
 
-        public ControlItem MinSizeUnit { get; set; }
+        public GenericItemModel MinSizeUnit { get; set; }
 
-        public ControlItem MaxSizeUnit { get; set; }
+        public GenericItemModel MaxSizeUnit { get; set; }
 
         public FileSizeFilter()
         {
-            this.MinSizeUnit = (ControlItem)this.Items[2];
-            this.MaxSizeUnit = (ControlItem)this.Items[2];
+            this.MinSizeUnit = (GenericItemModel)this.Items[2];
+            this.MaxSizeUnit = (GenericItemModel)this.Items[2];
             this.Settings = new FileSizeFilterCtrl(this);
         }
 

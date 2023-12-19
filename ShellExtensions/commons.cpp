@@ -104,46 +104,42 @@ BOOL InsertMenuFromJsonFile(const char* menuJson, HMENU hMenu, UINT indexMenu, U
         if (readLength != fileLength) {
             goto FinalizeAndReturn;
         }
-        jsonMemory = new json_t[MAXJSONPROP];
-        const json_t* topMenuListJson = json_create(jsonCharData, jsonMemory, MAXJSONPROP);
-        if (NULL == topMenuListJson || JSON_ARRAY != json_getType(topMenuListJson)) {
+        jsonMemory = new json_t[MAX_JSON_PROP];
+        const json_t* topListJson = json_create(jsonCharData, jsonMemory, MAX_JSON_PROP);
+        if (NULL == topListJson || JSON_ARRAY != json_getType(topListJson)) {
             goto FinalizeAndReturn;
         }
         const json_t* topMenuJson;
-        for (topMenuJson = json_getChild(topMenuListJson); NULL != topMenuJson; topMenuJson = json_getSibling(topMenuJson)) {
+        for (topMenuJson = json_getChild(topListJson); NULL != topMenuJson; topMenuJson = json_getSibling(topMenuJson)) {
             int64_t int64MenuType;
-            if (!json_getPropValueByType(topMenuJson, "MenuType", JSON_INTEGER, &int64MenuType)
+            if (!json_getPropValueByType(topMenuJson, JSON_MENUTYPE, JSON_INTEGER, &int64MenuType)
                 || int64MenuType != (int64_t)menuType) {
                 continue;
             }
             const char* topMenuTitle;
-            if (!json_getPropValueByType(topMenuJson, "Title", JSON_TEXT, &topMenuTitle)) {
+            if (!json_getPropValueByType(topMenuJson, JSON_TITLE, JSON_TEXT, &topMenuTitle)) {
                 continue;
             }
-            bool flagHasSubmenus;
-            if (!json_getPropValueByType(topMenuJson, "HasSubmenus", JSON_BOOLEAN, &flagHasSubmenus)) {
-                continue;
-            }
-            if (flagHasSubmenus) {
-                const json_t* submenuListJson = json_getProperty(topMenuJson, "Submenus");
-                if (NULL == submenuListJson || JSON_ARRAY != json_getType(submenuListJson)) {
+            const json_t* subListJson = json_getProperty(topMenuJson, JSON_SUBMENUS);
+            if (NULL != subListJson) {
+                if (JSON_ARRAY != json_getType(subListJson)) {
                     continue;
                 }
                 UINT appendedSubmenuCount = 0U;
                 HMENU hSubmenuContainer = CreatePopupMenu();
                 LONG flag = MF_STRING | MF_POPUP;
                 const json_t* submenuJson;
-                for (submenuJson = json_getChild(submenuListJson); NULL != submenuJson; submenuJson = json_getSibling(submenuJson)) {
-                    const char* submenuTitle, * submenuAlgoTypeStr;
-                    if (!json_getPropValueByType(submenuJson, "Title", JSON_TEXT, &submenuTitle) ||
-                        !json_getPropValueByType(submenuJson, "AlgType", JSON_TEXT, &submenuAlgoTypeStr)) {
+                for (submenuJson = json_getChild(subListJson); NULL != submenuJson; submenuJson = json_getSibling(submenuJson)) {
+                    const char* submenuTitle, * submenuUsingAlgsStr;
+                    if (!json_getPropValueByType(submenuJson, JSON_TITLE, JSON_TEXT, &submenuTitle) ||
+                        !json_getPropValueByType(submenuJson, JSON_ALGTYPES, JSON_TEXT, &submenuUsingAlgsStr)) {
                         continue;
                     }
                     if (AppendMenuA(hSubmenuContainer, flag, idCmdFirst + *pIdCurrent, submenuTitle)) {
                         ++appendedSubmenuCount;
-                        size_t bufferCharLength = strlen(submenuAlgoTypeStr) + 1;
+                        size_t bufferCharLength = strlen(submenuUsingAlgsStr) + 1;
                         char* submenuAlgoTypeBuffer = new char[bufferCharLength]();
-                        StringCchCopyA(submenuAlgoTypeBuffer, bufferCharLength, submenuAlgoTypeStr);
+                        StringCchCopyA(submenuAlgoTypeBuffer, bufferCharLength, submenuUsingAlgsStr);
                         mCmdDict.emplace(*pIdCurrent, submenuAlgoTypeBuffer);
                         *pIdCurrent = *pIdCurrent + 1;
                     }
@@ -169,13 +165,13 @@ BOOL InsertMenuFromJsonFile(const char* menuJson, HMENU hMenu, UINT indexMenu, U
                 DestroyMenu(hSubmenuContainer);
             }
             else {
-                const char* algoTypeStr;
-                if (json_getPropValueByType(topMenuJson, "AlgType", JSON_TEXT, &algoTypeStr)) {
+                const char* usingAlgsStr;
+                if (json_getPropValueByType(topMenuJson, JSON_ALGTYPES, JSON_TEXT, &usingAlgsStr)) {
                     if (InsertMenuA(hMenu, indexMenu, MF_BYPOSITION | MF_STRING | MF_POPUP, idCmdFirst + *pIdCurrent, topMenuTitle)) {
                         SetMenuItemBitmaps(hMenu, indexMenu, MF_BYPOSITION, bitMapHandle, bitMapHandle);
-                        size_t bufferCharLength = strlen(algoTypeStr) + 1;
+                        size_t bufferCharLength = strlen(usingAlgsStr) + 1;
                         char* algoTypeBuffer = new char[bufferCharLength]();
-                        StringCchCopyA(algoTypeBuffer, bufferCharLength, algoTypeStr);
+                        StringCchCopyA(algoTypeBuffer, bufferCharLength, usingAlgsStr);
                         mCmdDict.emplace(*pIdCurrent, algoTypeBuffer);
                         *pIdCurrent = *pIdCurrent + 1;
                     }

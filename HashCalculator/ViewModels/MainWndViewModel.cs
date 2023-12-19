@@ -66,10 +66,10 @@ namespace HashCalculator
         private RelayCommand deleteSelectedModelsFileCmd;
         private RelayCommand removeSelectedModelsCmd;
         private RelayCommand stopEnumeratingPackageCmd;
-        private ControlItem[] copyModelsHashMenuCmds;
-        private ControlItem[] copyModelsAllAlgosMenuCmds;
-        private ControlItem[] hashModelTasksCtrlCmds;
-        private ControlItem[] switchDisplayedAlgoCmds;
+        private GenericItemModel[] copyModelsHashMenuCmds;
+        private GenericItemModel[] copyModelsAllAlgosMenuCmds;
+        private GenericItemModel[] ctrlHashViewModelTaskCmds;
+        private GenericItemModel[] switchDisplayedAlgoCmds;
 
         public MainWndViewModel()
         {
@@ -298,7 +298,7 @@ namespace HashCalculator
                         }
                         if (reset)
                         {
-                            arg.PresetAlgo = AlgoType.Unknown;
+                            arg.PresetAlgos = null;
                         }
                         this.displayedFiles.Add(arg);
                         synchronization.Invoke(
@@ -472,17 +472,17 @@ namespace HashCalculator
             this.CopyModelsHashValueAction(param, OutputType.BinaryLower);
         }
 
-        public ControlItem[] CopyModelsHashMenuCmds
+        public GenericItemModel[] CopyModelsHashMenuCmds
         {
             get
             {
                 if (this.copyModelsHashMenuCmds is null)
                 {
-                    this.copyModelsHashMenuCmds = new ControlItem[]
+                    this.copyModelsHashMenuCmds = new GenericItemModel[]
                     {
-                        new ControlItem("Base64 格式", new RelayCommand(this.CopyModelsHashBase64Action)),
-                        new ControlItem("十六进制大写", new RelayCommand(this.CopyModelsHashBinUpperAction)),
-                        new ControlItem("十六进制小写", new RelayCommand(this.CopyModelsHashBinLowerAction)),
+                        new GenericItemModel("Base64 格式", new RelayCommand(this.CopyModelsHashBase64Action)),
+                        new GenericItemModel("十六进制大写", new RelayCommand(this.CopyModelsHashBinUpperAction)),
+                        new GenericItemModel("十六进制小写", new RelayCommand(this.CopyModelsHashBinLowerAction)),
                     };
                 }
                 return this.copyModelsHashMenuCmds;
@@ -539,17 +539,17 @@ namespace HashCalculator
             this.CopyModelsAllAlgosValueAction(param, OutputType.BinaryLower);
         }
 
-        public ControlItem[] CopyModelsAllAlgosMenuCmds
+        public GenericItemModel[] CopyModelsAllAlgosMenuCmds
         {
             get
             {
                 if (this.copyModelsAllAlgosMenuCmds == null)
                 {
-                    this.copyModelsAllAlgosMenuCmds = new ControlItem[]
+                    this.copyModelsAllAlgosMenuCmds = new GenericItemModel[]
                     {
-                        new ControlItem("Base64 格式", new RelayCommand(this.CopyModelsAllAlgosBase64Action)),
-                        new ControlItem("十六进制大写", new RelayCommand(this.CopyModelsAllAlgosBinUpperAction)),
-                        new ControlItem("十六进制小写", new RelayCommand(this.CopyModelsAllAlgosBinLowerAction)),
+                        new GenericItemModel("Base64 格式", new RelayCommand(this.CopyModelsAllAlgosBase64Action)),
+                        new GenericItemModel("十六进制大写", new RelayCommand(this.CopyModelsAllAlgosBinUpperAction)),
+                        new GenericItemModel("十六进制小写", new RelayCommand(this.CopyModelsAllAlgosBinLowerAction)),
                     };
                 }
                 return this.copyModelsAllAlgosMenuCmds;
@@ -1415,22 +1415,22 @@ namespace HashCalculator
             }
         }
 
-        public ControlItem[] HashModelTasksCtrlCmds
+        public GenericItemModel[] CtrlHashViewModelTaskCmds
         {
             get
             {
-                if (this.hashModelTasksCtrlCmds is null)
+                if (this.ctrlHashViewModelTaskCmds is null)
                 {
-                    this.hashModelTasksCtrlCmds = new ControlItem[] {
-                        new ControlItem("暂停任务", new RelayCommand(this.PauseSelectedModelsAction)),
-                        new ControlItem("继续任务", new RelayCommand(this.ContinueSelectedModelsAction)),
-                        new ControlItem("取消任务", new RelayCommand(this.CancelSelectedModelsAction)),
-                        new ControlItem("新增计算", new RelayCommand(this.RestartSelectedModelsNewLineAction)),
-                        new ControlItem("启动未成功行", new RelayCommand(this.RestartSelectedUnsucceededModelsAction)),
-                        new ControlItem("重新计算", new RelayCommand(this.RestartSelectedModelsForceAction)),
+                    this.ctrlHashViewModelTaskCmds = new GenericItemModel[] {
+                        new GenericItemModel("暂停任务", new RelayCommand(this.PauseSelectedModelsAction)),
+                        new GenericItemModel("继续任务", new RelayCommand(this.ContinueSelectedModelsAction)),
+                        new GenericItemModel("取消任务", new RelayCommand(this.CancelSelectedModelsAction)),
+                        new GenericItemModel("新增计算", new RelayCommand(this.RestartSelectedModelsNewLineAction)),
+                        new GenericItemModel("启动未成功行", new RelayCommand(this.RestartSelectedUnsucceededModelsAction)),
+                        new GenericItemModel("重新计算", new RelayCommand(this.RestartSelectedModelsForceAction)),
                     };
                 }
-                return this.hashModelTasksCtrlCmds;
+                return this.ctrlHashViewModelTaskCmds;
             }
         }
 
@@ -1475,7 +1475,7 @@ namespace HashCalculator
             }
         }
 
-        public ControlItem[] SwitchDisplayedAlgoCmds
+        public GenericItemModel[] SwitchDisplayedAlgoCmds
         {
             get
             {
@@ -1483,7 +1483,7 @@ namespace HashCalculator
                 {
                     RelayCommand command = new RelayCommand(this.SwitchDisplayedAlgoAction);
                     this.switchDisplayedAlgoCmds = AlgosPanelModel.ProvidedAlgos.Select(
-                        obj => new ControlItem(obj.AlgoName, obj.AlgoType, command)).ToArray();
+                        obj => new GenericItemModel(obj.AlgoName, obj.AlgoType, command)).ToArray();
                 }
                 return this.switchDisplayedAlgoCmds;
             }

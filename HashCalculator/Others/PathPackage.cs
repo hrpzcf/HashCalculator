@@ -86,11 +86,11 @@ namespace HashCalculator
                             }
                             if (this.hashChecklist == null)
                             {
-                                yield return new ModelArg(fileInfoEnum.Current.FullName, this.PresetAlgoType);
+                                yield return new ModelArg(fileInfoEnum.Current.FullName, this.PresetAlgoTypes);
                             }
                             else if (this.hashChecklist.IsNameInChecklist(fileInfoEnum.Current.Name))
                             {
-                                yield return new ModelArg(this.hashChecklist, fileInfoEnum.Current.FullName, this.PresetAlgoType);
+                                yield return new ModelArg(this.hashChecklist, fileInfoEnum.Current.FullName, this.PresetAlgoTypes);
                             }
                             if (this.StopSearchingToken != null && this.StopSearchingToken.IsCancellationRequested)
                             {
@@ -103,12 +103,12 @@ namespace HashCalculator
                             {
                                 if (pair.Key.IndexOfAny(invalidFnameChars) != -1)
                                 {
-                                    yield return new ModelArg(true, true, this.PresetAlgoType);
+                                    yield return new ModelArg(true, true, this.PresetAlgoTypes);
                                 }
                                 // 此属性由 HashChecklist.IsNameInChecklist 方法更改
                                 else if (!pair.Value.IsExistingFile)
                                 {
-                                    yield return new ModelArg(pair.Key, true, this.PresetAlgoType);
+                                    yield return new ModelArg(pair.Key, true, this.PresetAlgoTypes);
                                 }
                                 if (this.StopSearchingToken != null && this.StopSearchingToken.IsCancellationRequested)
                                 {
@@ -121,7 +121,7 @@ namespace HashCalculator
                 }
                 else if (File.Exists(path))
                 {
-                    yield return new ModelArg(this.hashChecklist, path, this.PresetAlgoType);
+                    yield return new ModelArg(this.hashChecklist, path, this.PresetAlgoTypes);
                 }
             }
         }
@@ -132,6 +132,6 @@ namespace HashCalculator
 
         public CancellationToken StopSearchingToken { get; set; }
 
-        public AlgoType PresetAlgoType { get; set; } = AlgoType.Unknown;
+        public IEnumerable<AlgoType> PresetAlgoTypes { get; set; } 
     }
 }

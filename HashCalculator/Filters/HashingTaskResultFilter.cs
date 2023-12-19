@@ -6,11 +6,11 @@ namespace HashCalculator
 {
     internal class HashingTaskResultFilter : AbsHashViewFilter
     {
-        private readonly ControlItem[] expResultCtrls = new ControlItem[]
+        private readonly GenericItemModel[] expResultModels = new GenericItemModel[]
         {
-            new ControlItem("已取消", HashResult.Canceled),
-            new ControlItem("已失败", HashResult.Failed),
-            new ControlItem("已成功", HashResult.Succeeded),
+            new GenericItemModel("已取消", HashResult.Canceled),
+            new GenericItemModel("已失败", HashResult.Failed),
+            new GenericItemModel("已成功", HashResult.Succeeded),
         };
 
         public override ContentControl Settings { get; }
@@ -21,7 +21,7 @@ namespace HashCalculator
 
         public override object Param { get; set; } = FilterLogic.Any;
 
-        public override object[] Items { get => this.expResultCtrls; set { } }
+        public override object[] Items { get => this.expResultModels; set { } }
 
         public HashingTaskResultFilter()
         {
@@ -34,7 +34,7 @@ namespace HashCalculator
             {
                 return;
             }
-            HashSet<HashResult> expectedResults = this.expResultCtrls.Where(i => i.Selected).Select(i => (HashResult)i.ItemValue).ToHashSet();
+            HashSet<HashResult> expectedResults = this.expResultModels.Where(i => i.Selected).Select(i => (HashResult)i.ItemValue).ToHashSet();
             if (expectedResults.Any())
             {
                 foreach (HashViewModel model in models)

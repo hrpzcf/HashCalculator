@@ -106,8 +106,6 @@ namespace HashCalculator
 
         public string ReasonForFailure { get; private set; }
 
-        public AlgoType PreferredAlgo { get; set; } = AlgoType.Unknown;
-
         private readonly Dictionary<string, AlgHashMap> algHashMapOfFiles =
             new Dictionary<string, AlgHashMap>(StringComparer.OrdinalIgnoreCase);
 

@@ -198,7 +198,7 @@
     <Compile Include="Others\NativeFunctions.cs" />
     <Compile Include="Others\NotifiableModel.cs" />
     <Compile Include="Others\HashChecklist.cs" />
-    <Compile Include="Others\ControlItem.cs" />
+    <Compile Include="ViewModels\GenericItemModel.cs" />
     <Compile Include="Others\ModelStarter.cs" />
     <Compile Include="Others\PathPackage.cs" />
     <Compile Include="Others\ProcSynchronizer.cs" />

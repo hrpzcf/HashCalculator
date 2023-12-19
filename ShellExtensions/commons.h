@@ -4,10 +4,14 @@
 
 using std::map;
 
+#define JSON_MENUTYPE               "MenuType"
+#define JSON_TITLE                  "Title"
+#define JSON_ALGTYPES               "AlgTypes"
+#define JSON_SUBMENUS               "Submenus"
 #define MENU_JSONNAME               "menus.json"
 #define HC_EXECUTABLE               "HashCalculator.exe"
 #define HCEXE_REGPATH               "Software\\Microsoft\\Windows\\CurrentVersion\\App Paths"
-#define MAXJSONPROP                 480
+#define MAX_JSON_PROP               480
 #define MAX_CMD_CHARS               32767
 
 /// <summary>

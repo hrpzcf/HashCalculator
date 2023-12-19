@@ -1,14 +1,14 @@
 ﻿namespace HashCalculator
 {
-    public class ControlItem
+    public class GenericItemModel
     {
-        public ControlItem(string name, object value)
+        public GenericItemModel(string name, object value)
         {
             this.Display = name;
             this.ItemValue = value;
         }
 
-        public ControlItem(string name, object param, object value)
+        public GenericItemModel(string name, object param, object value)
         {
             this.Display = name;
             this.Param = param;

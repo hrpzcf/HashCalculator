@@ -30,7 +30,7 @@ namespace HashCalculator
 
         public string AlgoName => "SHA-224";
 
-        public AlgoType AlgoType => AlgoType.SHA224;
+        public AlgoType AlgoType => AlgoType.SHA_224;
 
         private void DeleteState()
         {

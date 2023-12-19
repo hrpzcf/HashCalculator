@@ -22,12 +22,12 @@ namespace HashCalculator
 
         public virtual GroupDescription[] GroupDescriptions { get; }
 
-        public virtual ControlItem[] FilterLogics { get; set; } = new ControlItem[]
+        public virtual GenericItemModel[] FilterLogics { get; set; } = new GenericItemModel[]
         {
-            new ControlItem("满足任意要求", FilterLogic.Any),
-            new ControlItem("严格满足要求", FilterLogic.Strict),
-            new ControlItem("在要求范围内", FilterLogic.Within),
-            new ControlItem("涵盖所有要求", FilterLogic.Cover),
+            new GenericItemModel("满足任意要求", FilterLogic.Any),
+            new GenericItemModel("严格满足要求", FilterLogic.Strict),
+            new GenericItemModel("在要求范围内", FilterLogic.Within),
+            new GenericItemModel("涵盖所有要求", FilterLogic.Cover),
         };
 
         public virtual void Init() { }

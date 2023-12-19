@@ -24,11 +24,16 @@
     </Window.Resources>
     <ScrollViewer Padding="2" VerticalScrollBarVisibility="Auto">
         <Grid Margin="8">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <DataGrid
+                Grid.Row="0"
                 Grid.Column="0"
                 AutoGenerateColumns="False"
                 CellStyle="{StaticResource CellStyleNormal}"
@@ -76,19 +81,28 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <ComboBox
-                                    Margin="2"
-                                    DisplayMemberPath="Display"
                                     IsEnabled="{Binding HasSubmenus, Converter={StaticResource ReverseBooleanValueCvt}}"
-                                    ItemsSource="{Binding Source={x:Static local:ShellMenuEditorModel.AvailableAlgoTypes}}"
-                                    SelectedValue="{Binding AlgType, UpdateSourceTrigger=PropertyChanged}"
-                                    SelectedValuePath="ItemValue" />
+                                    ItemsSource="{Binding AvailableAlgTypes}"
+                                    SelectedItem="{Binding CurrentAlgoType}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <CheckBox
+                                                VerticalAlignment="Center"
+                                                Content="{Binding Display}"
+                                                IsChecked="{Binding Selected}" />
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTextColumn Width="*" />
                 </DataGrid.Columns>
             </DataGrid>
-            <StackPanel Grid.Column="1" Margin="8,0,0,0">
+            <StackPanel
+                Grid.Row="0"
+                Grid.Column="1"
+                Margin="8,0,0,0">
                 <Button
                     Grid.Column="2"
                     Padding="8,4"
@@ -143,6 +157,14 @@
                     Command="{Binding ResetMenuListCmd}"
                     Content="恢复默认" />
             </StackPanel>
+            <TextBlock
+                Grid.Row="1"
+                Grid.ColumnSpan="2"
+                Margin="0,8,0,0"
+                FontSize="8pt"
+                Foreground="#969696"
+                Text="【算法】列中的下拉列表允许同时勾选多个算法，可以实现右键菜单一键使用多个算法进行计算。如果不勾选任何算法，则按设置中指定的行为自动选择算法。注意：当前显示哪个算法不重要，只有被勾选的算法起作用。"
+                TextWrapping="Wrap" />
         </Grid>
     </ScrollViewer>
 </Window>

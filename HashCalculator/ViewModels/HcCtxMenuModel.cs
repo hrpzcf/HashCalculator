@@ -1,4 +1,8 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Runtime.Serialization;
+using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using Newtonsoft.Json;
@@ -7,15 +11,52 @@ namespace HashCalculator
 {
     public class HcCtxMenuModel : NotifiableModel
     {
+        private const char sep = ',';
         private string _title;
-        private string _algType;
         private bool _hasSubmenus;
         private ObservableCollection<HcCtxMenuModel> _submenus;
+        private GenericItemModel _currentAlgoType;
         private HcCtxMenuModel _selectedSubmenu;
         private RelayCommand _addSubmenuCmd;
         private RelayCommand _deleteSubmenuCmd;
         private RelayCommand _moveSubmenuUpCmd;
         private RelayCommand _moveSubmenuDownCmd;
+
+        public HcCtxMenuModel()
+        {
+            this.AvailableAlgTypes = GenericItemModelsFromProvidedAlgos();
+            this.CurrentAlgoType = this.AvailableAlgTypes[0];
+        }
+
+        public HcCtxMenuModel(string title) : this()
+        {
+            this.Title = title;
+            this.CurrentAlgoType = this.AvailableAlgTypes[0];
+        }
+
+        public HcCtxMenuModel(string title, string algType) : this()
+        {
+            this.Title = title;
+            this.AlgTypes = algType;
+            foreach (GenericItemModel item in this.AvailableAlgTypes)
+            {
+                if (algType.Equals((string)item.ItemValue, StringComparison.OrdinalIgnoreCase))
+                {
+                    item.Selected = true;
+                    this.CurrentAlgoType = item;
+                    break;
+                }
+            }
+        }
+
+        public HcCtxMenuModel(string title, bool hasSubmenus, MenuType menuType) : this()
+        {
+            this.Title = title;
+            this.HasSubmenus = hasSubmenus;
+            this.MenuType = menuType;
+        }
+
+        public MenuType MenuType { get; set; }
 
         public string Title
         {
@@ -23,26 +64,28 @@ namespace HashCalculator
             set => this.SetPropNotify(ref this._title, value);
         }
 
-        public string AlgType
-        {
-            get => this._algType;
-            set => this.SetPropNotify(ref this._algType, value);
-        }
+        public string AlgTypes { get; set; }
 
-        public MenuType MenuType { get; set; }
+        public ObservableCollection<HcCtxMenuModel> Submenus
+        {
+            get => this._submenus;
+            set => this.SetPropNotify(ref this._submenus, value);
+        }
 
         public string ShortCutKey { get; set; }
 
+        [JsonIgnore]
         public bool HasSubmenus
         {
             get => this._hasSubmenus;
             set => this.SetPropNotify(ref this._hasSubmenus, value);
         }
 
-        public ObservableCollection<HcCtxMenuModel> Submenus
+        [JsonIgnore]
+        public GenericItemModel CurrentAlgoType
         {
-            get => this._submenus;
-            set => this.SetPropNotify(ref this._submenus, value);
+            get => this._currentAlgoType;
+            set => this.SetPropNotify(ref this._currentAlgoType, value);
         }
 
         [JsonIgnore]
@@ -51,6 +94,9 @@ namespace HashCalculator
             get => this._selectedSubmenu;
             set => this.SetPropNotify(ref this._selectedSubmenu, value);
         }
+
+        [JsonIgnore]
+        public GenericItemModel[] AvailableAlgTypes { get; }
 
         private void AddSubmenuAction(object param)
         {
@@ -163,19 +209,60 @@ namespace HashCalculator
             }
         }
 
-        public HcCtxMenuModel() { }
-
-        public HcCtxMenuModel(string title, string algType)
+        [OnDeserialized]
+        internal void OnHcCtxMenuModelDeserialized(StreamingContext context)
         {
-            this.Title = title;
-            this.AlgType = algType;
+            this.HasSubmenus = this.Submenus != null;
+            if (!this.HasSubmenus)
+            {
+                if (!string.IsNullOrEmpty(this.AlgTypes))
+                {
+                    string[] algTypeList = this.AlgTypes.Split(sep);
+                    foreach (GenericItemModel model in this.AvailableAlgTypes)
+                    {
+                        if (algTypeList.Contains((string)model.ItemValue, StringComparer.OrdinalIgnoreCase))
+                        {
+                            model.Selected = true;
+                            if (this.CurrentAlgoType == null || !this.CurrentAlgoType.Selected)
+                            {
+                                this.CurrentAlgoType = model;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
-        public HcCtxMenuModel(string title, bool hasSubmenus, MenuType menuType)
+        [OnSerializing]
+        internal void OnHcCtxMenuModelSerializing(StreamingContext context)
         {
-            this.Title = title;
-            this.HasSubmenus = hasSubmenus;
-            this.MenuType = menuType;
+            if (this.HasSubmenus)
+            {
+                this.AlgTypes = null;
+            }
+            else
+            {
+                StringBuilder jsonValueStringBuilder = new StringBuilder();
+                foreach (GenericItemModel item in this.AvailableAlgTypes)
+                {
+                    if (item.Selected)
+                    {
+                        jsonValueStringBuilder.Append((string)item.ItemValue);
+                        jsonValueStringBuilder.Append(sep);
+                    }
+                }
+                if (jsonValueStringBuilder.Length > 0 && jsonValueStringBuilder[jsonValueStringBuilder.Length - 1] == sep)
+                {
+                    jsonValueStringBuilder.Remove(jsonValueStringBuilder.Length - 1, 1);
+                }
+                this.AlgTypes = jsonValueStringBuilder.ToString();
+            }
+        }
+
+        public static GenericItemModel[] GenericItemModelsFromProvidedAlgos()
+        {
+            return AlgosPanelModel.ProvidedAlgos.Select(
+                i => new GenericItemModel(i.AlgoName, i.AlgoType.ToString())).ToArray();
         }
     }
 }

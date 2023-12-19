@@ -17,10 +17,10 @@ namespace HashCalculator
 
         public override string Description => "使用指定算法、格式的哈希值作为文件名，重命名操作对象所指的文件";
 
-        public ControlItem[] OutputTypes { get; } = new ControlItem[]
+        public GenericItemModel[] OutputTypes { get; } = new GenericItemModel[]
         {
-            new ControlItem("十六进制小写", OutputType.BinaryLower),
-            new ControlItem("十六进制大写", OutputType.BinaryUpper),
+            new GenericItemModel("十六进制小写", OutputType.BinaryLower),
+            new GenericItemModel("十六进制大写", OutputType.BinaryUpper),
         };
 
         public OutputType BeingUsedOutput { get; set; } = OutputType.BinaryLower;

@@ -6,13 +6,13 @@ namespace HashCalculator
 {
     internal class CmpResultFilter : AbsHashViewFilter
     {
-        private readonly ControlItem[] expResultCtrls = new ControlItem[]
+        private readonly GenericItemModel[] expResultModels = new GenericItemModel[]
         {
-            new ControlItem("未校验", CmpRes.NoResult),
-            new ControlItem("无关联", CmpRes.Unrelated),
-            new ControlItem("已匹配", CmpRes.Matched),
-            new ControlItem("不匹配", CmpRes.Mismatch),
-            new ControlItem("不确定", CmpRes.Uncertain),
+            new GenericItemModel("未校验", CmpRes.NoResult),
+            new GenericItemModel("无关联", CmpRes.Unrelated),
+            new GenericItemModel("已匹配", CmpRes.Matched),
+            new GenericItemModel("不匹配", CmpRes.Mismatch),
+            new GenericItemModel("不确定", CmpRes.Uncertain),
         };
 
         public override ContentControl Settings { get; }
@@ -23,7 +23,7 @@ namespace HashCalculator
 
         public override object Param { get; set; } = FilterLogic.Any;
 
-        public override object[] Items { get => this.expResultCtrls; set { } }
+        public override object[] Items { get => this.expResultModels; set { } }
 
         public CmpResultFilter()
         {
@@ -36,7 +36,7 @@ namespace HashCalculator
             {
                 return;
             }
-            HashSet<CmpRes> expectedResults = this.expResultCtrls.Where(i => i.Selected)
+            HashSet<CmpRes> expectedResults = this.expResultModels.Where(i => i.Selected)
                 .Select(i => (CmpRes)i.ItemValue).ToHashSet();
             if (expectedResults.Any())
             {

@@ -153,26 +153,26 @@ namespace HashCalculator
                 i => i.NewAlgoInOutModel()).ToArray();
         }
 
-        public static AlgoInOutModel[] GetSelectedAlgos()
+        public static IEnumerable<AlgoInOutModel> GetSelectedAlgos()
         {
             IEnumerable<AlgoInOutModel> selectedAlgos = ProvidedAlgos.Where(
                 i => i.Selected).Select(i => i.NewAlgoInOutModel());
-            if (selectedAlgos.Any())
+            if (!selectedAlgos.Any())
             {
-                return selectedAlgos.ToArray();
+                return new AlgoInOutModel[] { ProvidedAlgos[0].NewAlgoInOutModel() };
             }
-            return new AlgoInOutModel[] { ProvidedAlgos[0].NewAlgoInOutModel() };
+            return selectedAlgos;
         }
 
-        public static AlgoInOutModel[] GetKnownAlgos(AlgoType algoType)
+        public static AlgoInOutModel[] GetKnownAlgos(IEnumerable<AlgoType> algoTypes)
         {
-            if (algoType != AlgoType.Unknown)
+            if (algoTypes != null)
             {
-                IEnumerable<AlgoInOutModel> matchedAlgo = ProvidedAlgos.Where(
-                    i => i.IAlgo.AlgoType == algoType).Select(i => i.NewAlgoInOutModel());
-                if (matchedAlgo.Any())
+                IEnumerable<AlgoInOutModel> matchingAlgos = ProvidedAlgos.Where(
+                    i => algoTypes.Contains(i.IAlgo.AlgoType)).Select(i => i.NewAlgoInOutModel());
+                if (matchingAlgos.Any())
                 {
-                    return matchedAlgo.ToArray();
+                    return matchingAlgos.ToArray();
                 }
             }
             return default(AlgoInOutModel[]);
@@ -210,39 +210,38 @@ namespace HashCalculator
             return default(List<AlgoInOutModel>);
         }
 
-        public static List<AlgoInOutModel> NewInOutModelsByDigestLengths(int[] lengths)
+        public static IEnumerable<AlgoInOutModel> NewInOutModelsByDigestLengths(int[] lengths)
         {
             if (lengths != null)
             {
-                List<AlgoInOutModel> algoInstances = new List<AlgoInOutModel>();
+                List<AlgoInOutModel> algoInstances;
                 switch (Settings.Current.FetchAlgorithmOption)
                 {
                     case FetchAlgoOption.SELECTED:
-                        // 当 HashViewModel 内检查算法列表为空时，
-                        // 会自动通过此类的 GetSelectedAlgos 方法获取已选择的算法
-                        break;
+                        return GetSelectedAlgos();
                     case FetchAlgoOption.TATMSHDL:
-                        foreach (AlgoInOutModel model in ProvidedAlgos)
+                        algoInstances = new List<AlgoInOutModel>();
+                        foreach (AlgoInOutModel algoInOutModel in ProvidedAlgos)
                         {
-                            if (lengths.Contains(model.IAlgo.DigestLength))
+                            if (lengths.Contains(algoInOutModel.IAlgo.DigestLength))
                             {
-                                algoInstances.Add(model.NewAlgoInOutModel());
+                                algoInstances.Add(algoInOutModel.NewAlgoInOutModel());
                             }
                         }
-                        break;
+                        return algoInstances;
                     case FetchAlgoOption.TATSAMSHDL:
-                        foreach (AlgoInOutModel model in ProvidedAlgos)
+                        algoInstances = new List<AlgoInOutModel>();
+                        foreach (AlgoInOutModel algoInOutModel in ProvidedAlgos)
                         {
-                            if (model.Selected && lengths.Contains(model.IAlgo.DigestLength))
+                            if (algoInOutModel.Selected && lengths.Contains(algoInOutModel.IAlgo.DigestLength))
                             {
-                                algoInstances.Add(model.NewAlgoInOutModel());
+                                algoInstances.Add(algoInOutModel.NewAlgoInOutModel());
                             }
                         }
-                        break;
+                        return algoInstances;
                 }
-                return algoInstances;
             }
-            return default(List<AlgoInOutModel>);
+            return default(IEnumerable<AlgoInOutModel>);
         }
 
         public static AlgoInOutModel[] GetAlgsFromChecklist(HashChecklist checklist, string fileName)
@@ -250,14 +249,9 @@ namespace HashCalculator
             if (checklist != null)
             {
                 List<AlgoInOutModel> finalInOutModels = new List<AlgoInOutModel>();
-                if (checklist.PreferredAlgo != AlgoType.Unknown)
-                {
-                    finalInOutModels.Add(NewInOutModelByType(checklist.PreferredAlgo));
-                    return finalInOutModels.ToArray();
-                }
                 if (checklist.TryGetAlgHashMapOfFile(fileName, out AlgHashMap algHashMap))
                 {
-                    List<AlgoInOutModel> inOutModels;
+                    IEnumerable<AlgoInOutModel> inOutModels;
                     string[] algoNames = algHashMap.GetExistingAlgoNames();
                     if (algoNames.Length != 0)
                     {
