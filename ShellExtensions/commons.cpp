@@ -87,6 +87,7 @@ BOOL InsertMenuFromJsonFile(const char* menuJson, HMENU hMenu, UINT indexMenu, U
     json_t* jsonMemory = NULL;
     CHAR* jsonCharData = NULL;
     UINT initalId = *pIdCurrent;
+    UINT indexTopCurrent = indexMenu;
     DeleteCmdDictBuffer(mCmdDict);
     mCmdDict.clear();
     if (menuType != MENUTYPE_UNKNOWN) {
@@ -145,9 +146,9 @@ BOOL InsertMenuFromJsonFile(const char* menuJson, HMENU hMenu, UINT indexMenu, U
                     }
                 }
                 if (0 != appendedSubmenuCount) {
-                    UINT mainMenuTitleLength = (UINT)strlen(topMenuTitle);
-                    char* mainMenuTitleBuffer = new char[mainMenuTitleLength + 1];
-                    StringCbCopyA(mainMenuTitleBuffer, mainMenuTitleLength + 1, topMenuTitle);
+                    UINT topMenuTitleLength = (UINT)strlen(topMenuTitle);
+                    char* topMenuTitleBuffer = new char[topMenuTitleLength + 1];
+                    StringCbCopyA(topMenuTitleBuffer, topMenuTitleLength + 1, topMenuTitle);
                     MENUITEMINFOA menuItemInformationBasedOnSubmenuContainer = { 0 };
                     menuItemInformationBasedOnSubmenuContainer.cbSize = sizeof(MENUITEMINFOA);
                     menuItemInformationBasedOnSubmenuContainer.fMask = MIIM_ID | MIIM_SUBMENU | MIIM_STRING | MIIM_CHECKMARKS;
@@ -155,20 +156,24 @@ BOOL InsertMenuFromJsonFile(const char* menuJson, HMENU hMenu, UINT indexMenu, U
                     menuItemInformationBasedOnSubmenuContainer.hbmpUnchecked = bitMapHandle;
                     menuItemInformationBasedOnSubmenuContainer.wID = idCmdFirst + *pIdCurrent;
                     menuItemInformationBasedOnSubmenuContainer.hSubMenu = hSubmenuContainer;
-                    menuItemInformationBasedOnSubmenuContainer.dwTypeData = mainMenuTitleBuffer;
-                    menuItemInformationBasedOnSubmenuContainer.cch = mainMenuTitleLength;
-                    if (InsertMenuItemA(hMenu, indexMenu + 1, true, &menuItemInformationBasedOnSubmenuContainer)) {
-                        *pIdCurrent = *pIdCurrent + 1;
-                        goto FinalizeAndReturn;
+                    menuItemInformationBasedOnSubmenuContainer.dwTypeData = topMenuTitleBuffer;
+                    menuItemInformationBasedOnSubmenuContainer.cch = topMenuTitleLength;
+                    if (!InsertMenuItemA(hMenu, indexTopCurrent, true, &menuItemInformationBasedOnSubmenuContainer)) {
+                        goto DestroyMenuContinue;
                     }
+                    ++indexTopCurrent;
+                    delete[] topMenuTitleBuffer;
+                    *pIdCurrent = *pIdCurrent + 1;
+                    continue;
                 }
+            DestroyMenuContinue:
                 DestroyMenu(hSubmenuContainer);
             }
             else {
                 const char* usingAlgsStr;
                 if (json_getPropValueByType(topMenuJson, JSON_ALGTYPES, JSON_TEXT, &usingAlgsStr)) {
-                    if (InsertMenuA(hMenu, indexMenu, MF_BYPOSITION | MF_STRING | MF_POPUP, idCmdFirst + *pIdCurrent, topMenuTitle)) {
-                        SetMenuItemBitmaps(hMenu, indexMenu, MF_BYPOSITION, bitMapHandle, bitMapHandle);
+                    if (InsertMenuA(hMenu, indexTopCurrent, MF_BYPOSITION | MF_STRING | MF_POPUP, idCmdFirst + *pIdCurrent, topMenuTitle)) {
+                        SetMenuItemBitmaps(hMenu, indexTopCurrent++, MF_BYPOSITION, bitMapHandle, bitMapHandle);
                         size_t bufferCharLength = strlen(usingAlgsStr) + 1;
                         char* algoTypeBuffer = new char[bufferCharLength]();
                         StringCchCopyA(algoTypeBuffer, bufferCharLength, usingAlgsStr);
