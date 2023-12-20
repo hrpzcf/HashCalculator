@@ -3,7 +3,6 @@
 #include <strsafe.h>
 #include "commons.h"
 #include "OpenAsChecklist.h"
-#include "ResString.h"
 
 
 VOID COpenAsChecklist::CreateGUIProcessVerifyHash(LPCSTR algo) const {

@@ -7,7 +7,6 @@
 #include <strsafe.h>
 #include "commons.h"
 #include "ComputeHash.h"
-#include "ResString.h"
 
 
 VOID CComputeHash::CreateGUIProcessComputeHash(LPCSTR algo) {
