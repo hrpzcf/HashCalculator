@@ -49,7 +49,7 @@ FinalizeAndReturn:
 VOID ShowMessageType(HMODULE hModule, UINT titleID, UINT messageID, UINT uType) {
     ResString title = ResString(hModule, titleID);
     ResString message = ResString(hModule, messageID);
-    MessageBoxA(nullptr, message.String(), title.String(), MB_TOPMOST | MB_ICONERROR);
+    MessageBoxA(nullptr, message.String(), title.String(), uType);
 }
 
 static BOOL json_getPropValueByType(const json_t* parent, const char* propName, jsonType_t jsonType, void* addr) {
