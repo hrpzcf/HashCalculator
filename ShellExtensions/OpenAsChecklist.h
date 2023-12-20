@@ -25,7 +25,7 @@ class ATL_NO_VTABLE COpenAsChecklist :
     HINSTANCE hModule = nullptr;
     LPSTR checklistPath = nullptr;
     HBITMAP hBitmapMenu = nullptr;
-    map<UINT, char*> mCmdDict;
+    map<UINT, CHAR*> mCmdDict;
     VOID CreateGUIProcessVerifyHash(LPCSTR) const;
 public:
     COpenAsChecklist();

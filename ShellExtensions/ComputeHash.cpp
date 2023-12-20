@@ -66,8 +66,7 @@ VOID CComputeHash::CreateGUIProcessComputeHash(LPCSTR algo) {
 
 CComputeHash::CComputeHash() {
     this->hModule = _AtlBaseModule.GetModuleInstance();
-    this->hBitmapMenu1 = LoadBitmapW(this->hModule, MAKEINTRESOURCEW(IDB_BITMAP_MENU1));
-    this->hBitmapMenu2 = LoadBitmapW(this->hModule, MAKEINTRESOURCEW(IDB_BITMAP_MENU2));
+    this->hBitmapMenu = LoadBitmapW(this->hModule, MAKEINTRESOURCEW(IDB_BITMAP_MENU1));
     DWORD bufsize = MAX_PATH;
     LPSTR  moduleDirPath = new CHAR[bufsize]();
     while (true)
@@ -97,8 +96,7 @@ CComputeHash::CComputeHash() {
 }
 
 CComputeHash::~CComputeHash() {
-    DeleteObject(this->hBitmapMenu1);
-    DeleteObject(this->hBitmapMenu2);
+    DeleteObject(this->hBitmapMenu);
     DeleteCmdDictBuffer(this->mCmdDict);
     delete[] this->MenuJsonPath;
 }
@@ -161,7 +159,7 @@ STDMETHODIMP CComputeHash::QueryContextMenu(
     }
     UINT idCmdCurrent = 0;
     if (!InsertMenuFromJsonFile(this->MenuJsonPath, hMenu, indexMenu, idCmdFirst, idCmdLast, MENUTYPE_COMPUTE,
-        &idCmdCurrent, this->mCmdDict, this->hBitmapMenu1)) {
+        &idCmdCurrent, this->mCmdDict, this->hBitmapMenu)) {
         return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, 0);
     }
     return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, idCmdCurrent);
@@ -172,7 +170,7 @@ STDMETHODIMP CComputeHash::InvokeCommand(CMINVOKECOMMANDINFO* pici) {
     {
         return E_INVALIDARG;
     }
-    map<UINT, char*>::iterator iter = mCmdDict.find(LOWORD(pici->lpVerb));
+    map<UINT, CHAR*>::iterator iter = mCmdDict.find(LOWORD(pici->lpVerb));
     if (iter == mCmdDict.end())
     {
         return E_INVALIDARG;

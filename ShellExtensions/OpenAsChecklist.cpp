@@ -153,7 +153,7 @@ STDMETHODIMP COpenAsChecklist::InvokeCommand(CMINVOKECOMMANDINFO* pici) {
     {
         return E_INVALIDARG;
     }
-    map<UINT, char*>::iterator iter = mCmdDict.find(LOWORD(pici->lpVerb));
+    map<UINT, CHAR*>::iterator iter = mCmdDict.find(LOWORD(pici->lpVerb));
     if (iter == mCmdDict.end())
     {
         return E_INVALIDARG;

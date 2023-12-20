@@ -37,6 +37,6 @@ typedef enum {
 BOOL GetHashCalculatorPath(LPSTR* buffer, LPDWORD bufsize);
 VOID ShowMessageType(HMODULE hModule, UINT titleID, UINT messageID, UINT uType);
 BOOL InsertMenuFromJsonFile(
-    const char* menuJson, HMENU hMenu, UINT indexMenu, UINT idCmdFirst, UINT idCmdLast, MenuType_t menuType,
-    UINT* idCur, map<UINT, char*>& idCmdMap, HBITMAP hBitMap);
-VOID DeleteCmdDictBuffer(map<UINT, char*>& mCmdDict);
+    const CHAR* menuJson, HMENU hMenu, UINT indexMenu, UINT idCmdFirst, UINT idCmdLast, MenuType_t menuType,
+    UINT* idCur, map<UINT, CHAR*>& idCmdMap, HBITMAP hBitMap);
+VOID DeleteCmdDictBuffer(map<UINT, CHAR*>& mCmdDict);

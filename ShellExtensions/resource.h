@@ -8,7 +8,6 @@
 #define IDS_FRIENDLY_TYPE_NAME          107
 #define IDS_APPLICATIONNAME             108
 #define IDB_BITMAP_MENU1                201
-#define IDB_BITMAP_MENU2                202
 #define IDI_FILE_ICON                   203
 #define IDB_BITMAP_MENU3                204
 #define IDI_APP_ICON                    205

@@ -82,8 +82,8 @@ static BOOL json_getPropValueByType(const json_t* parent, const char* propName, 
     return FALSE;
 }
 
-BOOL InsertMenuFromJsonFile(const char* menuJson, HMENU hMenu, UINT indexMenu, UINT idCmdFirst, UINT idCmdLast,
-    MenuType_t menuType, UINT* pIdCurrent, map<UINT, char*>& mCmdDict, HBITMAP bitMapHandle) {
+BOOL InsertMenuFromJsonFile(const CHAR* menuJson, HMENU hMenu, UINT indexMenu, UINT idCmdFirst, UINT idCmdLast,
+    MenuType_t menuType, UINT* pIdCurrent, map<UINT, CHAR*>& mCmdDict, HBITMAP bitMapHandle) {
     json_t* jsonMemory = NULL;
     CHAR* jsonCharData = NULL;
     UINT initalId = *pIdCurrent;
@@ -194,8 +194,8 @@ FinalizeAndReturn:
     return initalId != *pIdCurrent;
 }
 
-VOID DeleteCmdDictBuffer(map<UINT, char*>& mCmdDict) {
-    for (pair<const UINT, char*>& keyValuePair : mCmdDict) {
+VOID DeleteCmdDictBuffer(map<UINT, CHAR*>& mCmdDict) {
+    for (pair<const UINT, CHAR*>& keyValuePair : mCmdDict) {
         delete[] keyValuePair.second;
         keyValuePair.second = nullptr;
     }

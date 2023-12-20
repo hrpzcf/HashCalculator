@@ -27,9 +27,8 @@ class ATL_NO_VTABLE CComputeHash :
 {
     LPSTR MenuJsonPath = nullptr;
     HINSTANCE hModule = nullptr;
-    HBITMAP hBitmapMenu1 = nullptr;
-    HBITMAP hBitmapMenu2 = nullptr;
-    map<UINT, char*> mCmdDict;
+    HBITMAP hBitmapMenu = nullptr;
+    map<UINT, CHAR*> mCmdDict;
     vector<string> vFilepathList;
     VOID CreateGUIProcessComputeHash(LPCSTR);
 
