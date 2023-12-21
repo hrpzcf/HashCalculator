@@ -27,7 +27,6 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -110,14 +109,6 @@
         <TextBlock
             Grid.Row="2"
             Grid.ColumnSpan="3"
-            Padding="1"
-            HorizontalAlignment="Center"
-            FontSize="8pt"
-            Style="{StaticResource DescTextBlockStyle}"
-            Text="如果默认算法多选且设置中启用并行计算，强烈建议把同时进行的任务数上限设置为 1" />
-        <TextBlock
-            Grid.Row="3"
-            Grid.ColumnSpan="3"
             Margin="0,0,0,4"
             Padding="1"
             HorizontalAlignment="Center"
@@ -126,7 +117,7 @@
             Style="{StaticResource DescTextBlockStyle}"
             Text="不建议选择太多算法，否则对程序做任何操作都极易造成程序无响应" />
         <Button
-            Grid.Row="4"
+            Grid.Row="3"
             Grid.Column="0"
             Margin="0,0,0,4"
             Padding="20,4,20,4"
@@ -138,7 +129,7 @@
             Content="清除"
             Style="{StaticResource FixedBdColorButtonStyle1}" />
         <Button
-            Grid.Row="4"
+            Grid.Row="3"
             Grid.Column="1"
             Margin="0,0,0,4"
             Padding="20,4,20,4"
