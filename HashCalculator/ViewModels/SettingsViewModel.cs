@@ -752,9 +752,9 @@ namespace HashCalculator
         [XmlIgnore]
         public GenericItemModel[] AvailableDroppedSearchPolicies { get; } =
         {
-            new GenericItemModel("搜索一代子文件", SearchPolicy.Children),
-            new GenericItemModel("搜索全部子文件", SearchPolicy.Descendants),
-            new GenericItemModel("不搜索该文件夹", SearchPolicy.DontSearch),
+            new GenericItemModel("搜索该文件夹的一代子文件", SearchPolicy.Children),
+            new GenericItemModel("搜索该文件夹的全部子文件", SearchPolicy.Descendants),
+            new GenericItemModel("不对该文件夹进行搜索操作", SearchPolicy.DontSearch),
         };
 
         [XmlIgnore]
@@ -767,7 +767,7 @@ namespace HashCalculator
         [XmlIgnore]
         public GenericItemModel[] AvailableFetchAlgoOptions { get; } =
         {
-            new GenericItemModel("使用默认算法中已被勾选的算法", FetchAlgoOption.SELECTED),
+            new GenericItemModel("使用默认哈希算法中被勾选的算法", FetchAlgoOption.SELECTED),
             new GenericItemModel("使用被勾选且可产生相应哈希长度的算法", FetchAlgoOption.TATSAMSHDL),
             new GenericItemModel("使用所有可产生相应哈希长度的算法", FetchAlgoOption.TATMSHDL),
         };

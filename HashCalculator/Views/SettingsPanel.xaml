@@ -33,7 +33,7 @@
             Padding="8"
             Header="常规设置"
             Style="{StaticResource TabItemStyle1}">
-            <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                 <StackPanel Margin="8">
                     <GroupBox Foreground="#FF006FD6" Header="哈希值计算任务设置">
                         <StackPanel>
@@ -51,7 +51,7 @@
                             <CheckBox
                                 Margin="0,8,0,4"
                                 Padding="4,0,0,0"
-                                Content="每个任务的多个算法并行计算(不勾选则多个算法串行计算)"
+                                Content="当任务包含多个算法时，每次读取数据多个算法都并行计算"
                                 IsChecked="{Binding ParallelBetweenAlgos, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         </StackPanel>
                     </GroupBox>
@@ -64,7 +64,7 @@
                                 <TextBlock
                                     VerticalAlignment="Center"
                                     Foreground="Black"
-                                    Text="当选择的待计算对象中包含文件夹时：" />
+                                    Text="当选择或拖放的多个待计算对象中包含文件夹时：" />
                                 <ComboBox
                                     DisplayMemberPath="Display"
                                     ItemsSource="{Binding AvailableDroppedSearchPolicies}"
@@ -75,7 +75,7 @@
                                 <TextBlock
                                     VerticalAlignment="Center"
                                     Foreground="Black"
-                                    Text="表格为空时使用校验依据文件进行校验：" />
+                                    Text="当有需要时如何查找校验依据文件内列出的文件：" />
                                 <ComboBox
                                     DisplayMemberPath="Display"
                                     ItemsSource="{Binding AvailableQVSearchPolicies}"
@@ -88,19 +88,24 @@
                     <GroupBox
                         Margin="0,8,0,0"
                         Foreground="#FF006FD6"
-                        Header="使用校验依据文件时如何选择算法">
+                        Header="当需要查找校验依据内列出的文件进行计算并校验时">
                         <StackPanel>
-                            <CheckBox
+                            <RadioButton
+                                Margin="0,8,0,0"
+                                Padding="4,0,0,0"
+                                Content="使用默认哈希算法中被勾选的算法"
+                                IsChecked="{Binding PreferChecklistAlgs, Converter={StaticResource ReverseBooleanValueCvt}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <RadioButton
                                 x:Name="checkBoxPreferChecklistAlgs"
                                 Margin="0,8,0,0"
                                 Padding="4,0,0,0"
-                                Content="直接使用校验依据进行校验时首选依据算法而非默认算法"
+                                Content="首选校验依据文件内指定的哈希算法"
                                 IsChecked="{Binding PreferChecklistAlgs, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             <StackPanel Margin="20,8,0,4" Orientation="Horizontal">
                                 <TextBlock
                                     VerticalAlignment="Center"
                                     Foreground="Black"
-                                    Text="当校验依据中未指明算法时：" />
+                                    Text="当校验依据内未指定算法时：" />
                                 <ComboBox
                                     DisplayMemberPath="Display"
                                     IsEnabled="{Binding ElementName=checkBoxPreferChecklistAlgs, Path=IsChecked}"
@@ -113,13 +118,13 @@
                     <GroupBox
                         Margin="0,8,0,0"
                         Foreground="#FF006FD6"
-                        Header="监控新复制的哈希值用于校验">
+                        Header="监控剪贴板中新复制的哈希值用于校验">
                         <StackPanel>
                             <CheckBox
                                 x:Name="checkBoxVerifyWhenClipbaordNewHash"
                                 Margin="0,8,0,0"
                                 Padding="4,0,0,0"
-                                Content="剪贴板中有新复制的哈希值时填充校验依据文本框并校验"
+                                Content="有新复制的哈希值时自动填充校验依据文本框并校验"
                                 IsChecked="{Binding MonitorNewHashStringInClipboard, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             <CheckBox
                                 Margin="20,8,0,0"
@@ -127,9 +132,11 @@
                                 Content="完成哈希值校验后把主窗口带到前台"
                                 IsChecked="{Binding SwitchMainWndFgWhenNewHashCopied, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 IsEnabled="{Binding ElementName=checkBoxVerifyWhenClipbaordNewHash, Path=IsChecked}" />
-                            <StackPanel IsEnabled="{Binding ElementName=checkBoxVerifyWhenClipbaordNewHash, Path=IsChecked}" Orientation="Horizontal">
+                            <StackPanel
+                                Margin="20,8,0,4"
+                                IsEnabled="{Binding ElementName=checkBoxVerifyWhenClipbaordNewHash, Path=IsChecked}"
+                                Orientation="Horizontal">
                                 <TextBlock
-                                    Margin="20,8,0,4"
                                     VerticalAlignment="Center"
                                     Foreground="Black"
                                     Text="复制的字符数在此范围内时才触发 (默认8~128)：" />
@@ -356,7 +363,7 @@
                                     <TextBlock
                                         FontSize="8pt"
                                         Style="{StaticResource DescTextBlockStyle}"
-                                        Text="将哈希值结果导出为 .txt 后缀的文本文件，每行格式：[#算法 *哈希值 *文件名]，不包括方括号" />
+                                        Text="将哈希值结果导出为 .txt 后缀的文本文件，每行格式：#算法 *哈希值 *文件名" />
                                 </StackPanel>
                             </RadioButton>
                         </Border>
@@ -374,11 +381,19 @@
                                     <TextBlock
                                         FontSize="8pt"
                                         Style="{StaticResource DescTextBlockStyle}"
-                                        Text="内容与&lt;导出为文本文件 (.txt)&gt;相同，如果已设置文件关联则可直接双击打开 .hcb 文件进行校验" />
+                                        Text="导出的内容与【导出为文本文件 (.txt)】选项的结果完全相同，仅文件后缀不同" />
                                     <TextBlock
                                         FontSize="8pt"
                                         Style="{StaticResource DescTextBlockStyle}"
-                                        Text="但 .hcb 文件需与待校验文件在同目录下，设置项&lt;直接使用校验依据进行校验时&gt;需选择合适策略" />
+                                        Text="如果已设置文件关联则可以双击打开 .hcb 文件自动对其内列出的文件进行计算并校验" />
+                                    <TextBlock
+                                        FontSize="8pt"
+                                        Style="{StaticResource DescTextBlockStyle}"
+                                        Text="能否找到其内列出的文件取决于 .hcb 文件与待哈希文件是否在相同的文件夹下，" />
+                                    <TextBlock
+                                        FontSize="8pt"
+                                        Style="{StaticResource DescTextBlockStyle}"
+                                        Text="以及【常规设置】中的设置项【文件搜索策略】是否选择了合适的文件搜索策略" />
                                 </StackPanel>
                             </RadioButton>
                         </Border>
