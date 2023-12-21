@@ -305,7 +305,6 @@
     <Image Include="app_icon.ico" />
     <Image Include="file_icon.ico" />
     <Image Include="icon_1.bmp" />
-    <Image Include="icon_2.bmp" />
     <Image Include="icon_3.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

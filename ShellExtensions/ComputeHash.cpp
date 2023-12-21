@@ -21,9 +21,9 @@ VOID CComputeHash::CreateGUIProcessComputeHash(LPCSTR algo) {
         return;
     }
     // 此处的字符 'p' 不是传给 HashCalculator 的命令，仅作为占位符，C# 程序接收不到此字符。
-    // 因为 C# 程序 Main 函数的 string[] args 参数仅从 CreateProcessW 第二个参数解析得来，
+    // 因为 C# 程序 Main 函数的 string[] args 参数仅从 CreateProcessA 第二个参数解析得来，
     // 且 C# Main 函数的 string[] args 参数为了不带可执行文件名，CLR 又无脑地删除了解析得到的列表的第一项，
-    // 它以为第一项一定是可执行文件名，但在此函数末尾作者根本没有把可执行文件名和命令合并放在 CreateProcessW 第二个参数，
+    // 它以为第一项一定是可执行文件名，但在此函数末尾作者根本没有把可执行文件名和命令合并放在 CreateProcessA 第二个参数，
     // 就造成了 C# CLR 错误地把命令行参数的第一项（也就是此处的字符 'p'）当作可执行文件名给删了。
     string command_line = string("p compute");
     if (nullptr != algo && 0 != strlen(algo)) {
@@ -66,37 +66,38 @@ VOID CComputeHash::CreateGUIProcessComputeHash(LPCSTR algo) {
 
 CComputeHash::CComputeHash() {
     this->hModule = _AtlBaseModule.GetModuleInstance();
-    this->hBitmapMenu = LoadBitmapW(this->hModule, MAKEINTRESOURCEW(IDB_BITMAP_MENU1));
+    this->hBitmapMenu = (HBITMAP)LoadImageA(
+        this->hModule, MAKEINTRESOURCEA(IDB_BITMAP_MENU1), IMAGE_BITMAP, 0, 0,
+        LR_DEFAULTSIZE | LR_SHARED);
     DWORD bufsize = MAX_PATH;
-    LPSTR  moduleDirPath = new CHAR[bufsize]();
+    LPSTR  modulePathBuffer = new CHAR[bufsize]();
     while (true)
     {
-        GetModuleFileNameA(this->hModule, moduleDirPath, bufsize);
+        GetModuleFileNameA(this->hModule, modulePathBuffer, bufsize);
         if (GetLastError() == ERROR_INSUFFICIENT_BUFFER) {
-            delete[]  moduleDirPath;
+            delete[]  modulePathBuffer;
             bufsize += MAX_PATH;
-            moduleDirPath = new CHAR[bufsize]();
+            modulePathBuffer = new CHAR[bufsize]();
             continue;
         }
-        if (!PathRemoveFileSpecA(moduleDirPath)) {
+        if (!PathRemoveFileSpecA(modulePathBuffer)) {
             break;
         }
-        SIZE_T pathChLength = strlen(moduleDirPath);
+        SIZE_T pathChLength = strlen(modulePathBuffer);
         if (pathChLength == 0) {
             break;
         }
         SIZE_T menuJsonPathTotalChLength = pathChLength + 2 + strlen(MENU_JSONNAME);
         this->MenuJsonPath = new CHAR[menuJsonPathTotalChLength]();
-        StringCchCatA(this->MenuJsonPath, menuJsonPathTotalChLength, moduleDirPath);
+        StringCchCatA(this->MenuJsonPath, menuJsonPathTotalChLength, modulePathBuffer);
         StringCchCatA(this->MenuJsonPath, menuJsonPathTotalChLength, "\\");
         StringCchCatA(this->MenuJsonPath, menuJsonPathTotalChLength, MENU_JSONNAME);
         break;
     }
-    delete[] moduleDirPath;
+    delete[] modulePathBuffer;
 }
 
 CComputeHash::~CComputeHash() {
-    DeleteObject(this->hBitmapMenu);
     DeleteCmdDictBuffer(this->mCmdDict);
     delete[] this->MenuJsonPath;
 }

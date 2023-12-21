@@ -90,98 +90,84 @@ BOOL InsertMenuFromJsonFile(const CHAR* menuJson, HMENU hMenu, UINT indexMenu, U
     UINT indexTopCurrent = indexMenu;
     DeleteCmdDictBuffer(mCmdDict);
     mCmdDict.clear();
-    if (menuType != MENUTYPE_UNKNOWN) {
-        FILE* jsonFile;
-        errno_t error = fopen_s(&jsonFile, menuJson, "rb");
-        if (error != 0 || NULL == jsonFile) {
-            goto FinalizeAndReturn;
+    if (menuType == MENUTYPE_UNKNOWN) {
+        return FALSE;
+    }
+    FILE* jsonFile;
+    errno_t error = fopen_s(&jsonFile, menuJson, "rb");
+    if (error != 0 || NULL == jsonFile) {
+        goto FinalizeAndReturn;
+    }
+    fseek(jsonFile, 0L, SEEK_END);
+    SIZE_T fileSize = ftell(jsonFile);
+    jsonCharData = new CHAR[fileSize + 1];
+    rewind(jsonFile);
+    SIZE_T elementCount = 1;
+    SIZE_T readEleCount = fread(jsonCharData, fileSize, elementCount, jsonFile);
+    fclose(jsonFile);
+    if (readEleCount != elementCount) {
+        goto FinalizeAndReturn;
+    }
+    jsonMemory = new json_t[MAX_JSON_PROP];
+    const json_t* topListJson = json_create(jsonCharData, jsonMemory, MAX_JSON_PROP);
+    if (NULL == topListJson || JSON_ARRAY != json_getType(topListJson)) {
+        goto FinalizeAndReturn;
+    }
+    const json_t* topMenuJson = NULL;
+    for (topMenuJson = json_getChild(topListJson); topMenuJson; topMenuJson = json_getSibling(topMenuJson)) {
+        int64_t i64MenuType;
+        const char* topMenuTitle;
+        if (!json_getPropValueByType(topMenuJson, JSON_MENUTYPE, JSON_INTEGER, &i64MenuType)
+            || i64MenuType != (int64_t)menuType
+            || !json_getPropValueByType(topMenuJson, JSON_TITLE, JSON_TEXT, &topMenuTitle)) {
+            continue;
         }
-        fseek(jsonFile, 0L, SEEK_END);
-        SIZE_T fileLength = ftell(jsonFile);
-        jsonCharData = new CHAR[fileLength + 1];
-        rewind(jsonFile);
-        SIZE_T readLength = fread(jsonCharData, 1, fileLength, jsonFile);
-        fclose(jsonFile);
-        if (readLength != fileLength) {
-            goto FinalizeAndReturn;
-        }
-        jsonMemory = new json_t[MAX_JSON_PROP];
-        const json_t* topListJson = json_create(jsonCharData, jsonMemory, MAX_JSON_PROP);
-        if (NULL == topListJson || JSON_ARRAY != json_getType(topListJson)) {
-            goto FinalizeAndReturn;
-        }
-        const json_t* topMenuJson;
-        for (topMenuJson = json_getChild(topListJson); NULL != topMenuJson; topMenuJson = json_getSibling(topMenuJson)) {
-            int64_t int64MenuType;
-            if (!json_getPropValueByType(topMenuJson, JSON_MENUTYPE, JSON_INTEGER, &int64MenuType)
-                || int64MenuType != (int64_t)menuType) {
-                continue;
+        MENUITEMINFOA topMenuOrSubmenuContainerInfo = { 0 };
+        topMenuOrSubmenuContainerInfo.fMask = MIIM_ID | MIIM_STRING | MIIM_BITMAP;
+        topMenuOrSubmenuContainerInfo.cbSize = sizeof(topMenuOrSubmenuContainerInfo);
+        topMenuOrSubmenuContainerInfo.wID = idCmdFirst + *pIdCurrent;
+        topMenuOrSubmenuContainerInfo.cch = (UINT)strlen(topMenuTitle);
+        topMenuOrSubmenuContainerInfo.dwTypeData = (LPSTR)topMenuTitle;
+        topMenuOrSubmenuContainerInfo.hbmpItem = bitMapHandle;
+        const json_t* subListJson = json_getProperty(topMenuJson, JSON_SUBMENUS);
+        if (NULL == subListJson) {
+            const char* usingAlgsStr;
+            if (json_getPropValueByType(topMenuJson, JSON_ALGTYPES, JSON_TEXT, &usingAlgsStr)
+                && InsertMenuItemA(hMenu, indexTopCurrent, true, &topMenuOrSubmenuContainerInfo)) {
+                ++indexTopCurrent;
+                SIZE_T bufferCharCapacity = strlen(usingAlgsStr) + 1;
+                CHAR* algoTypeBuffer = new char[bufferCharCapacity]();
+                StringCchCopyA(algoTypeBuffer, bufferCharCapacity, usingAlgsStr);
+                mCmdDict.emplace(*pIdCurrent, algoTypeBuffer);
+                *pIdCurrent = *pIdCurrent + 1;
             }
-            const char* topMenuTitle;
-            if (!json_getPropValueByType(topMenuJson, JSON_TITLE, JSON_TEXT, &topMenuTitle)) {
-                continue;
-            }
-            const json_t* subListJson = json_getProperty(topMenuJson, JSON_SUBMENUS);
-            if (NULL != subListJson) {
-                if (JSON_ARRAY != json_getType(subListJson)) {
-                    continue;
-                }
-                UINT appendedSubmenuCount = 0U;
-                HMENU hSubmenuContainer = CreatePopupMenu();
-                LONG flag = MF_STRING | MF_POPUP;
-                const json_t* submenuJson;
-                for (submenuJson = json_getChild(subListJson); NULL != submenuJson; submenuJson = json_getSibling(submenuJson)) {
-                    const char* submenuTitle, * submenuUsingAlgsStr;
-                    if (!json_getPropValueByType(submenuJson, JSON_TITLE, JSON_TEXT, &submenuTitle) ||
-                        !json_getPropValueByType(submenuJson, JSON_ALGTYPES, JSON_TEXT, &submenuUsingAlgsStr)) {
-                        continue;
-                    }
-                    if (AppendMenuA(hSubmenuContainer, flag, idCmdFirst + *pIdCurrent, submenuTitle)) {
-                        ++appendedSubmenuCount;
-                        size_t bufferCharLength = strlen(submenuUsingAlgsStr) + 1;
-                        char* submenuAlgoTypeBuffer = new char[bufferCharLength]();
-                        StringCchCopyA(submenuAlgoTypeBuffer, bufferCharLength, submenuUsingAlgsStr);
-                        mCmdDict.emplace(*pIdCurrent, submenuAlgoTypeBuffer);
-                        *pIdCurrent = *pIdCurrent + 1;
-                    }
-                }
-                if (0 != appendedSubmenuCount) {
-                    UINT topMenuTitleLength = (UINT)strlen(topMenuTitle);
-                    char* topMenuTitleBuffer = new char[topMenuTitleLength + 1];
-                    StringCbCopyA(topMenuTitleBuffer, topMenuTitleLength + 1, topMenuTitle);
-                    MENUITEMINFOA menuItemInformationBasedOnSubmenuContainer = { 0 };
-                    menuItemInformationBasedOnSubmenuContainer.cbSize = sizeof(MENUITEMINFOA);
-                    menuItemInformationBasedOnSubmenuContainer.fMask = MIIM_ID | MIIM_SUBMENU | MIIM_STRING | MIIM_CHECKMARKS;
-                    menuItemInformationBasedOnSubmenuContainer.hbmpChecked = bitMapHandle;
-                    menuItemInformationBasedOnSubmenuContainer.hbmpUnchecked = bitMapHandle;
-                    menuItemInformationBasedOnSubmenuContainer.wID = idCmdFirst + *pIdCurrent;
-                    menuItemInformationBasedOnSubmenuContainer.hSubMenu = hSubmenuContainer;
-                    menuItemInformationBasedOnSubmenuContainer.dwTypeData = topMenuTitleBuffer;
-                    menuItemInformationBasedOnSubmenuContainer.cch = topMenuTitleLength;
-                    if (!InsertMenuItemA(hMenu, indexTopCurrent, true, &menuItemInformationBasedOnSubmenuContainer)) {
-                        goto DestroyMenuContinue;
-                    }
-                    ++indexTopCurrent;
-                    delete[] topMenuTitleBuffer;
+        }
+        else if (JSON_ARRAY == json_getType(subListJson)) {
+            HMENU hSubmenuContainer = CreatePopupMenu();
+            topMenuOrSubmenuContainerInfo.hSubMenu = hSubmenuContainer;
+            topMenuOrSubmenuContainerInfo.fMask |= MIIM_SUBMENU;
+            UINT appendedSubmenuCount = 0U;
+            LONG flag = MF_STRING | MF_POPUP;
+            const json_t* submenuJson = NULL;
+            for (submenuJson = json_getChild(subListJson); submenuJson; submenuJson = json_getSibling(submenuJson)) {
+                const char* submenuTitle, * submenuUsingAlgsStr;
+                if (json_getPropValueByType(submenuJson, JSON_TITLE, JSON_TEXT, &submenuTitle)
+                    && json_getPropValueByType(submenuJson, JSON_ALGTYPES, JSON_TEXT, &submenuUsingAlgsStr)
+                    && AppendMenuA(hSubmenuContainer, flag, idCmdFirst + *pIdCurrent, submenuTitle)) {
+                    ++appendedSubmenuCount;
+                    SIZE_T bufferCharCapacity = strlen(submenuUsingAlgsStr) + 1;
+                    CHAR* submenuAlgoTypeBuffer = new char[bufferCharCapacity]();
+                    StringCchCopyA(submenuAlgoTypeBuffer, bufferCharCapacity, submenuUsingAlgsStr);
+                    mCmdDict.emplace(*pIdCurrent, submenuAlgoTypeBuffer);
                     *pIdCurrent = *pIdCurrent + 1;
-                    continue;
-                }
-            DestroyMenuContinue:
-                DestroyMenu(hSubmenuContainer);
-            }
-            else {
-                const char* usingAlgsStr;
-                if (json_getPropValueByType(topMenuJson, JSON_ALGTYPES, JSON_TEXT, &usingAlgsStr)) {
-                    if (InsertMenuA(hMenu, indexTopCurrent, MF_BYPOSITION | MF_STRING | MF_POPUP, idCmdFirst + *pIdCurrent, topMenuTitle)) {
-                        SetMenuItemBitmaps(hMenu, indexTopCurrent++, MF_BYPOSITION, bitMapHandle, bitMapHandle);
-                        size_t bufferCharLength = strlen(usingAlgsStr) + 1;
-                        char* algoTypeBuffer = new char[bufferCharLength]();
-                        StringCchCopyA(algoTypeBuffer, bufferCharLength, usingAlgsStr);
-                        mCmdDict.emplace(*pIdCurrent, algoTypeBuffer);
-                        *pIdCurrent = *pIdCurrent + 1;
-                    }
                 }
             }
+            if (0 != appendedSubmenuCount && InsertMenuItemA(hMenu, indexTopCurrent, true, &topMenuOrSubmenuContainerInfo)) {
+                ++indexTopCurrent;
+                *pIdCurrent = *pIdCurrent + 1;
+                continue;
+            }
+            DestroyMenu(hSubmenuContainer);
         }
     }
 FinalizeAndReturn:
