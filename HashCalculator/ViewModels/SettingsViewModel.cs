@@ -399,6 +399,10 @@ namespace HashCalculator
             set
             {
                 this.SetPropNotify(ref this.selectedTaskNumberLimit, value);
+                if (value != TaskNum.One)
+                {
+                    this.ParallelBetweenAlgos = false;
+                }
             }
         }
 
@@ -551,6 +555,10 @@ namespace HashCalculator
             set
             {
                 this.SetPropNotify(ref this.parallelBetweenAlgos, value);
+                if (value)
+                {
+                    this.SelectedTaskNumberLimit = TaskNum.One;
+                }
             }
         }
 
