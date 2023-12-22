@@ -52,7 +52,7 @@
     <ClInclude Include="ComputeHash.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="tiny-json.h">
+    <ClInclude Include="TinyJson\tiny-json.h">
       <Filter>TinyJson</Filter>
     </ClInclude>
   </ItemGroup>
@@ -78,7 +78,7 @@
     <ClCompile Include="commons.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="tiny-json.c">
+    <ClCompile Include="TinyJson\tiny-json.c">
       <Filter>TinyJson</Filter>
     </ClCompile>
   </ItemGroup>

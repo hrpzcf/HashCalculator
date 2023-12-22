@@ -1,0 +1,3 @@
+[submodule "ShellExtensions/TinyJson"]
+	path = ShellExtensions/TinyJson
+	url = git@github.com:rafagafe/tiny-json.git
