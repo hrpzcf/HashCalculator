@@ -118,27 +118,26 @@ namespace HashCalculator
 
         private void DeleteMenuAction(object param)
         {
-            if (this.MenuList == null)
+            if (this.MenuList != null)
             {
-                return;
-            }
-            int index;
-            if ((index = this.MenuList.IndexOf(this.SelectedMenu)) != -1)
-            {
-                this.MenuList.RemoveAt(index);
-                if (index < this.MenuList.Count)
+                int index;
+                if ((index = this.MenuList.IndexOf(this.SelectedMenu)) != -1)
                 {
-                    this.SelectedMenu = this.MenuList[index];
+                    this.MenuList.RemoveAt(index);
+                    if (index < this.MenuList.Count)
+                    {
+                        this.SelectedMenu = this.MenuList[index];
+                    }
+                    else if (index > 0)
+                    {
+                        this.SelectedMenu = this.MenuList[index - 1];
+                    }
                 }
-                else if (index > 0)
+                else
                 {
-                    this.SelectedMenu = this.MenuList[index - 1];
+                    MessageBox.Show(this.Parent, "没有选择任何主菜单！", "提示", MessageBoxButton.OK,
+                        MessageBoxImage.Information);
                 }
-            }
-            else
-            {
-                MessageBox.Show(this.Parent, "没有选择任何主菜单！", "提示", MessageBoxButton.OK,
-                    MessageBoxImage.Information);
             }
         }
 

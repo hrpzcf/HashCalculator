@@ -124,23 +124,26 @@ namespace HashCalculator
 
         private void DeleteSubmenuAction(object param)
         {
-            int index;
-            if ((index = this.Submenus.IndexOf(this.SelectedSubmenu)) != -1)
+            if (this.Submenus != null)
             {
-                this.Submenus.RemoveAt(index);
-                if (index < this.Submenus.Count)
+                int index;
+                if ((index = this.Submenus.IndexOf(this.SelectedSubmenu)) != -1)
                 {
-                    this.SelectedSubmenu = this.Submenus[index];
+                    this.Submenus.RemoveAt(index);
+                    if (index < this.Submenus.Count)
+                    {
+                        this.SelectedSubmenu = this.Submenus[index];
+                    }
+                    else if (index > 0)
+                    {
+                        this.SelectedSubmenu = this.Submenus[index - 1];
+                    }
                 }
-                else if (index > 0)
+                else
                 {
-                    this.SelectedSubmenu = this.Submenus[index - 1];
+                    MessageBox.Show(ShellMenuEditor.This, "没有选择任何菜单项！", "提示", MessageBoxButton.OK,
+                        MessageBoxImage.Information);
                 }
-            }
-            else
-            {
-                MessageBox.Show(ShellMenuEditor.This, "没有选择任何菜单项！", "提示", MessageBoxButton.OK,
-                    MessageBoxImage.Information);
             }
         }
 
@@ -159,14 +162,17 @@ namespace HashCalculator
 
         private void MoveSubmenuUpAction(object param)
         {
-            int index;
-            if ((index = this.Submenus.IndexOf(this.SelectedSubmenu)) != -1 && index > 0)
+            if (this.Submenus != null)
             {
-                int prevSubenuIndex = index - 1;
-                HcCtxMenuModel selectedMenu = this.SelectedSubmenu;
-                this.Submenus[index] = this.Submenus[prevSubenuIndex];
-                this.Submenus[prevSubenuIndex] = selectedMenu;
-                this.SelectedSubmenu = selectedMenu;
+                int index;
+                if ((index = this.Submenus.IndexOf(this.SelectedSubmenu)) != -1 && index > 0)
+                {
+                    int prevSubenuIndex = index - 1;
+                    HcCtxMenuModel selectedMenu = this.SelectedSubmenu;
+                    this.Submenus[index] = this.Submenus[prevSubenuIndex];
+                    this.Submenus[prevSubenuIndex] = selectedMenu;
+                    this.SelectedSubmenu = selectedMenu;
+                }
             }
         }
 
@@ -185,14 +191,17 @@ namespace HashCalculator
 
         private void MoveSubmenuDownAction(object param)
         {
-            int index;
-            if ((index = this.Submenus.IndexOf(this.SelectedSubmenu)) != -1 && index < this.Submenus.Count - 1)
+            if (this.Submenus != null)
             {
-                int nextSubenuIndex = index + 1;
-                HcCtxMenuModel selectedMenu = this.SelectedSubmenu;
-                this.Submenus[index] = this.Submenus[nextSubenuIndex];
-                this.Submenus[nextSubenuIndex] = selectedMenu;
-                this.SelectedSubmenu = selectedMenu;
+                int index;
+                if ((index = this.Submenus.IndexOf(this.SelectedSubmenu)) != -1 && index < this.Submenus.Count - 1)
+                {
+                    int nextSubenuIndex = index + 1;
+                    HcCtxMenuModel selectedMenu = this.SelectedSubmenu;
+                    this.Submenus[index] = this.Submenus[nextSubenuIndex];
+                    this.Submenus[nextSubenuIndex] = selectedMenu;
+                    this.SelectedSubmenu = selectedMenu;
+                }
             }
         }
 
