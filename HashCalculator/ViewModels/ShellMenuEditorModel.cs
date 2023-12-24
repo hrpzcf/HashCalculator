@@ -12,6 +12,7 @@ namespace HashCalculator
     internal class ShellMenuEditorModel : NotifiableModel
     {
         private HcCtxMenuModel _selectedMenu;
+        private ObservableCollection<HcCtxMenuModel> _menuList;
         private RelayCommand _resetMenusCmd;
         private RelayCommand _saveMenuListCmd;
         private RelayCommand _addMenuCmd;
@@ -19,8 +20,6 @@ namespace HashCalculator
         private RelayCommand _moveMenuUpCmd;
         private RelayCommand _moveMenuDownCmd;
         private RelayCommand _editMenuPropCmd;
-        private ObservableCollection<HcCtxMenuModel> _menuList =
-            new ObservableCollection<HcCtxMenuModel>();
 
         public Window Parent { get; }
 
@@ -97,6 +96,10 @@ namespace HashCalculator
         private void AddMenuAction(object param)
         {
             HcCtxMenuModel hcCtxMenuModel = new HcCtxMenuModel();
+            if (this.MenuList == null)
+            {
+                this.MenuList = new ObservableCollection<HcCtxMenuModel>();
+            }
             this.MenuList.Add(hcCtxMenuModel);
             this.SelectedMenu = hcCtxMenuModel;
         }
@@ -115,15 +118,19 @@ namespace HashCalculator
 
         private void DeleteMenuAction(object param)
         {
+            if (this.MenuList == null)
+            {
+                return;
+            }
             int index;
             if ((index = this.MenuList.IndexOf(this.SelectedMenu)) != -1)
             {
-                this.MenuList.Remove(this.SelectedMenu);
+                this.MenuList.RemoveAt(index);
                 if (index < this.MenuList.Count)
                 {
                     this.SelectedMenu = this.MenuList[index];
                 }
-                else if (index - 1 >= 0)
+                else if (index > 0)
                 {
                     this.SelectedMenu = this.MenuList[index - 1];
                 }
@@ -149,14 +156,17 @@ namespace HashCalculator
 
         private void MoveMenuUpAction(object param)
         {
-            int index;
-            if ((index = this.MenuList.IndexOf(this.SelectedMenu)) != -1 && index > 0)
+            if (this.MenuList != null)
             {
-                int prevSubenuIndex = index - 1;
-                HcCtxMenuModel selectedMenu = this.SelectedMenu;
-                this.MenuList[index] = this.MenuList[prevSubenuIndex];
-                this.MenuList[prevSubenuIndex] = selectedMenu;
-                this.SelectedMenu = selectedMenu;
+                int index;
+                if ((index = this.MenuList.IndexOf(this.SelectedMenu)) != -1 && index > 0)
+                {
+                    int prevSubmenuIndex = index - 1;
+                    HcCtxMenuModel selectedMenu = this.SelectedMenu;
+                    this.MenuList[index] = this.MenuList[prevSubmenuIndex];
+                    this.MenuList[prevSubmenuIndex] = selectedMenu;
+                    this.SelectedMenu = selectedMenu;
+                }
             }
         }
 
@@ -174,14 +184,17 @@ namespace HashCalculator
 
         private void MoveMenuDownAction(object param)
         {
-            int index;
-            if ((index = this.MenuList.IndexOf(this.SelectedMenu)) != -1 && index < this.MenuList.Count - 1)
+            if (this.MenuList != null)
             {
-                int nextSubenuIndex = index + 1;
-                HcCtxMenuModel selectedMenu = this.SelectedMenu;
-                this.MenuList[index] = this.MenuList[nextSubenuIndex];
-                this.MenuList[nextSubenuIndex] = selectedMenu;
-                this.SelectedMenu = selectedMenu;
+                int index;
+                if ((index = this.MenuList.IndexOf(this.SelectedMenu)) != -1 && index < this.MenuList.Count - 1)
+                {
+                    int nextSubmenuIndex = index + 1;
+                    HcCtxMenuModel selectedMenu = this.SelectedMenu;
+                    this.MenuList[index] = this.MenuList[nextSubmenuIndex];
+                    this.MenuList[nextSubmenuIndex] = selectedMenu;
+                    this.SelectedMenu = selectedMenu;
+                }
             }
         }
 
@@ -282,37 +295,31 @@ namespace HashCalculator
 
         private string CheckIfMenuListAllValid()
         {
-            if (!this.MenuList.Any(i => i.MenuType == MenuType.Compute) ||
-                    !this.MenuList.Any(i => i.MenuType == MenuType.CheckHash))
+            if (this.MenuList == null || !this.MenuList.Any())
             {
-                return "主菜单列表为空或缺失两种类型菜单其中的一种。";
+                return "主菜单列表为空，请添加主菜单或者点击\"恢复默认\"后再保存配置";
             }
             foreach (HcCtxMenuModel hcCtxMenuModel in this.MenuList)
             {
                 if (string.IsNullOrEmpty(hcCtxMenuModel.Title))
                 {
-                    return "主菜单列表中某项菜单的标题为空！";
+                    return "主菜单列表中某项菜单的标题为空，请添加标题！";
                 }
                 if (hcCtxMenuModel.MenuType == MenuType.Unknown)
                 {
-                    return $"主菜单项<{hcCtxMenuModel.Title}>没有选择有效的菜单类型！";
+                    return $"主菜单项【{hcCtxMenuModel.Title}】没有选择有效的菜单类型！";
                 }
-                if (!hcCtxMenuModel.HasSubmenus)
+                if (hcCtxMenuModel.HasSubmenus)
                 {
-                    hcCtxMenuModel.Submenus = null;
-                }
-                else
-                {
-                    hcCtxMenuModel.AlgTypes = null;
                     if (hcCtxMenuModel.Submenus == null || !hcCtxMenuModel.Submenus.Any())
                     {
-                        return $"主菜单项<{hcCtxMenuModel.Title}>设置为\"有子菜单\"但未添加任何子菜单！";
+                        return $"主菜单项【{hcCtxMenuModel.Title}】设置为\"有子菜单\"但未添加任何子菜单！";
                     }
                     foreach (HcCtxMenuModel submenu in hcCtxMenuModel.Submenus)
                     {
                         if (string.IsNullOrEmpty(submenu.Title))
                         {
-                            return $"主菜单<{hcCtxMenuModel.Title}>的某项子菜单标题为空！";
+                            return $"主菜单【{hcCtxMenuModel.Title}】的某项子菜单标题为空，请添加子菜单标题！";
                         }
                     }
                 }
@@ -327,10 +334,6 @@ namespace HashCalculator
                 if (!Directory.Exists(Settings.ConfigDir.FullName))
                 {
                     Settings.ConfigDir.Create();
-                }
-                if (this.MenuList == null || !this.MenuList.Any())
-                {
-                    this.ManuallyResetMenuList();
                 }
                 string checkMenuResult = this.CheckIfMenuListAllValid();
                 if (!string.IsNullOrEmpty(checkMenuResult))

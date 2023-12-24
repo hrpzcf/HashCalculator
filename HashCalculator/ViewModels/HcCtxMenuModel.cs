@@ -127,12 +127,12 @@ namespace HashCalculator
             int index;
             if ((index = this.Submenus.IndexOf(this.SelectedSubmenu)) != -1)
             {
-                this.Submenus.Remove(this.SelectedSubmenu);
+                this.Submenus.RemoveAt(index);
                 if (index < this.Submenus.Count)
                 {
                     this.SelectedSubmenu = this.Submenus[index];
                 }
-                else if (index - 1 >= 0)
+                else if (index > 0)
                 {
                     this.SelectedSubmenu = this.Submenus[index - 1];
                 }
@@ -242,6 +242,7 @@ namespace HashCalculator
             }
             else
             {
+                this.Submenus = null;
                 StringBuilder jsonValueStringBuilder = new StringBuilder();
                 foreach (GenericItemModel item in this.AvailableAlgTypes)
                 {
