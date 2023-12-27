@@ -49,7 +49,9 @@ namespace HashCalculator
         private bool monitorNewHashStringInClipboard = true;
         private bool switchMainWndFgWhenNewHashCopied = false;
         private FetchAlgoOption fetchAlgorithmOption = FetchAlgoOption.TATSAMSHDL;
+        [XmlIgnore]
         public int minCharsNumRequiredForMonitoringClipboard = 8;
+        [XmlIgnore]
         public int maxCharsNumRequiredForMonitoringClipboard = 128;
         private RelayCommand installShellExtCmd;
         private RelayCommand unInstallShellExtCmd;
