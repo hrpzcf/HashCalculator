@@ -558,7 +558,8 @@
                 <DataGridTemplateColumn
                     CanUserSort="True"
                     Header="输出方式"
-                    SortMemberPath="SelectedOutputType">
+                    SortMemberPath="SelectedOutputType"
+                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoOutputTypeColumn, Converter={StaticResource NoColumnCvt}, Mode=OneWay}">
                     <DataGridTemplateColumn.HeaderStyle>
                         <Style TargetType="{x:Type DataGridColumnHeader}">
                             <Setter Property="HorizontalContentAlignment" Value="Center" />

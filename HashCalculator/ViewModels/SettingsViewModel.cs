@@ -39,6 +39,7 @@ namespace HashCalculator
         private bool noExportColumn = false;
         private bool noDurationColumn = false;
         private bool noFileSizeColumn = false;
+        private bool noOutputTypeColumn = false;
         private bool showExecutionTargetColumn = false;
         private bool filterOrCmderEnabled = true;
         private bool runInMultiInstanceMode = false;
@@ -451,6 +452,18 @@ namespace HashCalculator
             set
             {
                 this.SetPropNotify(ref this.noFileSizeColumn, value);
+            }
+        }
+
+        public bool NoOutputTypeColumn
+        {
+            get
+            {
+                return this.noOutputTypeColumn;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.noOutputTypeColumn, value);
             }
         }
 
