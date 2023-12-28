@@ -30,14 +30,11 @@
                             SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
                     </Border>
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsDefaulted" Value="True">
-                            <Setter TargetName="border" Property="BorderBrush" Value="LightGreen" />
-                        </Trigger>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="#64A4CCA4" />
+                            <Setter TargetName="border" Property="Background" Value="#64909090" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
-                            <Setter TargetName="border" Property="Background" Value="#64839983" />
+                            <Setter TargetName="border" Property="Background" Value="#64707070" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -101,7 +98,7 @@
     </Style>
     <Style x:Key="GrayRoundTipButton1" TargetType="{x:Type Button}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-        <Setter Property="Background" Value="#64AAAAAA" />
+        <Setter Property="Background" Value="#64BABABA" />
         <Setter Property="BorderBrush" Value="Transparent" />
         <Setter Property="Foreground" Value="#FF707070" />
         <Setter Property="BorderThickness" Value="0" />
@@ -134,10 +131,10 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="border" Property="Background" Value="#64888888" />
+                            <Setter TargetName="border" Property="Background" Value="#64909090" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="true">
-                            <Setter TargetName="border" Property="Background" Value="#64666666" />
+                            <Setter TargetName="border" Property="Background" Value="#64707070" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

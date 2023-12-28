@@ -20,8 +20,8 @@ namespace HashCalculator
 {
     internal class MainWndViewModel : NotifiableModel
     {
-        private const string hashLineForCopyFormat = "{0}\n";
-        private const string exportHashFormat = "#{0} *{1} *{2}\n";
+        public const string formatForCopyHash = "{0}\n";
+        private const string formatForExportHash = "#{0} *{1} *{2}\n";
         private readonly HashChecklist MainChecklist = new HashChecklist();
         private readonly ModelStarter starter =
             new ModelStarter((int)Settings.Current.SelectedTaskNumberLimit, 8);
@@ -67,7 +67,7 @@ namespace HashCalculator
         private RelayCommand removeSelectedModelsCmd;
         private RelayCommand stopEnumeratingPackageCmd;
         private GenericItemModel[] copyModelsHashMenuCmds;
-        private GenericItemModel[] copyModelsAllAlgosMenuCmds;
+        private GenericItemModel[] copyModelsAllHashesMenuCmds;
         private GenericItemModel[] ctrlHashViewModelTaskCmds;
         private GenericItemModel[] switchDisplayedAlgoCmds;
 
@@ -448,7 +448,7 @@ namespace HashCalculator
                         formatedHashString = BytesToStrByOutputTypeCvt.Convert(
                             model.CurrentInOutModel.HashResult, Settings.Current.SelectedOutputType);
                     }
-                    stringBuilder.AppendFormat(hashLineForCopyFormat, formatedHashString);
+                    stringBuilder.AppendFormat(formatForCopyHash, formatedHashString);
                 }
                 if (stringBuilder.Length > 0)
                 {
@@ -489,7 +489,7 @@ namespace HashCalculator
             }
         }
 
-        private void CopyModelsAllAlgosValueAction(object param, OutputType output)
+        private void CopyModelsAllHashesAction(object param, OutputType output)
         {
             if (param is IList selectedModels && selectedModels.AnyItem())
             {
@@ -514,7 +514,7 @@ namespace HashCalculator
                             formatedHashString = BytesToStrByOutputTypeCvt.Convert(
                                 algoInOutModel.HashResult, Settings.Current.SelectedOutputType);
                         }
-                        stringBuilder.AppendFormat(hashLineForCopyFormat, formatedHashString);
+                        stringBuilder.AppendFormat(formatForCopyHash, formatedHashString);
                     }
                 }
                 if (stringBuilder.Length > 0)
@@ -524,35 +524,35 @@ namespace HashCalculator
             }
         }
 
-        private void CopyModelsAllAlgosBase64Action(object param)
+        private void CopyModelsAllBase64HashesAction(object param)
         {
-            this.CopyModelsAllAlgosValueAction(param, OutputType.BASE64);
+            this.CopyModelsAllHashesAction(param, OutputType.BASE64);
         }
 
-        private void CopyModelsAllAlgosBinUpperAction(object param)
+        private void CopyModelsAllBinUpperHashesAction(object param)
         {
-            this.CopyModelsAllAlgosValueAction(param, OutputType.BinaryUpper);
+            this.CopyModelsAllHashesAction(param, OutputType.BinaryUpper);
         }
 
-        private void CopyModelsAllAlgosBinLowerAction(object param)
+        private void CopyModelsAllBinLowerHashesAction(object param)
         {
-            this.CopyModelsAllAlgosValueAction(param, OutputType.BinaryLower);
+            this.CopyModelsAllHashesAction(param, OutputType.BinaryLower);
         }
 
-        public GenericItemModel[] CopyModelsAllAlgosMenuCmds
+        public GenericItemModel[] CopyModelsAllHashesMenuCmds
         {
             get
             {
-                if (this.copyModelsAllAlgosMenuCmds == null)
+                if (this.copyModelsAllHashesMenuCmds == null)
                 {
-                    this.copyModelsAllAlgosMenuCmds = new GenericItemModel[]
+                    this.copyModelsAllHashesMenuCmds = new GenericItemModel[]
                     {
-                        new GenericItemModel("Base64 格式", new RelayCommand(this.CopyModelsAllAlgosBase64Action)),
-                        new GenericItemModel("十六进制大写", new RelayCommand(this.CopyModelsAllAlgosBinUpperAction)),
-                        new GenericItemModel("十六进制小写", new RelayCommand(this.CopyModelsAllAlgosBinLowerAction)),
+                        new GenericItemModel("Base64 格式", new RelayCommand(this.CopyModelsAllBase64HashesAction)),
+                        new GenericItemModel("十六进制大写", new RelayCommand(this.CopyModelsAllBinUpperHashesAction)),
+                        new GenericItemModel("十六进制小写", new RelayCommand(this.CopyModelsAllBinLowerHashesAction)),
                     };
                 }
-                return this.copyModelsAllAlgosMenuCmds;
+                return this.copyModelsAllHashesMenuCmds;
             }
         }
 
@@ -961,7 +961,7 @@ namespace HashCalculator
                             }
                             string hash = BytesToStrByOutputTypeCvt.Convert(model.HashResult,
                                 Settings.Current.SelectedOutputType);
-                            stringBuilder.AppendFormat(exportHashFormat, model.AlgoName, hash,
+                            stringBuilder.AppendFormat(formatForExportHash, model.AlgoName, hash,
                                 hm.FileName);
                         }
                     }
@@ -976,12 +976,12 @@ namespace HashCalculator
                             {
                                 string hash = BytesToStrByOutputTypeCvt.Convert(hm.CurrentInOutModel.HashResult,
                                     Settings.Current.SelectedOutputType);
-                                stringBuilder.AppendFormat(exportHashFormat, hm.CurrentInOutModel.AlgoName, hash,
+                                stringBuilder.AppendFormat(formatForExportHash, hm.CurrentInOutModel.AlgoName, hash,
                                     hm.FileName);
                             }
                             else
                             {
-                                stringBuilder.AppendFormat(exportHashFormat, hm.CurrentInOutModel.AlgoName,
+                                stringBuilder.AppendFormat(formatForExportHash, hm.CurrentInOutModel.AlgoName,
                                     hm.CurrentHashString, hm.FileName);
                             }
                         }

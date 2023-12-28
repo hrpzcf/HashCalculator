@@ -379,7 +379,7 @@
     <Resource Include="Images\start.png" />
     <Resource Include="Images\stop.png" />
     <Resource Include="Images\cancel.png" />
-    <Resource Include="Images\copy.png" />
+    <Resource Include="Images\copy_16.png" />
     <Resource Include="Images\pause.png" />
     <Resource Include="Images\continue.png" />
     <Resource Include="Images\select_file_32.png" />
@@ -443,6 +443,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assembly\Newtonsoft.Json.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\copy_multi_16.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

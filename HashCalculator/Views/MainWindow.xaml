@@ -311,7 +311,7 @@
                     <MenuItem
                         Header="复制所选行所有哈希值"
                         IsEnabled="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems, Converter={StaticResource CopyModelsHashMenuEnabledCvt}}"
-                        ItemsSource="{Binding CopyModelsAllAlgosMenuCmds}">
+                        ItemsSource="{Binding CopyModelsAllHashesMenuCmds}">
                         <MenuItem.ItemContainerStyle>
                             <Style TargetType="MenuItem">
                                 <Setter Property="Header" Value="{Binding Display}" />
@@ -433,6 +433,7 @@
                                     <ColumnDefinition />
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
                                 <!--  不在计算状态  -->
                                 <TextBlock
@@ -457,6 +458,7 @@
                                 </TextBlock>
                                 <TextBlock
                                     Grid.Column="0"
+                                    Padding="4"
                                     VerticalAlignment="Center"
                                     Text="{Binding TaskMessage}"
                                     TextTrimming="CharacterEllipsis">
@@ -479,7 +481,7 @@
                                     Visibility="{Binding State, Converter={StaticResource StateRunningToVisiblityCvt}}"
                                     Value="{Binding Progress, Mode=OneWay}" />
                                 <Button
-                                    Grid.Column="1"
+                                    Grid.Column="2"
                                     Padding="4"
                                     Command="{Binding ShutdownModelSelfCmd}"
                                     Style="{StaticResource ImageButtonStyle1}"
@@ -488,7 +490,7 @@
                                     <Image Source="/Images/stop.png" />
                                 </Button>
                                 <Button
-                                    Grid.Column="2"
+                                    Grid.Column="3"
                                     Padding="4"
                                     Command="{Binding PauseOrContinueModelSelfCmd}"
                                     Style="{StaticResource ImageButtonStyle1}"
@@ -498,7 +500,7 @@
                                 </Button>
                                 <!--  正排队  -->
                                 <Button
-                                    Grid.Column="2"
+                                    Grid.Column="3"
                                     Padding="4"
                                     Command="{Binding ShutdownModelSelfCmd}"
                                     Style="{StaticResource ImageButtonStyle1}"
@@ -509,7 +511,9 @@
                                 <!--  已成功  -->
                                 <Button
                                     Grid.Column="1"
-                                    Margin="2"
+                                    Width="20"
+                                    Height="21"
+                                    Margin="0,0,4,0"
                                     d:DataContext="{d:DesignInstance local:HashViewModel}"
                                     Command="{Binding ShowHashDetailsWindowCmd}"
                                     Content="{Binding AlgoInOutModels.Length}"
@@ -525,20 +529,34 @@
                                 <Button
                                     Grid.Column="2"
                                     Padding="4"
-                                    Command="{Binding CopyOneModelHashValueCmd}"
+                                    Command="{Binding CopyThisModelCurHashCmd}"
                                     Style="{StaticResource ImageButtonStyle1}"
-                                    ToolTip="复制...">
+                                    ToolTip="复制该行当前结果...">
                                     <Button.Visibility>
                                         <MultiBinding Converter="{StaticResource StateFinishedResultSucceededToVisibilityCvt}">
                                             <Binding Path="State" />
                                             <Binding Path="Result" />
                                         </MultiBinding>
                                     </Button.Visibility>
-                                    <Image Source="/Images/copy.png" />
+                                    <Image Source="/Images/copy_16.png" />
+                                </Button>
+                                <Button
+                                    Grid.Column="3"
+                                    Padding="4"
+                                    Command="{Binding CopyThisModelAllHashesCmd}"
+                                    Style="{StaticResource ImageButtonStyle1}"
+                                    ToolTip="复制该行所有结果...">
+                                    <Button.Visibility>
+                                        <MultiBinding Converter="{StaticResource StateFinishedResultSucceededToVisibilityCvt}">
+                                            <Binding Path="State" />
+                                            <Binding Path="Result" />
+                                        </MultiBinding>
+                                    </Button.Visibility>
+                                    <Image Source="/Images/copy_multi_16.png" />
                                 </Button>
                                 <!--  未成功  -->
                                 <Button
-                                    Grid.Column="2"
+                                    Grid.Column="3"
                                     Padding="4"
                                     Command="{Binding RestartModelSelfCmd}"
                                     Style="{StaticResource ImageButtonStyle1}"

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -33,7 +34,8 @@ namespace HashCalculator
         private RelayCommand shutdownModelSelfCmd;
         private RelayCommand restartModelSelfCmd;
         private RelayCommand pauseOrContinueModelSelfCmd;
-        private RelayCommand copyOneModelHashValueCmd;
+        private RelayCommand copyThisModelCurHashCmd;
+        private RelayCommand copyThisModelAllHashesCmd;
         private RelayCommand showHashDetailsWindowCmd;
 
         private static readonly Dispatcher synchronization =
@@ -309,7 +311,7 @@ namespace HashCalculator
             }
         }
 
-        private void CopyOneModelHashValueAction(object param)
+        private void CopyThisModelCurHashAction(object param)
         {
             if (this.Result == HashResult.Succeeded && !string.IsNullOrEmpty(this.CurrentHashString))
             {
@@ -317,16 +319,50 @@ namespace HashCalculator
             }
         }
 
-        public ICommand CopyOneModelHashValueCmd
+        public ICommand CopyThisModelCurHashCmd
         {
             get
             {
-                if (this.copyOneModelHashValueCmd is null)
+                if (this.copyThisModelCurHashCmd is null)
                 {
-                    this.copyOneModelHashValueCmd =
-                        new RelayCommand(this.CopyOneModelHashValueAction);
+                    this.copyThisModelCurHashCmd = new RelayCommand(this.CopyThisModelCurHashAction);
                 }
-                return this.copyOneModelHashValueCmd;
+                return this.copyThisModelCurHashCmd;
+            }
+        }
+
+        private void CopyThisModelAllHashesAction(object param)
+        {
+            OutputType outputType;
+            if (this.SelectedOutputType != OutputType.Unknown)
+            {
+                outputType = this.SelectedOutputType;
+            }
+            else
+            {
+                outputType = Settings.Current.SelectedOutputType;
+            }
+            StringBuilder stringBuilder = new StringBuilder();
+            foreach (AlgoInOutModel algoInOutModel in this.AlgoInOutModels)
+            {
+                stringBuilder.AppendFormat(MainWndViewModel.formatForCopyHash,
+                    BytesToStrByOutputTypeCvt.Convert(algoInOutModel.HashResult, outputType));
+            }
+            if (stringBuilder.Length > 0)
+            {
+                CommonUtils.ClipboardSetText(stringBuilder.ToString());
+            }
+        }
+
+        public ICommand CopyThisModelAllHashesCmd
+        {
+            get
+            {
+                if (this.copyThisModelAllHashesCmd is null)
+                {
+                    this.copyThisModelAllHashesCmd = new RelayCommand(this.CopyThisModelAllHashesAction);
+                }
+                return this.copyThisModelAllHashesCmd;
             }
         }
 

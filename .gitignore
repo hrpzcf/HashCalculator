@@ -362,5 +362,5 @@ MigrationBackup/
 # Others
 /ShellExtensions/ShellExtensions_i.c
 /ShellExtensions/ShellExtensions_i.h
-/ReleasedBin
 /HashCalculator/ShellExt
+/HashCalculator/Images/* - 副本.png
