@@ -664,24 +664,24 @@
                 <Image
                     Source="/Images/list_count_16.png"
                     Stretch="None"
-                    ToolTip="表格中的总行数" />
+                    ToolTip="表格总行数..." />
                 <TextBlock
                     Padding="4,0"
                     VerticalAlignment="Center"
                     Foreground="Gray"
                     Text="{Binding Source={x:Static local:MainWndViewModel.HashViewModels}, Path=Count}"
-                    ToolTip="表格中的总行数" />
+                    ToolTip="表格总行数..." />
                 <Image
                     Margin="6,0,0,0"
                     Source="/Images/remaining_16.png"
                     Stretch="None"
-                    ToolTip="哈希值计算任务数" />
+                    ToolTip="未结束任务数..." />
                 <TextBlock
                     Padding="4,0"
                     VerticalAlignment="Center"
                     Foreground="Gray"
                     Text="{Binding TobeComputedModelsCount}"
-                    ToolTip="哈希值计算任务数" />
+                    ToolTip="未结束任务数..." />
             </StackPanel>
             <Grid Grid.Column="1" Margin="8,0,0,0">
                 <TextBlock
