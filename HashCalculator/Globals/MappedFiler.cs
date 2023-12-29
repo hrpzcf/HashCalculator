@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO.MemoryMappedFiles;
 using System.Windows;
 
@@ -39,13 +38,11 @@ namespace HashCalculator
         public static IEnumerable<string> GetArgs()
         {
             using (MemoryMappedViewStream mmvs = MappedFile.CreateViewStream())
+            using (MappedReader reader = new MappedReader(mmvs))
             {
-                using (MappedReader reader = new MappedReader(mmvs))
+                foreach (string line in reader.ReadLines())
                 {
-                    foreach (string line in reader.ReadLines())
-                    {
-                        yield return line;
-                    }
+                    yield return line;
                 }
             }
         }
@@ -91,11 +88,9 @@ namespace HashCalculator
         private static void InternalPushArgs(string[] args)
         {
             using (MemoryMappedViewStream mmvs = MappedFile.CreateViewStream())
+            using (MappedWriter writer = new MappedWriter(mmvs))
             {
-                using (MappedWriter writer = new MappedWriter(mmvs))
-                {
-                    writer.WriteLines(args);
-                }
+                writer.WriteLines(args);
             }
         }
 
@@ -104,21 +99,17 @@ namespace HashCalculator
             get
             {
                 using (MemoryMappedViewStream mmvs = MappedFile.CreateViewStream())
+                using (MappedReader reader = new MappedReader(mmvs))
                 {
-                    using (MappedReader reader = new MappedReader(mmvs))
-                    {
-                        return reader.ReadProcessId();
-                    }
+                    return reader.ReadProcessId();
                 }
             }
             set
             {
                 using (MemoryMappedViewStream mmvs = MappedFile.CreateViewStream())
+                using (MappedWriter writer = new MappedWriter(mmvs))
                 {
-                    using (MappedWriter writer = new MappedWriter(mmvs))
-                    {
-                        writer.WriteProcessId(value);
-                    }
+                    writer.WriteProcessId(value);
                 }
             }
         }
@@ -128,21 +119,17 @@ namespace HashCalculator
             get
             {
                 using (MemoryMappedViewStream mmvs = MappedFile.CreateViewStream())
+                using (MappedReader reader = new MappedReader(mmvs))
                 {
-                    using (MappedReader reader = new MappedReader(mmvs))
-                    {
-                        return reader.ReadRunMulti();
-                    }
+                    return reader.ReadRunMulti();
                 }
             }
             set
             {
                 using (MemoryMappedViewStream mmvs = MappedFile.CreateViewStream())
+                using (MappedWriter writer = new MappedWriter(mmvs))
                 {
-                    using (MappedWriter writer = new MappedWriter(mmvs))
-                    {
-                        writer.WriteRunMulti(value);
-                    }
+                    writer.WriteRunMulti(value);
                 }
             }
         }

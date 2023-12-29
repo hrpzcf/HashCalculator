@@ -10,7 +10,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
 using CommandLine;
-using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace HashCalculator
 {
@@ -45,6 +44,13 @@ namespace HashCalculator
         {
             this.RemoveClipboardListener();
             this.ProcIdMonitorFlag = false;
+            // 此处与 ProcessIdMonitorProc 方法内的 PIdSynchronizer.Set 不重复，原因：
+            // 如果是本进程实例内的 ProcessIdMonitorProc 方法内的 PIdSynchronizer.Wait 抢到了锁，
+            // 1. 本进程实例 ProcessIdMonitorProc 方法内进入 if (!this.ProcIdMonitorFlag) 分支，
+            // 2. 分支内再执行一次 PIdSynchronizer.Set 以保证可以有其他进程实例（如果有）能抢到锁，
+            // 3. 然后在其他进程实例内启动 ComputeCrossProcessFilesMonitor 保证其他进程能监控第三方进程的参数推送。
+            // 如果是其他进程实例内的 ProcessIdMonitorProc 方法内的 PIdSynchronizer.Wait 抢到了锁，
+            // 则直接进入步骤 3，本进程实例 ProcessIdMonitorProc 方法内的 PIdSynchronizer.Wait 抢不到锁不会往下执行。
             MappedFiler.PIdSynchronizer.Set();
         }
 
@@ -115,7 +121,7 @@ namespace HashCalculator
                     if (!Settings.Current.ClipboardUpdatedByMe &&
                         Environment.TickCount - this.tickCountWhenHashStringOrChecklistPathWasLastSet > 600)
                     {
-                        this.viewModel.SetTextOnHashStringOrChecklistPath();
+                        this.viewModel.SetHashStringOrChecklistPath();
                     }
                     Settings.Current.ClipboardUpdatedByMe = false;
                     this.tickCountWhenHashStringOrChecklistPathWasLastSet = Environment.TickCount;
@@ -187,7 +193,7 @@ namespace HashCalculator
         }
 
         /// <summary>
-        /// 多实例模式启动使用此方法处理不同进程传入的待处理的文件、目录路径
+        /// 多进程实例模式启动使用此方法处理不同进程传入的待处理的文件、目录路径
         /// </summary>
         private void ComputeInProcessFiles(string[] args)
         {
@@ -195,9 +201,9 @@ namespace HashCalculator
         }
 
         /// <summary>
-        /// 单实例模式启动使用此方法处理不同进程传入的待处理的文件、目录路径
+        /// 单进程实例模式启动使用此方法处理不同进程传入的待处理的文件、目录路径
         /// </summary>
-        private void ComputeCrossProcessFiles()
+        private void ComputeCrossProcessFilesMonitor()
         {
             MappedFiler.ExistingProcessId = ProcessId;
             while (true)
@@ -219,7 +225,7 @@ namespace HashCalculator
                     MappedFiler.PIdSynchronizer.Set();
                     break;
                 }
-                Thread thread = new Thread(this.ComputeCrossProcessFiles);
+                Thread thread = new Thread(this.ComputeCrossProcessFilesMonitor);
                 thread.IsBackground = true;
                 thread.Start();
             }
@@ -232,8 +238,7 @@ namespace HashCalculator
             {
                 return;
             }
-            this.viewModel.BeginDisplayModels(
-                new PathPackage(data, Settings.Current.SelectedSearchPolicy));
+            this.viewModel.BeginDisplayModels(new PathPackage(data, Settings.Current.SelectedSearchPolicy));
         }
 
         private void DataGridHashingFilesPrevKeyDown(object sender, KeyEventArgs e)
@@ -241,20 +246,6 @@ namespace HashCalculator
             if (e.Key == Key.Escape && sender is DataGrid dataGrid)
             {
                 dataGrid.SelectedItem = null;
-            }
-        }
-
-        private void ButtonSelectChecklistSetPathClick(object sender, RoutedEventArgs e)
-        {
-            CommonOpenFileDialog openFile = new CommonOpenFileDialog
-            {
-                Title = "选择文件",
-                InitialDirectory = Settings.Current.LastUsedPath,
-            };
-            if (openFile.ShowDialog() == CommonFileDialogResult.Ok)
-            {
-                Settings.Current.LastUsedPath = Path.GetDirectoryName(openFile.FileName);
-                this.viewModel.HashStringOrChecklistPath = openFile.FileName;
             }
         }
 
@@ -268,7 +259,7 @@ namespace HashCalculator
             this.viewModel.HashStringOrChecklistPath = data[0];
         }
 
-        private void TextBoxHashValueOrFilePathPreviewDragOver(object sender, DragEventArgs e)
+        private void TextBoxHashStringOrChecklistPathPreviewDragOver(object sender, DragEventArgs e)
         {
             e.Handled = true;
         }

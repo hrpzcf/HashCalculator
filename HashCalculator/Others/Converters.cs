@@ -298,7 +298,7 @@ namespace HashCalculator
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if ((QueueState)value != QueueState.Started)
+            if ((RunningState)value != RunningState.Started)
             {
                 return true;
             }
@@ -319,7 +319,7 @@ namespace HashCalculator
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             Debug.Assert(values != null && values.Length == 2);
-            if (values[0] is QueueState state && state == QueueState.Started)
+            if (values[0] is RunningState state && state == RunningState.Started)
             {
                 return false;
             }
@@ -544,7 +544,7 @@ namespace HashCalculator
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if ((QueueState)value == QueueState.Started)
+            if ((RunningState)value == RunningState.Started)
             {
                 return Visibility.Visible;
             }

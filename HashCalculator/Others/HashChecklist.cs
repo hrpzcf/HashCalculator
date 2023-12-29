@@ -220,7 +220,7 @@ namespace HashCalculator
             return this.ReasonForFailure;
         }
 
-        public string UpdateWithParagraph(string paragraph)
+        public string UpdateWithText(string paragraph)
         {
             this.ReasonForFailure = null;
             this.algHashMapOfFiles.Clear();

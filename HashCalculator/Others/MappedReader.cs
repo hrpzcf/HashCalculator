@@ -109,12 +109,7 @@ namespace HashCalculator
 
         public IEnumerable<string> ReadLines()
         {
-            MappedVer ver;
-            if ((ver = this.ReadVersion()) == MappedVer.Unknown)
-            {
-                yield break;
-            }
-            switch (ver)
+            switch (this.ReadVersion())
             {
                 default:
                 case MappedVer.Unknown:
