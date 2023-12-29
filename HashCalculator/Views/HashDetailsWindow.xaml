@@ -161,7 +161,7 @@
                                     CommandParameter="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
                                     Style="{StaticResource ImageButtonStyle1}"
                                     ToolTip="复制...">
-                                    <Image Source="/Images/copy.png" />
+                                    <Image Source="/Images/copy_16.png" />
                                 </Button>
                             </Grid>
                         </DataTemplate>
