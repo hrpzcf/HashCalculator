@@ -48,6 +48,7 @@ namespace HashCalculator
         private bool parallelBetweenAlgos = false;
         private bool monitorNewHashStringInClipboard = true;
         private bool switchMainWndFgWhenNewHashCopied = false;
+        private CmpRes algoToSwitchToAfterHashChecked = CmpRes.Matched;
         private FetchAlgoOption fetchAlgorithmOption = FetchAlgoOption.TATSAMSHDL;
         [XmlIgnore]
         public int minCharsNumRequiredForMonitoringClipboard = 8;
@@ -637,6 +638,18 @@ namespace HashCalculator
             }
         }
 
+        public CmpRes AlgoToSwitchToAfterHashChecked
+        {
+            get
+            {
+                return this.algoToSwitchToAfterHashChecked;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.algoToSwitchToAfterHashChecked, value);
+            }
+        }
+
         [XmlIgnore]
         public bool NotSettingShellExtension
         {
@@ -793,6 +806,16 @@ namespace HashCalculator
             new GenericItemModel("使用默认哈希算法中被勾选的算法", FetchAlgoOption.SELECTED),
             new GenericItemModel("使用被勾选且可产生相应哈希长度的算法", FetchAlgoOption.TATSAMSHDL),
             new GenericItemModel("使用所有可产生相应哈希长度的算法", FetchAlgoOption.TATMSHDL),
+        };
+
+        [XmlIgnore]
+        public GenericItemModel[] AvailableResultsToSwitchTo { get; } =
+        {
+            new GenericItemModel("保持现状不执行自动切换操作", CmpRes.NoResult),
+            new GenericItemModel("校验结果是【无关联】的算法", CmpRes.Unrelated),
+            new GenericItemModel("校验结果是【已匹配】的算法", CmpRes.Matched),
+            new GenericItemModel("校验结果是【不匹配】的算法", CmpRes.Mismatch),
+            new GenericItemModel("校验结果是【不确定】的算法", CmpRes.Uncertain),
         };
     }
 }

@@ -149,7 +149,7 @@
                 <Button
                     Grid.Column="11"
                     Margin="4,0,0,0"
-                    Command="{Binding RestartModelsWithCopyCmd}"
+                    Command="{Binding CopyAndRestartModelsCmd}"
                     IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBooleanCvt}}"
                     Style="{StaticResource ImageButtonStyle2}"
                     ToolTip="新增哈希计算：根据 [默认哈希算法] 所选算法，计算表格中所有文件的哈希值，但不清除原来的计算结果，而是增加新的行来显示结果">

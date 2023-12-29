@@ -80,7 +80,7 @@
         Stopped,
     }
 
-    internal enum CmpRes
+    public enum CmpRes
     {
         /// <summary>
         /// 没有执行过比较操作

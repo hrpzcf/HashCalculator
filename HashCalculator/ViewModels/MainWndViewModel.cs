@@ -46,7 +46,7 @@ namespace HashCalculator
         private RelayCommand mainWindowTopmostCmd;
         private RelayCommand clearAllTableLinesCmd;
         private RelayCommand exportHashResultCmd;
-        private RelayCommand restartModelsWithCopyCmd;
+        private RelayCommand copyAndRestartModelsCmd;
         private RelayCommand refreshOriginalModelsCmd;
         private RelayCommand forceRefreshOriginalModelsCmd;
         private RelayCommand selectChecklistFileCmd;
@@ -1036,20 +1036,20 @@ namespace HashCalculator
             }
         }
 
-        private void RestartModelsWithCopyAction(object param)
+        private void CopyAndRestartModelsAction(object param)
         {
             this.StartModels(newLines: true, force: false);
         }
 
-        public ICommand RestartModelsWithCopyCmd
+        public ICommand CopyAndRestartModelsCmd
         {
             get
             {
-                if (this.restartModelsWithCopyCmd is null)
+                if (this.copyAndRestartModelsCmd is null)
                 {
-                    this.restartModelsWithCopyCmd = new RelayCommand(this.RestartModelsWithCopyAction);
+                    this.copyAndRestartModelsCmd = new RelayCommand(this.CopyAndRestartModelsAction);
                 }
-                return this.restartModelsWithCopyCmd;
+                return this.copyAndRestartModelsCmd;
             }
         }
 
@@ -1140,33 +1140,7 @@ namespace HashCalculator
             {
                 foreach (HashViewModel hm in HashViewModels)
                 {
-                    if (hm.AlgoInOutModels != null)
-                    {
-                        if (hm.Result != HashResult.Succeeded)
-                        {
-                            foreach (AlgoInOutModel model in hm.AlgoInOutModels)
-                            {
-                                model.HashCmpResult = CmpRes.NoResult;
-                            }
-                        }
-                        else
-                        {
-                            if (!(this.MainChecklist.GetAlgHashMapOfFile(hm.FileName) is AlgHashMap algoHashMap))
-                            {
-                                foreach (AlgoInOutModel model in hm.AlgoInOutModels)
-                                {
-                                    model.HashCmpResult = CmpRes.Unrelated;
-                                }
-                            }
-                            else
-                            {
-                                foreach (AlgoInOutModel model in hm.AlgoInOutModels)
-                                {
-                                    model.HashCmpResult = algoHashMap.CompareHash(model.AlgoName, model.HashResult);
-                                }
-                            }
-                        }
-                    }
+                    hm.SetHashCheckResultForModel(this.MainChecklist);
                 }
                 this.GenerateFileHashCheckReport();
             }

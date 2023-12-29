@@ -646,6 +646,68 @@ namespace HashCalculator
             return synchronization.Invoke(this.MarkAsWaiting);
         }
 
+        public void SetHashCheckResultForModel(HashChecklist checklist)
+        {
+            if (checklist != null && this.AlgoInOutModels != null)
+            {
+                if (this.Result != HashResult.Succeeded)
+                {
+                    foreach (AlgoInOutModel model in this.AlgoInOutModels)
+                    {
+                        model.HashCmpResult = CmpRes.NoResult;
+                    }
+                }
+                else
+                {
+                    if (checklist.GetAlgHashMapOfFile(this.FileName) is AlgHashMap algoHashMap)
+                    {
+                        foreach (AlgoInOutModel model in this.AlgoInOutModels)
+                        {
+                            model.HashCmpResult = algoHashMap.CompareHash(model.AlgoName, model.HashResult);
+                        }
+                    }
+                    else
+                    {
+                        foreach (AlgoInOutModel model in this.AlgoInOutModels)
+                        {
+                            model.HashCmpResult = CmpRes.Unrelated;
+                        }
+                    }
+                    if (Settings.Current.AlgoToSwitchToAfterHashChecked != CmpRes.NoResult)
+                    {
+                        foreach (AlgoInOutModel model in this.AlgoInOutModels)
+                        {
+                            if (model.HashCmpResult == Settings.Current.AlgoToSwitchToAfterHashChecked &&
+                                (this.CurrentInOutModel == null || this.CurrentInOutModel.HashCmpResult != model.HashCmpResult))
+                            {
+                                this.CurrentInOutModel = model;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void SetHashCheckResultForInOutModelAndSetCurModel()
+        {
+            AlgHashMap algHashMap = this.ModelArg.HashChecklist?.GetAlgHashMapOfFile(this.FileName);
+            if (algHashMap != null && this.AlgoInOutModels != null)
+            {
+                foreach (AlgoInOutModel item in this.AlgoInOutModels)
+                {
+                    CmpRes hashCheckResult = algHashMap.CompareHash(item.AlgoName, item.HashResult);
+                    item.HashCmpResult = hashCheckResult;
+                    if (Settings.Current.AlgoToSwitchToAfterHashChecked != CmpRes.NoResult &&
+                        hashCheckResult == Settings.Current.AlgoToSwitchToAfterHashChecked &&
+                        (this.CurrentInOutModel == null || this.CurrentInOutModel.HashCmpResult != hashCheckResult))
+                    {
+                        this.CurrentInOutModel = item;
+                    }
+                }
+            }
+        }
+
         public void ComputeManyHashValue()
         {
             Monitor.Enter(this.hashComputeOperationLock);
@@ -776,25 +838,14 @@ namespace HashCalculator
                             i.Export = true;
                             i.HashResult = i.Algo.Hash;
                         };
-                        Action<AlgoInOutModel, CmpRes> updateModel = (i, c) =>
-                        {
-                            i.HashCmpResult = c;
-                        };
-                        AlgHashMap algoHashMap =
-                            this.ModelArg.HashChecklist?.GetAlgHashMapOfFile(this.FileName);
                         foreach (AlgoInOutModel item in this.AlgoInOutModels)
                         {
                             item.Algo.TransformFinalBlock(buffer, 0, 0);
                             synchronization.Invoke(updateHashBytes, item);
-                            if (algoHashMap != null)
-                            {
-                                CmpRes bytesComparisonResult = algoHashMap.CompareHash(
-                                    item.AlgoName, item.HashResult);
-                                synchronization.Invoke(updateModel, item, bytesComparisonResult);
-                            }
                         }
                         synchronization.Invoke(() =>
                         {
+                            this.SetHashCheckResultForInOutModelAndSetCurModel();
                             this.Result = HashResult.Succeeded;
                         });
                     }
