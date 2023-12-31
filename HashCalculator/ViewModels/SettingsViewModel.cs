@@ -795,7 +795,15 @@ namespace HashCalculator
         }
 
         [XmlIgnore]
-        public GenericItemModel[] AvailableOutputTypes { get; } =
+        public static GenericItemModel[] AvailableOutputTypes { get; } =
+        {
+            new GenericItemModel("Base64", OutputType.BASE64),
+            new GenericItemModel("Hex大写", OutputType.BinaryUpper),
+            new GenericItemModel("Hex小写", OutputType.BinaryLower),
+        };
+
+        [XmlIgnore]
+        public static GenericItemModel[] AvailableOutputTypesLong { get; } =
         {
             new GenericItemModel("Base64 格式", OutputType.BASE64),
             new GenericItemModel("十六进制大写", OutputType.BinaryUpper),

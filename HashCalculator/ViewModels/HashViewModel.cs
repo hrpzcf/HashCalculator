@@ -425,13 +425,6 @@ namespace HashCalculator
             }
         }
 
-        public GenericItemModel[] AvailableOutputTypes { get; } =
-        {
-            new GenericItemModel("Base64", OutputType.BASE64),
-            new GenericItemModel("Hex大写", OutputType.BinaryUpper),
-            new GenericItemModel("Hex小写", OutputType.BinaryLower),
-        };
-
         private void MakeSureAlgoModelArrayNotEmpty()
         {
             if (!this.AlgoInOutModels?.Any() ?? true)
