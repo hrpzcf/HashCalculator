@@ -128,7 +128,7 @@ namespace HashCalculator
 
         public bool IsNameInChecklist(string fileName)
         {
-            if (fileName != null && this.algHashMapOfFiles.ContainsKey(fileName))
+            if (!string.IsNullOrEmpty(fileName) && this.algHashMapOfFiles.ContainsKey(fileName))
             {
                 this.algHashMapOfFiles[fileName].IsExistingFile = true;
                 return true;

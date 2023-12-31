@@ -101,7 +101,7 @@ namespace HashCalculator
                         {
                             foreach (KeyValuePair<string, AlgHashMap> pair in this.hashChecklist)
                             {
-                                if (pair.Key.IndexOfAny(invalidFnameChars) != -1)
+                                if (string.IsNullOrEmpty(pair.Key) || pair.Key.IndexOfAny(invalidFnameChars) != -1)
                                 {
                                     yield return new ModelArg(true, true, this.PresetAlgoTypes);
                                 }
