@@ -313,9 +313,10 @@ namespace HashCalculator
 
         private void CopyThisModelCurHashAction(object param)
         {
-            if (this.Result == HashResult.Succeeded && !string.IsNullOrEmpty(this.CurrentHashString))
+            if (this.GenerateTextLineInFormat(Settings.Current.FormatForGenerateText,
+                this.SelectedOutputType, false) is string text)
             {
-                CommonUtils.ClipboardSetText(this.CurrentHashString);
+                CommonUtils.ClipboardSetText(text);
             }
         }
 
@@ -333,24 +334,10 @@ namespace HashCalculator
 
         private void CopyThisModelAllHashesAction(object param)
         {
-            OutputType outputType;
-            if (this.SelectedOutputType != OutputType.Unknown)
+            if (this.GenerateTextLineInFormat(Settings.Current.FormatForGenerateText,
+                this.SelectedOutputType, true) is string text)
             {
-                outputType = this.SelectedOutputType;
-            }
-            else
-            {
-                outputType = Settings.Current.SelectedOutputType;
-            }
-            StringBuilder stringBuilder = new StringBuilder();
-            foreach (AlgoInOutModel algoInOutModel in this.AlgoInOutModels)
-            {
-                stringBuilder.AppendFormat(MainWndViewModel.formatForCopyHash,
-                    BytesToStrByOutputTypeCvt.Convert(algoInOutModel.HashResult, outputType));
-            }
-            if (stringBuilder.Length > 0)
-            {
-                CommonUtils.ClipboardSetText(stringBuilder.ToString());
+                CommonUtils.ClipboardSetText(text);
             }
         }
 
@@ -881,6 +868,36 @@ namespace HashCalculator
             this.ModelReleasedEvent?.InvokeAsync(this);
             this.ModelShutdownEvent?.Invoke(this);
             Monitor.Exit(this.hashComputeOperationLock);
+        }
+
+        public string GenerateTextLineInFormat(string format, OutputType outputType, bool allHash)
+        {
+            if (this.Result == HashResult.Succeeded && this.AlgoInOutModels != null &&
+                this.AlgoInOutModels.Any())
+            {
+                if (!allHash)
+                {
+                    return this.CurrentInOutModel.GenerateTextLineInFormat(this, format, outputType);
+                }
+                else
+                {
+                    StringBuilder stringBuilderForGenerateMultiLineHash = new StringBuilder();
+                    foreach (AlgoInOutModel inOutModel in this.AlgoInOutModels)
+                    {
+                        if (inOutModel.GenerateTextLineInFormat(this, format, outputType) is string text)
+                        {
+                            stringBuilderForGenerateMultiLineHash.Append(text);
+                            stringBuilderForGenerateMultiLineHash.Append('\n');
+                        }
+                    }
+                    if (stringBuilderForGenerateMultiLineHash.Length > 0)
+                    {
+                        stringBuilderForGenerateMultiLineHash.Remove(stringBuilderForGenerateMultiLineHash.Length - 1, 1);
+                    }
+                    return stringBuilderForGenerateMultiLineHash.ToString();
+                }
+            }
+            return default(string);
         }
     }
 }

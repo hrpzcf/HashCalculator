@@ -424,33 +424,23 @@ namespace HashCalculator
             }
         }
 
-        private void CopyModelsHashValueAction(object param, OutputType output)
+        private void CopyModelsHashValueAction(object param, OutputType outputType, bool copyAll)
         {
             if (param is IList selectedModels && selectedModels.AnyItem())
             {
                 StringBuilder stringBuilder = new StringBuilder();
                 foreach (HashViewModel model in selectedModels)
                 {
-                    string formatedHashString;
-                    if (output != OutputType.Unknown)
+                    if (model.GenerateTextLineInFormat(Settings.Current.FormatForGenerateText, outputType, copyAll)
+                        is string text)
                     {
-                        formatedHashString = BytesToStrByOutputTypeCvt.Convert(
-                            model.CurrentInOutModel.HashResult, output);
+                        stringBuilder.Append(text);
+                        stringBuilder.Append('\n');
                     }
-                    else if (model.SelectedOutputType != OutputType.Unknown)
-                    {
-                        formatedHashString = BytesToStrByOutputTypeCvt.Convert(
-                            model.CurrentInOutModel.HashResult, model.SelectedOutputType);
-                    }
-                    else
-                    {
-                        formatedHashString = BytesToStrByOutputTypeCvt.Convert(
-                            model.CurrentInOutModel.HashResult, Settings.Current.SelectedOutputType);
-                    }
-                    stringBuilder.AppendFormat(formatForCopyHash, formatedHashString);
                 }
                 if (stringBuilder.Length > 0)
                 {
+                    stringBuilder.Remove(stringBuilder.Length - 1, 1);
                     CommonUtils.ClipboardSetText(stringBuilder.ToString());
                 }
             }
@@ -458,17 +448,17 @@ namespace HashCalculator
 
         private void CopyModelsHashBase64Action(object param)
         {
-            this.CopyModelsHashValueAction(param, OutputType.BASE64);
+            this.CopyModelsHashValueAction(param, OutputType.BASE64, false);
         }
 
         private void CopyModelsHashBinUpperAction(object param)
         {
-            this.CopyModelsHashValueAction(param, OutputType.BinaryUpper);
+            this.CopyModelsHashValueAction(param, OutputType.BinaryUpper, false);
         }
 
         private void CopyModelsHashBinLowerAction(object param)
         {
-            this.CopyModelsHashValueAction(param, OutputType.BinaryLower);
+            this.CopyModelsHashValueAction(param, OutputType.BinaryLower, false);
         }
 
         public GenericItemModel[] CopyModelsHashMenuCmds
@@ -488,54 +478,19 @@ namespace HashCalculator
             }
         }
 
-        private void CopyModelsAllHashesAction(object param, OutputType output)
-        {
-            if (param is IList selectedModels && selectedModels.AnyItem())
-            {
-                StringBuilder stringBuilder = new StringBuilder();
-                foreach (HashViewModel model in selectedModels)
-                {
-                    foreach (AlgoInOutModel algoInOutModel in model.AlgoInOutModels)
-                    {
-                        string formatedHashString;
-                        if (output != OutputType.Unknown)
-                        {
-                            formatedHashString = BytesToStrByOutputTypeCvt.Convert(
-                                algoInOutModel.HashResult, output);
-                        }
-                        else if (model.SelectedOutputType != OutputType.Unknown)
-                        {
-                            formatedHashString = BytesToStrByOutputTypeCvt.Convert(
-                                algoInOutModel.HashResult, model.SelectedOutputType);
-                        }
-                        else
-                        {
-                            formatedHashString = BytesToStrByOutputTypeCvt.Convert(
-                                algoInOutModel.HashResult, Settings.Current.SelectedOutputType);
-                        }
-                        stringBuilder.AppendFormat(formatForCopyHash, formatedHashString);
-                    }
-                }
-                if (stringBuilder.Length > 0)
-                {
-                    CommonUtils.ClipboardSetText(stringBuilder.ToString());
-                }
-            }
-        }
-
         private void CopyModelsAllBase64HashesAction(object param)
         {
-            this.CopyModelsAllHashesAction(param, OutputType.BASE64);
+            this.CopyModelsHashValueAction(param, OutputType.BASE64, true);
         }
 
         private void CopyModelsAllBinUpperHashesAction(object param)
         {
-            this.CopyModelsAllHashesAction(param, OutputType.BinaryUpper);
+            this.CopyModelsHashValueAction(param, OutputType.BinaryUpper, true);
         }
 
         private void CopyModelsAllBinLowerHashesAction(object param)
         {
-            this.CopyModelsAllHashesAction(param, OutputType.BinaryLower);
+            this.CopyModelsHashValueAction(param, OutputType.BinaryLower, true);
         }
 
         public GenericItemModel[] CopyModelsAllHashesMenuCmds

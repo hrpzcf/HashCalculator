@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Security.Cryptography;
+using System.Text;
 using System.Windows.Input;
 
 namespace HashCalculator
@@ -98,20 +99,11 @@ namespace HashCalculator
         {
             if (this.HashResult != null && param is HashViewModel parent)
             {
-                OutputType outputType;
-                if (parent.SelectedOutputType != OutputType.Unknown)
+                if (this.GenerateTextLineInFormat(parent,
+                    Settings.Current.FormatForGenerateText, parent.SelectedOutputType) is string text)
                 {
-                    outputType = parent.SelectedOutputType;
+                    CommonUtils.ClipboardSetText(text);
                 }
-                else if (Settings.Current.SelectedOutputType != OutputType.Unknown)
-                {
-                    outputType = Settings.Current.SelectedOutputType;
-                }
-                else
-                {
-                    outputType = OutputType.BinaryLower;
-                }
-                CommonUtils.ClipboardSetText(BytesToStrByOutputTypeCvt.Convert(this.HashResult, outputType));
             }
         }
 
@@ -125,6 +117,39 @@ namespace HashCalculator
                 }
                 return this._copyHashResultCmd;
             }
+        }
+
+        public string GenerateTextLineInFormat(HashViewModel parent, string format, OutputType outputType)
+        {
+            if (parent != null && this.HashResult != null)
+            {
+                if (outputType == OutputType.Unknown)
+                {
+                    if (parent.SelectedOutputType != OutputType.Unknown)
+                    {
+                        outputType = parent.SelectedOutputType;
+                    }
+                    else
+                    {
+                        outputType = Settings.Current.SelectedOutputType;
+                    }
+                }
+                if (!Settings.Current.GenerateTextInFormat || string.IsNullOrEmpty(format))
+                {
+                    return BytesToStrByOutputTypeCvt.Convert(this.HashResult, outputType);
+                }
+                else
+                {
+                    // "$algo$", "$hash$", "$path$", "$name$"
+                    StringBuilder formatBuilder = new StringBuilder(format);
+                    formatBuilder.Replace("$algo$", this.AlgoName);
+                    formatBuilder.Replace("$hash$", BytesToStrByOutputTypeCvt.Convert(this.HashResult, outputType));
+                    formatBuilder.Replace("$name$", parent.FileInfo.Name);
+                    formatBuilder.Replace("$path$", parent.FileInfo.FullName);
+                    return formatBuilder.ToString();
+                }
+            }
+            return default(string);
         }
     }
 }

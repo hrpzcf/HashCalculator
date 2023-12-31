@@ -132,6 +132,6 @@ namespace HashCalculator
 
         public CancellationToken StopSearchingToken { get; set; }
 
-        public IEnumerable<AlgoType> PresetAlgoTypes { get; set; } 
+        public IEnumerable<AlgoType> PresetAlgoTypes { get; set; }
     }
 }

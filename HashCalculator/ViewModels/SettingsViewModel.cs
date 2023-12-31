@@ -54,6 +54,8 @@ namespace HashCalculator
         public int minCharsNumRequiredForMonitoringClipboard = 8;
         [XmlIgnore]
         public int maxCharsNumRequiredForMonitoringClipboard = 128;
+        private bool generateTextInFormat = false;
+        private string formatForGenerateText = "#$algo$ *$hash$ *$name$";
         private RelayCommand installShellExtCmd;
         private RelayCommand unInstallShellExtCmd;
         private RelayCommand openEditContextMenuCmd;
@@ -647,6 +649,30 @@ namespace HashCalculator
             set
             {
                 this.SetPropNotify(ref this.algoToSwitchToAfterHashChecked, value);
+            }
+        }
+
+        public bool GenerateTextInFormat
+        {
+            get
+            {
+                return this.generateTextInFormat;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.generateTextInFormat, value);
+            }
+        }
+
+        public string FormatForGenerateText
+        {
+            get
+            {
+                return this.formatForGenerateText;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.formatForGenerateText, value);
             }
         }
 
