@@ -157,6 +157,14 @@
                             </StackPanel>
                         </StackPanel>
                     </GroupBox>
+                    <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
+                        <TextBlock VerticalAlignment="Center" Text="校验时自动把算法切换到：" />
+                        <ComboBox
+                            DisplayMemberPath="Display"
+                            ItemsSource="{Binding AvailableResultsToSwitchTo}"
+                            SelectedValue="{Binding AlgoToSwitchToAfterHashChecked}"
+                            SelectedValuePath="ItemValue" />
+                    </StackPanel>
                     <CheckBox
                         Margin="0,8,0,0"
                         Padding="4,0,0,0"
@@ -172,14 +180,6 @@
                         Padding="4,0,0,0"
                         Content="不要计算空文件的哈希值以避免造成【文件内容相同】的误导"
                         IsChecked="{Binding DoNotHashForEmptyFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
-                        <TextBlock VerticalAlignment="Center" Text="进行校验时自动把每行的算法切换到：" />
-                        <ComboBox
-                            DisplayMemberPath="Display"
-                            ItemsSource="{Binding AvailableResultsToSwitchTo}"
-                            SelectedValue="{Binding AlgoToSwitchToAfterHashChecked}"
-                            SelectedValuePath="ItemValue" />
-                    </StackPanel>
                 </StackPanel>
             </ScrollViewer>
         </TabItem>
