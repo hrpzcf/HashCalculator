@@ -296,7 +296,8 @@ namespace HashCalculator
         {
             if (this.MenuList == null || !this.MenuList.Any())
             {
-                return "主菜单列表为空，请添加主菜单或者点击\"恢复默认\"后再保存配置";
+                this.ManuallyResetMenuList();
+                return default(string);
             }
             foreach (HcCtxMenuModel hcCtxMenuModel in this.MenuList)
             {

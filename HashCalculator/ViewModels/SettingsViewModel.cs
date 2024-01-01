@@ -714,8 +714,8 @@ namespace HashCalculator
                 string exception1 = new ShellMenuEditorModel(SettingsPanel.This).SaveMenuListToJsonFile();
                 if (!string.IsNullOrEmpty(exception1))
                 {
-                    MessageBox.Show(
-                        SettingsPanel.This, exception1, "外壳扩展模块配置文件创建失败，快捷菜单可能无法显示",
+                    MessageBox.Show(SettingsPanel.This,
+                        $"外壳扩展模块配置文件创建失败，快捷菜单可能无法显示，原因：{exception1}", "警告",
                         MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
