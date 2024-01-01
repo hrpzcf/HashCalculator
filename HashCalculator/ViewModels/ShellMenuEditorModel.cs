@@ -21,6 +21,16 @@ namespace HashCalculator
         private RelayCommand _moveMenuDownCmd;
         private RelayCommand _editMenuPropCmd;
 
+        public ShellMenuEditorModel(Window parent)
+        {
+            this.Parent = parent;
+            if (this.LoadMenuListFromJsonFile() is string reason)
+            {
+                MessageBox.Show(parent, $"载入快捷菜单配置文件失败：{reason}", "警告",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
         public Window Parent { get; }
 
         public ObservableCollection<HcCtxMenuModel> MenuList
@@ -236,12 +246,6 @@ namespace HashCalculator
             }
         }
 
-        public ShellMenuEditorModel(Window parent)
-        {
-            this.Parent = parent;
-            this.LoadMenuListFromJsonFile();
-        }
-
         private void ManuallyResetMenuList()
         {
             if (this.MenuList == null)
@@ -271,25 +275,42 @@ namespace HashCalculator
             this.MenuList.Add(menuCheckHash);
         }
 
-        private bool LoadMenuListFromJsonFile()
+        private string LoadMenuListFromJsonFile()
         {
-            if (File.Exists(Settings.MenuConfigFile))
+            if (!File.Exists(Settings.MenuConfUnicode) && File.Exists(Settings.MenuConfigFile))
+            {
+                try
+                {
+                    using (StreamReader sr = new StreamReader(Settings.MenuConfigFile, Encoding.Default))
+                    using (StreamWriter sw = new StreamWriter(Settings.MenuConfUnicode, false, Encoding.Unicode))
+                    {
+                        sw.Write(sr.ReadToEnd());
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return ex.Message;
+                }
+            }
+            if (File.Exists(Settings.MenuConfUnicode))
             {
                 try
                 {
                     JsonSerializer jsonSerializer = new JsonSerializer();
                     jsonSerializer.NullValueHandling = NullValueHandling.Ignore;
                     jsonSerializer.DefaultValueHandling = DefaultValueHandling.Populate;
-                    using (StreamReader sr = new StreamReader(Settings.MenuConfigFile, Encoding.Default))
+                    using (StreamReader sr = new StreamReader(Settings.MenuConfUnicode, Encoding.Unicode))
                     using (JsonTextReader jsonTextReader = new JsonTextReader(sr))
                     {
                         this.MenuList = jsonSerializer.Deserialize<ObservableCollection<HcCtxMenuModel>>(jsonTextReader);
-                        return true;
                     }
                 }
-                catch (Exception) { }
+                catch (Exception ex)
+                {
+                    return ex.Message;
+                }
             }
-            return false;
+            return default(string);
         }
 
         private string CheckIfMenuListAllValid()
@@ -335,15 +356,14 @@ namespace HashCalculator
                 {
                     Settings.ConfigDir.Create();
                 }
-                string checkMenuResult = this.CheckIfMenuListAllValid();
-                if (!string.IsNullOrEmpty(checkMenuResult))
+                if (this.CheckIfMenuListAllValid() is string checkMenuResult)
                 {
                     return checkMenuResult;
                 }
                 JsonSerializer jsonSerializer = new JsonSerializer();
                 jsonSerializer.NullValueHandling = NullValueHandling.Ignore;
                 jsonSerializer.DefaultValueHandling = DefaultValueHandling.Ignore;
-                using (StreamWriter sw = new StreamWriter(Settings.MenuConfigFile, false, Encoding.Default))
+                using (StreamWriter sw = new StreamWriter(Settings.MenuConfUnicode, false, Encoding.Unicode))
                 using (JsonTextWriter jsonTextWriter = new JsonTextWriter(sw))
                 {
                     jsonSerializer.Serialize(jsonTextWriter, this.MenuList, typeof(ObservableCollection<HcCtxMenuModel>));
