@@ -84,32 +84,58 @@ static BOOL json_getPropValueByType(const json_t* parent, const char* propName, 
 
 BOOL InsertMenuFromJsonFile(const CHAR* menuJson, HMENU hMenu, UINT indexMenu, UINT idCmdFirst, UINT idCmdLast,
     MenuType_t menuType, UINT* pIdCurrent, map<UINT, CHAR*>& mCmdDict, HBITMAP bitMapHandle) {
-    json_t* jsonMemory = NULL;
-    CHAR* jsonCharData = NULL;
+    LPSTR fileBytes = NULL;
+    LPSTR jsonAnsiData = NULL;
     UINT initalId = *pIdCurrent;
     UINT indexTopCurrent = indexMenu;
+    FILE* jsonFile = NULL;
+    json_t* jsonMemory = NULL;
     DeleteCmdDictBuffer(mCmdDict);
     mCmdDict.clear();
     if (menuType == MENUTYPE_UNKNOWN) {
         return FALSE;
     }
-    FILE* jsonFile;
     errno_t error = fopen_s(&jsonFile, menuJson, "rb");
     if (error != 0 || NULL == jsonFile) {
         goto FinalizeAndReturn;
     }
     fseek(jsonFile, 0L, SEEK_END);
     SIZE_T fileSize = ftell(jsonFile);
-    jsonCharData = new CHAR[fileSize + 1];
+    // 虽然读取文件内容到 fileBytes 后要强转为 LPWSTR 类型，
+    // 但此处给 fileBytes 分配空间时不用为字符串的 L'\0' 末尾增加 sizeof(WCHAR) （2 字节）的容量，
+    // 因为 UTF-16LE 编码的文件头部有 2 字节的标识（FFFE），读取字符串时不读取这两个字节，
+    // 所以 fileBytes 有 fileSize 个字节的容量是足够为字符串末尾增加 L'\0'（2 字节）的。
+    fileBytes = new CHAR[fileSize];
+    fileBytes[fileSize] = 0;
+    fileBytes[fileSize - 1] = 0;
     rewind(jsonFile);
-    SIZE_T elementCount = 1;
-    SIZE_T readEleCount = fread(jsonCharData, fileSize, elementCount, jsonFile);
-    fclose(jsonFile);
+    // 验证 UTF-16LE 编码的文件头部 2 字节是否是 FFFE
+    const SIZE_T headCount = 2;
+    CHAR utf16LEHead[headCount] = { 0 };
+    if (headCount != fread(utf16LEHead, sizeof(CHAR), headCount, jsonFile)) {
+        goto FinalizeAndReturn;
+    }
+    // 在小端字节序下 FFFE 两个字节对应的数值是 0xFEFF
+    if (0xFEFFu != *((WORD*)utf16LEHead)) {
+        goto FinalizeAndReturn;
+    }
+    SIZE_T elementCount = fileSize - headCount;
+    SIZE_T readEleCount = fread(fileBytes, sizeof(CHAR), elementCount, jsonFile);
     if (readEleCount != elementCount) {
         goto FinalizeAndReturn;
     }
+    LPWSTR jsonUnicodeData = (LPWSTR)fileBytes;
+    INT reqSize = WideCharToMultiByte(CP_ACP, 0, jsonUnicodeData, -1, NULL, 0, NULL, NULL);
+    if (0 == reqSize) {
+        goto FinalizeAndReturn;
+    }
+    jsonAnsiData = new CHAR[reqSize];
+    jsonAnsiData[reqSize - 1] = 0;
+    if (0 == WideCharToMultiByte(CP_ACP, 0, jsonUnicodeData, -1, jsonAnsiData, reqSize, NULL, NULL)) {
+        goto FinalizeAndReturn;
+    }
     jsonMemory = new json_t[MAX_JSON_PROP];
-    const json_t* topListJson = json_create(jsonCharData, jsonMemory, MAX_JSON_PROP);
+    const json_t* topListJson = json_create(jsonAnsiData, jsonMemory, MAX_JSON_PROP);
     if (NULL == topListJson || JSON_ARRAY != json_getType(topListJson)) {
         goto FinalizeAndReturn;
     }
@@ -171,11 +197,17 @@ BOOL InsertMenuFromJsonFile(const CHAR* menuJson, HMENU hMenu, UINT indexMenu, U
         }
     }
 FinalizeAndReturn:
+    if (NULL != jsonFile) {
+        fclose(jsonFile);
+    }
+    if (NULL != fileBytes) {
+        delete[] fileBytes;
+    }
     if (NULL != jsonMemory) {
         delete[] jsonMemory;
     }
-    if (NULL != jsonCharData) {
-        delete[] jsonCharData;
+    if (NULL != jsonAnsiData) {
+        delete[] jsonAnsiData;
     }
     return initalId != *pIdCurrent;
 }

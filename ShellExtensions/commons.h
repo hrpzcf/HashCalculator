@@ -8,7 +8,7 @@ using std::map;
 #define JSON_TITLE                  "Title"
 #define JSON_ALGTYPES               "AlgTypes"
 #define JSON_SUBMENUS               "Submenus"
-#define MENU_JSONNAME               "menus.json"
+#define MENU_JSONNAME               "menus_unicode.json"
 #define HC_EXECUTABLE               "HashCalculator.exe"
 #define HCEXE_REGPATH               "Software\\Microsoft\\Windows\\CurrentVersion\\App Paths"
 #define MAX_JSON_PROP               480
