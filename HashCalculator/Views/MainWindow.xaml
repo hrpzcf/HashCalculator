@@ -195,14 +195,14 @@
                         Command="{Binding CopyAndRestartModelsCmd}"
                         IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBooleanCvt}}"
                         Style="{StaticResource ImageButtonStyle2}"
-                        ToolTip="复制表格中所有的行到新行并使用【默认算法】中所选的算法重新计算哈希值">
+                        ToolTip="复制表格中所有的行到新行并使用【默认算法】中所选的算法重新计算新行的哈希值">
                         <Image Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnNewLineEnabledImgSrcCvt}}" />
                     </Button>
                     <TextBlock
                         Margin="0,2"
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
-                        Text="新增计算"
+                        Text="新行重算"
                         Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
                 <StackPanel Grid.Column="10" Margin="8,0,0,0">
@@ -210,14 +210,14 @@
                         Command="{Binding RefreshOriginalModelsCmd}"
                         IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBooleanCvt}}"
                         Style="{StaticResource ImageButtonStyle2}"
-                        ToolTip="使用【默认算法】中所选的算法重新计算表格中那些未完成计算的行的哈希值">
+                        ToolTip="使用【默认算法】中所选的算法重新计算表格中那些没有计算成功的行的哈希值">
                         <Image Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnRefreshEnabledImgSrcCvt}}" />
                     </Button>
                     <TextBlock
                         Margin="0,2"
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
-                        Text="计算未完成项"
+                        Text="计算缺值项"
                         Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
                 <StackPanel Grid.Column="11" Margin="8,0,0,0">
