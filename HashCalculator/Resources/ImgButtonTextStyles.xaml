@@ -2,6 +2,6 @@
     <Style x:Key="ImgButtonTextStyle1" TargetType="{x:Type TextBlock}">
         <Setter Property="TextWrapping" Value="NoWrap" />
         <Setter Property="TextTrimming" Value="None" />
-        <Setter Property="Foreground" Value="#767676" />
+        <Setter Property="Foreground" Value="#565656" />
     </Style>
 </ResourceDictionary>

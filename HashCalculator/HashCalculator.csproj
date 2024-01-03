@@ -405,7 +405,7 @@
     <Resource Include="Images\topmost_32.png" />
     <Resource Include="Images\topmost_32_gray.png" />
     <Resource Include="Images\list_count_16.png" />
-    <Resource Include="Images\refresh_output_24.png" />
+    <Resource Include="Images\refresh_output_32.png" />
     <Resource Include="Images\remaining_16.png" />
     <Resource Include="Images\loading.gif" />
     <Resource Include="Images\stop_searching_32.png" />
@@ -448,6 +448,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\copy_multi_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\algorithm_32.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
