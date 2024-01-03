@@ -16,7 +16,7 @@ namespace HashCalculator
             new DirectoryInfo(Path.Combine(configBaseDataPath, "HashCalculator"));
         private static readonly string configFile = Path.Combine(ConfigDir.FullName, "settings.xml");
         public static readonly string MenuConfigFile = Path.Combine(ConfigDir.FullName, "menus.json");
-        public static readonly string MenuConfUnicode = Path.Combine(ConfigDir.FullName, "menus_unicode.json");
+        public static readonly string MenuConfigUnicode = Path.Combine(ConfigDir.FullName, "menus_unicode.json");
         public static readonly string LibraryDir = Path.Combine(ConfigDir.FullName, "Library");
 
         public static string[] StartupArgs { get; set; }

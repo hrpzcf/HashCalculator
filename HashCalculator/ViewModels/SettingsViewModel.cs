@@ -699,9 +699,9 @@ namespace HashCalculator
                 return;
             }
             this.NotSettingShellExtension = false;
-            if (await ShellExtHelper.InstallShellExtension() is Exception exception)
+            if (await ShellExtHelper.InstallShellExtension() is Exception exception1)
             {
-                MessageBox.Show(SettingsPanel.This, exception.Message, "安装外壳扩展失败",
+                MessageBox.Show(SettingsPanel.This, exception1.Message, "安装外壳扩展失败",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
             }
             else
@@ -709,16 +709,28 @@ namespace HashCalculator
                 MessageBox.Show(SettingsPanel.This, $"安装外壳扩展成功！", "提示", MessageBoxButton.OK,
                     MessageBoxImage.Information);
             }
-            if (!File.Exists(Settings.MenuConfigFile))
+            if (!File.Exists(Settings.MenuConfigUnicode))
             {
-                string exception1 = new ShellMenuEditorModel(SettingsPanel.This).SaveMenuListToJsonFile();
-                if (!string.IsNullOrEmpty(exception1))
+                if (File.Exists(Settings.MenuConfigFile))
+                {
+                    string reason = ShellMenuEditorModel.AnsiMenuConfigToUnicodeMenuConfig();
+                    if (string.IsNullOrEmpty(reason))
+                    {
+                        goto FinalizeAndReturn;
+                    }
+                    MessageBox.Show(SettingsPanel.This,
+                        $"无法将旧版快捷菜单配置文件转换为新版，将恢复为默认配置。\n{reason}", "警告",
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+                string exception2 = new ShellMenuEditorModel(SettingsPanel.This).SaveMenuListToJsonFile();
+                if (!string.IsNullOrEmpty(exception2))
                 {
                     MessageBox.Show(SettingsPanel.This,
-                        $"外壳扩展模块配置文件创建失败，快捷菜单可能无法显示，原因：{exception1}", "警告",
+                        $"外壳扩展模块配置文件创建失败，快捷菜单可能无法显示，原因：{exception2}", "警告",
                         MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
+        FinalizeAndReturn:
             this.NotSettingShellExtension = true;
         }
 

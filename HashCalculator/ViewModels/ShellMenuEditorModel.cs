@@ -13,6 +13,7 @@ namespace HashCalculator
     {
         private HcCtxMenuModel _selectedMenu;
         private ObservableCollection<HcCtxMenuModel> _menuList;
+        private static readonly Encoding menuEncoding = Encoding.Unicode;
         private RelayCommand _resetMenusCmd;
         private RelayCommand _saveMenuListCmd;
         private RelayCommand _addMenuCmd;
@@ -275,31 +276,39 @@ namespace HashCalculator
             this.MenuList.Add(menuCheckHash);
         }
 
-        private string LoadMenuListFromJsonFile()
+        public static string AnsiMenuConfigToUnicodeMenuConfig()
         {
-            if (!File.Exists(Settings.MenuConfUnicode) && File.Exists(Settings.MenuConfigFile))
+            try
             {
-                try
+                using (StreamReader sr = new StreamReader(Settings.MenuConfigFile, Encoding.Default))
+                using (StreamWriter sw = new StreamWriter(Settings.MenuConfigUnicode, false, menuEncoding))
                 {
-                    using (StreamReader sr = new StreamReader(Settings.MenuConfigFile, Encoding.Default))
-                    using (StreamWriter sw = new StreamWriter(Settings.MenuConfUnicode, false, Encoding.Unicode))
-                    {
-                        sw.Write(sr.ReadToEnd());
-                    }
-                }
-                catch (Exception ex)
-                {
-                    return ex.Message;
+                    sw.Write(sr.ReadToEnd());
                 }
             }
-            if (File.Exists(Settings.MenuConfUnicode))
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+            return default(string);
+        }
+
+        private string LoadMenuListFromJsonFile()
+        {
+            if (!File.Exists(Settings.MenuConfigUnicode) &&
+                File.Exists(Settings.MenuConfigFile) &&
+                AnsiMenuConfigToUnicodeMenuConfig() is string reason)
+            {
+                return reason;
+            }
+            if (File.Exists(Settings.MenuConfigUnicode))
             {
                 try
                 {
                     JsonSerializer jsonSerializer = new JsonSerializer();
                     jsonSerializer.NullValueHandling = NullValueHandling.Ignore;
                     jsonSerializer.DefaultValueHandling = DefaultValueHandling.Populate;
-                    using (StreamReader sr = new StreamReader(Settings.MenuConfUnicode, Encoding.Unicode))
+                    using (StreamReader sr = new StreamReader(Settings.MenuConfigUnicode, menuEncoding))
                     using (JsonTextReader jsonTextReader = new JsonTextReader(sr))
                     {
                         this.MenuList = jsonSerializer.Deserialize<ObservableCollection<HcCtxMenuModel>>(jsonTextReader);
@@ -363,7 +372,7 @@ namespace HashCalculator
                 JsonSerializer jsonSerializer = new JsonSerializer();
                 jsonSerializer.NullValueHandling = NullValueHandling.Ignore;
                 jsonSerializer.DefaultValueHandling = DefaultValueHandling.Ignore;
-                using (StreamWriter sw = new StreamWriter(Settings.MenuConfUnicode, false, Encoding.Unicode))
+                using (StreamWriter sw = new StreamWriter(Settings.MenuConfigUnicode, false, menuEncoding))
                 using (JsonTextWriter jsonTextWriter = new JsonTextWriter(sw))
                 {
                     jsonSerializer.Serialize(jsonTextWriter, this.MenuList, typeof(ObservableCollection<HcCtxMenuModel>));
