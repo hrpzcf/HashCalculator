@@ -2,11 +2,12 @@
 
 # 哈希值批量计算器 (HashCalculator)
 
-[![GitHub stars](https://img.shields.io/github/stars/hrpzcf/HashCalculator?label=Stars&logo=github)](https://github.com/hrpzcf/HashCalculator/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/hrpzcf/HashCalculator?label=Forks&logo=github)](https://github.com/hrpzcf/HashCalculator/network)
-[![GitHub issues](https://img.shields.io/github/issues/hrpzcf/HashCalculator?label=Issues&logo=github)](https://github.com/hrpzcf/HashCalculator/issues)
-[![GitHub license](https://img.shields.io/github/license/hrpzcf/HashCalculator?color=red&label=License)](https://github.com/hrpzcf/HashCalculator/blob/main/LICENSE)
-[![GitHub license](https://img.shields.io/github/v/release/hrpzcf/HashCalculator?label=Release)](https://github.com/hrpzcf/HashCalculator/releases)
+[![GitHub stars](https://img.shields.io/github/stars/hrpzcf/HashCalculator?style=flat)](https://github.com/hrpzcf/HashCalculator/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/hrpzcf/HashCalculator?style=flat)](https://github.com/hrpzcf/HashCalculator/network)
+[![GitHub issues](https://img.shields.io/github/issues/hrpzcf/HashCalculator)](https://github.com/hrpzcf/HashCalculator/issues)
+[![GitHub license](https://img.shields.io/github/license/hrpzcf/HashCalculator)](https://github.com/hrpzcf/HashCalculator/blob/main/LICENSE)
+[![GitHub release](https://img.shields.io/github/v/release/hrpzcf/HashCalculator)](https://github.com/hrpzcf/HashCalculator/releases)
+[![GitHub downloads](https://img.shields.io/github/downloads/hrpzcf/HashCalculator/total)](https://github.com/hrpzcf/HashCalculator/releases)
 
 </div>
 
