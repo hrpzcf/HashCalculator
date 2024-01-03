@@ -51,6 +51,7 @@ namespace HashCalculator
         private CmpRes algoToSwitchToAfterHashChecked = CmpRes.Matched;
         private FetchAlgoOption fetchAlgorithmOption = FetchAlgoOption.TATSAMSHDL;
         private bool displayMainWndButtonText = true;
+        private bool caseOfCopiedAlgNameFollowsOutputType = false;
         [XmlIgnore]
         public int minCharsNumRequiredForMonitoringClipboard = 8;
         [XmlIgnore]
@@ -686,6 +687,18 @@ namespace HashCalculator
             set
             {
                 this.SetPropNotify(ref this.formatForGenerateText, value);
+            }
+        }
+
+        public bool CaseOfCopiedAlgNameFollowsOutputType
+        {
+            get
+            {
+                return this.caseOfCopiedAlgNameFollowsOutputType;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.caseOfCopiedAlgNameFollowsOutputType, value);
             }
         }
 

@@ -185,92 +185,108 @@
         </TabItem>
         <TabItem
             Padding="8"
-            Header="复制模板设置"
+            Header="复制行为设置"
             Style="{StaticResource TabItemStyle1}">
             <StackPanel Margin="8">
-                <RadioButton
-                    Padding="4,0,0,0"
-                    Content="使用与【复制哈希值】相关按钮或菜单时只复制哈希值"
-                    IsChecked="{Binding GenerateTextInFormat, Converter={StaticResource ReverseBooleanValueCvt}}" />
-                <RadioButton
-                    Margin="0,4,0,0"
-                    VerticalAlignment="Center"
-                    Content="使用以下自定义模版来定制想要复制出来的内容"
-                    IsChecked="{Binding GenerateTextInFormat}" />
-                <TextBox
-                    Margin="0,4,0,0"
-                    Padding="0,2"
-                    IsEnabled="{Binding GenerateTextInFormat}"
-                    MaxLines="1"
-                    Text="{Binding FormatForGenerateText, UpdateSourceTrigger=PropertyChanged}" />
-                <TextBlock
-                    Margin="0,4,0,0"
-                    Style="{StaticResource DescTextBlockStyle}"
-                    Text="可以在输入框中任意使用以下占位符来指定实际要复制的内容：" />
-                <Grid Margin="0,4,0,0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock
-                        Grid.Row="0"
-                        Grid.Column="0"
-                        Text="$algo$" />
-                    <TextBlock
-                        Grid.Row="0"
-                        Grid.Column="1"
-                        Margin="16,0,0,0"
-                        Style="{StaticResource DescTextBlockStyle}"
-                        Text="在复制时此占位符将被替换为实际算法名。" />
-                    <TextBlock
-                        Grid.Row="1"
-                        Grid.Column="0"
-                        Text="$hash$" />
-                    <TextBlock
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        Margin="16,0,0,0"
-                        Style="{StaticResource DescTextBlockStyle}"
-                        Text="在复制时此占位符将被替换为实际哈希值。" />
-                    <TextBlock
-                        Grid.Row="2"
-                        Grid.Column="0"
-                        Text="$path$" />
-                    <TextBlock
-                        Grid.Row="2"
-                        Grid.Column="1"
-                        Margin="16,0,0,0"
-                        Style="{StaticResource DescTextBlockStyle}"
-                        Text="在复制时此占位符将被替换为实际文件全路径。" />
-                    <TextBlock
-                        Grid.Row="3"
-                        Grid.Column="0"
-                        Text="$name$" />
-                    <TextBlock
-                        Grid.Row="3"
-                        Grid.Column="1"
-                        Margin="16,0,0,0"
-                        Style="{StaticResource DescTextBlockStyle}"
-                        Text="在复制时此占位符将被替换为实际文件名。" />
-                </Grid>
-                <TextBlock
+                <GroupBox
+                    Padding="0,8,0,0"
+                    Foreground="#FF006FD6"
+                    Header="是否使用复制模版">
+                    <StackPanel>
+                        <RadioButton
+                            Padding="4,0,0,0"
+                            Content="使用与【复制哈希值】相关按钮或菜单时只复制哈希值"
+                            IsChecked="{Binding GenerateTextInFormat, Converter={StaticResource ReverseBooleanValueCvt}}" />
+                        <RadioButton
+                            Margin="0,4,0,0"
+                            VerticalAlignment="Center"
+                            Content="使用以下自定义模版来定制想要复制出来的内容"
+                            IsChecked="{Binding GenerateTextInFormat}" />
+                        <TextBox
+                            Margin="0,4,0,0"
+                            Padding="0,2"
+                            IsEnabled="{Binding GenerateTextInFormat}"
+                            MaxLines="1"
+                            Text="{Binding FormatForGenerateText, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock
+                            Margin="0,4,0,0"
+                            Style="{StaticResource DescTextBlockStyle}"
+                            Text="可以在输入框中任意使用以下占位符来指定实际要复制的内容：" />
+                        <Grid Margin="0,4,0,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Foreground="Black"
+                                Text="$algo$" />
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Margin="16,0,0,0"
+                                Style="{StaticResource DescTextBlockStyle}"
+                                Text="在复制时此占位符将被替换为实际算法名。" />
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Foreground="Black"
+                                Text="$hash$" />
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Margin="16,0,0,0"
+                                Style="{StaticResource DescTextBlockStyle}"
+                                Text="在复制时此占位符将被替换为实际哈希值。" />
+                            <TextBlock
+                                Grid.Row="2"
+                                Grid.Column="0"
+                                Foreground="Black"
+                                Text="$path$" />
+                            <TextBlock
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                Margin="16,0,0,0"
+                                Style="{StaticResource DescTextBlockStyle}"
+                                Text="在复制时此占位符将被替换为实际文件全路径。" />
+                            <TextBlock
+                                Grid.Row="3"
+                                Grid.Column="0"
+                                Foreground="Black"
+                                Text="$name$" />
+                            <TextBlock
+                                Grid.Row="3"
+                                Grid.Column="1"
+                                Margin="16,0,0,0"
+                                Style="{StaticResource DescTextBlockStyle}"
+                                Text="在复制时此占位符将被替换为实际文件名。" />
+                        </Grid>
+                        <TextBlock
+                            Margin="0,8,0,0"
+                            Style="{StaticResource DescTextBlockStyle}"
+                            Text="此设置影响软件所有与复制哈希值相关的按钮或菜单的复制结果。" />
+                        <TextBlock
+                            Margin="0,2,0,0"
+                            Style="{StaticResource DescTextBlockStyle}"
+                            Text="模版输入框留空效果与选择【使用复制按钮或右键菜单时只复制哈希值】相同。" />
+                        <TextBlock
+                            Margin="0,2,0,0"
+                            Style="{StaticResource DescTextBlockStyle}"
+                            Text="此模板对于那些会复制出多行内容的按钮或菜单来说是每一行的模版。" />
+                    </StackPanel>
+                </GroupBox>
+                <CheckBox
                     Margin="0,8,0,0"
-                    Style="{StaticResource DescTextBlockStyle}"
-                    Text="此设置影响软件所有与复制哈希值相关的按钮或菜单的复制结果。" />
-                <TextBlock
-                    Margin="0,2,0,0"
-                    Style="{StaticResource DescTextBlockStyle}"
-                    Text="模版输入框留空效果与选择【使用复制按钮或右键菜单时只复制哈希值】相同。" />
-                <TextBlock
-                    Margin="0,2,0,0"
-                    Style="{StaticResource DescTextBlockStyle}"
-                    Text="此模板对于那些会复制出多行内容的按钮或菜单来说是每一行的模版。" />
+                    Padding="4,0,0,0"
+                    Content="复制的内容含算法名时算法名的大小写跟随十六进制输出方式"
+                    IsChecked="{Binding CaseOfCopiedAlgNameFollowsOutputType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </StackPanel>
         </TabItem>
         <TabItem

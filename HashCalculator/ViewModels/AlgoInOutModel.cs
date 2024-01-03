@@ -140,9 +140,22 @@ namespace HashCalculator
                 }
                 else
                 {
+                    string algoName = this.AlgoName;
+                    if (Settings.Current.CaseOfCopiedAlgNameFollowsOutputType)
+                    {
+                        switch (outputType)
+                        {
+                            case OutputType.BinaryLower:
+                                algoName = this.AlgoName.ToLower();
+                                break;
+                            case OutputType.BinaryUpper:
+                                algoName = this.AlgoName.ToUpper();
+                                break;
+                        }
+                    }
                     // "$algo$", "$hash$", "$path$", "$name$"
                     StringBuilder formatBuilder = new StringBuilder(format);
-                    formatBuilder.Replace("$algo$", this.AlgoName);
+                    formatBuilder.Replace("$algo$", algoName);
                     formatBuilder.Replace("$hash$", BytesToStrByOutputTypeCvt.Convert(this.HashResult, outputType));
                     formatBuilder.Replace("$name$", parent.FileInfo.Name);
                     formatBuilder.Replace("$path$", parent.FileInfo.FullName);
