@@ -33,7 +33,7 @@ namespace HashCalculator
         private int tobeComputedModelsCount = 0;
         private CancellationTokenSource _cancellation = new CancellationTokenSource();
         private CancellationTokenSource searchCancellation = new CancellationTokenSource();
-        private List<ModelArg> displayedFiles = new List<ModelArg>();
+        private List<HashViewModel> displayedModels = new List<HashViewModel>();
         private string hashCheckReport = string.Empty;
         private string hashValueStringOrChecklistPath = null;
         private RunningState queueState = RunningState.None;
@@ -244,13 +244,14 @@ namespace HashCalculator
 
         private void AddModelAction(ModelArg arg)
         {
-            HashViewModel model = new HashViewModel(
-                Interlocked.Increment(ref this.serial), arg);
+            Interlocked.Increment(ref this.serial);
+            HashViewModel model = new HashViewModel(this.serial, arg);
+            this.displayedModels.Add(model);
             model.ModelCapturedEvent += this.ModelCapturedAction;
             model.ModelCapturedEvent += this.starter.PendingModel;
             model.ModelReleasedEvent += this.ModelReleasedAction;
-            model.StartupModel(false);
             HashViewModels.Add(model);
+            model.StartupModel(false);
         }
 
         public async void BeginDisplayModels(PathPackage package)
@@ -271,7 +272,6 @@ namespace HashCalculator
                         {
                             break;
                         }
-                        this.displayedFiles.Add(arg);
                         synchronization.Invoke(this.addModelAction, DispatcherPriority.Background, arg);
                         Thread.Yield();
                     }
@@ -279,7 +279,7 @@ namespace HashCalculator
             }, token);
         }
 
-        public async void BeginDisplayModels(IEnumerable<ModelArg> args, bool reset)
+        public async void BeginDisplayModels(IEnumerable<HashViewModel> models, bool resetAlg)
         {
             CancellationToken token;
             lock (this.displayModelRequestLock)
@@ -290,17 +290,16 @@ namespace HashCalculator
             {
                 lock (this.displayingModelLock)
                 {
-                    foreach (ModelArg arg in args)
+                    foreach (ModelArg arg in models.Select(i => i.ModelArg))
                     {
                         if (token.IsCancellationRequested)
                         {
                             break;
                         }
-                        if (reset)
+                        if (resetAlg)
                         {
                             arg.PresetAlgos = null;
                         }
-                        this.displayedFiles.Add(arg);
                         synchronization.Invoke(this.addModelAction, DispatcherPriority.Background, arg);
                         Thread.Yield();
                     }
@@ -811,6 +810,7 @@ namespace HashCalculator
                     model.ShutdownModel();
                     // 对 HashViewModels 的增删操作是在主线程上进行的，不用加锁
                     HashViewModels.Remove(model);
+                    this.displayedModels.Remove(model);
                 }
                 this.GenerateFileHashCheckReport();
             }
@@ -849,7 +849,7 @@ namespace HashCalculator
         {
             this.CancelDisplayedModelsAction(null);
             this.serial = 0;
-            this.displayedFiles.Clear();
+            this.displayedModels.Clear();
             HashViewModels.Clear();
         }
 
@@ -982,10 +982,10 @@ namespace HashCalculator
             }
             else
             {
-                if (this.displayedFiles.Any())
+                if (this.displayedModels.Any())
                 {
-                    List<ModelArg> args = this.displayedFiles;
-                    this.displayedFiles = new List<ModelArg>();
+                    List<HashViewModel> args = this.displayedModels;
+                    this.displayedModels = new List<HashViewModel>();
                     this.BeginDisplayModels(args, true);
                 }
             }
@@ -1374,8 +1374,7 @@ namespace HashCalculator
         {
             if (param is IList selectedModels)
             {
-                IEnumerable<ModelArg> args = selectedModels.Cast<HashViewModel>().Select(i => i.ModelArg);
-                this.BeginDisplayModels(args, true);
+                this.BeginDisplayModels(selectedModels.Cast<HashViewModel>(), true);
             }
         }
 
