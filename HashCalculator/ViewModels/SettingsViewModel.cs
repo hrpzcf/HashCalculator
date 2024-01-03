@@ -862,8 +862,8 @@ namespace HashCalculator
         [XmlIgnore]
         public GenericItemModel[] AvailableFetchAlgoOptions { get; } =
         {
-            new GenericItemModel("使用默认哈希算法中被勾选的算法", FetchAlgoOption.SELECTED),
-            new GenericItemModel("使用被勾选且可产生相应哈希长度的算法", FetchAlgoOption.TATSAMSHDL),
+            new GenericItemModel("使用【默认算法】中被勾选的算法", FetchAlgoOption.SELECTED),
+            new GenericItemModel("使用被勾选且可产生相应长度哈希值的算法", FetchAlgoOption.TATSAMSHDL),
             new GenericItemModel("使用所有可产生相应哈希长度的算法", FetchAlgoOption.TATMSHDL),
         };
 

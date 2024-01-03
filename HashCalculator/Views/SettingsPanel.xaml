@@ -93,7 +93,7 @@
                             <RadioButton
                                 Margin="0,8,0,0"
                                 Padding="4,0,0,0"
-                                Content="使用默认哈希算法中被勾选的算法"
+                                Content="使用【默认算法】中被勾选的算法"
                                 IsChecked="{Binding PreferChecklistAlgs, Converter={StaticResource ReverseBooleanValueCvt}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             <RadioButton
                                 x:Name="checkBoxPreferChecklistAlgs"
