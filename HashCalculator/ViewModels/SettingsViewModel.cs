@@ -50,6 +50,7 @@ namespace HashCalculator
         private bool switchMainWndFgWhenNewHashCopied = false;
         private CmpRes algoToSwitchToAfterHashChecked = CmpRes.Matched;
         private FetchAlgoOption fetchAlgorithmOption = FetchAlgoOption.TATSAMSHDL;
+        private bool displayMainWndButtonText = true;
         [XmlIgnore]
         public int minCharsNumRequiredForMonitoringClipboard = 8;
         [XmlIgnore]
@@ -613,6 +614,18 @@ namespace HashCalculator
             set
             {
                 this.SetPropNotify(ref this.fetchAlgorithmOption, value);
+            }
+        }
+
+        public bool DisplayMainWndButtonText
+        {
+            get
+            {
+                return this.displayMainWndButtonText;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.displayMainWndButtonText, value);
             }
         }
 

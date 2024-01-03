@@ -31,6 +31,7 @@
                 <ResourceDictionary Source="/Resources/ComboBoxStyle1.xaml" />
                 <ResourceDictionary Source="/Resources/ComboBoxStyle2.xaml" />
                 <ResourceDictionary Source="/Resources/ImageButtonStyles.xaml" />
+                <ResourceDictionary Source="/Resources/ImgButtonTextStyles.xaml" />
                 <ResourceDictionary Source="/Resources/ConverterResource.xaml" />
                 <ResourceDictionary Source="/Resources/DataGridCellStyles.xaml" />
                 <ResourceDictionary Source="/Resources/DataGridRowStyles.xaml" />
@@ -105,130 +106,220 @@
                     ToolTip="刷新输出方式：以 [默认输出方式] 下拉列表选择的输出方式更新表格内所有文件的哈希值显示方式">
                     <Image Source="/Images/refresh_output_24.png" />
                 </Button>
-                <Button
-                    Grid.Column="6"
-                    Margin="28,0,0,0"
-                    Command="{Binding OpenCommandPanelCmd}"
-                    Style="{StaticResource ImageButtonStyle2}"
-                    ToolTip="筛选与操作：打开筛选与操作窗口以进行筛选、对筛选结果进行操作，或关闭该窗口">
-                    <Image Source="/Images/filter_32.png" />
-                </Button>
-                <Button
-                    Grid.Column="7"
-                    Margin="28,0,0,0"
-                    Command="{Binding SelectFilesToHashCmd}"
-                    Style="{StaticResource ImageButtonStyle2}"
-                    ToolTip="选择文件：添加所选的文件并开始计算，也可以将文件、文件夹直接拖放到下方表格中">
-                    <Image Source="/Images/select_file_32.png" />
-                </Button>
-                <Button
-                    Grid.Column="8"
-                    Margin="4,0,0,0"
-                    Command="{Binding SelectFolderToHashCmd}"
-                    Style="{StaticResource ImageButtonStyle2}"
-                    ToolTip="选择文件夹：搜索文件夹内的文件并开始计算，也可以将文件和文件夹直接拖放到表格中">
-                    <Image Source="/Images/select_folder_32.png" />
-                </Button>
-                <Button
-                    Grid.Column="9"
-                    Margin="4,0,0,0"
-                    Command="{Binding StopEnumeratingPackageCmd}"
-                    Style="{StaticResource ImageButtonStyle2}"
-                    ToolTip="停止搜索文件：如果表格正持续增加新文件，则立即停止向表格添加新文件，但不停止哈希值计算。">
-                    <Image Source="/Images/stop_searching_32.png" />
-                </Button>
-                <Button
-                    Grid.Column="10"
-                    Margin="28,0,0,0"
-                    Command="{Binding ExportHashResultCmd}"
-                    IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBooleanCvt}}"
-                    Style="{StaticResource ImageButtonStyle2}"
-                    ToolTip="导出哈希值：将表格中所有文件的哈希计算结果导出为文件&#10;导出的内容使用的输出方式受到 [默认输出方式] 的控制而不受各文件自己的 [输出方式] 的控制&#10;没有计算结果的行不会被导出，[导出] 列没有勾选的行也不会被导出">
-                    <Image Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnExportEnabledImgSrcCvt}}" />
-                </Button>
-                <Button
-                    Grid.Column="11"
-                    Margin="4,0,0,0"
-                    Command="{Binding CopyAndRestartModelsCmd}"
-                    IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBooleanCvt}}"
-                    Style="{StaticResource ImageButtonStyle2}"
-                    ToolTip="新增哈希计算：根据 [默认哈希算法] 所选算法，计算表格中所有文件的哈希值，但不清除原来的计算结果，而是增加新的行来显示结果">
-                    <Image Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnNewLineEnabledImgSrcCvt}}" />
-                </Button>
-                <Button
-                    Grid.Column="12"
-                    Margin="4,0,0,0"
-                    Command="{Binding RefreshOriginalModelsCmd}"
-                    IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBooleanCvt}}"
-                    Style="{StaticResource ImageButtonStyle2}"
-                    ToolTip="计算未完成项：根据 [默认哈希算法] 所选算法，重新计算表格中未完成计算的文件的哈希值">
-                    <Image Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnRefreshEnabledImgSrcCvt}}" />
-                </Button>
-                <Button
-                    Grid.Column="13"
-                    Margin="4,0,0,0"
-                    Command="{Binding ForceRefreshOriginalModelsCmd}"
-                    IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBooleanCvt}}"
-                    Style="{StaticResource ImageButtonStyle2}"
-                    ToolTip="全部重新计算：根据 [默认哈希算法] 所选算法，重新计算表格中所有文件的哈希值">
-                    <Image Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnForceRefreshEnabledImgSrcCvt}}" />
-                </Button>
-                <Button
-                    Grid.Column="14"
-                    Margin="4,0,0,0"
-                    Command="{Binding ClearAllTableLinesCmd}"
-                    Style="{StaticResource ImageButtonStyle2}"
-                    ToolTip="清空所有内容：清空表格中显示的所有行">
-                    <Image Source="/Images/clear_panel_32.png" />
-                </Button>
-                <Button
-                    Grid.Column="15"
-                    Margin="28,0,0,0"
-                    Command="{Binding ContinueDisplayedModelsCmd}"
-                    Style="{StaticResource ImageButtonStyle2}"
-                    ToolTip="继续所有任务：继续所有已暂停的哈希值计算任务">
-                    <Image Source="/Images/continue_32.png" />
-                </Button>
-                <Button
-                    Grid.Column="16"
-                    Margin="4,0,0,0"
-                    Command="{Binding PauseDisplayedModelsCmd}"
-                    Style="{StaticResource ImageButtonStyle2}"
-                    ToolTip="暂停所有任务：暂停所有正在运行的哈希值计算任务（计算大量小文件时可能会暂停不成功，需要多次点击）">
-                    <Image Source="/Images/pause_32.png" />
-                </Button>
-                <Button
-                    Grid.Column="17"
-                    Margin="4,0,0,0"
-                    Command="{Binding CancelDisplayedModelsCmd}"
-                    Style="{StaticResource ImageButtonStyle2}"
-                    ToolTip="取消所有任务：取消所有排队中、运行中和已暂停的哈希值计算任务">
-                    <Image Source="/Images/cancel_32.png" />
-                </Button>
-                <Button
-                    Grid.Column="18"
-                    Margin="28,0,0,0"
-                    Command="{Binding MainWindowTopmostCmd}"
-                    Style="{StaticResource ImageButtonStyle2}"
-                    ToolTip="切换置顶状态：点击在 [置顶/非置顶] 之间切换主窗口置顶状态">
-                    <Image Source="{Binding Source={x:Static local:Settings.Current}, Path=MainWndTopmost, Converter={StaticResource BtnTopmostEnabledImgSrcCvt}}" />
-                </Button>
-                <Button
-                    Grid.Column="19"
-                    Margin="4,0,0,0"
-                    Command="{Binding OpenSettingsPanelCmd}"
-                    Style="{StaticResource ImageButtonStyle2}"
-                    ToolTip="打开设置面板...">
-                    <Image Source="/Images/settings_32.png" />
-                </Button>
-                <Button
-                    Grid.Column="20"
-                    Margin="4,0,0,0"
-                    Command="{Binding OpenAboutWindowCmd}"
-                    Style="{StaticResource ImageButtonStyle2}"
-                    ToolTip="关于...">
-                    <Image Source="/Images/using_help_32.png" />
-                </Button>
+                <StackPanel Grid.Column="6" Margin="24,0,0,0">
+                    <Button
+                        Command="{Binding OpenCommandPanelCmd}"
+                        Style="{StaticResource ImageButtonStyle2}"
+                        ToolTip="筛选与操作：打开筛选与操作窗口以进行筛选、对筛选结果进行操作，或关闭该窗口">
+                        <Image Source="/Images/filter_32.png" />
+                    </Button>
+                    <TextBlock
+                        Margin="0,2"
+                        HorizontalAlignment="Center"
+                        Style="{DynamicResource ImgButtonTextStyle1}"
+                        Text="筛选与操作"
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
+                </StackPanel>
+                <StackPanel Grid.Column="7" Margin="8,0,0,0">
+                    <Button
+                        Command="{Binding SelectFilesToHashCmd}"
+                        Style="{StaticResource ImageButtonStyle2}"
+                        ToolTip="选择文件：添加所选的文件并开始计算，也可以将文件、文件夹直接拖放到下方表格中">
+                        <Image Source="/Images/select_file_32.png" />
+                    </Button>
+                    <TextBlock
+                        Margin="0,2"
+                        HorizontalAlignment="Center"
+                        Style="{DynamicResource ImgButtonTextStyle1}"
+                        Text="选择文件"
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
+                </StackPanel>
+                <StackPanel Grid.Column="8" Margin="8,0,0,0">
+                    <Button
+                        Command="{Binding SelectFolderToHashCmd}"
+                        Style="{StaticResource ImageButtonStyle2}"
+                        ToolTip="选择文件夹：搜索文件夹内的文件并开始计算，也可以将文件和文件夹直接拖放到表格中">
+                        <Image Source="/Images/select_folder_32.png" />
+                    </Button>
+                    <TextBlock
+                        Margin="0,2"
+                        HorizontalAlignment="Center"
+                        Style="{DynamicResource ImgButtonTextStyle1}"
+                        Text="选择目录"
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
+                </StackPanel>
+                <StackPanel Grid.Column="9" Margin="8,0,0,0">
+                    <Button
+                        Command="{Binding StopEnumeratingPackageCmd}"
+                        Style="{StaticResource ImageButtonStyle2}"
+                        ToolTip="停止搜索文件：如果表格正持续增加新文件，则立即停止向表格添加新文件，但不停止哈希值计算。">
+                        <Image Source="/Images/stop_searching_32.png" />
+                    </Button>
+                    <TextBlock
+                        Margin="0,2"
+                        HorizontalAlignment="Center"
+                        Style="{DynamicResource ImgButtonTextStyle1}"
+                        Text="停止搜索"
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
+                </StackPanel>
+                <StackPanel Grid.Column="10" Margin="8,0,0,0">
+                    <Button
+                        Command="{Binding ExportHashResultCmd}"
+                        IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBooleanCvt}}"
+                        Style="{StaticResource ImageButtonStyle2}"
+                        ToolTip="导出哈希值：将表格中所有文件的哈希计算结果导出为文件&#10;导出的内容使用的输出方式受到 [默认输出方式] 的控制而不受各文件自己的 [输出方式] 的控制&#10;没有计算结果的行不会被导出，[导出] 列没有勾选的行也不会被导出">
+                        <Image Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnExportEnabledImgSrcCvt}}" />
+                    </Button>
+                    <TextBlock
+                        Margin="0,2"
+                        HorizontalAlignment="Center"
+                        Style="{DynamicResource ImgButtonTextStyle1}"
+                        Text="导出"
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
+                </StackPanel>
+                <StackPanel Grid.Column="11" Margin="8,0,0,0">
+                    <Button
+                        Command="{Binding CopyAndRestartModelsCmd}"
+                        IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBooleanCvt}}"
+                        Style="{StaticResource ImageButtonStyle2}"
+                        ToolTip="新增哈希计算：根据 [默认哈希算法] 所选算法，计算表格中所有文件的哈希值，但不清除原来的计算结果，而是增加新的行来显示结果">
+                        <Image Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnNewLineEnabledImgSrcCvt}}" />
+                    </Button>
+                    <TextBlock
+                        Margin="0,2"
+                        HorizontalAlignment="Center"
+                        Style="{DynamicResource ImgButtonTextStyle1}"
+                        Text="新增计算"
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
+                </StackPanel>
+                <StackPanel Grid.Column="12" Margin="8,0,0,0">
+                    <Button
+                        Command="{Binding RefreshOriginalModelsCmd}"
+                        IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBooleanCvt}}"
+                        Style="{StaticResource ImageButtonStyle2}"
+                        ToolTip="计算未完成项：根据 [默认哈希算法] 所选算法，重新计算表格中未完成计算的文件的哈希值">
+                        <Image Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnRefreshEnabledImgSrcCvt}}" />
+                    </Button>
+                    <TextBlock
+                        Margin="0,2"
+                        HorizontalAlignment="Center"
+                        Style="{DynamicResource ImgButtonTextStyle1}"
+                        Text="计算未完成项"
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
+                </StackPanel>
+                <StackPanel Grid.Column="13" Margin="8,0,0,0">
+                    <Button
+                        Command="{Binding ForceRefreshOriginalModelsCmd}"
+                        IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBooleanCvt}}"
+                        Style="{StaticResource ImageButtonStyle2}"
+                        ToolTip="全部重新计算：根据 [默认哈希算法] 所选算法，重新计算表格中所有文件的哈希值">
+                        <Image Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnForceRefreshEnabledImgSrcCvt}}" />
+                    </Button>
+                    <TextBlock
+                        Margin="0,2"
+                        HorizontalAlignment="Center"
+                        Style="{DynamicResource ImgButtonTextStyle1}"
+                        Text="重新计算"
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
+                </StackPanel>
+                <StackPanel Grid.Column="14" Margin="8,0,0,0">
+                    <Button
+                        Command="{Binding ClearAllTableLinesCmd}"
+                        Style="{StaticResource ImageButtonStyle2}"
+                        ToolTip="清空所有内容：清空表格中显示的所有行">
+                        <Image Source="/Images/clear_panel_32.png" />
+                    </Button>
+                    <TextBlock
+                        Margin="0,2"
+                        HorizontalAlignment="Center"
+                        Style="{DynamicResource ImgButtonTextStyle1}"
+                        Text="清空表格"
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
+                </StackPanel>
+                <StackPanel Grid.Column="15" Margin="8,0,0,0">
+                    <Button
+                        Command="{Binding ContinueDisplayedModelsCmd}"
+                        Style="{StaticResource ImageButtonStyle2}"
+                        ToolTip="继续所有任务：继续所有已暂停的哈希值计算任务">
+                        <Image Source="/Images/continue_32.png" />
+                    </Button>
+                    <TextBlock
+                        Margin="0,2"
+                        HorizontalAlignment="Center"
+                        Style="{DynamicResource ImgButtonTextStyle1}"
+                        Text="全部继续"
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
+                </StackPanel>
+                <StackPanel Grid.Column="16" Margin="8,0,0,0">
+                    <Button
+                        Command="{Binding PauseDisplayedModelsCmd}"
+                        Style="{StaticResource ImageButtonStyle2}"
+                        ToolTip="暂停所有任务：暂停所有正在运行的哈希值计算任务（计算大量小文件时可能会暂停不成功，需要多次点击）">
+                        <Image Source="/Images/pause_32.png" />
+                    </Button>
+                    <TextBlock
+                        Margin="0,2"
+                        HorizontalAlignment="Center"
+                        Style="{DynamicResource ImgButtonTextStyle1}"
+                        Text="全部暂停"
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
+                </StackPanel>
+                <StackPanel Grid.Column="17" Margin="8,0,0,0">
+                    <Button
+                        Command="{Binding CancelDisplayedModelsCmd}"
+                        Style="{StaticResource ImageButtonStyle2}"
+                        ToolTip="取消所有任务：取消所有排队中、运行中和已暂停的哈希值计算任务">
+                        <Image Source="/Images/cancel_32.png" />
+                    </Button>
+                    <TextBlock
+                        Margin="0,2"
+                        HorizontalAlignment="Center"
+                        Style="{DynamicResource ImgButtonTextStyle1}"
+                        Text="全部取消"
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
+                </StackPanel>
+                <StackPanel Grid.Column="18" Margin="8,0,0,0">
+                    <Button
+                        Command="{Binding MainWindowTopmostCmd}"
+                        Style="{StaticResource ImageButtonStyle2}"
+                        ToolTip="切换置顶状态：点击在 [置顶/非置顶] 之间切换主窗口置顶状态">
+                        <Image Source="{Binding Source={x:Static local:Settings.Current}, Path=MainWndTopmost, Converter={StaticResource BtnTopmostEnabledImgSrcCvt}}" />
+                    </Button>
+                    <TextBlock
+                        Margin="0,2"
+                        HorizontalAlignment="Center"
+                        Style="{DynamicResource ImgButtonTextStyle1}"
+                        Text="置顶/取消"
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
+                </StackPanel>
+                <StackPanel Grid.Column="19" Margin="8,0,0,0">
+                    <Button
+                        Command="{Binding OpenSettingsPanelCmd}"
+                        Style="{StaticResource ImageButtonStyle2}"
+                        ToolTip="打开设置面板...">
+                        <Image Source="/Images/settings_32.png" />
+                    </Button>
+                    <TextBlock
+                        Margin="0,2"
+                        HorizontalAlignment="Center"
+                        Style="{DynamicResource ImgButtonTextStyle1}"
+                        Text="设置"
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
+                </StackPanel>
+                <StackPanel Grid.Column="20" Margin="8,0,0,0">
+                    <Button
+                        Command="{Binding OpenAboutWindowCmd}"
+                        Style="{StaticResource ImageButtonStyle2}"
+                        ToolTip="关于...">
+                        <Image Source="/Images/using_help_32.png" />
+                    </Button>
+                    <TextBlock
+                        Margin="0,2"
+                        HorizontalAlignment="Center"
+                        Style="{DynamicResource ImgButtonTextStyle1}"
+                        Text="关于"
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
+                </StackPanel>
             </Grid>
         </ScrollViewer>
         <DataGrid
