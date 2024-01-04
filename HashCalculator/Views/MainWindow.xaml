@@ -52,7 +52,6 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
@@ -85,9 +84,8 @@
                         Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
                 <StackPanel Grid.Column="1" Margin="16,0,0,0">
-                    <Border Height="34">
+                    <StackPanel Orientation="Horizontal">
                         <ComboBox
-                            x:Name="outputTypeComboBox"
                             Width="110"
                             Margin="0,2,0,0"
                             VerticalAlignment="Center"
@@ -97,7 +95,14 @@
                             SelectedValuePath="ItemValue"
                             Style="{StaticResource ComboBoxStyle1}"
                             ToolTip="此设置影响变更后才开始计算的行和【刷新输出】按钮、【导出结果】按钮的行为，其中十六进制大/小写是常用的输出方式" />
-                    </Border>
+                        <Button
+                            Margin="2,0,0,0"
+                            Command="{Binding RefreshAllOutputTypeCmd}"
+                            Style="{StaticResource ImageButtonStyle2}"
+                            ToolTip="将表格内所有行的哈希值输出方式刷新为【默认输出方式】下拉列表所选择的输出方式">
+                            <Image Source="/Images/refresh_output_32.png" />
+                        </Button>
+                    </StackPanel>
                     <TextBlock
                         Margin="0,2"
                         HorizontalAlignment="Left"
@@ -105,21 +110,7 @@
                         Text="默认输出方式"
                         Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
-                <StackPanel Grid.Column="2" Margin="4,0,0,0">
-                    <Button
-                        Command="{Binding RefreshAllOutputTypeCmd}"
-                        Style="{StaticResource ImageButtonStyle2}"
-                        ToolTip="以【默认输出方式】下拉列表所选择的输出方式来更新表格内所有行的哈希值输出(显示)方式">
-                        <Image Source="/Images/refresh_output_32.png" />
-                    </Button>
-                    <TextBlock
-                        Margin="0,2"
-                        HorizontalAlignment="Center"
-                        Style="{StaticResource ImgButtonTextStyle1}"
-                        Text="刷新输出"
-                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
-                </StackPanel>
-                <StackPanel Grid.Column="4" Margin="16,0,0,0">
+                <StackPanel Grid.Column="3" Margin="16,0,0,0">
                     <Button
                         Command="{Binding OpenCommandPanelCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
@@ -133,7 +124,7 @@
                         Text="筛选与操作"
                         Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
-                <StackPanel Grid.Column="5" Margin="8,0,0,0">
+                <StackPanel Grid.Column="4" Margin="8,0,0,0">
                     <Button
                         Command="{Binding SelectFilesToHashCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
@@ -147,7 +138,7 @@
                         Text="选择文件"
                         Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
-                <StackPanel Grid.Column="6" Margin="8,0,0,0">
+                <StackPanel Grid.Column="5" Margin="8,0,0,0">
                     <Button
                         Command="{Binding SelectFolderToHashCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
@@ -161,11 +152,11 @@
                         Text="选择目录"
                         Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
-                <StackPanel Grid.Column="7" Margin="8,0,0,0">
+                <StackPanel Grid.Column="6" Margin="8,0,0,0">
                     <Button
                         Command="{Binding StopEnumeratingPackageCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
-                        ToolTip="如果表格正持续增加新文件，则立即停止向表格添加新文件，但不停止哈希值计算任务">
+                        ToolTip="如果程序正持续搜索文件并向表格添加新文件，则立即停止搜索文件，但不停止现有的哈希值计算任务">
                         <Image Source="/Images/stop_searching_32.png" />
                     </Button>
                     <TextBlock
@@ -175,7 +166,7 @@
                         Text="停止搜索"
                         Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
-                <StackPanel Grid.Column="8" Margin="8,0,0,0">
+                <StackPanel Grid.Column="7" Margin="8,0,0,0">
                     <Button
                         Command="{Binding ExportHashResultCmd}"
                         IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBooleanCvt}}"
@@ -190,7 +181,7 @@
                         Text="导出结果"
                         Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
-                <StackPanel Grid.Column="9" Margin="8,0,0,0">
+                <StackPanel Grid.Column="8" Margin="8,0,0,0">
                     <Button
                         Command="{Binding CopyAndRestartModelsCmd}"
                         IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBooleanCvt}}"
@@ -205,7 +196,7 @@
                         Text="新行重算"
                         Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
-                <StackPanel Grid.Column="10" Margin="8,0,0,0">
+                <StackPanel Grid.Column="9" Margin="8,0,0,0">
                     <Button
                         Command="{Binding RefreshOriginalModelsCmd}"
                         IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBooleanCvt}}"
@@ -220,7 +211,7 @@
                         Text="计算缺值项"
                         Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
-                <StackPanel Grid.Column="11" Margin="8,0,0,0">
+                <StackPanel Grid.Column="10" Margin="8,0,0,0">
                     <Button
                         Command="{Binding ForceRefreshOriginalModelsCmd}"
                         IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBooleanCvt}}"
@@ -235,7 +226,7 @@
                         Text="重新计算"
                         Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
-                <StackPanel Grid.Column="12" Margin="8,0,0,0">
+                <StackPanel Grid.Column="11" Margin="8,0,0,0">
                     <Button
                         Command="{Binding ClearAllTableLinesCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
@@ -249,7 +240,7 @@
                         Text="清空表格"
                         Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
-                <StackPanel Grid.Column="13" Margin="8,0,0,0">
+                <StackPanel Grid.Column="12" Margin="8,0,0,0">
                     <Button
                         Command="{Binding ContinueDisplayedModelsCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
@@ -263,7 +254,7 @@
                         Text="全部继续"
                         Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
-                <StackPanel Grid.Column="14" Margin="8,0,0,0">
+                <StackPanel Grid.Column="13" Margin="8,0,0,0">
                     <Button
                         Command="{Binding PauseDisplayedModelsCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
@@ -277,7 +268,7 @@
                         Text="全部暂停"
                         Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
-                <StackPanel Grid.Column="15" Margin="8,0,0,0">
+                <StackPanel Grid.Column="14" Margin="8,0,0,0">
                     <Button
                         Command="{Binding CancelDisplayedModelsCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
@@ -291,7 +282,7 @@
                         Text="全部取消"
                         Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
-                <StackPanel Grid.Column="16" Margin="8,0,0,0">
+                <StackPanel Grid.Column="15" Margin="8,0,0,0">
                     <Button
                         Command="{Binding MainWindowTopmostCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
@@ -305,7 +296,7 @@
                         Text="置顶窗口"
                         Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
-                <StackPanel Grid.Column="17" Margin="8,0,0,0">
+                <StackPanel Grid.Column="16" Margin="8,0,0,0">
                     <Button
                         Command="{Binding OpenSettingsPanelCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
@@ -319,7 +310,7 @@
                         Text="设置"
                         Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
-                <StackPanel Grid.Column="18" Margin="8,0,0,0">
+                <StackPanel Grid.Column="17" Margin="8,0,0,0">
                     <Button
                         Command="{Binding OpenAboutWindowCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
