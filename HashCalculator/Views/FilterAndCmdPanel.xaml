@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:gif="https://github.com/XamlAnimatedGif/XamlAnimatedGif"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     x:Name="cmdPanel"
@@ -157,6 +158,16 @@
                             </Button.IsEnabled>
                             <Image Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnRefreshFiltersEnabledImgSrcCvt}}" />
                         </Button>
+                        <Image
+                            Width="32"
+                            Height="32"
+                            Margin="0,0,16,8"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom"
+                            gif:AnimationBehavior.RepeatBehavior="Forever"
+                            gif:AnimationBehavior.SourceUri="/Images/loading.gif"
+                            DockPanel.Dock="Right"
+                            Visibility="{Binding Source={x:Static local:Settings.Current}, Path=FilterOrCmderEnabled, Converter={StaticResource BooleanTrueToVisibilityHiddenCvt}}" />
                     </DockPanel>
                     <GroupBox
                         Margin="4,0,0,0"

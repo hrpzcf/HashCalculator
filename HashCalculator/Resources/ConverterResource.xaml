@@ -42,6 +42,7 @@
     <local:CloneParameterArrayCvt x:Key="CloneParameterArrayCvt" />
     <local:SelectSmallerDoubleCvt x:Key="SelectSmallerDoubleCvt" />
     <local:RadiusFromSideLengthCvt x:Key="RadiusFromSideLengthCvt" />
+    <local:BooleanTrueToVisibilityHiddenCvt x:Key="BooleanTrueToVisibilityHiddenCvt" />
     <local:BooleanFlaseToVisibilityCollapsedCvt x:Key="BooleanFlaseToVisibilityCollapsedCvt" />
     <local:EditSubmenusButtonEnabledCvt x:Key="EditSubmenusButtonEnabledCvt" />
 </ResourceDictionary>
