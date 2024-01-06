@@ -19,8 +19,7 @@ class ATL_NO_VTABLE COpenAsChecklist :
     public CComCoClass<COpenAsChecklist, &CLSID_OpenAsChecklist>,
     public IDispatchImpl<IOpenAsChecklist, &IID_IOpenAsChecklist, &LIBID_ShellExtensionsLib, /*wMajor =*/ 1, /*wMinor =*/ 0>,
     public IShellExtInit,
-    public IContextMenu
-{
+    public IContextMenu {
     LPSTR MenuJsonPath = nullptr;
     HINSTANCE hModule = nullptr;
     LPSTR checklistPath = nullptr;
@@ -42,8 +41,11 @@ public:
 
     DECLARE_PROTECT_FINAL_CONSTRUCT();
 
-    HRESULT FinalConstruct() { return S_OK; }
-    void FinalRelease() {  }
+    HRESULT FinalConstruct() {
+        return S_OK;
+    }
+    void FinalRelease() {
+    }
     STDMETHOD(Initialize)(PCIDLIST_ABSOLUTE, IDataObject*, HKEY);
     STDMETHOD(QueryContextMenu)(HMENU, UINT, UINT, UINT, UINT);
     STDMETHOD(InvokeCommand)(CMINVOKECOMMANDINFO*);

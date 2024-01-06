@@ -2,8 +2,7 @@
 #include <strsafe.h>
 #include <Windows.h>
 
-class ResString
-{
+class ResString {
     LPSTR resource_str = nullptr;
 public:
     LPSTR String() const {
@@ -16,8 +15,7 @@ public:
         if (0 == length) {
             this->resource_str = new CHAR[1];
         }
-        else
-        {
+        else {
             this->resource_str = new CHAR[length + 1];
             if (FAILED(StringCchCopyNA(this->resource_str, length + 1, message, length))) {
                 delete[] this->resource_str;

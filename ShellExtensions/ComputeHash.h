@@ -23,8 +23,7 @@ class ATL_NO_VTABLE CComputeHash :
     public CComCoClass<CComputeHash, &CLSID_ComputeHash>,
     public IDispatchImpl<IComputeHash, &IID_IComputeHash, &LIBID_ShellExtensionsLib, /*wMajor =*/ 1, /*wMinor =*/ 0>,
     public IShellExtInit,
-    public IContextMenu
-{
+    public IContextMenu {
     LPSTR MenuJsonPath = nullptr;
     HINSTANCE hModule = nullptr;
     HBITMAP hBitmapMenu = nullptr;
@@ -47,8 +46,11 @@ public:
 
     DECLARE_PROTECT_FINAL_CONSTRUCT();
 
-    HRESULT FinalConstruct() { return S_OK; }
-    VOID FinalRelease() { }
+    HRESULT FinalConstruct() {
+        return S_OK;
+    }
+    VOID FinalRelease() {
+    }
     STDMETHOD(Initialize)(PCIDLIST_ABSOLUTE, IDataObject*, HKEY);
     STDMETHOD(QueryContextMenu)(HMENU, UINT, UINT, UINT, UINT);
     STDMETHOD(InvokeCommand)(CMINVOKECOMMANDINFO*);

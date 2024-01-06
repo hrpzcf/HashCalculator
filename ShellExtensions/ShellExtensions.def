@@ -1,10 +1,8 @@
-﻿; ShellExtensions.def: 声明模块参数。
-
-LIBRARY
+﻿LIBRARY
 
 EXPORTS
 	DllCanUnloadNow		PRIVATE
 	DllGetClassObject	PRIVATE
+	DllInstall			PRIVATE
 	DllRegisterServer	PRIVATE
 	DllUnregisterServer	PRIVATE
-	DllInstall		PRIVATE

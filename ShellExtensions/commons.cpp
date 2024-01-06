@@ -32,8 +32,7 @@ BOOL GetHashCalculatorPath(LPSTR* buffer, LPDWORD bufsize) {
         LSTATUS status2 = RegGetValueA(keyAppPaths, HC_EXECUTABLE, NULL, RRF_RT_REG_SZ, &valueDataType, *buffer, bufsize);
         executionResult = ERROR_SUCCESS == status2 && REG_SZ == valueDataType;
     }
-    else
-    {
+    else {
         executionResult = ERROR_SUCCESS == status1 && REG_SZ == valueDataType;
     }
 FinalizeAndReturn:
@@ -56,19 +55,21 @@ static BOOL json_getPropValueByType(const json_t* parent, const char* propName, 
     if (NULL != parent && NULL != propName) {
         const json_t* propJson = json_getProperty(parent, propName);
         if (NULL != propJson && jsonType == json_getType(propJson)) {
-            switch (jsonType)
+            switch (jsonType) {
+            case JSON_BOOLEAN:
             {
-            case JSON_BOOLEAN: {
                 bool* boolAddr = (bool*)addr;
                 *boolAddr = json_getBoolean(propJson);
                 break;
             }
-            case JSON_INTEGER: {
+            case JSON_INTEGER:
+            {
                 int64_t* int64Addr = (int64_t*)addr;
                 *int64Addr = json_getInteger(propJson);
                 break;
             }
-            case JSON_TEXT: {
+            case JSON_TEXT:
+            {
                 const char** strAddr = (const char**)addr;
                 *strAddr = json_getValue(propJson);
                 break;

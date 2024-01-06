@@ -38,8 +38,7 @@ VOID COpenAsChecklist::CreateGUIProcessVerifyHash(LPCSTR algo) const {
     startup_info.cb = sizeof(startup_info);
     PROCESS_INFORMATION proc_info = { 0 };
     if (CreateProcessA(exePathBuffer, commandlineBuffer, NULL, NULL, FALSE, NORMAL_PRIORITY_CLASS, NULL,
-        NULL, &startup_info, &proc_info))
-    {
+        NULL, &startup_info, &proc_info)) {
         CloseHandle(proc_info.hThread);
         CloseHandle(proc_info.hProcess);
     }
@@ -54,8 +53,7 @@ COpenAsChecklist::COpenAsChecklist() {
         LR_DEFAULTSIZE | LR_SHARED);
     DWORD bufsize = MAX_PATH;
     LPSTR  modulePathBuffer = new CHAR[bufsize]();
-    while (true)
-    {
+    while (true) {
         GetModuleFileNameA(this->hModule, modulePathBuffer, bufsize);
         if (GetLastError() == ERROR_INSUFFICIENT_BUFFER) {
             delete[]  modulePathBuffer;
@@ -100,18 +98,15 @@ STDMETHODIMP COpenAsChecklist::Initialize(
         DVASPECT_CONTENT,
         -1,
         TYMED_HGLOBAL };
-    if (FAILED(pdtobj->GetData(&fmt, &stg)))
-    {
+    if (FAILED(pdtobj->GetData(&fmt, &stg))) {
         return E_INVALIDARG;
     }
     HDROP drop_handle = (HDROP)GlobalLock(stg.hGlobal);
-    if (nullptr == drop_handle)
-    {
+    if (nullptr == drop_handle) {
         ReleaseStgMedium(&stg);
         return E_INVALIDARG;
     }
-    if (1 != DragQueryFileW(drop_handle, INFINITE, nullptr, 0))
-    {
+    if (1 != DragQueryFileW(drop_handle, INFINITE, nullptr, 0)) {
         GlobalUnlock(stg.hGlobal);
         ReleaseStgMedium(&stg);
         return E_INVALIDARG;
@@ -137,8 +132,7 @@ STDMETHODIMP COpenAsChecklist::Initialize(
 
 STDMETHODIMP COpenAsChecklist::QueryContextMenu(
     HMENU hMenu, UINT indexMenu, UINT idCmdFirst, UINT idCmdLast, UINT uFlags) {
-    if (uFlags & CMF_DEFAULTONLY)
-    {
+    if (uFlags & CMF_DEFAULTONLY) {
         return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, 0);
     }
     UINT idCmdCurrent = 0;
@@ -150,13 +144,11 @@ STDMETHODIMP COpenAsChecklist::QueryContextMenu(
 }
 
 STDMETHODIMP COpenAsChecklist::InvokeCommand(CMINVOKECOMMANDINFO* pici) {
-    if (0 != HIWORD(pici->lpVerb))
-    {
+    if (0 != HIWORD(pici->lpVerb)) {
         return E_INVALIDARG;
     }
     map<UINT, CHAR*>::iterator iter = mCmdDict.find(LOWORD(pici->lpVerb));
-    if (iter == mCmdDict.end())
-    {
+    if (iter == mCmdDict.end()) {
         return E_INVALIDARG;
     }
     this->CreateGUIProcessVerifyHash(iter->second);

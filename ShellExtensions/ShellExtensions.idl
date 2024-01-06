@@ -1,7 +1,4 @@
-﻿// ShellExtensions.idl: ShellExtensions 的 IDL 源
-//
-
-// 此文件将由 MIDL 工具处理以
+﻿// 此文件将由 MIDL 工具处理以
 // 生成类型库(ShellExtensions.tlb)和封送处理代码。
 
 import "oaidl.idl";
@@ -14,8 +11,7 @@ import "ocidl.idl";
         nonextensible,
         pointer_default(unique)
 ]
-interface IComputeHash : IDispatch
-{
+interface IComputeHash : IDispatch {
 };
 [
     object,
@@ -24,8 +20,7 @@ interface IComputeHash : IDispatch
         nonextensible,
         pointer_default(unique)
 ]
-interface IOpenAsChecklist : IDispatch
-{
+interface IOpenAsChecklist : IDispatch {
 };
 [
     uuid(18d6b7f2-f466-481f-adfc-849b5f9fbd0b),
@@ -37,15 +32,13 @@ library ShellExtensionsLib
     [
         uuid(de95cac8-90d1-4c55-b81d-d7f6d527606c)
     ]
-        coclass ComputeHash
-    {
+        coclass ComputeHash {
         [default] interface IComputeHash;
     };
     [
         uuid(50b22df9-3ff8-428e-900f-f6ee89f1a18b)
     ]
-        coclass OpenAsChecklist
-    {
+        coclass OpenAsChecklist {
         [default] interface IOpenAsChecklist;
     };
 };
