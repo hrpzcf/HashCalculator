@@ -141,7 +141,7 @@ namespace HashCalculator
                 }
                 else
                 {
-                    MessageBox.Show(ShellMenuEditor.This, "没有选择任何菜单项！", "提示", MessageBoxButton.OK,
+                    MessageBox.Show(ShellSubmenuEditor.This, "没有选择任何菜单项！", "提示", MessageBoxButton.OK,
                         MessageBoxImage.Information);
                 }
             }
