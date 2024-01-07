@@ -5,12 +5,12 @@ using System.Text;
 
 namespace HashCalculator
 {
-    internal class MappedReader : IDisposable
+    internal class MmvsReader : IDisposable
     {
         private readonly Stream _stream;
         private readonly long _prevPosition;
 
-        public MappedReader(Stream stream)
+        public MmvsReader(Stream stream)
         {
             if (stream == null)
             {

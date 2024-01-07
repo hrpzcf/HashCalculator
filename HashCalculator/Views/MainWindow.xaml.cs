@@ -51,7 +51,7 @@ namespace HashCalculator
             // 3. 然后在其他进程实例内启动 ComputeCrossProcessFilesMonitor 保证其他进程能监控第三方进程的参数推送。
             // 如果是其他进程实例内的 ProcessIdMonitorProc 方法内的 PIdSynchronizer.Wait 抢到了锁，
             // 则直接进入步骤 3，本进程实例 ProcessIdMonitorProc 方法内的 PIdSynchronizer.Wait 抢不到锁不会往下执行。
-            MappedFiler.PIdSynchronizer.Set();
+            Initializer.PIdSynchronizer.Set();
         }
 
         private void MainWindowLoaded(object sender, RoutedEventArgs e)
@@ -100,7 +100,7 @@ namespace HashCalculator
             if (this.hwndSourceHookAdded && WndHandle != IntPtr.Zero &&
                 !this.listenerAdded)
             {
-                this.listenerAdded = NativeFunctions.AddClipboardFormatListener(WndHandle);
+                this.listenerAdded = USER32.AddClipboardFormatListener(WndHandle);
             }
         }
 
@@ -108,7 +108,7 @@ namespace HashCalculator
         {
             if (this.listenerAdded && WndHandle != IntPtr.Zero)
             {
-                NativeFunctions.RemoveClipboardFormatListener(WndHandle);
+                USER32.RemoveClipboardFormatListener(WndHandle);
                 this.listenerAdded = false;
             }
         }
@@ -205,12 +205,12 @@ namespace HashCalculator
         /// </summary>
         private void ComputeCrossProcessFilesMonitor()
         {
-            MappedFiler.ExistingProcessId = ProcessId;
+            Initializer.ExistingProcessId = ProcessId;
             while (true)
             {
-                MappedFiler.Synchronizer.Wait();
+                Initializer.Synchronizer.Wait();
                 // ToArray 能避免 GetArgs 方法在 ParseArguments 内被执行多次
-                string[] args = MappedFiler.GetArgs().ToArray();
+                string[] args = Initializer.GetArgs().ToArray();
                 this.InternalParseArguments(args);
             }
         }
@@ -219,10 +219,10 @@ namespace HashCalculator
         {
             while (true)
             {
-                MappedFiler.PIdSynchronizer.Wait();
+                Initializer.PIdSynchronizer.Wait();
                 if (!this.ProcIdMonitorFlag)
                 {
-                    MappedFiler.PIdSynchronizer.Set();
+                    Initializer.PIdSynchronizer.Set();
                     break;
                 }
                 Thread thread = new Thread(this.ComputeCrossProcessFilesMonitor);

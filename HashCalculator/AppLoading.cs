@@ -38,7 +38,7 @@ namespace HashCalculator
 
         private static void ApplicationExit(object sender, ExitEventArgs e)
         {
-            Settings.Current.RunInMultiInstMode = MappedFiler.RunMultiMode;
+            Settings.Current.RunInMultiInstMode = Initializer.RunMultiMode;
             Settings.SaveSettings();
         }
 
@@ -46,7 +46,7 @@ namespace HashCalculator
         {
             Settings.LoadSettings();
             Settings.ExtractEmbeddedAlgoDlls(false);
-            MappedFiler.PushArgs(Settings.StartupArgs);
+            Initializer.PushArgs(Settings.StartupArgs);
         }
 
         private static Assembly AssemblyResolve(object sender, ResolveEventArgs arg)

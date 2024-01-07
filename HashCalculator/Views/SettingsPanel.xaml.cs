@@ -14,7 +14,7 @@ namespace HashCalculator
         {
             this.viewModel = Settings.Current;
             this.DataContext = Settings.Current;
-            Settings.Current.RunInMultiInstMode = MappedFiler.RunMultiMode;
+            Settings.Current.RunInMultiInstMode = Initializer.RunMultiMode;
             this.InitializeComponent();
             This = this;
         }

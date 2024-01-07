@@ -373,7 +373,7 @@ namespace HashCalculator
             }
             else if (e.PropertyName == nameof(Settings.Current.RunInMultiInstMode))
             {
-                MappedFiler.RunMultiMode = Settings.Current.RunInMultiInstMode;
+                Initializer.RunMultiMode = Settings.Current.RunInMultiInstMode;
             }
         }
 
@@ -642,11 +642,9 @@ namespace HashCalculator
                     {
                         continue;
                     }
-                    NativeFunctions.ShellExecuteW(
-                        MainWindow.WndHandle, "open",
+                    SHELL32.ShellExecuteW(MainWindow.WndHandle, "open",
                         model.FileInfo.FullName, null,
-                        Path.GetDirectoryName(model.FileInfo.FullName),
-                        ShowCmd.SW_SHOWNORMAL);
+                        Path.GetDirectoryName(model.FileInfo.FullName), ShowCmd.SW_SHOWNORMAL);
                 }
             }
         }
@@ -671,19 +669,18 @@ namespace HashCalculator
                 for (int i = 0; i < count; ++i)
                 {
                     HashViewModel model = (HashViewModel)selectedModels[i];
-                    if (!File.Exists(model.FileInfo.FullName))
+                    if (File.Exists(model.FileInfo.FullName))
                     {
-                        continue;
+                        var shellExecuteInfo = new SHELLEXECUTEINFOW();
+                        shellExecuteInfo.cbSize = Marshal.SizeOf(shellExecuteInfo);
+                        shellExecuteInfo.fMask = SEMaskFlags.SEE_MASK_INVOKEIDLIST;
+                        shellExecuteInfo.hwnd = MainWindow.WndHandle;
+                        shellExecuteInfo.lpVerb = "properties";
+                        shellExecuteInfo.lpFile = model.FileInfo.FullName;
+                        shellExecuteInfo.lpDirectory = model.FileInfo.DirectoryName;
+                        shellExecuteInfo.nShow = ShowCmd.SW_SHOWNORMAL;
+                        SHELL32.ShellExecuteExW(ref shellExecuteInfo);
                     }
-                    var shellExecuteInfo = new SHELLEXECUTEINFOW();
-                    shellExecuteInfo.cbSize = Marshal.SizeOf(shellExecuteInfo);
-                    shellExecuteInfo.fMask = SEMaskFlags.SEE_MASK_INVOKEIDLIST;
-                    shellExecuteInfo.hwnd = MainWindow.WndHandle;
-                    shellExecuteInfo.lpVerb = "properties";
-                    shellExecuteInfo.lpFile = model.FileInfo.FullName;
-                    shellExecuteInfo.lpDirectory = model.FileInfo.DirectoryName;
-                    shellExecuteInfo.nShow = ShowCmd.SW_SHOWNORMAL;
-                    NativeFunctions.ShellExecuteExW(ref shellExecuteInfo);
                 }
             }
         }

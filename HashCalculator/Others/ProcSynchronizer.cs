@@ -50,7 +50,7 @@ namespace HashCalculator
 
         ~ProcSynchronizer()
         {
-            NativeFunctions.CloseHandle(this._eventHandle);
+            KERNEL32.CloseHandle(this._eventHandle);
         }
 
         public bool Wait(int milliseconds = INFINITE)

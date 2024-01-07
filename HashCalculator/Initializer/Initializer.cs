@@ -5,9 +5,9 @@ using System.Windows;
 
 namespace HashCalculator
 {
-    internal static class MappedFiler
+    internal static class Initializer
     {
-        static MappedFiler()
+        static Initializer()
         {
             try
             {
@@ -38,7 +38,7 @@ namespace HashCalculator
         public static IEnumerable<string> GetArgs()
         {
             using (MemoryMappedViewStream mmvs = MappedFile.CreateViewStream())
-            using (MappedReader reader = new MappedReader(mmvs))
+            using (MmvsReader reader = new MmvsReader(mmvs))
             {
                 foreach (string line in reader.ReadLines())
                 {
@@ -88,7 +88,7 @@ namespace HashCalculator
         private static void InternalPushArgs(string[] args)
         {
             using (MemoryMappedViewStream mmvs = MappedFile.CreateViewStream())
-            using (MappedWriter writer = new MappedWriter(mmvs))
+            using (MmvsWriter writer = new MmvsWriter(mmvs))
             {
                 writer.WriteLines(args);
             }
@@ -99,7 +99,7 @@ namespace HashCalculator
             get
             {
                 using (MemoryMappedViewStream mmvs = MappedFile.CreateViewStream())
-                using (MappedReader reader = new MappedReader(mmvs))
+                using (MmvsReader reader = new MmvsReader(mmvs))
                 {
                     return reader.ReadProcessId();
                 }
@@ -107,7 +107,7 @@ namespace HashCalculator
             set
             {
                 using (MemoryMappedViewStream mmvs = MappedFile.CreateViewStream())
-                using (MappedWriter writer = new MappedWriter(mmvs))
+                using (MmvsWriter writer = new MmvsWriter(mmvs))
                 {
                     writer.WriteProcessId(value);
                 }
@@ -119,7 +119,7 @@ namespace HashCalculator
             get
             {
                 using (MemoryMappedViewStream mmvs = MappedFile.CreateViewStream())
-                using (MappedReader reader = new MappedReader(mmvs))
+                using (MmvsReader reader = new MmvsReader(mmvs))
                 {
                     return reader.ReadRunMulti();
                 }
@@ -127,7 +127,7 @@ namespace HashCalculator
             set
             {
                 using (MemoryMappedViewStream mmvs = MappedFile.CreateViewStream())
-                using (MappedWriter writer = new MappedWriter(mmvs))
+                using (MmvsWriter writer = new MmvsWriter(mmvs))
                 {
                     writer.WriteRunMulti(value);
                 }

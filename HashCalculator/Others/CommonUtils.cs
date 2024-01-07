@@ -53,13 +53,13 @@ namespace HashCalculator
                 return false;
             }
             path = path.Replace("/", "\\");
-            NativeFunctions.SHParseDisplayName(
+            SHELL32.SHParseDisplayName(
                 path, IntPtr.Zero, out IntPtr nativePath, 0U, out _);
             if (nativePath == IntPtr.Zero)
             {
                 return false;
             }
-            int intResult = NativeFunctions.SHOpenFolderAndSelectItems(nativePath, 0U, null, 0U);
+            int intResult = SHELL32.SHOpenFolderAndSelectItems(nativePath, 0U, null, 0U);
             Marshal.FreeCoTaskMem(nativePath);
             return 0 == intResult;
         }
@@ -73,7 +73,7 @@ namespace HashCalculator
                 return false;
             }
             folderPath = folderPath.Replace("/", "\\");
-            NativeFunctions.SHParseDisplayName(
+            SHELL32.SHParseDisplayName(
                 folderPath, IntPtr.Zero, out IntPtr folderID, 0U, out _);
             if (folderID == IntPtr.Zero)
             {
@@ -81,7 +81,7 @@ namespace HashCalculator
             }
             if (files == null || !files.Any())
             {
-                int intResult1 = NativeFunctions.SHOpenFolderAndSelectItems(folderID, 0U, null, 0U);
+                int intResult1 = SHELL32.SHOpenFolderAndSelectItems(folderID, 0U, null, 0U);
                 Marshal.FreeCoTaskMem(folderID);
                 return 0 == intResult1;
             }
@@ -93,7 +93,7 @@ namespace HashCalculator
                 {
                     continue;
                 }
-                NativeFunctions.SHParseDisplayName(
+                SHELL32.SHParseDisplayName(
                     fileFullPath, IntPtr.Zero, out IntPtr fileID, 0U, out _);
                 if (fileID != null)
                 {
@@ -103,7 +103,7 @@ namespace HashCalculator
             int intResult2 = 0;
             if (fileIDList.Any())
             {
-                intResult2 = NativeFunctions.SHOpenFolderAndSelectItems(folderID, (uint)fileIDList.Count,
+                intResult2 = SHELL32.SHOpenFolderAndSelectItems(folderID, (uint)fileIDList.Count,
                    fileIDList.ToArray(), 0U);
             }
             Marshal.FreeCoTaskMem(folderID);
@@ -212,7 +212,7 @@ namespace HashCalculator
                 flags |= FILEOP_FLAGS.FOF_SILENT;
                 flags |= FILEOP_FLAGS.FOF_NOCONFIRMATION;
             }
-            int result;
+            int operationResult;
             if (IntPtr.Size == 4)
             {
                 SHFILEOPSTRUCTW32 data = new SHFILEOPSTRUCTW32
@@ -222,7 +222,7 @@ namespace HashCalculator
                     pFrom = path + '\0',
                     fFlags = (ushort)flags,
                 };
-                result = NativeFunctions.SHFileOperationW32(ref data);
+                operationResult = SHELL32.SHFileOperationW32(ref data);
             }
             else
             {
@@ -233,9 +233,9 @@ namespace HashCalculator
                     pFrom = path + '\0',
                     fFlags = (ushort)flags,
                 };
-                result = NativeFunctions.SHFileOperationW64(ref data);
+                operationResult = SHELL32.SHFileOperationW64(ref data);
             }
-            return result == 0;
+            return operationResult == 0;
         }
 
         public static bool IsPointToSameFile(string filePath1, string filePath2, out bool isSameFile)
@@ -249,20 +249,22 @@ namespace HashCalculator
             {
                 goto FinalizeAndReturnResult;
             }
-            fileHandle1 = NativeFunctions.CreateFileW(filePath1, 0U, FileShare.Read | FileShare.Write | FileShare.Delete,
-               IntPtr.Zero, FileMode.Open, FileAttributes.Normal | FileAttributes.ReparsePoint, IntPtr.Zero);
+            fileHandle1 = KERNEL32.CreateFileW(filePath1, 0U,
+                FileShare.Read | FileShare.Write | FileShare.Delete, IntPtr.Zero, FileMode.Open,
+                FileAttributes.Normal | FileAttributes.ReparsePoint, IntPtr.Zero);
             if (fileHandle1.ToInt32() == INVALID_HANDLE_VALUE)
             {
                 goto FinalizeAndReturnResult;
             }
-            fileHandle2 = NativeFunctions.CreateFileW(filePath2, 0U, FileShare.Read | FileShare.Write | FileShare.Delete,
-               IntPtr.Zero, FileMode.Open, FileAttributes.Normal | FileAttributes.ReparsePoint, IntPtr.Zero);
+            fileHandle2 = KERNEL32.CreateFileW(filePath2, 0U,
+                FileShare.Read | FileShare.Write | FileShare.Delete, IntPtr.Zero, FileMode.Open,
+                FileAttributes.Normal | FileAttributes.ReparsePoint, IntPtr.Zero);
             if (fileHandle2.ToInt32() == INVALID_HANDLE_VALUE)
             {
                 goto FinalizeAndReturnResult;
             }
-            if (!NativeFunctions.GetFileInformationByHandle(fileHandle1, out BY_HANDLE_FILE_INFORMATION fileInfo1) ||
-                !NativeFunctions.GetFileInformationByHandle(fileHandle2, out BY_HANDLE_FILE_INFORMATION fileInfo2))
+            if (!KERNEL32.GetFileInformationByHandle(fileHandle1, out BY_HANDLE_FILE_INFORMATION fileInfo1) ||
+                !KERNEL32.GetFileInformationByHandle(fileHandle2, out BY_HANDLE_FILE_INFORMATION fileInfo2))
             {
                 goto FinalizeAndReturnResult;
             }
@@ -272,11 +274,11 @@ namespace HashCalculator
         FinalizeAndReturnResult:
             if (fileHandle1.ToInt32() != INVALID_HANDLE_VALUE)
             {
-                NativeFunctions.CloseHandle(fileHandle1);
+                KERNEL32.CloseHandle(fileHandle1);
             }
             if (fileHandle2.ToInt32() != INVALID_HANDLE_VALUE)
             {
-                NativeFunctions.CloseHandle(fileHandle2);
+                KERNEL32.CloseHandle(fileHandle2);
             }
             return executeResult;
         }
@@ -356,7 +358,7 @@ namespace HashCalculator
             double MAX_HLS = 240.0;
             foreach (double H in new CyclingDouble(0.0, MAX_HLS, number))
             {
-                colors.Add(RgbDwordToColor(NativeFunctions.ColorHLSToRGB((int)H, 200, 230)));
+                colors.Add(RgbDwordToColor(SHLWAPI.ColorHLSToRGB((int)H, 200, 230)));
             }
             return colors.ToArray();
         }
@@ -374,18 +376,18 @@ namespace HashCalculator
             }
             if (handle != IntPtr.Zero)
             {
-                if (NativeFunctions.IsIconic(handle))
+                if (USER32.IsIconic(handle))
                 {
-                    return NativeFunctions.ShowWindow(handle, SW.SW_RESTORE);
+                    return USER32.ShowWindow(handle, SW.SW_RESTORE);
                 }
-                else if (NativeFunctions.IsWindowVisible(handle))
+                else if (USER32.IsWindowVisible(handle))
                 {
-                    bool executionResult = NativeFunctions.ShowWindow(handle, SW.SW_SHOW);
-                    if ((NativeFunctions.GetWindowLongPtrW(handle, GWL.GWL_EXSTYLE) & WS.WS_EX_TOPMOST) != WS.WS_EX_TOPMOST)
+                    bool executionResult = USER32.ShowWindow(handle, SW.SW_SHOW);
+                    if ((USER32.GetWindowLongPtrW(handle, GWL.GWL_EXSTYLE) & WS.WS_EX_TOPMOST) != WS.WS_EX_TOPMOST)
                     {
                         uint uFlags = SWP.SWP_NOMOVE | SWP.SWP_NOSIZE;
-                        NativeFunctions.SetWindowPos(handle, SWP.HWND_TOPMOST, 0, 0, 0, 0, uFlags);
-                        NativeFunctions.SetWindowPos(handle, SWP.HWND_NOTOPMOST, 0, 0, 0, 0, uFlags);
+                        USER32.SetWindowPos(handle, SWP.HWND_TOPMOST, 0, 0, 0, 0, uFlags);
+                        USER32.SetWindowPos(handle, SWP.HWND_NOTOPMOST, 0, 0, 0, 0, uFlags);
                     }
                     return executionResult;
                 }
@@ -403,7 +405,7 @@ namespace HashCalculator
             string reasonForFailure = text != null ? null : "要复制的内容为空";
             if (reasonForFailure == null)
             {
-                reasonForFailure = NativeFunctions.OpenClipboard(MainWindow.WndHandle) ?
+                reasonForFailure = USER32.OpenClipboard(MainWindow.WndHandle) ?
                     null : "打开剪贴板失败，剪贴板可能正被其他程序占用";
                 if (reasonForFailure == null)
                 {
@@ -418,11 +420,11 @@ namespace HashCalculator
                     }
                     if (reasonForFailure == null)
                     {
-                        reasonForFailure = hMem != IntPtr.Zero && NativeFunctions.EmptyClipboard() ?
+                        reasonForFailure = hMem != IntPtr.Zero && USER32.EmptyClipboard() ?
                             null : "无法为内容分配内存或无法取得剪贴板所有权";
                         if (reasonForFailure == null)
                         {
-                            reasonForFailure = NativeFunctions.SetClipboardData(CF.CF_UNICODETEXT, hMem) == hMem ?
+                            reasonForFailure = USER32.SetClipboardData(CF.CF_UNICODETEXT, hMem) == hMem ?
                                 null : "无法将内容更新到剪贴板上";
                             if (reasonForFailure == null)
                             {
@@ -430,7 +432,7 @@ namespace HashCalculator
                             }
                         }
                     }
-                    NativeFunctions.CloseClipboard();
+                    USER32.CloseClipboard();
                 }
             }
             if (!string.IsNullOrEmpty(reasonForFailure))
@@ -448,13 +450,13 @@ namespace HashCalculator
 
         public static bool ClipboardGetText(Window owner, out string text)
         {
-            if (NativeFunctions.OpenClipboard(MainWindow.WndHandle))
+            if (USER32.OpenClipboard(MainWindow.WndHandle))
             {
                 try
                 {
-                    if (NativeFunctions.IsClipboardFormatAvailable(CF.CF_UNICODETEXT))
+                    if (USER32.IsClipboardFormatAvailable(CF.CF_UNICODETEXT))
                     {
-                        IntPtr hMem = NativeFunctions.GetClipboardData(CF.CF_UNICODETEXT);
+                        IntPtr hMem = USER32.GetClipboardData(CF.CF_UNICODETEXT);
                         if (hMem != IntPtr.Zero)
                         {
                             text = Marshal.PtrToStringUni(hMem);
@@ -464,12 +466,12 @@ namespace HashCalculator
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show(owner ?? MainWindow.This, $"错误详情：{e.Message}", "读取剪贴板失败", MessageBoxButton.OK,
-                        MessageBoxImage.Error);
+                    MessageBox.Show(owner ?? MainWindow.This,
+                        $"错误详情：{e.Message}", "读取剪贴板失败", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 finally
                 {
-                    NativeFunctions.CloseClipboard();
+                    USER32.CloseClipboard();
                 }
             }
             text = default(string);

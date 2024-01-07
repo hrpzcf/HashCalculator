@@ -110,13 +110,14 @@ namespace HashCalculator
             {
                 goto FinalizeAndReturnResult;
             }
-            fileHandle = NativeFunctions.CreateFileW(filePath, 0U, FileShare.Read | FileShare.Write | FileShare.Delete,
-               IntPtr.Zero, FileMode.Open, FileAttributes.Normal | FileAttributes.ReparsePoint, IntPtr.Zero);
+            fileHandle = KERNEL32.CreateFileW(filePath, 0U,
+                FileShare.Read | FileShare.Write | FileShare.Delete, IntPtr.Zero, FileMode.Open,
+                FileAttributes.Normal | FileAttributes.ReparsePoint, IntPtr.Zero);
             if (fileHandle.ToInt32() == INVALID_HANDLE_VALUE)
             {
                 goto FinalizeAndReturnResult;
             }
-            if (!NativeFunctions.GetFileInformationByHandle(fileHandle, out BY_HANDLE_FILE_INFORMATION fileInfo))
+            if (!KERNEL32.GetFileInformationByHandle(fileHandle, out BY_HANDLE_FILE_INFORMATION fileInfo))
             {
                 goto FinalizeAndReturnResult;
             }
@@ -124,7 +125,7 @@ namespace HashCalculator
         FinalizeAndReturnResult:
             if (fileHandle.ToInt32() != INVALID_HANDLE_VALUE)
             {
-                NativeFunctions.CloseHandle(fileHandle);
+                KERNEL32.CloseHandle(fileHandle);
             }
             return fileIndex;
         }

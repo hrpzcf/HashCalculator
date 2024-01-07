@@ -4,12 +4,12 @@ using System.Text;
 
 namespace HashCalculator
 {
-    internal class MappedWriter : IDisposable
+    internal class MmvsWriter : IDisposable
     {
         private readonly Stream _stream;
         private readonly long _prevPosition;
 
-        public MappedWriter(Stream stream)
+        public MmvsWriter(Stream stream)
         {
             if (stream == null)
             {

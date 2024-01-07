@@ -111,8 +111,8 @@ namespace HashCalculator
                         {
                             return exception;
                         }
-                        NativeFunctions.SHChangeNotify(
-                            HChangeNotifyEventID.SHCNE_ASSOCCHANGED, HChangeNotifyFlags.SHCNF_IDLIST, IntPtr.Zero, IntPtr.Zero);
+                        SHELL32.SHChangeNotify(HChangeNotifyEventID.SHCNE_ASSOCCHANGED, HChangeNotifyFlags.SHCNF_IDLIST,
+                            IntPtr.Zero, IntPtr.Zero);
                         return await RegUpdateAppPathAsync();
                     }
                     else
@@ -151,8 +151,8 @@ namespace HashCalculator
                         }
                         catch { }
                     }
-                    NativeFunctions.SHChangeNotify(
-                        HChangeNotifyEventID.SHCNE_ASSOCCHANGED, HChangeNotifyFlags.SHCNF_IDLIST, IntPtr.Zero, IntPtr.Zero);
+                    SHELL32.SHChangeNotify(HChangeNotifyEventID.SHCNE_ASSOCCHANGED, HChangeNotifyFlags.SHCNF_IDLIST,
+                        IntPtr.Zero, IntPtr.Zero);
                     return await RegDeleteAppPathAsync();
                 }
                 else
