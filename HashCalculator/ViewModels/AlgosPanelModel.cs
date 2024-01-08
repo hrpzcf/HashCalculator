@@ -9,11 +9,8 @@ namespace HashCalculator
     {
         private RelayCommand checkBoxChangedCmd;
         private RelayCommand clearAllSelectedCmd;
-
-        private AlgoGroupModel _selectedGroup = GroupOthers;
-
-        public static AlgoGroupModel GroupOthers { get; } = new AlgoGroupModel(
-            "OTHERS",
+        private static readonly AlgoGroupModel _groupOthers = new AlgoGroupModel(
+            "其他算法",
             new AlgoInOutModel[]
             {
                 // XxHash
@@ -39,20 +36,19 @@ namespace HashCalculator
                 new AlgoInOutModel(new LibRHashHas160()),
                 // RipeMD160
                 new AlgoInOutModel(new LibRHashRipeMD160()),
+                // SHA1
+                new AlgoInOutModel(new NetCryptoCngSHA1()),
             });
-
-        public static AlgoGroupModel GroupSHA2 { get; } = new AlgoGroupModel(
-            "SHA1/2",
+        private static readonly AlgoGroupModel _groupSHA2 = new AlgoGroupModel(
+            "SHA2",
             new AlgoInOutModel[]
             {
-                new AlgoInOutModel(new NetCryptoCngSHA1()), // SHA1
                 new AlgoInOutModel(new LibRHashSHA224()),
                 new AlgoInOutModel(new NetCryptoCngSHA256()),
                 new AlgoInOutModel(new NetCryptoCngSHA384()),
                 new AlgoInOutModel(new NetCryptoCngSHA512()),
             });
-
-        public static AlgoGroupModel GroupSHA3 { get; } = new AlgoGroupModel(
+        private static readonly AlgoGroupModel _groupSHA3 = new AlgoGroupModel(
             "SHA3",
             new AlgoInOutModel[]
             {
@@ -61,8 +57,7 @@ namespace HashCalculator
                 new AlgoInOutModel(new ExtendedKcpSHA3(384)),
                 new AlgoInOutModel(new ExtendedKcpSHA3(512)),
             });
-
-        public static AlgoGroupModel GroupBlake2b { get; } = new AlgoGroupModel(
+        private static readonly AlgoGroupModel _groupBLAKE2b = new AlgoGroupModel(
             "BLAKE2B",
             new AlgoInOutModel[]
             {
@@ -71,8 +66,7 @@ namespace HashCalculator
                 new AlgoInOutModel(new OfficialImplBlake2b(384)),
                 new AlgoInOutModel(new OfficialImplBlake2b(512)),
             });
-
-        public static AlgoGroupModel GroupBlake2bp { get; } = new AlgoGroupModel(
+        private static readonly AlgoGroupModel _groupBLAKE2bp = new AlgoGroupModel(
             "BLAKE2BP",
             new AlgoInOutModel[]
             {
@@ -81,24 +75,21 @@ namespace HashCalculator
                 new AlgoInOutModel(new OfficialImplBlake2bp(384)),
                 new AlgoInOutModel(new OfficialImplBlake2bp(512)),
             });
-
-        public static AlgoGroupModel GroupBlake2s { get; } = new AlgoGroupModel(
+        private static readonly AlgoGroupModel _groupBLAKE2s = new AlgoGroupModel(
             "BLAKE2S",
             new AlgoInOutModel[]
             {
                 new AlgoInOutModel(new OfficialImplBlake2s(224)),
                 new AlgoInOutModel(new OfficialImplBlake2s(256)),
             });
-
-        public static AlgoGroupModel GroupBlake2sp { get; } = new AlgoGroupModel(
+        private static readonly AlgoGroupModel _groupBLAKE2sp = new AlgoGroupModel(
             "BLAKE2SP",
             new AlgoInOutModel[]
             {
                 new AlgoInOutModel(new OfficialImplBlake2sp(224)),
                 new AlgoInOutModel(new OfficialImplBlake2sp(256)),
             });
-
-        public static AlgoGroupModel GroupBlake3 { get; } = new AlgoGroupModel(
+        private static readonly AlgoGroupModel _groupBLAKE3 = new AlgoGroupModel(
             "BLAKE3",
             new AlgoInOutModel[]
             {
@@ -107,38 +98,37 @@ namespace HashCalculator
                 new AlgoInOutModel(new OfficialImplBlake3(384)),
                 new AlgoInOutModel(new OfficialImplBlake3(512)),
             });
-
-        public static AlgoGroupModel GroupStreebog { get; } = new AlgoGroupModel(
+        private static readonly AlgoGroupModel _groupStreebog = new AlgoGroupModel(
             "STREEBOG",
             new AlgoInOutModel[]
             {
                 new AlgoInOutModel(new Gost34112012Streebog(256)),
                 new AlgoInOutModel(new Gost34112012Streebog(512)),
             });
+        private readonly static AlgoGroupModel _groupAllAlgos = new AlgoGroupModel(
+            "总览视图",
+            _groupOthers.ConcatItems(
+                _groupSHA2, _groupSHA3, _groupBLAKE2b,
+                _groupBLAKE2bp, _groupBLAKE2s, _groupBLAKE2sp,
+                _groupBLAKE3, _groupStreebog
+            ).ToArray());
+        private AlgoGroupModel _selectedAlgoGroup = _groupOthers;
 
-        public static AlgoGroupModel[] AlgoGroups { get; } =
-            new AlgoGroupModel[]
+        public static AlgoGroupModel[] AlgoGroups { get; } = new AlgoGroupModel[]
             {
-                GroupOthers,
-                GroupSHA2,
-                GroupSHA3,
-                GroupBlake2b,
-                GroupBlake2bp,
-                GroupBlake2s,
-                GroupBlake2sp,
-                GroupBlake3,
-                GroupStreebog,
+                _groupOthers,
+                _groupSHA2,
+                _groupSHA3,
+                _groupBLAKE2b,
+                _groupBLAKE2bp,
+                _groupBLAKE2s,
+                _groupBLAKE2sp,
+                _groupBLAKE3,
+                _groupStreebog,
+                _groupAllAlgos,
             };
 
-        public static AlgoInOutModel[] ProvidedAlgos { get; } = GroupOthers.Items
-            .Concat(GroupSHA2.Items)
-            .Concat(GroupSHA3.Items)
-            .Concat(GroupBlake2b.Items)
-            .Concat(GroupBlake2bp.Items)
-            .Concat(GroupBlake2s.Items)
-            .Concat(GroupBlake2sp.Items)
-            .Concat(GroupBlake3.Items)
-            .Concat(GroupStreebog.Items).ToArray();
+        public static AlgoInOutModel[] ProvidedAlgos { get => _groupAllAlgos.Items; }
 
         public static AlgoInOutModel[] FromAlgoName(string name)
         {
@@ -279,11 +269,11 @@ namespace HashCalculator
         {
             get
             {
-                return this._selectedGroup;
+                return this._selectedAlgoGroup;
             }
             set
             {
-                this.SetPropNotify(ref this._selectedGroup, value);
+                this.SetPropNotify(ref this._selectedAlgoGroup, value);
             }
         }
 

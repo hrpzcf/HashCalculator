@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace HashCalculator
@@ -30,6 +31,24 @@ namespace HashCalculator
             set
             {
                 this.SetPropNotify(ref this._selectedAlgoCount, value);
+            }
+        }
+
+        public IEnumerable<AlgoInOutModel> ConcatItems(params AlgoGroupModel[] groups)
+        {
+            foreach (AlgoInOutModel model in this.Items)
+            {
+                yield return model;
+            }
+            if (groups != null)
+            {
+                foreach (AlgoGroupModel group in groups)
+                {
+                    foreach (AlgoInOutModel model in group.Items)
+                    {
+                        yield return model;
+                    }
+                }
             }
         }
 

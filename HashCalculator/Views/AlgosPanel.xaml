@@ -34,14 +34,14 @@
         </Grid.ColumnDefinitions>
         <GroupBox
             Grid.Row="0"
-            Grid.ColumnSpan="3"
+            Grid.ColumnSpan="2"
             Padding="0,4,0,0"
             Foreground="#FF006FD6"
             Header="对每个文件使用以下已勾选算法计算其哈希值：">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="3*" />
-                    <ColumnDefinition Width="5*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <ListBox
                     Grid.Column="0"
@@ -58,13 +58,15 @@
                         <DataTemplate>
                             <Grid Margin="2">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" SharedSizeGroup="name" />
-                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="algGroupCol" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="{Binding GroupName}" />
                                 <TextBlock
-                                    Grid.Column="2"
+                                    Grid.Column="0"
+                                    Margin="0,0,24,0"
+                                    Text="{Binding GroupName}" />
+                                <TextBlock
+                                    Grid.Column="1"
                                     Foreground="Gray"
                                     Text="{Binding SelectedAlgoCount, StringFormat=已选：{0}}" />
                             </Grid>
@@ -99,7 +101,7 @@
         </GroupBox>
         <TextBlock
             Grid.Row="1"
-            Grid.ColumnSpan="3"
+            Grid.ColumnSpan="2"
             Margin="0,4,0,0"
             Padding="1"
             HorizontalAlignment="Center"
@@ -108,7 +110,7 @@
             Text="如果没有选择任何算法，则默认使用第一个算法" />
         <TextBlock
             Grid.Row="2"
-            Grid.ColumnSpan="3"
+            Grid.ColumnSpan="2"
             Margin="0,0,0,4"
             Padding="1"
             HorizontalAlignment="Center"
