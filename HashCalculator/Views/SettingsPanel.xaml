@@ -523,6 +523,10 @@
                         </Border>
                     </StackPanel>
                 </GroupBox>
+                <CheckBox
+                    Margin="0,8,0,0"
+                    Content="导出结果时的哈希值使用默认输出方式而不是各行当前的输出方式"
+                    IsChecked="{Binding UseSelectedDefaultOutputType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </StackPanel>
         </TabItem>
         <TabItem

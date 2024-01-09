@@ -313,8 +313,11 @@ namespace HashCalculator
 
         private void CopyThisModelCurHashAction(object param)
         {
-            if (this.GenerateTextLineInFormat(Settings.Current.FormatForGenerateText,
-                this.SelectedOutputType, false) is string text)
+            string format = Settings.Current.GenerateTextInFormat ?
+                Settings.Current.FormatForGenerateText : null;
+            if (this.GenerateTextInFormat(
+                format, this.SelectedOutputType, all: false, endLine: false,
+                Settings.Current.CaseOfCopiedAlgNameFollowsOutputType) is string text)
             {
                 CommonUtils.ClipboardSetText(text);
             }
@@ -334,8 +337,11 @@ namespace HashCalculator
 
         private void CopyThisModelAllHashesAction(object param)
         {
-            if (this.GenerateTextLineInFormat(Settings.Current.FormatForGenerateText,
-                this.SelectedOutputType, true) is string text)
+            string format = Settings.Current.GenerateTextInFormat ?
+                Settings.Current.FormatForGenerateText : null;
+            if (this.GenerateTextInFormat(
+                format, this.SelectedOutputType, all: true, endLine: false,
+                Settings.Current.CaseOfCopiedAlgNameFollowsOutputType) is string text)
             {
                 CommonUtils.ClipboardSetText(text);
             }
@@ -863,31 +869,35 @@ namespace HashCalculator
             Monitor.Exit(this.hashComputeOperationLock);
         }
 
-        public string GenerateTextLineInFormat(string format, OutputType outputType, bool allHash)
+        public string GenerateTextInFormat(string format, OutputType output, bool all, bool endLine, bool casedName)
         {
-            if (this.Result == HashResult.Succeeded && this.AlgoInOutModels != null &&
-                this.AlgoInOutModels.Any())
+            if (this.Result == HashResult.Succeeded)
             {
-                if (!allHash)
+                if (!all)
                 {
-                    return this.CurrentInOutModel.GenerateTextLineInFormat(this, format, outputType);
+                    if (this.CurrentInOutModel != null)
+                    {
+                        return this.CurrentInOutModel.GenerateTextInFormat(this, format, output, endLine, casedName);
+                    }
                 }
                 else
                 {
-                    StringBuilder stringBuilderForGenerateMultiLineHash = new StringBuilder();
-                    foreach (AlgoInOutModel inOutModel in this.AlgoInOutModels)
+                    if (this.AlgoInOutModels != null && this.AlgoInOutModels.Any())
                     {
-                        if (inOutModel.GenerateTextLineInFormat(this, format, outputType) is string text)
+                        StringBuilder stringBuilderForGenerateFormattedHash = new StringBuilder();
+                        foreach (AlgoInOutModel inOutModel in this.AlgoInOutModels)
                         {
-                            stringBuilderForGenerateMultiLineHash.Append(text);
-                            stringBuilderForGenerateMultiLineHash.Append('\n');
+                            if (inOutModel.GenerateTextInFormat(this, format, output, endLine: true, casedName) is string text)
+                            {
+                                stringBuilderForGenerateFormattedHash.Append(text);
+                            }
                         }
+                        if (!endLine && stringBuilderForGenerateFormattedHash.Length > 0)
+                        {
+                            stringBuilderForGenerateFormattedHash.Remove(stringBuilderForGenerateFormattedHash.Length - 1, 1);
+                        }
+                        return stringBuilderForGenerateFormattedHash.ToString();
                     }
-                    if (stringBuilderForGenerateMultiLineHash.Length > 0)
-                    {
-                        stringBuilderForGenerateMultiLineHash.Remove(stringBuilderForGenerateMultiLineHash.Length - 1, 1);
-                    }
-                    return stringBuilderForGenerateMultiLineHash.ToString();
                 }
             }
             return default(string);

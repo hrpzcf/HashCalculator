@@ -20,8 +20,7 @@ namespace HashCalculator
 {
     internal class MainWndViewModel : NotifiableModel
     {
-        public const string formatForCopyHash = "{0}\n";
-        private const string formatForExportHash = "#{0} *{1} *{2}\n";
+        private const string formatForExport = "#$algo$ *$hash$ *$name$";
         private readonly HashChecklist MainChecklist = new HashChecklist();
         private readonly ModelStarter starter =
             new ModelStarter((int)Settings.Current.SelectedTaskNumberLimit, 8);
@@ -428,13 +427,14 @@ namespace HashCalculator
             if (param is IList selectedModels && selectedModels.AnyItem())
             {
                 StringBuilder stringBuilder = new StringBuilder();
+                string format = Settings.Current.GenerateTextInFormat ?
+                    Settings.Current.FormatForGenerateText : null;
                 foreach (HashViewModel model in selectedModels)
                 {
-                    if (model.GenerateTextLineInFormat(Settings.Current.FormatForGenerateText, outputType, copyAll)
-                        is string text)
+                    if (model.GenerateTextInFormat(format, outputType, copyAll,
+                        endLine: true, Settings.Current.CaseOfCopiedAlgNameFollowsOutputType) is string text)
                     {
                         stringBuilder.Append(text);
-                        stringBuilder.Append('\n');
                     }
                 }
                 if (stringBuilder.Length > 0)
@@ -881,66 +881,37 @@ namespace HashCalculator
                     filter = "哈希值校验依据|*.hcb|文本文件|*.txt|所有文件|*.*";
                     break;
             }
-            SaveFileDialog sf = new SaveFileDialog()
+            SaveFileDialog sfd = new SaveFileDialog()
             {
                 ValidateNames = true,
                 Filter = filter,
                 FileName = fileName,
                 InitialDirectory = Settings.Current.LastUsedPath,
             };
-            if (sf.ShowDialog() != true)
+            if (sfd.ShowDialog() != true)
             {
                 return;
             }
-            Settings.Current.LastUsedPath = Path.GetDirectoryName(sf.FileName);
+            Settings.Current.LastUsedPath = Path.GetDirectoryName(sfd.FileName);
             try
             {
                 StringBuilder stringBuilder = new StringBuilder();
-                if (Settings.Current.HowToExportHashValues == ExportAlgos.AllCalculated)
+                OutputType output = OutputType.Unknown;
+                if (Settings.Current.UseSelectedDefaultOutputType)
                 {
-                    foreach (HashViewModel hm in HashViewModels)
-                    {
-                        if (hm.Result != HashResult.Succeeded)
-                        {
-                            continue;
-                        }
-                        foreach (AlgoInOutModel model in hm.AlgoInOutModels)
-                        {
-                            if (!model.Export)
-                            {
-                                continue;
-                            }
-                            string hash = BytesToStrByOutputTypeCvt.Convert(model.HashResult,
-                                Settings.Current.SelectedOutputType);
-                            stringBuilder.AppendFormat(formatForExportHash, model.AlgoName, hash,
-                                hm.FileName);
-                        }
-                    }
+                    output = Settings.Current.SelectedOutputType;
                 }
-                else if (Settings.Current.HowToExportHashValues == ExportAlgos.Current)
+                bool all = Settings.Current.HowToExportHashValues != ExportAlgo.Current;
+                foreach (HashViewModel hm in HashViewModels)
                 {
-                    foreach (HashViewModel hm in HashViewModels)
+                    if (hm.GenerateTextInFormat(formatForExport, output, all, endLine: true, casedName: false) is string text)
                     {
-                        if (hm.Result == HashResult.Succeeded && hm.CurrentInOutModel.Export)
-                        {
-                            if (string.IsNullOrEmpty(hm.CurrentHashString))
-                            {
-                                string hash = BytesToStrByOutputTypeCvt.Convert(hm.CurrentInOutModel.HashResult,
-                                    Settings.Current.SelectedOutputType);
-                                stringBuilder.AppendFormat(formatForExportHash, hm.CurrentInOutModel.AlgoName, hash,
-                                    hm.FileName);
-                            }
-                            else
-                            {
-                                stringBuilder.AppendFormat(formatForExportHash, hm.CurrentInOutModel.AlgoName,
-                                    hm.CurrentHashString, hm.FileName);
-                            }
-                        }
+                        stringBuilder.Append(text);
                     }
                 }
                 if (stringBuilder.Length > 0)
                 {
-                    File.WriteAllText(sf.FileName, stringBuilder.ToString());
+                    File.WriteAllText(sfd.FileName, stringBuilder.ToString());
                 }
                 else
                 {

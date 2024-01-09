@@ -32,8 +32,9 @@ namespace HashCalculator
         private double shellSubmenuEditorWidth = 400.0;
         private double shellSubmenuEditorHeight = 600.0;
         private TaskNum selectedTaskNumberLimit = TaskNum.One;
+        private bool useSelectedDefaultOutputType = true;
         private ExportType resultFileTypeExportAs = ExportType.TxtFile;
-        private ExportAlgos howToExportHashValues = ExportAlgos.Current;
+        private ExportAlgo howToExportHashValues = ExportAlgo.Current;
         private OutputType selectedOutputType = OutputType.BinaryUpper;
         private bool showResultText = false;
         private bool noExportColumn = false;
@@ -514,7 +515,7 @@ namespace HashCalculator
             }
         }
 
-        public ExportAlgos HowToExportHashValues
+        public ExportAlgo HowToExportHashValues
         {
             get
             {
@@ -523,6 +524,18 @@ namespace HashCalculator
             set
             {
                 this.SetPropNotify(ref this.howToExportHashValues, value);
+            }
+        }
+
+        public bool UseSelectedDefaultOutputType
+        {
+            get
+            {
+                return this.useSelectedDefaultOutputType;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.useSelectedDefaultOutputType, value);
             }
         }
 

@@ -99,8 +99,10 @@ namespace HashCalculator
         {
             if (this.HashResult != null && param is HashViewModel parent)
             {
-                if (this.GenerateTextLineInFormat(parent,
-                    Settings.Current.FormatForGenerateText, parent.SelectedOutputType) is string text)
+                string format = Settings.Current.GenerateTextInFormat ?
+                    Settings.Current.FormatForGenerateText : null;
+                if (this.GenerateTextInFormat(parent, format, parent.SelectedOutputType, false,
+                    Settings.Current.CaseOfCopiedAlgNameFollowsOutputType) is string text)
                 {
                     CommonUtils.ClipboardSetText(text);
                 }
@@ -119,44 +121,55 @@ namespace HashCalculator
             }
         }
 
-        public string GenerateTextLineInFormat(HashViewModel parent, string format, OutputType outputType)
+        /// <summary>
+        /// 参数 format 为 null 或空字符串代表不按格式生成字符串。<br/>
+        /// 参数 output 为 OutputType.Unknown 代表按 parent.SelectedOutputType 格式化哈希值，<br/>
+        /// 如果 parent.SelectedOutputType 也是 OutputType.Unknown，则使用 Settings.Current.SelectedOutputType。
+        /// </summary>
+        public string GenerateTextInFormat(HashViewModel parent, string format, OutputType output,
+            bool endLine, bool casedAlgName)
         {
             if (parent != null && this.HashResult != null)
             {
-                if (outputType == OutputType.Unknown)
+                if (output == OutputType.Unknown)
                 {
                     if (parent.SelectedOutputType != OutputType.Unknown)
                     {
-                        outputType = parent.SelectedOutputType;
+                        output = parent.SelectedOutputType;
                     }
                     else
                     {
-                        outputType = Settings.Current.SelectedOutputType;
+                        output = Settings.Current.SelectedOutputType;
                     }
                 }
-                if (!Settings.Current.GenerateTextInFormat || string.IsNullOrEmpty(format))
+                if (string.IsNullOrEmpty(format))
                 {
-                    return BytesToStrByOutputTypeCvt.Convert(this.HashResult, outputType);
+                    string text = BytesToStrByOutputTypeCvt.Convert(this.HashResult, output);
+                    return endLine ? $"{text}\n" : text;
                 }
                 else
                 {
                     string algoName = this.AlgoName;
-                    if (Settings.Current.CaseOfCopiedAlgNameFollowsOutputType)
+                    if (casedAlgName)
                     {
-                        switch (outputType)
+                        switch (output)
                         {
                             case OutputType.BinaryLower:
-                                algoName = this.AlgoName.ToLower();
+                                algoName = algoName.ToLower();
                                 break;
                             case OutputType.BinaryUpper:
-                                algoName = this.AlgoName.ToUpper();
+                                algoName = algoName.ToUpper();
                                 break;
                         }
                     }
                     // "$algo$", "$hash$", "$path$", "$name$"
                     StringBuilder formatBuilder = new StringBuilder(format);
+                    if (endLine)
+                    {
+                        formatBuilder.Append('\n');
+                    }
                     formatBuilder.Replace("$algo$", algoName);
-                    formatBuilder.Replace("$hash$", BytesToStrByOutputTypeCvt.Convert(this.HashResult, outputType));
+                    formatBuilder.Replace("$hash$", BytesToStrByOutputTypeCvt.Convert(this.HashResult, output));
                     formatBuilder.Replace("$name$", parent.FileInfo.Name);
                     formatBuilder.Replace("$path$", parent.FileInfo.FullName);
                     return formatBuilder.ToString();

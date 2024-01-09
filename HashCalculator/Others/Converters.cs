@@ -693,12 +693,12 @@ namespace HashCalculator
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return (ExportAlgos)value == ExportAlgos.Current;
+            return (ExportAlgo)value == ExportAlgo.Current;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return (bool)value ? ExportAlgos.Current : ExportAlgos.AllCalculated;
+            return (bool)value ? ExportAlgo.Current : ExportAlgo.AllCalculated;
         }
     }
 
@@ -706,12 +706,12 @@ namespace HashCalculator
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return (ExportAlgos)value == ExportAlgos.AllCalculated;
+            return (ExportAlgo)value == ExportAlgo.AllCalculated;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return (bool)value ? ExportAlgos.AllCalculated : ExportAlgos.Current;
+            return (bool)value ? ExportAlgo.AllCalculated : ExportAlgo.Current;
         }
     }
 

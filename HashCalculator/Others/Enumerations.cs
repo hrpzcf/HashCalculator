@@ -218,7 +218,7 @@
     /// <summary>
     /// 选择导出每个文件的哪些算法的哈希结果
     /// </summary>
-    public enum ExportAlgos
+    public enum ExportAlgo
     {
         /// <summary>
         /// 导出每个文件当前显示的算法的结果
