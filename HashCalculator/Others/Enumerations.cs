@@ -231,23 +231,6 @@
     }
 
     /// <summary>
-    /// 哈希值结果可导出的文件类型
-    /// </summary>
-    public enum ExportType
-    {
-        /// <summary>
-        /// 导出为 .txt 文件，每行格式：[#算法名 *哈希值 *文件名]，不包括方括号
-        /// </summary>
-        TxtFile,
-        /// <summary>
-        /// 文件内容与 TxtFile 完全相同，仅文件扩展名不同，此类型为 .hcb 后缀<br/>
-        /// 如果在设置面板中打开了本程序的文件关联，则可以直接通过双击 .hcb 文件打开本程序进行哈希校验<br/>
-        /// 前提是<直接使用校验依据进行校验时>设置项选择了合适的文件搜索策略
-        /// </summary>
-        HcbFile,
-    }
-
-    /// <summary>
     /// 约定的 MemoryMappedFile 内容排布方案版本
     /// 默认约定：MemoryMappedFile 内的前 4 个字节总是代表内容排布方案版本，转为 int 值后强转为此枚举
     /// </summary>
@@ -341,5 +324,16 @@
         /// 菜单属于校验文件哈希值菜单
         /// </summary>
         CheckHash,
+    }
+
+    /// <summary>
+    /// 保存文件使用的编码(保存设置时被序列化，不方便使用 UsingEncoding 类)
+    /// </summary>
+    public enum EncodingEnum
+    {
+        UTF_8,
+        UTF_8_BOM,
+        ANSI,
+        UNICODE,
     }
 }

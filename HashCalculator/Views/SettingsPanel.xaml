@@ -19,6 +19,8 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Resources/ConverterResource.xaml" />
+                <ResourceDictionary Source="/Resources/DataGridCellStyles.xaml" />
+                <ResourceDictionary Source="/Resources/DataGridRowStyles.xaml" />
                 <ResourceDictionary Source="/Resources/TabControlItemStyles.xaml" />
                 <ResourceDictionary Source="/Resources/TabControlStyles.xaml" />
                 <ResourceDictionary Source="/Resources/DescTextBlockStyles.xaml" />
@@ -144,7 +146,7 @@
                                     MinWidth="50"
                                     Padding="0,2"
                                     VerticalAlignment="Center"
-                                    Text="{Binding MinCharsNumRequiredForMonitoringClipboard, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    Text="{Binding MinCharsNumRequiredForMonitoringClipboard, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
                                 <TextBlock
                                     VerticalAlignment="Center"
                                     Foreground="Black"
@@ -153,7 +155,7 @@
                                     MinWidth="50"
                                     Padding="0,2"
                                     VerticalAlignment="Center"
-                                    Text="{Binding MaxCharsNumRequiredForMonitoringClipboard, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    Text="{Binding MaxCharsNumRequiredForMonitoringClipboard, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
                             </StackPanel>
                         </StackPanel>
                     </GroupBox>
@@ -182,112 +184,6 @@
                         IsChecked="{Binding DoNotHashForEmptyFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
             </ScrollViewer>
-        </TabItem>
-        <TabItem
-            Padding="8"
-            Header="复制行为设置"
-            Style="{StaticResource TabItemStyle1}">
-            <StackPanel Margin="8">
-                <GroupBox
-                    Padding="0,8,0,0"
-                    Foreground="#FF006FD6"
-                    Header="是否使用复制模版">
-                    <StackPanel>
-                        <RadioButton
-                            Padding="4,0,0,0"
-                            Content="使用与【复制哈希值】相关按钮或菜单时只复制哈希值"
-                            IsChecked="{Binding GenerateTextInFormat, Converter={StaticResource ReverseBooleanValueCvt}}" />
-                        <RadioButton
-                            Margin="0,4,0,0"
-                            VerticalAlignment="Center"
-                            Content="使用以下自定义模版来定制想要复制出来的内容"
-                            IsChecked="{Binding GenerateTextInFormat}" />
-                        <TextBox
-                            Margin="0,4,0,0"
-                            Padding="0,2"
-                            IsEnabled="{Binding GenerateTextInFormat}"
-                            MaxLines="1"
-                            Text="{Binding FormatForGenerateText, UpdateSourceTrigger=PropertyChanged}" />
-                        <TextBlock
-                            Margin="0,4,0,0"
-                            Style="{StaticResource DescTextBlockStyle}"
-                            Text="可以在输入框中任意使用以下占位符来指定实际要复制的内容：" />
-                        <Grid Margin="0,4,0,0">
-                            <Grid.RowDefinitions>
-                                <RowDefinition />
-                                <RowDefinition />
-                                <RowDefinition />
-                                <RowDefinition />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock
-                                Grid.Row="0"
-                                Grid.Column="0"
-                                Foreground="Black"
-                                Text="$algo$" />
-                            <TextBlock
-                                Grid.Row="0"
-                                Grid.Column="1"
-                                Margin="16,0,0,0"
-                                Style="{StaticResource DescTextBlockStyle}"
-                                Text="在复制时此占位符将被替换为实际算法名。" />
-                            <TextBlock
-                                Grid.Row="1"
-                                Grid.Column="0"
-                                Foreground="Black"
-                                Text="$hash$" />
-                            <TextBlock
-                                Grid.Row="1"
-                                Grid.Column="1"
-                                Margin="16,0,0,0"
-                                Style="{StaticResource DescTextBlockStyle}"
-                                Text="在复制时此占位符将被替换为实际哈希值。" />
-                            <TextBlock
-                                Grid.Row="2"
-                                Grid.Column="0"
-                                Foreground="Black"
-                                Text="$path$" />
-                            <TextBlock
-                                Grid.Row="2"
-                                Grid.Column="1"
-                                Margin="16,0,0,0"
-                                Style="{StaticResource DescTextBlockStyle}"
-                                Text="在复制时此占位符将被替换为实际文件全路径。" />
-                            <TextBlock
-                                Grid.Row="3"
-                                Grid.Column="0"
-                                Foreground="Black"
-                                Text="$name$" />
-                            <TextBlock
-                                Grid.Row="3"
-                                Grid.Column="1"
-                                Margin="16,0,0,0"
-                                Style="{StaticResource DescTextBlockStyle}"
-                                Text="在复制时此占位符将被替换为实际文件名。" />
-                        </Grid>
-                        <TextBlock
-                            Margin="0,8,0,0"
-                            Style="{StaticResource DescTextBlockStyle}"
-                            Text="此设置影响软件所有与复制哈希值相关的按钮或菜单的复制结果。" />
-                        <TextBlock
-                            Margin="0,2,0,0"
-                            Style="{StaticResource DescTextBlockStyle}"
-                            Text="模版输入框留空效果与选择【使用复制按钮或右键菜单时只复制哈希值】相同。" />
-                        <TextBlock
-                            Margin="0,2,0,0"
-                            Style="{StaticResource DescTextBlockStyle}"
-                            Text="此模板对于那些会复制出多行内容的按钮或菜单来说是每一行的模版。" />
-                    </StackPanel>
-                </GroupBox>
-                <CheckBox
-                    Margin="0,8,0,0"
-                    Padding="4,0,0,0"
-                    Content="复制的内容含算法名时算法名的大小写跟随十六进制输出方式"
-                    IsChecked="{Binding CaseOfCopiedAlgNameFollowsOutputType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-            </StackPanel>
         </TabItem>
         <TabItem
             Padding="8"
@@ -448,86 +344,341 @@
         </TabItem>
         <TabItem
             Padding="8"
-            Header="导出结果设置"
+            Header="复制行为设置"
             Style="{StaticResource TabItemStyle1}">
-            <StackPanel Margin="4">
+            <StackPanel Margin="8">
                 <GroupBox
-                    Padding="4,8,4,4"
+                    Padding="0,8,0,0"
                     Foreground="#FF006FD6"
-                    Header="导出哈希值时导出哪些算法的结果？">
+                    Header="是否使用复制模版">
                     <StackPanel>
                         <RadioButton
-                            Margin="8,0"
-                            VerticalContentAlignment="Center"
-                            Content="仅导出每个文件当前显示的算法结果"
-                            IsChecked="{Binding HowToExportHashValues, Converter={StaticResource RadioExportCurrentAlgoCvt}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            Padding="4,0,0,0"
+                            Content="使用与【复制哈希值】相关按钮或菜单时只复制哈希值"
+                            IsChecked="{Binding GenerateTextInFormat, Converter={StaticResource ReverseBooleanValueCvt}}" />
                         <RadioButton
-                            Margin="8,8,0,0"
-                            VerticalContentAlignment="Center"
-                            Content="导出每个文件所有已计算的算法结果"
-                            IsChecked="{Binding HowToExportHashValues, Converter={StaticResource RadioExportAllCalculatedAlgosCvt}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    </StackPanel>
-                </GroupBox>
-                <GroupBox
-                    Margin="0,8,0,0"
-                    Padding="4,8,4,4"
-                    Foreground="#FF006FD6"
-                    Header="导出哈希计算结果时首选导出文件类型">
-                    <StackPanel>
-                        <Border
-                            Padding="4"
-                            BorderBrush="LightGray"
-                            BorderThickness="1">
-                            <RadioButton
-                                HorizontalContentAlignment="Stretch"
-                                VerticalContentAlignment="Center"
-                                IsChecked="{Binding ResultFileTypeExportAs, Converter={StaticResource RadioExportAsTxtFileCvt}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                                <StackPanel>
-                                    <TextBlock Text="导出为文本文件 (.txt)" />
-                                    <TextBlock
-                                        FontSize="8pt"
-                                        Style="{StaticResource DescTextBlockStyle}"
-                                        Text="将哈希值结果导出为 .txt 后缀的文本文件，每行格式：#算法 *哈希值 *文件名" />
-                                </StackPanel>
-                            </RadioButton>
-                        </Border>
-                        <Border
+                            Margin="0,4,0,0"
+                            VerticalAlignment="Center"
+                            Content="使用以下自定义模版来定制想要复制出来的内容"
+                            IsChecked="{Binding GenerateTextInFormat}" />
+                        <TextBox
+                            Margin="0,4,0,0"
+                            Padding="0,2"
+                            IsEnabled="{Binding GenerateTextInFormat}"
+                            MaxLines="1"
+                            Text="{Binding FormatForGenerateText, UpdateSourceTrigger=LostFocus}" />
+                        <TextBlock
+                            Margin="0,4,0,0"
+                            Style="{StaticResource DescTextBlockStyle}"
+                            Text="可以在输入框中任意使用以下占位符来指定实际要复制的内容：" />
+                        <Grid Margin="0,4,0,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Foreground="Black"
+                                Text="$algo$" />
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Margin="16,0,0,0"
+                                Style="{StaticResource DescTextBlockStyle}"
+                                Text="在复制时此占位符将被替换为实际算法名。" />
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Foreground="Black"
+                                Text="$hash$" />
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Margin="16,0,0,0"
+                                Style="{StaticResource DescTextBlockStyle}"
+                                Text="在复制时此占位符将被替换为实际哈希值。" />
+                            <TextBlock
+                                Grid.Row="2"
+                                Grid.Column="0"
+                                Foreground="Black"
+                                Text="$path$" />
+                            <TextBlock
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                Margin="16,0,0,0"
+                                Style="{StaticResource DescTextBlockStyle}"
+                                Text="在复制时此占位符将被替换为实际文件完整路径。" />
+                            <TextBlock
+                                Grid.Row="3"
+                                Grid.Column="0"
+                                Foreground="Black"
+                                Text="$name$" />
+                            <TextBlock
+                                Grid.Row="3"
+                                Grid.Column="1"
+                                Margin="16,0,0,0"
+                                Style="{StaticResource DescTextBlockStyle}"
+                                Text="在复制时此占位符将被替换为实际文件名。" />
+                        </Grid>
+                        <TextBlock
                             Margin="0,8,0,0"
-                            Padding="4"
-                            BorderBrush="LightGray"
-                            BorderThickness="1">
-                            <RadioButton
-                                HorizontalContentAlignment="Stretch"
-                                VerticalContentAlignment="Center"
-                                IsChecked="{Binding ResultFileTypeExportAs, Converter={StaticResource RadioExportAsHcbFileCvt}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                                <StackPanel>
-                                    <TextBlock Text="导出为文本文件 (.hcb)" />
-                                    <TextBlock
-                                        FontSize="8pt"
-                                        Style="{StaticResource DescTextBlockStyle}"
-                                        Text="导出的内容与【导出为文本文件 (.txt)】选项的结果完全相同，仅文件后缀不同" />
-                                    <TextBlock
-                                        FontSize="8pt"
-                                        Style="{StaticResource DescTextBlockStyle}"
-                                        Text="如果已设置文件关联则可以双击打开 .hcb 文件自动对其内列出的文件进行计算并校验" />
-                                    <TextBlock
-                                        FontSize="8pt"
-                                        Style="{StaticResource DescTextBlockStyle}"
-                                        Text="能否找到其内列出的文件取决于 .hcb 文件与待哈希文件是否在相同的文件夹下，" />
-                                    <TextBlock
-                                        FontSize="8pt"
-                                        Style="{StaticResource DescTextBlockStyle}"
-                                        Text="以及【常规设置】中的设置项【文件搜索策略】是否选择了合适的文件搜索策略" />
-                                </StackPanel>
-                            </RadioButton>
-                        </Border>
+                            Style="{StaticResource DescTextBlockStyle}"
+                            Text="此设置影响软件所有与复制哈希值相关的按钮或菜单的复制结果。" />
+                        <TextBlock
+                            Margin="0,2,0,0"
+                            Style="{StaticResource DescTextBlockStyle}"
+                            Text="模版输入框留空效果与选择【使用复制按钮或右键菜单时只复制哈希值】相同。" />
+                        <TextBlock
+                            Margin="0,2,0,0"
+                            Style="{StaticResource DescTextBlockStyle}"
+                            Text="此模板对于那些会复制出多行内容的按钮或菜单来说是每一行的模版。" />
                     </StackPanel>
                 </GroupBox>
                 <CheckBox
                     Margin="0,8,0,0"
-                    Content="导出结果时的哈希值使用默认输出方式而不是各行当前的输出方式"
-                    IsChecked="{Binding UseSelectedDefaultOutputType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    Padding="4,0,0,0"
+                    Content="复制的内容含算法名时算法名的大小写跟随十六进制输出方式"
+                    IsChecked="{Binding CaseOfCopiedAlgNameFollowsOutputType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </StackPanel>
+        </TabItem>
+        <TabItem
+            Padding="8"
+            Header="导出结果设置"
+            Style="{StaticResource TabItemStyle1}">
+            <Grid Margin="4">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <GroupBox
+                    Grid.Row="0"
+                    Padding="4,8,4,4"
+                    Foreground="#FF006FD6"
+                    Header="导出计算结果时导出哪些算法的结果">
+                    <StackPanel>
+                        <RadioButton
+                            Margin="8,0"
+                            VerticalContentAlignment="Center"
+                            Content="仅导出每行当前显示的算法的结果"
+                            IsChecked="{Binding HowToExportHashValues, Converter={StaticResource RadioExportCurrentAlgoCvt}}" />
+                        <RadioButton
+                            Margin="8,8,0,0"
+                            VerticalContentAlignment="Center"
+                            Content="导出每行所有已计算的算法的结果"
+                            IsChecked="{Binding HowToExportHashValues, Converter={StaticResource RadioExportAllCalculatedAlgosCvt}}" />
+                    </StackPanel>
+                </GroupBox>
+                <CheckBox
+                    Grid.Row="1"
+                    Margin="0,8,0,0"
+                    Padding="4,0,0,0"
+                    Content="导出计算结果时使用默认输出方式输出哈希值而不是各行的输出方式"
+                    IsChecked="{Binding UseDefaultOutputTypeWhenExporting}" />
+                <GroupBox
+                    Grid.Row="2"
+                    Margin="0,8,0,0"
+                    Padding="0,8,0,0"
+                    Foreground="#FF006FD6"
+                    Header="导出计算结果时【另存为】对话框的【保存类型】列表内的可选方案">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <DataGrid
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            AutoGenerateColumns="False"
+                            CellStyle="{StaticResource CellStyleNormal}"
+                            HeadersVisibility="Column"
+                            HorizontalGridLinesBrush="#FF969696"
+                            IsReadOnly="True"
+                            ItemsSource="{Binding Source={x:Static local:Settings.Current}, Path=TemplatesForExport}"
+                            KeyDown="SettingsPanelKeyDown"
+                            RowStyle="{StaticResource RowStyleNormal}"
+                            SelectedItem="{Binding Source={x:Static local:Settings.Current}, Path=SelectedTemplateForExport}"
+                            VerticalGridLinesBrush="#FF969696">
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn Header="方案名称">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox
+                                                Margin="2"
+                                                Padding="2"
+                                                Text="{Binding Name, UpdateSourceTrigger=LostFocus}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="文件扩展名">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox
+                                                Margin="2"
+                                                Padding="2"
+                                                LostFocus="OnTextBoxExtensionLostFocus"
+                                                Text="{Binding Extension, UpdateSourceTrigger=LostFocus}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="文件内容模版">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox
+                                                Margin="2"
+                                                Padding="2"
+                                                Text="{Binding Template, UpdateSourceTrigger=LostFocus}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="文件编码">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <ComboBox
+                                                Margin="2"
+                                                DisplayMemberPath="Display"
+                                                ItemsSource="{Binding Path=(local:TemplateForExportModel.AvailableEncodings)}"
+                                                SelectedValue="{Binding UsingEncoding, UpdateSourceTrigger=PropertyChanged}"
+                                                SelectedValuePath="ItemValue" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Width="*" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <StackPanel
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Margin="4,0,0,0">
+                            <Button
+                                Padding="8,2"
+                                Background="{x:Null}"
+                                Command="{Binding AddExprotTemplateCmd}"
+                                Content="添加" />
+                            <Button
+                                Margin="0,8,0,0"
+                                Padding="8,2"
+                                Background="{x:Null}"
+                                Command="{Binding CopyExprotTemplateCmd}"
+                                Content="复制" />
+                            <Button
+                                Margin="0,8,0,0"
+                                Padding="8,2"
+                                Background="{x:Null}"
+                                Command="{Binding MoveExportTemplateUpCmd}"
+                                Content="上移" />
+                            <Button
+                                Margin="0,8,0,0"
+                                Padding="8,2"
+                                Background="{x:Null}"
+                                Command="{Binding MoveExportTemplateDownCmd}"
+                                Content="下移" />
+                            <Button
+                                Margin="0,8,0,0"
+                                Padding="8,2"
+                                Background="{x:Null}"
+                                BorderBrush="Red"
+                                Command="{Binding RemoveExportTemplateCmd}"
+                                Content="移除" />
+                            <Button
+                                Margin="0,8,0,0"
+                                Padding="8,2"
+                                Background="{x:Null}"
+                                BorderBrush="Red"
+                                Command="{Binding ResetExportTemplateCmd}"
+                                Content="重置" />
+                        </StackPanel>
+                        <StackPanel
+                            Grid.Row="1"
+                            Grid.ColumnSpan="2"
+                            Margin="0,4,0,0">
+                            <TextBlock
+                                Margin="0,4,0,0"
+                                Style="{StaticResource DescTextBlockStyle}"
+                                Text="导出计算结果时保存的文件的每一行内容都将按照“文件内容模版”生成。" />
+                            <TextBlock
+                                Margin="0,4,0,0"
+                                Style="{StaticResource DescTextBlockStyle}"
+                                Text="可以在“文件内容模版”输入框中任意使用以下占位符：" />
+                            <Grid Margin="0,4,0,0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    Foreground="Black"
+                                    Text="$algo$" />
+                                <TextBlock
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    Margin="16,0,0,0"
+                                    Style="{StaticResource DescTextBlockStyle}"
+                                    Text="导出计算结果时此占位符将被替换为实际算法名。" />
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    Foreground="Black"
+                                    Text="$hash$" />
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    Margin="16,0,0,0"
+                                    Style="{StaticResource DescTextBlockStyle}"
+                                    Text="导出计算结果时此占位符将被替换为实际哈希值。" />
+                                <TextBlock
+                                    Grid.Row="2"
+                                    Grid.Column="0"
+                                    Foreground="Black"
+                                    Text="$path$" />
+                                <TextBlock
+                                    Grid.Row="2"
+                                    Grid.Column="1"
+                                    Margin="16,0,0,0"
+                                    Style="{StaticResource DescTextBlockStyle}"
+                                    Text="导出计算结果时此占位符将被替换为实际文件完整路径。" />
+                                <TextBlock
+                                    Grid.Row="3"
+                                    Grid.Column="0"
+                                    Foreground="Black"
+                                    Text="$name$" />
+                                <TextBlock
+                                    Grid.Row="3"
+                                    Grid.Column="1"
+                                    Margin="16,0,0,0"
+                                    Style="{StaticResource DescTextBlockStyle}"
+                                    Text="导出计算结果时此占位符将被替换为实际文件名。" />
+                            </Grid>
+                            <TextBlock
+                                Margin="0,8,0,0"
+                                Foreground="Black"
+                                Text="如何使用以上设置好的方案来导出计算结果？" />
+                            <TextBlock
+                                Margin="0,2,0,0"
+                                Style="{StaticResource DescTextBlockStyle}"
+                                Text="点击【导出结果】按钮打开【另存为】对话框后在【保存类型】下拉列表内选择方案。" />
+                        </StackPanel>
+                    </Grid>
+                </GroupBox>
+            </Grid>
         </TabItem>
         <TabItem
             Padding="8"

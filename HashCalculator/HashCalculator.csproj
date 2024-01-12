@@ -198,6 +198,7 @@
     <Compile Include="Initializer\MmvsReader.cs" />
     <Compile Include="Initializer\MmvsWriter.cs" />
     <Compile Include="Native\Methods.cs" />
+    <Compile Include="ViewModels\TemplateForExportModel.cs" />
     <Compile Include="ViewModels\NotifiableModel.cs" />
     <Compile Include="Others\HashChecklist.cs" />
     <Compile Include="ViewModels\GenericItemModel.cs" />

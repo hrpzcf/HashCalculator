@@ -50,6 +50,8 @@ namespace HashCalculator
             }
             set
             {
+                // AlgoGroupModel 类根据此属性的变化计数
+                // 所以新值与旧值没有区别则不能触发通知，否则计数就不正确
                 if (value != this._selected)
                 {
                     this.SetPropNotify(ref this._selected, value);

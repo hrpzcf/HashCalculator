@@ -45,7 +45,6 @@
                 </Grid.ColumnDefinitions>
                 <ListBox
                     Grid.Column="0"
-                    HorizontalContentAlignment="Stretch"
                     Grid.IsSharedSizeScope="True"
                     ItemsSource="{Binding Path=(local:AlgosPanelModel.AlgoGroups)}"
                     SelectedItem="{Binding SelectedAlgoGroup}">
@@ -89,10 +88,9 @@
                                 <CheckBox
                                     Margin="16,4"
                                     VerticalContentAlignment="Center"
-                                    Command="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.CheckBoxChangedCmd}"
                                     CommandParameter="{Binding}"
                                     Content="{Binding AlgoName}"
-                                    IsChecked="{Binding Selected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    IsChecked="{Binding Selected, Mode=TwoWay}" />
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>

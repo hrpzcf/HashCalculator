@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -7,13 +9,14 @@ namespace HashCalculator
     public partial class SettingsPanel : Window
     {
         private readonly SettingsViewModel viewModel;
+        private static readonly char[] invalidChars = Path.GetInvalidFileNameChars();
 
         public static SettingsPanel This { get; private set; }
 
         public SettingsPanel()
         {
             this.viewModel = Settings.Current;
-            this.DataContext = Settings.Current;
+            this.DataContext = this.viewModel;
             Settings.Current.RunInMultiInstMode = Initializer.RunMultiMode;
             this.InitializeComponent();
             This = this;
@@ -23,7 +26,16 @@ namespace HashCalculator
         {
             if (e.Key == System.Windows.Input.Key.Escape)
             {
-                this.Close();
+                if (sender is Window)
+                {
+                    this.Close();
+                    e.Handled = true;
+                }
+                else if (sender is DataGrid && this.viewModel.SelectedTemplateForExport != null)
+                {
+                    this.viewModel.SelectedTemplateForExport = null;
+                    e.Handled = true;
+                }
             }
         }
 
@@ -68,6 +80,20 @@ namespace HashCalculator
                 {
                     CommonUtils.OpenFolderAndSelectItem(Settings.LibraryDir);
                 }
+            }
+        }
+
+        private async void OnTextBoxExtensionLostFocus(object sender, RoutedEventArgs e)
+        {
+            int index;
+            if (sender is TextBox textBox && (index = textBox.Text.IndexOfAny(invalidChars)) != -1)
+            {
+                MessageBox.Show(this, $"文件扩展名不能包含字符 <{textBox.Text[index]}>，此方案将不起作用！", "警告",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                await Task.Delay(200);
+                this.viewModel.SelectedTemplateForExport = textBox.DataContext as TemplateForExportModel;
+                textBox.Focus();
+                textBox.SelectAll();
             }
         }
     }

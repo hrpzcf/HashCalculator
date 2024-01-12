@@ -2,19 +2,19 @@
 using System.IO;
 using System.Windows;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace HashCalculator
 {
     internal static class Settings
     {
         private const string resPrefix = "HashCalculator.HashAlgos.AlgoDlls";
-        private static readonly XmlSerializer serializer =
-            new XmlSerializer(typeof(SettingsViewModel));
         private static readonly string configBaseDataPath =
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         public static readonly DirectoryInfo ConfigDir =
             new DirectoryInfo(Path.Combine(configBaseDataPath, "HashCalculator"));
         private static readonly string configFile = Path.Combine(ConfigDir.FullName, "settings.xml");
+        private static readonly string configFileJson = Path.Combine(ConfigDir.FullName, "settings.json");
         public static readonly string MenuConfigFile = Path.Combine(ConfigDir.FullName, "menus.json");
         public static readonly string MenuConfigUnicode = Path.Combine(ConfigDir.FullName, "menus_unicode.json");
         public static readonly string LibraryDir = Path.Combine(ConfigDir.FullName, "Library");
@@ -28,46 +28,83 @@ namespace HashCalculator
         {
             try
             {
-                if (!ConfigDir.Exists)
+                if (!Directory.Exists(ConfigDir.FullName))
                 {
                     ConfigDir.Create();
                 }
-                using (FileStream fs = File.Create(configFile))
+                else if (File.Exists(configFile))
                 {
-                    serializer.Serialize(fs, Current);
+                    try
+                    {
+                        File.Delete(configFile);
+                    }
+                    catch { }
                 }
-                return true;
+                JsonSerializer jsonSerializer = new JsonSerializer();
+                jsonSerializer.NullValueHandling = NullValueHandling.Ignore;
+                using (StreamWriter sw = new StreamWriter(configFileJson))
+                using (JsonTextWriter jsonTextWriter = new JsonTextWriter(sw))
+                {
+#if DEBUG
+                    jsonTextWriter.Formatting = Formatting.Indented;
+                    jsonTextWriter.Indentation = 4;
+#endif
+                    jsonSerializer.Serialize(jsonTextWriter, Current, typeof(SettingsViewModel));
+                    return true;
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"设置保存失败：\n{ex.Message}", "错误");
-                return false;
+                MessageBox.Show($"设置保存失败：{ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
+            return false;
         }
 
         /// <summary>
-        /// 只有在窗口加载前调用才有效<br/>
-        /// 因为部分窗口 xaml 内以 Static 方式绑定 Settings.Current
+        /// 只有在窗口加载前调用才有效，因为部分窗口 xaml 内静态绑定 Settings.Current
         /// </summary>
         public static bool LoadSettings()
         {
-            bool executeResult = false;
-            if (File.Exists(configFile))
+            bool settingsModelLoaded = false;
+            try
             {
-                try
+                if (!File.Exists(configFileJson) && File.Exists(configFile))
                 {
-                    using (FileStream fs = File.OpenRead(configFile))
+                    XmlSerializer serializer = new XmlSerializer(typeof(SettingsViewModel));
+                    using (Stream fs = new FileStream(configFile, FileMode.Open, FileAccess.Read))
                     {
                         if (serializer.Deserialize(fs) is SettingsViewModel model)
                         {
                             Current = model;
-                            executeResult = true;
+                            Current.OnSettingsViewModelDeserialized();
+                            settingsModelLoaded = true;
                         }
                     }
                 }
-                catch (Exception) { }
+                else if (File.Exists(configFileJson))
+                {
+                    JsonSerializer jsonSerializer = new JsonSerializer();
+                    jsonSerializer.NullValueHandling = NullValueHandling.Ignore;
+                    using (StreamReader sr = new StreamReader(configFileJson))
+                    using (JsonTextReader jsonTextReader = new JsonTextReader(sr))
+                    {
+                        if (jsonSerializer.Deserialize<SettingsViewModel>(jsonTextReader) is SettingsViewModel model)
+                        {
+                            Current = model;
+                            settingsModelLoaded = true;
+                        }
+                    }
+                }
             }
-            return executeResult;
+            catch (Exception ex)
+            {
+                MessageBox.Show($"设置加载失败：{ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+            if (!settingsModelLoaded)
+            {
+                Current.ResetTemplatesForExport();
+            }
+            return settingsModelLoaded;
         }
 
         public static void SetProcessEnvVar()

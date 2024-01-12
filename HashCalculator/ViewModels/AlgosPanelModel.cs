@@ -7,8 +7,8 @@ namespace HashCalculator
 {
     internal class AlgosPanelModel : NotifiableModel
     {
-        private RelayCommand checkBoxChangedCmd;
         private RelayCommand clearAllSelectedCmd;
+
         private static readonly AlgoGroupModel _groupOthers = new AlgoGroupModel(
             "其他算法",
             new AlgoInOutModel[]
@@ -277,37 +277,8 @@ namespace HashCalculator
             }
         }
 
-        private void CheckBoxChangedAction(object param)
-        {
-            if (param is AlgoInOutModel model)
-            {
-                Settings.Current.RemoveSelectedAlgosChanged();
-                if (!model.Selected)
-                {
-                    Settings.Current.SelectedAlgos.Remove(model.AlgoType);
-                }
-                else if (!Settings.Current.SelectedAlgos.Contains(model.AlgoType))
-                {
-                    Settings.Current.SelectedAlgos.Add(model.AlgoType);
-                }
-            }
-        }
-
-        public ICommand CheckBoxChangedCmd
-        {
-            get
-            {
-                if (this.checkBoxChangedCmd == null)
-                {
-                    this.checkBoxChangedCmd = new RelayCommand(this.CheckBoxChangedAction);
-                }
-                return this.checkBoxChangedCmd;
-            }
-        }
-
         private void ClearAllSelectedAction(object param)
         {
-            Settings.Current.SelectedAlgos.Clear();
             foreach (AlgoInOutModel info in ProvidedAlgos)
             {
                 info.Selected = false;

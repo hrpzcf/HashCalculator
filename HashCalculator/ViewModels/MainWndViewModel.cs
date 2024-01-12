@@ -20,7 +20,6 @@ namespace HashCalculator
 {
     internal class MainWndViewModel : NotifiableModel
     {
-        private const string formatForExport = "#$algo$ *$hash$ *$name$";
         private readonly HashChecklist MainChecklist = new HashChecklist();
         private readonly ModelStarter starter =
             new ModelStarter((int)Settings.Current.SelectedTaskNumberLimit, 8);
@@ -866,64 +865,68 @@ namespace HashCalculator
         {
             if (!HashViewModels.Any())
             {
-                MessageBox.Show(this.OwnerWnd, "列表中没有任何可以导出的条目。", "提示");
+                MessageBox.Show(this.OwnerWnd, "列表中没有可以导出的结果。", "提示");
                 return;
             }
-            string fileName = "hashsums.txt";
-            string filter = "文本文件|*.txt|哈希值校验依据|*.hcb|所有文件|*.*";
-            switch (Settings.Current.ResultFileTypeExportAs)
+            if (!Settings.Current.TemplatesForExport?.Any() ?? true)
             {
-                default:
-                case ExportType.TxtFile:
-                    break;
-                case ExportType.HcbFile:
-                    fileName = "hashsums.hcb";
-                    filter = "哈希值校验依据|*.hcb|文本文件|*.txt|所有文件|*.*";
-                    break;
-            }
-            SaveFileDialog sfd = new SaveFileDialog()
-            {
-                ValidateNames = true,
-                Filter = filter,
-                FileName = fileName,
-                InitialDirectory = Settings.Current.LastUsedPath,
-            };
-            if (sfd.ShowDialog() != true)
-            {
+                MessageBox.Show(this.OwnerWnd, "没有导出模版可用，请到【导出结果设置】中添加。", "提示",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-            Settings.Current.LastUsedPath = Path.GetDirectoryName(sfd.FileName);
+            var usedModels = new List<TemplateForExportModel>();
+            StringBuilder filterStringBuilder = new StringBuilder();
+            foreach (TemplateForExportModel model in Settings.Current.TemplatesForExport)
+            {
+                if (model.GetFilterFormat() is string filterFormat)
+                {
+                    usedModels.Add(model);
+                    filterStringBuilder.Append(filterFormat);
+                    filterStringBuilder.Append('|');
+                }
+            }
+            if (filterStringBuilder.Length > 0)
+            {
+                filterStringBuilder.Remove(filterStringBuilder.Length - 1, 1);
+            }
             try
             {
-                StringBuilder stringBuilder = new StringBuilder();
+                SaveFileDialog sfd = new SaveFileDialog()
+                {
+                    ValidateNames = true,
+                    Filter = filterStringBuilder.ToString(),
+                    FileName = $"hashsums{usedModels[0].Extension}",
+                    InitialDirectory = Settings.Current.LastUsedPath,
+                };
+                if (sfd.ShowDialog() != true)
+                {
+                    return;
+                }
+                Settings.Current.LastUsedPath = Path.GetDirectoryName(sfd.FileName);
                 OutputType output = OutputType.Unknown;
-                if (Settings.Current.UseSelectedDefaultOutputType)
+                if (Settings.Current.UseDefaultOutputTypeWhenExporting)
                 {
                     output = Settings.Current.SelectedOutputType;
                 }
                 bool all = Settings.Current.HowToExportHashValues != ExportAlgo.Current;
-                foreach (HashViewModel hm in HashViewModels)
+                TemplateForExportModel model = usedModels.ElementAt(sfd.FilterIndex - 1);
+                Encoding encoding = model.GetEncoding();
+                string formatForExport = model.Template;
+                using (StreamWriter streamWriter = new StreamWriter(sfd.FileName, false, encoding))
                 {
-                    if (hm.GenerateTextInFormat(formatForExport, output, all, endLine: true, casedName: false) is string text)
+                    foreach (HashViewModel hm in HashViewModels)
                     {
-                        stringBuilder.Append(text);
+                        if (hm.GenerateTextInFormat(formatForExport, output, all, endLine: true, casedName: false) is string text)
+                        {
+                            streamWriter.Write(text);
+                        }
                     }
-                }
-                if (stringBuilder.Length > 0)
-                {
-                    File.WriteAllText(sfd.FileName, stringBuilder.ToString());
-                }
-                else
-                {
-                    MessageBox.Show(this.OwnerWnd, $"收集到的哈希结果为空", "提示",
-                        MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this.OwnerWnd, $"哈希值导出失败：\n{ex.Message}", "错误",
+                MessageBox.Show(this.OwnerWnd, $"哈希值导出失败，异常信息：{ex.Message}", "错误",
                     MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
             }
         }
 
@@ -1079,7 +1082,7 @@ namespace HashCalculator
         {
             CommonOpenFileDialog openFile = new CommonOpenFileDialog
             {
-                Title = "选择【文件哈希值清单】文件",
+                Title = "选择【哈希值清单】文件",
                 InitialDirectory = Settings.Current.LastUsedPath,
             };
             if (openFile.ShowDialog() == CommonFileDialogResult.Ok)

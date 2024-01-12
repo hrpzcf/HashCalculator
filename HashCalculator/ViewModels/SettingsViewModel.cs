@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.IO;
+using System.Linq;
+using System.Runtime.Serialization;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace HashCalculator
 {
@@ -12,15 +14,15 @@ namespace HashCalculator
     {
         private bool mainWndTopmost = false;
         private string lastUsedPath = string.Empty;
-        private double mainWndWidth = 1280.0;
-        private double mainWndHeight = 800.0;
+        private double mainWndWidth = 1100.0;
+        private double mainWndHeight = 700.0;
         private double mainWndTop = double.NaN;
         private double mainWndLeft = double.NaN;
         private WindowState mainWindowState = WindowState.Normal;
-        private double settingsWndWidth = 620.0;
-        private double settingsWndHeight = 510.0;
+        private double settingsWndWidth = 660.0;
+        private double settingsWndHeight = 565.0;
         private double algosPanelWidth = 450.0;
-        private double algosPanelHeight = 400.0;
+        private double algosPanelHeight = 410.0;
         private double hashDetailsWidth = 1200.0;
         private double hashDetailsHeight = 800.0;
         private double cmdPanelWidth = 590.0;
@@ -32,10 +34,9 @@ namespace HashCalculator
         private double shellSubmenuEditorWidth = 400.0;
         private double shellSubmenuEditorHeight = 600.0;
         private TaskNum selectedTaskNumberLimit = TaskNum.One;
-        private bool useSelectedDefaultOutputType = true;
-        private ExportType resultFileTypeExportAs = ExportType.TxtFile;
-        private ExportAlgo howToExportHashValues = ExportAlgo.Current;
+        private bool useDefaultOutputTypeWhenExporting = true;
         private OutputType selectedOutputType = OutputType.BinaryUpper;
+        private ExportAlgo howToExportHashValues = ExportAlgo.AllCalculated;
         private bool showResultText = false;
         private bool noExportColumn = false;
         private bool noDurationColumn = false;
@@ -46,41 +47,34 @@ namespace HashCalculator
         private bool runInMultiInstanceMode = false;
         private bool notSettingShellExtension = true;
         private bool preferChecklistAlgs = true;
-        private bool parallelBetweenAlgos = false;
+        private bool parallelBetweenAlgos = true;
         private bool monitorNewHashStringInClipboard = true;
-        private bool switchMainWndFgWhenNewHashCopied = false;
+        private bool switchMainWndFgWhenNewHashCopied = true;
         private CmpRes algoToSwitchToAfterHashChecked = CmpRes.Matched;
         private FetchAlgoOption fetchAlgorithmOption = FetchAlgoOption.TATSAMSHDL;
         private bool displayMainWndButtonText = true;
         private bool caseOfCopiedAlgNameFollowsOutputType = false;
-        [XmlIgnore]
-        public int minCharsNumRequiredForMonitoringClipboard = 8;
-        [XmlIgnore]
-        public int maxCharsNumRequiredForMonitoringClipboard = 128;
         private bool generateTextInFormat = false;
         private string formatForGenerateText = "#$algo$ *$hash$ *$name$";
+        private ObservableCollection<TemplateForExportModel> templatesForExport = null;
         private RelayCommand installShellExtCmd;
         private RelayCommand unInstallShellExtCmd;
         private RelayCommand openEditContextMenuCmd;
+        private RelayCommand addExprotTemplateCmd;
+        private RelayCommand copyExprotTemplateCmd;
+        private RelayCommand moveExportTemplateUpCmd;
+        private RelayCommand moveExportTemplateDownCmd;
+        private RelayCommand removeExportTemplateCmd;
+        private RelayCommand resetExportTemplateCmd;
+        private TemplateForExportModel selectedExportTemplate;
 
-        [XmlIgnore]
-        public bool ClipboardUpdatedByMe { get; set; }
-
-        [XmlIgnore]
-        public static string FixAlgoDlls { get; } = "更新动态链接库";
-
-        [XmlIgnore]
-        public static string ShellExtDir { get; } = "用户目录";
-
-        [XmlIgnore]
-        public static string FixExePath { get; } = "修复程序路径";
-
-        [XmlIgnore]
-        public static string AlgosDllDir { get; } = "动态链接库目录";
+        [JsonIgnore, XmlIgnore]
+        public int minCharsNumRequiredForMonitoringClipboard = 8;
+        [JsonIgnore, XmlIgnore]
+        public int maxCharsNumRequiredForMonitoringClipboard = 128;
 
         public SettingsViewModel()
         {
-            this.AddSelectedAlgosChanged();
             if (double.IsNaN(this.mainWndLeft))
             {
                 this.mainWndLeft = (SystemParameters.PrimaryScreenWidth
@@ -91,49 +85,6 @@ namespace HashCalculator
                 this.mainWndTop = (SystemParameters.PrimaryScreenHeight
                     - this.mainWndHeight) / 2;
             }
-        }
-
-        private void SelectedAlgosChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            switch (e.Action)
-            {
-                case NotifyCollectionChangedAction.Add:
-                    if (e.NewItems.AnyItem() && e.NewItems[0] is AlgoType algo1)
-                    {
-                        foreach (AlgoInOutModel model in AlgosPanelModel.ProvidedAlgos)
-                        {
-                            if (model.AlgoType == algo1)
-                            {
-                                model.Selected = true;
-                                break;
-                            }
-                        }
-                    }
-                    break;
-                case NotifyCollectionChangedAction.Remove:
-                    if (e.OldItems.AnyItem() && e.OldItems[0] is AlgoType algo2)
-                    {
-                        foreach (AlgoInOutModel model in AlgosPanelModel.ProvidedAlgos)
-                        {
-                            if (model.AlgoType == algo2)
-                            {
-                                model.Selected = false;
-                                break;
-                            }
-                        }
-                    }
-                    break;
-            }
-        }
-
-        internal void AddSelectedAlgosChanged()
-        {
-            this.SelectedAlgos.CollectionChanged += this.SelectedAlgosChanged;
-        }
-
-        internal void RemoveSelectedAlgosChanged()
-        {
-            this.SelectedAlgos.CollectionChanged -= this.SelectedAlgosChanged;
         }
 
         public string PreviousVer { get; set; }
@@ -380,8 +331,7 @@ namespace HashCalculator
             }
         }
 
-        public ObservableCollection<AlgoType> SelectedAlgos { get; } =
-            new ObservableCollection<AlgoType>();
+        public AlgoType[] SelectedAlgos { get; set; }
 
         public OutputType SelectedOutputType
         {
@@ -395,9 +345,11 @@ namespace HashCalculator
             }
         }
 
-        public SearchPolicy SelectedQVSPolicy { get; set; }
+        public SearchPolicy SelectedQVSPolicy { get; set; } =
+            SearchPolicy.Descendants;
 
-        public SearchPolicy SelectedSearchPolicy { get; set; }
+        public SearchPolicy SelectedSearchPolicy { get; set; } =
+            SearchPolicy.Descendants;
 
         public TaskNum SelectedTaskNumberLimit
         {
@@ -475,7 +427,7 @@ namespace HashCalculator
             }
         }
 
-        [XmlIgnore]
+        [JsonIgnore, XmlIgnore]
         public bool ShowExecutionTargetColumn
         {
             get
@@ -488,7 +440,7 @@ namespace HashCalculator
             }
         }
 
-        [XmlIgnore]
+        [JsonIgnore, XmlIgnore]
         public bool FilterOrCmderEnabled
         {
             get
@@ -527,27 +479,15 @@ namespace HashCalculator
             }
         }
 
-        public bool UseSelectedDefaultOutputType
+        public bool UseDefaultOutputTypeWhenExporting
         {
             get
             {
-                return this.useSelectedDefaultOutputType;
+                return this.useDefaultOutputTypeWhenExporting;
             }
             set
             {
-                this.SetPropNotify(ref this.useSelectedDefaultOutputType, value);
-            }
-        }
-
-        public ExportType ResultFileTypeExportAs
-        {
-            get
-            {
-                return this.resultFileTypeExportAs;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.resultFileTypeExportAs, value);
+                this.SetPropNotify(ref this.useDefaultOutputTypeWhenExporting, value);
             }
         }
 
@@ -715,7 +655,19 @@ namespace HashCalculator
             }
         }
 
-        [XmlIgnore]
+        public ObservableCollection<TemplateForExportModel> TemplatesForExport
+        {
+            get
+            {
+                return this.templatesForExport;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.templatesForExport, value);
+            }
+        }
+
+        [JsonIgnore, XmlIgnore]
         public bool NotSettingShellExtension
         {
             get
@@ -773,7 +725,7 @@ namespace HashCalculator
             this.NotSettingShellExtension = true;
         }
 
-        [XmlIgnore]
+        [JsonIgnore, XmlIgnore]
         public ICommand InstallShellExtCmd
         {
             get
@@ -809,7 +761,7 @@ namespace HashCalculator
             this.NotSettingShellExtension = true;
         }
 
-        [XmlIgnore]
+        [JsonIgnore, XmlIgnore]
         public ICommand UnInstallShellExtCmd
         {
             get
@@ -832,7 +784,7 @@ namespace HashCalculator
             shellextEditor.ShowDialog();
         }
 
-        [XmlIgnore]
+        [JsonIgnore, XmlIgnore]
         public ICommand OpenEditContextMenuCmd
         {
             get
@@ -845,7 +797,249 @@ namespace HashCalculator
             }
         }
 
-        [XmlIgnore]
+        [JsonIgnore, XmlIgnore]
+        public TemplateForExportModel SelectedTemplateForExport
+        {
+            get
+            {
+                return this.selectedExportTemplate;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.selectedExportTemplate, value);
+            }
+        }
+
+        private void AddExprotTemplateAction(object param)
+        {
+            TemplateForExportModel model = new TemplateForExportModel();
+            if (this.TemplatesForExport == null)
+            {
+                this.TemplatesForExport = new ObservableCollection<TemplateForExportModel>();
+            }
+            this.TemplatesForExport.Add(model);
+            this.SelectedTemplateForExport = model;
+        }
+
+        [JsonIgnore, XmlIgnore]
+        public ICommand AddExprotTemplateCmd
+        {
+            get
+            {
+                if (this.addExprotTemplateCmd == null)
+                {
+                    this.addExprotTemplateCmd = new RelayCommand(this.AddExprotTemplateAction);
+                }
+                return this.addExprotTemplateCmd;
+            }
+        }
+
+        private void CopyExprotTemplateAction(object param)
+        {
+            if (this.TemplatesForExport != null)
+            {
+                if (this.SelectedTemplateForExport != null)
+                {
+                    TemplateForExportModel model = this.SelectedTemplateForExport.Copy("_复制");
+                    this.TemplatesForExport.Add(model);
+                    this.SelectedTemplateForExport = model;
+                }
+                else
+                {
+                    MessageBox.Show(SettingsPanel.This, "没有选择任何模版！", "提示", MessageBoxButton.OK,
+                        MessageBoxImage.Information);
+                }
+            }
+        }
+
+        [JsonIgnore, XmlIgnore]
+        public ICommand CopyExprotTemplateCmd
+        {
+            get
+            {
+                if (this.copyExprotTemplateCmd == null)
+                {
+                    this.copyExprotTemplateCmd = new RelayCommand(this.CopyExprotTemplateAction);
+                }
+                return this.copyExprotTemplateCmd;
+            }
+        }
+
+        private void MoveExportTemplateUpAction(object param)
+        {
+            if (this.TemplatesForExport != null)
+            {
+                int index;
+                if ((index = this.TemplatesForExport.IndexOf(this.SelectedTemplateForExport)) != -1 &&
+                    index > 0)
+                {
+                    int prevTemplateIndex = index - 1;
+                    TemplateForExportModel selectedTemplate = this.SelectedTemplateForExport;
+                    this.TemplatesForExport[index] = this.TemplatesForExport[prevTemplateIndex];
+                    this.TemplatesForExport[prevTemplateIndex] = selectedTemplate;
+                    this.SelectedTemplateForExport = selectedTemplate;
+                }
+            }
+        }
+
+        [JsonIgnore, XmlIgnore]
+        public ICommand MoveExportTemplateUpCmd
+        {
+            get
+            {
+                if (this.moveExportTemplateUpCmd == null)
+                {
+                    this.moveExportTemplateUpCmd = new RelayCommand(this.MoveExportTemplateUpAction);
+                }
+                return this.moveExportTemplateUpCmd;
+            }
+        }
+
+        private void MoveExportTemplateDownAction(object param)
+        {
+            if (this.TemplatesForExport != null)
+            {
+                int index;
+                if ((index = this.TemplatesForExport.IndexOf(this.SelectedTemplateForExport)) != -1 &&
+                    index < this.TemplatesForExport.Count - 1)
+                {
+                    int nextTemplateIndex = index + 1;
+                    TemplateForExportModel selectedTemplate = this.SelectedTemplateForExport;
+                    this.TemplatesForExport[index] = this.TemplatesForExport[nextTemplateIndex];
+                    this.TemplatesForExport[nextTemplateIndex] = selectedTemplate;
+                    this.SelectedTemplateForExport = selectedTemplate;
+                }
+            }
+        }
+
+        [JsonIgnore, XmlIgnore]
+        public ICommand MoveExportTemplateDownCmd
+        {
+            get
+            {
+                if (this.moveExportTemplateDownCmd == null)
+                {
+                    this.moveExportTemplateDownCmd = new RelayCommand(this.MoveExportTemplateDownAction);
+                }
+                return this.moveExportTemplateDownCmd;
+            }
+        }
+
+        private void RemoveExportTemplateAction(object param)
+        {
+            if (this.TemplatesForExport != null)
+            {
+                int index;
+                if ((index = this.TemplatesForExport.IndexOf(this.SelectedTemplateForExport)) != -1)
+                {
+                    this.TemplatesForExport.RemoveAt(index);
+                    if (index < this.TemplatesForExport.Count)
+                    {
+                        this.SelectedTemplateForExport = this.TemplatesForExport[index];
+                    }
+                    else if (index > 0)
+                    {
+                        this.SelectedTemplateForExport = this.TemplatesForExport[index - 1];
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(SettingsPanel.This, "没有选择任何模版！", "提示", MessageBoxButton.OK,
+                        MessageBoxImage.Information);
+                }
+            }
+        }
+
+        [JsonIgnore, XmlIgnore]
+        public ICommand RemoveExportTemplateCmd
+        {
+            get
+            {
+                if (this.removeExportTemplateCmd == null)
+                {
+                    this.removeExportTemplateCmd = new RelayCommand(this.RemoveExportTemplateAction);
+                }
+                return this.removeExportTemplateCmd;
+            }
+        }
+
+        internal void ResetTemplatesForExport()
+        {
+            this.SelectedTemplateForExport = null;
+            this.TemplatesForExport = new ObservableCollection<TemplateForExportModel>
+            {
+                TemplateForExportModel.TxtModel.Copy(null),
+                TemplateForExportModel.CsvModel.Copy(null),
+                TemplateForExportModel.HcbModel.Copy(null),
+                TemplateForExportModel.AllModel.Copy(null)
+            };
+        }
+
+        private void ResetExportTemplateAction(object param)
+        {
+            this.ResetTemplatesForExport();
+            MessageBox.Show(SettingsPanel.This, "已重置导出结果方案列表。", "提示",
+                MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        [JsonIgnore, XmlIgnore]
+        public ICommand ResetExportTemplateCmd
+        {
+            get
+            {
+                if (this.resetExportTemplateCmd == null)
+                {
+                    this.resetExportTemplateCmd = new RelayCommand(this.ResetExportTemplateAction);
+                }
+                return this.resetExportTemplateCmd;
+            }
+        }
+
+        [OnSerializing]
+        internal void OnSettingsViewModelSerializing(StreamingContext context)
+        {
+            if (this.TemplatesForExport != null && !this.TemplatesForExport.Any())
+            {
+                this.TemplatesForExport = null;
+            }
+            this.SelectedAlgos = AlgosPanelModel.ProvidedAlgos.Where(i => i.Selected).Select(
+                i => i.AlgoType).ToArray();
+        }
+
+        internal void OnSettingsViewModelDeserialized()
+        {
+            if (this.TemplatesForExport == null || !this.TemplatesForExport.Any())
+            {
+                this.ResetTemplatesForExport();
+            }
+            foreach (AlgoInOutModel model in AlgosPanelModel.ProvidedAlgos)
+            {
+                model.Selected = this.SelectedAlgos?.Any(i => i == model.AlgoType) ?? false;
+            }
+        }
+
+        [OnDeserialized]
+        internal void OnSettingsViewModelDeserialized(StreamingContext context)
+        {
+            this.OnSettingsViewModelDeserialized();
+        }
+
+        [JsonIgnore, XmlIgnore]
+        public bool ClipboardUpdatedByMe { get; set; }
+
+        [JsonIgnore, XmlIgnore]
+        public static string FixAlgoDlls { get; } = "更新动态链接库";
+
+        [JsonIgnore, XmlIgnore]
+        public static string ShellExtDir { get; } = "用户目录";
+
+        [JsonIgnore, XmlIgnore]
+        public static string FixExePath { get; } = "修复程序路径";
+
+        [JsonIgnore, XmlIgnore]
+        public static string AlgosDllDir { get; } = "动态链接库目录";
+
+        [JsonIgnore, XmlIgnore]
         public static GenericItemModel[] AvailableOutputTypes { get; } =
         {
             new GenericItemModel("Base64", OutputType.BASE64),
@@ -853,7 +1047,7 @@ namespace HashCalculator
             new GenericItemModel("Hex小写", OutputType.BinaryLower),
         };
 
-        [XmlIgnore]
+        [JsonIgnore, XmlIgnore]
         public static GenericItemModel[] AvailableOutputTypesLong { get; } =
         {
             new GenericItemModel("Base64 格式", OutputType.BASE64),
@@ -861,7 +1055,7 @@ namespace HashCalculator
             new GenericItemModel("十六进制小写", OutputType.BinaryLower),
         };
 
-        [XmlIgnore]
+        [JsonIgnore, XmlIgnore]
         public GenericItemModel[] AvailableTaskNumLimits { get; } =
         {
             new GenericItemModel("1 个：大多数文件很大", TaskNum.One),
@@ -870,7 +1064,7 @@ namespace HashCalculator
             new GenericItemModel("8 个：大多数文件很小", TaskNum.Eight),
         };
 
-        [XmlIgnore]
+        [JsonIgnore, XmlIgnore]
         public GenericItemModel[] AvailableDroppedSearchPolicies { get; } =
         {
             new GenericItemModel("搜索该文件夹的一代子文件", SearchPolicy.Children),
@@ -878,14 +1072,14 @@ namespace HashCalculator
             new GenericItemModel("不对该文件夹进行搜索操作", SearchPolicy.DontSearch),
         };
 
-        [XmlIgnore]
+        [JsonIgnore, XmlIgnore]
         public GenericItemModel[] AvailableQVSearchPolicies { get; } =
         {
             new GenericItemModel("搜索依据所在目录的一代子文件", SearchPolicy.Children),
             new GenericItemModel("搜索依据所在目录的所有子文件", SearchPolicy.Descendants),
         };
 
-        [XmlIgnore]
+        [JsonIgnore, XmlIgnore]
         public GenericItemModel[] AvailableFetchAlgoOptions { get; } =
         {
             new GenericItemModel("使用【默认算法】中被勾选的算法", FetchAlgoOption.SELECTED),
@@ -893,7 +1087,7 @@ namespace HashCalculator
             new GenericItemModel("使用所有可产生相应哈希长度的算法", FetchAlgoOption.TATMSHDL),
         };
 
-        [XmlIgnore]
+        [JsonIgnore, XmlIgnore]
         public GenericItemModel[] AvailableResultsToSwitchTo { get; } =
         {
             new GenericItemModel("保持现状不执行自动切换操作", CmpRes.NoResult),

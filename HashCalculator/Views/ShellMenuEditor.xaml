@@ -51,7 +51,7 @@
                                 <TextBox
                                     Margin="2"
                                     Padding="2"
-                                    Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" />
+                                    Text="{Binding Title, UpdateSourceTrigger=LostFocus}" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

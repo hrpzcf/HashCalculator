@@ -663,32 +663,6 @@ namespace HashCalculator
         }
     }
 
-    internal class RadioExportAsTxtFileCvt : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return (ExportType)value == ExportType.TxtFile;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return (bool)value ? ExportType.TxtFile : ExportType.HcbFile;
-        }
-    }
-
-    internal class RadioExportAsHcbFileCvt : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return (ExportType)value == ExportType.HcbFile;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return (bool)value ? ExportType.HcbFile : ExportType.TxtFile;
-        }
-    }
-
     internal class RadioExportCurrentAlgoCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

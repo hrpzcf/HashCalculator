@@ -784,7 +784,7 @@
                     VerticalAlignment="Center"
                     Panel.ZIndex="0"
                     Foreground="#A0808080"
-                    Text="哈希值校验依据：1. 单个或多个哈希值(每行一个)；2.【文件哈希值清单】文件路径；3.【文件哈希值清单】的单行或多行内容"
+                    Text="哈希值校验依据：可在此输入单个或多个哈希值(每行一个)、使用后面的 [...] 按钮选择 [哈希值清单] 文件、粘贴 [哈希值清单] 的单行或多行内容"
                     Visibility="{Binding HashStringOrChecklistPath, Converter={StaticResource PlaceHolderTextVisibilityCvt}}" />
                 <TextBox
                     Padding="0,3"
@@ -804,7 +804,7 @@
                 VerticalAlignment="Center"
                 Command="{Binding SelectChecklistFileCmd}"
                 Content="..."
-                ToolTip="打开【选择文件】对话框选择【文件哈希值清单】文件，将选择的文件路径填充到【哈希值校验依据】输入框中" />
+                ToolTip="打开【选择文件】对话框选择【哈希值清单】文件，将选择的文件路径填充到【哈希值校验依据】输入框中" />
             <Button
                 Grid.Column="3"
                 Margin="8,0,0,0"
@@ -813,7 +813,7 @@
                 Command="{Binding StartVerifyHashValueCmd}"
                 Content="校验"
                 IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBooleanCvt}}"
-                ToolTip="解析输入框的内容并检查哪些行的哈希值与输入框内的哈希值匹配并在【校验结果】列显示结果。&#10;如果检查时表格为空且校验依据是通用格式的【文件哈希值清单】文件路径，则：&#10;1. 点击【校验】后程序会自动解析文件并在相同目录下寻找要计算哈希值的文件完成计算并显示校验结果。&#10;2. 通用格式的【文件哈希值清单】文件请参考程序【导出结果】功能导出的文件的内容排布格式。" />
+                ToolTip="解析输入框的内容并检查哪些行的哈希值与输入框内的哈希值匹配并在【校验结果】列显示结果。&#10;如果检查时表格为空且校验依据是通用格式的【哈希值清单】文件路径，则：&#10;1. 点击【校验】后程序会自动解析文件并在相同目录下寻找要计算哈希值的文件完成计算并显示校验结果。&#10;2. 通用格式的【文件哈希值清单】文件请参考程序【导出结果】功能导出的文件的内容排布格式。" />
         </Grid>
     </Grid>
 </Window>
