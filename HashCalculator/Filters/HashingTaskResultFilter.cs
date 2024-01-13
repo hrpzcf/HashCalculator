@@ -13,7 +13,7 @@ namespace HashCalculator
             new GenericItemModel("已成功", HashResult.Succeeded),
         };
 
-        public override ContentControl Settings { get; }
+        public override ContentControl UserInterface { get; }
 
         public override string Display => "运行结果";
 
@@ -25,7 +25,7 @@ namespace HashCalculator
 
         public HashingTaskResultFilter()
         {
-            this.Settings = new HashingTaskResultFilterCtrl(this);
+            this.UserInterface = new HashingTaskResultFilterCtrl(this);
         }
 
         public override void FilterObjects(IEnumerable<HashViewModel> models)

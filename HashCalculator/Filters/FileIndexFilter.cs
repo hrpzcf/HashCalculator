@@ -6,7 +6,7 @@ namespace HashCalculator
 {
     internal class FileIndexFilter : AbsHashViewFilter
     {
-        public override ContentControl Settings { get; }
+        public override ContentControl UserInterface { get; }
 
         public override string Display => "有效的文件";
 
@@ -19,7 +19,7 @@ namespace HashCalculator
         public FileIndexFilter()
         {
             this.Selected = true;
-            this.Settings = new FileIndexFilterCtrl(this);
+            this.UserInterface = new FileIndexFilterCtrl(this);
         }
 
         public override void FilterObjects(IEnumerable<HashViewModel> models)

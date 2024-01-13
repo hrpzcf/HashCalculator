@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Windows.Controls;
 
 namespace HashCalculator
 {
@@ -9,6 +10,8 @@ namespace HashCalculator
         public abstract string Display { get; }
 
         public abstract string Description { get; }
+
+        public abstract ContentControl UserInterface { get; }
 
         public virtual void Init() { }
 

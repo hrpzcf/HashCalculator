@@ -492,7 +492,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="操作对象" Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowExecutionTargetColumn, Converter={StaticResource ShowColumnCvt}, Mode=OneWay}">
+                <DataGridTemplateColumn Header="操作目标" Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowExecutionTargetColumn, Converter={StaticResource ShowColumnCvt}, Mode=OneWay}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid>

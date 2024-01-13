@@ -9,7 +9,7 @@ namespace HashCalculator
 {
     internal class SameDirFilesFilter : AbsHashViewFilter
     {
-        public override ContentControl Settings { get; }
+        public override ContentControl UserInterface { get; }
 
         public override string Display => "相同文件夹";
 
@@ -27,7 +27,7 @@ namespace HashCalculator
 
         public SameDirFilesFilter()
         {
-            this.Settings = new SameDirFilesFilterCtrl(this);
+            this.UserInterface = new SameDirFilesFilterCtrl(this);
         }
 
         public override void FilterObjects(IEnumerable<HashViewModel> models)

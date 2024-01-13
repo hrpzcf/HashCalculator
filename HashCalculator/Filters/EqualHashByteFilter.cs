@@ -21,7 +21,7 @@ namespace HashCalculator
     {
         private AlgoInOutModel[] _algos;
 
-        public override ContentControl Settings { get; }
+        public override ContentControl UserInterface { get; }
 
         public override string Display => "相同哈希值";
 
@@ -51,7 +51,7 @@ namespace HashCalculator
             this._algos = AlgosPanelModel.ProvidedAlgos
                 .Select(i => i.NewAlgoInOutModel()).ToArray();
             this.Param = this._algos[0];
-            this.Settings = new EqualHashByteFilterCtrl(this);
+            this.UserInterface = new EqualHashByteFilterCtrl(this);
         }
 
         public override void FilterObjects(IEnumerable<HashViewModel> models)

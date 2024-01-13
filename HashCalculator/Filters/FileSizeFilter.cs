@@ -5,7 +5,7 @@ namespace HashCalculator
 {
     internal class FileSizeFilter : AbsHashViewFilter
     {
-        public override ContentControl Settings { get; }
+        public override ContentControl UserInterface { get; }
 
         public override string Display => "文件大小";
 
@@ -33,7 +33,7 @@ namespace HashCalculator
         {
             this.MinSizeUnit = (GenericItemModel)this.Items[2];
             this.MaxSizeUnit = (GenericItemModel)this.Items[2];
-            this.Settings = new FileSizeFilterCtrl(this);
+            this.UserInterface = new FileSizeFilterCtrl(this);
         }
 
         public override void FilterObjects(IEnumerable<HashViewModel> models)

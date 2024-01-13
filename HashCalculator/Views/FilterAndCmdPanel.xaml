@@ -62,10 +62,10 @@
     </Window.Left>
     <Grid Margin="4">
         <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="8*" />
+            <RowDefinition Height="9*" />
         </Grid.RowDefinitions>
-        <GroupBox Grid.Row="0" Padding="0,6,0,0">
+        <GroupBox Grid.Row="0" Padding="0,4,0,0">
             <GroupBox.Header>
                 <TextBlock
                     VerticalAlignment="Center"
@@ -74,11 +74,17 @@
                     ToolTip="勾选筛选器并点击【刷新】按钮以更新主窗口表格，勾选的筛选器之间为【且】关系&#10;警告：在主窗口发生任何更改后，都应该点击【刷新】按钮刷新筛选结果，否则结果是不可靠的" />
             </GroupBox.Header>
             <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <ListBox
+                    Grid.Row="0"
+                    Grid.RowSpan="2"
                     Grid.Column="0"
                     d:ItemsSource="{d:SampleData}"
                     ItemsSource="{Binding HashModelFilters}"
@@ -98,89 +104,108 @@
                                     Command="{Binding ElementName=cmdPanel, Path=DataContext.FilterChangedCmd}"
                                     CommandParameter="{Binding}"
                                     IsChecked="{Binding Selected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                <TextBlock
-                                    Padding="8,1,32,1"
-                                    Text="{Binding Display}"
-                                    ToolTip="{Binding Description}" />
+                                <TextBlock Padding="8,1,32,1" Text="{Binding Display}" />
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
-                <DockPanel Grid.Column="1">
-                    <DockPanel Margin="4,0,0,0" DockPanel.Dock="Bottom">
-                        <StackPanel
-                            Margin="0,0,0,6"
-                            VerticalAlignment="Bottom"
-                            DockPanel.Dock="Left"
-                            Orientation="Horizontal">
-                            <Button
-                                Width="32"
-                                Height="32"
-                                Command="{Binding MoveFilterUpCmd}"
-                                CommandParameter="{Binding}"
-                                Style="{StaticResource ImageButtonStyle2}"
-                                ToolTip="上移筛选器...">
-                                <Image Source="/Images/arrow_up_64.png" />
-                            </Button>
-                            <Button
-                                Width="32"
-                                Height="32"
-                                Margin="12,0,0,0"
-                                Command="{Binding MoveFilterDownCmd}"
-                                Style="{StaticResource ImageButtonStyle2}"
-                                ToolTip="下移筛选器...">
-                                <Image Source="/Images/arrow_down_64.png" />
-                            </Button>
-                            <Button
-                                Width="32"
-                                Height="32"
-                                Margin="12,0,0,0"
-                                Command="{Binding ClearFilterSelectionCmd}"
-                                Style="{StaticResource ImageButtonStyle2}"
-                                ToolTip="取消所有筛选器的启用状态...">
-                                <Image Source="/Images/clear_filter_64.png" />
-                            </Button>
-                        </StackPanel>
-                        <!--  筛选器的刷新按钮  -->
+                <GroupBox
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Margin="4,0,0,0"
+                    Padding="4,6,4,2">
+                    <GroupBox.Header>
+                        <TextBlock
+                            VerticalAlignment="Top"
+                            Foreground="#FF006FD6"
+                            Text="{Binding SelectedFilter.Display, StringFormat=[ {0} ] 筛选器参数：}" />
+                    </GroupBox.Header>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <ContentControl Grid.Row="0" Content="{Binding SelectedFilter.UserInterface}" />
+                        <TextBlock
+                            Grid.Row="1"
+                            Margin="0,8,0,0"
+                            FontSize="8pt"
+                            Foreground="Red"
+                            Text="筛选器描述：" />
+                        <TextBlock
+                            Grid.Row="2"
+                            FontSize="8pt"
+                            Foreground="#DD006FD6"
+                            Style="{StaticResource DescTextBlockStyle}"
+                            Text="{Binding SelectedFilter.Description}"
+                            ToolTip="{Binding SelectedFilter.Description}" />
+                    </Grid>
+                </GroupBox>
+                <DockPanel
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Margin="4,0,0,0">
+                    <StackPanel
+                        Margin="0,0,0,6"
+                        VerticalAlignment="Bottom"
+                        DockPanel.Dock="Left"
+                        Orientation="Horizontal">
                         <Button
-                            Width="64"
-                            Height="64"
-                            HorizontalAlignment="Right"
-                            Command="{Binding RefreshFiltersCmd}"
-                            DockPanel.Dock="Right"
-                            Style="{StaticResource ImageButtonStyle2}"
-                            ToolTip="应用已勾选的筛选器并刷新主窗口表格视图...">
-                            <Button.IsEnabled>
-                                <MultiBinding Converter="{StaticResource CmdPanelCriticalControlsEnabledCvt}">
-                                    <Binding Path="State" Source="{x:Static local:MainWndViewModel.CurrentModel}" />
-                                    <Binding Path="FilterOrCmderEnabled" Source="{x:Static local:Settings.Current}" />
-                                </MultiBinding>
-                            </Button.IsEnabled>
-                            <Image Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnRefreshFiltersEnabledImgSrcCvt}}" />
-                        </Button>
-                        <Image
                             Width="32"
                             Height="32"
-                            Margin="0,0,16,8"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Bottom"
-                            gif:AnimationBehavior.RepeatBehavior="Forever"
-                            gif:AnimationBehavior.SourceUri="/Images/loading.gif"
-                            DockPanel.Dock="Right"
-                            Visibility="{Binding Source={x:Static local:Settings.Current}, Path=FilterOrCmderEnabled, Converter={StaticResource BooleanTrueToVisibilityHiddenCvt}}" />
-                    </DockPanel>
-                    <GroupBox
-                        Margin="4,0,0,0"
-                        Padding="4,6,4,4"
-                        DockPanel.Dock="Top">
-                        <GroupBox.Header>
-                            <TextBlock
-                                VerticalAlignment="Top"
-                                Foreground="#FF006FD6"
-                                Text="{Binding SelectedFilter.Display, StringFormat=[ {0} ] 筛选器参数：}" />
-                        </GroupBox.Header>
-                        <ContentControl Content="{Binding SelectedFilter.Settings}" />
-                    </GroupBox>
+                            Command="{Binding MoveFilterUpCmd}"
+                            CommandParameter="{Binding}"
+                            Style="{StaticResource ImageButtonStyle2}"
+                            ToolTip="上移筛选器...">
+                            <Image Source="/Images/arrow_up_64.png" />
+                        </Button>
+                        <Button
+                            Width="32"
+                            Height="32"
+                            Margin="12,0,0,0"
+                            Command="{Binding MoveFilterDownCmd}"
+                            Style="{StaticResource ImageButtonStyle2}"
+                            ToolTip="下移筛选器...">
+                            <Image Source="/Images/arrow_down_64.png" />
+                        </Button>
+                        <Button
+                            Width="32"
+                            Height="32"
+                            Margin="12,0,0,0"
+                            Command="{Binding ClearFilterSelectionCmd}"
+                            Style="{StaticResource ImageButtonStyle2}"
+                            ToolTip="取消所有筛选器的启用状态...">
+                            <Image Source="/Images/clear_filter_64.png" />
+                        </Button>
+                    </StackPanel>
+                    <!--  筛选器的刷新按钮  -->
+                    <Button
+                        Width="64"
+                        Height="64"
+                        HorizontalAlignment="Right"
+                        Command="{Binding RefreshFiltersCmd}"
+                        DockPanel.Dock="Right"
+                        Style="{StaticResource ImageButtonStyle2}"
+                        ToolTip="应用已勾选的筛选器并刷新主窗口表格视图...">
+                        <Button.IsEnabled>
+                            <MultiBinding Converter="{StaticResource CmdPanelCriticalControlsEnabledCvt}">
+                                <Binding Path="State" Source="{x:Static local:MainWndViewModel.CurrentModel}" />
+                                <Binding Path="FilterOrCmderEnabled" Source="{x:Static local:Settings.Current}" />
+                            </MultiBinding>
+                        </Button.IsEnabled>
+                        <Image Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnRefreshFiltersEnabledImgSrcCvt}}" />
+                    </Button>
+                    <Image
+                        Width="32"
+                        Height="32"
+                        Margin="0,0,16,8"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        gif:AnimationBehavior.RepeatBehavior="Forever"
+                        gif:AnimationBehavior.SourceUri="/Images/loading.gif"
+                        DockPanel.Dock="Right"
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=FilterOrCmderEnabled, Converter={StaticResource BooleanTrueToVisibilityHiddenCvt}}" />
                 </DockPanel>
             </Grid>
         </GroupBox>
@@ -189,7 +214,7 @@
                 <TextBlock
                     VerticalAlignment="Center"
                     Foreground="#FF006FD6"
-                    Text="可使用的操作"
+                    Text="可用的操作器"
                     ToolTip="可用于对筛选的结果进行操作的一些命令" />
             </GroupBox.Header>
             <GroupBox.IsEnabled>
@@ -207,14 +232,14 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <!--  操作对象选择器命令  -->
+                <!--  操作目标选择器命令  -->
                 <GroupBox
                     Grid.Row="0"
                     Grid.ColumnSpan="2"
-                    Padding="0,6,0,2"
+                    Padding="0,2,0,0"
                     d:DataContext="{d:DesignInstance Type=local:SelectFileCmder}"
                     BorderBrush="Violet"
-                    DataContext="{Binding HashModelCmders[0]}">
+                    DataContext="{Binding SelectFilesCmder}">
                     <GroupBox.Header>
                         <TextBlock
                             Margin="3,0,0,0"
@@ -229,7 +254,7 @@
                         </Grid.ColumnDefinitions>
                         <WrapPanel Grid.Column="0">
                             <Button
-                                Margin="4"
+                                Margin="2"
                                 Padding="20,6"
                                 Background="DarkSlateBlue"
                                 BorderThickness="1"
@@ -239,7 +264,7 @@
                                 Style="{StaticResource IndepButtonStyle}"
                                 ToolTip="如果有【相同哈希值】筛选器的分组结果，则每组选择除了第一行外的所有行，否则取消选择所有行" />
                             <Button
-                                Margin="4"
+                                Margin="2"
                                 Padding="20,6"
                                 Background="DarkCyan"
                                 BorderThickness="1"
@@ -249,7 +274,7 @@
                                 Style="{StaticResource IndepButtonStyle}"
                                 ToolTip="如果有【相同文件夹】筛选器的分组结果，则每组选择除了第一行外的所有行，否则取消选择所有行" />
                             <Button
-                                Margin="4"
+                                Margin="2"
                                 Padding="20,6"
                                 Background="DarkMagenta"
                                 BorderThickness="1"
@@ -259,7 +284,7 @@
                                 Style="{StaticResource IndepButtonStyle}"
                                 ToolTip="如果有多个筛选器共同起作用的分组结果，则每组选择除了第一行外的所有行，否则取消选择所有行" />
                             <Button
-                                Margin="4"
+                                Margin="2"
                                 Padding="20,6"
                                 Background="DarkOliveGreen"
                                 BorderThickness="1"
@@ -269,7 +294,7 @@
                                 Style="{StaticResource IndepButtonStyle}"
                                 ToolTip="选择所有已通过筛选的行" />
                             <Button
-                                Margin="4"
+                                Margin="2"
                                 Padding="20,6"
                                 Background="DarkBlue"
                                 BorderThickness="1"
@@ -279,7 +304,7 @@
                                 Style="{StaticResource IndepButtonStyle}"
                                 ToolTip="反向改变所有已通过筛选的行的选择状态" />
                             <Button
-                                Margin="4"
+                                Margin="2"
                                 Padding="20,6"
                                 Background="SaddleBrown"
                                 BorderThickness="1"
@@ -300,97 +325,39 @@
                             Content="取消"
                             Foreground="WhiteSmoke"
                             Style="{StaticResource IndepButtonStyle}"
-                            ToolTip="取消选择所有行并隐藏主窗口【操作对象】列" />
+                            ToolTip="取消选择所有行并隐藏主窗口【操作目标】列" />
                     </Grid>
                 </GroupBox>
-                <!--  删除指定文件命令  -->
-                <GroupBox
+                <ListBox
                     Grid.Row="1"
                     Grid.Column="0"
                     Margin="0,4,0,0"
-                    Padding="0,6,0,2"
-                    d:DataContext="{d:DesignInstance Type=local:DeleteFileCmder}"
-                    BorderBrush="DarkCyan"
-                    DataContext="{Binding HashModelCmders[1]}"
-                    Foreground="Black">
-                    <GroupBox.Header>
-                        <TextBlock
-                            Margin="3,0,0,0"
-                            VerticalAlignment="Center"
-                            Text="{Binding Display}"
-                            ToolTip="{Binding Description}" />
-                    </GroupBox.Header>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <Button
-                            Grid.Row="0"
-                            Grid.Column="0"
-                            Padding="24,6"
-                            VerticalAlignment="Center"
-                            Background="Red"
-                            BorderThickness="1"
-                            Command="{Binding DeleteFileDirectlyCmd}"
-                            Content="删除"
-                            Foreground="White"
-                            IsEnabled="{Binding Source={x:Static local:Settings.Current}, Path=ShowExecutionTargetColumn}"
-                            Style="{StaticResource IndepButtonStyle}"
-                            ToolTip="直接删除操作对象，删除前请确认是否正确勾选了要删除的文件" />
-                        <Button
-                            Grid.Row="0"
-                            Grid.Column="1"
-                            Margin="4,0,0,0"
-                            Padding="16,6"
-                            VerticalAlignment="Center"
-                            Background="OrangeRed"
-                            BorderThickness="1"
-                            Command="{Binding MoveToRecycleBinCmd}"
-                            Content="移到回收站"
-                            Foreground="White"
-                            IsEnabled="{Binding Source={x:Static local:Settings.Current}, Path=ShowExecutionTargetColumn}"
-                            Style="{StaticResource IndepButtonStyle}"
-                            ToolTip="把操作对象所指文件移动到回收站，删除前请确认是否正确勾选了要删除的文件" />
-                        <CheckBox
-                            Grid.Row="1"
-                            Grid.ColumnSpan="3"
-                            Margin="0,4,0,0"
-                            VerticalContentAlignment="Center"
-                            Content="检查是否全部经过【有效文件】的筛选"
-                            IsChecked="{Binding CheckIfUsingDistinctFilesFilter}" />
-                        <TextBlock
-                            Grid.Row="2"
-                            Grid.ColumnSpan="3"
-                            Margin="0,4,0,0"
-                            VerticalAlignment="Center"
-                            FontSize="8pt"
-                            Foreground="OrangeRed"
-                            Text="提示：勾选【有效的文件】筛选器并刷新以避免误删" />
-                    </Grid>
-                </GroupBox>
-                <!--  重命名文件命令  -->
+                    d:ItemsSource="{d:SampleData}"
+                    ItemsSource="{Binding HashModelCmders}"
+                    SelectedIndex="0"
+                    SelectedItem="{Binding SelectedCmder}"
+                    SelectionMode="Single">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Margin" Value="1" />
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Padding="0,1,4,1" Text="{Binding Display}" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
                 <GroupBox
                     Grid.Row="1"
                     Grid.Column="1"
                     Margin="4,4,0,0"
-                    Padding="0,6,0,2"
-                    d:DataContext="{d:DesignInstance Type=local:RenameFileCmder}"
-                    BorderBrush="Olive"
-                    DataContext="{Binding HashModelCmders[2]}"
-                    Foreground="Black">
+                    Padding="4,6,4,2">
                     <GroupBox.Header>
                         <TextBlock
-                            Margin="3,0,0,0"
-                            VerticalAlignment="Center"
-                            Text="{Binding Display}"
-                            ToolTip="{Binding Description}" />
+                            VerticalAlignment="Top"
+                            Foreground="#FF006FD6"
+                            Text="{Binding SelectedCmder.Display, StringFormat=[ {0} ] 的功能面板：}" />
                     </GroupBox.Header>
                     <Grid>
                         <Grid.RowDefinitions>
@@ -398,76 +365,20 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Row="0" Grid.Column="0">
-                            <DockPanel>
-                                <TextBlock
-                                    VerticalAlignment="Center"
-                                    DockPanel.Dock="Left"
-                                    Text="关注的算法："
-                                    ToolTip="使用该算法的哈希值，如果操作对象没有完成该算法则不重命名该对象所指文件" />
-                                <ComboBox
-                                    Width="{Binding ElementName=outputComboBox, Path=ActualWidth}"
-                                    VerticalAlignment="Center"
-                                    VerticalContentAlignment="Center"
-                                    DisplayMemberPath="AlgoName"
-                                    DockPanel.Dock="Right"
-                                    ItemsSource="{Binding AlgoInOutModels}"
-                                    SelectedValue="{Binding SelectedAlgo}"
-                                    SelectedValuePath="AlgoType"
-                                    ToolTip="使用该算法的哈希值，如果操作对象没有完成该算法则不重命名该对象所指文件" />
-                            </DockPanel>
-                            <DockPanel Margin="0,2,0,0">
-                                <TextBlock
-                                    VerticalAlignment="Center"
-                                    DockPanel.Dock="Left"
-                                    Text="哈希值格式："
-                                    ToolTip="把哈希值转换为该格式的字符串作为文件名，不支持 Base64 的原因是某些字符不能作为文件名" />
-                                <ComboBox
-                                    x:Name="outputComboBox"
-                                    VerticalAlignment="Center"
-                                    VerticalContentAlignment="Center"
-                                    DisplayMemberPath="Display"
-                                    DockPanel.Dock="Right"
-                                    ItemsSource="{Binding OutputTypes}"
-                                    SelectedValue="{Binding BeingUsedOutput}"
-                                    SelectedValuePath="ItemValue"
-                                    ToolTip="把哈希值转换为该格式的字符串作为文件名，不支持 Base64 的原因是某些字符不能作为文件名" />
-                            </DockPanel>
-                        </StackPanel>
-                        <Button
-                            Grid.Row="0"
-                            Grid.Column="1"
-                            Margin="4,0,0,0"
-                            Padding="16,6"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Center"
-                            Background="SaddleBrown"
-                            BorderThickness="1"
-                            Command="{Binding RenameFilesCmd}"
-                            Content="重命名"
-                            Foreground="White"
-                            IsEnabled="{Binding Source={x:Static local:Settings.Current}, Path=ShowExecutionTargetColumn}"
-                            Style="{StaticResource IndepButtonStyle}"
-                            ToolTip="把指定算法的哈希值转换为指定格式的字符串，将该字符串作为文件名重命名操作对象所指的文件" />
-                        <CheckBox
+                        <ContentControl Grid.Row="0" Content="{Binding SelectedCmder.UserInterface}" />
+                        <TextBlock
                             Grid.Row="1"
-                            Grid.ColumnSpan="2"
-                            Margin="0,4,0,0"
-                            VerticalContentAlignment="Center"
-                            Content="检查是否全部经过【有效文件】的筛选"
-                            IsChecked="{Binding CheckIfUsingDistinctFilesFilter}" />
+                            Margin="0,8,0,0"
+                            FontSize="8pt"
+                            Foreground="Red"
+                            Text="操作器描述：" />
                         <TextBlock
                             Grid.Row="2"
-                            Grid.ColumnSpan="2"
-                            Margin="0,4,0,0"
-                            VerticalAlignment="Center"
                             FontSize="8pt"
-                            Foreground="OrangeRed"
-                            Text="提示：勾选【有效的文件】筛选器并刷新以避免重复重命名" />
+                            Foreground="#DD006FD6"
+                            Style="{StaticResource DescTextBlockStyle}"
+                            Text="{Binding SelectedCmder.Description}"
+                            ToolTip="{Binding SelectedCmder.Description}" />
                     </Grid>
                 </GroupBox>
             </Grid>

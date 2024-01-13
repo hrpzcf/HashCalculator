@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 
@@ -18,9 +19,11 @@ namespace HashCalculator
 
         private ICollectionView BoundDataGridView { get; }
 
-        public override string Display => "选择操作对象";
+        public override ContentControl UserInterface { get; }
 
-        public override string Description => "提供不同的快速选择方法来选择行，供其他操作使用";
+        public override string Display => "选择操作目标（在主窗口表格中显示【操作目标】列并勾选相关行）";
+
+        public override string Description => "提供不同的快速选择方法来选择不同的行以用作其他操作器的目标。";
 
         public SelectFileCmder(IEnumerable<HashViewModel> models, ICollectionView view) : base(models)
         {

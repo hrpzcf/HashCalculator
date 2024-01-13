@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace HashCalculator
@@ -12,9 +13,11 @@ namespace HashCalculator
         private RelayCommand moveToRecycleBinCmd;
         private RelayCommand deleteFileDirectlyCmd;
 
-        public override string Display => "删除操作对象所指文件";
+        public override ContentControl UserInterface { get; }
 
-        public override string Description => "直接删除操作对象所指的文件或移动到回收站\n通常使用【相同哈希值】筛选器进行文件筛选后再使用此功能";
+        public override string Display => "删除操作目标所指文件";
+
+        public override string Description => "直接删除操作目标所指的文件或移动到回收站；\n通常使用【相同哈希值】筛选器进行文件筛选后再使用此功能。";
 
         public bool CheckIfUsingDistinctFilesFilter { get; set; } = true;
 
@@ -24,6 +27,7 @@ namespace HashCalculator
 
         public DeleteFileCmder(IEnumerable<HashViewModel> models) : base(models)
         {
+            this.UserInterface = new DeleteFileCmderCtrl(this);
         }
 
         private void DeleteMoveToRecycleBin(bool permanently)
@@ -35,8 +39,8 @@ namespace HashCalculator
                 Settings.Current.FilterOrCmderEnabled = false;
                 if (obsModels.Any(i => i.IsExecutionTarget))
                 {
-                    string promptInfo = permanently ? "确定直接删除操作对象所指的文件吗？" :
-                        "确定把操作对象所指的文件移动到回收站吗？";
+                    string promptInfo = permanently ? "确定直接删除操作目标所指的文件吗？" :
+                        "确定把操作目标所指的文件移动到回收站吗？";
                     if (MessageBox.Show(MainWindow.This, promptInfo, "警告", MessageBoxButton.OKCancel,
                         MessageBoxImage.Warning) == MessageBoxResult.OK)
                     {
@@ -81,7 +85,7 @@ namespace HashCalculator
                 }
                 else
                 {
-                    MessageBox.Show(MainWindow.This, "没有找到任何操作对象，请刷新筛选或手动勾选要删除的对象", "提示",
+                    MessageBox.Show(MainWindow.This, "没有找到任何操作目标，请刷新筛选或手动勾选要删除的对象", "提示",
                         MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             FinishingTouches:

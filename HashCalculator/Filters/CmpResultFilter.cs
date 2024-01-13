@@ -15,7 +15,7 @@ namespace HashCalculator
             new GenericItemModel("不确定", CmpRes.Uncertain),
         };
 
-        public override ContentControl Settings { get; }
+        public override ContentControl UserInterface { get; }
 
         public override string Display => "校验结果";
 
@@ -27,7 +27,7 @@ namespace HashCalculator
 
         public CmpResultFilter()
         {
-            this.Settings = new CmpResultFilterCtrl(this);
+            this.UserInterface = new CmpResultFilterCtrl(this);
         }
 
         public override void FilterObjects(IEnumerable<HashViewModel> models)

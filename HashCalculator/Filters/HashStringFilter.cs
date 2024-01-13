@@ -6,7 +6,7 @@ namespace HashCalculator
 {
     internal class HashStringFilter : AbsHashViewFilter
     {
-        public override ContentControl Settings { get; }
+        public override ContentControl UserInterface { get; }
 
         public override string Display => "哈希值";
 
@@ -18,7 +18,7 @@ namespace HashCalculator
 
         public HashStringFilter()
         {
-            this.Settings = new HashStringFilterCtrl(this);
+            this.UserInterface = new HashStringFilterCtrl(this);
         }
 
         public override void FilterObjects(IEnumerable<HashViewModel> models)

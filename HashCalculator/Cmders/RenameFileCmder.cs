@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.ConstrainedExecution;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace HashCalculator
@@ -13,9 +13,11 @@ namespace HashCalculator
         private readonly AlgoInOutModel[] _algos;
         private RelayCommand renameFilesCmd;
 
-        public override string Display => "使用哈希值作为文件名重命名文件";
+        public override ContentControl UserInterface { get; }
 
-        public override string Description => "使用指定算法、格式的哈希值作为文件名，重命名操作对象所指的文件";
+        public override string Display => "重命名操作目标所指文件";
+
+        public override string Description => "使用指定算法、格式的哈希值作为文件名，重命名操作目标所指的文件。";
 
         public GenericItemModel[] OutputTypes { get; } = new GenericItemModel[]
         {
@@ -39,6 +41,7 @@ namespace HashCalculator
         {
             this._algos = AlgosPanelModel.ProvidedAlgos;
             this.SelectedAlgo = this._algos[0].AlgoType;
+            this.UserInterface = new RenameFileCmderCtrl(this);
         }
 
         private void RenameFilesAction(object param)
@@ -53,7 +56,7 @@ namespace HashCalculator
                         MessageBoxButton.OK, MessageBoxImage.Information);
                     goto FinishingTouches;
                 }
-                else if (MessageBox.Show(MainWindow.This, "用哈希值作为文件名重命名操作对象所指的文件吗？", "确认",
+                else if (MessageBox.Show(MainWindow.This, "用哈希值作为文件名重命名操作目标所指的文件吗？", "确认",
                      MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
                 {
                     goto FinishingTouches;

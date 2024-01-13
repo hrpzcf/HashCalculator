@@ -8,7 +8,7 @@ namespace HashCalculator
     {
         private AlgoInOutModel[] _algos;
 
-        public override ContentControl Settings { get; }
+        public override ContentControl UserInterface { get; }
 
         public override string Display => "哈希算法";
 
@@ -32,7 +32,7 @@ namespace HashCalculator
         {
             this._algos = AlgosPanelModel.ProvidedAlgos.Select(
                 i => i.NewAlgoInOutModel()).ToArray();
-            this.Settings = new HashAlgoFilterCtrl(this);
+            this.UserInterface = new HashAlgoFilterCtrl(this);
         }
 
         public override void FilterObjects(IEnumerable<HashViewModel> models)

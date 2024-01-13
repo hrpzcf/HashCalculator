@@ -1,0 +1,76 @@
+﻿<UserControl
+    x:Class="HashCalculator.DeleteFileCmderCtrl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:HashCalculator"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DataContext="{d:DesignInstance Type=local:DeleteFileCmder}"
+    d:DesignHeight="100"
+    d:DesignWidth="300"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/CmderButtonStyles.xaml" />
+                <ResourceDictionary Source="/Resources/DescTextBlockStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Button
+            Grid.Row="0"
+            Grid.Column="0"
+            Padding="24,6"
+            VerticalAlignment="Center"
+            Background="Red"
+            BorderThickness="1"
+            Command="{Binding DeleteFileDirectlyCmd}"
+            Content="删除"
+            Foreground="White"
+            IsEnabled="{Binding Source={x:Static local:Settings.Current}, Path=ShowExecutionTargetColumn}"
+            Style="{StaticResource IndepButtonStyle}"
+            ToolTip="直接删除操作目标，删除前请确认是否正确勾选了要删除的文件" />
+        <Button
+            Grid.Row="0"
+            Grid.Column="1"
+            Margin="4,0,0,0"
+            Padding="16,6"
+            VerticalAlignment="Center"
+            Background="OrangeRed"
+            BorderThickness="1"
+            Command="{Binding MoveToRecycleBinCmd}"
+            Content="移到回收站"
+            Foreground="White"
+            IsEnabled="{Binding Source={x:Static local:Settings.Current}, Path=ShowExecutionTargetColumn}"
+            Style="{StaticResource IndepButtonStyle}"
+            ToolTip="把操作目标所指文件移动到回收站，删除前请确认是否正确勾选了要删除的文件" />
+        <CheckBox
+            Grid.Row="1"
+            Grid.ColumnSpan="3"
+            Margin="0,4,0,0"
+            VerticalContentAlignment="Center"
+            Content="检查是否全部经过【有效文件】的筛选"
+            IsChecked="{Binding CheckIfUsingDistinctFilesFilter}" />
+        <TextBlock
+            Grid.Row="2"
+            Grid.ColumnSpan="3"
+            Margin="0,4,0,0"
+            VerticalAlignment="Center"
+            FontSize="8pt"
+            Foreground="OrangeRed"
+            Style="{StaticResource DescTextBlockStyle}"
+            Text="提示：勾选【有效的文件】筛选器并刷新以避免误删" />
+    </Grid>
+</UserControl>

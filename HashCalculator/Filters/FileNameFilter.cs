@@ -7,7 +7,7 @@ namespace HashCalculator
 {
     internal class FileNameFilter : AbsHashViewFilter
     {
-        public override ContentControl Settings { get; }
+        public override ContentControl UserInterface { get; }
 
         public override string Display => "搜索文件名";
 
@@ -26,7 +26,7 @@ namespace HashCalculator
 
         public FileNameFilter()
         {
-            this.Settings = new FileNameFilterCtrl(this);
+            this.UserInterface = new FileNameFilterCtrl(this);
         }
 
         public override void FilterObjects(IEnumerable<HashViewModel> models)

@@ -6,7 +6,7 @@ namespace HashCalculator
 {
     internal class SerialNumberFilter : AbsHashViewFilter
     {
-        public override ContentControl Settings { get; }
+        public override ContentControl UserInterface { get; }
 
         public override string Display => "序号范围";
 
@@ -22,7 +22,7 @@ namespace HashCalculator
 
         public SerialNumberFilter()
         {
-            this.Settings = new SerialNumberFilterCtrl(this);
+            this.UserInterface = new SerialNumberFilterCtrl(this);
         }
 
         public override void FilterObjects(IEnumerable<HashViewModel> models)

@@ -8,11 +8,11 @@ namespace HashCalculator
     {
         private bool _selected = false;
 
-        public abstract ContentControl Settings { get; }
-
         public abstract string Display { get; }
 
         public abstract string Description { get; }
+
+        public abstract ContentControl UserInterface { get; }
 
         public abstract object Param { get; set; }
 

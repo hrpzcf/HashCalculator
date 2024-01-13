@@ -111,6 +111,12 @@
     <Compile Include="AppLoading.cs" />
     <Compile Include="Cmders\DeleteFileCmder.cs" />
     <Compile Include="Cmders\AbsHashesCmder.cs" />
+    <Compile Include="Cmders\DeleteFileCmderCtrl.xaml.cs">
+      <DependentUpon>DeleteFileCmderCtrl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Cmders\RenameFileCmderCtrl.xaml.cs">
+      <DependentUpon>RenameFileCmderCtrl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Cmders\SelectFileCmder.cs" />
     <Compile Include="Cmders\RenameFileCmder.cs" />
     <Compile Include="Globals\BufferSize.cs" />
@@ -243,6 +249,14 @@
     <Compile Include="Views\ShellSubmenuEditor.xaml.cs">
       <DependentUpon>ShellSubmenuEditor.xaml</DependentUpon>
     </Compile>
+    <Page Include="Cmders\DeleteFileCmderCtrl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Cmders\RenameFileCmderCtrl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Filters\CmpResultFilterCtrl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -9,6 +9,7 @@ namespace HashCalculator
 {
     internal class FilterAndCmdPanelModel : NotifiableModel
     {
+        private AbsHashesCmder selectedCmder;
         private AbsHashViewFilter selectedFilter;
         private RelayCommand refreshFiltersCmd;
         private RelayCommand filterChangedCmd;
@@ -17,6 +18,18 @@ namespace HashCalculator
         private RelayCommand clearFilterSelectionCmd;
 
         private ICollectionView BoundDataGridView { get; }
+
+        public AbsHashesCmder SelectedCmder
+        {
+            get
+            {
+                return this.selectedCmder;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.selectedCmder, value);
+            }
+        }
 
         public AbsHashViewFilter SelectedFilter
         {
@@ -30,18 +43,20 @@ namespace HashCalculator
             }
         }
 
-        public AbsHashesCmder[] HashModelCmders { get; }
+        public AbsHashesCmder SelectFilesCmder { get; }
+
+        public ObservableCollection<AbsHashesCmder> HashModelCmders { get; }
 
         public ObservableCollection<AbsHashViewFilter> HashModelFilters { get; }
 
         public FilterAndCmdPanelModel(ICollectionView view)
         {
             this.BoundDataGridView = view;
-            this.HashModelCmders = new AbsHashesCmder[]
+            this.SelectFilesCmder = new SelectFileCmder();
+            this.HashModelCmders = new ObservableCollection<AbsHashesCmder>()
             {
-                new SelectFileCmder(),      // 0
-                new DeleteFileCmder(),      // 1
-                new RenameFileCmder(),      // 2
+                new DeleteFileCmder(),
+                new RenameFileCmder(),
             };
             this.HashModelFilters = new ObservableCollection<AbsHashViewFilter>()
             {
