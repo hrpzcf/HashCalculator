@@ -15,7 +15,7 @@ namespace HashCalculator
 
         public override ContentControl UserInterface { get; }
 
-        public override string Display => "删除操作目标所指文件";
+        public override string Display => "删除操作目标所指的文件";
 
         public override string Description => "直接删除操作目标所指的文件或移动到回收站；\n通常使用【相同哈希值】筛选器进行文件筛选后再使用此功能。";
 
@@ -34,10 +34,10 @@ namespace HashCalculator
         {
             if (Settings.Current.ShowExecutionTargetColumn &&
                 Settings.Current.FilterOrCmderEnabled &&
-                this.RefModels is ObservableCollection<HashViewModel> obsModels)
+                this.RefModels is Collection<HashViewModel> hashViewModels)
             {
                 Settings.Current.FilterOrCmderEnabled = false;
-                if (obsModels.Any(i => i.IsExecutionTarget))
+                if (hashViewModels.Any(i => i.IsExecutionTarget))
                 {
                     string promptInfo = permanently ? "确定直接删除操作目标所指的文件吗？" :
                         "确定把操作目标所指的文件移动到回收站吗？";
@@ -45,17 +45,17 @@ namespace HashCalculator
                         MessageBoxImage.Warning) == MessageBoxResult.OK)
                     {
                         if (this.CheckIfUsingDistinctFilesFilter &&
-                            !obsModels.Where(i => i.Matched).All(i => i.FileIndex != null))
+                            !hashViewModels.Where(i => i.Matched).All(i => i.FileIndex != null))
                         {
-                            if (MessageBox.Show(MainWindow.This, "并非所有行都经过【有效文件】的筛选，继续吗？", "提示",
+                            if (MessageBox.Show(MainWindow.This, "并非所有筛选出的行都经过【有效文件】的筛选，继续吗？", "提示",
                                 MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
                             {
                                 goto FinishingTouches;
                             }
                         }
-                        HashViewModel[] hashViewModels = new HashViewModel[obsModels.Count];
-                        obsModels.CopyTo(hashViewModels, 0);
-                        foreach (HashViewModel model in hashViewModels)
+                        HashViewModel[] modelsCopied = new HashViewModel[hashViewModels.Count];
+                        hashViewModels.CopyTo(modelsCopied, 0);
+                        foreach (HashViewModel model in modelsCopied)
                         {
                             if (model.IsExecutionTarget)
                             {
@@ -73,7 +73,7 @@ namespace HashCalculator
                                         };
                                     }
                                     model.ShutdownModel();
-                                    obsModels.Remove(model);
+                                    hashViewModels.Remove(model);
                                     continue;
                                 }
                                 catch (Exception) { }

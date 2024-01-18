@@ -11,7 +11,7 @@ namespace HashCalculator
 
         public override string Display => "搜索文件名";
 
-        public override string Description => "筛选出含有指定字符串或与指定正则表达式匹配的文件名";
+        public override string Description => "筛选出含有指定字符串或与指定正则表达式匹配的文件名。";
 
         public string Pattern { get; set; }
 

@@ -10,7 +10,7 @@ namespace HashCalculator
 
         public override string Display => "哈希值";
 
-        public override string Description => "将各行中包含指定哈希值的行筛选出来";
+        public override string Description => "将各行中包含指定哈希值的行筛选出来。";
 
         public override object Param { get; set; } = FilterLogic.Any;
 

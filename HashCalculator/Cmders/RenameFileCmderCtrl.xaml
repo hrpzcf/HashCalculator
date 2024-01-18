@@ -86,14 +86,15 @@
             Grid.Row="2"
             Grid.ColumnSpan="3"
             Margin="0,4,0,0"
+            Padding="4,0,0,0"
             VerticalContentAlignment="Center"
-            Content="检查是否全部经过【有效文件】的筛选"
-            IsChecked="{Binding CheckIfUsingDistinctFilesFilter}" />
+            Content="检查是否经过【有效的文件】的筛选"
+            IsChecked="{Binding CheckIfUsingDistinctFilesFilter}"
+            ToolTip="检查当前所有筛选出来的行是否都已经被【有效的文件】筛选器筛选过" />
         <TextBlock
             Grid.Row="3"
             Grid.ColumnSpan="3"
             Margin="0,4,0,0"
-            VerticalAlignment="Center"
             FontSize="8pt"
             Foreground="OrangeRed"
             Style="{StaticResource DescTextBlockStyle}"

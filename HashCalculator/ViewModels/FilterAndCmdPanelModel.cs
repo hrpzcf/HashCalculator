@@ -43,7 +43,7 @@ namespace HashCalculator
             }
         }
 
-        public AbsHashesCmder SelectFilesCmder { get; }
+        public AbsHashesCmder SelectTableLinesCmder { get; }
 
         public ObservableCollection<AbsHashesCmder> HashModelCmders { get; }
 
@@ -52,11 +52,13 @@ namespace HashCalculator
         public FilterAndCmdPanelModel(ICollectionView view)
         {
             this.BoundDataGridView = view;
-            this.SelectFilesCmder = new SelectFileCmder();
+            this.SelectTableLinesCmder = new SelectTargetsCmder();
             this.HashModelCmders = new ObservableCollection<AbsHashesCmder>()
             {
                 new DeleteFileCmder(),
                 new RenameFileCmder(),
+                new MarkFilesCmder(),
+                new RestoreFilesCmder(),
             };
             this.HashModelFilters = new ObservableCollection<AbsHashViewFilter>()
             {

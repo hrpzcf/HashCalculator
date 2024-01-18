@@ -3,7 +3,7 @@ using System.Windows.Controls;
 
 namespace HashCalculator
 {
-    internal abstract class AbsHashesCmder
+    internal abstract class AbsHashesCmder : NotifiableModel
     {
         protected object RefModels { get; }
 

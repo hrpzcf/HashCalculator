@@ -728,6 +728,7 @@ namespace HashCalculator
                 });
                 goto FinishingTouchesBeforeExiting;
             }
+            byte[] buffer = null;
             try
             {
                 using (FileStream fs = File.OpenRead(this.FileInfo.FullName))
@@ -757,8 +758,7 @@ namespace HashCalculator
                         model.Algo.Initialize();
                     }
                     int readedSize = 0;
-                    int bufferMinSize = BufferSize.Suggest(this.FileSize);
-                    byte[] buffer = ArrayPool<byte>.Shared.Rent(bufferMinSize);
+                    GlobalUtils.Suggest(ref buffer, this.FileSize);
                     Action<int> updateProgress = size => { this.Progress += size; };
                     bool terminateByCancellation = false;
                     if (Settings.Current.ParallelBetweenAlgos)
@@ -767,7 +767,7 @@ namespace HashCalculator
                         using (Barrier barrier = new Barrier(modelsCount, i =>
                             {
                                 this.manualPauseController.WaitOne();
-                                readedSize = fs.Read(buffer, 0, bufferMinSize);
+                                readedSize = fs.Read(buffer, 0, buffer.Length);
                                 synchronization.BeginInvoke(updateProgress, readedSize);
                             }))
                         {
@@ -806,7 +806,7 @@ namespace HashCalculator
                             {
                                 goto ReturnRentedBufferMemory;
                             }
-                            if ((readedSize = fs.Read(buffer, 0, bufferMinSize)) <= 0)
+                            if ((readedSize = fs.Read(buffer, 0, buffer.Length)) <= 0)
                             {
                                 break;
                             }
@@ -846,6 +846,10 @@ namespace HashCalculator
                     this.Result = HashResult.Failed;
                     this.TaskMessage = "文件读取失败或进行计算时出错...";
                 });
+            }
+            finally
+            {
+                GlobalUtils.MakeSureBuffer(ref buffer, 0);
             }
         FinishingTouchesBeforeExiting:
             if (this.AlgoInOutModels != null)

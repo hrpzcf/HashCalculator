@@ -1,0 +1,68 @@
+﻿<Window
+    x:Class="HashCalculator.DoubleProgressWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:HashCalculator"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="正在修改哈希值"
+    Width="{Binding Source={x:Static local:Settings.Current}, Path=ChangHashProgressWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+    Height="{Binding Source={x:Static local:Settings.Current}, Path=ChangHashProgressHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+    d:DataContext="{d:DesignInstance Type=local:DoubleProgressModel}"
+    SnapsToDevicePixels="True"
+    WindowStartupLocation="CenterOwner"
+    mc:Ignorable="d">
+    <Window.Resources>
+        <ResourceDictionary Source="/Resources/ConverterResource.xaml" />
+    </Window.Resources>
+    <Grid Margin="32,8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="3*" />
+        </Grid.RowDefinitions>
+        <ProgressBar
+            Grid.Row="1"
+            Grid.Column="1"
+            Grid.ColumnSpan="2"
+            Height="4"
+            Maximum="1.0"
+            Value="{Binding ProgressValue}" />
+        <TextBlock
+            Grid.Row="2"
+            Margin="0,2,0,0"
+            Foreground="Gray"
+            Text="{Binding CurFileName}"
+            TextTrimming="CharacterEllipsis" />
+        <ProgressBar
+            Grid.Row="3"
+            Height="4"
+            Margin="0,8,0,0"
+            Maximum="{Binding FilesCount}"
+            Value="{Binding ProcessedCount}" />
+        <TextBlock
+            Grid.Row="4"
+            Margin="0,2,0,0"
+            Foreground="Gray"
+            TextTrimming="CharacterEllipsis">
+            <TextBlock.Text>
+                <MultiBinding StringFormat="正在处理文件，请耐心等待...({1}/{0})">
+                    <Binding Path="FilesCount" />
+                    <Binding Path="ProcessedCount" />
+                </MultiBinding>
+            </TextBlock.Text>
+        </TextBlock>
+        <Button
+            Grid.Row="5"
+            Padding="16,4"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            Background="{x:Null}"
+            Command="{Binding CancelOperationCmd}"
+            Content="取消"
+            IsEnabled="{Binding IsCancelled, Converter={StaticResource ReverseBooleanValueCvt}}" />
+    </Grid>
+</Window>

@@ -1191,7 +1191,7 @@ namespace HashCalculator
             SearchPolicy policy = Settings.Current.SelectedSearchPolicy;
             if (policy == SearchPolicy.DontSearch)
             {
-                policy = SearchPolicy.Children;
+                policy = SearchPolicy.Descendants;
             }
             CommonOpenFileDialog folderOpen = new CommonOpenFileDialog()
             {

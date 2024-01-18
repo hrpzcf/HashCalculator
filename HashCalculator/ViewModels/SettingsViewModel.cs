@@ -25,14 +25,16 @@ namespace HashCalculator
         private double algosPanelHeight = 410.0;
         private double hashDetailsWidth = 1200.0;
         private double hashDetailsHeight = 800.0;
-        private double cmdPanelWidth = 480.0;
-        private double cmdPanelHeight = 600.0;
+        private double cmdPanelWidth = 510.0;
+        private double cmdPanelHeight = 620.0;
         private double cmdPanelTopRelToMainWnd = 0.0;
         private double cmdPanelLeftRelToMainWnd = 0.0;
         private double shellMenuEditorWidth = 600.0;
         private double shellMenuEditorHeight = 400.0;
         private double shellSubmenuEditorWidth = 400.0;
         private double shellSubmenuEditorHeight = 600.0;
+        private double changHashProgressWidth = 400.0;
+        private double changHashProgressHeight = 200.0;
         private TaskNum selectedTaskNumberLimit = TaskNum.One;
         private bool useDefaultOutputTypeWhenExporting = true;
         private OutputType selectedOutputType = OutputType.BinaryUpper;
@@ -328,6 +330,30 @@ namespace HashCalculator
             set
             {
                 this.SetPropNotify(ref this.shellSubmenuEditorHeight, value);
+            }
+        }
+
+        public double ChangHashProgressWidth
+        {
+            get
+            {
+                return this.changHashProgressWidth;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.changHashProgressWidth, value);
+            }
+        }
+
+        public double ChangHashProgressHeight
+        {
+            get
+            {
+                return this.changHashProgressHeight;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.changHashProgressHeight, value);
             }
         }
 

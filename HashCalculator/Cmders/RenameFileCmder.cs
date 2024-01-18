@@ -17,7 +17,7 @@ namespace HashCalculator
 
         public override string Display => "重命名操作目标所指文件";
 
-        public override string Description => "使用指定算法、格式的哈希值作为文件名，重命名操作目标所指的文件。";
+        public override string Description => "使用指定算法和指定格式的哈希值作为文件名重命名操作目标所指的文件。";
 
         public GenericItemModel[] OutputTypes { get; } = new GenericItemModel[]
         {
@@ -64,7 +64,7 @@ namespace HashCalculator
                 if (this.CheckIfUsingDistinctFilesFilter &&
                     !models.Where(i => i.Matched).All(i => i.FileIndex != null))
                 {
-                    if (MessageBox.Show(MainWindow.This, "并非所有行都经过【有效文件】的筛选，继续吗？", "提示",
+                    if (MessageBox.Show(MainWindow.This, "并非所有筛选出的行都经过【有效文件】的筛选，继续吗？", "提示",
                         MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
                     {
                         goto FinishingTouches;

@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 namespace HashCalculator
 {
-    internal class SelectFileCmder : AbsHashesCmder
+    internal class SelectTargetsCmder : AbsHashesCmder
     {
         private RelayCommand cancelSelectionCmd = null;
         private RelayCommand selectSameHashGroupCmd = null;
@@ -25,12 +25,13 @@ namespace HashCalculator
 
         public override string Description => "提供不同的快速选择方法来选择不同的行以用作其他操作器的目标。";
 
-        public SelectFileCmder(IEnumerable<HashViewModel> models, ICollectionView view) : base(models)
+        public SelectTargetsCmder(IEnumerable<HashViewModel> models, ICollectionView view) : base(models)
         {
             this.BoundDataGridView = view;
+            this.UserInterface = new SelectTargetsCmderCtrl(this);
         }
 
-        public SelectFileCmder() : this(MainWndViewModel.HashViewModels, MainWndViewModel.HashViewModelsView)
+        public SelectTargetsCmder() : this(MainWndViewModel.HashViewModels, MainWndViewModel.HashViewModelsView)
         {
         }
 

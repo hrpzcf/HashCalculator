@@ -224,5 +224,44 @@ namespace HashCalculator
             }
             return false;
         }
+
+        /// <summary>
+        /// Seq1.ElementsEqual(Seq2)，如果 Seq1 元素全部与 Seq2 相对应元素相等则为 true。<br/>
+        /// 如果 Seq2 是 null 或 Seq1 比 Seq2 长，则结果肯定是 false；<br/>
+        /// 如果 Seq1 比 Seq2 短，只要是 Seq1 元素全部与 Seq2 相对应元素相等，也视为 true。<br/>
+        /// </summary>
+        public static bool ElementsEqual<T>(this IEnumerable<T> first, IEnumerable<T> second)
+        {
+            return first.ElementsEqual(second, null);
+        }
+
+        /// <summary>
+        /// Seq1.ElementsEqual(Seq2)，如果 Seq1 所有元素与 Seq2 相应元素相等则为 true。<br/>
+        /// 如果 Seq2 是 null 或 Seq1 比 Seq2 长，则结果肯定是 false；<br/>
+        /// 如果 Seq1 比 Seq2 短，只要 Seq1 元素全部与 Seq2 相对应元素相等，也视为 true。<br/>
+        /// </summary>
+        public static bool ElementsEqual<T>(this IEnumerable<T> first, IEnumerable<T> second, IEqualityComparer<T> comparer)
+        {
+            if (comparer == null)
+            {
+                comparer = EqualityComparer<T>.Default;
+            }
+            if (second == null)
+            {
+                return false;
+            }
+            using (IEnumerator<T> enumerator1 = first.GetEnumerator())
+            using (IEnumerator<T> enumerator2 = second.GetEnumerator())
+            {
+                while (enumerator1.MoveNext())
+                {
+                    if (!enumerator2.MoveNext() || !comparer.Equals(enumerator1.Current, enumerator2.Current))
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
     }
 }

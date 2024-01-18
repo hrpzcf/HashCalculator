@@ -9,7 +9,7 @@ namespace HashCalculator
 
         public override string Display => "文件大小";
 
-        public override string Description => "筛选出符合指定大小范围的文件";
+        public override string Description => "筛选出符合指定大小范围的文件。";
 
         public override object Param { get; set; }
 

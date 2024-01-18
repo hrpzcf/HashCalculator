@@ -10,7 +10,7 @@ namespace HashCalculator
 
         public override string Display => "序号范围";
 
-        public override string Description => "将序列号在指定范围内的行筛选出来";
+        public override string Description => "将序列号在指定范围内的行筛选出来。";
 
         public override object Param { get; set; }
 

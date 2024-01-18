@@ -109,6 +109,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppLoading.cs" />
+    <Compile Include="Cmders\MarkFilesCmder.cs" />
+    <Compile Include="Cmders\MarkFilesCmderCtrl.xaml.cs">
+      <DependentUpon>MarkFilesCmderCtrl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Cmders\DeleteFileCmder.cs" />
     <Compile Include="Cmders\AbsHashesCmder.cs" />
     <Compile Include="Cmders\DeleteFileCmderCtrl.xaml.cs">
@@ -117,9 +121,16 @@
     <Compile Include="Cmders\RenameFileCmderCtrl.xaml.cs">
       <DependentUpon>RenameFileCmderCtrl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Cmders\SelectFileCmder.cs" />
+    <Compile Include="Cmders\RestoreFilesCmder.cs" />
+    <Compile Include="Cmders\RestoreFilesCmderCtrl.xaml.cs">
+      <DependentUpon>RestoreFilesCmderCtrl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Cmders\SelectTargetsCmder.cs" />
     <Compile Include="Cmders\RenameFileCmder.cs" />
-    <Compile Include="Globals\BufferSize.cs" />
+    <Compile Include="Cmders\SelectTargetsCmderCtrl.xaml.cs">
+      <DependentUpon>SelectTargetsCmderCtrl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Globals\GlobalUtils.cs" />
     <Compile Include="Globals\Embedded.cs" />
     <Compile Include="Initializer\Initializer.cs" />
     <Compile Include="Initializer\MappedInfo.cs" />
@@ -204,6 +215,9 @@
     <Compile Include="Initializer\MmvsReader.cs" />
     <Compile Include="Initializer\MmvsWriter.cs" />
     <Compile Include="Native\Methods.cs" />
+    <Compile Include="Others\HcFileHelper.cs" />
+    <Compile Include="Others\HcFileInfo.cs" />
+    <Compile Include="ViewModels\DoubleProgressModel.cs" />
     <Compile Include="ViewModels\TemplateForExportModel.cs" />
     <Compile Include="ViewModels\NotifiableModel.cs" />
     <Compile Include="Others\HashChecklist.cs" />
@@ -233,6 +247,9 @@
     <Compile Include="Views\AlgosPanel.xaml.cs">
       <DependentUpon>AlgosPanel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\DoubleProgressWnd.xaml.cs">
+      <DependentUpon>DoubleProgressWnd.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\FilterAndCmdPanel.xaml.cs">
       <DependentUpon>FilterAndCmdPanel.xaml</DependentUpon>
     </Compile>
@@ -249,11 +266,23 @@
     <Compile Include="Views\ShellSubmenuEditor.xaml.cs">
       <DependentUpon>ShellSubmenuEditor.xaml</DependentUpon>
     </Compile>
+    <Page Include="Cmders\MarkFilesCmderCtrl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Cmders\DeleteFileCmderCtrl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Cmders\RenameFileCmderCtrl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Cmders\RestoreFilesCmderCtrl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Cmders\SelectTargetsCmderCtrl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -354,6 +383,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\AlgosPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DoubleProgressWnd.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

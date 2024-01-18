@@ -17,7 +17,7 @@ namespace HashCalculator
 
         public override string Display => "运行结果";
 
-        public override string Description => "将各行中符合指定运行结果的行筛选出来";
+        public override string Description => "将各行中符合指定运行结果的行筛选出来。";
 
         public override object Param { get; set; } = FilterLogic.Any;
 

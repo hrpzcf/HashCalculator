@@ -10,7 +10,7 @@ namespace HashCalculator
 
         public override string Display => "有效的文件";
 
-        public override string Description => "过滤掉重复添加和不存在的文件，重复添加的文件只显示其中一行";
+        public override string Description => "过滤掉重复添加和不存在的文件，重复添加的文件只显示其中一行。";
 
         public override object Param { get; set; }
 

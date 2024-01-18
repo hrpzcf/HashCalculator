@@ -12,7 +12,7 @@ namespace HashCalculator
 
         public override string Display => "哈希算法";
 
-        public override string Description => "将各行中含有指定算法的行筛选出来";
+        public override string Description => "将各行中含有指定算法的行筛选出来。";
 
         public override object Param { get; set; } = FilterLogic.Any;
 

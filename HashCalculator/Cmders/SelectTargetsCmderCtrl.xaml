@@ -1,0 +1,100 @@
+﻿<UserControl
+    x:Class="HashCalculator.SelectTargetsCmderCtrl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:HashCalculator"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DataContext="{d:DesignInstance Type=local:SelectTargetsCmder}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/CmderButtonStyles.xaml" />
+                <ResourceDictionary Source="/Resources/DescTextBlockStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <WrapPanel Grid.Column="0">
+            <Button
+                Margin="2"
+                Padding="20,6"
+                Background="DarkSlateBlue"
+                BorderThickness="1"
+                Command="{Binding SelectSameHashGroupCmd}"
+                Content="按相同哈希值组选择"
+                Foreground="WhiteSmoke"
+                Style="{StaticResource IndepButtonStyle}"
+                ToolTip="如果有【相同哈希值】筛选器的分组结果，则每组选择除了第一行外的所有行，否则取消选择所有行" />
+            <Button
+                Margin="2"
+                Padding="20,6"
+                Background="DarkCyan"
+                BorderThickness="1"
+                Command="{Binding SelectSameFolderGroupCmd}"
+                Content="按相同文件夹组选择"
+                Foreground="WhiteSmoke"
+                Style="{StaticResource IndepButtonStyle}"
+                ToolTip="如果有【相同文件夹】筛选器的分组结果，则每组选择除了第一行外的所有行，否则取消选择所有行" />
+            <Button
+                Margin="2"
+                Padding="20,6"
+                Background="DarkMagenta"
+                BorderThickness="1"
+                Command="{Binding SelectHybridGroupsCmd}"
+                Content="按多个分组选择"
+                Foreground="WhiteSmoke"
+                Style="{StaticResource IndepButtonStyle}"
+                ToolTip="如果有多个筛选器共同起作用的分组结果，则每组选择除了第一行外的所有行，否则取消选择所有行" />
+            <Button
+                Margin="2"
+                Padding="20,6"
+                Background="DarkOliveGreen"
+                BorderThickness="1"
+                Command="{Binding SelectAllModelsCmd}"
+                Content="全选"
+                Foreground="WhiteSmoke"
+                Style="{StaticResource IndepButtonStyle}"
+                ToolTip="选择所有已通过筛选的行" />
+            <Button
+                Margin="2"
+                Padding="20,6"
+                Background="DarkBlue"
+                BorderThickness="1"
+                Command="{Binding ReverseSelectModelsCmd}"
+                Content="反选"
+                Foreground="WhiteSmoke"
+                Style="{StaticResource IndepButtonStyle}"
+                ToolTip="反向改变所有已通过筛选的行的选择状态" />
+            <Button
+                Margin="2"
+                Padding="20,6"
+                Background="SaddleBrown"
+                BorderThickness="1"
+                Command="{Binding DeselectAllModelsCmd}"
+                Content="全不选"
+                Foreground="WhiteSmoke"
+                Style="{StaticResource IndepButtonStyle}"
+                ToolTip="取消选择所有行" />
+        </WrapPanel>
+        <Button
+            Grid.Column="1"
+            Margin="4,0,0,0"
+            Padding="20,6"
+            VerticalAlignment="Center"
+            Background="DarkGreen"
+            BorderThickness="1"
+            Command="{Binding CancelSelectionCmd}"
+            Content="取消"
+            Foreground="WhiteSmoke"
+            Style="{StaticResource IndepButtonStyle}"
+            ToolTip="取消选择所有行并隐藏主窗口【操作目标】列" />
+    </Grid>
+</UserControl>
