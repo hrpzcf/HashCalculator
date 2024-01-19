@@ -226,6 +226,31 @@ namespace HashCalculator
         }
 
         /// <summary>
+        /// 把 array 内所有的 oldValue 替换为 newValue。
+        /// </summary>
+        public static void Replace<T>(this T[] array, T oldValue, T newValue)
+        {
+            array.Replace(oldValue, newValue, 0, array.Length);
+        }
+
+        /// <summary>
+        /// 在 array 数组中起始点为 offset，元素数量为 count 的范围内，把所有的 oldValue 替换为 newValue。
+        /// </summary>
+        public static void Replace<T>(this T[] array, T oldValue, T newValue, int offset, int count)
+        {
+            if (offset >= 0 && offset < array.Length && (offset + count) <= array.Length)
+            {
+                for (int index = offset; index < offset + count; ++index)
+                {
+                    if (array[index].Equals(oldValue))
+                    {
+                        array[index] = newValue;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Seq1.ElementsEqual(Seq2)，如果 Seq1 元素全部与 Seq2 相对应元素相等则为 true。<br/>
         /// 如果 Seq2 是 null 或 Seq1 比 Seq2 长，则结果肯定是 false；<br/>
         /// 如果 Seq1 比 Seq2 短，只要是 Seq1 元素全部与 Seq2 相对应元素相等，也视为 true。<br/>

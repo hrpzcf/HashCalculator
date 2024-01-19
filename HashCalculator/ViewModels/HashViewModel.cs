@@ -24,6 +24,8 @@ namespace HashCalculator
         private long _maxProgress = 0L;
         private double _durationofTask = 0.0;
         private bool _isExecutionTarget = false;
+        private string _algoNameInTag = null;
+        private byte[] _hashValueInTag = null;
         private AlgoInOutModel _currentInOutModel = null;
         private AlgoInOutModel[] _algoInOutModels = null;
         private ComparableColor _groupId = null;
@@ -151,6 +153,30 @@ namespace HashCalculator
             set
             {
                 this.SetPropNotify(ref this._currentInOutModel, value);
+            }
+        }
+
+        public string AlgoNameInTag
+        {
+            get
+            {
+                return this._algoNameInTag;
+            }
+            set
+            {
+                this.SetPropNotify(ref this._algoNameInTag, value);
+            }
+        }
+
+        public byte[] HashValueInTag
+        {
+            get
+            {
+                return this._hashValueInTag;
+            }
+            set
+            {
+                this.SetPropNotify(ref this._hashValueInTag, value);
             }
         }
 

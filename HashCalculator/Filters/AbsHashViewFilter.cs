@@ -30,8 +30,6 @@ namespace HashCalculator
             new GenericItemModel("涵盖所有要求", FilterLogic.Cover),
         };
 
-        public virtual void Init() { }
-
         public virtual void Reset() { }
 
         public abstract void FilterObjects(IEnumerable<HashViewModel> models);

@@ -33,8 +33,10 @@ namespace HashCalculator
         private double shellMenuEditorHeight = 400.0;
         private double shellSubmenuEditorWidth = 400.0;
         private double shellSubmenuEditorHeight = 600.0;
-        private double changHashProgressWidth = 400.0;
-        private double changHashProgressHeight = 200.0;
+        private double markFilesProgressWidth = 400.0;
+        private double markFilesProgressHeight = 200.0;
+        private double restoreFilesProgressWidth = 400.0;
+        private double restoreFilesProgressHeight = 200.0;
         private TaskNum selectedTaskNumberLimit = TaskNum.One;
         private bool useDefaultOutputTypeWhenExporting = true;
         private OutputType selectedOutputType = OutputType.BinaryUpper;
@@ -45,6 +47,7 @@ namespace HashCalculator
         private bool noFileSizeColumn = false;
         private bool noOutputTypeColumn = false;
         private bool showExecutionTargetColumn = false;
+        private bool showHashInTagColumn = false;
         private bool filterOrCmderEnabled = true;
         private bool runInMultiInstanceMode = false;
         private bool notSettingShellExtension = true;
@@ -333,27 +336,51 @@ namespace HashCalculator
             }
         }
 
-        public double ChangHashProgressWidth
+        public double MarkFilesProgressWidth
         {
             get
             {
-                return this.changHashProgressWidth;
+                return this.markFilesProgressWidth;
             }
             set
             {
-                this.SetPropNotify(ref this.changHashProgressWidth, value);
+                this.SetPropNotify(ref this.markFilesProgressWidth, value);
             }
         }
 
-        public double ChangHashProgressHeight
+        public double MarkFilesProgressHeight
         {
             get
             {
-                return this.changHashProgressHeight;
+                return this.markFilesProgressHeight;
             }
             set
             {
-                this.SetPropNotify(ref this.changHashProgressHeight, value);
+                this.SetPropNotify(ref this.markFilesProgressHeight, value);
+            }
+        }
+
+        public double RestoreFilesProgressWidth
+        {
+            get
+            {
+                return this.restoreFilesProgressWidth;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.restoreFilesProgressWidth, value);
+            }
+        }
+
+        public double RestoreFilesProgressHeight
+        {
+            get
+            {
+                return this.restoreFilesProgressHeight;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.restoreFilesProgressHeight, value);
             }
         }
 
@@ -463,6 +490,19 @@ namespace HashCalculator
             set
             {
                 this.SetPropNotify(ref this.showExecutionTargetColumn, value);
+            }
+        }
+
+        [JsonIgnore, XmlIgnore]
+        public bool ShowHashInTagColumn
+        {
+            get
+            {
+                return this.showHashInTagColumn;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.showHashInTagColumn, value);
             }
         }
 

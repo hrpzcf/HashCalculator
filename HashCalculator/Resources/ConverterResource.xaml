@@ -14,8 +14,9 @@
     <local:StateFinishedResultNotSucceedToVisibilityCvt x:Key="StateFinishedResultNotSucceedToVisibilityCvt" />
     <local:MainModelStateToBooleanCvt x:Key="MainModelStateToBooleanCvt" />
     <local:CmdPanelCriticalControlsEnabledCvt x:Key="CmdPanelCriticalControlsEnabledCvt" />
-    <local:NoColumnCvt x:Key="NoColumnCvt" />
-    <local:ShowColumnCvt x:Key="ShowColumnCvt" />
+    <local:TrueToVisibilityHiddenCvt x:Key="TrueToVisibilityHiddenCvt" />
+    <local:TrueToVisibilityVisibleCvt x:Key="TrueToVisibilityVisibleCvt" />
+    <local:FalseToVisibilityCollapsedCvt x:Key="FalseToVisibilityCollapsedCvt" />
     <local:ReverseBooleanValueCvt x:Key="ReverseBooleanValueCvt" />
     <local:SubBtnPauseImageSrcCvt x:Key="SubBtnPauseImageSrcCvt" />
     <local:SubBtnPauseToolTipCvt x:Key="SubBtnPauseToolTipCvt" />
@@ -40,7 +41,5 @@
     <local:CloneParameterArrayCvt x:Key="CloneParameterArrayCvt" />
     <local:SelectSmallerDoubleCvt x:Key="SelectSmallerDoubleCvt" />
     <local:RadiusFromSideLengthCvt x:Key="RadiusFromSideLengthCvt" />
-    <local:BooleanTrueToVisibilityHiddenCvt x:Key="BooleanTrueToVisibilityHiddenCvt" />
-    <local:BooleanFlaseToVisibilityCollapsedCvt x:Key="BooleanFlaseToVisibilityCollapsedCvt" />
     <local:EditSubmenusButtonEnabledCvt x:Key="EditSubmenusButtonEnabledCvt" />
 </ResourceDictionary>

@@ -63,7 +63,7 @@
     <Grid Margin="4">
         <Grid.RowDefinitions>
             <RowDefinition Height="11*" />
-            <RowDefinition Height="13*" />
+            <RowDefinition Height="14*" />
         </Grid.RowDefinitions>
         <GroupBox Grid.Row="0" Padding="0,4,0,0">
             <GroupBox.Header>
@@ -208,7 +208,7 @@
                         gif:AnimationBehavior.RepeatBehavior="Forever"
                         gif:AnimationBehavior.SourceUri="/Images/loading.gif"
                         DockPanel.Dock="Right"
-                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=FilterOrCmderEnabled, Converter={StaticResource BooleanTrueToVisibilityHiddenCvt}}" />
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=FilterOrCmderEnabled, Converter={StaticResource TrueToVisibilityHiddenCvt}}" />
                 </DockPanel>
             </Grid>
         </GroupBox>

@@ -9,6 +9,8 @@
     Width="{Binding Source={x:Static local:Settings.Current}, Path=MainWndWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     Height="{Binding Source={x:Static local:Settings.Current}, Path=MainWndHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     d:DataContext="{d:DesignInstance Type=local:MainWndViewModel}"
+    d:Height="300"
+    d:Width="1100"
     Icon="/Images/icon.ico"
     Left="{Binding Source={x:Static local:Settings.Current}, Path=MainWindowLeft, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     SnapsToDevicePixels="True"
@@ -81,7 +83,7 @@
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="默认算法"
-                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
                 <StackPanel Grid.Column="1" Margin="16,0,0,0">
                     <StackPanel Orientation="Horizontal">
@@ -108,7 +110,7 @@
                         HorizontalAlignment="Left"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="默认输出方式"
-                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
                 <StackPanel Grid.Column="3" Margin="16,0,0,0">
                     <Button
@@ -122,7 +124,7 @@
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="筛选与操作"
-                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
                 <StackPanel Grid.Column="4" Margin="8,0,0,0">
                     <Button
@@ -136,7 +138,7 @@
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="选择文件"
-                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
                 <StackPanel Grid.Column="5" Margin="8,0,0,0">
                     <Button
@@ -150,7 +152,7 @@
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="选择目录"
-                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
                 <StackPanel Grid.Column="6" Margin="8,0,0,0">
                     <Button
@@ -164,7 +166,7 @@
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="停止搜索"
-                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
                 <StackPanel Grid.Column="7" Margin="8,0,0,0">
                     <Button
@@ -179,7 +181,7 @@
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="导出结果"
-                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
                 <StackPanel Grid.Column="8" Margin="8,0,0,0">
                     <Button
@@ -194,7 +196,7 @@
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="新行重算"
-                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
                 <StackPanel Grid.Column="9" Margin="8,0,0,0">
                     <Button
@@ -209,7 +211,7 @@
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="计算缺值项"
-                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
                 <StackPanel Grid.Column="10" Margin="8,0,0,0">
                     <Button
@@ -224,7 +226,7 @@
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="重新计算"
-                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
                 <StackPanel Grid.Column="11" Margin="8,0,0,0">
                     <Button
@@ -238,7 +240,7 @@
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="清空表格"
-                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
                 <StackPanel Grid.Column="12" Margin="8,0,0,0">
                     <Button
@@ -252,7 +254,7 @@
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="全部继续"
-                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
                 <StackPanel Grid.Column="13" Margin="8,0,0,0">
                     <Button
@@ -266,7 +268,7 @@
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="全部暂停"
-                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
                 <StackPanel Grid.Column="14" Margin="8,0,0,0">
                     <Button
@@ -280,7 +282,7 @@
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="全部取消"
-                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
                 <StackPanel Grid.Column="15" Margin="8,0,0,0">
                     <Button
@@ -294,7 +296,7 @@
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="置顶窗口"
-                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
                 <StackPanel Grid.Column="16" Margin="8,0,0,0">
                     <Button
@@ -308,7 +310,7 @@
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="设置"
-                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
                 <StackPanel Grid.Column="17" Margin="8,0,0,0">
                     <Button
@@ -322,7 +324,7 @@
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="关于"
-                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource BooleanFlaseToVisibilityCollapsedCvt}}" />
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
             </Grid>
         </ScrollViewer>
@@ -334,6 +336,7 @@
             Background="Transparent"
             CellStyle="{StaticResource CellStyleNormal}"
             Drop="DataGridHashingFilesDrop"
+            Grid.IsSharedSizeScope="True"
             HeadersVisibility="Column"
             HorizontalGridLinesBrush="#FF969696"
             IsReadOnly="True"
@@ -452,7 +455,7 @@
                 <DataGridTemplateColumn
                     Header="文件大小"
                     SortMemberPath="FileSize"
-                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoFileSizeColumn, Converter={StaticResource NoColumnCvt}, Mode=OneWay}">
+                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoFileSizeColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
                     <DataGridTemplateColumn.HeaderStyle>
                         <Style TargetType="{x:Type DataGridColumnHeader}">
                             <Setter Property="HorizontalContentAlignment" Value="Center" />
@@ -492,7 +495,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="操作目标" Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowExecutionTargetColumn, Converter={StaticResource ShowColumnCvt}, Mode=OneWay}">
+                <DataGridTemplateColumn Header="操作目标" Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowExecutionTargetColumn, Converter={StaticResource TrueToVisibilityVisibleCvt}, Mode=OneWay}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid>
@@ -672,7 +675,7 @@
                     CanUserSort="True"
                     Header="输出方式"
                     SortMemberPath="SelectedOutputType"
-                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoOutputTypeColumn, Converter={StaticResource NoColumnCvt}, Mode=OneWay}">
+                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoOutputTypeColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
                     <DataGridTemplateColumn.HeaderStyle>
                         <Style TargetType="{x:Type DataGridColumnHeader}">
                             <Setter Property="HorizontalContentAlignment" Value="Center" />
@@ -696,12 +699,12 @@
                     MinWidth="80"
                     Binding="{Binding DurationofTask, StringFormat=f2}"
                     Header="任务耗时 (秒)"
-                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoDurationColumn, Converter={StaticResource NoColumnCvt}, Mode=OneWay}" />
+                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoDurationColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}" />
                 <DataGridTemplateColumn
                     CanUserSort="True"
                     Header="导出"
                     SortMemberPath="CurrentInOutModel.Export"
-                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoExportColumn, Converter={StaticResource NoColumnCvt}, Mode=OneWay}">
+                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoExportColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <CheckBox HorizontalAlignment="Center" IsChecked="{Binding CurrentInOutModel.Export, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
@@ -735,6 +738,40 @@
                                     </MultiBinding>
                                 </Label.Foreground>
                             </Label>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="原文件哈希值" Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowHashInTagColumn, Converter={StaticResource TrueToVisibilityVisibleCvt}}">
+                    <DataGridTemplateColumn.HeaderStyle>
+                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="HorizontalContentAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTemplateColumn.HeaderStyle>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="inTagHashGroup" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Padding="4"
+                                    VerticalAlignment="Center"
+                                    Text="{Binding AlgoNameInTag}" />
+                                <TextBlock
+                                    Grid.Column="1"
+                                    Padding="4"
+                                    VerticalAlignment="Center"
+                                    TextTrimming="CharacterEllipsis">
+                                    <TextBlock.Text>
+                                        <MultiBinding Converter="{StaticResource BytesToStrByOutputTypeCvt}">
+                                            <Binding Path="HashValueInTag" />
+                                            <Binding Path="SelectedOutputType" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </Grid>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

@@ -5,12 +5,70 @@ namespace HashCalculator
 {
     internal class DoubleProgressModel : NotifiableModel
     {
-        private string curFileName;
+        private string curFileName = null;
         private double curPercentage = 0;
         private int filesCount = 0;
         private int processedCount = 0;
         private RelayCommand cancelOperationCmd;
+        private readonly bool isMarkFilesProgress;
         private bool isCancelled = false;
+
+        public DoubleProgressModel(bool isMarkFilesModel)
+        {
+            this.isMarkFilesProgress = isMarkFilesModel;
+        }
+
+        public double WindowWidth
+        {
+            get
+            {
+                if (this.isMarkFilesProgress)
+                {
+                    return Settings.Current.MarkFilesProgressWidth;
+                }
+                else
+                {
+                    return Settings.Current.RestoreFilesProgressWidth;
+                }
+            }
+            set
+            {
+                if (this.isMarkFilesProgress)
+                {
+                    Settings.Current.MarkFilesProgressWidth = value;
+                }
+                else
+                {
+                    Settings.Current.RestoreFilesProgressWidth = value;
+                }
+            }
+        }
+
+        public double WindowHeight
+        {
+            get
+            {
+                if (this.isMarkFilesProgress)
+                {
+                    return Settings.Current.MarkFilesProgressHeight;
+                }
+                else
+                {
+                    return Settings.Current.RestoreFilesProgressHeight;
+                }
+            }
+            set
+            {
+                if (this.isMarkFilesProgress)
+                {
+                    Settings.Current.MarkFilesProgressHeight = value;
+                }
+                else
+                {
+                    Settings.Current.RestoreFilesProgressHeight = value;
+                }
+            }
+        }
 
         public string CurFileName
         {

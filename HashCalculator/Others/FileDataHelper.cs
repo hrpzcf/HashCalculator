@@ -7,7 +7,7 @@ namespace HashCalculator
     /// <summary>
     /// 用于检测文件是否是由本程序生成的有哈希标记的文件、生成有哈希标记的文件、从有哈希标记的文件还原出原文件。<br/>
     /// </summary>
-    internal class HcFileHelper : IDisposable
+    internal class FileDataHelper : IDisposable
     {
         /// <summary>
         /// JPEG 文件数据块中的类型标记/数据域长度占用的字节数
@@ -67,7 +67,7 @@ namespace HashCalculator
 
         /// <summary>
         /// 本程序自定义的 HCM 文件头，用于标记文件被本程序写入过哈希标记。<br/>
-        /// 对于 PNG/JPEG 文件来说也可能放在尾部，取决于调用 GenerateHcFile 方法时的 senseFree 参数。
+        /// 对于 PNG/JPEG 文件来说也可能放在尾部，取决于调用 GenerateTaggedFile 方法时的 senseFree 参数。
         /// </summary>
         private static readonly byte[] HC_HEAD =
             { 0xF3, 0x48, 0x43, 0x4D, 0x20, 0x66, 0x69, 0x6C, 0x65 };
@@ -76,7 +76,7 @@ namespace HashCalculator
 
         private long InitialPosition { get; } = -1L;
 
-        public HcFileHelper(Stream stream)
+        public FileDataHelper(Stream stream)
         {
             this.InitialStream = stream;
             try
@@ -156,7 +156,7 @@ namespace HashCalculator
             }
         }
 
-        private void WriteRealDataToStream(Stream stream, HcFileInfo info, DoubleProgressModel progressModel)
+        private void WriteRealDataToStream(Stream stream, FileDataInfo info, DoubleProgressModel progressModel)
         {
             long dataStart, dataCount;
             if (info == null)
@@ -166,8 +166,8 @@ namespace HashCalculator
             }
             else
             {
-                dataStart = info.RealStart;
-                dataCount = info.RealCount;
+                dataStart = info.ActualStart;
+                dataCount = info.ActualCount;
             }
             byte[] buffer = null;
             try
@@ -203,27 +203,18 @@ namespace HashCalculator
         /// 对于 PNG 文件，如果 senseFree 参数为 true，则程序会在 0x49454E44AE426082 标记后写入【HCM标记】，否则在文件起始写入；<br/>
         /// 对于其他非 JPEG 文件和非 PNG 文件，程序会在文件起始位置写入【HCM标记】。
         /// </summary>
-        public bool GenerateHcFile(Stream stream, AlgoInOutModel model, bool senseFree,
-            DoubleProgressModel doubleProgressModel)
+        public bool GenerateTaggedFile(Stream stream, AlgoInOutModel model,
+            bool senseFree, DoubleProgressModel doubleProgressModel)
         {
-            if (IsUsableAlgoModel(model) && this.ValidInitialStream && this.IsUsableExternalStream(stream))
+            if (IsUsableAlgoModel(model) && this.IsUsableExternalStream(stream) &&
+                this.TryGetFileDataInfo(out FileDataInfo information))
             {
-                long hcInfoStartPosition = 0L;
-                if (senseFree)
-                {
-                    hcInfoStartPosition = this.GetPngRealLength();
-                    if (hcInfoStartPosition == 0L)
-                    {
-                        hcInfoStartPosition = this.GetJpegRealLength();
-                    }
-                }
-                HcFileInfo information = this.GetHcFileInformation(hcInfoStartPosition);
                 long previousPosition = -1L;
                 try
                 {
                     previousPosition = stream.Position;
                     stream.Position = 0L;
-                    if (hcInfoStartPosition != 0L)
+                    if (senseFree && information.IsTailable)
                     {
                         this.WriteRealDataToStream(stream, information, doubleProgressModel);
                         this.WriteHcHeaderToStream(stream, model);
@@ -246,36 +237,22 @@ namespace HashCalculator
             return false;
         }
 
-        public bool RestoreHcFile(Stream stream, DoubleProgressModel progressModel)
+        public bool RestoreTaggedFile(Stream stream, DoubleProgressModel progressModel)
         {
             if (this.ValidInitialStream && this.IsUsableExternalStream(stream))
             {
-                // 优先从头部查找 HCM 标记
-                HcFileInfo information = this.GetHcFileInformation(0L);
-                if (information == null)
-                {
-                    long hcInfoStartPosition = this.GetPngRealLength();
-                    if (hcInfoStartPosition == 0L)
-                    {
-                        hcInfoStartPosition = this.GetJpegRealLength();
-                    }
-                    if (hcInfoStartPosition != 0L)
-                    {
-                        information = this.GetHcFileInformation(hcInfoStartPosition);
-                    }
-                }
-                if (information != null)
+                if (this.TryGetTaggedFileDataInfo(out FileDataInfo information))
                 {
                     double progressValue = 0L;
                     long initialPosition = -1L;
-                    long remainCount = information.RealCount;
+                    long remainCount = information.ActualCount;
                     byte[] buffer = null;
                     try
                     {
-                        GlobalUtils.Suggest(ref buffer, information.RealCount);
+                        GlobalUtils.Suggest(ref buffer, information.ActualCount);
                         initialPosition = stream.Position;
                         int plannedReadCount = buffer.Length;
-                        stream.Position = information.RealStart;
+                        stream.Position = information.ActualStart;
                         while (remainCount > 0L)
                         {
                             if (remainCount < buffer.Length)
@@ -286,7 +263,7 @@ namespace HashCalculator
                             stream.Write(buffer, 0, actualReadCount);
                             remainCount -= actualReadCount;
                             progressValue += actualReadCount;
-                            progressModel.ProgressValue = progressValue / information.RealCount;
+                            progressModel.ProgressValue = progressValue / information.ActualCount;
                         }
                         return true;
                     }
@@ -449,40 +426,74 @@ namespace HashCalculator
             }
         }
 
-        /// <summary>
-        /// 获取被本程序修改过哈希值的文件的信息 (原算法名、原哈希值、文件的真实起始位置、真实字节数)。<br/>
-        /// 如果此方法返回 null 则代表该文件流所指文件不是被本程序修改过哈希值的文件。<br/>
-        /// 参数 expHcInfoStart 是期望的 HcHead 起始位置，如果是 JPEG 文件则为 0xFFD9 的后一位，不是则为 0。
-        /// </summary>
-        public HcFileInfo GetHcFileInformation(long expHcInfoStart)
+        public bool TryGetFileDataInfo(out FileDataInfo information)
         {
+            // 先当作头部有 HCM 标记的文件对待，找不到标记再当作 PNG/JPEG 文件对待
+            information = this.GetFileDataInformation(0L);
+            if (information != null && !information.IsTagged)
+            {
+                long infoStartingPosition = this.GetPngRealLength();
+                if (infoStartingPosition == 0L)
+                {
+                    infoStartingPosition = this.GetJpegRealLength();
+                }
+                if (infoStartingPosition != 0L)
+                {
+                    information = this.GetFileDataInformation(infoStartingPosition);
+                }
+            }
+            return information != null;
+        }
+
+        public bool TryGetTaggedFileDataInfo(out FileDataInfo information)
+        {
+            if (!this.TryGetFileDataInfo(out information))
+            {
+                return false;
+            }
+            else if (!information.IsTagged)
+            {
+                information = default(FileDataInfo);
+                return false;
+            }
+            else
+            {
+                return information.IsTagged;
+            }
+        }
+
+        private FileDataInfo GetFileDataInformation(long infoStartingPos)
+        {
+            bool tailable = infoStartingPos != 0L;
+            FileDataInfo defaultInfoForValidStream = new FileDataInfo(
+                0L, tailable ? infoStartingPos : this.InitialStream.Length, tailable);
             if (this.ValidInitialStream)
             {
                 byte[] buffer = null;
                 try
                 {
-                    if (this.InitialStream.Length < HC_HEAD.Length || expHcInfoStart < 0 ||
-                        expHcInfoStart > this.InitialStream.Length)
+                    if (this.InitialStream.Length < HC_HEAD.Length || infoStartingPos < 0 ||
+                        infoStartingPos > this.InitialStream.Length)
                     {
-                        return default(HcFileInfo);
+                        return defaultInfoForValidStream;
                     }
                     GlobalUtils.MakeSureBuffer(ref buffer, HC_HEAD.Length);
-                    this.InitialStream.Position = expHcInfoStart;
+                    this.InitialStream.Position = infoStartingPos;
                     if (this.InitialStream.Read(buffer, 0, HC_HEAD.Length) != HC_HEAD.Length ||
                         !HC_HEAD.ElementsEqual(buffer))
                     {
-                        return default(HcFileInfo);
+                        return defaultInfoForValidStream;
                     }
                     GlobalUtils.MakeSureBuffer(ref buffer, COUNT_BYTES_RECORD_NAME_LENGTH);
                     if (this.InitialStream.Read(buffer, 0, COUNT_BYTES_RECORD_NAME_LENGTH) != COUNT_BYTES_RECORD_NAME_LENGTH)
                     {
-                        return default(HcFileInfo);
+                        return defaultInfoForValidStream;
                     }
                     int algoNameBytesLength = buffer[0];
                     GlobalUtils.MakeSureBuffer(ref buffer, algoNameBytesLength);
                     if (this.InitialStream.Read(buffer, 0, algoNameBytesLength) != algoNameBytesLength)
                     {
-                        return default(HcFileInfo);
+                        return defaultInfoForValidStream;
                     }
                     string algoName;
                     try
@@ -491,38 +502,34 @@ namespace HashCalculator
                     }
                     catch (Exception)
                     {
-                        return default(HcFileInfo);
-                    }
-                    if (!Enum.TryParse(algoName, true, out AlgoType algoType))
-                    {
-                        return default(HcFileInfo);
+                        return defaultInfoForValidStream;
                     }
                     GlobalUtils.MakeSureBuffer(ref buffer, COUNT_BYTES_RECORD_HASH_LENGTH);
                     if (this.InitialStream.Read(buffer, 0, COUNT_BYTES_RECORD_HASH_LENGTH) != COUNT_BYTES_RECORD_HASH_LENGTH)
                     {
-                        return default(HcFileInfo);
+                        return defaultInfoForValidStream;
                     }
                     int hashValueBytesLength = BitConverter.ToInt16(buffer, 0);
                     // 不用 MakeSureBuffer 共享数组，因为要将数组返回给调用方
                     byte[] hashValueBytes = new byte[hashValueBytesLength];
                     if (this.InitialStream.Read(hashValueBytes, 0, hashValueBytesLength) != hashValueBytesLength)
                     {
-                        return default(HcFileInfo);
+                        return defaultInfoForValidStream;
                     }
                     GlobalUtils.MakeSureBuffer(ref buffer, COUNT_BYTES_RECORD_RAND_LENGTH);
                     if (this.InitialStream.Read(buffer, 0, COUNT_BYTES_RECORD_RAND_LENGTH) != COUNT_BYTES_RECORD_RAND_LENGTH)
                     {
-                        return default(HcFileInfo);
+                        return defaultInfoForValidStream;
                     }
-                    if (expHcInfoStart != 0L)
+                    if (infoStartingPos != 0L)
                     {
-                        return new HcFileInfo(algoType, hashValueBytes, 0L, expHcInfoStart);
+                        return new FileDataInfo(0L, infoStartingPos, algoName, hashValueBytes, tailable);
                     }
                     else
                     {
-                        long streamRealStart = this.InitialStream.Position + buffer[0];
-                        return new HcFileInfo(algoType, hashValueBytes, streamRealStart,
-                            this.InitialStream.Length - streamRealStart);
+                        long actualStartingPosition = this.InitialStream.Position + buffer[0];
+                        return new FileDataInfo(actualStartingPosition, this.InitialStream.Length - actualStartingPosition,
+                            algoName, hashValueBytes, tailable);
                     }
                 }
                 finally
@@ -530,7 +537,7 @@ namespace HashCalculator
                     GlobalUtils.MakeSureBuffer(ref buffer, 0);
                 }
             }
-            return default(HcFileInfo);
+            return default(FileDataInfo);
         }
     }
 }

@@ -13,19 +13,26 @@ namespace HashCalculator
     internal class MarkFilesCmder : AbsHashesCmder
     {
         private RelayCommand selectFolderCmd;
-        private RelayCommand changeFilesHashCmd;
-        private string folderUsedToSaveFiles;
+        private RelayCommand generateTaggedFilesCmd;
+        private string directoryUsedToSaveFiles;
+        private bool saveToOriginDirectory = true;
 
         public override ContentControl UserInterface { get; }
 
-        public override string Display => "生成有哈希标记的新文件";
+        public override string Display => "生成带哈希标记的新文件";
 
         public override string Description => "生成带哈希标记和随机数据的新文件用于避过哈希检测。\n当需要使用文件时需要先从带标记的文件中还原出原文件。";
 
-        public string FolderUsedToSaveFiles
+        public bool SaveToOriginDirectory
         {
-            get => this.folderUsedToSaveFiles;
-            set => this.SetPropNotify(ref this.folderUsedToSaveFiles, value);
+            get => this.saveToOriginDirectory;
+            set => this.SetPropNotify(ref this.saveToOriginDirectory, value);
+        }
+
+        public string DirectoryUsedToSaveFiles
+        {
+            get => this.directoryUsedToSaveFiles;
+            set => this.SetPropNotify(ref this.directoryUsedToSaveFiles, value);
         }
 
         public bool UseSenseFreeModifications { get; set; } = false;
@@ -51,7 +58,7 @@ namespace HashCalculator
             };
             if (folderOpen.ShowDialog() == CommonFileDialogResult.Ok)
             {
-                this.FolderUsedToSaveFiles = folderOpen.FileName;
+                this.DirectoryUsedToSaveFiles = folderOpen.FileName;
                 Settings.Current.LastUsedPath = folderOpen.FileName;
             }
         }
@@ -68,7 +75,7 @@ namespace HashCalculator
             }
         }
 
-        private async Task<string> ChangeFilesHash(IEnumerable<HashViewModel> models,
+        private async Task<string> GenerateTaggedFiles(IEnumerable<HashViewModel> models,
             DoubleProgressWindow doubleProgressWindow, DoubleProgressModel doubleProgressModel)
         {
             try
@@ -102,9 +109,11 @@ namespace HashCalculator
                             int duplicate = 0;
                             string newFilePath;
                             string newFileName = $"{noExtName}{newExt}";
+                            string directoryToSaveFile = this.SaveToOriginDirectory ?
+                                model.FileInfo.DirectoryName : this.DirectoryUsedToSaveFiles;
                             while (true)
                             {
-                                newFilePath = Path.Combine(this.FolderUsedToSaveFiles, newFileName);
+                                newFilePath = Path.Combine(directoryToSaveFile, newFileName);
                                 if (File.Exists(newFilePath))
                                 {
                                     newFileName = $"{noExtName}_{++duplicate}{newExt}";
@@ -112,16 +121,22 @@ namespace HashCalculator
                                 }
                                 break;
                             }
-                            using (Stream oldStream = model.FileInfo.OpenRead())
-                            using (HcFileHelper hcFileHelper = new HcFileHelper(oldStream))
-                            using (Stream newStream = File.OpenWrite(newFilePath))
+                            using (FileStream fileStream = model.FileInfo.OpenRead())
+                            using (FileDataHelper hcFileHelper = new FileDataHelper(fileStream))
                             {
-                                AlgoInOutModel currentAlgoModel = model.CurrentInOutModel;
-                                hcFileHelper.GenerateHcFile(
-                                    newStream, currentAlgoModel, this.UseSenseFreeModifications, doubleProgressModel);
+                                if (hcFileHelper.TryGetFileDataInfo(out FileDataInfo info) && !info.IsTagged)
+                                {
+                                    using (FileStream newFileStream = File.OpenWrite(newFilePath))
+                                    {
+                                        hcFileHelper.GenerateTaggedFile(newFileStream, model.CurrentInOutModel,
+                                            this.UseSenseFreeModifications, doubleProgressModel);
+                                    }
+                                }
                             }
                         }
-                        catch (Exception) { }
+                        catch (Exception)
+                        {
+                        }
                         doubleProgressModel.ProcessedCount += 1;
                         if (doubleProgressModel.TokenSrc.IsCancellationRequested)
                         {
@@ -142,19 +157,35 @@ namespace HashCalculator
             }
         }
 
-        private async void ChangeFilesHashAction(object param)
+        private async void GenerateTaggedFilesAction(object param)
         {
             if (Settings.Current.ShowExecutionTargetColumn &&
                 Settings.Current.FilterOrCmderEnabled &&
                 this.RefModels is IEnumerable<HashViewModel> hashViewModels)
             {
                 Settings.Current.FilterOrCmderEnabled = false;
-                if (string.IsNullOrEmpty(this.FolderUsedToSaveFiles) ||
-                    !Path.IsPathRooted(this.FolderUsedToSaveFiles))
+                if (!this.SaveToOriginDirectory)
                 {
-                    MessageBox.Show(MainWindow.This, "请输入生成的新文件的保存目录的完整路径！", "提示",
+                    if (string.IsNullOrEmpty(this.DirectoryUsedToSaveFiles) ||
+                        !Path.IsPathRooted(this.DirectoryUsedToSaveFiles))
+                    {
+                        MessageBox.Show(MainWindow.This, "请输入生成的新文件的保存目录的完整路径！", "提示",
                             MessageBoxButton.OK, MessageBoxImage.Warning);
-                    goto FinishingTouches;
+                        goto FinishingTouches;
+                    }
+                    if (!Directory.Exists(this.DirectoryUsedToSaveFiles))
+                    {
+                        try
+                        {
+                            Directory.CreateDirectory(this.DirectoryUsedToSaveFiles);
+                        }
+                        catch (Exception)
+                        {
+                            MessageBox.Show(MainWindow.This, "用于保存生成的新文件的目录不存在且创建失败！", "错误",
+                                MessageBoxButton.OK, MessageBoxImage.Error);
+                            goto FinishingTouches;
+                        }
+                    }
                 }
                 if (this.CheckIfUsingDistinctFilesFilter && !hashViewModels.Where(
                     i => i.Matched).All(i => i.FileIndex != null))
@@ -165,29 +196,17 @@ namespace HashCalculator
                         goto FinishingTouches;
                     }
                 }
-                if (!Directory.Exists(this.FolderUsedToSaveFiles))
-                {
-                    try
-                    {
-                        Directory.CreateDirectory(this.FolderUsedToSaveFiles);
-                    }
-                    catch (Exception)
-                    {
-                        MessageBox.Show(MainWindow.This, "用于保存生成的新文件的目录不存在且创建失败！", "错误",
-                            MessageBoxButton.OK, MessageBoxImage.Error);
-                        goto FinishingTouches;
-                    }
-                }
                 if (hashViewModels.Any(i => i.IsExecutionTarget))
                 {
-                    DoubleProgressModel progressModel = new DoubleProgressModel();
+                    IEnumerable<HashViewModel> models = hashViewModels.Where(i => i.IsExecutionTarget);
+                    DoubleProgressModel progressModel = new DoubleProgressModel(true);
                     DoubleProgressWindow progressWindow = new DoubleProgressWindow(progressModel)
                     {
                         Owner = MainWindow.This
                     };
-                    Task<string> changeHashTask = this.ChangeFilesHash(hashViewModels, progressWindow, progressModel);
+                    Task<string> genTaggedFilesTask = this.GenerateTaggedFiles(models, progressWindow, progressModel);
                     progressWindow.ShowDialog();
-                    string exceptionMessage = await changeHashTask;
+                    string exceptionMessage = await genTaggedFilesTask;
                     if (!string.IsNullOrEmpty(exceptionMessage))
                     {
                         MessageBox.Show(MainWindow.This, $"出现异常导致过程中断：{exceptionMessage}", "错误",
@@ -206,15 +225,15 @@ namespace HashCalculator
             }
         }
 
-        public ICommand ChangeFilesHashCmd
+        public ICommand GenerateTaggedFilesCmd
         {
             get
             {
-                if (this.changeFilesHashCmd == null)
+                if (this.generateTaggedFilesCmd == null)
                 {
-                    this.changeFilesHashCmd = new RelayCommand(this.ChangeFilesHashAction);
+                    this.generateTaggedFilesCmd = new RelayCommand(this.GenerateTaggedFilesAction);
                 }
-                return this.changeFilesHashCmd;
+                return this.generateTaggedFilesCmd;
             }
         }
     }

@@ -190,6 +190,7 @@ namespace HashCalculator
                 return;
             }
             Settings.Current.FilterOrCmderEnabled = false;
+            this.SelectTableLinesCmder.Reset();
             foreach (AbsHashesCmder cmder in this.HashModelCmders)
             {
                 cmder.Reset();

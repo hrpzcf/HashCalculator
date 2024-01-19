@@ -336,18 +336,11 @@ namespace HashCalculator
         }
     }
 
-    internal class NoColumnCvt : IValueConverter
+    internal class TrueToVisibilityHiddenCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if ((bool)value)
-            {
-                return Visibility.Hidden;
-            }
-            else
-            {
-                return Visibility.Visible;
-            }
+            return value is bool hidden && hidden ? Visibility.Hidden : Visibility.Visible;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -356,18 +349,11 @@ namespace HashCalculator
         }
     }
 
-    internal class ShowColumnCvt : IValueConverter
+    internal class TrueToVisibilityVisibleCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (!(bool)value)
-            {
-                return Visibility.Hidden;
-            }
-            else
-            {
-                return Visibility.Visible;
-            }
+            return value is bool visible && visible ? Visibility.Visible : Visibility.Hidden;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -376,38 +362,11 @@ namespace HashCalculator
         }
     }
 
-    internal class BooleanTrueToVisibilityHiddenCvt : IValueConverter
+    internal class FalseToVisibilityCollapsedCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is bool visible && visible)
-            {
-                return Visibility.Hidden;
-            }
-            else
-            {
-                return Visibility.Visible;
-            }
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    internal class BooleanFlaseToVisibilityCollapsedCvt : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value is bool visible && visible)
-            {
-                return Visibility.Visible;
-            }
-            else
-            {
-                return Visibility.Collapsed;
-            }
+            return value is bool visible && !visible ? Visibility.Collapsed : Visibility.Visible;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -588,25 +547,23 @@ namespace HashCalculator
             return Convert(values[0], values[1]);
         }
 
-        internal static string Convert(object bytes, object outputType)
+        internal static string Convert(object bytes, object output)
         {
-            if (!(bytes is byte[] hashBytes) || !hashBytes.Any())
+            if (bytes is byte[] hashBytes && hashBytes.Any() && output is OutputType outputType)
             {
-                return string.Empty;
+                switch (outputType)
+                {
+                    case OutputType.BASE64:
+                        return CommonUtils.ToBase64String(hashBytes);
+                    default:
+                    case OutputType.BinaryUpper:
+                        return CommonUtils.ToHexStringUpper(hashBytes);
+                    case OutputType.BinaryLower:
+                        return CommonUtils.ToHexStringLower(hashBytes);
+                }
             }
-            switch ((OutputType)outputType)
-            {
-                case OutputType.BASE64:
-                    return CommonUtils.ToBase64String(hashBytes);
-                default:
-                case OutputType.BinaryUpper:
-                    return CommonUtils.ToHexStringUpper(hashBytes);
-                case OutputType.BinaryLower:
-                    return CommonUtils.ToHexStringLower(hashBytes);
-                // 返回值可能被复制所以不返回 null，上同
-                case OutputType.Unknown:
-                    return string.Empty;
-            }
+            // 返回值可能被放置到剪贴板，所以不返回 null
+            return string.Empty;
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
