@@ -82,13 +82,13 @@ namespace HashCalculator
             {
                 IEnumerable<HashViewModel> succeededModels = models.Where(
                     i => i.Result == HashResult.Succeeded);
-                doubleProgressModel.FilesCount = succeededModels.Count();
+                doubleProgressModel.TotalCount = succeededModels.Count();
                 await Task.Run(() =>
                 {
                     foreach (HashViewModel model in succeededModels)
                     {
-                        doubleProgressModel.ProgressValue = 0.0;
-                        doubleProgressModel.CurFileName = model.FileName;
+                        doubleProgressModel.CurrentValue = 0.0;
+                        doubleProgressModel.CurrentString = model.FileName;
                         try
                         {
                             using (FileStream fileStream = model.FileInfo.OpenRead())

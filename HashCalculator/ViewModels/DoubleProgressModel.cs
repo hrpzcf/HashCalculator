@@ -18,6 +18,8 @@ namespace HashCalculator
             this.isMarkFilesProgress = isMarkFilesModel;
         }
 
+        public string WindowTitle { get; set; }
+
         public double WindowWidth
         {
             get
@@ -70,19 +72,19 @@ namespace HashCalculator
             }
         }
 
-        public string CurFileName
+        public string CurrentString
         {
             get => this.curFileName;
             set => this.SetPropNotify(ref this.curFileName, value);
         }
 
-        public double ProgressValue
+        public double CurrentValue
         {
             get => this.curPercentage;
             set => this.SetPropNotify(ref this.curPercentage, value);
         }
 
-        public int FilesCount
+        public int TotalCount
         {
             get => this.filesCount;
             set => this.SetPropNotify(ref this.filesCount, value);

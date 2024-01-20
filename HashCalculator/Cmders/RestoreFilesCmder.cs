@@ -85,13 +85,13 @@ namespace HashCalculator
         {
             try
             {
-                doubleProgressModel.FilesCount = models.Count();
+                doubleProgressModel.TotalCount = models.Count();
                 await Task.Run(() =>
                 {
                     foreach (HashViewModel model in models)
                     {
-                        doubleProgressModel.ProgressValue = 0.0;
-                        doubleProgressModel.CurFileName = model.FileName;
+                        doubleProgressModel.CurrentValue = 0.0;
+                        doubleProgressModel.CurrentString = model.FileName;
                         try
                         {
                             using (FileStream fileStream = model.FileInfo.OpenRead())
@@ -234,13 +234,13 @@ namespace HashCalculator
         {
             try
             {
-                doubleProgressModel.FilesCount = models.Count();
+                doubleProgressModel.TotalCount = models.Count();
                 await Task.Run(() =>
                 {
                     foreach (HashViewModel model in models)
                     {
-                        doubleProgressModel.ProgressValue = 0.0;
-                        doubleProgressModel.CurFileName = model.FileName;
+                        doubleProgressModel.CurrentValue = 0.0;
+                        doubleProgressModel.CurrentString = model.FileName;
                         try
                         {
                             using (FileStream fileStream = model.FileInfo.OpenRead())

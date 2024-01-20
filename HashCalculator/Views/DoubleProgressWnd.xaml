@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="正在修改哈希值"
+    Title="{Binding WindowTitle}"
     Width="{Binding WindowWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     Height="{Binding WindowHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     d:DataContext="{d:DesignInstance Type=local:DoubleProgressModel}"
@@ -28,29 +28,29 @@
             Grid.Row="1"
             Grid.Column="1"
             Grid.ColumnSpan="2"
-            Height="4"
+            Height="8"
             Maximum="1.0"
-            Value="{Binding ProgressValue}" />
+            Value="{Binding CurrentValue}" />
         <TextBlock
             Grid.Row="2"
-            Margin="0,2,0,0"
+            Margin="0,4,0,0"
             Foreground="Gray"
-            Text="{Binding CurFileName}"
+            Text="{Binding CurrentString}"
             TextTrimming="CharacterEllipsis" />
         <ProgressBar
             Grid.Row="3"
-            Height="4"
-            Margin="0,8,0,0"
-            Maximum="{Binding FilesCount}"
+            Height="8"
+            Margin="0,16,0,0"
+            Maximum="{Binding TotalCount}"
             Value="{Binding ProcessedCount}" />
         <TextBlock
             Grid.Row="4"
-            Margin="0,2,0,0"
+            Margin="0,4,0,0"
             Foreground="Gray"
             TextTrimming="CharacterEllipsis">
             <TextBlock.Text>
-                <MultiBinding StringFormat="正在处理文件，请耐心等待...({1}/{0})">
-                    <Binding Path="FilesCount" />
+                <MultiBinding StringFormat="正在处理第 {1}/{0} 个......">
+                    <Binding Path="TotalCount" />
                     <Binding Path="ProcessedCount" />
                 </MultiBinding>
             </TextBlock.Text>

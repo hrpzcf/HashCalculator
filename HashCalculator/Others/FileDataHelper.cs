@@ -457,7 +457,7 @@ namespace HashCalculator
                     stream.Write(bytesBuffer, 0, actualReadCount);
                     remainCount -= actualReadCount;
                     progressValue += actualReadCount;
-                    progressModel.ProgressValue = progressValue / dataCount;
+                    progressModel.CurrentValue = progressValue / dataCount;
                 }
                 return remainCount == 0L;
             }
@@ -501,7 +501,7 @@ namespace HashCalculator
                         stream.Write(buffer, 0, actualReadCount);
                         remainCount -= actualReadCount;
                         progressValue += actualReadCount;
-                        progress.ProgressValue = progressValue / info.ActualCount;
+                        progress.CurrentValue = progressValue / info.ActualCount;
                     }
                     return remainCount == 0L;
                 }
