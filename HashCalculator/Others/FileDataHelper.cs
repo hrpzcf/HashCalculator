@@ -67,7 +67,7 @@ namespace HashCalculator
 
         /// <summary>
         /// 本程序自定义的 HCM 文件头，用于标记文件被本程序写入过哈希标记。<br/>
-        /// 对于 PNG/JPEG 文件来说也可能放在尾部，取决于调用 GenerateTaggedFile 方法时的 senseFree 参数。
+        /// 对于 PNG/JPEG 文件来说也可能放在尾部，取决于调用 GenerateTaggedFile 方法时的 tailTag 参数。
         /// </summary>
         private static readonly byte[] HC_HEAD =
             { 0xF3, 0x48, 0x43, 0x4D, 0x20, 0x66, 0x69, 0x6C, 0x65 };
@@ -88,15 +88,6 @@ namespace HashCalculator
             }
         }
 
-        public bool ValidInitialStream
-        {
-            get
-            {
-                return this.InitialStream != null &&
-                    this.InitialStream.CanRead && !this.InitialStream.CanWrite && this.InitialStream.CanSeek;
-            }
-        }
-
         public void Dispose()
         {
             if (this.InitialPosition != -1L)
@@ -111,189 +102,29 @@ namespace HashCalculator
             }
         }
 
-        private bool IsUsableExternalStream(Stream stream)
+        private bool ValidInitialStream
         {
-            return stream != this.InitialStream && stream != null && stream.CanWrite && stream.CanSeek;
-        }
-
-        private static bool IsUsableAlgoModel(AlgoInOutModel algoModel)
-        {
-            return algoModel != null && algoModel.AlgoType != AlgoType.Unknown && algoModel.HashResult?.Length != 0;
-        }
-
-        private void WriteHcHeaderToStream(Stream stream, AlgoInOutModel algoModel)
-        {
-            try
+            get
             {
-                byte[] algoNameBytes = Encoding.ASCII.GetBytes(algoModel.AlgoName);
-                if (algoNameBytes?.Length > byte.MaxValue)
-                {
-                    return;
-                }
-                if (algoModel.HashResult.Length > short.MaxValue)
-                {
-                    return;
-                }
-                byte[] hashResultLengthBytes = BitConverter.GetBytes((short)algoModel.HashResult.Length);
-                if (hashResultLengthBytes.Length != COUNT_BYTES_RECORD_HASH_LENGTH)
-                {
-                    return;
-                }
-                Random randomGernerator = new Random();
-                byte randomBytesLength = (byte)randomGernerator.Next(RANDOM_DATA_LENTGH_LOWER, RANDOM_DATA_LENTGH_UPPER);
-                byte[] randomBytesBuffer = new byte[randomBytesLength];
-                randomGernerator.NextBytes(randomBytesBuffer);
-                stream.Write(HC_HEAD, 0, HC_HEAD.Length);
-                stream.WriteByte((byte)algoNameBytes.Length);
-                stream.Write(algoNameBytes, 0, algoNameBytes.Length);
-                stream.Write(hashResultLengthBytes, 0, COUNT_BYTES_RECORD_HASH_LENGTH);
-                stream.Write(algoModel.HashResult, 0, algoModel.HashResult.Length);
-                stream.WriteByte(randomBytesLength);
-                stream.Write(randomBytesBuffer, 0, randomBytesLength);
+                return this.InitialStream != null &&
+                    this.InitialStream.CanRead && !this.InitialStream.CanWrite && this.InitialStream.CanSeek;
             }
-            catch (Exception)
-            {
-            }
-        }
-
-        private void WriteRealDataToStream(Stream stream, FileDataInfo info, DoubleProgressModel progressModel)
-        {
-            long dataStart, dataCount;
-            if (info == null)
-            {
-                dataStart = 0L;
-                dataCount = this.InitialStream.Length;
-            }
-            else
-            {
-                dataStart = info.ActualStart;
-                dataCount = info.ActualCount;
-            }
-            byte[] buffer = null;
-            try
-            {
-                long remainCount = dataCount;
-                double progressValue = 0L;
-                GlobalUtils.Suggest(ref buffer, dataCount);
-                int plannedReadCount = buffer.Length;
-                this.InitialStream.Position = dataStart;
-                while (remainCount > 0L)
-                {
-                    if (remainCount < buffer.Length)
-                    {
-                        plannedReadCount = (int)remainCount;
-                    }
-                    int actualReadCount = this.InitialStream.Read(buffer, 0, plannedReadCount);
-                    stream.Write(buffer, 0, actualReadCount);
-                    remainCount -= actualReadCount;
-                    progressValue += actualReadCount;
-                    progressModel.ProgressValue = progressValue / dataCount;
-                }
-            }
-            finally
-            {
-                GlobalUtils.MakeSureBuffer(ref buffer, 0);
-            }
-        }
-
-        /// <summary>
-        /// 生成有哈希标记的文件，哈希标记 (下称【HCM标记】) 具体格式如下：<br/>
-        /// 文件头(HC_HEAD)标识，1 字节算法名长度，算法名，2 字节算法结果长度，算法结果, 1 字节随机数据长度, 随机数据<br/>
-        /// 对于 JPEG 文件，如果 senseFree 参数为 true，则程序会在 0xFFD9 标记后写入【HCM标记】，否则在文件起始写入；<br/>
-        /// 对于 PNG 文件，如果 senseFree 参数为 true，则程序会在 0x49454E44AE426082 标记后写入【HCM标记】，否则在文件起始写入；<br/>
-        /// 对于其他非 JPEG 文件和非 PNG 文件，程序会在文件起始位置写入【HCM标记】。
-        /// </summary>
-        public bool GenerateTaggedFile(Stream stream, AlgoInOutModel model,
-            bool senseFree, DoubleProgressModel doubleProgressModel)
-        {
-            if (IsUsableAlgoModel(model) && this.IsUsableExternalStream(stream) &&
-                this.TryGetFileDataInfo(out FileDataInfo information))
-            {
-                long previousPosition = -1L;
-                try
-                {
-                    previousPosition = stream.Position;
-                    stream.Position = 0L;
-                    if (senseFree && information.IsTailable)
-                    {
-                        this.WriteRealDataToStream(stream, information, doubleProgressModel);
-                        this.WriteHcHeaderToStream(stream, model);
-                    }
-                    else
-                    {
-                        this.WriteHcHeaderToStream(stream, model);
-                        this.WriteRealDataToStream(stream, information, doubleProgressModel);
-                    }
-                    return true;
-                }
-                finally
-                {
-                    if (previousPosition != -1L)
-                    {
-                        stream.Position = previousPosition;
-                    }
-                }
-            }
-            return false;
-        }
-
-        public bool RestoreTaggedFile(Stream stream, DoubleProgressModel progressModel)
-        {
-            if (this.ValidInitialStream && this.IsUsableExternalStream(stream))
-            {
-                if (this.TryGetTaggedFileDataInfo(out FileDataInfo information))
-                {
-                    double progressValue = 0L;
-                    long initialPosition = -1L;
-                    long remainCount = information.ActualCount;
-                    byte[] buffer = null;
-                    try
-                    {
-                        GlobalUtils.Suggest(ref buffer, information.ActualCount);
-                        initialPosition = stream.Position;
-                        int plannedReadCount = buffer.Length;
-                        stream.Position = information.ActualStart;
-                        while (remainCount > 0L)
-                        {
-                            if (remainCount < buffer.Length)
-                            {
-                                plannedReadCount = (int)remainCount;
-                            }
-                            int actualReadCount = this.InitialStream.Read(buffer, 0, plannedReadCount);
-                            stream.Write(buffer, 0, actualReadCount);
-                            remainCount -= actualReadCount;
-                            progressValue += actualReadCount;
-                            progressModel.ProgressValue = progressValue / information.ActualCount;
-                        }
-                        return true;
-                    }
-                    finally
-                    {
-                        if (initialPosition != -1L)
-                        {
-                            stream.Position = initialPosition;
-                        }
-                        GlobalUtils.MakeSureBuffer(ref buffer, 0);
-                    }
-                }
-            }
-            return false;
         }
 
         /// <summary>
         /// 获取 PNG 文件的真实大小(不包含 0x49 45 4E 44 AE 42 60 82 标记后的内容)，
         /// 如果返回 0 则代表不是 PNG 文件。
         /// </summary>
-        public long GetPngRealLength()
+        private long GetPngRealLength()
         {
             byte[] bytesBuffer = null;
             const long endTagNotFound = 0L;
-            if (!this.ValidInitialStream)
-            {
-                return endTagNotFound;
-            }
             try
             {
+                if (!this.ValidInitialStream)
+                {
+                    return endTagNotFound;
+                }
                 if (this.InitialStream.Length <= 20L)
                 {
                     return endTagNotFound;
@@ -345,6 +176,10 @@ namespace HashCalculator
                     }
                 }
             }
+            catch (Exception)
+            {
+                return endTagNotFound;
+            }
             finally
             {
                 GlobalUtils.MakeSureBuffer(ref bytesBuffer, 0);
@@ -354,16 +189,16 @@ namespace HashCalculator
         /// <summary>
         /// 获取 JPEG 文件的真实大小(不包含 0xFF D9 标记后的内容)，如果返回 0 则代表不是 JPEG 文件。
         /// </summary>
-        public long GetJpegRealLength()
+        private long GetJpegRealLength()
         {
             byte[] bytesBuffer = null;
             const long endTagNotFound = 0L;
-            if (!this.ValidInitialStream)
-            {
-                return endTagNotFound;
-            }
             try
             {
+                if (!this.ValidInitialStream)
+                {
+                    return endTagNotFound;
+                }
                 if (this.InitialStream.Length <= 4L)
                 {
                     return endTagNotFound;
@@ -420,45 +255,13 @@ namespace HashCalculator
                     previousMarkLastByte = bytesBuffer[actualReadCount - 1];
                 }
             }
+            catch (Exception)
+            {
+                return endTagNotFound;
+            }
             finally
             {
                 GlobalUtils.MakeSureBuffer(ref bytesBuffer, 0);
-            }
-        }
-
-        public bool TryGetFileDataInfo(out FileDataInfo information)
-        {
-            // 先当作头部有 HCM 标记的文件对待，找不到标记再当作 PNG/JPEG 文件对待
-            information = this.GetFileDataInformation(0L);
-            if (information != null && !information.IsTagged)
-            {
-                long infoStartingPosition = this.GetPngRealLength();
-                if (infoStartingPosition == 0L)
-                {
-                    infoStartingPosition = this.GetJpegRealLength();
-                }
-                if (infoStartingPosition != 0L)
-                {
-                    information = this.GetFileDataInformation(infoStartingPosition);
-                }
-            }
-            return information != null;
-        }
-
-        public bool TryGetTaggedFileDataInfo(out FileDataInfo information)
-        {
-            if (!this.TryGetFileDataInfo(out information))
-            {
-                return false;
-            }
-            else if (!information.IsTagged)
-            {
-                information = default(FileDataInfo);
-                return false;
-            }
-            else
-            {
-                return information.IsTagged;
             }
         }
 
@@ -532,12 +335,209 @@ namespace HashCalculator
                             algoName, hashValueBytes, tailable);
                     }
                 }
+                catch (Exception)
+                {
+                }
                 finally
                 {
                     GlobalUtils.MakeSureBuffer(ref buffer, 0);
                 }
             }
             return default(FileDataInfo);
+        }
+
+        public bool TryGetFileDataInfo(out FileDataInfo information)
+        {
+            // 先当作头部有 HCM 标记的文件对待，找不到标记再当作 PNG/JPEG 文件对待
+            information = this.GetFileDataInformation(0L);
+            if (information != null && !information.IsTagged)
+            {
+                long infoStartingPosition = this.GetPngRealLength();
+                if (infoStartingPosition == 0L)
+                {
+                    infoStartingPosition = this.GetJpegRealLength();
+                }
+                if (infoStartingPosition != 0L)
+                {
+                    information = this.GetFileDataInformation(infoStartingPosition);
+                }
+            }
+            return information != null;
+        }
+
+        public bool TryGetTaggedFileDataInfo(out FileDataInfo information)
+        {
+            if (!this.TryGetFileDataInfo(out information))
+            {
+                return false;
+            }
+            else if (!information.IsTagged)
+            {
+                information = default(FileDataInfo);
+                return false;
+            }
+            else
+            {
+                return information.IsTagged;
+            }
+        }
+
+        private bool IsValidExternalStream(Stream stream)
+        {
+            return stream != this.InitialStream && stream != null && stream.CanWrite && stream.CanSeek;
+        }
+
+        private static bool IsValidAlgoModel(AlgoInOutModel algoModel)
+        {
+            return algoModel != null && algoModel.AlgoType != AlgoType.Unknown && algoModel.HashResult?.Length != 0;
+        }
+
+        private bool WriteHcmHeaderToStream(Stream stream, AlgoInOutModel algoModel)
+        {
+            try
+            {
+                byte[] algoNameBytes = Encoding.ASCII.GetBytes(algoModel.AlgoName);
+                byte[] hashLengthBytes = BitConverter.GetBytes((short)algoModel.HashResult.Length);
+                if (algoNameBytes?.Length > byte.MaxValue ||
+                    algoModel.HashResult.Length > short.MaxValue ||
+                    hashLengthBytes.Length != COUNT_BYTES_RECORD_HASH_LENGTH)
+                {
+                    return false;
+                }
+                Random randomGernerator = new Random();
+                byte randomBytesLength = (byte)randomGernerator.Next(RANDOM_DATA_LENTGH_LOWER, RANDOM_DATA_LENTGH_UPPER);
+                byte[] randomBytesBuffer = new byte[randomBytesLength];
+                randomGernerator.NextBytes(randomBytesBuffer);
+                stream.Write(HC_HEAD, 0, HC_HEAD.Length);
+                stream.WriteByte((byte)algoNameBytes.Length);
+                stream.Write(algoNameBytes, 0, algoNameBytes.Length);
+                stream.Write(hashLengthBytes, 0, COUNT_BYTES_RECORD_HASH_LENGTH);
+                stream.Write(algoModel.HashResult, 0, algoModel.HashResult.Length);
+                stream.WriteByte(randomBytesLength);
+                stream.Write(randomBytesBuffer, 0, randomBytesLength);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        private bool WriteActualDataToStream(Stream stream, FileDataInfo info, DoubleProgressModel progressModel)
+        {
+            byte[] bytesBuffer = null;
+            try
+            {
+                long dataCount;
+                if (info == null)
+                {
+                    this.InitialStream.Position = 0L;
+                    dataCount = this.InitialStream.Length;
+                }
+                else
+                {
+                    this.InitialStream.Position = info.ActualStart;
+                    dataCount = info.ActualCount;
+                }
+                GlobalUtils.Suggest(ref bytesBuffer, dataCount);
+                double progressValue = 0L;
+                long remainCount = dataCount;
+                int actualReadCount;
+                int plannedReadCount = bytesBuffer.Length;
+                while (remainCount > 0L)
+                {
+                    if (remainCount < bytesBuffer.Length)
+                    {
+                        plannedReadCount = (int)remainCount;
+                    }
+                    if ((actualReadCount = this.InitialStream.Read(bytesBuffer, 0, plannedReadCount)) == 0)
+                    {
+                        break;
+                    }
+                    stream.Write(bytesBuffer, 0, actualReadCount);
+                    remainCount -= actualReadCount;
+                    progressValue += actualReadCount;
+                    progressModel.ProgressValue = progressValue / dataCount;
+                }
+                return remainCount == 0L;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            finally
+            {
+                GlobalUtils.MakeSureBuffer(ref bytesBuffer, 0);
+            }
+        }
+
+        /// <summary>
+        /// 从带有哈希标记 (HCM标记) 的文件中还原出无标记的文件。
+        /// </summary>
+        public bool RestoreTaggedFile(Stream stream, FileDataInfo info, DoubleProgressModel progress)
+        {
+            if (this.ValidInitialStream && this.IsValidExternalStream(stream) &&
+                info?.IsTagged == true)
+            {
+                byte[] buffer = null;
+                try
+                {
+                    this.InitialStream.Position = info.ActualStart;
+                    GlobalUtils.Suggest(ref buffer, info.ActualCount);
+                    double progressValue = 0L;
+                    long remainCount = info.ActualCount;
+                    int actualReadCount = 0;
+                    int plannedReadCount = buffer.Length;
+                    while (remainCount > 0L)
+                    {
+                        if (remainCount < buffer.Length)
+                        {
+                            plannedReadCount = (int)remainCount;
+                        }
+                        if ((actualReadCount = this.InitialStream.Read(buffer, 0, plannedReadCount)) == 0)
+                        {
+                            break;
+                        }
+                        stream.Write(buffer, 0, actualReadCount);
+                        remainCount -= actualReadCount;
+                        progressValue += actualReadCount;
+                        progress.ProgressValue = progressValue / info.ActualCount;
+                    }
+                    return remainCount == 0L;
+                }
+                catch (Exception)
+                {
+                }
+                finally
+                {
+                    GlobalUtils.MakeSureBuffer(ref buffer, 0);
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 生成有哈希标记的文件，哈希标记 (HCM标记) 具体格式如下：<br/>
+        /// 文件头(HC_HEAD)标识，1 字节算法名长度，算法名，2 字节算法结果长度，算法结果, 1 字节随机数据长度, 随机数据<br/>
+        /// 对于 PNG/JPEG 文件，如果 tailTag 参数为 true，则程序会在其结束标记后写入【HCM标记】，否则在文件起始写入；<br/>
+        /// 对于其他非 PNG/JPEG 文件，程序会在文件起始位置写入【HCM标记】。
+        /// </summary>
+        public bool GenerateTaggedFile(Stream stream, FileDataInfo info, AlgoInOutModel model, bool tailTag, DoubleProgressModel progress)
+        {
+            if (this.IsValidExternalStream(stream) && IsValidAlgoModel(model))
+            {
+                if (!tailTag || !info.IsTailable)
+                {
+                    return this.WriteHcmHeaderToStream(stream, model) &&
+                        this.WriteActualDataToStream(stream, info, progress);
+                }
+                else
+                {
+                    return this.WriteActualDataToStream(stream, info, progress) &&
+                        this.WriteHcmHeaderToStream(stream, model);
+                }
+            }
+            return false;
         }
     }
 }

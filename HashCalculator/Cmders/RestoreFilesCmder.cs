@@ -80,9 +80,132 @@ namespace HashCalculator
             }
         }
 
-        private void RestoreTaggedFilesAction(object param)
+        private async Task<string> RestoreTaggedFiles(IEnumerable<HashViewModel> models,
+            DoubleProgressWindow doubleProgressWindow, DoubleProgressModel doubleProgressModel)
         {
+            try
+            {
+                doubleProgressModel.FilesCount = models.Count();
+                await Task.Run(() =>
+                {
+                    foreach (HashViewModel model in models)
+                    {
+                        doubleProgressModel.ProgressValue = 0.0;
+                        doubleProgressModel.CurFileName = model.FileName;
+                        try
+                        {
+                            using (FileStream fileStream = model.FileInfo.OpenRead())
+                            using (FileDataHelper fileDataHelper = new FileDataHelper(fileStream))
+                            {
+                                if (!fileDataHelper.TryGetTaggedFileDataInfo(out FileDataInfo info))
+                                {
+                                    goto NextRound;
+                                }
+                                string oldExtension = Path.GetExtension(model.FileName);
+                                string oldNameNoExt = Path.GetFileNameWithoutExtension(model.FileName);
+                                string newNameNoExt = Path.GetFileNameWithoutExtension(oldNameNoExt);
+                                string newExtension = !oldExtension.Equals(".hcm", StringComparison.OrdinalIgnoreCase) ?
+                                    oldExtension : Path.GetExtension(oldNameNoExt);
+                                string outputDirectory = this.SaveToOriginDirectory ?
+                                    model.FileInfo.DirectoryName : this.DirectoryUsedToSaveFiles;
+                                int duplicate = -1;
+                                string newFilePath;
+                                do
+                                {
+                                    string newFileName = ++duplicate == 0 ? $"{newNameNoExt}{newExtension}" :
+                                        $"{newNameNoExt}_{duplicate}{newExtension}";
+                                    newFilePath = Path.Combine(outputDirectory, newFileName);
+                                } while (File.Exists(newFilePath));
+                                using (FileStream newFileStream = File.OpenWrite(newFilePath))
+                                {
+                                    fileDataHelper.RestoreTaggedFile(newFileStream, info, doubleProgressModel);
+                                }
+                            }
+                        }
+                        catch (Exception)
+                        {
+                        }
+                    NextRound:
+                        doubleProgressModel.ProcessedCount += 1;
+                        if (doubleProgressModel.TokenSrc.IsCancellationRequested)
+                        {
+                            break;
+                        }
+                    }
+                });
+                return default(string);
+            }
+            catch (Exception exception)
+            {
+                return exception.Message;
+            }
+            finally
+            {
+                doubleProgressModel.AutoClose = true;
+                doubleProgressWindow.DialogResult = false;
+            }
+        }
 
+        private async void RestoreTaggedFilesAction(object param)
+        {
+            if (Settings.Current.ShowExecutionTargetColumn &&
+                Settings.Current.FilterOrCmderEnabled &&
+                this.RefModels is IEnumerable<HashViewModel> hashViewModels)
+            {
+                Settings.Current.FilterOrCmderEnabled = false;
+                if (!this.SaveToOriginDirectory)
+                {
+                    if (string.IsNullOrEmpty(this.DirectoryUsedToSaveFiles) ||
+                        !Path.IsPathRooted(this.DirectoryUsedToSaveFiles))
+                    {
+                        MessageBox.Show(MainWindow.This, "请输入还原出来的文件的保存目录完整路径！", "提示",
+                            MessageBoxButton.OK, MessageBoxImage.Warning);
+                        goto FinishingTouches;
+                    }
+                    if (!Directory.Exists(this.DirectoryUsedToSaveFiles))
+                    {
+                        try
+                        {
+                            Directory.CreateDirectory(this.DirectoryUsedToSaveFiles);
+                        }
+                        catch (Exception)
+                        {
+                            MessageBox.Show(MainWindow.This, "用于保存还原出来的文件的目录不存在且创建失败！", "错误",
+                                MessageBoxButton.OK, MessageBoxImage.Error);
+                            goto FinishingTouches;
+                        }
+                    }
+                }
+                if (hashViewModels.Any(i => i.IsExecutionTarget))
+                {
+                    IEnumerable<HashViewModel> targets = hashViewModels.Where(i => i.IsExecutionTarget);
+                    DoubleProgressModel progressModel = new DoubleProgressModel(false);
+                    DoubleProgressWindow progressWindow = new DoubleProgressWindow(progressModel)
+                    {
+                        Owner = MainWindow.This
+                    };
+                    Task<string> restoreTaggedFilesTask = this.RestoreTaggedFiles(targets, progressWindow, progressModel);
+                    progressWindow.ShowDialog();
+                    string exceptionMessage = await restoreTaggedFilesTask;
+                    if (string.IsNullOrEmpty(exceptionMessage))
+                    {
+                        Settings.Current.ShowHashInTagColumn = true;
+                    }
+                    else
+                    {
+                        MessageBox.Show(MainWindow.This, $"出现异常导致过程中断：{exceptionMessage}", "错误",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(MainWindow.This, "没有找到任何操作目标，请刷新筛选或手动勾选操作目标！", "提示",
+                        MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            FinishingTouches:
+                Settings.Current.FilterOrCmderEnabled = true;
+                Settings.Current.ShowExecutionTargetColumn = false;
+            }
         }
 
         public ICommand RestoreTaggedFilesCmd
@@ -121,7 +244,9 @@ namespace HashCalculator
                                 }
                             }
                         }
-                        catch (Exception) { }
+                        catch (Exception)
+                        {
+                        }
                         doubleProgressModel.ProcessedCount += 1;
                         if (doubleProgressModel.TokenSrc.IsCancellationRequested)
                         {
@@ -151,13 +276,13 @@ namespace HashCalculator
                 Settings.Current.FilterOrCmderEnabled = false;
                 if (hashViewModels.Any(i => i.IsExecutionTarget))
                 {
-                    IEnumerable<HashViewModel> models = hashViewModels.Where(i => i.IsExecutionTarget);
+                    IEnumerable<HashViewModel> targets = hashViewModels.Where(i => i.IsExecutionTarget);
                     DoubleProgressModel progressModel = new DoubleProgressModel(false);
                     DoubleProgressWindow progressWindow = new DoubleProgressWindow(progressModel)
                     {
                         Owner = MainWindow.This
                     };
-                    Task<string> getFilesTagTask = this.GetFilesTag(models, progressWindow, progressModel);
+                    Task<string> getFilesTagTask = this.GetFilesTag(targets, progressWindow, progressModel);
                     progressWindow.ShowDialog();
                     string exceptionMessage = await getFilesTagTask;
                     if (string.IsNullOrEmpty(exceptionMessage))

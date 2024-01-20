@@ -91,52 +91,42 @@ namespace HashCalculator
                         doubleProgressModel.CurFileName = model.FileName;
                         try
                         {
-                            string newExt;
-                            string oldExt = Path.GetExtension(model.FileName);
-                            string noExtName = Path.GetFileNameWithoutExtension(model.FileName);
-                            if (this.UseSenseFreeModifications && !string.IsNullOrEmpty(oldExt) && (
-                                oldExt.Equals(".png", StringComparison.OrdinalIgnoreCase) ||
-                                oldExt.Equals(".jpg", StringComparison.OrdinalIgnoreCase) ||
-                                oldExt.Equals(".jpeg", StringComparison.OrdinalIgnoreCase)))
-                            {
-
-                                newExt = $".hcm{oldExt}";
-                            }
-                            else
-                            {
-                                newExt = $"{oldExt}.hcm";
-                            }
-                            int duplicate = 0;
-                            string newFilePath;
-                            string newFileName = $"{noExtName}{newExt}";
-                            string directoryToSaveFile = this.SaveToOriginDirectory ?
-                                model.FileInfo.DirectoryName : this.DirectoryUsedToSaveFiles;
-                            while (true)
-                            {
-                                newFilePath = Path.Combine(directoryToSaveFile, newFileName);
-                                if (File.Exists(newFilePath))
-                                {
-                                    newFileName = $"{noExtName}_{++duplicate}{newExt}";
-                                    continue;
-                                }
-                                break;
-                            }
                             using (FileStream fileStream = model.FileInfo.OpenRead())
-                            using (FileDataHelper hcFileHelper = new FileDataHelper(fileStream))
+                            using (FileDataHelper fileDataHelper = new FileDataHelper(fileStream))
                             {
-                                if (hcFileHelper.TryGetFileDataInfo(out FileDataInfo info) && !info.IsTagged)
+                                if (!fileDataHelper.TryGetFileDataInfo(out FileDataInfo info) || info.IsTagged)
                                 {
-                                    using (FileStream newFileStream = File.OpenWrite(newFilePath))
-                                    {
-                                        hcFileHelper.GenerateTaggedFile(newFileStream, model.CurrentInOutModel,
-                                            this.UseSenseFreeModifications, doubleProgressModel);
-                                    }
+                                    goto NextRound;
+                                }
+                                string oldExtension = Path.GetExtension(model.FileName);
+                                string newNameNoExt = Path.GetFileNameWithoutExtension(model.FileName);
+                                string newExt = this.UseSenseFreeModifications &&
+                                    !string.IsNullOrEmpty(oldExtension) && (
+                                        oldExtension.Equals(".png", StringComparison.OrdinalIgnoreCase) ||
+                                        oldExtension.Equals(".jpg", StringComparison.OrdinalIgnoreCase) ||
+                                        oldExtension.Equals(".jpeg", StringComparison.OrdinalIgnoreCase)
+                                    ) ? $".hcm{oldExtension}" : $"{oldExtension}.hcm";
+                                string directoryToSaveFile = this.SaveToOriginDirectory ?
+                                    model.FileInfo.DirectoryName : this.DirectoryUsedToSaveFiles;
+                                int duplicate = -1;
+                                string newFilePath;
+                                do
+                                {
+                                    string newFileName = ++duplicate == 0 ?
+                                        $"{newNameNoExt}{newExt}" : $"{newNameNoExt}_{duplicate}{newExt}";
+                                    newFilePath = Path.Combine(directoryToSaveFile, newFileName);
+                                } while (File.Exists(newFilePath));
+                                using (FileStream newFileStream = File.OpenWrite(newFilePath))
+                                {
+                                    fileDataHelper.GenerateTaggedFile(newFileStream, info, model.CurrentInOutModel,
+                                        this.UseSenseFreeModifications, doubleProgressModel);
                                 }
                             }
                         }
                         catch (Exception)
                         {
                         }
+                    NextRound:
                         doubleProgressModel.ProcessedCount += 1;
                         if (doubleProgressModel.TokenSrc.IsCancellationRequested)
                         {
@@ -198,13 +188,13 @@ namespace HashCalculator
                 }
                 if (hashViewModels.Any(i => i.IsExecutionTarget))
                 {
-                    IEnumerable<HashViewModel> models = hashViewModels.Where(i => i.IsExecutionTarget);
+                    IEnumerable<HashViewModel> targets = hashViewModels.Where(i => i.IsExecutionTarget);
                     DoubleProgressModel progressModel = new DoubleProgressModel(true);
                     DoubleProgressWindow progressWindow = new DoubleProgressWindow(progressModel)
                     {
                         Owner = MainWindow.This
                     };
-                    Task<string> genTaggedFilesTask = this.GenerateTaggedFiles(models, progressWindow, progressModel);
+                    Task<string> genTaggedFilesTask = this.GenerateTaggedFiles(targets, progressWindow, progressModel);
                     progressWindow.ShowDialog();
                     string exceptionMessage = await genTaggedFilesTask;
                     if (!string.IsNullOrEmpty(exceptionMessage))
