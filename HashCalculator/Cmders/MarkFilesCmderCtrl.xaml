@@ -18,106 +18,108 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition />
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
-        <RadioButton
-            Grid.Row="0"
-            Grid.Column="0"
-            Grid.ColumnSpan="3"
-            Padding="4,0,0,0"
-            Content="新文件保存到与原文件相同的位置"
-            IsChecked="{Binding SaveToOriginDirectory}" />
-        <RadioButton
-            Grid.Row="1"
-            Grid.Column="0"
-            Grid.ColumnSpan="3"
-            Margin="0,2,0,0"
-            Padding="4,0,0,0"
-            Content="新文件保存到以下显示的文件夹："
-            IsChecked="{Binding SaveToOriginDirectory, Converter={StaticResource ReverseBooleanValueCvt}}" />
-        <TextBox
-            Grid.Row="2"
-            Grid.Column="0"
-            Grid.ColumnSpan="2"
-            Margin="0,2,0,0"
-            Padding="2"
-            IsEnabled="{Binding SaveToOriginDirectory, Converter={StaticResource ReverseBooleanValueCvt}}"
-            MaxLines="1"
-            Text="{Binding DirectoryUsedToSaveFiles}" />
-        <Button
-            Grid.Row="2"
-            Grid.Column="2"
-            Margin="4,2,0,0"
-            Padding="4,2"
-            Background="{x:Null}"
-            Command="{Binding SelectFolderCmd}"
-            Content="..."
-            IsEnabled="{Binding SaveToOriginDirectory, Converter={StaticResource ReverseBooleanValueCvt}}" />
-        <Button
-            Grid.Row="3"
-            Grid.RowSpan="2"
-            Grid.Column="0"
-            Margin="0,4,0,0"
-            Padding="16,6"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Center"
-            Background="DarkCyan"
-            BorderThickness="1"
-            Command="{Binding GenerateTaggedFilesCmd}"
-            Content="开始生成"
-            Foreground="White"
-            IsEnabled="{Binding Source={x:Static local:Settings.Current}, Path=ShowExecutionTargetColumn}"
-            Style="{StaticResource IndepButtonStyle}" />
-        <CheckBox
-            Grid.Row="3"
-            Grid.Column="1"
-            Grid.ColumnSpan="2"
-            Margin="4,4,0,0"
-            Padding="4,0,0,0"
-            VerticalAlignment="Center"
-            Content="对 PNG/JPEG 文件进行无感觉标记"
-            IsChecked="{Binding UseSenseFreeModifications}"
-            ToolTip="开启此设置后生成带标记的 PNG/JPEG 新文件(下称标记文件)完全正常使用，但应注意：&#10;1. 如果原文件末尾带有额外数据，则生成的标记文件末尾只带本程序的标记，不带原额外数据；&#10;2. 一般原文件末尾不会带有额外数据，除非是你特意用某些方法将一些数据隐藏到它的末尾；&#10;3. 因为生成的标记文件不带原文件的额外数据，所以从标记文件还原出的文件也不带额外数据；&#10;4. 因还原出的文件不带原文件的额外数据，所以还原出的文件的哈希与标记内的哈希值不一样。" />
-        <CheckBox
-            Grid.Row="4"
-            Grid.Column="1"
-            Grid.ColumnSpan="2"
-            Margin="4,2,0,0"
-            Padding="4,0,0,0"
-            VerticalAlignment="Center"
-            Content="检查是否应用了【有效的文件】筛选器"
-            IsChecked="{Binding CheckIfUsingDistinctFilesFilter}"
-            ToolTip="检查当前显示的所有行是否都已经经过【有效的文件】筛选器的筛选" />
-        <TextBlock
-            Grid.Row="5"
-            Grid.Column="0"
-            Grid.ColumnSpan="3"
-            Margin="0,4,0,0"
-            FontSize="8pt"
-            Foreground="OrangeRed"
-            Style="{StaticResource DescTextBlockStyle}"
-            Text="提示1：只支持计算成功且无标记的操作目标，否则忽略该目标" />
-        <TextBlock
-            Grid.Row="6"
-            Grid.Column="0"
-            Grid.ColumnSpan="3"
-            FontSize="8pt"
-            Foreground="OrangeRed"
-            Style="{StaticResource DescTextBlockStyle}"
-            Text="提示2：每行的哈希标记由当前显示的算法结果和随机数据构成" />
-    </Grid>
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <RadioButton
+                Grid.Row="0"
+                Grid.Column="0"
+                Grid.ColumnSpan="3"
+                Padding="4,0,0,0"
+                Content="新文件保存到与原文件相同的位置"
+                IsChecked="{Binding SaveToOriginDirectory}" />
+            <RadioButton
+                Grid.Row="1"
+                Grid.Column="0"
+                Grid.ColumnSpan="3"
+                Margin="0,2,0,0"
+                Padding="4,0,0,0"
+                Content="新文件保存到以下显示的文件夹："
+                IsChecked="{Binding SaveToOriginDirectory, Converter={StaticResource ReverseBooleanValueCvt}}" />
+            <TextBox
+                Grid.Row="2"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="0,2,0,0"
+                Padding="2"
+                IsEnabled="{Binding SaveToOriginDirectory, Converter={StaticResource ReverseBooleanValueCvt}}"
+                MaxLines="1"
+                Text="{Binding DirectoryUsedToSaveFiles}" />
+            <Button
+                Grid.Row="2"
+                Grid.Column="2"
+                Margin="4,2,0,0"
+                Padding="4,2"
+                Background="{x:Null}"
+                Command="{Binding SelectFolderCmd}"
+                Content="..."
+                IsEnabled="{Binding SaveToOriginDirectory, Converter={StaticResource ReverseBooleanValueCvt}}" />
+            <Button
+                Grid.Row="3"
+                Grid.RowSpan="2"
+                Grid.Column="0"
+                Margin="0,4,0,0"
+                Padding="16,6"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Background="DarkCyan"
+                BorderThickness="1"
+                Command="{Binding GenerateTaggedFilesCmd}"
+                Content="开始生成"
+                Foreground="White"
+                IsEnabled="{Binding Source={x:Static local:Settings.Current}, Path=ShowExecutionTargetColumn}"
+                Style="{StaticResource IndepButtonStyle}" />
+            <CheckBox
+                Grid.Row="3"
+                Grid.Column="1"
+                Grid.ColumnSpan="2"
+                Margin="4,4,0,0"
+                Padding="4,0,0,0"
+                VerticalAlignment="Center"
+                Content="对 PNG/JPEG 文件进行无感觉标记"
+                IsChecked="{Binding UseSenseFreeModifications}"
+                ToolTip="开启此设置后生成带标记的 PNG/JPEG 新文件(下称标记文件)完全正常使用，但应注意：&#10;1. 如果原文件末尾带有额外数据，则生成的标记文件末尾只带本程序的标记，不带原额外数据；&#10;2. 一般原文件末尾不会带有额外数据，除非是你特意用某些方法将一些数据隐藏到它的末尾；&#10;3. 因为生成的标记文件不带原文件的额外数据，所以从标记文件还原出的文件也不带额外数据；&#10;4. 因还原出的文件不带原文件的额外数据，所以还原出的文件的哈希与标记内的哈希值不一样。" />
+            <CheckBox
+                Grid.Row="4"
+                Grid.Column="1"
+                Grid.ColumnSpan="2"
+                Margin="4,2,0,0"
+                Padding="4,0,0,0"
+                VerticalAlignment="Center"
+                Content="检查是否应用了【有效的文件】筛选器"
+                IsChecked="{Binding CheckIfUsingDistinctFilesFilter}"
+                ToolTip="检查当前显示的所有行是否都已经经过【有效的文件】筛选器的筛选" />
+            <TextBlock
+                Grid.Row="5"
+                Grid.Column="0"
+                Grid.ColumnSpan="3"
+                Margin="0,4,0,0"
+                FontSize="8pt"
+                Foreground="OrangeRed"
+                Style="{StaticResource DescTextBlockStyle}"
+                Text="提示1：只支持计算成功且无标记的操作目标，否则忽略该目标" />
+            <TextBlock
+                Grid.Row="6"
+                Grid.Column="0"
+                Grid.ColumnSpan="3"
+                FontSize="8pt"
+                Foreground="OrangeRed"
+                Style="{StaticResource DescTextBlockStyle}"
+                Text="提示2：每行的哈希标记由当前显示的算法结果和随机数据构成" />
+        </Grid>
+    </ScrollViewer>
 </UserControl>
