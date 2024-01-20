@@ -88,9 +88,9 @@
             Margin="0,4,0,0"
             Padding="4,0,0,0"
             VerticalContentAlignment="Center"
-            Content="检查是否经过【有效的文件】的筛选"
+            Content="检查是否应用了【有效的文件】筛选器"
             IsChecked="{Binding CheckIfUsingDistinctFilesFilter}"
-            ToolTip="检查当前所有筛选出来的行是否都已经被【有效的文件】筛选器筛选过" />
+            ToolTip="检查当前显示的所有行是否都已经经过【有效的文件】筛选器的筛选" />
         <TextBlock
             Grid.Row="3"
             Grid.ColumnSpan="3"
@@ -98,6 +98,6 @@
             FontSize="8pt"
             Foreground="OrangeRed"
             Style="{StaticResource DescTextBlockStyle}"
-            Text="提示：勾选【有效的文件】筛选器并刷新以避免重复重命名" />
+            Text="提示：应用【有效的文件】筛选器以避免重复重命名" />
     </Grid>
 </UserControl>

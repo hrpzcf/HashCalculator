@@ -47,7 +47,7 @@ namespace HashCalculator
                         if (this.CheckIfUsingDistinctFilesFilter &&
                             !hashViewModels.Where(i => i.Matched).All(i => i.FileIndex != null))
                         {
-                            if (MessageBox.Show(MainWindow.This, "并非所有筛选出的行都经过【有效文件】的筛选，继续吗？", "提示",
+                            if (MessageBox.Show(MainWindow.This, "没有应用【有效的文件】筛选器，要继续操作吗？", "提示",
                                 MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
                             {
                                 goto FinishingTouches;

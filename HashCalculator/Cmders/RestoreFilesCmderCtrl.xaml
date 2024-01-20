@@ -115,9 +115,9 @@
                 Margin="0,4,0,0"
                 Padding="4,0,0,0"
                 VerticalAlignment="Center"
-                Content="检查是否经过【有效的文件】的筛选"
+                Content="检查是否应用了【有效的文件】筛选器"
                 IsChecked="{Binding CheckIfUsingDistinctFilesFilter}"
-                ToolTip="检查当前所有筛选出来的行是否都已经被【有效的文件】筛选器筛选过" />
+                ToolTip="检查当前显示的所有行是否都已经经过【有效的文件】筛选器的筛选" />
         </Grid>
     </ScrollViewer>
 </UserControl>
