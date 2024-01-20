@@ -17,6 +17,14 @@ namespace HashCalculator
         private string directoryUsedToSaveFiles;
         private bool saveToOriginDirectory = true;
 
+        private static readonly SizeDelegates delegates = new SizeDelegates()
+        {
+            GetWindowWidth = () => Settings.Current.MarkFilesProgressWidth,
+            SetWindowWidth = width => Settings.Current.MarkFilesProgressWidth = width,
+            GetWindowHeight = () => Settings.Current.MarkFilesProgressHeight,
+            SetWindowHeight = height => Settings.Current.MarkFilesProgressHeight = height,
+        };
+
         public override ContentControl UserInterface { get; }
 
         public override string Display => "生成带哈希标记的新文件";
@@ -189,7 +197,7 @@ namespace HashCalculator
                 if (hashViewModels.Any(i => i.IsExecutionTarget))
                 {
                     IEnumerable<HashViewModel> targets = hashViewModels.Where(i => i.IsExecutionTarget);
-                    DoubleProgressModel progressModel = new DoubleProgressModel(true);
+                    DoubleProgressModel progressModel = new DoubleProgressModel(delegates);
                     DoubleProgressWindow progressWindow = new DoubleProgressWindow(progressModel)
                     {
                         Owner = MainWindow.This

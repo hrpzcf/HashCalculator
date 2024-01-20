@@ -1,48 +1,67 @@
 ﻿using System.Threading;
+using System.Windows;
 using System.Windows.Input;
 
 namespace HashCalculator
 {
+    internal delegate double GetWndSize();
+
+    internal delegate void SetWndSize(double size);
+
+    internal class SizeDelegates
+    {
+        public SizeDelegates() { }
+
+        public SizeDelegates(GetWndSize gww, SetWndSize sww, GetWndSize gwh, SetWndSize swh)
+        {
+            this.GetWindowWidth = gww;
+            this.SetWindowWidth = sww;
+            this.GetWindowHeight = gwh;
+            this.SetWindowHeight = swh;
+        }
+
+        public GetWndSize GetWindowWidth { get; set; }
+
+        public SetWndSize SetWindowWidth { get; set; }
+
+        public GetWndSize GetWindowHeight { get; set; }
+
+        public SetWndSize SetWindowHeight { get; set; }
+    }
+
     internal class DoubleProgressModel : NotifiableModel
     {
-        private string curFileName = null;
-        private double curPercentage = 0;
-        private int filesCount = 0;
+        private double currentValue = 0;
+        private string currentString = null;
+        private int totalCount = 0;
         private int processedCount = 0;
+        private string totalString = null;
+        private Visibility subProgressVisibility;
+        private Visibility totalProgressVisibility;
         private RelayCommand cancelOperationCmd;
-        private readonly bool isMarkFilesProgress;
         private bool isCancelled = false;
 
-        public DoubleProgressModel(bool isMarkFilesModel)
+        public DoubleProgressModel() { }
+
+        public DoubleProgressModel(SizeDelegates delegates)
         {
-            this.isMarkFilesProgress = isMarkFilesModel;
+            this.SizeDelegates = delegates;
         }
 
         public string WindowTitle { get; set; }
+
+        public SizeDelegates SizeDelegates { get; set; }
 
         public double WindowWidth
         {
             get
             {
-                if (this.isMarkFilesProgress)
-                {
-                    return Settings.Current.MarkFilesProgressWidth;
-                }
-                else
-                {
-                    return Settings.Current.RestoreFilesProgressWidth;
-                }
+                return this.SizeDelegates?.GetWindowWidth?.Invoke()
+                    ?? 400.0;
             }
             set
             {
-                if (this.isMarkFilesProgress)
-                {
-                    Settings.Current.MarkFilesProgressWidth = value;
-                }
-                else
-                {
-                    Settings.Current.RestoreFilesProgressWidth = value;
-                }
+                this.SizeDelegates?.SetWindowWidth?.Invoke(value);
             }
         }
 
@@ -50,50 +69,88 @@ namespace HashCalculator
         {
             get
             {
-                if (this.isMarkFilesProgress)
-                {
-                    return Settings.Current.MarkFilesProgressHeight;
-                }
-                else
-                {
-                    return Settings.Current.RestoreFilesProgressHeight;
-                }
+                return this.SizeDelegates?.GetWindowHeight?.Invoke()
+                    ?? 200.0;
             }
             set
             {
-                if (this.isMarkFilesProgress)
-                {
-                    Settings.Current.MarkFilesProgressHeight = value;
-                }
-                else
-                {
-                    Settings.Current.RestoreFilesProgressHeight = value;
-                }
+                this.SizeDelegates?.SetWindowHeight?.Invoke(value);
             }
-        }
-
-        public string CurrentString
-        {
-            get => this.curFileName;
-            set => this.SetPropNotify(ref this.curFileName, value);
         }
 
         public double CurrentValue
         {
-            get => this.curPercentage;
-            set => this.SetPropNotify(ref this.curPercentage, value);
+            get => this.currentValue;
+            set => this.SetPropNotify(ref this.currentValue, value);
+        }
+
+        public string CurrentString
+        {
+            get => this.currentString;
+            set => this.SetPropNotify(ref this.currentString, value);
         }
 
         public int TotalCount
         {
-            get => this.filesCount;
-            set => this.SetPropNotify(ref this.filesCount, value);
+            get
+            {
+                return this.totalCount;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.totalCount, value);
+                if (string.IsNullOrEmpty(this.totalString))
+                {
+                    this.NotifyPropertyChanged(nameof(this.TotalString));
+                }
+            }
         }
 
         public int ProcessedCount
         {
-            get => this.processedCount;
-            set => this.SetPropNotify(ref this.processedCount, value);
+            get
+            {
+                return this.processedCount;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.processedCount, value);
+                if (string.IsNullOrEmpty(this.totalString))
+                {
+                    this.NotifyPropertyChanged(nameof(this.TotalString));
+                }
+            }
+        }
+
+        public string TotalString
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(this.totalString))
+                {
+                    return this.totalString;
+                }
+                else
+                {
+                    return $"正在处理第 {this.ProcessedCount}/{this.TotalCount} 个......";
+                }
+            }
+            set
+            {
+                this.SetPropNotify(ref this.totalString, value);
+            }
+        }
+
+        public Visibility SubProgressVisibility
+        {
+            get => this.subProgressVisibility;
+            set => this.SetPropNotify(ref this.subProgressVisibility, value);
+        }
+
+        public Visibility TotalProgressVisibility
+        {
+            get => this.totalProgressVisibility;
+            set => this.SetPropNotify(ref this.totalProgressVisibility, value);
         }
 
         public bool IsCancelled

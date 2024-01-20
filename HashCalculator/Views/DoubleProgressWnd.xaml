@@ -30,31 +30,29 @@
             Grid.ColumnSpan="2"
             Height="8"
             Maximum="1.0"
+            Visibility="{Binding SubProgressVisibility}"
             Value="{Binding CurrentValue}" />
         <TextBlock
             Grid.Row="2"
             Margin="0,4,0,0"
             Foreground="Gray"
             Text="{Binding CurrentString}"
-            TextTrimming="CharacterEllipsis" />
+            TextTrimming="CharacterEllipsis"
+            Visibility="{Binding SubProgressVisibility}" />
         <ProgressBar
             Grid.Row="3"
             Height="8"
             Margin="0,16,0,0"
             Maximum="{Binding TotalCount}"
+            Visibility="{Binding TotalProgressVisibility}"
             Value="{Binding ProcessedCount}" />
         <TextBlock
             Grid.Row="4"
             Margin="0,4,0,0"
             Foreground="Gray"
-            TextTrimming="CharacterEllipsis">
-            <TextBlock.Text>
-                <MultiBinding StringFormat="正在处理第 {1}/{0} 个......">
-                    <Binding Path="TotalCount" />
-                    <Binding Path="ProcessedCount" />
-                </MultiBinding>
-            </TextBlock.Text>
-        </TextBlock>
+            Text="{Binding TotalString}"
+            TextTrimming="CharacterEllipsis"
+            Visibility="{Binding TotalProgressVisibility}" />
         <Button
             Grid.Row="5"
             Padding="16,4"
