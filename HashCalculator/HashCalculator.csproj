@@ -259,7 +259,7 @@
     <Compile Include="Views\SettingsPanel.xaml.cs">
       <DependentUpon>SettingsPanel.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Others\ModelArg.cs" />
+    <Compile Include="Others\HashModelArg.cs" />
     <Compile Include="Views\ShellMenuEditor.xaml.cs">
       <DependentUpon>ShellMenuEditor.xaml</DependentUpon>
     </Compile>

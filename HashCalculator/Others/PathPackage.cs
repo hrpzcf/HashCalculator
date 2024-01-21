@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace HashCalculator
 {
-    internal class PathPackage : IEnumerable<ModelArg>
+    internal class PathPackage : IEnumerable<HashModelArg>
     {
         private static readonly char[] invalidFnameChars = Path.GetInvalidFileNameChars();
 
@@ -35,12 +35,12 @@ namespace HashCalculator
             return this.EnumerateModelArgs();
         }
 
-        public IEnumerator<ModelArg> GetEnumerator()
+        public IEnumerator<HashModelArg> GetEnumerator()
         {
             return this.EnumerateModelArgs();
         }
 
-        private IEnumerator<ModelArg> EnumerateModelArgs()
+        private IEnumerator<HashModelArg> EnumerateModelArgs()
         {
             foreach (string path in this.paths ?? Array.Empty<string>())
             {
@@ -86,11 +86,11 @@ namespace HashCalculator
                             }
                             if (this.hashChecklist == null)
                             {
-                                yield return new ModelArg(fileInfoEnum.Current.FullName, this.PresetAlgoTypes);
+                                yield return new HashModelArg(fileInfoEnum.Current.FullName, this.PresetAlgoTypes);
                             }
                             else if (this.hashChecklist.IsNameInChecklist(fileInfoEnum.Current.Name))
                             {
-                                yield return new ModelArg(this.hashChecklist, fileInfoEnum.Current.FullName, this.PresetAlgoTypes);
+                                yield return new HashModelArg(this.hashChecklist, fileInfoEnum.Current.FullName, this.PresetAlgoTypes);
                             }
                             if (this.StopSearchingToken != null && this.StopSearchingToken.IsCancellationRequested)
                             {
@@ -103,12 +103,12 @@ namespace HashCalculator
                             {
                                 if (string.IsNullOrEmpty(pair.Key) || pair.Key.IndexOfAny(invalidFnameChars) != -1)
                                 {
-                                    yield return new ModelArg(true, true, this.PresetAlgoTypes);
+                                    yield return new HashModelArg(true, true, this.PresetAlgoTypes);
                                 }
                                 // 此属性由 HashChecklist.IsNameInChecklist 方法更改
                                 else if (!pair.Value.IsExistingFile)
                                 {
-                                    yield return new ModelArg(pair.Key, true, this.PresetAlgoTypes);
+                                    yield return new HashModelArg(pair.Key, true, this.PresetAlgoTypes);
                                 }
                                 if (this.StopSearchingToken != null && this.StopSearchingToken.IsCancellationRequested)
                                 {
@@ -121,7 +121,7 @@ namespace HashCalculator
                 }
                 else if (File.Exists(path))
                 {
-                    yield return new ModelArg(this.hashChecklist, path, this.PresetAlgoTypes);
+                    yield return new HashModelArg(this.hashChecklist, path, this.PresetAlgoTypes);
                 }
             }
         }

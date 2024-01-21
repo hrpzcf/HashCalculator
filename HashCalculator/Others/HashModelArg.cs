@@ -5,7 +5,7 @@ namespace HashCalculator
     /// <summary>
     /// HashViewModel 的构造函数的参数，用于打包零散参数
     /// </summary>
-    internal class ModelArg
+    internal class HashModelArg
     {
         public string FilePath { get; }
 
@@ -17,27 +17,27 @@ namespace HashCalculator
 
         public HashChecklist HashChecklist { get; set; }
 
-        public ModelArg(string path, IEnumerable<AlgoType> algo)
+        public HashModelArg(string path, IEnumerable<AlgoType> algo)
         {
             this.FilePath = path;
             this.PresetAlgos = algo;
         }
 
-        public ModelArg(string path, bool deprecated, IEnumerable<AlgoType> algo)
+        public HashModelArg(string path, bool deprecated, IEnumerable<AlgoType> algo)
         {
             this.FilePath = path;
             this.Deprecated = deprecated;
             this.PresetAlgos = algo;
         }
 
-        public ModelArg(bool deprecated, bool invalidFname, IEnumerable<AlgoType> algo)
+        public HashModelArg(bool deprecated, bool invalidFname, IEnumerable<AlgoType> algo)
         {
             this.Deprecated = deprecated;
             this.InvalidFileName = invalidFname;
             this.PresetAlgos = algo;
         }
 
-        public ModelArg(HashChecklist checklist, string path, IEnumerable<AlgoType> algo)
+        public HashModelArg(HashChecklist checklist, string path, IEnumerable<AlgoType> algo)
         {
             this.FilePath = path;
             this.HashChecklist = checklist;

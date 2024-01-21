@@ -25,8 +25,7 @@ namespace HashCalculator
             new ModelStarter((int)Settings.Current.SelectedTaskNumberLimit, 8);
         private static readonly Dispatcher synchronization =
             Application.Current.Dispatcher;
-        private delegate void AddModelDelegate(ModelArg arg);
-        private readonly AddModelDelegate addModelAction;
+        private readonly Action<HashModelArg> addModelAction;
         private volatile int serial = 0;
         private int tobeComputedModelsCount = 0;
         private CancellationTokenSource _cancellation = new CancellationTokenSource();
@@ -77,7 +76,7 @@ namespace HashCalculator
             HashViewModelsViewSrc.Source = HashViewModels;
             HashViewModelsView = HashViewModelsViewSrc.View;
             Settings.Current.PropertyChanged += this.SettingsPropChangedAction;
-            this.addModelAction = new AddModelDelegate(this.AddModelAction);
+            this.addModelAction = new Action<HashModelArg>(this.AddModelAction);
         }
 
         public static MainWndViewModel CurrentModel
@@ -240,7 +239,7 @@ namespace HashCalculator
             }
         }
 
-        private void AddModelAction(ModelArg arg)
+        private void AddModelAction(HashModelArg arg)
         {
             Interlocked.Increment(ref this.serial);
             HashViewModel model = new HashViewModel(this.serial, arg);
@@ -264,7 +263,7 @@ namespace HashCalculator
             {
                 lock (this.displayingModelLock)
                 {
-                    foreach (ModelArg arg in package)
+                    foreach (HashModelArg arg in package)
                     {
                         if (token.IsCancellationRequested)
                         {
@@ -288,7 +287,7 @@ namespace HashCalculator
             {
                 lock (this.displayingModelLock)
                 {
-                    foreach (ModelArg arg in models.Select(i => i.ModelArg))
+                    foreach (HashModelArg arg in models.Select(i => i.ModelArg))
                     {
                         if (token.IsCancellationRequested)
                         {

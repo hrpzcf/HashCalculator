@@ -68,7 +68,7 @@ namespace HashCalculator
         /// </summary>
         public event Action<HashViewModel> ModelShutdownEvent;
 
-        public HashViewModel(int serial, ModelArg arg)
+        public HashViewModel(int serial, HashModelArg arg)
         {
             this.ModelArg = arg;
             this.SerialNumber = serial;
@@ -100,7 +100,7 @@ namespace HashCalculator
 
         public bool InvalidFileName { get; }
 
-        public ModelArg ModelArg { get; }
+        public HashModelArg ModelArg { get; }
 
         public bool HasBeenRun { get; private set; }
 
