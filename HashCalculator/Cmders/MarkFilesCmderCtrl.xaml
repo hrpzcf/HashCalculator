@@ -82,7 +82,8 @@
                 Content="开始生成"
                 Foreground="White"
                 IsEnabled="{Binding Source={x:Static local:Settings.Current}, Path=ShowExecutionTargetColumn}"
-                Style="{StaticResource IndepButtonStyle}" />
+                Style="{StaticResource IndepButtonStyle}"
+                ToolTip="用哈希标记和随机数据与原文件组合生成的新文件，如果保存位置有同名文件则给文件名添加数字后缀后保存。" />
             <CheckBox
                 Grid.Row="3"
                 Grid.Column="1"
@@ -102,7 +103,7 @@
                 VerticalAlignment="Center"
                 Content="检查是否应用了【有效的文件】筛选器"
                 IsChecked="{Binding CheckIfUsingDistinctFilesFilter}"
-                ToolTip="检查当前显示的所有行是否都已经经过【有效的文件】筛选器的筛选" />
+                ToolTip="检查当前显示的所有行是否都已经经过【有效的文件】筛选器的筛选。" />
             <TextBlock
                 Grid.Row="5"
                 Grid.Column="0"

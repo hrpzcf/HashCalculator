@@ -29,7 +29,7 @@ namespace HashCalculator
 
         public override string Display => "生成带哈希标记的新文件";
 
-        public override string Description => "生成带哈希标记和随机数据的新文件用于避过哈希检测。\n当需要使用文件时需要先从带标记的文件中还原出原文件。";
+        public override string Description => "用哈希标记和随机数据与原文件组合成的新文件用于避过某些平台的哈希检测。\n当需要使用文件时需要先从带标记的文件中还原出原文件。";
 
         public bool SaveToOriginDirectory
         {

@@ -6,8 +6,8 @@
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DataContext="{d:DesignInstance Type=local:SelectTargetsCmder}"
-    d:DesignHeight="450"
-    d:DesignWidth="800"
+    d:DesignHeight="100"
+    d:DesignWidth="500"
     mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -32,7 +32,7 @@
                 Content="按相同哈希值组选择"
                 Foreground="WhiteSmoke"
                 Style="{StaticResource IndepButtonStyle}"
-                ToolTip="如果有【相同哈希值】筛选器的分组结果，则每组选择除了第一行外的所有行，否则取消选择所有行" />
+                ToolTip="只针对【相同哈希值】筛选器的分组结果，每组选择除了第一行外的所有行，否则取消选择所有行。" />
             <Button
                 Margin="2"
                 Padding="20,6"
@@ -42,17 +42,17 @@
                 Content="按相同文件夹组选择"
                 Foreground="WhiteSmoke"
                 Style="{StaticResource IndepButtonStyle}"
-                ToolTip="如果有【相同文件夹】筛选器的分组结果，则每组选择除了第一行外的所有行，否则取消选择所有行" />
+                ToolTip="只针对【相同文件夹】筛选器的分组结果，每组选择除了第一行外的所有行，否则取消选择所有行。" />
             <Button
                 Margin="2"
                 Padding="20,6"
                 Background="DarkMagenta"
                 BorderThickness="1"
                 Command="{Binding SelectHybridGroupsCmd}"
-                Content="按多个分组选择"
+                Content="按多级嵌套分组选择"
                 Foreground="WhiteSmoke"
                 Style="{StaticResource IndepButtonStyle}"
-                ToolTip="如果有多个筛选器共同起作用的分组结果，则每组选择除了第一行外的所有行，否则取消选择所有行" />
+                ToolTip="综合考虑【相同哈希值】和【相同文件夹】的嵌套分组结果，每个最底级子组选择除了第一行外的所有行，否则取消选择所有行。" />
             <Button
                 Margin="2"
                 Padding="20,6"
@@ -62,7 +62,7 @@
                 Content="全选"
                 Foreground="WhiteSmoke"
                 Style="{StaticResource IndepButtonStyle}"
-                ToolTip="选择所有已通过筛选的行" />
+                ToolTip="选择所有行。" />
             <Button
                 Margin="2"
                 Padding="20,6"
@@ -72,7 +72,7 @@
                 Content="反选"
                 Foreground="WhiteSmoke"
                 Style="{StaticResource IndepButtonStyle}"
-                ToolTip="反向改变所有已通过筛选的行的选择状态" />
+                ToolTip="把所有行的选择状态改为相反状态。" />
             <Button
                 Margin="2"
                 Padding="20,6"
@@ -82,11 +82,11 @@
                 Content="全不选"
                 Foreground="WhiteSmoke"
                 Style="{StaticResource IndepButtonStyle}"
-                ToolTip="取消选择所有行" />
+                ToolTip="取消选择所有行。" />
         </WrapPanel>
         <Button
             Grid.Column="1"
-            Margin="4,0,0,0"
+            Margin="4,0,2,0"
             Padding="20,6"
             VerticalAlignment="Center"
             Background="DarkGreen"
@@ -95,6 +95,6 @@
             Content="取消"
             Foreground="WhiteSmoke"
             Style="{StaticResource IndepButtonStyle}"
-            ToolTip="取消选择所有行并隐藏主窗口【操作目标】列" />
+            ToolTip="取消选择所有行并隐藏主窗口的【操作目标】列。" />
     </Grid>
 </UserControl>

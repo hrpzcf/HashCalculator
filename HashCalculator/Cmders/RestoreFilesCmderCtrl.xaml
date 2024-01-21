@@ -45,7 +45,8 @@
                     Content="显示文件内哈希标记"
                     Foreground="White"
                     IsEnabled="{Binding Source={x:Static local:Settings.Current}, Path=ShowExecutionTargetColumn}"
-                    Style="{StaticResource IndepButtonStyle}" />
+                    Style="{StaticResource IndepButtonStyle}"
+                    ToolTip="在主窗口的【原文件哈希值】列中显示带哈希标记文件内记录的原文件哈希值和算法。" />
                 <Button
                     Grid.Column="1"
                     Margin="4,0,0,0"
@@ -56,7 +57,8 @@
                     Command="{Binding HideHashesInFileTagCmd}"
                     Content="取消显示"
                     Foreground="White"
-                    Style="{StaticResource IndepButtonStyle}" />
+                    Style="{StaticResource IndepButtonStyle}"
+                    ToolTip="清空并隐藏主窗口的【原文件哈希值】列。" />
                 <Button
                     Grid.Column="2"
                     Margin="4,0,0,0"
@@ -68,7 +70,8 @@
                     Content="从带标记的文件还原"
                     Foreground="White"
                     IsEnabled="{Binding Source={x:Static local:Settings.Current}, Path=ShowExecutionTargetColumn}"
-                    Style="{StaticResource IndepButtonStyle}" />
+                    Style="{StaticResource IndepButtonStyle}"
+                    ToolTip="从带哈希标记的文件中还原出原文件，如果保存位置有同名文件则给文件名添加数字后缀后保存。" />
             </Grid>
             <TextBlock
                 Grid.Row="1"
@@ -117,7 +120,7 @@
                 VerticalAlignment="Center"
                 Content="检查是否应用了【有效的文件】筛选器"
                 IsChecked="{Binding CheckIfUsingDistinctFilesFilter}"
-                ToolTip="检查当前显示的所有行是否都已经经过【有效的文件】筛选器的筛选" />
+                ToolTip="检查当前显示的所有行是否都已经经过【有效的文件】筛选器的筛选。" />
         </Grid>
     </ScrollViewer>
 </UserControl>

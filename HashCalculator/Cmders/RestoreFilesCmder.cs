@@ -29,9 +29,9 @@ namespace HashCalculator
 
         public override ContentControl UserInterface { get; }
 
-        public override string Display => "显示文件哈希标记或还原";
+        public override string Display => "显示哈希标记或还原文件";
 
-        public override string Description => "从使用本程序生成的带哈希标记的文件中还原出不带标记的原文件。";
+        public override string Description => "从使用本程序生成的带哈希标记的文件中还原出原文件。";
 
         public bool SaveToOriginDirectory
         {
