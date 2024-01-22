@@ -70,7 +70,7 @@ namespace HashCalculator
         /// <param name="model"></param>
         public static async void InvokeAsync(this Action<HashViewModel> action, HashViewModel model)
         {
-            await Task.Run(() => { action(model); });
+            await Task.Run(() => { action.Invoke(model); });
         }
 
         /// <summary>

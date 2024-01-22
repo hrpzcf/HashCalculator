@@ -27,17 +27,19 @@ namespace HashCalculator
             Application.Current.Dispatcher;
         private readonly Action<HashModelArg> addModelAction;
         private volatile int serial = 0;
+        private int computedModelsCount = 0;
         private int tobeComputedModelsCount = 0;
         private CancellationTokenSource _cancellation = new CancellationTokenSource();
         private CancellationTokenSource searchCancellation = new CancellationTokenSource();
         private List<HashViewModel> displayedModels = new List<HashViewModel>();
         private string hashCheckReport = string.Empty;
         private string hashValueStringOrChecklistPath = null;
-        private RunningState queueState = RunningState.None;
+        private const int interval = 800;
+        private readonly Timer checkStateTimer;
+        private RunningState runningState = RunningState.None;
         private FilterAndCmdPanel commandPanelInst = null;
         private readonly object displayingModelLock = new object();
-        private readonly object displayModelRequestLock = new object();
-        private readonly object tobeComputedModelsCountLock = new object();
+        private readonly object changeRunningStateLock = new object();
         private RelayCommand openCommandPanelCmd;
         private RelayCommand openSelectAlgoWndCmd;
         private RelayCommand mainWindowTopmostCmd;
@@ -77,6 +79,7 @@ namespace HashCalculator
             HashViewModelsView = HashViewModelsViewSrc.View;
             Settings.Current.PropertyChanged += this.SettingsPropChangedAction;
             this.addModelAction = new Action<HashModelArg>(this.AddModelAction);
+            this.checkStateTimer = new Timer(this.CheckStateAction);
         }
 
         public static MainWndViewModel CurrentModel
@@ -132,21 +135,19 @@ namespace HashCalculator
         {
             get
             {
-                return this.queueState;
+                return this.runningState;
             }
             set
             {
-                if ((this.queueState == RunningState.None
-                    || this.queueState == RunningState.Stopped)
-                    && value == RunningState.Started)
+                if ((this.runningState != RunningState.Started) && value == RunningState.Started)
                 {
                     this.Report = string.Empty;
-                    this.SetPropNotify(ref this.queueState, value);
+                    this.SetPropNotify(ref this.runningState, value);
                 }
-                else if (this.queueState == RunningState.Started && value == RunningState.Stopped)
+                else if (this.runningState == RunningState.Started && value == RunningState.Stopped)
                 {
                     this.GenerateFileHashCheckReport();
-                    this.SetPropNotify(ref this.queueState, value);
+                    this.SetPropNotify(ref this.runningState, value);
                 }
             }
         }
@@ -217,24 +218,38 @@ namespace HashCalculator
             catch (Exception) { }
         }
 
-        private void ModelCapturedAction(HashViewModel model)
+        private void CheckStateAction(object state)
         {
-            lock (this.tobeComputedModelsCountLock)
+            lock (this.changeRunningStateLock)
             {
-                if (this.TobeComputedModelsCount++ == 0)
+                this.TobeComputedModelsCount -= this.computedModelsCount;
+                this.computedModelsCount = 0;
+                if (this.TobeComputedModelsCount == 0)
                 {
-                    synchronization.Invoke(() => { this.State = RunningState.Started; });
+                    synchronization.Invoke(() => { this.State = RunningState.Stopped; });
+                    this.checkStateTimer.Change(-1, -1);
                 }
             }
         }
 
         private void ModelReleasedAction(HashViewModel model)
         {
-            lock (this.tobeComputedModelsCountLock)
+            lock (this.changeRunningStateLock)
             {
-                if (--this.TobeComputedModelsCount == 0)
+                ++this.computedModelsCount;
+            }
+        }
+
+        private void ModelCapturedAction(HashViewModel model)
+        {
+            // 在最外层套上 synchronization.Invoke 在主线程执行逻辑虽然也能达到锁效果，
+            // 但每次更改 TobeComputedModelsCount 的值都要 Invoke 占用主线程资源，没有必要
+            lock (this.changeRunningStateLock)
+            {
+                if (++this.TobeComputedModelsCount == 1)
                 {
-                    synchronization.Invoke(() => { this.State = RunningState.Stopped; });
+                    synchronization.Invoke(() => { this.State = RunningState.Started; });
+                    this.checkStateTimer.Change(interval, interval);
                 }
             }
         }
@@ -253,11 +268,7 @@ namespace HashCalculator
 
         public async void BeginDisplayModels(PathPackage package)
         {
-            CancellationToken token;
-            lock (this.displayModelRequestLock)
-            {
-                token = this.Cancellation.Token;
-            }
+            CancellationToken token = this.Cancellation.Token;
             package.StopSearchingToken = this.searchCancellation.Token;
             await Task.Run(() =>
             {
@@ -270,7 +281,6 @@ namespace HashCalculator
                             break;
                         }
                         synchronization.Invoke(this.addModelAction, DispatcherPriority.Background, arg);
-                        Thread.Yield();
                     }
                 }
             }, token);
@@ -278,16 +288,12 @@ namespace HashCalculator
 
         public async void BeginDisplayModels(IEnumerable<HashViewModel> models, bool resetAlg)
         {
-            CancellationToken token;
-            lock (this.displayModelRequestLock)
-            {
-                token = this.Cancellation.Token;
-            }
+            CancellationToken token = this.Cancellation.Token;
             await Task.Run(() =>
             {
                 lock (this.displayingModelLock)
                 {
-                    foreach (HashModelArg arg in models.Select(i => i.ModelArg))
+                    foreach (HashModelArg arg in models.Select(i => i.HashModelArg))
                     {
                         if (token.IsCancellationRequested)
                         {
@@ -298,7 +304,6 @@ namespace HashCalculator
                             arg.PresetAlgos = null;
                         }
                         synchronization.Invoke(this.addModelAction, DispatcherPriority.Background, arg);
-                        Thread.Yield();
                     }
                 }
             }, token);
@@ -586,7 +591,7 @@ namespace HashCalculator
                 foreach (HashViewModel model in selectedModels)
                 {
                     bool isMatched = false;
-                    if (!Path.IsPathRooted(model.ModelArg.FilePath))
+                    if (!Path.IsPathRooted(model.HashModelArg.FilePath))
                     {
                         continue;
                     }
@@ -1221,16 +1226,13 @@ namespace HashCalculator
 
         private void CancelDisplayedModelsAction(object param)
         {
-            lock (this.displayModelRequestLock)
+            this.Cancellation?.Cancel();
+            foreach (HashViewModel model in HashViewModels)
             {
-                this.Cancellation?.Cancel();
-                foreach (HashViewModel model in HashViewModels)
-                {
-                    model.ShutdownModel();
-                }
-                this.Cancellation?.Dispose();
-                this.Cancellation = new CancellationTokenSource();
+                model.ShutdownModel();
             }
+            this.Cancellation?.Dispose();
+            this.Cancellation = new CancellationTokenSource();
         }
 
         public ICommand CancelDisplayedModelsCmd

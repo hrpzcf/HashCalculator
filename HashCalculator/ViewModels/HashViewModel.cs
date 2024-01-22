@@ -70,7 +70,7 @@ namespace HashCalculator
 
         public HashViewModel(int serial, HashModelArg arg)
         {
-            this.ModelArg = arg;
+            this.HashModelArg = arg;
             this.SerialNumber = serial;
             this.InvalidFileName = arg.InvalidFileName;
             if (arg.InvalidFileName)
@@ -100,7 +100,7 @@ namespace HashCalculator
 
         public bool InvalidFileName { get; }
 
-        public HashModelArg ModelArg { get; }
+        public HashModelArg HashModelArg { get; }
 
         public bool HasBeenRun { get; private set; }
 
@@ -703,7 +703,7 @@ namespace HashCalculator
 
         private void SetHashCheckResultForInOutModelAndSetCurModel()
         {
-            AlgHashMap algHashMap = this.ModelArg.HashChecklist?.GetAlgHashMapOfFile(this.FileName);
+            AlgHashMap algHashMap = this.HashModelArg.HashChecklist?.GetAlgHashMapOfFile(this.FileName);
             if (algHashMap != null && this.AlgoInOutModels != null)
             {
                 foreach (AlgoInOutModel item in this.AlgoInOutModels)
@@ -735,7 +735,7 @@ namespace HashCalculator
             {
                 this.State = HashState.Running;
             });
-            if (this.ModelArg.Deprecated)
+            if (this.HashModelArg.Deprecated)
             {
                 synchronization.Invoke(() =>
                 {
