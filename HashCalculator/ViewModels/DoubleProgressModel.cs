@@ -31,6 +31,8 @@ namespace HashCalculator
 
     internal class DoubleProgressModel : NotifiableModel
     {
+        private bool isCancelled = false;
+        private string windowTitle = string.Empty;
         private double currentValue = 0;
         private string currentString = null;
         private int totalCount = 0;
@@ -38,8 +40,8 @@ namespace HashCalculator
         private string totalString = null;
         private Visibility subProgressVisibility;
         private Visibility totalProgressVisibility;
+        private Visibility totalStringVisibility;
         private RelayCommand cancelOperationCmd;
-        private bool isCancelled = false;
 
         public DoubleProgressModel() { }
 
@@ -48,7 +50,17 @@ namespace HashCalculator
             this.SizeDelegates = delegates;
         }
 
-        public string WindowTitle { get; set; }
+        public DoubleProgressModel(string title, SizeDelegates delegates)
+        {
+            this.windowTitle = title;
+            this.SizeDelegates = delegates;
+        }
+
+        public string WindowTitle
+        {
+            get => this.windowTitle;
+            set => this.SetPropNotify(ref this.windowTitle, value);
+        }
 
         public SizeDelegates SizeDelegates { get; set; }
 
@@ -151,6 +163,12 @@ namespace HashCalculator
         {
             get => this.totalProgressVisibility;
             set => this.SetPropNotify(ref this.totalProgressVisibility, value);
+        }
+
+        public Visibility TotalStringVisibility
+        {
+            get => this.totalStringVisibility;
+            set => this.SetPropNotify(ref this.totalStringVisibility, value);
         }
 
         public bool IsCancelled

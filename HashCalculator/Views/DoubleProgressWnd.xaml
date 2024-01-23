@@ -52,7 +52,7 @@
             Foreground="Gray"
             Text="{Binding TotalString}"
             TextTrimming="CharacterEllipsis"
-            Visibility="{Binding TotalProgressVisibility}" />
+            Visibility="{Binding TotalStringVisibility}" />
         <Button
             Grid.Row="5"
             Padding="16,4"

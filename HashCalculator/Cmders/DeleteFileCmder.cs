@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -30,17 +31,17 @@ namespace HashCalculator
             this.UserInterface = new DeleteFileCmderCtrl(this);
         }
 
-        private void DeleteMoveToRecycleBin(bool permanently)
+        private async void DeleteOrMoveToRecycleBin(bool toRecyclebin)
         {
             if (Settings.Current.ShowExecutionTargetColumn &&
                 Settings.Current.FilterOrCmderEnabled &&
-                this.RefModels is Collection<HashViewModel> hashViewModels)
+                this.RefModels is ObservableCollection<HashViewModel> hashViewModels)
             {
                 Settings.Current.FilterOrCmderEnabled = false;
                 if (hashViewModels.Any(i => i.IsExecutionTarget))
                 {
-                    string promptInfo = permanently ? "确定直接删除操作目标所指的文件吗？" :
-                        "确定把操作目标所指的文件移动到回收站吗？";
+                    string promptInfo = toRecyclebin ? "确定把操作目标所指的文件移动到回收站吗？" :
+                        "确定直接删除操作目标所指的文件吗？";
                     if (MessageBox.Show(MainWindow.This, promptInfo, "警告", MessageBoxButton.OKCancel,
                         MessageBoxImage.Warning) == MessageBoxResult.OK)
                     {
@@ -53,33 +54,28 @@ namespace HashCalculator
                                 goto FinishingTouches;
                             }
                         }
-                        HashViewModel[] modelsCopied = new HashViewModel[hashViewModels.Count];
-                        hashViewModels.CopyTo(modelsCopied, 0);
-                        foreach (HashViewModel model in modelsCopied)
+                        HashViewModel[] targets = hashViewModels.Where(i => i.IsExecutionTarget).ToArray();
+                        foreach (HashViewModel model in targets)
                         {
-                            if (model.IsExecutionTarget)
-                            {
-                                try
-                                {
-                                    if (permanently)
-                                    {
-                                        model.ModelShutdownEvent += m => { m.FileInfo.Delete(); };
-                                    }
-                                    else
-                                    {
-                                        model.ModelShutdownEvent += m =>
-                                        {
-                                            CommonUtils.SendToRecycleBin(MainWindow.WndHandle, m.FileInfo.FullName);
-                                        };
-                                    }
-                                    model.ShutdownModel();
-                                    hashViewModels.Remove(model);
-                                    continue;
-                                }
-                                catch (Exception) { }
-                            }
-                            model.IsExecutionTarget = false;
+                            model.ShutdownModelWait();
+                            hashViewModels.Remove(model);
                         }
+                        await Task.Run(() =>
+                        {
+
+                            if (!toRecyclebin)
+                            {
+                                foreach (HashViewModel model in targets)
+                                {
+                                    try { model.FileInfo.Delete(); } catch (Exception) { }
+                                }
+                            }
+                            else
+                            {
+                                string pathsInOneString = '\0'.Join(targets.Select(i => i.FileInfo.FullName));
+                                CommonUtils.SendToRecycleBin(MainWindow.WndHandle, pathsInOneString);
+                            }
+                        });
                         MainWndViewModel.CurrentModel.GenerateFileHashCheckReport();
                     }
                 }
@@ -96,7 +92,7 @@ namespace HashCalculator
 
         private void MoveToRecycleBinAction(object param)
         {
-            this.DeleteMoveToRecycleBin(false);
+            this.DeleteOrMoveToRecycleBin(true);
         }
 
         public ICommand MoveToRecycleBinCmd
@@ -113,7 +109,7 @@ namespace HashCalculator
 
         private void DeleteFileDirectlyAction(object param)
         {
-            this.DeleteMoveToRecycleBin(true);
+            this.DeleteOrMoveToRecycleBin(false);
         }
 
         public ICommand DeleteFileDirectlyCmd

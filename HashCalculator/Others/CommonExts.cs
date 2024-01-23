@@ -40,27 +40,49 @@ namespace HashCalculator
         }
 
         /// <summary>
+        /// 为 char 对象提供扩展方法，该方法以该对象自身为连接符，将若干非 null 非空的字符串连接起来
+        /// </summary>
+        public static string Join(this char seperator, IEnumerable<string> values)
+        {
+            return Join(seperator.ToString(), values);
+        }
+
+        /// <summary>
+        /// 为 char 对象提供扩展方法，该方法以该对象自身为连接符，将若干非 null 非空的字符串连接起来
+        /// </summary>
+        public static string Join(this char seperator, params string[] values)
+        {
+            return Join(seperator.ToString(), values as IEnumerable<string>);
+        }
+
+        /// <summary>
         /// 为 string 对象提供扩展方法，该方法以该对象自身为连接符，将若干非 null 非空的字符串连接起来
         /// </summary>
-        /// <param name="seperator"></param>
-        /// <param name="values"></param>
-        /// <returns></returns>
-        public static string Join(this string seperator, params string[] values)
+        public static string Join(this string seperator, IEnumerable<string> values)
         {
-            int indexOftheLast = values.Length - 1;
-            var cleanlyJoinValuesStringBuilder = new StringBuilder();
-            for (int i = 0; i < values.Length; ++i)
+            StringBuilder cleanlyJoinValuesStringBuilder = new StringBuilder();
+            foreach (string value in values)
             {
-                if (!string.IsNullOrEmpty(values[i]))
+                if (!string.IsNullOrEmpty(value))
                 {
-                    cleanlyJoinValuesStringBuilder.Append(values[i]);
-                    if (i != indexOftheLast)
-                    {
-                        cleanlyJoinValuesStringBuilder.Append(seperator);
-                    }
+                    cleanlyJoinValuesStringBuilder.Append(value);
+                    cleanlyJoinValuesStringBuilder.Append(seperator);
                 }
             }
+            if (cleanlyJoinValuesStringBuilder.Length > 0)
+            {
+                int count = seperator.Length;
+                cleanlyJoinValuesStringBuilder.Remove(cleanlyJoinValuesStringBuilder.Length - count, count);
+            }
             return cleanlyJoinValuesStringBuilder.ToString();
+        }
+
+        /// <summary>
+        /// 为 string 对象提供扩展方法，该方法以该对象自身为连接符，将若干非 null 非空的字符串连接起来
+        /// </summary>
+        public static string Join(this string seperator, params string[] values)
+        {
+            return Join(seperator, values as IEnumerable<string>);
         }
 
         /// <summary>

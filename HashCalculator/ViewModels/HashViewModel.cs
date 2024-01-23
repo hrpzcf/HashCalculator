@@ -44,7 +44,7 @@ namespace HashCalculator
             Application.Current.Dispatcher;
         private readonly ManualResetEvent manualPauseController =
             new ManualResetEvent(true);
-        private readonly object hashComputeOperationLock = new object();
+        private readonly object computeHashOperationLock = new object();
         private CancellationTokenSource cancellation;
 
         /// <summary>
@@ -60,13 +60,6 @@ namespace HashCalculator
         /// 此事件是异步事件。
         /// </summary>
         public event Action<HashViewModel> ModelReleasedEvent;
-
-        /// <summary>
-        /// 调用 ShutdownModel 方法时如果 State 是非 Running 则触发此事件后退出，
-        /// 如果 State 是 Running 则由 Running 变为 Finished 后触发。<br/>
-        /// 此事件是同步事件，可以保证在触发期间 HashViewModel 不会成功执行 StartupModel 和 ComputeManyHashValue。
-        /// </summary>
-        public event Action<HashViewModel> ModelShutdownEvent;
 
         public HashViewModel(int serial, HashModelArg arg)
         {
@@ -523,7 +516,7 @@ namespace HashCalculator
         public bool StartupModel(bool force)
         {
             bool startupModelResult = false;
-            if (Monitor.TryEnter(this.hashComputeOperationLock))
+            if (Monitor.TryEnter(this.computeHashOperationLock))
             {
                 bool conditionMatched = false;
                 if (force)
@@ -555,14 +548,27 @@ namespace HashCalculator
                     this.ModelCapturedEvent?.InvokeAsync(this);
                     startupModelResult = true;
                 }
-                Monitor.Exit(this.hashComputeOperationLock);
+                Monitor.Exit(this.computeHashOperationLock);
             }
             return startupModelResult;
         }
 
+        public void ShutdownModelWait()
+        {
+            this.cancellation?.Cancel();
+            this.manualPauseController.Set();
+            Monitor.Enter(this.computeHashOperationLock);
+            if (this.State == HashState.NoState || this.State == HashState.Waiting)
+            {
+                this.State = HashState.Finished;
+                this.ModelReleasedEvent?.InvokeAsync(this);
+            }
+            Monitor.Exit(this.computeHashOperationLock);
+        }
+
         public void ShutdownModel()
         {
-            if (Monitor.TryEnter(this.hashComputeOperationLock))
+            if (Monitor.TryEnter(this.computeHashOperationLock))
             {
                 this.cancellation?.Cancel();
                 if (this.State == HashState.NoState || this.State == HashState.Waiting)
@@ -570,8 +576,7 @@ namespace HashCalculator
                     this.State = HashState.Finished;
                     this.ModelReleasedEvent?.InvokeAsync(this);
                 }
-                this.ModelShutdownEvent?.Invoke(this);
-                Monitor.Exit(this.hashComputeOperationLock);
+                Monitor.Exit(this.computeHashOperationLock);
             }
             else
             {
@@ -630,7 +635,7 @@ namespace HashCalculator
         {
             // StartupModel 时已经重置了 State 和 Result，为什么这里还要判断？
             // 因为 StartupModel 里 ModelCapturedEvent 是异步调用的，有可能发生：
-            // StartupModel 后 ShutdownModel 使状态变化才执行 MarkAsWaiting
+            // StartupModel 后 ShutdownModel 使状态变化才执行到 MarkAsWaiting
             if (this.State == HashState.NoState && this.Result != HashResult.Canceled)
             {
                 this.State = HashState.Waiting;
@@ -722,10 +727,10 @@ namespace HashCalculator
 
         public void ComputeManyHashValue()
         {
-            Monitor.Enter(this.hashComputeOperationLock);
+            Monitor.Enter(this.computeHashOperationLock);
             if (this.cancellation.IsCancellationRequested)
             {
-                Monitor.Exit(this.hashComputeOperationLock);
+                Monitor.Exit(this.computeHashOperationLock);
                 return;
             }
             this.HasBeenRun = true;
@@ -783,7 +788,7 @@ namespace HashCalculator
                     {
                         model.Algo.Initialize();
                     }
-                    int readedSize = 0;
+                    int actualReadCount = 0;
                     GlobalUtils.Suggest(ref buffer, this.FileSize);
                     Action<int> updateProgress = size => { this.Progress += size; };
                     bool terminateByCancellation = false;
@@ -793,8 +798,8 @@ namespace HashCalculator
                         using (Barrier barrier = new Barrier(modelsCount, i =>
                             {
                                 this.manualPauseController.WaitOne();
-                                readedSize = fs.Read(buffer, 0, buffer.Length);
-                                synchronization.BeginInvoke(updateProgress, readedSize);
+                                actualReadCount = fs.Read(buffer, 0, buffer.Length);
+                                synchronization.BeginInvoke(updateProgress, actualReadCount);
                             }))
                         {
                             void DoTransformBlocks(AlgoInOutModel model)
@@ -808,11 +813,11 @@ namespace HashCalculator
                                         terminateByCancellation = true;
                                         break;
                                     }
-                                    if (readedSize <= 0)
+                                    if (actualReadCount <= 0)
                                     {
                                         break;
                                     }
-                                    model.Algo.TransformBlock(buffer, 0, readedSize, null, 0);
+                                    model.Algo.TransformBlock(buffer, 0, actualReadCount, null, 0);
                                 }
                             }
                             ThreadPool.GetMinThreads(out int minwt, out int mincpt);
@@ -832,15 +837,15 @@ namespace HashCalculator
                             {
                                 goto ReturnRentedBufferMemory;
                             }
-                            if ((readedSize = fs.Read(buffer, 0, buffer.Length)) <= 0)
+                            if ((actualReadCount = fs.Read(buffer, 0, buffer.Length)) <= 0)
                             {
                                 break;
                             }
                             foreach (AlgoInOutModel algoInOut in this.AlgoInOutModels)
                             {
-                                algoInOut.Algo.TransformBlock(buffer, 0, readedSize, null, 0);
+                                algoInOut.Algo.TransformBlock(buffer, 0, actualReadCount, null, 0);
                             }
-                            synchronization.BeginInvoke(updateProgress, readedSize);
+                            synchronization.BeginInvoke(updateProgress, actualReadCount);
                         }
                     }
                     if (!terminateByCancellation)
@@ -895,8 +900,7 @@ namespace HashCalculator
                 this.State = HashState.Finished;
             });
             this.ModelReleasedEvent?.InvokeAsync(this);
-            this.ModelShutdownEvent?.Invoke(this);
-            Monitor.Exit(this.hashComputeOperationLock);
+            Monitor.Exit(this.computeHashOperationLock);
         }
 
         public string GenerateTextInFormat(string format, OutputType output, bool all, bool endLine, bool casedName)

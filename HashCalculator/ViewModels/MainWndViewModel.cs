@@ -71,6 +71,14 @@ namespace HashCalculator
         private GenericItemModel[] ctrlHashViewModelTaskCmds;
         private GenericItemModel[] switchDisplayedAlgoCmds;
 
+        private static readonly SizeDelegates sizeDelegates = new SizeDelegates()
+        {
+            GetWindowWidth = () => Settings.Current.MainWndDelFileProgressWidth,
+            SetWindowWidth = width => Settings.Current.MainWndDelFileProgressWidth = width,
+            GetWindowHeight = () => Settings.Current.MainWndDelFileProgressHeight,
+            SetWindowHeight = height => Settings.Current.MainWndDelFileProgressHeight = height,
+        };
+
         public MainWndViewModel()
         {
             CurrentModel = this;
@@ -723,34 +731,7 @@ namespace HashCalculator
             }
         }
 
-        private void DeleteModelFileAction(HashViewModel model)
-        {
-            if (Settings.Current.PermanentlyDeleteFiles)
-            {
-                try
-                {
-                    model.FileInfo.Delete();
-                }
-                catch (Exception)
-                {
-                    MessageBox.Show(this.OwnerWnd,
-                        $"文件删除失败：\n{model.FileInfo.FullName}", "错误",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
-            else
-            {
-                if (!CommonUtils.SendToRecycleBin(
-                        MainWindow.WndHandle, model.FileInfo.FullName))
-                {
-                    MessageBox.Show(this.OwnerWnd,
-                        $"文件移动到回收站失败：\n{model.FileInfo.FullName}", "错误",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
-        }
-
-        private void DeleteSelectedModelsFileAction(object param)
+        private async void DeleteSelectedModelsFileAction(object param)
         {
             if (param is IList selectedModels)
             {
@@ -776,13 +757,77 @@ namespace HashCalculator
                 {
                     return;
                 }
-                HashViewModel[] models = selectedModels.Cast<HashViewModel>().ToArray();
-                foreach (HashViewModel model in models)
+                DoubleProgressModel progress = new DoubleProgressModel(sizeDelegates)
                 {
-                    model.ModelShutdownEvent += this.DeleteModelFileAction;
-                    // 对 HashViewModels 的增删操作是在主线程上进行的，不用加锁
-                    model.ShutdownModel();
+                    IsCancelled = true,
+                    TotalCount = count,
+                    SubProgressVisibility = Visibility.Collapsed,
+                    TotalProgressVisibility = Visibility.Collapsed,
+                    TotalString = "正在删除文件，请稍候...",
+                };
+                DoubleProgressWindow progressWindow = new DoubleProgressWindow(progress)
+                {
+                    Owner = this.OwnerWnd,
+                };
+                HashViewModel[] targets = selectedModels.Cast<HashViewModel>().ToArray();
+                foreach (HashViewModel model in targets)
+                {
+                    model.ShutdownModelWait();
                     HashViewModels.Remove(model);
+                }
+                Task<string> deleteFileTask = Task.Run(() =>
+                {
+                    try
+                    {
+                        if (Settings.Current.PermanentlyDeleteFiles)
+                        {
+                            List<string> fileNameList = new List<string>();
+                            foreach (HashViewModel model in targets)
+                            {
+                                try
+                                {
+                                    model.FileInfo.Delete();
+                                }
+                                catch (Exception)
+                                {
+                                    fileNameList.Add(model.FileName);
+                                }
+                            }
+                            if (fileNameList.Any())
+                            {
+                                return "以下文件删除失败：\n" + '\n'.Join(fileNameList);
+                            }
+                            return default(string);
+                        }
+                        else
+                        {
+                            string allInOneStr = '\0'.Join(targets.Select(i => i.FileInfo.FullName));
+                            if (!CommonUtils.SendToRecycleBin(MainWindow.WndHandle, allInOneStr))
+                            {
+                                return "移动文件到回收站失败，可能部分文件未移动！";
+                            }
+                            return default(string);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return $"删除文件或移动文件到回收站的过程出现异常：{ex.Message}";
+                    }
+                    finally
+                    {
+                        progress.AutoClose = true;
+                        synchronization.Invoke(() =>
+                        {
+                            progressWindow.DialogResult = false;
+                        });
+                    }
+                });
+                progressWindow.ShowDialog();
+                string exceptionMessage = await deleteFileTask;
+                if (!string.IsNullOrEmpty(exceptionMessage))
+                {
+                    MessageBox.Show(this.OwnerWnd, $"{exceptionMessage}", "错误", MessageBoxButton.OK,
+                        MessageBoxImage.Error);
                 }
                 this.GenerateFileHashCheckReport();
             }

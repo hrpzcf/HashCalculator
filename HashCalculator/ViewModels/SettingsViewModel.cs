@@ -33,6 +33,8 @@ namespace HashCalculator
         private double shellMenuEditorHeight = 400.0;
         private double shellSubmenuEditorWidth = 400.0;
         private double shellSubmenuEditorHeight = 600.0;
+        private double mainWndDelFileProgressWidth = 400.0;
+        private double mainWndDelFileProgressHeight = 200.0;
         private double markFilesProgressWidth = 400.0;
         private double markFilesProgressHeight = 200.0;
         private double restoreFilesProgressWidth = 400.0;
@@ -333,6 +335,30 @@ namespace HashCalculator
             set
             {
                 this.SetPropNotify(ref this.shellSubmenuEditorHeight, value);
+            }
+        }
+
+        public double MainWndDelFileProgressWidth
+        {
+            get
+            {
+                return this.mainWndDelFileProgressWidth;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.mainWndDelFileProgressWidth, value);
+            }
+        }
+
+        public double MainWndDelFileProgressHeight
+        {
+            get
+            {
+                return this.mainWndDelFileProgressHeight;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.mainWndDelFileProgressHeight, value);
             }
         }
 
