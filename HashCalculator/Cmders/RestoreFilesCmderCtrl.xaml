@@ -42,7 +42,7 @@
                     Background="DarkGreen"
                     BorderThickness="1"
                     Command="{Binding ShowHashesInFileTagCmd}"
-                    Content="显示文件内哈希标记"
+                    Content="显示文件内的哈希标记"
                     Foreground="White"
                     IsEnabled="{Binding Source={x:Static local:Settings.Current}, Path=ShowExecutionTargetColumn}"
                     Style="{StaticResource IndepButtonStyle}"

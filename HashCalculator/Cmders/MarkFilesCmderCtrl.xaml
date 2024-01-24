@@ -48,7 +48,7 @@
                 Grid.ColumnSpan="3"
                 Margin="0,2,0,0"
                 Padding="4,0,0,0"
-                Content="新文件保存到以下显示的文件夹："
+                Content="新文件保存到以下显示的文件夹内"
                 IsChecked="{Binding SaveToOriginDirectory, Converter={StaticResource ReverseBooleanValueCvt}}" />
             <TextBox
                 Grid.Row="2"
@@ -91,7 +91,7 @@
                 Margin="4,4,0,0"
                 Padding="4,0,0,0"
                 VerticalAlignment="Center"
-                Content="对 PNG/JPEG 文件进行无感觉标记"
+                Content="对 PNG/JPEG 文件进行无痕标记"
                 IsChecked="{Binding UseSenseFreeModifications}"
                 ToolTip="开启此设置后生成带标记的 PNG/JPEG 新文件(下称标记文件)完全正常使用，但应注意：&#10;1. 如果原文件末尾带有额外数据，则生成的标记文件末尾只带本程序的标记，不带原额外数据；&#10;2. 一般原文件末尾不会带有额外数据，除非是你特意用某些方法将一些数据隐藏到它的末尾；&#10;3. 因为生成的标记文件不带原文件的额外数据，所以从标记文件还原出的文件也不带额外数据；&#10;4. 因还原出的文件不带原文件的额外数据，所以还原出的文件的哈希与标记内的哈希值不一样。" />
             <CheckBox

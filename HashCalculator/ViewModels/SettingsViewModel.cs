@@ -25,8 +25,8 @@ namespace HashCalculator
         private double algosPanelHeight = 410.0;
         private double hashDetailsWidth = 1200.0;
         private double hashDetailsHeight = 800.0;
-        private double cmdPanelWidth = 530.0;
-        private double cmdPanelHeight = 640.0;
+        private double filterAndCmderWndWidth = 540.0;
+        private double filterAndCmderWndHeight = 640.0;
         private double cmdPanelTopRelToMainWnd = 0.0;
         private double cmdPanelLeftRelToMainWnd = 0.0;
         private double shellMenuEditorWidth = 600.0;
@@ -242,27 +242,27 @@ namespace HashCalculator
             }
         }
 
-        public double CmdPanelWidth
+        public double FilterAndCmderWndWidth
         {
             get
             {
-                return this.cmdPanelWidth;
+                return this.filterAndCmderWndWidth;
             }
             set
             {
-                this.SetPropNotify(ref this.cmdPanelWidth, value);
+                this.SetPropNotify(ref this.filterAndCmderWndWidth, value);
             }
         }
 
-        public double CmdPanelHeight
+        public double FilterAndCmderWndHeight
         {
             get
             {
-                return this.cmdPanelHeight;
+                return this.filterAndCmderWndHeight;
             }
             set
             {
-                this.SetPropNotify(ref this.cmdPanelHeight, value);
+                this.SetPropNotify(ref this.filterAndCmderWndHeight, value);
             }
         }
 

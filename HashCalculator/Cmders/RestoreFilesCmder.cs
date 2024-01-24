@@ -31,7 +31,7 @@ namespace HashCalculator
 
         public override string Display => "显示哈希标记或还原文件";
 
-        public override string Description => "从使用本程序生成的带哈希标记的文件中还原出原文件。";
+        public override string Description => "功能一：在主窗口的【哈希标记】列中显示带标记的文件内记录的原文件哈希值；\n功能二：从带哈希标记的文件中还原出原文件(无痕标记的 PNG/JPEG 文件可能无法还原出完全一样的原文件)。";
 
         public bool SaveToOriginDirectory
         {

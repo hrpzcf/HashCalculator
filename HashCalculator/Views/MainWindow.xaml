@@ -741,7 +741,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="原文件哈希值" Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowHashInTagColumn, Converter={StaticResource TrueToVisibilityVisibleCvt}}">
+                <DataGridTemplateColumn Header="哈希标记" Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowHashInTagColumn, Converter={StaticResource TrueToVisibilityVisibleCvt}}">
                     <DataGridTemplateColumn.HeaderStyle>
                         <Style TargetType="{x:Type DataGridColumnHeader}">
                             <Setter Property="HorizontalContentAlignment" Value="Center" />
