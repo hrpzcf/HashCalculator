@@ -204,11 +204,7 @@ namespace HashCalculator
                     Task<string> restoreTaggedFilesTask = this.RestoreTaggedFiles(targets, progressWindow, progressModel);
                     progressWindow.ShowDialog();
                     string exceptionMessage = await restoreTaggedFilesTask;
-                    if (string.IsNullOrEmpty(exceptionMessage))
-                    {
-                        Settings.Current.ShowHashInTagColumn = true;
-                    }
-                    else
+                    if (!string.IsNullOrEmpty(exceptionMessage))
                     {
                         MessageBox.Show(MainWindow.This, $"出现异常导致过程中断：{exceptionMessage}", "错误",
                             MessageBoxButton.OK, MessageBoxImage.Error);
