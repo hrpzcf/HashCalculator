@@ -442,8 +442,8 @@ namespace HashCalculator
                     Settings.Current.FormatForGenerateText : null;
                 foreach (HashViewModel model in selectedModels)
                 {
-                    if (model.GenerateTextInFormat(format, outputType, copyAll,
-                        endLine: true, Settings.Current.CaseOfCopiedAlgNameFollowsOutputType) is string text)
+                    if (model.GenerateTextInFormat(format, outputType, copyAll, endLine: true, forExport: false,
+                        Settings.Current.CaseOfCopiedAlgNameFollowsOutputType) is string text)
                     {
                         stringBuilder.Append(text);
                     }
@@ -912,14 +912,14 @@ namespace HashCalculator
 
         private void ExporHashResultAction(object param)
         {
-            if (!HashViewModels.Any())
+            if (!HashViewModels.Any(i => i.Result == HashResult.Succeeded))
             {
-                MessageBox.Show(this.OwnerWnd, "列表中没有可以导出的结果。", "提示");
+                MessageBox.Show(this.OwnerWnd, "主窗口列表中没有可以导出的结果。", "提示");
                 return;
             }
             if (!Settings.Current.TemplatesForExport?.Any() ?? true)
             {
-                MessageBox.Show(this.OwnerWnd, "没有导出模版可用，请到【导出结果设置】中添加。", "提示",
+                MessageBox.Show(this.OwnerWnd, "没有导出方案可用，请到【导出结果设置】中添加。", "提示",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
@@ -937,6 +937,13 @@ namespace HashCalculator
             if (filterStringBuilder.Length > 0)
             {
                 filterStringBuilder.Remove(filterStringBuilder.Length - 1, 1);
+            }
+            if (!usedModels.Any())
+            {
+                MessageBox.Show(this.OwnerWnd,
+                    "没有可用方案，可能方案的扩展名中存在不能用作文件名的字符，请到【导出结果设置】中修改。", "提示",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
             }
             try
             {
@@ -963,9 +970,10 @@ namespace HashCalculator
                 string formatForExport = model.Template;
                 using (StreamWriter streamWriter = new StreamWriter(sfd.FileName, false, encoding))
                 {
-                    foreach (HashViewModel hm in HashViewModels)
+                    foreach (HashViewModel hm in HashViewModels.Where(i => i.Result == HashResult.Succeeded))
                     {
-                        if (hm.GenerateTextInFormat(formatForExport, output, all, endLine: true, casedName: false) is string text)
+                        if (hm.GenerateTextInFormat(formatForExport, output, all, endLine: true, forExport: true,
+                            casedName: false) is string text)
                         {
                             streamWriter.Write(text);
                         }

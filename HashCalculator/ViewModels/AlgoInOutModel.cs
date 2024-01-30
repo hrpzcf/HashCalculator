@@ -103,7 +103,8 @@ namespace HashCalculator
             {
                 string format = Settings.Current.GenerateTextInFormat ?
                     Settings.Current.FormatForGenerateText : null;
-                if (this.GenerateTextInFormat(parent, format, parent.SelectedOutputType, false,
+                if (this.GenerateTextInFormat(
+                    parent, format, parent.SelectedOutputType, endLine: false, forExport: false,
                     Settings.Current.CaseOfCopiedAlgNameFollowsOutputType) is string text)
                 {
                     CommonUtils.ClipboardSetText(text);
@@ -129,9 +130,9 @@ namespace HashCalculator
         /// 如果 parent.SelectedOutputType 也是 OutputType.Unknown，则使用 Settings.Current.SelectedOutputType。
         /// </summary>
         public string GenerateTextInFormat(HashViewModel parent, string format, OutputType output,
-            bool endLine, bool casedAlgName)
+            bool endLine, bool forExport, bool casedAlgName)
         {
-            if (parent != null && this.HashResult != null)
+            if (parent != null && this.HashResult != null && (!forExport || this.Export))
             {
                 if (output == OutputType.Unknown)
                 {
