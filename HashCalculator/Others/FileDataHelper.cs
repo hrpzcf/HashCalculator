@@ -441,25 +441,25 @@ namespace HashCalculator
                 }
                 GlobalUtils.Suggest(ref bytesBuffer, dataCount);
                 double progressValue = 0L;
-                long remainCount = dataCount;
+                long remainingCount = dataCount;
                 int actualReadCount;
                 int plannedReadCount = bytesBuffer.Length;
-                while (remainCount > 0L)
+                while (remainingCount > 0L)
                 {
-                    if (remainCount < bytesBuffer.Length)
+                    if (plannedReadCount > remainingCount)
                     {
-                        plannedReadCount = (int)remainCount;
+                        plannedReadCount = (int)remainingCount;
                     }
                     if ((actualReadCount = this.InitialStream.Read(bytesBuffer, 0, plannedReadCount)) == 0)
                     {
                         break;
                     }
                     stream.Write(bytesBuffer, 0, actualReadCount);
-                    remainCount -= actualReadCount;
                     progressValue += actualReadCount;
                     progressModel.CurrentValue = progressValue / dataCount;
+                    remainingCount -= actualReadCount;
                 }
-                return remainCount == 0L;
+                return remainingCount == 0L;
             }
             catch (Exception)
             {
@@ -485,25 +485,25 @@ namespace HashCalculator
                     this.InitialStream.Position = info.ActualStart;
                     GlobalUtils.Suggest(ref buffer, info.ActualCount);
                     double progressValue = 0L;
-                    long remainCount = info.ActualCount;
+                    long remainingCount = info.ActualCount;
                     int actualReadCount = 0;
                     int plannedReadCount = buffer.Length;
-                    while (remainCount > 0L)
+                    while (remainingCount > 0L)
                     {
-                        if (remainCount < buffer.Length)
+                        if (plannedReadCount > remainingCount)
                         {
-                            plannedReadCount = (int)remainCount;
+                            plannedReadCount = (int)remainingCount;
                         }
                         if ((actualReadCount = this.InitialStream.Read(buffer, 0, plannedReadCount)) == 0)
                         {
                             break;
                         }
                         stream.Write(buffer, 0, actualReadCount);
-                        remainCount -= actualReadCount;
                         progressValue += actualReadCount;
                         progress.CurrentValue = progressValue / info.ActualCount;
+                        remainingCount -= actualReadCount;
                     }
-                    return remainCount == 0L;
+                    return remainingCount == 0L;
                 }
                 catch (Exception)
                 {

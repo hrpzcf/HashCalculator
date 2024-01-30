@@ -50,7 +50,7 @@ namespace HashCalculator
             {
                 if (textBlock.Text == SettingsViewModel.FixAlgoDlls)
                 {
-                    string message = Settings.ExtractEmbeddedAlgoDlls(force: true);
+                    string message = Settings.ExtractEmbeddedAlgoDllAndReadme(force: true);
                     if (!string.IsNullOrEmpty(message))
                     {
                         MessageBox.Show(this, $"修复失败：\n{message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);

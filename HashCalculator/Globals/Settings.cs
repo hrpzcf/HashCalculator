@@ -8,7 +8,7 @@ namespace HashCalculator
 {
     internal static class Settings
     {
-        private const string resPrefix = "HashCalculator.HashAlgos.AlgoDlls";
+        private const string algoDllResPrefix = "HashCalculator.HashAlgos.AlgoDlls";
         private static readonly string configBaseDataPath =
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         public static readonly DirectoryInfo ConfigDir =
@@ -112,10 +112,10 @@ namespace HashCalculator
             Environment.SetEnvironmentVariable("PATH", LibraryDir);
         }
 
-        private static string ExtractFile(string fname, bool force, bool dll = true)
+        private static string ExtractLibraryDirFile(string fname, bool force, bool dll = true)
         {
-            string userDllPath = Path.Combine(LibraryDir, fname);
-            if (force || !File.Exists(userDllPath))
+            string newFileFullPath = Path.Combine(LibraryDir, fname);
+            if (force || !File.Exists(newFileFullPath))
             {
                 try
                 {
@@ -126,29 +126,24 @@ namespace HashCalculator
                     string resPath;
                     if (!dll)
                     {
-                        resPath = string.Format("{0}.{1}", resPrefix, fname);
+                        resPath = string.Format("{0}.{1}", algoDllResPrefix, fname);
                     }
                     else
                     {
-                        resPath = string.Format("{0}.{1}{2}.dll", resPrefix,
+                        resPath = string.Format("{0}.{1}{2}.dll", algoDllResPrefix,
                             Path.GetFileNameWithoutExtension(fname),
                             Environment.Is64BitProcess ? "64" : "32");
                     }
-                    if (AppLoading.ExecutingAsmb.GetManifestResourceStream(resPath) is Stream stream)
+                    using (Stream stream = AppLoading.Executing.GetManifestResourceStream(resPath))
                     {
-                        using (stream)
+                        if (stream != null)
                         {
-                            byte[] dllBuffer = new byte[stream.Length];
-                            stream.Read(dllBuffer, 0, dllBuffer.Length);
-                            using (FileStream fileStream = File.Create(userDllPath))
-                            {
-                                fileStream.Write(dllBuffer, 0, dllBuffer.Length);
-                            }
+                            stream.ToNewFile(newFileFullPath);
                         }
-                    }
-                    else
-                    {
-                        return $"内嵌资源不存在： {resPath}";
+                        else
+                        {
+                            return $"内嵌资源不存在： {resPath}";
+                        }
                     }
                 }
                 catch (Exception exception) { return exception.Message; }
@@ -156,14 +151,9 @@ namespace HashCalculator
             return string.Empty;
         }
 
-        private static string ExtractHashAlgDll(bool force)
+        public static string ExtractEmbeddedAlgoDllAndReadme(bool force)
         {
-            return ExtractFile(Embedded.HashAlgs, Current.PreviousVer != Info.Ver || force);
-        }
-
-        public static string ExtractEmbeddedAlgoDlls(bool force)
-        {
-            if (Current.PreviousVer != Info.Ver)
+            if (Current.PreviousVer != Info.Ver || force)
             {
                 try
                 {
@@ -183,8 +173,8 @@ namespace HashCalculator
                 catch (Exception) { }
             }
             string message = "\n".Join(
-                ExtractFile(Embedded.Readme, Current.PreviousVer != Info.Ver || force, false),
-                ExtractHashAlgDll(force));
+                ExtractLibraryDirFile(Embedded.HashAlgs, Current.PreviousVer != Info.Ver || force),
+                ExtractLibraryDirFile(Embedded.Readme, Current.PreviousVer != Info.Ver || force, false));
             if (string.IsNullOrEmpty(message))
             {
                 Current.PreviousVer = Info.Ver;

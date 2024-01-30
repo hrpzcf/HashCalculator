@@ -94,17 +94,11 @@ namespace HashCalculator
                     {
                         await UninstallShellExtension();
                     }
-                    Assembly executing = Assembly.GetExecutingAssembly();
-                    if (executing.GetManifestResourceStream(embeddedShellExtPath) is Stream stream)
+                    if (AppLoading.Executing.GetManifestResourceStream(embeddedShellExtPath) is Stream manifest)
                     {
-                        using (stream)
+                        using (manifest)
                         {
-                            byte[] shellExtBuffer = new byte[stream.Length];
-                            stream.Read(shellExtBuffer, 0, shellExtBuffer.Length);
-                            using (FileStream fs = File.Create(shellExtensionsPath))
-                            {
-                                fs.Write(shellExtBuffer, 0, shellExtBuffer.Length);
-                            }
+                            manifest.ToNewFile(shellExtensionsPath);
                         }
                         Exception exception;
                         if ((exception = RegisterShellExtDll(shellExtensionsPath, true)) != null)

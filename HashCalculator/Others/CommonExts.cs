@@ -310,5 +310,66 @@ namespace HashCalculator
             }
             return true;
         }
+
+        public static bool TryGetBytes(this Stream stream, out byte[] buffer)
+        {
+            try
+            {
+                buffer = new byte[stream.Length];
+                int readCount = 0;
+                int remainingCount = buffer.Length;
+                int plannedReadCount = buffer.Length;
+                while (remainingCount > 0)
+                {
+                    if (plannedReadCount > remainingCount)
+                    {
+                        plannedReadCount = remainingCount;
+                    }
+                    int actualReadCount;
+                    if ((actualReadCount = stream.Read(buffer, readCount, plannedReadCount)) == 0)
+                    {
+                        buffer = default(byte[]);
+                        return false;
+                    }
+                    readCount += actualReadCount;
+                    remainingCount -= actualReadCount;
+                }
+                return true;
+            }
+            catch (Exception)
+            {
+                buffer = default(byte[]);
+                return false;
+            }
+        }
+
+        public static bool ToNewFile(this Stream stream, string newFilePath)
+        {
+            if (string.IsNullOrWhiteSpace(newFilePath))
+            {
+                return false;
+            }
+            using (FileStream fileStream = File.Create(newFilePath))
+            {
+                byte[] buffer = new byte[stream.Length];
+                int actualReadCount = 0;
+                int remainingCount = buffer.Length;
+                int plannedReadCount = buffer.Length;
+                while (remainingCount > 0L)
+                {
+                    if (plannedReadCount > remainingCount)
+                    {
+                        plannedReadCount = remainingCount;
+                    }
+                    if ((actualReadCount = stream.Read(buffer, 0, plannedReadCount)) == 0)
+                    {
+                        return false;
+                    }
+                    fileStream.Write(buffer, 0, actualReadCount);
+                    remainingCount -= actualReadCount;
+                }
+            }
+            return true;
+        }
     }
 }

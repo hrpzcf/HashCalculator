@@ -9,7 +9,7 @@ namespace HashCalculator
 {
     public partial class AppLoading : Application
     {
-        private static readonly string[] reqAsmbs = new string[]
+        private static readonly string[] reqAsmbNames = new string[]
         {
             "System.Buffers",
             "System.Memory",
@@ -22,7 +22,7 @@ namespace HashCalculator
             "Newtonsoft.Json",
             "XamlAnimatedGif",
         };
-        internal static readonly Assembly ExecutingAsmb = Assembly.GetExecutingAssembly();
+        internal static readonly Assembly Executing = Assembly.GetExecutingAssembly();
 
         [STAThread()]
         public static void Main(string[] args)
@@ -45,23 +45,30 @@ namespace HashCalculator
         private static void ApplicationStartup(object sender, StartupEventArgs e)
         {
             Settings.LoadSettings();
-            Settings.ExtractEmbeddedAlgoDlls(false);
+            Settings.ExtractEmbeddedAlgoDllAndReadme(false);
             Initializer.PushArgs(Settings.StartupArgs);
         }
 
         private static Assembly AssemblyResolve(object sender, ResolveEventArgs arg)
         {
-            string asmbName = new AssemblyName(arg.Name).Name;
-            if (reqAsmbs.Contains(asmbName))
+            try
             {
-                if (ExecutingAsmb.GetManifestResourceStream(
-                    string.Format("HashCalculator.Assembly.{0}.dll", asmbName)) is Stream stream)
+                string asmbName = new AssemblyName(arg.Name).Name;
+                if (!reqAsmbNames.Contains(asmbName))
                 {
-                    byte[] assemblyBytes = new byte[stream.Length];
-                    stream.Read(assemblyBytes, 0, assemblyBytes.Length);
-                    stream.Close();
-                    return Assembly.Load(assemblyBytes);
+                    return default(Assembly);
                 }
+                using (Stream stream = Executing.GetManifestResourceStream(
+                    string.Format("HashCalculator.Assembly.{0}.dll", asmbName)))
+                {
+                    if (stream?.TryGetBytes(out byte[] assemblyBytes) == true)
+                    {
+                        return Assembly.Load(assemblyBytes);
+                    }
+                }
+            }
+            catch (Exception)
+            {
             }
             return default(Assembly);
         }
