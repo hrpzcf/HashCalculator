@@ -124,7 +124,7 @@ namespace HashCalculator
                                         $"{newNameNoExt}{newExt}" : $"{newNameNoExt}_{duplicate}{newExt}";
                                     newFilePath = Path.Combine(directoryToSaveFile, newFileName);
                                 } while (File.Exists(newFilePath));
-                                using (FileStream newFileStream = File.OpenWrite(newFilePath))
+                                using (FileStream newFileStream = File.Create(newFilePath))
                                 {
                                     fileDataHelper.GenerateTaggedFile(newFileStream, info, model.CurrentInOutModel,
                                         this.UseSenseFreeModifications, doubleProgressModel);

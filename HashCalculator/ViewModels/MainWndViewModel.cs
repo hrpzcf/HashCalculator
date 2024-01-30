@@ -947,28 +947,29 @@ namespace HashCalculator
             }
             try
             {
-                SaveFileDialog sfd = new SaveFileDialog()
+                SaveFileDialog saveFileDialog = new SaveFileDialog()
                 {
                     ValidateNames = true,
                     Filter = filterStringBuilder.ToString(),
                     FileName = $"hashsums{usedModels[0].Extension}",
                     InitialDirectory = Settings.Current.LastUsedPath,
                 };
-                if (sfd.ShowDialog() != true)
+                if (saveFileDialog.ShowDialog() != true)
                 {
                     return;
                 }
-                Settings.Current.LastUsedPath = Path.GetDirectoryName(sfd.FileName);
+                Settings.Current.LastUsedPath = Path.GetDirectoryName(saveFileDialog.FileName);
                 OutputType output = OutputType.Unknown;
                 if (Settings.Current.UseDefaultOutputTypeWhenExporting)
                 {
                     output = Settings.Current.SelectedOutputType;
                 }
                 bool all = Settings.Current.HowToExportHashValues != ExportAlgo.Current;
-                TemplateForExportModel model = usedModels.ElementAt(sfd.FilterIndex - 1);
+                TemplateForExportModel model = usedModels.ElementAt(saveFileDialog.FilterIndex - 1);
                 Encoding encoding = model.GetEncoding();
                 string formatForExport = model.Template;
-                using (StreamWriter streamWriter = new StreamWriter(sfd.FileName, false, encoding))
+                using (FileStream fileStream = File.Create(saveFileDialog.FileName))
+                using (StreamWriter streamWriter = new StreamWriter(fileStream, encoding))
                 {
                     foreach (HashViewModel hm in HashViewModels.Where(i => i.Result == HashResult.Succeeded))
                     {

@@ -140,9 +140,9 @@ namespace HashCalculator
                         {
                             byte[] dllBuffer = new byte[stream.Length];
                             stream.Read(dllBuffer, 0, dllBuffer.Length);
-                            using (FileStream fs = File.OpenWrite(userDllPath))
+                            using (FileStream fileStream = File.Create(userDllPath))
                             {
-                                fs.Write(dllBuffer, 0, dllBuffer.Length);
+                                fileStream.Write(dllBuffer, 0, dllBuffer.Length);
                             }
                         }
                     }

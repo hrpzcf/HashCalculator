@@ -101,7 +101,7 @@ namespace HashCalculator
                         {
                             byte[] shellExtBuffer = new byte[stream.Length];
                             stream.Read(shellExtBuffer, 0, shellExtBuffer.Length);
-                            using (FileStream fs = File.OpenWrite(shellExtensionsPath))
+                            using (FileStream fs = File.Create(shellExtensionsPath))
                             {
                                 fs.Write(shellExtBuffer, 0, shellExtBuffer.Length);
                             }
