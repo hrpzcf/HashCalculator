@@ -452,233 +452,242 @@
             Padding="8"
             Header="导出结果设置"
             Style="{StaticResource TabItemStyle1}">
-            <Grid Margin="4">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-                <GroupBox
-                    Grid.Row="0"
-                    Padding="4,8,4,4"
-                    Foreground="#FF006FD6"
-                    Header="导出计算结果时导出哪些算法的结果">
-                    <StackPanel>
-                        <RadioButton
-                            Margin="8,0"
-                            VerticalContentAlignment="Center"
-                            Content="仅导出每行当前显示的算法的结果"
-                            IsChecked="{Binding HowToExportHashValues, Converter={StaticResource RadioExportCurrentAlgoCvt}}" />
-                        <RadioButton
-                            Margin="8,8,0,0"
-                            VerticalContentAlignment="Center"
-                            Content="导出每行所有已计算的算法的结果"
-                            IsChecked="{Binding HowToExportHashValues, Converter={StaticResource RadioExportAllCalculatedAlgosCvt}}" />
-                    </StackPanel>
-                </GroupBox>
-                <CheckBox
-                    Grid.Row="1"
-                    Margin="0,8,0,0"
-                    Padding="4,0,0,0"
-                    Content="导出计算结果时使用默认输出方式输出哈希值而不是各行的输出方式"
-                    IsChecked="{Binding UseDefaultOutputTypeWhenExporting}" />
-                <GroupBox
-                    Grid.Row="2"
-                    Margin="0,8,0,0"
-                    Padding="0,8,0,0"
-                    Foreground="#FF006FD6"
-                    Header="导出计算结果时【另存为】对话框的【保存类型】列表内的可选方案">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <DataGrid
-                            Grid.Row="0"
-                            Grid.Column="0"
-                            AutoGenerateColumns="False"
-                            CellStyle="{StaticResource CellStyleNormal}"
-                            HeadersVisibility="Column"
-                            HorizontalGridLinesBrush="#FF969696"
-                            IsReadOnly="True"
-                            ItemsSource="{Binding Source={x:Static local:Settings.Current}, Path=TemplatesForExport}"
-                            KeyDown="SettingsPanelKeyDown"
-                            RowStyle="{StaticResource RowStyleNormal}"
-                            SelectedItem="{Binding Source={x:Static local:Settings.Current}, Path=SelectedTemplateForExport}"
-                            VerticalGridLinesBrush="#FF969696">
-                            <DataGrid.Columns>
-                                <DataGridTemplateColumn Header="方案名称">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBox
-                                                Margin="2"
-                                                Padding="2"
-                                                Text="{Binding Name, UpdateSourceTrigger=LostFocus}" />
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTemplateColumn Header="文件扩展名">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBox
-                                                Margin="2"
-                                                Padding="2"
-                                                LostFocus="OnTextBoxExtensionLostFocus"
-                                                Text="{Binding Extension, UpdateSourceTrigger=LostFocus}" />
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTemplateColumn Header="文件内容模版">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBox
-                                                Margin="2"
-                                                Padding="2"
-                                                Text="{Binding Template, UpdateSourceTrigger=LostFocus}" />
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTemplateColumn Header="文件编码">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <ComboBox
-                                                Margin="2"
-                                                DisplayMemberPath="Display"
-                                                ItemsSource="{Binding Path=(local:TemplateForExportModel.AvailableEncodings)}"
-                                                SelectedValue="{Binding UsingEncoding, UpdateSourceTrigger=PropertyChanged}"
-                                                SelectedValuePath="ItemValue" />
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTextColumn Width="*" />
-                            </DataGrid.Columns>
-                        </DataGrid>
-                        <StackPanel
-                            Grid.Row="0"
-                            Grid.Column="1"
-                            Margin="4,0,0,0">
-                            <Button
-                                Padding="8,2"
-                                Background="{x:Null}"
-                                Command="{Binding AddExprotTemplateCmd}"
-                                Content="添加" />
-                            <Button
-                                Margin="0,8,0,0"
-                                Padding="8,2"
-                                Background="{x:Null}"
-                                Command="{Binding CopyExprotTemplateCmd}"
-                                Content="复制" />
-                            <Button
-                                Margin="0,8,0,0"
-                                Padding="8,2"
-                                Background="{x:Null}"
-                                Command="{Binding MoveExportTemplateUpCmd}"
-                                Content="上移" />
-                            <Button
-                                Margin="0,8,0,0"
-                                Padding="8,2"
-                                Background="{x:Null}"
-                                Command="{Binding MoveExportTemplateDownCmd}"
-                                Content="下移" />
-                            <Button
-                                Margin="0,8,0,0"
-                                Padding="8,2"
-                                Background="{x:Null}"
-                                BorderBrush="Red"
-                                Command="{Binding RemoveExportTemplateCmd}"
-                                Content="移除" />
-                            <Button
-                                Margin="0,8,0,0"
-                                Padding="8,2"
-                                Background="{x:Null}"
-                                BorderBrush="Red"
-                                Command="{Binding ResetExportTemplateCmd}"
-                                Content="重置" />
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <Grid Margin="4">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <GroupBox
+                        Grid.Row="0"
+                        Padding="4,8,4,4"
+                        Foreground="#FF006FD6"
+                        Header="导出计算结果时导出哪些算法的结果">
+                        <StackPanel>
+                            <RadioButton
+                                Margin="8,0"
+                                VerticalContentAlignment="Center"
+                                Content="仅导出每行当前显示的算法的结果"
+                                IsChecked="{Binding HowToExportHashValues, Converter={StaticResource RadioExportCurrentAlgoCvt}}" />
+                            <RadioButton
+                                Margin="8,8,0,0"
+                                VerticalContentAlignment="Center"
+                                Content="导出每行所有已计算的算法的结果"
+                                IsChecked="{Binding HowToExportHashValues, Converter={StaticResource RadioExportAllCalculatedAlgosCvt}}" />
                         </StackPanel>
-                        <StackPanel
-                            Grid.Row="1"
-                            Grid.ColumnSpan="2"
-                            Margin="0,4,0,0">
-                            <TextBlock
-                                Margin="0,4,0,0"
-                                Style="{StaticResource DescTextBlockStyle}"
-                                Text="导出计算结果时保存的文件的每一行内容都将按照“文件内容模版”生成。" />
-                            <TextBlock
-                                Margin="0,4,0,0"
-                                Style="{StaticResource DescTextBlockStyle}"
-                                Text="可以在“文件内容模版”输入框中任意使用以下占位符：" />
-                            <Grid Margin="0,4,0,0">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition />
-                                    <RowDefinition />
-                                    <RowDefinition />
-                                    <RowDefinition />
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
+                    </GroupBox>
+                    <CheckBox
+                        Grid.Row="1"
+                        Margin="0,8,0,0"
+                        Padding="4,0,0,0"
+                        Content="导出计算结果时使用默认输出方式输出哈希值而不是各行的输出方式"
+                        IsChecked="{Binding UseDefaultOutputTypeWhenExporting}" />
+                    <CheckBox
+                        Grid.Row="2"
+                        Margin="0,8,0,0"
+                        Padding="4,0,0,0"
+                        Content="使主窗口的【导出】复选框控制该行所有子算法的【导出】而非当前算法"
+                        IsChecked="{Binding ExportInMainControlsChildExports}" />
+                    <GroupBox
+                        Grid.Row="3"
+                        Margin="0,8,0,0"
+                        Padding="0,8,0,0"
+                        Foreground="#FF006FD6"
+                        Header="导出计算结果时【另存为】对话框的【保存类型】列表内的可选方案">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <DataGrid
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                AutoGenerateColumns="False"
+                                CellStyle="{StaticResource CellStyleNormal}"
+                                HeadersVisibility="Column"
+                                HorizontalGridLinesBrush="#FF969696"
+                                IsReadOnly="True"
+                                ItemsSource="{Binding Source={x:Static local:Settings.Current}, Path=TemplatesForExport}"
+                                KeyDown="SettingsPanelKeyDown"
+                                RowStyle="{StaticResource RowStyleNormal}"
+                                SelectedItem="{Binding Source={x:Static local:Settings.Current}, Path=SelectedTemplateForExport}"
+                                VerticalGridLinesBrush="#FF969696">
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn Header="方案名称">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox
+                                                    Margin="2"
+                                                    Padding="2"
+                                                    Text="{Binding Name, UpdateSourceTrigger=LostFocus}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Header="文件扩展名">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox
+                                                    Margin="2"
+                                                    Padding="2"
+                                                    LostFocus="OnTextBoxExtensionLostFocus"
+                                                    Text="{Binding Extension, UpdateSourceTrigger=LostFocus}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Header="文件内容模版">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox
+                                                    Margin="2"
+                                                    Padding="2"
+                                                    Text="{Binding Template, UpdateSourceTrigger=LostFocus}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Header="文件编码">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <ComboBox
+                                                    Margin="2"
+                                                    DisplayMemberPath="Display"
+                                                    ItemsSource="{Binding Path=(local:TemplateForExportModel.AvailableEncodings)}"
+                                                    SelectedValue="{Binding UsingEncoding, UpdateSourceTrigger=PropertyChanged}"
+                                                    SelectedValuePath="ItemValue" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTextColumn Width="*" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <StackPanel
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Margin="4,0,0,0">
+                                <Button
+                                    Padding="8,2"
+                                    Background="{x:Null}"
+                                    Command="{Binding AddExprotTemplateCmd}"
+                                    Content="添加" />
+                                <Button
+                                    Margin="0,8,0,0"
+                                    Padding="8,2"
+                                    Background="{x:Null}"
+                                    Command="{Binding CopyExprotTemplateCmd}"
+                                    Content="复制" />
+                                <Button
+                                    Margin="0,8,0,0"
+                                    Padding="8,2"
+                                    Background="{x:Null}"
+                                    Command="{Binding MoveExportTemplateUpCmd}"
+                                    Content="上移" />
+                                <Button
+                                    Margin="0,8,0,0"
+                                    Padding="8,2"
+                                    Background="{x:Null}"
+                                    Command="{Binding MoveExportTemplateDownCmd}"
+                                    Content="下移" />
+                                <Button
+                                    Margin="0,8,0,0"
+                                    Padding="8,2"
+                                    Background="{x:Null}"
+                                    BorderBrush="Red"
+                                    Command="{Binding RemoveExportTemplateCmd}"
+                                    Content="移除" />
+                                <Button
+                                    Margin="0,8,0,0"
+                                    Padding="8,2"
+                                    Background="{x:Null}"
+                                    BorderBrush="Red"
+                                    Command="{Binding ResetExportTemplateCmd}"
+                                    Content="重置" />
+                            </StackPanel>
+                            <StackPanel
+                                Grid.Row="1"
+                                Grid.ColumnSpan="2"
+                                Margin="0,4,0,0">
                                 <TextBlock
-                                    Grid.Row="0"
-                                    Grid.Column="0"
-                                    Foreground="Black"
-                                    Text="$algo$" />
-                                <TextBlock
-                                    Grid.Row="0"
-                                    Grid.Column="1"
-                                    Margin="16,0,0,0"
+                                    Margin="0,4,0,0"
                                     Style="{StaticResource DescTextBlockStyle}"
-                                    Text="导出计算结果时此占位符将被替换为实际算法名。" />
+                                    Text="导出计算结果时保存的文件的每一行内容都将按照“文件内容模版”生成。" />
                                 <TextBlock
-                                    Grid.Row="1"
-                                    Grid.Column="0"
-                                    Foreground="Black"
-                                    Text="$hash$" />
-                                <TextBlock
-                                    Grid.Row="1"
-                                    Grid.Column="1"
-                                    Margin="16,0,0,0"
+                                    Margin="0,4,0,0"
                                     Style="{StaticResource DescTextBlockStyle}"
-                                    Text="导出计算结果时此占位符将被替换为实际哈希值。" />
+                                    Text="可以在“文件内容模版”输入框中任意使用以下占位符：" />
+                                <Grid Margin="0,4,0,0">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock
+                                        Grid.Row="0"
+                                        Grid.Column="0"
+                                        Foreground="Black"
+                                        Text="$algo$" />
+                                    <TextBlock
+                                        Grid.Row="0"
+                                        Grid.Column="1"
+                                        Margin="16,0,0,0"
+                                        Style="{StaticResource DescTextBlockStyle}"
+                                        Text="导出计算结果时此占位符将被替换为实际算法名。" />
+                                    <TextBlock
+                                        Grid.Row="1"
+                                        Grid.Column="0"
+                                        Foreground="Black"
+                                        Text="$hash$" />
+                                    <TextBlock
+                                        Grid.Row="1"
+                                        Grid.Column="1"
+                                        Margin="16,0,0,0"
+                                        Style="{StaticResource DescTextBlockStyle}"
+                                        Text="导出计算结果时此占位符将被替换为实际哈希值。" />
+                                    <TextBlock
+                                        Grid.Row="2"
+                                        Grid.Column="0"
+                                        Foreground="Black"
+                                        Text="$path$" />
+                                    <TextBlock
+                                        Grid.Row="2"
+                                        Grid.Column="1"
+                                        Margin="16,0,0,0"
+                                        Style="{StaticResource DescTextBlockStyle}"
+                                        Text="导出计算结果时此占位符将被替换为实际文件完整路径。" />
+                                    <TextBlock
+                                        Grid.Row="3"
+                                        Grid.Column="0"
+                                        Foreground="Black"
+                                        Text="$name$" />
+                                    <TextBlock
+                                        Grid.Row="3"
+                                        Grid.Column="1"
+                                        Margin="16,0,0,0"
+                                        Style="{StaticResource DescTextBlockStyle}"
+                                        Text="导出计算结果时此占位符将被替换为实际文件名。" />
+                                </Grid>
                                 <TextBlock
-                                    Grid.Row="2"
-                                    Grid.Column="0"
+                                    Margin="0,8,0,0"
                                     Foreground="Black"
-                                    Text="$path$" />
+                                    Text="如何使用以上设置好的方案来导出计算结果？" />
                                 <TextBlock
-                                    Grid.Row="2"
-                                    Grid.Column="1"
-                                    Margin="16,0,0,0"
+                                    Margin="0,2,0,0"
                                     Style="{StaticResource DescTextBlockStyle}"
-                                    Text="导出计算结果时此占位符将被替换为实际文件完整路径。" />
-                                <TextBlock
-                                    Grid.Row="3"
-                                    Grid.Column="0"
-                                    Foreground="Black"
-                                    Text="$name$" />
-                                <TextBlock
-                                    Grid.Row="3"
-                                    Grid.Column="1"
-                                    Margin="16,0,0,0"
-                                    Style="{StaticResource DescTextBlockStyle}"
-                                    Text="导出计算结果时此占位符将被替换为实际文件名。" />
-                            </Grid>
-                            <TextBlock
-                                Margin="0,8,0,0"
-                                Foreground="Black"
-                                Text="如何使用以上设置好的方案来导出计算结果？" />
-                            <TextBlock
-                                Margin="0,2,0,0"
-                                Style="{StaticResource DescTextBlockStyle}"
-                                Text="点击【导出结果】按钮打开【另存为】对话框后在【保存类型】下拉列表内选择方案。" />
-                        </StackPanel>
-                    </Grid>
-                </GroupBox>
-            </Grid>
+                                    Text="点击【导出结果】按钮打开【另存为】对话框后在【保存类型】下拉列表内选择方案。" />
+                            </StackPanel>
+                        </Grid>
+                    </GroupBox>
+                </Grid>
+            </ScrollViewer>
         </TabItem>
         <TabItem
             Padding="8"

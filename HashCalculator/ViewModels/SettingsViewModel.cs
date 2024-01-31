@@ -63,6 +63,7 @@ namespace HashCalculator
         private bool caseOfCopiedAlgNameFollowsOutputType = false;
         private bool generateTextInFormat = false;
         private string formatForGenerateText = "#$algo$ *$hash$ *$name$";
+        private bool exportInMainControlsChildExportsInRow = false;
         private ObservableCollection<TemplateForExportModel> templatesForExport = null;
         private RelayCommand installShellExtCmd;
         private RelayCommand unInstallShellExtCmd;
@@ -744,6 +745,18 @@ namespace HashCalculator
             set
             {
                 this.SetPropNotify(ref this.caseOfCopiedAlgNameFollowsOutputType, value);
+            }
+        }
+
+        public bool ExportInMainControlsChildExports
+        {
+            get
+            {
+                return this.exportInMainControlsChildExportsInRow;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.exportInMainControlsChildExportsInRow, value);
             }
         }
 

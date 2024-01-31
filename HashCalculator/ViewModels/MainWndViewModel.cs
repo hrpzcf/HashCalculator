@@ -66,6 +66,7 @@ namespace HashCalculator
         private RelayCommand deleteSelectedModelsFileCmd;
         private RelayCommand removeSelectedModelsCmd;
         private RelayCommand stopEnumeratingPackageCmd;
+        private RelayCommand changeAlgosExportStateCmd;
         private GenericItemModel[] copyModelsHashMenuCmds;
         private GenericItemModel[] copyModelsAllHashesMenuCmds;
         private GenericItemModel[] ctrlHashViewModelTaskCmds;
@@ -136,6 +137,18 @@ namespace HashCalculator
             set
             {
                 this.SetPropNotify(ref this.hashCheckReport, value);
+            }
+        }
+
+        public string HashStringOrChecklistPath
+        {
+            get
+            {
+                return this.hashValueStringOrChecklistPath;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.hashValueStringOrChecklistPath, value);
             }
         }
 
@@ -1478,15 +1491,37 @@ namespace HashCalculator
             }
         }
 
-        public string HashStringOrChecklistPath
+        private void ChangeAlgosExportStateAction(object param)
+        {
+            if (param is HashViewModel model)
+            {
+                if (Settings.Current.ExportInMainControlsChildExports)
+                {
+                    if (model.AlgoInOutModels?.AnyItem() == true)
+                    {
+                        bool export = !model.CurrentInOutModel?.Export ?? true;
+                        foreach (AlgoInOutModel inOut in model.AlgoInOutModels)
+                        {
+                            inOut.Export = export;
+                        }
+                    }
+                }
+                else if (model.CurrentInOutModel != null)
+                {
+                    model.CurrentInOutModel.Export = !model.CurrentInOutModel.Export;
+                }
+            }
+        }
+
+        public ICommand ChangeAlgosExportStateCmd
         {
             get
             {
-                return this.hashValueStringOrChecklistPath;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.hashValueStringOrChecklistPath, value);
+                if (this.changeAlgosExportStateCmd == null)
+                {
+                    this.changeAlgosExportStateCmd = new RelayCommand(this.ChangeAlgosExportStateAction);
+                }
+                return this.changeAlgosExportStateCmd;
             }
         }
     }
