@@ -286,27 +286,7 @@
                             Foreground="#FF006FD6"
                             Text="{Binding SelectedCmder.Display, StringFormat=[ {0} ] 的功能面板：}" />
                     </GroupBox.Header>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <ContentControl Grid.Row="0" Content="{Binding SelectedCmder.UserInterface}" />
-                        <TextBlock
-                            Grid.Row="1"
-                            Margin="0,8,0,0"
-                            FontSize="8pt"
-                            Foreground="Red"
-                            Text="操作器描述：" />
-                        <TextBlock
-                            Grid.Row="2"
-                            FontSize="8pt"
-                            Foreground="#DD006FD6"
-                            Style="{StaticResource DescTextBlockStyle}"
-                            Text="{Binding SelectedCmder.Description}"
-                            ToolTip="{Binding SelectedCmder.Description}" />
-                    </Grid>
+                    <ContentControl Grid.Row="0" Content="{Binding SelectedCmder.UserInterface}" />
                 </GroupBox>
             </Grid>
         </GroupBox>

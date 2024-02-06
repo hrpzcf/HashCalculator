@@ -371,5 +371,36 @@ namespace HashCalculator
             }
             return true;
         }
+
+        public static byte[] ToBytesWithLargerValue(this byte[] bytes)
+        {
+            if (bytes?.Length > 0)
+            {
+                byte[] largerValueBytes = new byte[bytes.Length * 2];
+                for (int i = 0; i < bytes.Length; ++i)
+                {
+                    // 第一个字节储存原字节的低 4 位
+                    largerValueBytes[i * 2] = (byte)(bytes[i] | 0xF0);
+                    // 第二个字节储存原字节的高 4 位
+                    largerValueBytes[i * 2 + 1] = (byte)((bytes[i] >> 4) | 0xF0);
+                }
+                return largerValueBytes;
+            }
+            return default(byte[]);
+        }
+
+        public static byte[] FromBytesWithLargerValue(this byte[] bytes)
+        {
+            if (bytes?.Length > 0 && bytes?.Length % 2 == 0)
+            {
+                byte[] smallerValueBytes = new byte[bytes.Length / 2];
+                for (int i = 0; i < smallerValueBytes.Length; ++i)
+                {
+                    smallerValueBytes[i] = (byte)((bytes[i * 2] & 0x0F) | (bytes[i * 2 + 1] << 4));
+                }
+                return smallerValueBytes;
+            }
+            return default(byte[]);
+        }
     }
 }

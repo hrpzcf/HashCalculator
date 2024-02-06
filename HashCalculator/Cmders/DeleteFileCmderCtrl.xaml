@@ -72,6 +72,6 @@
             FontSize="8pt"
             Foreground="OrangeRed"
             Style="{StaticResource DescTextBlockStyle}"
-            Text="提示：应用【有效的文件】筛选器以避免误删" />
+            Text="应用【有效的文件】筛选器过滤重复目标可以避免出现误删" />
     </Grid>
 </UserControl>

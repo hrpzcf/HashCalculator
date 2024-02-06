@@ -336,4 +336,25 @@
         ANSI,
         UNICODE,
     }
+
+    /// <summary>
+    /// 编辑文件时的操作类型
+    /// </summary>
+    public enum EditFileOption
+    {
+        /// <summary>
+        /// 直接修改原文件
+        /// </summary>
+        OriginalFile,
+
+        /// <summary>
+        /// 复制到相同目录再修改新文件
+        /// </summary>
+        NewInSameLocation,
+
+        /// <summary>
+        /// 复制到新的目录再修改新文件
+        /// </summary>
+        NewInNewLocation
+    }
 }

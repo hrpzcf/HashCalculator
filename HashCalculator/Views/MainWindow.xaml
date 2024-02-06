@@ -762,15 +762,17 @@
                                     Grid.Column="0"
                                     Padding="4"
                                     VerticalAlignment="Center"
-                                    Text="{Binding AlgoNameInTag}" />
+                                    Background="{Binding HcmDataFromFile, Converter={StaticResource DisplayHcmDataBackgroundCvt}}"
+                                    Text="{Binding HcmDataFromFile, Converter={StaticResource DisplayHcmDataHashNameCvt}}" />
                                 <TextBlock
                                     Grid.Column="1"
                                     Padding="4"
                                     VerticalAlignment="Center"
+                                    Background="{Binding HcmDataFromFile, Converter={StaticResource DisplayHcmDataBackgroundCvt}}"
                                     TextTrimming="CharacterEllipsis">
                                     <TextBlock.Text>
-                                        <MultiBinding Converter="{StaticResource BytesToStrByOutputTypeCvt}">
-                                            <Binding Path="HashValueInTag" />
+                                        <MultiBinding Converter="{StaticResource DisplayHcmDataHashValueCvt}">
+                                            <Binding Path="HcmDataFromFile" />
                                             <Binding Path="SelectedOutputType" />
                                         </MultiBinding>
                                     </TextBlock.Text>

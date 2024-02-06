@@ -215,8 +215,8 @@
     <Compile Include="Initializer\MmvsReader.cs" />
     <Compile Include="Initializer\MmvsWriter.cs" />
     <Compile Include="Native\Methods.cs" />
-    <Compile Include="Others\FileDataHelper.cs" />
-    <Compile Include="Others\FileDataInfo.cs" />
+    <Compile Include="Others\HcmDataHelper.cs" />
+    <Compile Include="Others\HcmData.cs" />
     <Compile Include="ViewModels\DoubleProgressModel.cs" />
     <Compile Include="ViewModels\TemplateForExportModel.cs" />
     <Compile Include="ViewModels\NotifiableModel.cs" />

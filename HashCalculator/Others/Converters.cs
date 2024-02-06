@@ -830,11 +830,117 @@ namespace HashCalculator
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            Debug.Assert(values.Length == 2);
+            Debug.Assert(values != null && values.Length == 2);
             return values[0] != null && values[1] is bool result && result;
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class EditOriginalFileToTrueCvt : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return value is EditFileOption option && option == EditFileOption.OriginalFile;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is bool result && result)
+            {
+                return EditFileOption.OriginalFile;
+            }
+            return default(EditFileOption);
+        }
+    }
+
+    internal class EditNewInSameLocationToTrueCvt : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return value is EditFileOption option && option == EditFileOption.NewInSameLocation;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is bool result && result)
+            {
+                return EditFileOption.NewInSameLocation;
+            }
+            return default(EditFileOption);
+        }
+    }
+
+    internal class EditNewInNewLocationToTrueCvt : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return value is EditFileOption option && option == EditFileOption.NewInNewLocation;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is bool result && result)
+            {
+                return EditFileOption.NewInNewLocation;
+            }
+            return default(EditFileOption);
+        }
+    }
+
+    internal class DisplayHcmDataHashNameCvt : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is HcmData hcmData)
+            {
+                return hcmData.DataReliable ? hcmData.Name : "<异常>";
+            }
+            return default(string);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class DisplayHcmDataHashValueCvt : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            Debug.Assert(values != null && values.Length == 2);
+            if (values[0] is HcmData hcmData && values[1] is OutputType outputType)
+            {
+                if (!hcmData.DataReliable)
+                {
+                    return "文件内的哈希标记已损坏";
+                }
+                return BytesToStrByOutputTypeCvt.Convert(hcmData.Hash, outputType);
+            }
+            return default(string);
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class DisplayHcmDataBackgroundCvt : IValueConverter
+    {
+        private static readonly SolidColorBrush transparent = new SolidColorBrush(Colors.Transparent);
+        private static readonly SolidColorBrush errors = new SolidColorBrush(Color.FromArgb(60, 255, 0, 0));
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return (value is HcmData hcmData && !hcmData.DataReliable) ? errors : transparent;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }

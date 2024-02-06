@@ -13,9 +13,9 @@ namespace HashCalculator
     internal class MarkFilesCmder : AbsHashesCmder
     {
         private RelayCommand selectFolderCmd;
-        private RelayCommand generateTaggedFilesCmd;
+        private RelayCommand generateMarkedFilesCmd;
         private string directoryUsedToSaveFiles;
-        private bool saveToOriginDirectory = true;
+        private EditFileOption markFilesOption;
 
         private static readonly SizeDelegates delegates = new SizeDelegates()
         {
@@ -27,14 +27,15 @@ namespace HashCalculator
 
         public override ContentControl UserInterface { get; }
 
-        public override string Display => "生成带哈希标记的新文件";
+        public override string Display => "添加标记改变文件哈希值";
 
-        public override string Description => "用原文件哈希值、随机数据和原文件组合成 .hcm 新文件用于避过一些网络平台的哈希检测。\n当要使用原文件时需要先从带标记的文件中还原 (无痕标记的 PNG/JPEG 文件可以不用还原)。";
+        public override string Description => "给文件添加哈希标记以改变其哈希值，部分文件可正常使用，一般用于避过网络平台的相同文件检测。\n" +
+            "对于改变哈希值后不能正常使用的文件，用【还原被改变哈希值的文件】对其进行还原即可得到原文件。";
 
-        public bool SaveToOriginDirectory
+        public EditFileOption MarkFilesOption
         {
-            get => this.saveToOriginDirectory;
-            set => this.SetPropNotify(ref this.saveToOriginDirectory, value);
+            get => this.markFilesOption;
+            set => this.SetPropNotify(ref this.markFilesOption, value);
         }
 
         public string DirectoryUsedToSaveFiles
@@ -42,8 +43,6 @@ namespace HashCalculator
             get => this.directoryUsedToSaveFiles;
             set => this.SetPropNotify(ref this.directoryUsedToSaveFiles, value);
         }
-
-        public bool UseSenseFreeModifications { get; set; } = false;
 
         public bool CheckIfUsingDistinctFilesFilter { get; set; } = true;
 
@@ -83,7 +82,7 @@ namespace HashCalculator
             }
         }
 
-        private async Task<string> GenerateTaggedFiles(IEnumerable<HashViewModel> models,
+        private async Task<string> GenerateMarkedFiles(IEnumerable<HashViewModel> models,
             DoubleProgressWindow doubleProgressWindow, DoubleProgressModel doubleProgressModel)
         {
             try
@@ -99,42 +98,51 @@ namespace HashCalculator
                         doubleProgressModel.CurrentString = model.FileName;
                         try
                         {
-                            using (FileStream fileStream = model.FileInfo.OpenRead())
-                            using (FileDataHelper fileDataHelper = new FileDataHelper(fileStream))
+                            string outputDirectory = string.Empty;
+                            switch (this.MarkFilesOption)
                             {
-                                if (!fileDataHelper.TryGetFileDataInfo(out FileDataInfo info) || info.IsTagged)
-                                {
-                                    goto NextRound;
-                                }
-                                string oldExtension = Path.GetExtension(model.FileName);
-                                string newNameNoExt = Path.GetFileNameWithoutExtension(model.FileName);
-                                string newExt = this.UseSenseFreeModifications &&
-                                    !string.IsNullOrEmpty(oldExtension) && (
-                                        oldExtension.Equals(".png", StringComparison.OrdinalIgnoreCase) ||
-                                        oldExtension.Equals(".jpg", StringComparison.OrdinalIgnoreCase) ||
-                                        oldExtension.Equals(".jpeg", StringComparison.OrdinalIgnoreCase)
-                                    ) ? $".hcm{oldExtension}" : $"{oldExtension}.hcm";
-                                string directoryToSaveFile = this.SaveToOriginDirectory ?
-                                    model.FileInfo.DirectoryName : this.DirectoryUsedToSaveFiles;
-                                int duplicate = -1;
-                                string newFilePath;
-                                do
-                                {
-                                    string newFileName = ++duplicate == 0 ?
-                                        $"{newNameNoExt}{newExt}" : $"{newNameNoExt}_{duplicate}{newExt}";
-                                    newFilePath = Path.Combine(directoryToSaveFile, newFileName);
-                                } while (File.Exists(newFilePath));
-                                using (FileStream newFileStream = File.Create(newFilePath))
-                                {
-                                    fileDataHelper.GenerateTaggedFile(newFileStream, info, model.CurrentInOutModel,
-                                        this.UseSenseFreeModifications, doubleProgressModel);
-                                }
+                                case EditFileOption.OriginalFile:
+                                    using (FileStream stream = model.FileInfo.Open(FileMode.Open,
+                                        FileAccess.Write))
+                                    {
+                                        new HcmDataHelper(stream).GenerateMarkedFile(model.CurrentInOutModel);
+                                    }
+                                    goto RoundEndsAndNext;
+                                default:
+                                case EditFileOption.NewInSameLocation:
+                                    outputDirectory = model.FileInfo.DirectoryName;
+                                    break;
+                                case EditFileOption.NewInNewLocation:
+                                    outputDirectory = this.DirectoryUsedToSaveFiles;
+                                    break;
+                            }
+                            string extension = Path.GetExtension(model.FileName);
+                            string nameNoExt = Path.GetFileNameWithoutExtension(model.FileName);
+                            int duplicate = -1;
+                            string newFilePath;
+                            do
+                            {
+                                string newFileName = ++duplicate == 0 ? $"{nameNoExt}{extension}" :
+                                    $"{nameNoExt}_{duplicate}{extension}";
+                                newFilePath = Path.Combine(outputDirectory, newFileName);
+                            } while (File.Exists(newFilePath));
+                            bool result = true;
+                            using (FileStream fileStream = model.FileInfo.OpenRead())
+                            using (FileStream newFileStream = File.Create(newFilePath))
+                            {
+                                HcmDataHelper hcmDataHelper = new HcmDataHelper(fileStream);
+                                result = hcmDataHelper.GenerateMarkedFile(newFileStream, model.CurrentInOutModel,
+                                    doubleProgressModel);
+                            }
+                            if (!result && File.Exists(newFilePath))
+                            {
+                                File.Delete(newFilePath);
                             }
                         }
                         catch (Exception)
                         {
                         }
-                    NextRound:
+                    RoundEndsAndNext:
                         doubleProgressModel.ProcessedCount += 1;
                         if (doubleProgressModel.TokenSrc.IsCancellationRequested)
                         {
@@ -155,14 +163,14 @@ namespace HashCalculator
             }
         }
 
-        private async void GenerateTaggedFilesAction(object param)
+        private async void GenerateMarkedFilesAction(object param)
         {
             if (Settings.Current.ShowExecutionTargetColumn &&
                 Settings.Current.FilterOrCmderEnabled &&
                 this.RefModels is IEnumerable<HashViewModel> hashViewModels)
             {
                 Settings.Current.FilterOrCmderEnabled = false;
-                if (!this.SaveToOriginDirectory)
+                if (this.MarkFilesOption == EditFileOption.NewInNewLocation)
                 {
                     if (string.IsNullOrEmpty(this.DirectoryUsedToSaveFiles) ||
                         !Path.IsPathRooted(this.DirectoryUsedToSaveFiles))
@@ -202,9 +210,9 @@ namespace HashCalculator
                     {
                         Owner = MainWindow.This
                     };
-                    Task<string> genTaggedFilesTask = this.GenerateTaggedFiles(targets, progressWindow, progressModel);
+                    Task<string> genMarkedFilesTask = this.GenerateMarkedFiles(targets, progressWindow, progressModel);
                     progressWindow.ShowDialog();
-                    string exceptionMessage = await genTaggedFilesTask;
+                    string exceptionMessage = await genMarkedFilesTask;
                     if (!string.IsNullOrEmpty(exceptionMessage))
                     {
                         MessageBox.Show(MainWindow.This, $"出现异常导致过程中断：{exceptionMessage}", "错误",
@@ -223,15 +231,15 @@ namespace HashCalculator
             }
         }
 
-        public ICommand GenerateTaggedFilesCmd
+        public ICommand GenerateMarkedFilesCmd
         {
             get
             {
-                if (this.generateTaggedFilesCmd == null)
+                if (this.generateMarkedFilesCmd == null)
                 {
-                    this.generateTaggedFilesCmd = new RelayCommand(this.GenerateTaggedFilesAction);
+                    this.generateMarkedFilesCmd = new RelayCommand(this.GenerateMarkedFilesAction);
                 }
-                return this.generateTaggedFilesCmd;
+                return this.generateMarkedFilesCmd;
             }
         }
     }

@@ -236,5 +236,11 @@ namespace HashCalculator
         /// </summary>
         [DllImport("kernel32.dll")]
         internal static extern bool GetFileInformationByHandle(IntPtr hFile, out BY_HANDLE_FILE_INFORMATION lpFileInformation);
+
+        /// <summary>
+        /// https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-setendoffile
+        /// </summary>
+        [DllImport("kernel32.dll")]
+        internal static extern bool SetEndOfFile(IntPtr hFile);
     }
 }

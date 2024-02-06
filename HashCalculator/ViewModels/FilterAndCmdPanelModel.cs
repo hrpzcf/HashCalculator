@@ -66,10 +66,10 @@ namespace HashCalculator
                 new CmpResultFilter(),
                 new HashingTaskResultFilter(),
                 new SerialNumberFilter(),
-                new FileIndexFilter(),
                 new FileSizeFilter(),
                 new HashStringFilter(),
-                new FileNameFilter(),           
+                new FileIndexFilter(),
+                new FileNameFilter(),
                 // 这两个筛选器因其特殊性需最后应用，否则可能得不到预期结果
                 new SameDirFilesFilter(),
                 new EqualHashByteFilter(),

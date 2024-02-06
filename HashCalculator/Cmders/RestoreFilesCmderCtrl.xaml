@@ -6,7 +6,7 @@
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DataContext="{d:DesignInstance Type=local:RestoreFilesCmder}"
-    d:DesignHeight="160"
+    d:DesignHeight="180"
     d:DesignWidth="400"
     mc:Ignorable="d">
     <UserControl.Resources>
@@ -27,6 +27,9 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition />
             </Grid.RowDefinitions>
             <Grid Grid.Row="0">
@@ -39,67 +42,74 @@
                     Grid.Column="0"
                     Padding="6"
                     VerticalAlignment="Center"
-                    Background="DarkGreen"
+                    Background="DarkMagenta"
                     BorderThickness="1"
-                    Command="{Binding ShowHashesInFileTagCmd}"
-                    Content="显示文件内的哈希标记"
+                    Command="{Binding RestoreMarkedFilesCmd}"
+                    Content="开始还原"
                     Foreground="White"
                     IsEnabled="{Binding Source={x:Static local:Settings.Current}, Path=ShowExecutionTargetColumn}"
                     Style="{StaticResource IndepButtonStyle}"
-                    ToolTip="在主窗口的【原文件哈希值】列中显示带哈希标记文件内记录的原文件哈希值和算法。" />
+                    ToolTip="还原被改变过哈希值的文件，如果保存位置有同名文件则给文件名添加数字后缀后保存。" />
                 <Button
                     Grid.Column="1"
                     Margin="4,0,0,0"
                     Padding="6"
                     VerticalAlignment="Center"
-                    Background="DarkGoldenrod"
+                    Background="DarkGreen"
                     BorderThickness="1"
-                    Command="{Binding HideHashesInFileTagCmd}"
-                    Content="取消显示"
+                    Command="{Binding ShowFilesHcmDataCmd}"
+                    Content="显示哈希标记"
                     Foreground="White"
+                    IsEnabled="{Binding Source={x:Static local:Settings.Current}, Path=ShowExecutionTargetColumn}"
                     Style="{StaticResource IndepButtonStyle}"
-                    ToolTip="清空并隐藏主窗口的【原文件哈希值】列。" />
+                    ToolTip="在主窗口的【哈希标记】列中显示被改变过哈希值的文件内记录的原文件哈希值和算法。" />
                 <Button
                     Grid.Column="2"
                     Margin="4,0,0,0"
                     Padding="6"
                     VerticalAlignment="Center"
-                    Background="DarkMagenta"
+                    Background="DarkGoldenrod"
                     BorderThickness="1"
-                    Command="{Binding RestoreTaggedFilesCmd}"
-                    Content="从带标记的文件还原"
+                    Command="{Binding HideFilesHcmDataCmd}"
+                    Content="不显示"
                     Foreground="White"
-                    IsEnabled="{Binding Source={x:Static local:Settings.Current}, Path=ShowExecutionTargetColumn}"
                     Style="{StaticResource IndepButtonStyle}"
-                    ToolTip="从带哈希标记的文件中还原出原文件，如果保存位置有同名文件则给文件名添加数字后缀后保存。" />
+                    ToolTip="清空并隐藏主窗口的【哈希标记】列。" />
             </Grid>
             <TextBlock
                 Grid.Row="1"
                 Margin="0,4,0,0"
-                Text="从带标记的文件还原出来的文件保存到：" />
+                Text="为改变哈希值而添加哈希标记的文件如何还原：" />
             <RadioButton
                 Grid.Row="2"
                 Margin="16,2,0,0"
                 Padding="4,0,0,0"
                 VerticalContentAlignment="Center"
-                Content="与带标记文件相同的位置"
-                IsChecked="{Binding SaveToOriginDirectory}" />
+                Content="直接在目标文件上剔除哈希标记"
+                IsChecked="{Binding RestoreFilesOption, Converter={StaticResource EditOriginalFileToTrueCvt}}" />
             <RadioButton
                 Grid.Row="3"
+                Margin="16,2,0,0"
+                Padding="4,0,0,0"
+                VerticalContentAlignment="Center"
+                Content="在目标文件所在目录创建副本并剔除标记"
+                IsChecked="{Binding RestoreFilesOption, Converter={StaticResource EditNewInSameLocationToTrueCvt}}" />
+            <RadioButton
+                Grid.Row="4"
                 Grid.Column="0"
                 Margin="16,2,0,0"
                 Padding="4,0,0,0"
                 VerticalContentAlignment="Center"
-                Content="以下文本框显示的文件夹"
-                IsChecked="{Binding SaveToOriginDirectory, Converter={StaticResource ReverseBooleanValueCvt}}" />
-            <Grid Grid.Row="4" Margin="0,2,0,0">
+                Content="在以下目录创建目标副本并剔除标记"
+                IsChecked="{Binding RestoreFilesOption, Converter={StaticResource EditNewInNewLocationToTrueCvt}}" />
+            <Grid Grid.Row="5" Margin="0,2,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <TextBox
                     Padding="2"
-                    IsEnabled="{Binding SaveToOriginDirectory, Converter={StaticResource ReverseBooleanValueCvt}}"
+                    IsEnabled="{Binding RestoreFilesOption, Converter={StaticResource EditNewInNewLocationToTrueCvt}}"
                     MaxLines="1"
                     Text="{Binding DirectoryUsedToSaveFiles}" />
                 <Button
@@ -109,10 +119,10 @@
                     Background="{x:Null}"
                     Command="{Binding SelectFolderCmd}"
                     Content="..."
-                    IsEnabled="{Binding SaveToOriginDirectory, Converter={StaticResource ReverseBooleanValueCvt}}" />
+                    IsEnabled="{Binding RestoreFilesOption, Converter={StaticResource EditNewInNewLocationToTrueCvt}}" />
             </Grid>
             <CheckBox
-                Grid.Row="5"
+                Grid.Row="6"
                 Grid.Column="0"
                 Grid.ColumnSpan="4"
                 Margin="0,4,0,0"
@@ -121,6 +131,21 @@
                 Content="检查是否应用了【有效的文件】筛选器"
                 IsChecked="{Binding CheckIfUsingDistinctFilesFilter}"
                 ToolTip="检查当前显示的所有行是否都已经经过【有效的文件】筛选器的筛选。" />
+            <TextBlock
+                Grid.Row="7"
+                Grid.Column="0"
+                Grid.ColumnSpan="4"
+                Margin="0,4,0,0"
+                FontSize="8pt"
+                Foreground="OrangeRed"
+                Text="所选的操作目标中没有被改变过哈希值的文件将被忽略" />
+            <TextBlock
+                Grid.Row="8"
+                Grid.Column="0"
+                Grid.ColumnSpan="4"
+                FontSize="8pt"
+                Foreground="OrangeRed"
+                Text="还原时遇到同名文件自动添加数字后缀，不会覆盖文件" />
         </Grid>
     </ScrollViewer>
 </UserControl>

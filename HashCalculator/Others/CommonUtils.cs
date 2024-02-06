@@ -477,5 +477,24 @@ namespace HashCalculator
             text = default(string);
             return false;
         }
+
+        public static bool TryAssignin<T1, T2>(T1 value, ref T2 variable)
+            where T1 : struct, IConvertible
+            where T2 : struct, IConvertible
+        {
+            try
+            {
+                checked
+                {
+                    T2 convertedToVariableTypeValue = (T2)Convert.ChangeType(value, typeof(T2));
+                    variable = convertedToVariableTypeValue;
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
     }
 }

@@ -6,7 +6,7 @@
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DataContext="{d:DesignInstance Type=local:MarkFilesCmder}"
-    d:DesignHeight="160"
+    d:DesignHeight="200"
     d:DesignWidth="320"
     mc:Ignorable="d">
     <UserControl.Resources>
@@ -28,6 +28,8 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
@@ -35,42 +37,55 @@
                 <ColumnDefinition />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <RadioButton
+            <TextBlock
                 Grid.Row="0"
                 Grid.Column="0"
                 Grid.ColumnSpan="3"
-                Padding="4,0,0,0"
-                Content="新文件保存到与原文件相同的位置"
-                IsChecked="{Binding SaveToOriginDirectory}" />
+                Text="如何给文件添加哈希标记以改变文件的哈希值：" />
             <RadioButton
                 Grid.Row="1"
                 Grid.Column="0"
                 Grid.ColumnSpan="3"
-                Margin="0,2,0,0"
+                Margin="16,2,0,0"
                 Padding="4,0,0,0"
-                Content="新文件保存到以下显示的文件夹内"
-                IsChecked="{Binding SaveToOriginDirectory, Converter={StaticResource ReverseBooleanValueCvt}}" />
-            <TextBox
+                Content="直接把哈希标记添加到目标文件上"
+                IsChecked="{Binding MarkFilesOption, Converter={StaticResource EditOriginalFileToTrueCvt}}" />
+            <RadioButton
                 Grid.Row="2"
+                Grid.Column="0"
+                Grid.ColumnSpan="3"
+                Margin="16,2,0,0"
+                Padding="4,0,0,0"
+                Content="在目标文件所在目录创建副本并添加标记"
+                IsChecked="{Binding MarkFilesOption, Converter={StaticResource EditNewInSameLocationToTrueCvt}}" />
+            <RadioButton
+                Grid.Row="3"
+                Grid.Column="0"
+                Grid.ColumnSpan="3"
+                Margin="16,2,0,0"
+                Padding="4,0,0,0"
+                Content="在以下目录创建目标副本并添加标记"
+                IsChecked="{Binding MarkFilesOption, Converter={StaticResource EditNewInNewLocationToTrueCvt}}" />
+            <TextBox
+                Grid.Row="4"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
                 Margin="0,2,0,0"
                 Padding="2"
-                IsEnabled="{Binding SaveToOriginDirectory, Converter={StaticResource ReverseBooleanValueCvt}}"
+                IsEnabled="{Binding MarkFilesOption, Converter={StaticResource EditNewInNewLocationToTrueCvt}}"
                 MaxLines="1"
                 Text="{Binding DirectoryUsedToSaveFiles}" />
             <Button
-                Grid.Row="2"
+                Grid.Row="4"
                 Grid.Column="2"
                 Margin="4,2,0,0"
                 Padding="4,2"
                 Background="{x:Null}"
                 Command="{Binding SelectFolderCmd}"
                 Content="..."
-                IsEnabled="{Binding SaveToOriginDirectory, Converter={StaticResource ReverseBooleanValueCvt}}" />
+                IsEnabled="{Binding MarkFilesOption, Converter={StaticResource EditNewInNewLocationToTrueCvt}}" />
             <Button
-                Grid.Row="3"
-                Grid.RowSpan="2"
+                Grid.Row="5"
                 Grid.Column="0"
                 Margin="0,4,0,0"
                 Padding="16,6"
@@ -78,49 +93,46 @@
                 VerticalAlignment="Center"
                 Background="DarkCyan"
                 BorderThickness="1"
-                Command="{Binding GenerateTaggedFilesCmd}"
-                Content="开始生成"
+                Command="{Binding GenerateMarkedFilesCmd}"
+                Content="开始处理"
                 Foreground="White"
                 IsEnabled="{Binding Source={x:Static local:Settings.Current}, Path=ShowExecutionTargetColumn}"
                 Style="{StaticResource IndepButtonStyle}"
-                ToolTip="用哈希标记和随机数据与原文件组合生成的新文件，如果保存位置有同名文件则给文件名添加数字后缀后保存。" />
+                ToolTip="向文件添加由算法、哈希值和随机数据等组成的哈希标记以改变文件的哈希值。" />
             <CheckBox
-                Grid.Row="3"
+                Grid.Row="5"
                 Grid.Column="1"
                 Grid.ColumnSpan="2"
                 Margin="4,4,0,0"
-                Padding="4,0,0,0"
-                VerticalAlignment="Center"
-                Content="对 PNG/JPEG 文件进行无痕标记"
-                IsChecked="{Binding UseSenseFreeModifications}"
-                ToolTip="开启此设置后生成带标记的 PNG/JPEG 新文件(下称标记文件)完全正常使用，但应注意：&#10;1. 如果原文件末尾带有额外数据，则生成的标记文件末尾只带本程序的标记，不带原额外数据；&#10;2. 一般原文件末尾不会带有额外数据，除非是你特意用某些方法将一些数据隐藏到它的末尾；&#10;3. 因为生成的标记文件不带原文件的额外数据，所以从标记文件还原出的文件也不带额外数据；&#10;4. 因还原出的文件不带原文件的额外数据，所以还原出的文件的哈希与标记内的哈希值不一样。" />
-            <CheckBox
-                Grid.Row="4"
-                Grid.Column="1"
-                Grid.ColumnSpan="2"
-                Margin="4,2,0,0"
                 Padding="4,0,0,0"
                 VerticalAlignment="Center"
                 Content="检查是否应用了【有效的文件】筛选器"
                 IsChecked="{Binding CheckIfUsingDistinctFilesFilter}"
                 ToolTip="检查当前显示的所有行是否都已经经过【有效的文件】筛选器的筛选。" />
             <TextBlock
-                Grid.Row="5"
+                Grid.Row="6"
                 Grid.Column="0"
                 Grid.ColumnSpan="3"
                 Margin="0,4,0,0"
                 FontSize="8pt"
                 Foreground="OrangeRed"
                 Style="{StaticResource DescTextBlockStyle}"
-                Text="提示1：只支持计算成功且无标记的操作目标，否则忽略该目标" />
+                Text="所选的操作目标中没有完成哈希值计算的目标都将被忽略" />
             <TextBlock
-                Grid.Row="6"
+                Grid.Row="7"
                 Grid.Column="0"
                 Grid.ColumnSpan="3"
                 FontSize="8pt"
                 Foreground="OrangeRed"
                 Style="{StaticResource DescTextBlockStyle}"
-                Text="提示2：每行的哈希标记由当前显示的算法结果和随机数据构成" />
+                Text="添加的哈希标记由目标当前显示的哈希值和随机数据构成" />
+            <TextBlock
+                Grid.Row="8"
+                Grid.Column="0"
+                Grid.ColumnSpan="4"
+                FontSize="8pt"
+                Foreground="OrangeRed"
+                Text="处理时时遇到同名文件自动添加数字后缀，不会覆盖文件" />
         </Grid>
     </ScrollViewer>
 </UserControl>

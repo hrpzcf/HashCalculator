@@ -13,11 +13,11 @@ namespace HashCalculator
     internal class RestoreFilesCmder : AbsHashesCmder
     {
         private RelayCommand selectFolderCmd;
-        private RelayCommand restoreTaggedFilesCmd;
-        private RelayCommand showHashesInFileTagCmd;
-        private RelayCommand hideHashesInFileTagCmd;
+        private RelayCommand restoreMarkedFilesCmd;
+        private RelayCommand showFilesHcmDataCmd;
+        private RelayCommand hideFilesHcmDataCmd;
         private string directoryUsedToSaveFiles;
-        private bool saveToOriginDirectory = true;
+        private EditFileOption restoreFilesOption;
 
         private static readonly SizeDelegates delegates = new SizeDelegates()
         {
@@ -29,14 +29,15 @@ namespace HashCalculator
 
         public override ContentControl UserInterface { get; }
 
-        public override string Display => "显示哈希标记或还原文件";
+        public override string Display => "还原被改变哈希值的文件";
 
-        public override string Description => "功能一：在主窗口的【哈希标记】列中显示带标记的文件内记录的原文件哈希值；\n功能二：从带哈希标记的文件中还原出原文件(无痕标记的 PNG/JPEG 文件可能无法还原出完全一样的原文件)。";
+        public override string Description => "功能一：在主窗口【哈希标记】列中显示被改变哈希值的文件内记录的原文件哈希值。\n" +
+            "功能二：将被改变过哈希值的文件还原，没有用本程序改变过哈希值的文件将被忽略。";
 
-        public bool SaveToOriginDirectory
+        public EditFileOption RestoreFilesOption
         {
-            get => this.saveToOriginDirectory;
-            set => this.SetPropNotify(ref this.saveToOriginDirectory, value);
+            get => this.restoreFilesOption;
+            set => this.SetPropNotify(ref this.restoreFilesOption, value);
         }
 
         public string DirectoryUsedToSaveFiles
@@ -58,7 +59,7 @@ namespace HashCalculator
 
         public override void Reset()
         {
-            this.HideHashesInFileTagAction(null);
+            this.HideFilesHcmDataAction(null);
         }
 
         private void SelectFolderAction(object param)
@@ -88,7 +89,7 @@ namespace HashCalculator
             }
         }
 
-        private async Task<string> RestoreTaggedFiles(IEnumerable<HashViewModel> models,
+        private async Task<string> RestoreMarkedFiles(IEnumerable<HashViewModel> models,
             DoubleProgressWindow doubleProgressWindow, DoubleProgressModel doubleProgressModel)
         {
             try
@@ -102,38 +103,51 @@ namespace HashCalculator
                         doubleProgressModel.CurrentString = model.FileName;
                         try
                         {
-                            using (FileStream fileStream = model.FileInfo.OpenRead())
-                            using (FileDataHelper fileDataHelper = new FileDataHelper(fileStream))
+                            string outputDirectory = string.Empty;
+                            switch (this.RestoreFilesOption)
                             {
-                                if (!fileDataHelper.TryGetTaggedFileDataInfo(out FileDataInfo info))
-                                {
-                                    goto NextRound;
-                                }
-                                string oldExtension = Path.GetExtension(model.FileName);
-                                string oldNameNoExt = Path.GetFileNameWithoutExtension(model.FileName);
-                                string newNameNoExt = Path.GetFileNameWithoutExtension(oldNameNoExt);
-                                string newExtension = !oldExtension.Equals(".hcm", StringComparison.OrdinalIgnoreCase) ?
-                                    oldExtension : Path.GetExtension(oldNameNoExt);
-                                string outputDirectory = this.SaveToOriginDirectory ?
-                                    model.FileInfo.DirectoryName : this.DirectoryUsedToSaveFiles;
-                                int duplicate = -1;
-                                string newFilePath;
-                                do
-                                {
-                                    string newFileName = ++duplicate == 0 ? $"{newNameNoExt}{newExtension}" :
-                                        $"{newNameNoExt}_{duplicate}{newExtension}";
-                                    newFilePath = Path.Combine(outputDirectory, newFileName);
-                                } while (File.Exists(newFilePath));
-                                using (FileStream newFileStream = File.Create(newFilePath))
-                                {
-                                    fileDataHelper.RestoreTaggedFile(newFileStream, info, doubleProgressModel);
-                                }
+                                case EditFileOption.OriginalFile:
+                                    using (FileStream fileStream = model.FileInfo.Open(
+                                        FileMode.Open, FileAccess.ReadWrite))
+                                    {
+                                        if (new HcmDataHelper(fileStream).RestoreMarkedFile())
+                                        {
+                                            model.HcmDataFromFile = null;
+                                        }
+                                    }
+                                    goto RoundEndsAndNext;
+                                default:
+                                case EditFileOption.NewInSameLocation:
+                                    outputDirectory = model.FileInfo.DirectoryName;
+                                    break;
+                                case EditFileOption.NewInNewLocation:
+                                    outputDirectory = this.DirectoryUsedToSaveFiles;
+                                    break;
+                            }
+                            string extension = Path.GetExtension(model.FileName);
+                            string nameNoExt = Path.GetFileNameWithoutExtension(model.FileName);
+                            int duplicate = -1;
+                            string newFilePath;
+                            do
+                            {
+                                string newFileName = ++duplicate == 0 ? $"{nameNoExt}{extension}" :
+                                    $"{nameNoExt}_{duplicate}{extension}";
+                                newFilePath = Path.Combine(outputDirectory, newFileName);
+                            } while (File.Exists(newFilePath));
+                            bool result = true;
+                            using (FileStream fileStream = model.FileInfo.OpenRead())
+                            using (FileStream newFileStream = File.Create(newFilePath))
+                            {
+                                HcmDataHelper hcmDataHelper = new HcmDataHelper(fileStream);
+                                result = hcmDataHelper.RestoreMarkedFile(newFileStream, doubleProgressModel);
+                            }
+                            if (!result && File.Exists(newFilePath))
+                            {
+                                File.Delete(newFilePath);
                             }
                         }
-                        catch (Exception)
-                        {
-                        }
-                    NextRound:
+                        catch (Exception) { }
+                    RoundEndsAndNext:
                         doubleProgressModel.ProcessedCount += 1;
                         if (doubleProgressModel.TokenSrc.IsCancellationRequested)
                         {
@@ -154,19 +168,19 @@ namespace HashCalculator
             }
         }
 
-        private async void RestoreTaggedFilesAction(object param)
+        private async void RestoreMarkedFilesAction(object param)
         {
             if (Settings.Current.ShowExecutionTargetColumn &&
                 Settings.Current.FilterOrCmderEnabled &&
                 this.RefModels is IEnumerable<HashViewModel> hashViewModels)
             {
                 Settings.Current.FilterOrCmderEnabled = false;
-                if (!this.SaveToOriginDirectory)
+                if (this.RestoreFilesOption == EditFileOption.NewInNewLocation)
                 {
                     if (string.IsNullOrEmpty(this.DirectoryUsedToSaveFiles) ||
                         !Path.IsPathRooted(this.DirectoryUsedToSaveFiles))
                     {
-                        MessageBox.Show(MainWindow.This, "请输入还原出来的文件的保存目录完整路径！", "提示",
+                        MessageBox.Show(MainWindow.This, "请输入还原的文件的保存目录完整路径！", "提示",
                             MessageBoxButton.OK, MessageBoxImage.Warning);
                         goto FinishingTouches;
                     }
@@ -178,7 +192,7 @@ namespace HashCalculator
                         }
                         catch (Exception)
                         {
-                            MessageBox.Show(MainWindow.This, "用于保存还原出来的文件的目录不存在且创建失败！", "错误",
+                            MessageBox.Show(MainWindow.This, "用于保存还原的文件的目录不存在且创建失败！", "错误",
                                 MessageBoxButton.OK, MessageBoxImage.Error);
                             goto FinishingTouches;
                         }
@@ -201,9 +215,9 @@ namespace HashCalculator
                     {
                         Owner = MainWindow.This
                     };
-                    Task<string> restoreTaggedFilesTask = this.RestoreTaggedFiles(targets, progressWindow, progressModel);
+                    Task<string> restoreMarkedFilesTask = this.RestoreMarkedFiles(targets, progressWindow, progressModel);
                     progressWindow.ShowDialog();
-                    string exceptionMessage = await restoreTaggedFilesTask;
+                    string exceptionMessage = await restoreMarkedFilesTask;
                     if (!string.IsNullOrEmpty(exceptionMessage))
                     {
                         MessageBox.Show(MainWindow.This, $"出现异常导致过程中断：{exceptionMessage}", "错误",
@@ -221,19 +235,19 @@ namespace HashCalculator
             }
         }
 
-        public ICommand RestoreTaggedFilesCmd
+        public ICommand RestoreMarkedFilesCmd
         {
             get
             {
-                if (this.restoreTaggedFilesCmd == null)
+                if (this.restoreMarkedFilesCmd == null)
                 {
-                    this.restoreTaggedFilesCmd = new RelayCommand(this.RestoreTaggedFilesAction);
+                    this.restoreMarkedFilesCmd = new RelayCommand(this.RestoreMarkedFilesAction);
                 }
-                return this.restoreTaggedFilesCmd;
+                return this.restoreMarkedFilesCmd;
             }
         }
 
-        private async Task<string> GetFilesTag(IEnumerable<HashViewModel> models,
+        private async Task<string> GetFilesHcmData(IEnumerable<HashViewModel> models,
             DoubleProgressWindow doubleProgressWindow, DoubleProgressModel doubleProgressModel)
         {
             try
@@ -248,18 +262,18 @@ namespace HashCalculator
                         try
                         {
                             using (FileStream fileStream = model.FileInfo.OpenRead())
-                            using (FileDataHelper hcFileHelper = new FileDataHelper(fileStream))
                             {
-                                if (hcFileHelper.TryGetTaggedFileDataInfo(out FileDataInfo information))
+                                if (!new HcmDataHelper(fileStream).ReadHcmData(out HcmData hcmData))
                                 {
-                                    model.AlgoNameInTag = information.AlgoName;
-                                    model.HashValueInTag = information.HashBytes;
+                                    model.HcmDataFromFile = null;
+                                }
+                                else
+                                {
+                                    model.HcmDataFromFile = hcmData;
                                 }
                             }
                         }
-                        catch (Exception)
-                        {
-                        }
+                        catch (Exception) { }
                         doubleProgressModel.ProcessedCount += 1;
                         if (doubleProgressModel.TokenSrc.IsCancellationRequested)
                         {
@@ -280,7 +294,7 @@ namespace HashCalculator
             }
         }
 
-        private async void ShowHashesInFileTagAction(object param)
+        private async void ShowFilesHcmDataAction(object param)
         {
             if (Settings.Current.ShowExecutionTargetColumn &&
                 Settings.Current.FilterOrCmderEnabled &&
@@ -295,9 +309,9 @@ namespace HashCalculator
                     {
                         Owner = MainWindow.This
                     };
-                    Task<string> getFilesTagTask = this.GetFilesTag(targets, progressWindow, progressModel);
+                    Task<string> getFilesHcmDataTask = this.GetFilesHcmData(targets, progressWindow, progressModel);
                     progressWindow.ShowDialog();
-                    string exceptionMessage = await getFilesTagTask;
+                    string exceptionMessage = await getFilesHcmDataTask;
                     if (string.IsNullOrEmpty(exceptionMessage))
                     {
                         Settings.Current.ShowHashInTagColumn = true;
@@ -318,40 +332,39 @@ namespace HashCalculator
             }
         }
 
-        public ICommand ShowHashesInFileTagCmd
+        public ICommand ShowFilesHcmDataCmd
         {
             get
             {
-                if (this.showHashesInFileTagCmd == null)
+                if (this.showFilesHcmDataCmd == null)
                 {
-                    this.showHashesInFileTagCmd = new RelayCommand(this.ShowHashesInFileTagAction);
+                    this.showFilesHcmDataCmd = new RelayCommand(this.ShowFilesHcmDataAction);
                 }
-                return this.showHashesInFileTagCmd;
+                return this.showFilesHcmDataCmd;
             }
         }
 
-        private void HideHashesInFileTagAction(object param)
+        private void HideFilesHcmDataAction(object param)
         {
             Settings.Current.ShowHashInTagColumn = false;
             if (this.RefModels is IEnumerable<HashViewModel> hashViewModels)
             {
                 foreach (HashViewModel model in hashViewModels)
                 {
-                    model.AlgoNameInTag = null;
-                    model.HashValueInTag = null;
+                    model.HcmDataFromFile = null;
                 }
             }
         }
 
-        public ICommand HideHashesInFileTagCmd
+        public ICommand HideFilesHcmDataCmd
         {
             get
             {
-                if (this.hideHashesInFileTagCmd == null)
+                if (this.hideFilesHcmDataCmd == null)
                 {
-                    this.hideHashesInFileTagCmd = new RelayCommand(this.HideHashesInFileTagAction);
+                    this.hideFilesHcmDataCmd = new RelayCommand(this.HideFilesHcmDataAction);
                 }
-                return this.hideHashesInFileTagCmd;
+                return this.hideFilesHcmDataCmd;
             }
         }
     }

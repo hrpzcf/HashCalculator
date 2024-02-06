@@ -6,7 +6,7 @@
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DataContext="{d:DesignInstance Type=local:RenameFileCmder}"
-    d:DesignHeight="100"
+    d:DesignHeight="200"
     d:DesignWidth="300"
     mc:Ignorable="d">
     <UserControl.Resources>
@@ -19,6 +19,7 @@
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -98,6 +99,13 @@
             FontSize="8pt"
             Foreground="OrangeRed"
             Style="{StaticResource DescTextBlockStyle}"
-            Text="提示：应用【有效的文件】筛选器以避免重复重命名" />
+            Text="应用【有效的文件】筛选器过滤重复目标可以避免重复重命名" />
+        <TextBlock
+            Grid.Row="4"
+            Grid.ColumnSpan="3"
+            FontSize="8pt"
+            Foreground="OrangeRed"
+            Style="{StaticResource DescTextBlockStyle}"
+            Text="将光标悬停在相关按钮或设置上可以查看详细的描述" />
     </Grid>
 </UserControl>
