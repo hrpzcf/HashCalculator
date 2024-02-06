@@ -22,7 +22,7 @@ namespace HashCalculator
     {
         private readonly HashChecklist MainChecklist = new HashChecklist();
         private readonly ModelStarter starter =
-            new ModelStarter((int)Settings.Current.SelectedTaskNumberLimit, 8);
+            new ModelStarter(Settings.Current.SelectedTaskNumberLimit, 32);
         private static readonly Dispatcher synchronization =
             Application.Current.Dispatcher;
         private readonly Action<HashModelArg> addModelAction;
@@ -390,13 +390,13 @@ namespace HashCalculator
         /// </summary>
         private void SettingsPropChangedAction(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(Settings.Current.SelectedTaskNumberLimit))
-            {
-                this.starter.BeginAdjust((int)Settings.Current.SelectedTaskNumberLimit);
-            }
-            else if (e.PropertyName == nameof(Settings.Current.RunInMultiInstMode))
+            if (e.PropertyName == nameof(Settings.Current.RunInMultiInstMode))
             {
                 Initializer.RunMultiMode = Settings.Current.RunInMultiInstMode;
+            }
+            else if (e.PropertyName == nameof(Settings.Current.SelectedTaskNumberLimit))
+            {
+                this.starter.BeginAdjust(Settings.Current.SelectedTaskNumberLimit);
             }
         }
 
@@ -1129,7 +1129,7 @@ namespace HashCalculator
                 else
                 {
                     this.BeginDisplayModels(new PathPackage(Path.GetDirectoryName(this.HashStringOrChecklistPath),
-                        Settings.Current.SelectedQVSPolicy, newChecklist));
+                        Settings.Current.SelectedSearchMethodForChecklist, newChecklist));
                 }
                 return;
             }
@@ -1242,7 +1242,7 @@ namespace HashCalculator
             Settings.Current.LastUsedPath =
                     Path.GetDirectoryName(fileOpen.FileNames.ElementAt(0));
             this.BeginDisplayModels(
-                new PathPackage(fileOpen.FileNames, Settings.Current.SelectedSearchPolicy));
+                new PathPackage(fileOpen.FileNames, Settings.Current.SelectedSearchMethodForDragDrop));
         }
 
         public ICommand SelectFilesToHashCmd
@@ -1259,10 +1259,10 @@ namespace HashCalculator
 
         private void SelectFolderToHashAction(object param)
         {
-            SearchPolicy policy = Settings.Current.SelectedSearchPolicy;
-            if (policy == SearchPolicy.DontSearch)
+            SearchMethod policy = Settings.Current.SelectedSearchMethodForDragDrop;
+            if (policy == SearchMethod.DontSearch)
             {
-                policy = SearchPolicy.Descendants;
+                policy = SearchMethod.Descendants;
             }
             CommonOpenFileDialog folderOpen = new CommonOpenFileDialog()
             {

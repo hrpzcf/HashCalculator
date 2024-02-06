@@ -43,17 +43,19 @@
                                 <TextBlock
                                     VerticalAlignment="Center"
                                     Foreground="Black"
-                                    Text="同时进行的任务数量上限：" />
+                                    Text="同时进行的任务数上限：" />
                                 <ComboBox
                                     DisplayMemberPath="Display"
                                     ItemsSource="{Binding AvailableTaskNumLimits}"
                                     SelectedValue="{Binding SelectedTaskNumberLimit, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                     SelectedValuePath="ItemValue" />
                             </StackPanel>
+                            <TextBlock Style="{StaticResource DescTextBlockStyle}" Text="任务数上限选项中除了 1，其他选项都与下一个设置互斥，无法同时开启" />
+                            <TextBlock Style="{StaticResource DescTextBlockStyle}" Text="盲目选择高任务上限不一定能加快速度" />
                             <CheckBox
                                 Margin="0,8,0,4"
                                 Padding="4,0,0,0"
-                                Content="当任务包含多个算法时，每次读取数据多个算法都并行计算"
+                                Content="任务包含多个算法时多个算法之间并行计算"
                                 IsChecked="{Binding ParallelBetweenAlgos, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         </StackPanel>
                     </GroupBox>
@@ -70,18 +72,18 @@
                                 <ComboBox
                                     DisplayMemberPath="Display"
                                     ItemsSource="{Binding AvailableDroppedSearchPolicies}"
-                                    SelectedValue="{Binding SelectedSearchPolicy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    SelectedValue="{Binding SelectedSearchMethodForDragDrop, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                     SelectedValuePath="ItemValue" />
                             </StackPanel>
                             <StackPanel Margin="0,8,0,4" Orientation="Horizontal">
                                 <TextBlock
                                     VerticalAlignment="Center"
                                     Foreground="Black"
-                                    Text="当有需要时如何查找校验依据文件内列出的文件：" />
+                                    Text="当有需要时如何搜索校验依据文件内列出的文件：" />
                                 <ComboBox
                                     DisplayMemberPath="Display"
                                     ItemsSource="{Binding AvailableQVSearchPolicies}"
-                                    SelectedValue="{Binding SelectedQVSPolicy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    SelectedValue="{Binding SelectedSearchMethodForChecklist, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                     SelectedValuePath="ItemValue"
                                     ToolTip="当表格为空时，如果校验依据选择的是通用格式的哈希值文本文件，则：&#10;点击 [校验] 后程序会自动解析文件并在相同目录下寻找要计算哈希值的文件完成计算并显示校验结果。&#10;通用格式的哈希值文件请参考程序 [导出结果] 功能导出的文件的内容排布格式。" />
                             </StackPanel>

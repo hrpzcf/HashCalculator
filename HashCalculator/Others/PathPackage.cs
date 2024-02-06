@@ -10,20 +10,20 @@ namespace HashCalculator
     {
         private static readonly char[] invalidFnameChars = Path.GetInvalidFileNameChars();
 
-        public PathPackage(IEnumerable<string> paths, SearchPolicy policy)
+        public PathPackage(IEnumerable<string> paths, SearchMethod policy)
         {
             this.paths = paths;
             this.searchPolicy = policy;
         }
 
-        public PathPackage(string path, SearchPolicy policy, HashChecklist checklist)
+        public PathPackage(string path, SearchMethod policy, HashChecklist checklist)
         {
             this.paths = new string[] { path };
             this.searchPolicy = policy;
             this.hashChecklist = checklist;
         }
 
-        public PathPackage(IEnumerable<string> paths, SearchPolicy policy, HashChecklist checklist)
+        public PathPackage(IEnumerable<string> paths, SearchMethod policy, HashChecklist checklist)
         {
             this.paths = paths;
             this.searchPolicy = policy;
@@ -58,13 +58,13 @@ namespace HashCalculator
                         switch (this.searchPolicy)
                         {
                             default:
-                            case SearchPolicy.Children:
+                            case SearchMethod.Children:
                                 fileInfoEnum = dInfo.EnumerateFiles().GetEnumerator();
                                 break;
-                            case SearchPolicy.Descendants:
+                            case SearchMethod.Descendants:
                                 fileInfoEnum = dInfo.EnumerateFiles("*", SearchOption.AllDirectories).GetEnumerator();
                                 break;
-                            case SearchPolicy.DontSearch:
+                            case SearchMethod.DontSearch:
                                 continue;
                         }
                         // 不直接 foreach 遍历 EnumerateFiles 返回的 IEnumerable 的原因：
@@ -127,7 +127,7 @@ namespace HashCalculator
         }
 
         private readonly IEnumerable<string> paths;
-        private readonly SearchPolicy searchPolicy;
+        private readonly SearchMethod searchPolicy;
         private readonly HashChecklist hashChecklist = null;
 
         public CancellationToken StopSearchingToken { get; set; }

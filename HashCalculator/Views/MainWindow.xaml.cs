@@ -158,7 +158,7 @@ namespace HashCalculator
                     if (option.FilePaths != null)
                     {
                         PathPackage package = new PathPackage(
-                            option.FilePaths, Settings.Current.SelectedSearchPolicy);
+                            option.FilePaths, Settings.Current.SelectedSearchMethodForDragDrop);
                         package.PresetAlgoTypes = this.GetAlgoTypesFromOption(option);
                         this.viewModel.BeginDisplayModels(package);
                     }
@@ -178,8 +178,8 @@ namespace HashCalculator
                         }
                         else
                         {
-                            PathPackage package = new PathPackage(
-                                Path.GetDirectoryName(option.ChecklistPath), Settings.Current.SelectedQVSPolicy, newChecklist);
+                            PathPackage package = new PathPackage(Path.GetDirectoryName(option.ChecklistPath),
+                                Settings.Current.SelectedSearchMethodForChecklist, newChecklist);
                             package.PresetAlgoTypes = this.GetAlgoTypesFromOption(option);
                             this.viewModel.BeginDisplayModels(package);
                         }
@@ -238,7 +238,7 @@ namespace HashCalculator
             {
                 return;
             }
-            this.viewModel.BeginDisplayModels(new PathPackage(data, Settings.Current.SelectedSearchPolicy));
+            this.viewModel.BeginDisplayModels(new PathPackage(data, Settings.Current.SelectedSearchMethodForDragDrop));
         }
 
         private void DataGridHashingFilesPrevKeyDown(object sender, KeyEventArgs e)

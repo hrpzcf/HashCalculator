@@ -39,7 +39,7 @@ namespace HashCalculator
         private double markFilesProgressHeight = 200.0;
         private double restoreFilesProgressWidth = 400.0;
         private double restoreFilesProgressHeight = 200.0;
-        private TaskNum selectedTaskNumberLimit = TaskNum.One;
+        private int selectedTaskNumberLimit = 1;
         private bool useDefaultOutputTypeWhenExporting = true;
         private OutputType selectedOutputType = OutputType.BinaryUpper;
         private ExportAlgo howToExportHashValues = ExportAlgo.AllCalculated;
@@ -64,17 +64,17 @@ namespace HashCalculator
         private bool generateTextInFormat = false;
         private string formatForGenerateText = "#$algo$ *$hash$ *$name$";
         private bool exportInMainControlsChildExportsInRow = false;
+        private TemplateForExportModel selectedExportTemplate;
         private ObservableCollection<TemplateForExportModel> templatesForExport = null;
         private RelayCommand installShellExtCmd;
         private RelayCommand unInstallShellExtCmd;
         private RelayCommand openEditContextMenuCmd;
+        private RelayCommand resetExportTemplateCmd;
         private RelayCommand addExprotTemplateCmd;
         private RelayCommand copyExprotTemplateCmd;
         private RelayCommand moveExportTemplateUpCmd;
         private RelayCommand moveExportTemplateDownCmd;
         private RelayCommand removeExportTemplateCmd;
-        private RelayCommand resetExportTemplateCmd;
-        private TemplateForExportModel selectedExportTemplate;
 
         [JsonIgnore, XmlIgnore]
         public int minCharsNumRequiredForMonitoringClipboard = 8;
@@ -425,13 +425,13 @@ namespace HashCalculator
             }
         }
 
-        public SearchPolicy SelectedQVSPolicy { get; set; } =
-            SearchPolicy.Descendants;
+        public SearchMethod SelectedSearchMethodForDragDrop { get; set; } =
+            SearchMethod.Descendants;
 
-        public SearchPolicy SelectedSearchPolicy { get; set; } =
-            SearchPolicy.Descendants;
+        public SearchMethod SelectedSearchMethodForChecklist { get; set; } =
+            SearchMethod.Descendants;
 
-        public TaskNum SelectedTaskNumberLimit
+        public int SelectedTaskNumberLimit
         {
             get
             {
@@ -440,7 +440,7 @@ namespace HashCalculator
             set
             {
                 this.SetPropNotify(ref this.selectedTaskNumberLimit, value);
-                if (value != TaskNum.One)
+                if (value != 1)
                 {
                     this.ParallelBetweenAlgos = false;
                 }
@@ -623,7 +623,7 @@ namespace HashCalculator
                 this.SetPropNotify(ref this.parallelBetweenAlgos, value);
                 if (value)
                 {
-                    this.SelectedTaskNumberLimit = TaskNum.One;
+                    this.SelectedTaskNumberLimit = 1;
                 }
             }
         }
@@ -1163,25 +1163,27 @@ namespace HashCalculator
         [JsonIgnore, XmlIgnore]
         public GenericItemModel[] AvailableTaskNumLimits { get; } =
         {
-            new GenericItemModel("1 个：大多数文件很大", TaskNum.One),
-            new GenericItemModel("2 个：大多数文件较大", TaskNum.Two),
-            new GenericItemModel("4 个：大多数文件较小", TaskNum.Four),
-            new GenericItemModel("8 个：大多数文件很小", TaskNum.Eight),
+            new GenericItemModel("1", 1),
+            new GenericItemModel("2", 2),
+            new GenericItemModel("4", 4),
+            new GenericItemModel("8", 8),
+            new GenericItemModel("16", 16),
+            new GenericItemModel("32", 32),
         };
 
         [JsonIgnore, XmlIgnore]
         public GenericItemModel[] AvailableDroppedSearchPolicies { get; } =
         {
-            new GenericItemModel("搜索该文件夹的一代子文件", SearchPolicy.Children),
-            new GenericItemModel("搜索该文件夹的全部子文件", SearchPolicy.Descendants),
-            new GenericItemModel("不对该文件夹进行搜索操作", SearchPolicy.DontSearch),
+            new GenericItemModel("搜索该文件夹的一代子文件", SearchMethod.Children),
+            new GenericItemModel("搜索该文件夹的全部子文件", SearchMethod.Descendants),
+            new GenericItemModel("不对该文件夹进行搜索操作", SearchMethod.DontSearch),
         };
 
         [JsonIgnore, XmlIgnore]
         public GenericItemModel[] AvailableQVSearchPolicies { get; } =
         {
-            new GenericItemModel("搜索依据所在目录的一代子文件", SearchPolicy.Children),
-            new GenericItemModel("搜索依据所在目录的所有子文件", SearchPolicy.Descendants),
+            new GenericItemModel("搜索依据所在目录的一代子文件", SearchMethod.Children),
+            new GenericItemModel("搜索依据所在目录的所有子文件", SearchMethod.Descendants),
         };
 
         [JsonIgnore, XmlIgnore]

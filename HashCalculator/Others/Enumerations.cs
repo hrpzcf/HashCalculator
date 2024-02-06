@@ -109,24 +109,13 @@
     }
 
     /// <summary>
-    /// 对文件夹的搜索策略
+    /// 对文件夹的搜索方式
     /// </summary>
-    public enum SearchPolicy
+    public enum SearchMethod
     {
         Children,
         Descendants,
         DontSearch,
-    }
-
-    /// <summary>
-    /// 同时进行的任务数量上限
-    /// </summary>
-    public enum TaskNum
-    {
-        One = 1,
-        Two = 2,
-        Four = 4,
-        Eight = 8,
     }
 
     /// <summary>

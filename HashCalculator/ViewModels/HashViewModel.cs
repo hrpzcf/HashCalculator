@@ -732,7 +732,7 @@ namespace HashCalculator
                 synchronization.Invoke(() =>
                 {
                     this.Result = HashResult.Failed;
-                    this.TaskMessage = "未搜索到文件，请检查搜索策略后重新添加...";
+                    this.TaskMessage = "未搜索到文件，请修改搜索策略后重新添加...";
                 });
                 goto FinishingTouchesBeforeExiting;
             }
