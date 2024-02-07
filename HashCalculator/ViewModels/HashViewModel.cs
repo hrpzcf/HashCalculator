@@ -439,7 +439,7 @@ namespace HashCalculator
 
         private void MakeSureAlgoModelArrayNotEmpty()
         {
-            if (!this.AlgoInOutModels?.Any() ?? true)
+            if (this.AlgoInOutModels == null || this.AlgoInOutModels.Length == 0)
             {
                 this.AlgoInOutModels = AlgosPanelModel.GetSelectedAlgos().ToArray();
             }

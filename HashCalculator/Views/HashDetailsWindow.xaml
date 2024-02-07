@@ -113,16 +113,10 @@
             VerticalGridLinesBrush="#FF969696">
             <DataGrid.Columns>
                 <DataGridTemplateColumn Header="算法">
-                    <DataGridTemplateColumn.HeaderStyle>
-                        <Style TargetType="DataGridColumnHeader">
-                            <Setter Property="HorizontalContentAlignment" Value="Center" />
-                        </Style>
-                    </DataGridTemplateColumn.HeaderStyle>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock
                                 Padding="4,0"
-                                HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 Foreground="Black"
                                 Text="{Binding AlgoName}" />

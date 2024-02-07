@@ -614,7 +614,7 @@
                                     Margin="0,0,4,0"
                                     d:DataContext="{d:DesignInstance local:HashViewModel}"
                                     Command="{Binding ShowHashDetailsWindowCmd}"
-                                    Content="{Binding AlgoInOutModels.Length}"
+                                    Content="{Binding AlgoInOutModels, Converter={StaticResource AlgoInOutModelsToNumberCvt}}"
                                     Style="{StaticResource GrayRoundTipButton1}"
                                     ToolTip="详情...">
                                     <Button.Visibility>

@@ -29,7 +29,8 @@ namespace HashCalculator
         {
             return model != null &&
                 model.AlgoType != AlgoType.Unknown &&
-                model.HashResult?.Length != 0;
+                model.HashResult != null &&
+                model.HashResult.Length != 0;
         }
 
         private static bool SetStreamLength(FileStream fileStream, long position)

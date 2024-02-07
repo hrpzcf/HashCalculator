@@ -48,4 +48,5 @@
     <local:DisplayHcmDataHashNameCvt x:Key="DisplayHcmDataHashNameCvt" />
     <local:DisplayHcmDataHashValueCvt x:Key="DisplayHcmDataHashValueCvt" />
     <local:DisplayHcmDataBackgroundCvt x:Key="DisplayHcmDataBackgroundCvt" />
+    <local:AlgoInOutModelsToNumberCvt x:Key="AlgoInOutModelsToNumberCvt" />
 </ResourceDictionary>
