@@ -6,6 +6,7 @@
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="关于"
+    d:DataContext="{d:DesignInstance Type=local:AboutWindowModel}"
     d:Height="300"
     d:Width="500"
     ResizeMode="NoResize"
@@ -14,15 +15,19 @@
     UseLayoutRounding="True"
     WindowStartupLocation="CenterOwner"
     mc:Ignorable="d">
-    <Grid Margin="48,16">
+    <Grid Margin="24">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
         <StackPanel
             Grid.Row="0"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Bottom"
+            Grid.Column="0"
             Orientation="Horizontal">
             <Image
                 Width="64"
@@ -32,109 +37,159 @@
                 <TextBlock
                     FontSize="16"
                     Foreground="Gray"
-                    Text="{Binding Source={x:Static local:Info.Title}}" />
+                    Text="{Binding Title}" />
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Foreground="Gray">
                         <TextBlock.Text>
                             <MultiBinding StringFormat="{}{0} by {1} @ ">
-                                <Binding Source="{x:Static local:Info.Ver}" />
-                                <Binding Source="{x:Static local:Info.Author}" />
+                                <Binding Path="Ver" />
+                                <Binding Path="Author" />
                             </MultiBinding>
                         </TextBlock.Text>
                     </TextBlock>
-                    <TextBlock
-                        Cursor="Hand"
-                        Foreground="#D00000FF"
-                        MouseLeftButtonDown="OnAboutWndTextBlockMouseLeftButtonDown"
-                        Text="{Binding Source={x:Static local:Info.Published}}" />
+                    <TextBlock>
+                        <Hyperlink
+                            Command="{Binding OpenWebSiteCmd}"
+                            CommandParameter="{Binding Published}"
+                            TextDecorations="None">
+                            <TextBlock Text="{Binding Published}" />
+                        </Hyperlink>
+                    </TextBlock>
                 </StackPanel>
             </StackPanel>
         </StackPanel>
-        <Grid Grid.Row="1" HorizontalAlignment="Center">
+        <Grid
+            Grid.Row="0"
+            Grid.Column="1"
+            Margin="72,0,0,0"
+            HorizontalAlignment="Left">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <TextBlock
                 Grid.Row="0"
-                Grid.ColumnSpan="2"
-                Margin="0,10,0,0"
-                HorizontalAlignment="Center"
-                Text="源码仓库：" />
+                Grid.Column="0"
+                Text="项目地址：" />
+            <TextBlock Grid.Row="0" Grid.Column="1">
+                <Hyperlink
+                    Command="{Binding OpenWebSiteCmd}"
+                    CommandParameter="{Binding SrcGitHub}"
+                    TextDecorations="None">
+                    GitHub
+                </Hyperlink>
+            </TextBlock>
+            <TextBlock
+                Grid.Row="0"
+                Grid.Column="2"
+                Margin="16,0,0,0">
+                <Hyperlink
+                    Command="{Binding OpenWebSiteCmd}"
+                    CommandParameter="{Binding SrcGitee}"
+                    TextDecorations="None">
+                    Gitee
+                </Hyperlink>
+            </TextBlock>
             <TextBlock
                 Grid.Row="1"
                 Grid.Column="0"
-                Margin="0,4,0,0"
-                HorizontalAlignment="Right"
-                Cursor="Hand"
-                Foreground="Blue"
-                MouseLeftButtonDown="OnAboutWndTextBlockMouseLeftButtonDown"
-                Text="GitHub" />
-            <TextBlock
-                Grid.Row="1"
-                Grid.Column="1"
-                Margin="16,4,0,0"
-                HorizontalAlignment="Left"
-                Cursor="Hand"
-                Foreground="Blue"
-                MouseLeftButtonDown="OnAboutWndTextBlockMouseLeftButtonDown"
-                Text="Gitee" />
-            <TextBlock
-                Grid.Row="2"
-                Grid.ColumnSpan="2"
                 Margin="0,10,0,0"
-                HorizontalAlignment="Center"
                 Text="问题反馈：" />
             <TextBlock
-                Grid.Row="3"
-                Grid.Column="0"
-                Margin="0,4,0,0"
-                HorizontalAlignment="Right"
-                Cursor="Hand"
-                Foreground="Blue"
-                MouseLeftButtonDown="OnAboutWndTextBlockMouseLeftButtonDown"
-                Text="GitHub Issues" />
-            <TextBlock
-                Grid.Row="3"
+                Grid.Row="1"
                 Grid.Column="1"
-                Margin="16,4,0,0"
-                HorizontalAlignment="Left"
-                Cursor="Hand"
-                Foreground="Blue"
-                MouseLeftButtonDown="OnAboutWndTextBlockMouseLeftButtonDown"
-                Text="Gitee Issues" />
+                Margin="0,10,0,0">
+                <Hyperlink
+                    Command="{Binding OpenWebSiteCmd}"
+                    CommandParameter="{Binding IssueGitHub}"
+                    TextDecorations="None">
+                    GitHub Issues
+                </Hyperlink>
+            </TextBlock>
             <TextBlock
-                Grid.Row="4"
-                Grid.ColumnSpan="2"
+                Grid.Row="1"
+                Grid.Column="2"
+                Margin="16,10,0,0">
+                <Hyperlink
+                    Command="{Binding OpenWebSiteCmd}"
+                    CommandParameter="{Binding IssueGitee}"
+                    TextDecorations="None">
+                    Gitee Issues
+                </Hyperlink>
+            </TextBlock>
+            <TextBlock
+                Grid.Row="2"
+                Grid.Column="0"
                 Margin="0,10,0,0"
-                HorizontalAlignment="Center"
                 Text="使用帮助：" />
             <TextBlock
-                Grid.Row="5"
-                Grid.Column="0"
-                Margin="0,4,0,0"
-                HorizontalAlignment="Right"
-                Cursor="Hand"
-                Foreground="Blue"
-                MouseLeftButtonDown="OnAboutWndTextBlockMouseLeftButtonDown"
-                Text="GitHub Wiki" />
-            <TextBlock
-                Grid.Row="5"
+                Grid.Row="2"
                 Grid.Column="1"
-                Margin="16,4,0,0"
-                HorizontalAlignment="Left"
-                Cursor="Hand"
-                Foreground="Blue"
-                MouseLeftButtonDown="OnAboutWndTextBlockMouseLeftButtonDown"
-                Text="Gitee Wiki" />
+                Margin="0,10,0,0">
+                <Hyperlink
+                    Command="{Binding OpenWebSiteCmd}"
+                    CommandParameter="{Binding WikiGitHub}"
+                    TextDecorations="None">
+                    GitHub Wiki
+                </Hyperlink>
+            </TextBlock>
+            <TextBlock
+                Grid.Row="2"
+                Grid.Column="2"
+                Margin="16,10,0,0">
+                <Hyperlink
+                    Command="{Binding OpenWebSiteCmd}"
+                    CommandParameter="{Binding WikiGitee}"
+                    TextDecorations="None">
+                    Gitee Wiki
+                </Hyperlink>
+            </TextBlock>
         </Grid>
+        <TextBlock
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            Margin="0,16,0,0"
+            Text="本软件使用的开源项目：" />
+        <ListBox
+            Grid.Row="2"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            MaxHeight="236"
+            Margin="0,2,0,0"
+            d:ItemsSource="{d:SampleData ItemCount=10}"
+            Grid.IsSharedSizeScope="True"
+            ItemsSource="{Binding OpenSourceProjects}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="projGroupCol" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Margin="8,0,0,0">
+                            <Hyperlink
+                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window, AncestorLevel=1}, Path=DataContext.OpenWebSiteCmd}"
+                                CommandParameter="{Binding Param}"
+                                TextDecorations="None">
+                                <TextBlock Text="{Binding Display}" />
+                            </Hyperlink>
+                        </TextBlock>
+                        <TextBlock
+                            Grid.Column="1"
+                            Margin="8,0,8,0"
+                            Foreground="Gray"
+                            Text="{Binding ItemValue}" />
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
     </Grid>
 </Window>
