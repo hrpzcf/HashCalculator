@@ -1239,8 +1239,7 @@ namespace HashCalculator
             {
                 return;
             }
-            Settings.Current.LastUsedPath =
-                    Path.GetDirectoryName(fileOpen.FileNames.ElementAt(0));
+            Settings.Current.LastUsedPath = Path.GetDirectoryName(fileOpen.FileNames.ElementAt(0));
             this.BeginDisplayModels(
                 new PathPackage(fileOpen.FileNames, Settings.Current.SelectedSearchMethodForDragDrop));
         }
@@ -1259,10 +1258,10 @@ namespace HashCalculator
 
         private void SelectFolderToHashAction(object param)
         {
-            SearchMethod policy = Settings.Current.SelectedSearchMethodForDragDrop;
-            if (policy == SearchMethod.DontSearch)
+            SearchMethod method = Settings.Current.SelectedSearchMethodForDragDrop;
+            if (method == SearchMethod.DontSearch)
             {
-                policy = SearchMethod.Descendants;
+                method = SearchMethod.Descendants;
             }
             CommonOpenFileDialog folderOpen = new CommonOpenFileDialog()
             {
@@ -1276,7 +1275,7 @@ namespace HashCalculator
                 return;
             }
             Settings.Current.LastUsedPath = folderOpen.FileNames.ElementAt(0);
-            this.BeginDisplayModels(new PathPackage(folderOpen.FileNames, policy));
+            this.BeginDisplayModels(new PathPackage(folderOpen.FileNames, method));
         }
 
         public ICommand SelectFolderToHashCmd

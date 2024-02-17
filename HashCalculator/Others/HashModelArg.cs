@@ -7,18 +7,21 @@ namespace HashCalculator
     /// </summary>
     internal class HashModelArg
     {
+        public string RootDir { get; }
+
         public string FilePath { get; }
 
-        public bool InvalidFileName { get; }
+        public bool IsInvalidName { get; }
 
         public bool Deprecated { get; }
 
         public IEnumerable<AlgoType> PresetAlgos { get; set; }
 
-        public HashChecklist HashChecklist { get; set; }
+        public HashChecklist HashChecklist { get; }
 
-        public HashModelArg(string path, IEnumerable<AlgoType> algo)
+        public HashModelArg(string root, string path, IEnumerable<AlgoType> algo)
         {
+            this.RootDir = root;
             this.FilePath = path;
             this.PresetAlgos = algo;
         }
@@ -30,15 +33,23 @@ namespace HashCalculator
             this.PresetAlgos = algo;
         }
 
-        public HashModelArg(bool deprecated, bool invalidFname, IEnumerable<AlgoType> algo)
+        public HashModelArg(bool deprecated, bool isInvalidName, IEnumerable<AlgoType> algo)
         {
             this.Deprecated = deprecated;
-            this.InvalidFileName = invalidFname;
+            this.IsInvalidName = isInvalidName;
             this.PresetAlgos = algo;
         }
 
-        public HashModelArg(HashChecklist checklist, string path, IEnumerable<AlgoType> algo)
+        public HashModelArg(string path, IEnumerable<AlgoType> algo, HashChecklist checklist)
         {
+            this.FilePath = path;
+            this.HashChecklist = checklist;
+            this.PresetAlgos = algo;
+        }
+
+        public HashModelArg(string root, string path, IEnumerable<AlgoType> algo, HashChecklist checklist)
+        {
+            this.RootDir = root;
             this.FilePath = path;
             this.HashChecklist = checklist;
             this.PresetAlgos = algo;

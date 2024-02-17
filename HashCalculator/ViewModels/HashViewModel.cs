@@ -64,8 +64,8 @@ namespace HashCalculator
         {
             this.HashModelArg = arg;
             this.SerialNumber = serial;
-            this.InvalidFileName = arg.InvalidFileName;
-            if (arg.InvalidFileName)
+            this.InvalidFileName = arg.IsInvalidName;
+            if (arg.IsInvalidName)
             {
                 this.FileInfo = new FileInfo("无效的文件名");
             }

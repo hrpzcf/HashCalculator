@@ -233,12 +233,12 @@ namespace HashCalculator
 
         private void DataGridHashingFilesDrop(object sender, DragEventArgs e)
         {
-            if (!e.Data.GetDataPresent(DataFormats.FileDrop) ||
-                !(e.Data.GetData(DataFormats.FileDrop) is string[] data) || !data.Any())
+            if (e.Data.GetDataPresent(DataFormats.FileDrop) &&
+                e.Data.GetData(DataFormats.FileDrop) is string[] data && data.Length != 0)
             {
-                return;
+                this.viewModel.BeginDisplayModels(
+                    new PathPackage(data, Settings.Current.SelectedSearchMethodForDragDrop));
             }
-            this.viewModel.BeginDisplayModels(new PathPackage(data, Settings.Current.SelectedSearchMethodForDragDrop));
         }
 
         private void DataGridHashingFilesPrevKeyDown(object sender, KeyEventArgs e)

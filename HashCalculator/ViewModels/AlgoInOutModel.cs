@@ -171,6 +171,16 @@ namespace HashCalculator
                     {
                         formatBuilder.Append('\n');
                     }
+                    if (!string.IsNullOrWhiteSpace(parent.HashModelArg.RootDir) &&
+                        CommonUtils.GetRelativePath(
+                            parent.HashModelArg.RootDir, parent.FileInfo.FullName) is string relativePath)
+                    {
+                        formatBuilder.Replace("$relpath$", relativePath);
+                    }
+                    else
+                    {
+                        formatBuilder.Replace("$relpath$", parent.FileInfo.Name);
+                    }
                     formatBuilder.Replace("$algo$", algoName);
                     formatBuilder.Replace("$hash$", BytesToStrByOutputTypeCvt.Convert(this.HashResult, output));
                     formatBuilder.Replace("$name$", parent.FileInfo.Name);

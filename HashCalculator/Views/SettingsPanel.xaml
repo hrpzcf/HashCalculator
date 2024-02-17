@@ -379,6 +379,7 @@
                                 <RowDefinition />
                                 <RowDefinition />
                                 <RowDefinition />
+                                <RowDefinition />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -421,9 +422,20 @@
                                 Grid.Row="3"
                                 Grid.Column="0"
                                 Foreground="Black"
-                                Text="$name$" />
+                                Text="$relpath$" />
                             <TextBlock
                                 Grid.Row="3"
+                                Grid.Column="1"
+                                Margin="16,0,0,0"
+                                Style="{StaticResource DescTextBlockStyle}"
+                                Text="此占位符将被替换为实际文件相对路径，对以文件夹方式添加的文件有效。" />
+                            <TextBlock
+                                Grid.Row="4"
+                                Grid.Column="0"
+                                Foreground="Black"
+                                Text="$name$" />
+                            <TextBlock
+                                Grid.Row="4"
                                 Grid.Column="1"
                                 Margin="16,0,0,0"
                                 Style="{StaticResource DescTextBlockStyle}"
@@ -627,6 +639,7 @@
                                         <RowDefinition />
                                         <RowDefinition />
                                         <RowDefinition />
+                                        <RowDefinition />
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
@@ -669,9 +682,20 @@
                                         Grid.Row="3"
                                         Grid.Column="0"
                                         Foreground="Black"
-                                        Text="$name$" />
+                                        Text="$relpath$" />
                                     <TextBlock
                                         Grid.Row="3"
+                                        Grid.Column="1"
+                                        Margin="16,0,0,0"
+                                        Style="{StaticResource DescTextBlockStyle}"
+                                        Text="此占位符将被替换为实际文件相对路径，对以文件夹方式添加的文件有效。" />
+                                    <TextBlock
+                                        Grid.Row="4"
+                                        Grid.Column="0"
+                                        Foreground="Black"
+                                        Text="$name$" />
+                                    <TextBlock
+                                        Grid.Row="4"
                                         Grid.Column="1"
                                         Margin="16,0,0,0"
                                         Style="{StaticResource DescTextBlockStyle}"

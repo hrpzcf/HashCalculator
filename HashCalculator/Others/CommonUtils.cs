@@ -16,6 +16,10 @@ namespace HashCalculator
         private const double kb = 1024D;
         private const double mb = 1048576D;
         private const double gb = 1073741824D;
+        private static readonly char[] dirSeparators = new char[] {
+            Path.DirectorySeparatorChar,
+            Path.AltDirectorySeparatorChar
+        };
 
         public static void Swap<T>(ref T leftValue, ref T rightValue)
         {
@@ -495,6 +499,32 @@ namespace HashCalculator
             {
                 return false;
             }
+        }
+
+        public static string GetRelativePath(string relativeTo, string path)
+        {
+            if (Path.IsPathRooted(relativeTo) &&
+                Path.IsPathRooted(path) &&
+                Path.GetPathRoot(relativeTo).Equals(Path.GetPathRoot(path), StringComparison.OrdinalIgnoreCase))
+            {
+                string[] partsPath = path.Split(dirSeparators, StringSplitOptions.RemoveEmptyEntries);
+                string[] partsRelativeTo = relativeTo.Split(dirSeparators, StringSplitOptions.RemoveEmptyEntries);
+                int commonPrefixLength = 0;
+                while (commonPrefixLength < partsPath.Length &&
+                    commonPrefixLength < partsRelativeTo.Length &&
+                    partsPath[commonPrefixLength].Equals(partsRelativeTo[commonPrefixLength], StringComparison.OrdinalIgnoreCase))
+                {
+                    commonPrefixLength++;
+                }
+                List<string> partsRelativePath = new List<string>();
+                for (int i = commonPrefixLength; i < partsRelativeTo.Length; ++i)
+                {
+                    partsRelativePath.Add("..");
+                }
+                partsRelativePath.AddRange(partsPath.Skip(commonPrefixLength).Take(partsPath.Length - commonPrefixLength));
+                return Path.DirectorySeparatorChar.Join(partsRelativePath);
+            }
+            return default(string);
         }
     }
 }
