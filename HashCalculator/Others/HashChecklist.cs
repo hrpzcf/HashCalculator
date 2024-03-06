@@ -183,18 +183,23 @@ namespace HashCalculator
             {
                 using (StreamReader reader = new StreamReader(filePath, encoding, true))
                 {
-                    bool anyItemAdded = false;
+                    bool anyPaser = false, anyItemAdded = false;
                     string fileExt = Path.GetExtension(filePath);
                     string textLines = reader.ReadToEnd();
                     foreach (TemplateForChecklistModel parser in this.GetParsers(fileExt))
                     {
+                        anyPaser = true;
                         if (parser.ExtendChecklistWithLines(textLines, this))
                         {
                             anyItemAdded = true;
                             break;
                         }
                     }
-                    if (!anyItemAdded)
+                    if (!anyPaser)
+                    {
+                        this.ReasonForFailure = "没有可用的校验依据解析方案";
+                    }
+                    else if (!anyItemAdded)
                     {
                         this.ReasonForFailure = "没有搜集到依据，请检查校验依据文件内容";
                     }
@@ -215,20 +220,25 @@ namespace HashCalculator
 
         public string UpdateWithText(string paragraph)
         {
-            bool anyItemAdded = false;
+            bool anyPaser = false, anyItemAdded = false;
             this.ReasonForFailure = null;
             this.algHashMapOfFiles.Clear();
             foreach (TemplateForChecklistModel parser in this.GetParsers(null))
             {
+                anyPaser = true;
                 if (parser.ExtendChecklistWithLines(paragraph, this))
                 {
                     anyItemAdded = true;
                     break;
                 }
             }
-            if (!anyItemAdded)
+            if (!anyPaser)
             {
-                this.ReasonForFailure = "没有搜集到依据，请检查输入的文本段落内容";
+                this.ReasonForFailure = "没有可用的校验依据解析方案";
+            }
+            else if (!anyItemAdded)
+            {
+                this.ReasonForFailure = "没有搜集到依据，请检查输入的文本内容";
             }
             return this.ReasonForFailure;
         }
