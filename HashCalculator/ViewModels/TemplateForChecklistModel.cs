@@ -182,7 +182,7 @@ namespace HashCalculator
                         result = checklist.AddCheckItem(algo, hash, name);
                         Console.WriteLine($"algo: {algo}; hash: {hash}; name: {name}");
 #else
-                        result = checklist.AddItem(match.Groups[algoGroupName].Value, match.Groups[hashGroupName].Value,
+                        result = checklist.AddCheckItem(match.Groups[algoGroupName].Value, match.Groups[hashGroupName].Value,
                             match.Groups[nameGroupName].Value);
 #endif
                     }
