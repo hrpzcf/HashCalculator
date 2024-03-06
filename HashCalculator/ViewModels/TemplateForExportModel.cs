@@ -123,7 +123,7 @@ namespace HashCalculator
             {
                 new GenericItemModel("UTF-8", EncodingEnum.UTF_8),
                 new GenericItemModel("带 BOM 的 UTF-8", EncodingEnum.UTF_8_BOM),
-                new GenericItemModel("系统默认", EncodingEnum.ANSI),
+                new GenericItemModel("ANSI", EncodingEnum.ANSI),
                 new GenericItemModel("UNICODE", EncodingEnum.UNICODE),
             };
     }
