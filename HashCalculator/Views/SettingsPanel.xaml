@@ -839,7 +839,7 @@
                             <TextBlock
                                 Margin="24,0,0,0"
                                 Style="{StaticResource DescTextBlockStyle}"
-                                Text="程序会按顺序使用【用于类型】为空的方案，直到成功解析；" />
+                                Text="程序会按顺序使用【用于类型】为空的方案，直到成功或用完方案；" />
                             <TextBlock
                                 Margin="0,4,0,0"
                                 Foreground="Black"
@@ -847,15 +847,15 @@
                             <TextBlock
                                 Margin="24,0,0,0"
                                 Style="{StaticResource DescTextBlockStyle}"
-                                Text="程序会按顺序使用【用于类型】与文件扩展名匹配的方案，直到成功解析；" />
+                                Text="程序会按顺序使用【用于类型】与文件扩展名匹配的方案，直到成功或用完方案；" />
                             <TextBlock
                                 Margin="24,0,0,0"
                                 Style="{StaticResource DescTextBlockStyle}"
-                                Text="如果仍然没有成功，则按顺序使用【用于类型】为空的方案，直到解析成功；" />
+                                Text="如果仍然没有成功，则按顺序使用【用于类型】为空的方案，直到成功或用完方案；" />
                             <TextBlock
                                 Margin="24,0,0,0"
                                 Style="{StaticResource DescTextBlockStyle}"
-                                Text="如果文件没有扩展名，则按顺序使用【用于类型】为空的方案，直到成功解析；" />
+                                Text="如果文件没有扩展名，则按顺序使用【用于类型】为空的方案，直到成功或用完方案；" />
                             <TextBlock
                                 Margin="0,8,0,0"
                                 Foreground="Black"
