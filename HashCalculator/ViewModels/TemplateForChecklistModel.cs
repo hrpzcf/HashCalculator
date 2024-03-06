@@ -21,7 +21,7 @@ namespace HashCalculator
             {
                 Name = "CSV文件",
                 Extension = ".csv",
-                Template = "^#$algo$,$hash$,$name$\\r?$"
+                Template = "^$algo$,$hash$,$name$\\r?$"
             };
 
         public static readonly TemplateForChecklistModel HcbFile =
