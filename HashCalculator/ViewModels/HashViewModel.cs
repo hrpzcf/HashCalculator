@@ -322,7 +322,7 @@ namespace HashCalculator
             string format = Settings.Current.GenerateTextInFormat ?
                 Settings.Current.FormatForGenerateText : null;
             if (this.GenerateTextInFormat(
-                format, this.SelectedOutputType, all: false, endLine: false, forExport: false,
+                format, this.SelectedOutputType, all: false, endLine: false, seeExport: false,
                 Settings.Current.CaseOfCopiedAlgNameFollowsOutputType) is string text)
             {
                 CommonUtils.ClipboardSetText(text);
@@ -346,7 +346,7 @@ namespace HashCalculator
             string format = Settings.Current.GenerateTextInFormat ?
                 Settings.Current.FormatForGenerateText : null;
             if (this.GenerateTextInFormat(
-                format, this.SelectedOutputType, all: true, endLine: false, forExport: false,
+                format, this.SelectedOutputType, all: true, endLine: false, seeExport: false,
                 Settings.Current.CaseOfCopiedAlgNameFollowsOutputType) is string text)
             {
                 CommonUtils.ClipboardSetText(text);
@@ -891,7 +891,7 @@ namespace HashCalculator
         }
 
         public string GenerateTextInFormat(string format, OutputType output, bool all, bool endLine,
-            bool forExport, bool casedName)
+            bool seeExport, bool casedName)
         {
             if (this.Result == HashResult.Succeeded)
             {
@@ -900,7 +900,7 @@ namespace HashCalculator
                     if (this.CurrentInOutModel != null)
                     {
                         return this.CurrentInOutModel.GenerateTextInFormat(this, format, output, endLine,
-                            forExport, casedName);
+                            seeExport, casedName);
                     }
                 }
                 else
@@ -911,7 +911,7 @@ namespace HashCalculator
                         foreach (AlgoInOutModel inOutModel in this.AlgoInOutModels)
                         {
                             if (inOutModel.GenerateTextInFormat(
-                                this, format, output, endLine: true, forExport, casedName) is string text)
+                                this, format, output, endLine: true, seeExport, casedName) is string text)
                             {
                                 stringBuilderForGenerateFormattedHash.Append(text);
                             }

@@ -104,7 +104,7 @@ namespace HashCalculator
                 string format = Settings.Current.GenerateTextInFormat ?
                     Settings.Current.FormatForGenerateText : null;
                 if (this.GenerateTextInFormat(
-                    parent, format, parent.SelectedOutputType, endLine: false, forExport: false,
+                    parent, format, parent.SelectedOutputType, endLine: false, seeExport: false,
                     Settings.Current.CaseOfCopiedAlgNameFollowsOutputType) is string text)
                 {
                     CommonUtils.ClipboardSetText(text);
@@ -130,9 +130,10 @@ namespace HashCalculator
         /// 如果 parent.SelectedOutputType 也是 OutputType.Unknown，则使用 Settings.Current.SelectedOutputType。
         /// </summary>
         public string GenerateTextInFormat(HashViewModel parent, string format, OutputType output,
-            bool endLine, bool forExport, bool casedAlgName)
+            bool endLine, bool seeExport, bool casedAlgName)
         {
-            if (parent != null && this.HashResult != null && (!forExport || this.Export))
+            if (parent != null && !parent.HashModelArg.IsInvalidName && this.HashResult != null &&
+                (!seeExport || this.Export))
             {
                 if (output == OutputType.Unknown)
                 {
@@ -165,15 +166,16 @@ namespace HashCalculator
                                 break;
                         }
                     }
-                    // "$algo$", "$hash$", "$path$", "$name$"
+                    // "$algo$", "$hash$", "$path$", "$name$", "$relpath$"
                     StringBuilder formatBuilder = new StringBuilder(format);
                     if (endLine)
                     {
                         formatBuilder.Append('\n');
                     }
-                    if (!string.IsNullOrWhiteSpace(parent.HashModelArg.RootDir) &&
-                        CommonUtils.GetRelativePath(
-                            parent.HashModelArg.RootDir, parent.FileInfo.FullName) is string relativePath)
+                    if (!parent.HashModelArg.Deprecated &&
+                        !string.IsNullOrWhiteSpace(parent.HashModelArg.RootDir) &&
+                        CommonUtils.GetRelativePath(parent.HashModelArg.RootDir, parent.FileInfo.FullName)
+                            is string relativePath)
                     {
                         formatBuilder.Replace("$relpath$", relativePath);
                     }
@@ -184,7 +186,8 @@ namespace HashCalculator
                     formatBuilder.Replace("$algo$", algoName);
                     formatBuilder.Replace("$hash$", BytesToStrByOutputTypeCvt.Convert(this.HashResult, output));
                     formatBuilder.Replace("$name$", parent.FileInfo.Name);
-                    formatBuilder.Replace("$path$", parent.FileInfo.FullName);
+                    formatBuilder.Replace("$path$", parent.HashModelArg.Deprecated ?
+                        parent.FileInfo.Name : parent.FileInfo.FullName);
                     return formatBuilder.ToString();
                 }
             }

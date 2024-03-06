@@ -455,7 +455,7 @@ namespace HashCalculator
                     Settings.Current.FormatForGenerateText : null;
                 foreach (HashViewModel model in selectedModels)
                 {
-                    if (model.GenerateTextInFormat(format, outputType, copyAll, endLine: true, forExport: false,
+                    if (model.GenerateTextInFormat(format, outputType, copyAll, endLine: true, seeExport: false,
                         Settings.Current.CaseOfCopiedAlgNameFollowsOutputType) is string text)
                     {
                         stringBuilder.Append(text);
@@ -555,7 +555,7 @@ namespace HashCalculator
                     {
                         stringBuilder.Append(model.FileInfo.Name);
                     }
-                    else if (File.Exists(model.FileInfo.FullName))
+                    else if (!model.HashModelArg.Deprecated)
                     {
                         fullPathCopied = true;
                         stringBuilder.Append(model.FileInfo.FullName);
@@ -567,7 +567,7 @@ namespace HashCalculator
                 }
                 if (!copyName && !fullPathCopied)
                 {
-                    MessageBox.Show(this.OwnerWnd, "文件不存在，文件完整路径没有被复制", "提示",
+                    MessageBox.Show(this.OwnerWnd, "文件不存在所以完整路径没有被复制", "提示",
                         MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
@@ -990,7 +990,7 @@ namespace HashCalculator
                 {
                     foreach (HashViewModel hm in HashViewModels.Where(i => i.Result == HashResult.Succeeded))
                     {
-                        if (hm.GenerateTextInFormat(formatForExport, output, all, endLine: true, forExport: true,
+                        if (hm.GenerateTextInFormat(formatForExport, output, all, endLine: true, seeExport: true,
                             casedName: false) is string text)
                         {
                             streamWriter.Write(text);
