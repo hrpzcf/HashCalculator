@@ -531,6 +531,7 @@
                                 KeyDown="SettingsPanelKeyDown"
                                 RowStyle="{StaticResource RowStyleNormal}"
                                 SelectedItem="{Binding Source={x:Static local:Settings.Current}, Path=SelectedTemplateForExport}"
+                                SelectionMode="Single"
                                 VerticalGridLinesBrush="#FF969696">
                                 <DataGrid.Columns>
                                     <DataGridTemplateColumn Header="方案名称">
@@ -560,6 +561,7 @@
                                                 <TextBox
                                                     Margin="2"
                                                     Padding="2"
+                                                    FontFamily="Consolas"
                                                     Text="{Binding Template, UpdateSourceTrigger=LostFocus}" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
@@ -586,13 +588,13 @@
                                 <Button
                                     Padding="8,2"
                                     Background="{x:Null}"
-                                    Command="{Binding AddExprotTemplateCmd}"
+                                    Command="{Binding AddExportTemplateCmd}"
                                     Content="添加" />
                                 <Button
                                     Margin="0,8,0,0"
                                     Padding="8,2"
                                     Background="{x:Null}"
-                                    Command="{Binding CopyExprotTemplateCmd}"
+                                    Command="{Binding CopyExportTemplateCmd}"
                                     Content="复制" />
                                 <Button
                                     Margin="0,8,0,0"
@@ -713,6 +715,214 @@
                         </Grid>
                     </GroupBox>
                 </Grid>
+            </ScrollViewer>
+        </TabItem>
+        <TabItem
+            Padding="8"
+            Header="校验依据解析方案"
+            Style="{StaticResource TabItemStyle1}">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <GroupBox
+                    Margin="4"
+                    Padding="4,8,4,4"
+                    Foreground="#FF006FD6"
+                    Header="从校验依据(文件/字符串)解析哈希信息时使用的解析方案">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <DataGrid
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            AutoGenerateColumns="False"
+                            CellStyle="{StaticResource CellStyleNormal}"
+                            HeadersVisibility="Column"
+                            HorizontalGridLinesBrush="#FF969696"
+                            IsReadOnly="True"
+                            ItemsSource="{Binding Source={x:Static local:Settings.Current}, Path=TemplatesForChecklist}"
+                            KeyDown="SettingsPanelKeyDown"
+                            RowStyle="{StaticResource RowStyleNormal}"
+                            SelectedItem="{Binding Source={x:Static local:Settings.Current}, Path=SelectedTemplateForChecklist}"
+                            SelectionMode="Single"
+                            VerticalGridLinesBrush="#FF969696">
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn Header="方案名称">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox
+                                                Margin="2"
+                                                Padding="2"
+                                                Text="{Binding Name, UpdateSourceTrigger=LostFocus}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="用于类型">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox
+                                                Margin="2"
+                                                Padding="2"
+                                                LostFocus="OnTextBoxExtensionLostFocus"
+                                                Text="{Binding Extension, UpdateSourceTrigger=LostFocus}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="解析方式表达式">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox
+                                                Margin="2"
+                                                Padding="2"
+                                                FontFamily="Consolas"
+                                                Text="{Binding Template, UpdateSourceTrigger=LostFocus}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Width="*" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <StackPanel
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Margin="4,0,0,0">
+                            <Button
+                                Padding="8,2"
+                                Background="{x:Null}"
+                                Command="{Binding AddChecklistTemplateCmd}"
+                                Content="添加" />
+                            <Button
+                                Margin="0,8,0,0"
+                                Padding="8,2"
+                                Background="{x:Null}"
+                                Command="{Binding CopyChecklistTemplateCmd}"
+                                Content="复制" />
+                            <Button
+                                Margin="0,8,0,0"
+                                Padding="8,2"
+                                Background="{x:Null}"
+                                Command="{Binding MoveChecklistTemplateUpCmd}"
+                                Content="上移" />
+                            <Button
+                                Margin="0,8,0,0"
+                                Padding="8,2"
+                                Background="{x:Null}"
+                                Command="{Binding MoveChecklistTemplateDownCmd}"
+                                Content="下移" />
+                            <Button
+                                Margin="0,8,0,0"
+                                Padding="8,2"
+                                Background="{x:Null}"
+                                BorderBrush="Red"
+                                Command="{Binding RemoveChecklistTemplateCmd}"
+                                Content="移除" />
+                            <Button
+                                Margin="0,8,0,0"
+                                Padding="8,2"
+                                Background="{x:Null}"
+                                BorderBrush="Red"
+                                Command="{Binding ResetChecklistTemplateCmd}"
+                                Content="重置" />
+                        </StackPanel>
+                        <StackPanel
+                            Grid.Row="1"
+                            Grid.ColumnSpan="2"
+                            Margin="0,4,0,0">
+                            <TextBlock
+                                Margin="0,4,0,0"
+                                Foreground="Black"
+                                Text="对于输入【校验依据】的字符串：" />
+                            <TextBlock
+                                Margin="24,0,0,0"
+                                Style="{StaticResource DescTextBlockStyle}"
+                                Text="程序会按顺序使用【用于类型】为空的方案，直到成功解析；" />
+                            <TextBlock
+                                Margin="0,4,0,0"
+                                Foreground="Black"
+                                Text="右键作为校验依据打开的文件或输入【校验依据】的文件：" />
+                            <TextBlock
+                                Margin="24,0,0,0"
+                                Style="{StaticResource DescTextBlockStyle}"
+                                Text="程序会按顺序使用【用于类型】与文件扩展名匹配的方案，直到成功解析；" />
+                            <TextBlock
+                                Margin="24,0,0,0"
+                                Style="{StaticResource DescTextBlockStyle}"
+                                Text="如果仍然没有成功，则按顺序使用【用于类型】为空的方案，直到解析成功；" />
+                            <TextBlock
+                                Margin="24,0,0,0"
+                                Style="{StaticResource DescTextBlockStyle}"
+                                Text="如果文件没有扩展名，则按顺序使用【用于类型】为空的方案，直到成功解析；" />
+                            <TextBlock
+                                Margin="0,8,0,0"
+                                Foreground="Black"
+                                Text="表格中的【解析方式表达式】实际上是正则表达式的 C# 版本。" />
+                            <TextBlock
+                                Margin="0,0,0,0"
+                                Foreground="Black"
+                                Text="被两个“$”号包围的字符串是本软件预定义的正则表达式命名组：" />
+                            <Grid Margin="0,4,0,0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    Foreground="Black"
+                                    Text="$algo$" />
+                                <TextBlock
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    Margin="16,0,0,0"
+                                    Style="{StaticResource DescTextBlockStyle}"
+                                    Text="等同 (?&lt;algo&gt;[A-Za-z0-9-]+)，此位置的匹配结果作为算法名。" />
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    Foreground="Black"
+                                    Text="$hash$" />
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    Margin="16,0,0,0"
+                                    Style="{StaticResource DescTextBlockStyle}"
+                                    Text="等同 (?&lt;hash&gt;[A-Za-z0-9+/=]+)，此位置的匹配结果作为哈希值。" />
+                                <TextBlock
+                                    Grid.Row="2"
+                                    Grid.Column="0"
+                                    Foreground="Black"
+                                    Text="$name$" />
+                                <TextBlock
+                                    Grid.Row="2"
+                                    Grid.Column="1"
+                                    Margin="16,0,0,0"
+                                    Style="{StaticResource DescTextBlockStyle}"
+                                    Text="等同 (?&lt;name&gt;[^:*?&quot;&lt;&gt;|\r\n]+)，此位置的匹配结果作为文件名。" />
+                            </Grid>
+                            <TextBlock
+                                Margin="0,4,0,0"
+                                Style="{StaticResource DescTextBlockStyle}"
+                                Text="你也可以自定义命名组，可用的组名： algo 和 hash 和 name" />
+                            <TextBlock
+                                Margin="0,8,0,0"
+                                Foreground="Black"
+                                Text="如何使用以上设置好的方案来解析校验依据？" />
+                            <TextBlock
+                                Margin="0,2,0,0"
+                                Style="{StaticResource DescTextBlockStyle}"
+                                Text="程序会在校验时自动选择解析方案，具体的选择方式见紧接在表格下方的说明。" />
+                        </StackPanel>
+                    </Grid>
+                </GroupBox>
             </ScrollViewer>
         </TabItem>
         <TabItem

@@ -103,6 +103,7 @@ namespace HashCalculator
             if (!settingsModelLoaded)
             {
                 Current.ResetTemplatesForExport();
+                Current.ResetTemplatesForChecklist();
             }
             return settingsModelLoaded;
         }

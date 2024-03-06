@@ -102,7 +102,6 @@ namespace HashCalculator
             "utf-8",
             new EncoderExceptionFallback(),
             new DecoderExceptionFallback());
-        private static readonly char[] charsToTrim = { ' ', '*', '#', '\r', '\n' };
 
         public string ReasonForFailure { get; private set; }
 
@@ -136,52 +135,44 @@ namespace HashCalculator
             return false;
         }
 
-        /// <summary>
-        /// 向校验依据对象添加一条以 <算法名>、<哈希字符串>、<文件名> 组成的依据
-        /// </summary>
-        private bool AddItem(string algoName, string hashString, string fileName)
+        public bool AddCheckItem(string algoName, string hashString, string fileName)
         {
-            if (!(algoName is null || hashString is null || fileName is null))
+            if (algoName != null && hashString != null && fileName != null &&
+                CommonUtils.HashBytesFromString(hashString) is byte[] hash)
             {
-                hashString = hashString.Trim(charsToTrim);
-                if (CommonUtils.HashBytesFromString(hashString) is byte[] hash)
+                if (this.algHashMapOfFiles.TryGetValue(fileName, out AlgHashMap algoHashMap))
                 {
-                    algoName = algoName.Trim(charsToTrim);
-                    fileName = fileName.Trim(charsToTrim);
-                    if (this.algHashMapOfFiles.TryGetValue(fileName, out AlgHashMap algoHashMap))
-                    {
-                        algoHashMap.AddAlgHashMapOfFile(fileName, algoName, hash);
-                    }
-                    else
-                    {
-                        this.algHashMapOfFiles[fileName] = new AlgHashMap(fileName, algoName, hash);
-                    }
-                    return true;
+                    algoHashMap.AddAlgHashMapOfFile(fileName, algoName, hash);
                 }
+                else
+                {
+                    this.algHashMapOfFiles[fileName] = new AlgHashMap(fileName, algoName, hash);
+                }
+                return true;
             }
             return false;
         }
 
-        private bool AddItemFromLine(string textLine)
+        private IEnumerable<TemplateForChecklistModel> GetParsers(string extension)
         {
-            string[] items = textLine.Split(
-                new char[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-            // 对应格式：hash-string
-            if (items.Length == 1)
+            if (!string.IsNullOrEmpty(extension))
             {
-                return this.AddItem(string.Empty, items[0], string.Empty);
+                foreach (var model in Settings.Current.TemplatesForChecklist)
+                {
+                    if (!string.IsNullOrEmpty(model.Extension) &&
+                        extension.Equals(model.Extension, StringComparison.OrdinalIgnoreCase))
+                    {
+                        yield return model;
+                    }
+                }
             }
-            // 对应格式：hash-string *file-fileName
-            else if (items.Length == 2)
+            foreach (TemplateForChecklistModel template in Settings.Current.TemplatesForChecklist)
             {
-                return this.AddItem(string.Empty, items[0], items[1]);
+                if (string.IsNullOrEmpty(template.Extension))
+                {
+                    yield return template;
+                }
             }
-            // 对应格式：#hash-name *hash-string *file-name
-            else if (items.Length == 3 && this.AddItem(items[0], items[1], items[2]))
-            {
-                return true;
-            }
-            return false;
         }
 
         public string UpdateWithFile(string filePath)
@@ -192,16 +183,18 @@ namespace HashCalculator
             {
                 using (StreamReader reader = new StreamReader(filePath, encoding, true))
                 {
-                    int addedLinesCount = 0;
-                    string lineString = null;
-                    while ((lineString = reader.ReadLine()) != null)
+                    bool anyItemAdded = false;
+                    string fileExt = Path.GetExtension(filePath);
+                    string textLines = reader.ReadToEnd();
+                    foreach (TemplateForChecklistModel parser in this.GetParsers(fileExt))
                     {
-                        if (this.AddItemFromLine(lineString))
+                        if (parser.ExtendChecklistWithLines(textLines, this))
                         {
-                            ++addedLinesCount;
+                            anyItemAdded = true;
+                            break;
                         }
                     }
-                    if (addedLinesCount == 0)
+                    if (!anyItemAdded)
                     {
                         this.ReasonForFailure = "没有搜集到依据，请检查校验依据文件内容";
                     }
@@ -222,17 +215,18 @@ namespace HashCalculator
 
         public string UpdateWithText(string paragraph)
         {
+            bool anyItemAdded = false;
             this.ReasonForFailure = null;
             this.algHashMapOfFiles.Clear();
-            int readedLineCount = 0;
-            foreach (string line in paragraph.Split('\r', '\n'))
+            foreach (TemplateForChecklistModel parser in this.GetParsers(null))
             {
-                if (this.AddItemFromLine(line))
+                if (parser.ExtendChecklistWithLines(paragraph, this))
                 {
-                    ++readedLineCount;
+                    anyItemAdded = true;
+                    break;
                 }
             }
-            if (readedLineCount == 0)
+            if (!anyItemAdded)
             {
                 this.ReasonForFailure = "没有搜集到依据，请检查输入的文本段落内容";
             }

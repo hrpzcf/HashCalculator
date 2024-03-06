@@ -65,16 +65,26 @@ namespace HashCalculator
         private string formatForGenerateText = "#$algo$ *$hash$ *$name$";
         private bool exportInMainControlsChildExportsInRow = false;
         private TemplateForExportModel selectedExportTemplate;
+        private TemplateForChecklistModel selectedChecklistTemplate;
         private ObservableCollection<TemplateForExportModel> templatesForExport = null;
+        private ObservableCollection<TemplateForChecklistModel> templatesForChecklist = null;
         private RelayCommand installShellExtCmd;
         private RelayCommand unInstallShellExtCmd;
         private RelayCommand openEditContextMenuCmd;
+
         private RelayCommand resetExportTemplateCmd;
-        private RelayCommand addExprotTemplateCmd;
-        private RelayCommand copyExprotTemplateCmd;
+        private RelayCommand addExportTemplateCmd;
+        private RelayCommand copyExportTemplateCmd;
         private RelayCommand moveExportTemplateUpCmd;
         private RelayCommand moveExportTemplateDownCmd;
         private RelayCommand removeExportTemplateCmd;
+
+        private RelayCommand resetChecklistTemplateCmd;
+        private RelayCommand addChecklistTemplateCmd;
+        private RelayCommand copyChecklistTemplateCmd;
+        private RelayCommand moveChecklistTemplateUpCmd;
+        private RelayCommand moveChecklistTemplateDownCmd;
+        private RelayCommand removeChecklistTemplateCmd;
 
         [JsonIgnore, XmlIgnore]
         public int minCharsNumRequiredForMonitoringClipboard = 8;
@@ -772,6 +782,18 @@ namespace HashCalculator
             }
         }
 
+        public ObservableCollection<TemplateForChecklistModel> TemplatesForChecklist
+        {
+            get
+            {
+                return this.templatesForChecklist;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.templatesForChecklist, value);
+            }
+        }
+
         [JsonIgnore, XmlIgnore]
         public bool NotSettingShellExtension
         {
@@ -915,7 +937,20 @@ namespace HashCalculator
             }
         }
 
-        private void AddExprotTemplateAction(object param)
+        [JsonIgnore, XmlIgnore]
+        public TemplateForChecklistModel SelectedTemplateForChecklist
+        {
+            get
+            {
+                return this.selectedChecklistTemplate;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.selectedChecklistTemplate, value);
+            }
+        }
+
+        private void AddExportTemplateAction(object param)
         {
             TemplateForExportModel model = new TemplateForExportModel();
             if (this.TemplatesForExport == null)
@@ -927,19 +962,19 @@ namespace HashCalculator
         }
 
         [JsonIgnore, XmlIgnore]
-        public ICommand AddExprotTemplateCmd
+        public ICommand AddExportTemplateCmd
         {
             get
             {
-                if (this.addExprotTemplateCmd == null)
+                if (this.addExportTemplateCmd == null)
                 {
-                    this.addExprotTemplateCmd = new RelayCommand(this.AddExprotTemplateAction);
+                    this.addExportTemplateCmd = new RelayCommand(this.AddExportTemplateAction);
                 }
-                return this.addExprotTemplateCmd;
+                return this.addExportTemplateCmd;
             }
         }
 
-        private void CopyExprotTemplateAction(object param)
+        private void CopyExportTemplateAction(object param)
         {
             if (this.TemplatesForExport != null)
             {
@@ -951,22 +986,22 @@ namespace HashCalculator
                 }
                 else
                 {
-                    MessageBox.Show(SettingsPanel.This, "没有选择任何模版！", "提示", MessageBoxButton.OK,
+                    MessageBox.Show(SettingsPanel.This, "没有选择任何方案！", "提示", MessageBoxButton.OK,
                         MessageBoxImage.Information);
                 }
             }
         }
 
         [JsonIgnore, XmlIgnore]
-        public ICommand CopyExprotTemplateCmd
+        public ICommand CopyExportTemplateCmd
         {
             get
             {
-                if (this.copyExprotTemplateCmd == null)
+                if (this.copyExportTemplateCmd == null)
                 {
-                    this.copyExprotTemplateCmd = new RelayCommand(this.CopyExprotTemplateAction);
+                    this.copyExportTemplateCmd = new RelayCommand(this.CopyExportTemplateAction);
                 }
-                return this.copyExprotTemplateCmd;
+                return this.copyExportTemplateCmd;
             }
         }
 
@@ -1049,7 +1084,7 @@ namespace HashCalculator
                 }
                 else
                 {
-                    MessageBox.Show(SettingsPanel.This, "没有选择任何模版！", "提示", MessageBoxButton.OK,
+                    MessageBox.Show(SettingsPanel.This, "没有选择任何方案！", "提示", MessageBoxButton.OK,
                         MessageBoxImage.Information);
                 }
             }
@@ -1100,12 +1135,208 @@ namespace HashCalculator
             }
         }
 
+        private void AddChecklistTemplateAction(object param)
+        {
+            TemplateForChecklistModel model = new TemplateForChecklistModel();
+            if (this.TemplatesForChecklist == null)
+            {
+                this.TemplatesForChecklist = new ObservableCollection<TemplateForChecklistModel>();
+            }
+            this.TemplatesForChecklist.Add(model);
+            this.SelectedTemplateForChecklist = model;
+        }
+
+        [JsonIgnore, XmlIgnore]
+        public ICommand AddChecklistTemplateCmd
+        {
+            get
+            {
+                if (this.addChecklistTemplateCmd == null)
+                {
+                    this.addChecklistTemplateCmd = new RelayCommand(this.AddChecklistTemplateAction);
+                }
+                return this.addChecklistTemplateCmd;
+            }
+        }
+
+        private void CopyChecklistTemplateAction(object param)
+        {
+            if (this.TemplatesForChecklist != null)
+            {
+                if (this.SelectedTemplateForChecklist != null)
+                {
+                    TemplateForChecklistModel model = this.SelectedTemplateForChecklist.Copy("_复制");
+                    this.TemplatesForChecklist.Add(model);
+                    this.SelectedTemplateForChecklist = model;
+                }
+                else
+                {
+                    MessageBox.Show(SettingsPanel.This, "没有选择任何方案！", "提示", MessageBoxButton.OK,
+                        MessageBoxImage.Information);
+                }
+            }
+        }
+
+        [JsonIgnore, XmlIgnore]
+        public ICommand CopyChecklistTemplateCmd
+        {
+            get
+            {
+                if (this.copyChecklistTemplateCmd == null)
+                {
+                    this.copyChecklistTemplateCmd = new RelayCommand(this.CopyChecklistTemplateAction);
+                }
+                return this.copyChecklistTemplateCmd;
+            }
+        }
+
+        private void MoveChecklistTemplateUpAction(object param)
+        {
+            if (this.TemplatesForChecklist != null)
+            {
+                int index;
+                if ((index = this.TemplatesForChecklist.IndexOf(this.SelectedTemplateForChecklist)) != -1 &&
+                    index > 0)
+                {
+                    int prevTemplateIndex = index - 1;
+                    TemplateForChecklistModel selectedTemplate = this.SelectedTemplateForChecklist;
+                    this.TemplatesForChecklist[index] = this.TemplatesForChecklist[prevTemplateIndex];
+                    this.TemplatesForChecklist[prevTemplateIndex] = selectedTemplate;
+                    this.SelectedTemplateForChecklist = selectedTemplate;
+                }
+            }
+        }
+
+        [JsonIgnore, XmlIgnore]
+        public ICommand MoveChecklistTemplateUpCmd
+        {
+            get
+            {
+                if (this.moveChecklistTemplateUpCmd == null)
+                {
+                    this.moveChecklistTemplateUpCmd = new RelayCommand(this.MoveChecklistTemplateUpAction);
+                }
+                return this.moveChecklistTemplateUpCmd;
+            }
+        }
+
+        private void MoveChecklistTemplateDownAction(object param)
+        {
+            if (this.TemplatesForChecklist != null)
+            {
+                int index;
+                if ((index = this.TemplatesForChecklist.IndexOf(this.SelectedTemplateForChecklist)) != -1 &&
+                    index < this.TemplatesForChecklist.Count - 1)
+                {
+                    int nextTemplateIndex = index + 1;
+                    TemplateForChecklistModel selectedTemplate = this.SelectedTemplateForChecklist;
+                    this.TemplatesForChecklist[index] = this.TemplatesForChecklist[nextTemplateIndex];
+                    this.TemplatesForChecklist[nextTemplateIndex] = selectedTemplate;
+                    this.SelectedTemplateForChecklist = selectedTemplate;
+                }
+            }
+        }
+
+        [JsonIgnore, XmlIgnore]
+        public ICommand MoveChecklistTemplateDownCmd
+        {
+            get
+            {
+                if (this.moveChecklistTemplateDownCmd == null)
+                {
+                    this.moveChecklistTemplateDownCmd = new RelayCommand(this.MoveChecklistTemplateDownAction);
+                }
+                return this.moveChecklistTemplateDownCmd;
+            }
+        }
+
+        private void RemoveChecklistTemplateAction(object param)
+        {
+            if (this.TemplatesForChecklist != null)
+            {
+                int index;
+                if ((index = this.TemplatesForChecklist.IndexOf(this.SelectedTemplateForChecklist)) != -1)
+                {
+                    this.TemplatesForChecklist.RemoveAt(index);
+                    if (index < this.TemplatesForChecklist.Count)
+                    {
+                        this.SelectedTemplateForChecklist = this.TemplatesForChecklist[index];
+                    }
+                    else if (index > 0)
+                    {
+                        this.SelectedTemplateForChecklist = this.TemplatesForChecklist[index - 1];
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(SettingsPanel.This, "没有选择任何方案！", "提示", MessageBoxButton.OK,
+                        MessageBoxImage.Information);
+                }
+            }
+        }
+
+        [JsonIgnore, XmlIgnore]
+        public ICommand RemoveChecklistTemplateCmd
+        {
+            get
+            {
+                if (this.removeChecklistTemplateCmd == null)
+                {
+                    this.removeChecklistTemplateCmd = new RelayCommand(this.RemoveChecklistTemplateAction);
+                }
+                return this.removeChecklistTemplateCmd;
+            }
+        }
+
+        internal void ResetTemplatesForChecklist()
+        {
+            this.SelectedTemplateForChecklist = null;
+            this.TemplatesForChecklist = new ObservableCollection<TemplateForChecklistModel>
+            {
+                TemplateForChecklistModel.TxtFile.Copy(null),
+                TemplateForChecklistModel.CsvFile.Copy(null),
+                TemplateForChecklistModel.HcbFile.Copy(null),
+                TemplateForChecklistModel.SfvFile.Copy(null),
+                TemplateForChecklistModel.SumsFile.Copy(null),
+                TemplateForChecklistModel.HashFile.Copy(null),
+                TemplateForChecklistModel.AnyFile1.Copy(null),
+                TemplateForChecklistModel.AnyFile2.Copy(null),
+                TemplateForChecklistModel.AnyFile3.Copy(null)
+            };
+        }
+
+        private void ResetChecklistTemplateAction(object param)
+        {
+            this.ResetTemplatesForChecklist();
+            MessageBox.Show(SettingsPanel.This, "已重置解析检验依据方案列表。", "提示",
+                MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        [JsonIgnore, XmlIgnore]
+        public ICommand ResetChecklistTemplateCmd
+        {
+            get
+            {
+                if (this.resetChecklistTemplateCmd == null)
+                {
+                    this.resetChecklistTemplateCmd = new RelayCommand(this.ResetChecklistTemplateAction);
+                }
+                return this.resetChecklistTemplateCmd;
+            }
+        }
+
         [OnSerializing]
         internal void OnSettingsViewModelSerializing(StreamingContext context)
         {
             if (this.TemplatesForExport != null && !this.TemplatesForExport.Any())
             {
+                // 非 null 但空，统一设置为 null
                 this.TemplatesForExport = null;
+            }
+            if (this.TemplatesForChecklist != null && !this.TemplatesForChecklist.Any())
+            {
+                // 非 null 但空，统一设置为 null
+                this.TemplatesForChecklist = null;
             }
             this.SelectedAlgos = AlgosPanelModel.ProvidedAlgos.Where(i => i.Selected).Select(
                 i => i.AlgoType).ToArray();
@@ -1116,6 +1347,10 @@ namespace HashCalculator
             if (this.TemplatesForExport == null || !this.TemplatesForExport.Any())
             {
                 this.ResetTemplatesForExport();
+            }
+            if (this.TemplatesForChecklist == null || !this.TemplatesForChecklist.Any())
+            {
+                this.ResetTemplatesForChecklist();
             }
             foreach (AlgoInOutModel model in AlgosPanelModel.ProvidedAlgos)
             {
