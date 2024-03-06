@@ -393,7 +393,7 @@
                     <MenuItem
                         Command="{Binding CopyFilesFullPathCmd}"
                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
-                        Header="复制全路径" />
+                        Header="复制完整路径" />
                     <MenuItem
                         Header="复制所选行当前哈希值"
                         IsEnabled="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems, Converter={StaticResource CopyModelsHashMenuEnabledCvt}}"

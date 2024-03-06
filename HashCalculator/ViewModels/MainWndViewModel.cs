@@ -542,29 +542,33 @@ namespace HashCalculator
                 {
                     return;
                 }
+                bool fullPathCopied = false;
                 StringBuilder stringBuilder = new StringBuilder();
                 for (int i = 0; i < count; ++i)
                 {
                     HashViewModel model = (HashViewModel)selectedModels[i];
-                    if (File.Exists(model.FileInfo.FullName))
+                    if (i != 0)
                     {
-                        if (i != 0)
-                        {
-                            stringBuilder.AppendLine();
-                        }
-                        if (copyName)
-                        {
-                            stringBuilder.Append(model.FileInfo.Name);
-                        }
-                        else
-                        {
-                            stringBuilder.Append(model.FileInfo.FullName);
-                        }
+                        stringBuilder.AppendLine();
+                    }
+                    if (copyName)
+                    {
+                        stringBuilder.Append(model.FileInfo.Name);
+                    }
+                    else if (File.Exists(model.FileInfo.FullName))
+                    {
+                        fullPathCopied = true;
+                        stringBuilder.Append(model.FileInfo.FullName);
                     }
                 }
                 if (stringBuilder.Length != 0)
                 {
                     CommonUtils.ClipboardSetText(stringBuilder.ToString());
+                }
+                if (!copyName && !fullPathCopied)
+                {
+                    MessageBox.Show(this.OwnerWnd, "文件不存在，文件完整路径没有被复制", "提示",
+                        MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
         }
