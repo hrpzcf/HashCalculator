@@ -98,10 +98,22 @@ namespace HashCalculator
 
     internal class HashChecklist : IEnumerable<KeyValuePair<string, AlgHashMap>>
     {
-        private static readonly Encoding encoding = Encoding.GetEncoding(
-            "utf-8",
-            new EncoderExceptionFallback(),
-            new DecoderExceptionFallback());
+        // "utf-8", "gb2312", "utf-16", "gb18030"
+        private static readonly Encoding[] supportedEncodings =
+            new Encoding[] {
+                Encoding.GetEncoding(Encoding.UTF8.CodePage,
+                    new EncoderExceptionFallback(),
+                    new DecoderExceptionFallback()),
+                Encoding.GetEncoding(Encoding.Default.CodePage,
+                    new EncoderExceptionFallback(),
+                    new DecoderExceptionFallback()),
+                Encoding.GetEncoding("gb18030",
+                    new EncoderExceptionFallback(),
+                    new DecoderExceptionFallback()),
+                Encoding.GetEncoding(Encoding.Unicode.CodePage,
+                    new EncoderExceptionFallback(),
+                    new DecoderExceptionFallback()),
+            };
 
         public string ReasonForFailure { get; private set; }
 
@@ -181,34 +193,48 @@ namespace HashCalculator
             this.algHashMapOfFiles.Clear();
             try
             {
-                using (StreamReader reader = new StreamReader(filePath, encoding, true))
+                bool contentDecoded = false;
+                foreach (Encoding encoding in supportedEncodings)
                 {
-                    bool anyPaser = false, anyItemAdded = false;
-                    string fileExt = Path.GetExtension(filePath);
-                    string textLines = reader.ReadToEnd();
-                    foreach (TemplateForChecklistModel parser in this.GetParsers(fileExt))
+                    using (StreamReader reader = new StreamReader(filePath, encoding, true))
                     {
-                        anyPaser = true;
-                        if (parser.ExtendChecklistWithLines(textLines, this))
+                        string checklistLines;
+                        try
                         {
-                            anyItemAdded = true;
-                            break;
+                            checklistLines = reader.ReadToEnd();
                         }
-                    }
-                    if (!anyPaser)
-                    {
-                        this.ReasonForFailure = "没有可用的校验依据解析方案";
-                    }
-                    else if (!anyItemAdded)
-                    {
-                        this.ReasonForFailure = "没有搜集到依据，请检查校验依据文件内容";
+                        catch (DecoderFallbackException)
+                        {
+                            continue;
+                        }
+                        contentDecoded = true;
+                        bool anyPaser = false;
+                        bool anyItemAdded = false;
+                        string fileExt = Path.GetExtension(filePath);
+                        foreach (TemplateForChecklistModel parser in this.GetParsers(fileExt))
+                        {
+                            anyPaser = true;
+                            if (parser.ExtendChecklistWithLines(checklistLines, this))
+                            {
+                                anyItemAdded = true;
+                                break;
+                            }
+                        }
+                        if (!anyPaser)
+                        {
+                            this.ReasonForFailure = "没有可用的校验依据解析方案";
+                        }
+                        else if (!anyItemAdded)
+                        {
+                            this.ReasonForFailure = "没有搜集到依据，请检查校验依据文件内容";
+                        }
+                        break;
                     }
                 }
-            }
-            catch (DecoderFallbackException)
-            {
-                this.algHashMapOfFiles.Clear();
-                this.ReasonForFailure = $"文件读取失败，仅支持兼容 UTF-8 编码的文本文件";
+                if (!contentDecoded)
+                {
+                    this.ReasonForFailure = "只支持 UTF8/UTF16/ANSI/GB18030 及其兼容编码的校验依据文件";
+                }
             }
             catch (Exception ex)
             {
