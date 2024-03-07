@@ -835,35 +835,35 @@
                             <TextBlock
                                 Margin="0,4,0,0"
                                 Foreground="Black"
-                                Text="对于输入【校验依据】的字符串：" />
+                                Text="对于输入【校验依据】输入框的字符串：" />
                             <TextBlock
                                 Margin="24,0,0,0"
                                 Style="{StaticResource DescTextBlockStyle}"
-                                Text="程序会按顺序使用【用于类型】为空的方案，直到成功或用完方案；" />
+                                Text="程序会按顺序使用【用于类型】为空的方案，直到成功或全部失败；" />
                             <TextBlock
                                 Margin="0,4,0,0"
                                 Foreground="Black"
-                                Text="右键作为校验依据打开的文件或输入【校验依据】的文件：" />
+                                Text="作为校验依据打开的文件或输入【校验依据】输入框的文件：" />
                             <TextBlock
                                 Margin="24,0,0,0"
                                 Style="{StaticResource DescTextBlockStyle}"
-                                Text="程序会按顺序使用【用于类型】与文件扩展名匹配的方案，直到成功或用完方案；" />
+                                Text="程序会按顺序使用【用于类型】与文件扩展名匹配的方案，直到成功或全部失败；" />
                             <TextBlock
                                 Margin="24,0,0,0"
                                 Style="{StaticResource DescTextBlockStyle}"
-                                Text="如果仍然没有成功，则按顺序使用【用于类型】为空的方案，直到成功或用完方案；" />
+                                Text="如果仍然没有成功，则按顺序使用【用于类型】为空的方案，直到成功或全部失败；" />
                             <TextBlock
                                 Margin="24,0,0,0"
                                 Style="{StaticResource DescTextBlockStyle}"
-                                Text="如果文件没有扩展名，则按顺序使用【用于类型】为空的方案，直到成功或用完方案；" />
+                                Text="如果文件没有扩展名，则按顺序使用【用于类型】为空的方案，直到成功或全部失败；" />
                             <TextBlock
                                 Margin="0,8,0,0"
                                 Foreground="Black"
-                                Text="表格中的【解析方式表达式】实际上是正则表达式的 C# 版本。" />
+                                Text="表格中的【解析方式表达式】实际上是正则表达式的 C# 版本，其中：" />
                             <TextBlock
                                 Margin="0,0,0,0"
                                 Foreground="Black"
-                                Text="被两个“$”号包围的字符串是本软件预定义的正则表达式命名组：" />
+                                Text="两个“$”号包围的字符串是本软件预定义的正则表达式命名组：" />
                             <Grid Margin="0,4,0,0">
                                 <Grid.RowDefinitions>
                                     <RowDefinition />
@@ -919,7 +919,7 @@
                             <TextBlock
                                 Margin="0,2,0,0"
                                 Style="{StaticResource DescTextBlockStyle}"
-                                Text="程序会在校验时自动选择解析方案，具体的选择方式见紧接在表格下方的说明。" />
+                                Text="程序会在校验时自动选择方案，具体的选择方式见紧接在表格下方的说明。" />
                         </StackPanel>
                     </Grid>
                 </GroupBox>
