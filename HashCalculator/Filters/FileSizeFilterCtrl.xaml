@@ -7,30 +7,40 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DataContext="{d:DesignInstance Type=local:FileSizeFilter}"
     d:DesignHeight="160"
-    d:DesignWidth="300"
+    d:DesignWidth="350"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/ConverterResource.xaml" />
+                <ResourceDictionary Source="/Resources/DescTextBlockStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition MinWidth="100" Width="Auto" />
+            <ColumnDefinition Width="Auto" MinWidth="100" />
             <ColumnDefinition Width="Auto" />
+            <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <TextBlock
             Grid.Row="0"
             Grid.Column="0"
             VerticalAlignment="Center"
-            Text="最小：" />
+            Text="文件大小下限：" />
         <TextBox
             Grid.Row="0"
             Grid.Column="1"
             Padding="0,2"
             VerticalAlignment="Center"
-            Text="{Binding MinFileSize}" />
+            Text="{Binding MinFileSize, Converter={StaticResource StringToDoubleDefaultZeroCvt}}" />
         <ComboBox
             Grid.Row="0"
             Grid.Column="2"
@@ -45,14 +55,14 @@
             Grid.Column="0"
             Margin="0,4,0,0"
             VerticalAlignment="Center"
-            Text="最大：" />
+            Text="文件大小上限：" />
         <TextBox
             Grid.Row="1"
             Grid.Column="1"
             Margin="0,4,0,0"
             Padding="0,2"
             VerticalAlignment="Center"
-            Text="{Binding MaxFileSize}" />
+            Text="{Binding MaxFileSize, Converter={StaticResource StringToDoubleDefaultZeroCvt}}" />
         <ComboBox
             Grid.Row="1"
             Grid.Column="2"
@@ -62,5 +72,12 @@
             DisplayMemberPath="Display"
             ItemsSource="{Binding Items}"
             SelectedItem="{Binding MaxSizeUnit}" />
+        <TextBlock
+            Grid.Row="2"
+            Grid.Column="0"
+            Grid.ColumnSpan="4"
+            Margin="0,4,0,0"
+            Style="{StaticResource DescTextBlockStyle}"
+            Text="如果【文件大小上限 &lt; 文件大小下限】则代表不设上限" />
     </Grid>
 </UserControl>

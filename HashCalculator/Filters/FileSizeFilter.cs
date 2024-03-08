@@ -17,8 +17,8 @@ namespace HashCalculator
         {
             new GenericItemModel("B", 1),
             new GenericItemModel("KB", 1024),
-            new GenericItemModel("MB", 1024*1024),
-            new GenericItemModel("GB", 1024*1024*1024),
+            new GenericItemModel("MB", 1024 * 1024),
+            new GenericItemModel("GB", 1024 * 1024 * 1024),
         };
 
         public double MinFileSize { get; set; }
@@ -38,23 +38,17 @@ namespace HashCalculator
 
         public override void FilterObjects(IEnumerable<HashViewModel> models)
         {
-            if (models == null)
+            if (models != null && this.MinSizeUnit.ItemValue is int minSizeUnit &&
+                this.MaxSizeUnit.ItemValue is int maxSizeUnit)
             {
-                return;
-            }
-            if (this.MinSizeUnit.ItemValue is int minSizeUnit && this.MaxSizeUnit.ItemValue is int maxSizeUnit)
-            {
-                double minFileSize = this.MinFileSize * minSizeUnit;
-                double maxFileSize = this.MaxFileSize * maxSizeUnit;
-                if (minFileSize > maxFileSize)
-                {
-                    CommonUtils.Swap(ref minFileSize, ref maxFileSize);
-                }
+                double lowerLimit = this.MinFileSize * minSizeUnit;
+                double upperLimit = this.MaxFileSize * maxSizeUnit;
                 foreach (HashViewModel model in models)
                 {
                     if (model.Matched)
                     {
-                        if (model.FileSize < minFileSize || model.FileSize > maxFileSize)
+                        if ((lowerLimit >= 0 && model.FileSize < lowerLimit) ||
+                            (upperLimit >= 0 && upperLimit >= lowerLimit && model.FileSize > upperLimit))
                         {
                             model.Matched = false;
                         }

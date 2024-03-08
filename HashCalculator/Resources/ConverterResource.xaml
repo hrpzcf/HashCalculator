@@ -2,6 +2,14 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:HashCalculator">
+    <local:StringToValidIntValueCvt
+        x:Key="StringToIntDefaultZeroCvt"
+        Default="0"
+        Min="0" />
+    <local:StringToValidDoubleValueCvt
+        x:Key="StringToDoubleDefaultZeroCvt"
+        Default="0"
+        Min="0" />
     <local:InvalidFileNameForegroundCvt x:Key="InvalidFileNameForegroundCvt" />
     <local:CmpResForegroundCvt x:Key="CmpResForegroundCvt" />
     <local:CmpResBackgroundCvt x:Key="CmpResBackgroundCvt" />

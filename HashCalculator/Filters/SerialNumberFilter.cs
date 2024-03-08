@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Controls;
 
 namespace HashCalculator
@@ -27,18 +26,12 @@ namespace HashCalculator
 
         public override void FilterObjects(IEnumerable<HashViewModel> models)
         {
-            if (models != null && models.Any())
+            if (models != null)
             {
-                if (this.SerialLeft > this.SerialRight)
-                {
-                    int temp;
-                    temp = this.SerialLeft;
-                    this.SerialLeft = this.SerialRight;
-                    this.SerialRight = temp;
-                }
                 foreach (HashViewModel model in models)
                 {
-                    if (model.SerialNumber < this.SerialLeft || model.SerialNumber > this.SerialRight)
+                    if ((this.SerialLeft >= 0 && model.SerialNumber < this.SerialLeft) ||
+                        (this.SerialRight >= 0 && this.SerialRight >= this.SerialLeft && model.SerialNumber > this.SerialRight))
                     {
                         model.Matched = false;
                     }

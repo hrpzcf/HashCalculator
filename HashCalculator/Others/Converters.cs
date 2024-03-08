@@ -958,4 +958,64 @@ namespace HashCalculator
             throw new NotImplementedException();
         }
     }
+
+    internal class StringToValidIntValueCvt : IValueConverter
+    {
+        public int Default { get; set; }
+
+        public int Min { get; set; } = int.MinValue;
+
+        public int Max { get; set; } = int.MaxValue;
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is int number &&
+                number >= this.Min && number <= this.Max)
+            {
+                return number.ToString();
+            }
+            return this.Default.ToString();
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is string intString &&
+                int.TryParse(intString, out int number) &&
+                number >= this.Min && number <= this.Max)
+            {
+                return number;
+            }
+            return this.Default;
+        }
+    }
+
+    internal class StringToValidDoubleValueCvt : IValueConverter
+    {
+        public double Default { get; set; }
+
+        public double Min { get; set; } = double.MinValue;
+
+        public double Max { get; set; } = double.MaxValue;
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is double number &&
+                number >= this.Min && number <= this.Max)
+            {
+                return number.ToString("f1");
+            }
+            return this.Default.ToString("f1");
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is string doubleString &&
+                double.TryParse(doubleString, out double number) &&
+                number >= this.Min && number <= this.Max)
+            {
+                return number;
+            }
+            return this.Default;
+        }
+    }
 }

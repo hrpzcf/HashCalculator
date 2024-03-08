@@ -67,8 +67,8 @@ namespace HashCalculator
                 new HashingTaskResultFilter(),
                 new SerialNumberFilter(),
                 new FileSizeFilter(),
-                new HashStringFilter(),
                 new FileIndexFilter(),
+                new HashStringFilter(),
                 new FileNameFilter(),
                 // 这两个筛选器因其特殊性需最后应用，否则可能得不到预期结果
                 new SameDirFilesFilter(),

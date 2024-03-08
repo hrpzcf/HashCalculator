@@ -8,7 +8,7 @@ namespace HashCalculator
     {
         public override ContentControl UserInterface { get; }
 
-        public override string Display => "哈希值";
+        public override string Display => "搜索哈希值";
 
         public override string Description => "将各行中包含指定哈希值的行筛选出来。";
 
