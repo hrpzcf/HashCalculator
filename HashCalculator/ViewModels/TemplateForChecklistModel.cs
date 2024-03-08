@@ -61,7 +61,7 @@ namespace HashCalculator
             {
                 Name = "通用一",
                 Extension = null,
-                Template = "^$hash$\\r?$"
+                Template = "^\\s*$hash$\\s*\\r?$"
             };
 
         public static readonly TemplateForChecklistModel AnyFile2 =
