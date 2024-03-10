@@ -6,6 +6,14 @@
         x:Key="StringToIntDefaultZeroCvt"
         Default="0"
         Min="0" />
+    <local:StringToValidIntValueCvt
+        x:Key="StringToIntDefaultEightCvt"
+        Default="8"
+        Min="2" />
+    <local:StringToValidIntValueCvt
+        x:Key="StringToIntDefaultFiveTwelveCvt"
+        Default="512"
+        Min="2" />
     <local:StringToValidDoubleValueCvt
         x:Key="StringToDoubleDefaultZeroCvt"
         Default="0"

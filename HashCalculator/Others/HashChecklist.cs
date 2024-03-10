@@ -117,7 +117,7 @@ namespace HashCalculator
 
         public string ReasonForFailure { get; private set; }
 
-        private readonly Dictionary<string, AlgHashMap> algHashMapOfFiles =
+        private Dictionary<string, AlgHashMap> algHashMapOfFiles =
             new Dictionary<string, AlgHashMap>(StringComparer.OrdinalIgnoreCase);
 
         public HashChecklist() { }
@@ -267,6 +267,20 @@ namespace HashCalculator
                 this.ReasonForFailure = "没有搜集到依据，请检查输入的文本内容";
             }
             return this.ReasonForFailure;
+        }
+
+        public string UpdateWithChecklist(HashChecklist checklist)
+        {
+            this.ReasonForFailure = checklist.ReasonForFailure;
+            this.algHashMapOfFiles = checklist.algHashMapOfFiles;
+            checklist.DestroyChecklist();
+            return this.ReasonForFailure;
+        }
+
+        public void DestroyChecklist()
+        {
+            this.algHashMapOfFiles = new Dictionary<string, AlgHashMap>();
+            this.ReasonForFailure = "校验依据内容已被清空";
         }
 
         public bool TryGetAlgHashMapOfFile(string fileName, out AlgHashMap hashMap)

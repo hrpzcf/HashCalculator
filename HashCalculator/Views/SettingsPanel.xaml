@@ -122,13 +122,13 @@
                     <GroupBox
                         Margin="0,8,0,0"
                         Foreground="#FF006FD6"
-                        Header="监控剪贴板中新复制的哈希值用于校验">
+                        Header="监控剪贴板中新复制的哈希信息用于校验">
                         <StackPanel>
                             <CheckBox
                                 x:Name="checkBoxVerifyWhenClipbaordNewHash"
                                 Margin="0,8,0,0"
                                 Padding="4,0,0,0"
-                                Content="有新复制的哈希值时自动填充校验依据文本框并校验"
+                                Content="有新复制的哈希信息时自动填充校验依据文本框并校验"
                                 IsChecked="{Binding MonitorNewHashStringInClipboard, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             <CheckBox
                                 Margin="20,8,0,0"
@@ -143,12 +143,12 @@
                                 <TextBlock
                                     VerticalAlignment="Center"
                                     Foreground="Black"
-                                    Text="复制的字符数在此范围内时才触发 (默认8~128)：" />
+                                    Text="复制的字符数在此范围内时才触发 (默认8~512)：" />
                                 <TextBox
                                     MinWidth="50"
                                     Padding="0,2"
                                     VerticalAlignment="Center"
-                                    Text="{Binding MinCharsNumRequiredForMonitoringClipboard, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                                    Text="{Binding MinCopiedCharsToTriggerHashCheck, Converter={StaticResource StringToIntDefaultEightCvt}, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
                                 <TextBlock
                                     VerticalAlignment="Center"
                                     Foreground="Black"
@@ -157,7 +157,7 @@
                                     MinWidth="50"
                                     Padding="0,2"
                                     VerticalAlignment="Center"
-                                    Text="{Binding MaxCharsNumRequiredForMonitoringClipboard, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                                    Text="{Binding MaxCopiedCharsToTriggerHashCheck, Converter={StaticResource StringToIntDefaultFiveTwelveCvt}, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
                             </StackPanel>
                         </StackPanel>
                     </GroupBox>

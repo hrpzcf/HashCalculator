@@ -203,11 +203,6 @@ namespace HashCalculator
             return default(byte[]);
         }
 
-        public static bool IsValidHashBytesString(string hashString)
-        {
-            return HashBytesFromString(hashString) != default(byte[]);
-        }
-
         public static bool SendToRecycleBin(IntPtr hParent, string path, bool silent = true)
         {
             FILEOP_FLAGS flags = FILEOP_FLAGS.FOF_ALLOWUNDO;

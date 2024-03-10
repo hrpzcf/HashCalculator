@@ -17,7 +17,7 @@ namespace HashCalculator
     {
         private bool hwndSourceHookAdded = false;
         private bool listenerAdded = false;
-        private int tickCountWhenHashStringOrChecklistPathWasLastSet = 0;
+        private long elapsedTickcountsSinceLastUpdateOfClipboard = 0;
         private readonly MainWndViewModel viewModel = new MainWndViewModel();
         private static string[] startupArgs = null;
 
@@ -113,19 +113,17 @@ namespace HashCalculator
             }
         }
 
-        private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wp, IntPtr lp, ref bool handled)
+        private IntPtr WndProc(IntPtr h, int msg, IntPtr w, IntPtr l, ref bool _)
         {
-            switch (msg)
+            if (msg == WM.WM_CLIPBOARDUPDATE)
             {
-                case WM.WM_CLIPBOARDUPDATE:
-                    if (!Settings.Current.ClipboardUpdatedByMe &&
-                        Environment.TickCount - this.tickCountWhenHashStringOrChecklistPathWasLastSet > 600)
-                    {
-                        this.viewModel.SetHashStringOrChecklistPath();
-                    }
-                    Settings.Current.ClipboardUpdatedByMe = false;
-                    this.tickCountWhenHashStringOrChecklistPathWasLastSet = Environment.TickCount;
-                    break;
+                if (!Settings.Current.ClipboardUpdatedByMe &&
+                    DateTime.Now.Ticks - this.elapsedTickcountsSinceLastUpdateOfClipboard > 600)
+                {
+                    this.viewModel.SetHashStringOrChecklistPath();
+                }
+                Settings.Current.ClipboardUpdatedByMe = false;
+                this.elapsedTickcountsSinceLastUpdateOfClipboard = DateTime.Now.Ticks;
             }
             return IntPtr.Zero;
         }

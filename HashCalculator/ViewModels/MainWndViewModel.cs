@@ -208,30 +208,20 @@ namespace HashCalculator
         {
             try
             {
-                if (CommonUtils.ClipboardGetText(out string clipboardText))
+                if (CommonUtils.ClipboardGetText(out string clipboardText) &&
+                    clipboardText.Length >= Settings.Current.MinCopiedCharsToTriggerHashCheck &&
+                    clipboardText.Length <= Settings.Current.MaxCopiedCharsToTriggerHashCheck)
                 {
-                    if (Settings.Current.MinCharsNumRequiredForMonitoringClipboard
-                        > Settings.Current.MaxCharsNumRequiredForMonitoringClipboard)
-                    {
-                        CommonUtils.Swap(
-                            ref Settings.Current.minCharsNumRequiredForMonitoringClipboard,
-                            ref Settings.Current.maxCharsNumRequiredForMonitoringClipboard);
-                    }
-                    if (clipboardText.Length < Settings.Current.MinCharsNumRequiredForMonitoringClipboard
-                        || clipboardText.Length > Settings.Current.MaxCharsNumRequiredForMonitoringClipboard)
-                    {
-                        return;
-                    }
-                    if (CommonUtils.IsValidHashBytesString(clipboardText))
+                    HashChecklist checklist = new HashChecklist();
+                    string reasonForFailure = File.Exists(clipboardText) ?
+                        checklist.UpdateWithFile(clipboardText) : checklist.UpdateWithText(clipboardText);
+                    if (reasonForFailure == null)
                     {
                         this.HashStringOrChecklistPath = clipboardText;
-                        if (this.State != RunningState.Started)
+                        if (this.State != RunningState.Started && this.CheckFilesHashBasedOnStringOrChecklist(checklist) &&
+                            Settings.Current.SwitchMainWndFgWhenNewHashCopied)
                         {
-                            this.CheckFileHashUseInfoFromHashStringOrChecklistPath();
-                            if (Settings.Current.SwitchMainWndFgWhenNewHashCopied)
-                            {
-                                CommonUtils.ShowWindowForeground(MainWindow.ProcessId);
-                            }
+                            CommonUtils.ShowWindowForeground(MainWindow.ProcessId);
                         }
                     }
                 }
@@ -1103,39 +1093,48 @@ namespace HashCalculator
             this.GenerateFileHashCheckReport();
         }
 
-        public void CheckFileHashUseInfoFromHashStringOrChecklistPath()
+        public bool CheckFilesHashBasedOnStringOrChecklist(HashChecklist checklist)
         {
-            if (string.IsNullOrEmpty(this.HashStringOrChecklistPath))
-            {
-                this.GenerateOriginFileHashCheckReport();
-                return;
-            }
             string reasonForFailure;
-            // HashStringOrChecklistPath 不是一个文件
-            if (!File.Exists(this.HashStringOrChecklistPath))
+            if (checklist != null)
             {
-                reasonForFailure = this.MainChecklist.UpdateWithText(this.HashStringOrChecklistPath);
+                reasonForFailure = this.MainChecklist.UpdateWithChecklist(checklist);
             }
-            // HashStringOrChecklistPath 是一个文件，但哈希结果列表不是空
-            else if (HashViewModels.Any())
-            {
-                reasonForFailure = this.MainChecklist.UpdateWithFile(this.HashStringOrChecklistPath);
-            }
-            // HashStringOrChecklistPath 是一个文件，且哈希结果列表也是空
             else
             {
-                HashChecklist newChecklist = new HashChecklist(this.HashStringOrChecklistPath);
-                if (newChecklist.ReasonForFailure != null)
+                if (string.IsNullOrEmpty(this.HashStringOrChecklistPath))
                 {
-                    MessageBox.Show(MainWindow.This, newChecklist.ReasonForFailure, "错误", MessageBoxButton.OK,
-                        MessageBoxImage.Error);
+                    this.GenerateOriginFileHashCheckReport();
+                    return false;
                 }
+                // HashStringOrChecklistPath 不是一个文件
+                if (!File.Exists(this.HashStringOrChecklistPath))
+                {
+                    reasonForFailure = this.MainChecklist.UpdateWithText(
+                        this.HashStringOrChecklistPath);
+                }
+                // HashStringOrChecklistPath 是一个文件，但哈希结果列表不是空
+                else if (HashViewModels.Any())
+                {
+                    reasonForFailure = this.MainChecklist.UpdateWithFile(
+                        this.HashStringOrChecklistPath);
+                }
+                // HashStringOrChecklistPath 是一个文件，且哈希结果列表也是空
                 else
                 {
-                    this.BeginDisplayModels(new PathPackage(Path.GetDirectoryName(this.HashStringOrChecklistPath),
-                        Settings.Current.SelectedSearchMethodForChecklist, newChecklist));
+                    HashChecklist newChecklist = new HashChecklist(this.HashStringOrChecklistPath);
+                    if ((reasonForFailure = newChecklist.ReasonForFailure) != null)
+                    {
+                        MessageBox.Show(MainWindow.This, reasonForFailure, "错误",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    else
+                    {
+                        this.BeginDisplayModels(new PathPackage(Path.GetDirectoryName(this.HashStringOrChecklistPath),
+                            Settings.Current.SelectedSearchMethodForChecklist, newChecklist));
+                    }
+                    return reasonForFailure == null;
                 }
-                return;
             }
             if (reasonForFailure == null)
             {
@@ -1148,9 +1147,10 @@ namespace HashCalculator
             else
             {
                 this.GenerateOriginFileHashCheckReport();
-                MessageBox.Show(MainWindow.This, reasonForFailure, "错误", MessageBoxButton.OK,
-                    MessageBoxImage.Error);
+                MessageBox.Show(MainWindow.This, reasonForFailure, "错误",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
+            return reasonForFailure == null;
         }
 
         private void SelectChecklistFileAction(object param)
@@ -1181,7 +1181,7 @@ namespace HashCalculator
 
         private void CheckFileHashValueAction(object param)
         {
-            this.CheckFileHashUseInfoFromHashStringOrChecklistPath();
+            this.CheckFilesHashBasedOnStringOrChecklist(null);
         }
 
         public ICommand StartVerifyHashValueCmd

@@ -10,6 +10,8 @@ using Newtonsoft.Json;
 
 namespace HashCalculator
 {
+#pragma warning disable IDE0180 // 使用元组交换值
+
     public class SettingsViewModel : NotifiableModel
     {
         private bool mainWndTopmost = false;
@@ -68,6 +70,9 @@ namespace HashCalculator
         private TemplateForChecklistModel selectedChecklistTemplate;
         private ObservableCollection<TemplateForExportModel> templatesForExport = null;
         private ObservableCollection<TemplateForChecklistModel> templatesForChecklist = null;
+        private int minCopiedCharsToTriggerHashCheck = 8;
+        private int maxCopiedCharsToTriggerHashCheck = 512;
+
         private RelayCommand installShellExtCmd;
         private RelayCommand unInstallShellExtCmd;
         private RelayCommand openEditContextMenuCmd;
@@ -85,11 +90,6 @@ namespace HashCalculator
         private RelayCommand moveChecklistTemplateUpCmd;
         private RelayCommand moveChecklistTemplateDownCmd;
         private RelayCommand removeChecklistTemplateCmd;
-
-        [JsonIgnore, XmlIgnore]
-        public int minCharsNumRequiredForMonitoringClipboard = 8;
-        [JsonIgnore, XmlIgnore]
-        public int maxCharsNumRequiredForMonitoringClipboard = 128;
 
         public SettingsViewModel()
         {
@@ -686,27 +686,39 @@ namespace HashCalculator
             }
         }
 
-        public int MinCharsNumRequiredForMonitoringClipboard
+        public int MinCopiedCharsToTriggerHashCheck
         {
             get
             {
-                return this.minCharsNumRequiredForMonitoringClipboard;
+                return this.minCopiedCharsToTriggerHashCheck;
             }
             set
             {
-                this.SetPropNotify(ref this.minCharsNumRequiredForMonitoringClipboard, value);
+                if (value > this.MaxCopiedCharsToTriggerHashCheck)
+                {
+                    int temp = this.MaxCopiedCharsToTriggerHashCheck;
+                    this.MaxCopiedCharsToTriggerHashCheck = value;
+                    value = temp;
+                }
+                this.SetPropNotify(ref this.minCopiedCharsToTriggerHashCheck, value);
             }
         }
 
-        public int MaxCharsNumRequiredForMonitoringClipboard
+        public int MaxCopiedCharsToTriggerHashCheck
         {
             get
             {
-                return this.maxCharsNumRequiredForMonitoringClipboard;
+                return this.maxCopiedCharsToTriggerHashCheck;
             }
             set
             {
-                this.SetPropNotify(ref this.maxCharsNumRequiredForMonitoringClipboard, value);
+                if (value < this.MinCopiedCharsToTriggerHashCheck)
+                {
+                    int temp = this.MinCopiedCharsToTriggerHashCheck;
+                    this.MinCopiedCharsToTriggerHashCheck = value;
+                    value = temp;
+                }
+                this.SetPropNotify(ref this.maxCopiedCharsToTriggerHashCheck, value);
             }
         }
 
@@ -746,18 +758,6 @@ namespace HashCalculator
             }
         }
 
-        public bool CaseOfCopiedAlgNameFollowsOutputType
-        {
-            get
-            {
-                return this.caseOfCopiedAlgNameFollowsOutputType;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.caseOfCopiedAlgNameFollowsOutputType, value);
-            }
-        }
-
         public bool ExportInMainControlsChildExports
         {
             get
@@ -767,6 +767,18 @@ namespace HashCalculator
             set
             {
                 this.SetPropNotify(ref this.exportInMainControlsChildExportsInRow, value);
+            }
+        }
+
+        public bool CaseOfCopiedAlgNameFollowsOutputType
+        {
+            get
+            {
+                return this.caseOfCopiedAlgNameFollowsOutputType;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.caseOfCopiedAlgNameFollowsOutputType, value);
             }
         }
 
@@ -1301,7 +1313,8 @@ namespace HashCalculator
                 TemplateForChecklistModel.HashFile.Copy(null),
                 TemplateForChecklistModel.AnyFile1.Copy(null),
                 TemplateForChecklistModel.AnyFile2.Copy(null),
-                TemplateForChecklistModel.AnyFile3.Copy(null)
+                TemplateForChecklistModel.AnyFile3.Copy(null),
+                TemplateForChecklistModel.AnyFile4.Copy(null)
             };
         }
 

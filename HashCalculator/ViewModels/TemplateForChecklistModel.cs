@@ -69,7 +69,7 @@ namespace HashCalculator
             {
                 Name = "通用二",
                 Extension = null,
-                Template = "^$hash$ \\*?$name$\\r?$"
+                Template = "^\\s*$hash$\\s+\\*?$name$\\s*\\r?$"
             };
 
         public static readonly TemplateForChecklistModel AnyFile3 =
@@ -77,7 +77,15 @@ namespace HashCalculator
             {
                 Name = "通用三",
                 Extension = null,
-                Template = "^#$algo$ \\*?$hash$ \\*?$name$\\r?$"
+                Template = "^\\s*$name$\\s+$hash$\\s*\\r?$"
+            };
+
+        public static readonly TemplateForChecklistModel AnyFile4 =
+            new TemplateForChecklistModel()
+            {
+                Name = "通用四",
+                Extension = null,
+                Template = "^#$algo$\\s\\*?$hash$\\s\\*?$name$\\r?$"
             };
 
         private const string algoGroupName = "algo";
@@ -95,7 +103,7 @@ namespace HashCalculator
                 {
                     {"$algo$", "(?<algo>[A-Za-z0-9-]+)" },
                     {"$hash$", "(?<hash>[A-Za-z0-9+/=]+)" },
-                    {"$name$", "(?<name>[^:*?\"<>|\r\n]+)" },
+                    {"$name$", "(?<name>[^:*?\"<>|\t\v\f\r\n]+)" },
                 }
             );
 
