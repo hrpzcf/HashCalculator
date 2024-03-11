@@ -155,10 +155,15 @@ namespace HashCalculator
                 {
                     if (option.FilePaths != null)
                     {
-                        PathPackage package = new PathPackage(
-                            option.FilePaths, Settings.Current.SelectedSearchMethodForDragDrop);
-                        package.PresetAlgoTypes = this.GetAlgoTypesFromOption(option);
-                        this.viewModel.BeginDisplayModels(package);
+                        string[] filePathArray = option.FilePaths.ToArray();
+                        if (filePathArray.Length > 0)
+                        {
+                            string fileDir = Path.GetDirectoryName(filePathArray[0]);
+                            PathPackage package = new PathPackage(fileDir, filePathArray,
+                                Settings.Current.SelectedSearchMethodForDragDrop);
+                            package.PresetAlgoTypes = this.GetAlgoTypesFromOption(option);
+                            this.viewModel.BeginDisplayModels(package);
+                        }
                     }
                 })
                 .WithParsed<VerifyHash>(option =>
@@ -176,7 +181,10 @@ namespace HashCalculator
                         }
                         else
                         {
-                            PathPackage package = new PathPackage(Path.GetDirectoryName(option.ChecklistPath),
+                            // 这里添加要计算哈希值的文件时，看作以多选文件的方式添，所以
+                            // PathPackage 的 parent 参数应是 option.ChecklistPath 所在目录
+                            string fileDir = Path.GetDirectoryName(option.ChecklistPath);
+                            PathPackage package = new PathPackage(fileDir, fileDir,
                                 Settings.Current.SelectedSearchMethodForChecklist, newChecklist);
                             package.PresetAlgoTypes = this.GetAlgoTypesFromOption(option);
                             this.viewModel.BeginDisplayModels(package);
@@ -234,8 +242,9 @@ namespace HashCalculator
             if (e.Data.GetDataPresent(DataFormats.FileDrop) &&
                 e.Data.GetData(DataFormats.FileDrop) is string[] data && data.Length != 0)
             {
-                this.viewModel.BeginDisplayModels(
-                    new PathPackage(data, Settings.Current.SelectedSearchMethodForDragDrop));
+                string fileDir = Path.GetDirectoryName(data[0]);
+                this.viewModel.BeginDisplayModels(new PathPackage(fileDir, data,
+                    Settings.Current.SelectedSearchMethodForDragDrop));
             }
         }
 

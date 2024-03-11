@@ -428,7 +428,7 @@
                                 Grid.Column="1"
                                 Margin="16,0,0,0"
                                 Style="{StaticResource DescTextBlockStyle}"
-                                Text="此占位符将被替换为实际文件相对路径，对以文件夹方式添加的文件有效。" />
+                                Text="此占位符将被替换为实际文件相对路径，起点是被添加的对象所在目录。" />
                             <TextBlock
                                 Grid.Row="4"
                                 Grid.Column="0"
@@ -690,7 +690,7 @@
                                         Grid.Column="1"
                                         Margin="16,0,0,0"
                                         Style="{StaticResource DescTextBlockStyle}"
-                                        Text="此占位符将被替换为实际文件相对路径，对以文件夹方式添加的文件有效。" />
+                                        Text="此占位符将被替换为实际文件相对路径，起点是被添加的对象所在目录。" />
                                     <TextBlock
                                         Grid.Row="4"
                                         Grid.Column="0"

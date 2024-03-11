@@ -1130,7 +1130,10 @@ namespace HashCalculator
                     }
                     else
                     {
-                        this.BeginDisplayModels(new PathPackage(Path.GetDirectoryName(this.HashStringOrChecklistPath),
+                        // 这里添加要计算哈希值的文件时，看作以多选文件的方式添，所以
+                        // PathPackage 的 parent 参数应是 HashStringOrChecklistPath 所在目录
+                        string fileDir = Path.GetDirectoryName(this.HashStringOrChecklistPath);
+                        this.BeginDisplayModels(new PathPackage(fileDir, fileDir,
                             Settings.Current.SelectedSearchMethodForChecklist, newChecklist));
                     }
                     return reasonForFailure == null;
@@ -1244,8 +1247,8 @@ namespace HashCalculator
                 return;
             }
             Settings.Current.LastUsedPath = Path.GetDirectoryName(fileOpen.FileNames.ElementAt(0));
-            this.BeginDisplayModels(
-                new PathPackage(fileOpen.FileNames, Settings.Current.SelectedSearchMethodForDragDrop));
+            this.BeginDisplayModels(new PathPackage(Settings.Current.LastUsedPath, fileOpen.FileNames,
+                Settings.Current.SelectedSearchMethodForDragDrop));
         }
 
         public ICommand SelectFilesToHashCmd
@@ -1262,11 +1265,6 @@ namespace HashCalculator
 
         private void SelectFolderToHashAction(object param)
         {
-            SearchMethod method = Settings.Current.SelectedSearchMethodForDragDrop;
-            if (method == SearchMethod.DontSearch)
-            {
-                method = SearchMethod.Descendants;
-            }
             CommonOpenFileDialog folderOpen = new CommonOpenFileDialog()
             {
                 IsFolderPicker = true,
@@ -1278,8 +1276,14 @@ namespace HashCalculator
             {
                 return;
             }
-            Settings.Current.LastUsedPath = folderOpen.FileNames.ElementAt(0);
-            this.BeginDisplayModels(new PathPackage(folderOpen.FileNames, method));
+            SearchMethod searchMethod = Settings.Current.SelectedSearchMethodForDragDrop;
+            if (searchMethod == SearchMethod.DontSearch)
+            {
+                searchMethod = SearchMethod.Descendants;
+            }
+            Settings.Current.LastUsedPath = Path.GetDirectoryName(folderOpen.FileNames.ElementAt(0));
+            this.BeginDisplayModels(new PathPackage(Settings.Current.LastUsedPath, folderOpen.FileNames,
+                searchMethod));
         }
 
         public ICommand SelectFolderToHashCmd

@@ -19,13 +19,6 @@ namespace HashCalculator
 
         public HashChecklist HashChecklist { get; }
 
-        public HashModelArg(string root, string path, IEnumerable<AlgoType> algo)
-        {
-            this.RootDir = root;
-            this.FilePath = path;
-            this.PresetAlgos = algo;
-        }
-
         public HashModelArg(string path, bool deprecated, IEnumerable<AlgoType> algo)
         {
             this.FilePath = path;
@@ -37,13 +30,6 @@ namespace HashCalculator
         {
             this.Deprecated = deprecated;
             this.IsInvalidName = isInvalidName;
-            this.PresetAlgos = algo;
-        }
-
-        public HashModelArg(string path, IEnumerable<AlgoType> algo, HashChecklist checklist)
-        {
-            this.FilePath = path;
-            this.HashChecklist = checklist;
             this.PresetAlgos = algo;
         }
 

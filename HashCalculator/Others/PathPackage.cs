@@ -2,37 +2,37 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 
 namespace HashCalculator
 {
     internal class PathPackage : IEnumerable<HashModelArg>
     {
-        private readonly IEnumerable<string> paths;
+        private readonly string[] paths = null;
         private readonly SearchMethod searchMethod;
         private readonly HashChecklist hashChecklist = null;
+        private readonly string pathsParentDir = null;
         private static readonly char[] invalidFnameChars = Path.GetInvalidFileNameChars();
 
         public CancellationToken StopSearchingToken { get; set; }
 
         public IEnumerable<AlgoType> PresetAlgoTypes { get; set; }
 
-        public PathPackage(IEnumerable<string> paths, SearchMethod method)
+        public PathPackage(string parent, IEnumerable<string> paths, SearchMethod method) :
+            this(parent, paths, method, checklist: null)
         {
-            this.paths = paths;
-            this.searchMethod = method;
         }
 
-        public PathPackage(string path, SearchMethod method, HashChecklist checklist)
+        public PathPackage(string parent, string path, SearchMethod method, HashChecklist checklist) :
+             this(parent, paths: new string[] { path }, method, checklist)
         {
-            this.paths = new string[] { path };
-            this.searchMethod = method;
-            this.hashChecklist = checklist;
         }
 
-        public PathPackage(IEnumerable<string> paths, SearchMethod method, HashChecklist checklist)
+        public PathPackage(string parent, IEnumerable<string> paths, SearchMethod method, HashChecklist checklist)
         {
-            this.paths = paths;
+            this.pathsParentDir = parent;
+            this.paths = paths is string[] array ? array : paths.ToArray();
             this.searchMethod = method;
             this.hashChecklist = checklist;
         }
@@ -58,12 +58,10 @@ namespace HashCalculator
                 }
                 if (Directory.Exists(path))
                 {
-                    string rootDir;
                     IEnumerator<FileInfo> enumerator;
                     try
                     {
                         DirectoryInfo directoryInfo = new DirectoryInfo(path);
-                        rootDir = directoryInfo.FullName;
                         switch (this.searchMethod)
                         {
                             default:
@@ -102,8 +100,8 @@ namespace HashCalculator
                         if (this.hashChecklist == null ||
                             this.hashChecklist.IsNameInChecklist(enumerator.Current.Name))
                         {
-                            yield return new HashModelArg(rootDir, enumerator.Current.FullName,
-                                this.PresetAlgoTypes, this.hashChecklist);
+                            yield return new HashModelArg(this.pathsParentDir,
+                                enumerator.Current.FullName, this.PresetAlgoTypes, this.hashChecklist);
                         }
                         if (this.StopSearchingToken.IsCancellationRequested)
                         {
@@ -132,7 +130,8 @@ namespace HashCalculator
                 }
                 else if (File.Exists(path))
                 {
-                    yield return new HashModelArg(path, this.PresetAlgoTypes, this.hashChecklist);
+                    yield return new HashModelArg(this.pathsParentDir, path, this.PresetAlgoTypes,
+                        this.hashChecklist);
                 }
             }
         }
