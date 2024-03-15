@@ -17,7 +17,7 @@ namespace HashCalculator
     {
         private string _fileName = string.Empty;
         private string _currentHashString = null;
-        private string _taskDetails = string.Empty;
+        private string _errorDetails = string.Empty;
         private string _modelDetails = "暂无详情...";
         private long _fileSize = 0L;
         private long _progress = 0L;
@@ -62,26 +62,20 @@ namespace HashCalculator
 
         public HashViewModel(int serial, HashModelArg arg)
         {
-            this.HashModelArg = arg;
+            this.Arguments = arg;
             this.SerialNumber = serial;
+            this.FileName = arg.FileName;
+            this.FileInfo = new FileInfo(arg.FilePath);
+            this.RelativePath = arg.FileRelativePath;
             this.InvalidFileName = arg.IsInvalidName;
-            if (arg.IsInvalidName)
-            {
-                this.FileInfo = new FileInfo("无效的文件名");
-            }
-            else
-            {
-                this.FileInfo = new FileInfo(arg.FilePath);
-            }
-            this.FileName = this.FileInfo.Name;
             if (arg.PresetAlgos != null)
             {
                 this.AlgoInOutModels = AlgosPanelModel.GetKnownAlgos(arg.PresetAlgos);
             }
             else if (Settings.Current.PreferChecklistAlgs && arg.HashChecklist != null)
             {
-                this.AlgoInOutModels =
-                    AlgosPanelModel.GetAlgsFromChecklist(arg.HashChecklist, this.FileName);
+                this.AlgoInOutModels = AlgosPanelModel.GetAlgsFromChecklist(arg.HashChecklist,
+                    this.RelativePath);
             }
             this.PropertyChanged += this.CurrentHashStringHandler;
         }
@@ -90,15 +84,17 @@ namespace HashCalculator
 
         public FileInfo FileInfo { get; }
 
+        public string RelativePath { get; }
+
         public bool InvalidFileName { get; }
 
-        public HashModelArg HashModelArg { get; }
+        public HashModelArg Arguments { get; }
 
-        public bool HasBeenRun { get; private set; }
+        public CmpableFileIndex FileIndex { get; set; }
 
         public bool Matched { get; set; } = true;
 
-        public CmpableFileIndex FileIndex { get; set; }
+        public bool HasBeenRun { get; private set; }
 
         public string FileName
         {
@@ -207,11 +203,11 @@ namespace HashCalculator
                 this.SetPropNotify(ref this._currentState, value);
                 if (value == HashState.NoState)
                 {
-                    this.TaskMessage = string.Empty;
+                    this.ErrorDetails = string.Empty;
                 }
                 else if (value == HashState.Waiting)
                 {
-                    this.TaskMessage = "任务排队中...";
+                    this.ErrorDetails = "任务排队中...";
                 }
             }
         }
@@ -227,7 +223,7 @@ namespace HashCalculator
                 this.SetPropNotify(ref this._currentResult, value);
                 if (value == HashResult.Canceled)
                 {
-                    this.TaskMessage = "任务已取消...";
+                    this.ErrorDetails = "任务已取消...";
                 }
             }
         }
@@ -256,15 +252,15 @@ namespace HashCalculator
             }
         }
 
-        public string TaskMessage
+        public string ErrorDetails
         {
             get
             {
-                return this._taskDetails;
+                return this._errorDetails;
             }
             set
             {
-                this.SetPropNotify(ref this._taskDetails, value);
+                this.SetPropNotify(ref this._errorDetails, value);
             }
         }
 
@@ -472,7 +468,7 @@ namespace HashCalculator
 
         public void ResetHashViewModel()
         {
-            this.TaskMessage = string.Empty;
+            this.ErrorDetails = string.Empty;
             this.FileSize = 0;
             this.DurationofTask = 0.0;
             this.Progress = 0;
@@ -663,12 +659,9 @@ namespace HashCalculator
                 }
                 else
                 {
-                    if (checklist.GetAlgHashMapOfFile(this.FileName) is AlgHashMap algoHashMap)
+                    if (checklist.TryGetFileOrEmptyHashChecker(this.RelativePath, out HashChecker checker))
                     {
-                        foreach (AlgoInOutModel model in this.AlgoInOutModels)
-                        {
-                            model.HashCmpResult = algoHashMap.CompareHash(model.AlgoName, model.HashResult);
-                        }
+                        checker.SetModelCheckResult(this);
                     }
                     else
                     {
@@ -695,12 +688,13 @@ namespace HashCalculator
 
         private void SetHashCheckResultForInOutModelAndSetCurModel()
         {
-            AlgHashMap algHashMap = this.HashModelArg.HashChecklist?.GetAlgHashMapOfFile(this.FileName);
-            if (algHashMap != null && this.AlgoInOutModels != null)
+            if (this.AlgoInOutModels != null &&
+                this.Arguments.HashChecklist?.TryGetFileOrEmptyHashChecker(this.RelativePath,
+                    out HashChecker checker) == true)
             {
                 foreach (AlgoInOutModel item in this.AlgoInOutModels)
                 {
-                    CmpRes hashCheckResult = algHashMap.CompareHash(item.AlgoName, item.HashResult);
+                    CmpRes hashCheckResult = checker.GetCheckResult(item.AlgoName, item.HashResult);
                     item.HashCmpResult = hashCheckResult;
                     if (Settings.Current.AlgoToSwitchToAfterHashChecked != CmpRes.NoResult &&
                         hashCheckResult == Settings.Current.AlgoToSwitchToAfterHashChecked &&
@@ -727,12 +721,12 @@ namespace HashCalculator
             {
                 this.State = HashState.Running;
             });
-            if (this.HashModelArg.Deprecated)
+            if (this.Arguments.Deprecated)
             {
                 synchronization.Invoke(() =>
                 {
                     this.Result = HashResult.Failed;
-                    this.TaskMessage = "未搜索到文件，请修改搜索策略后重新添加...";
+                    this.ErrorDetails = this.Arguments.Message;
                 });
                 goto FinishingTouchesBeforeExiting;
             }
@@ -742,7 +736,7 @@ namespace HashCalculator
                 synchronization.Invoke(() =>
                 {
                     this.Result = HashResult.Failed;
-                    this.TaskMessage = "该文件不存在或无法访问...";
+                    this.ErrorDetails = "此文件不存在或无法访问...";
                 });
                 goto FinishingTouchesBeforeExiting;
             }
@@ -767,7 +761,7 @@ namespace HashCalculator
                         synchronization.Invoke(() =>
                         {
                             this.Result = HashResult.Failed;
-                            this.TaskMessage = "是空文件，终止计算并标记为失败...";
+                            this.ErrorDetails = "是空文件，终止计算并标记为失败...";
                         });
                         goto FinishingTouchesBeforeExiting;
                     }
@@ -862,7 +856,7 @@ namespace HashCalculator
                 synchronization.Invoke(() =>
                 {
                     this.Result = HashResult.Failed;
-                    this.TaskMessage = "文件读取失败或进行计算时出错...";
+                    this.ErrorDetails = "文件读取失败或进行计算时出错...";
                 });
             }
             finally

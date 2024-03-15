@@ -132,7 +132,7 @@ namespace HashCalculator
         public string GenerateTextInFormat(HashViewModel parent, string format, OutputType output,
             bool endLine, bool seeExport, bool casedAlgName)
         {
-            if (parent != null && !parent.HashModelArg.IsInvalidName && this.HashResult != null &&
+            if (parent != null && !parent.Arguments.IsInvalidName && this.HashResult != null &&
                 (!seeExport || this.Export))
             {
                 if (output == OutputType.Unknown)
@@ -172,22 +172,12 @@ namespace HashCalculator
                     {
                         formatBuilder.Append('\n');
                     }
-                    if (!parent.HashModelArg.Deprecated &&
-                        !string.IsNullOrWhiteSpace(parent.HashModelArg.RootDir) &&
-                        CommonUtils.GetRelativePath(parent.HashModelArg.RootDir, parent.FileInfo.FullName)
-                            is string relativePath)
-                    {
-                        formatBuilder.Replace("$relpath$", relativePath);
-                    }
-                    else
-                    {
-                        formatBuilder.Replace("$relpath$", parent.FileInfo.Name);
-                    }
                     formatBuilder.Replace("$algo$", algoName);
                     formatBuilder.Replace("$hash$", BytesToStrByOutputTypeCvt.Convert(this.HashResult, output));
                     formatBuilder.Replace("$name$", parent.FileInfo.Name);
-                    formatBuilder.Replace("$path$", parent.HashModelArg.Deprecated ?
+                    formatBuilder.Replace("$path$", parent.Arguments.Deprecated ?
                         parent.FileInfo.Name : parent.FileInfo.FullName);
+                    formatBuilder.Replace("$relpath$", parent.RelativePath);
                     return formatBuilder.ToString();
                 }
             }

@@ -239,10 +239,10 @@ namespace HashCalculator
             if (checklist != null)
             {
                 List<AlgoInOutModel> finalInOutModels = new List<AlgoInOutModel>();
-                if (checklist.TryGetAlgHashMapOfFile(fileName, out AlgHashMap algHashMap))
+                if (checklist.TryGetFileHashChecker(fileName, out HashChecker checker))
                 {
                     IEnumerable<AlgoInOutModel> inOutModels;
-                    string[] algoNames = algHashMap.GetExistingAlgoNames();
+                    string[] algoNames = checker.GetExistingAlgoNames();
                     if (algoNames.Length != 0)
                     {
                         inOutModels = NewInOutModelsByNames(algoNames);
@@ -253,7 +253,7 @@ namespace HashCalculator
                     }
                     else
                     {
-                        inOutModels = NewInOutModelsByDigestLengths(algHashMap.GetExistingDigestLengths());
+                        inOutModels = NewInOutModelsByDigestLengths(checker.GetExistingDigestLengths());
                         if (inOutModels != null)
                         {
                             finalInOutModels.AddRange(inOutModels);

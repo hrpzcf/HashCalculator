@@ -7,49 +7,49 @@ using System.Text;
 
 namespace HashCalculator
 {
-    internal class AlgHashMap
+    internal class HashChecker
     {
-        private bool FileIndependent { get; set; }
+        private bool fileIndependent;
 
-        private readonly Dictionary<string, List<byte[]>> algHashDict =
+        private readonly Dictionary<string, List<byte[]>> algoHashDict =
             new Dictionary<string, List<byte[]>>(StringComparer.OrdinalIgnoreCase);
 
         public bool IsExistingFile { get; set; }
 
-        public AlgHashMap(string fileName, string algoName, byte[] hashBytes)
+        public HashChecker(string relpath, string algoName, byte[] hashBytes)
         {
-            this.AddAlgHashMapOfFile(fileName, algoName, hashBytes);
+            this.AddCheckerItem(relpath, algoName, hashBytes);
         }
 
-        public bool AddAlgHashMapOfFile(string fileName, string algoName, byte[] hashBytes)
+        public bool AddCheckerItem(string relpath, string algoName, byte[] hashBytes)
         {
-            this.FileIndependent = fileName == string.Empty;
-            if (algoName == null || hashBytes == null)
+            if (relpath == null || algoName == null || hashBytes == null)
             {
                 return false;
             }
-            if (this.algHashDict.TryGetValue(algoName, out var hashValues))
+            this.fileIndependent = relpath == string.Empty;
+            if (this.algoHashDict.TryGetValue(algoName, out var hashValues))
             {
                 hashValues.Add(hashBytes);
             }
             else
             {
-                this.algHashDict[algoName] = new List<byte[]>() { hashBytes };
+                this.algoHashDict[algoName] = new List<byte[]>() { hashBytes };
             }
             return true;
         }
 
-        public CmpRes CompareHash(string algoName, byte[] hashBytes)
+        public CmpRes GetCheckResult(string algoName, byte[] hashBytes)
         {
-            if (algoName == null || hashBytes == null || !this.algHashDict.Any())
+            if (algoName == null || hashBytes == null || !this.algoHashDict.Any())
             {
                 return CmpRes.Unrelated;
             }
             bool algoNameIndependent = false;
-            if (!this.algHashDict.TryGetValue(algoName, out List<byte[]> hashValues))
+            if (!this.algoHashDict.TryGetValue(algoName, out List<byte[]> hashValues))
             {
                 algoNameIndependent = true;
-                this.algHashDict.TryGetValue(string.Empty, out hashValues);
+                this.algoHashDict.TryGetValue(string.Empty, out hashValues);
             }
             if (hashValues != null)
             {
@@ -79,46 +79,56 @@ namespace HashCalculator
                         }
                     }
                     return first.SequenceEqual(hashBytes) ?
-                        CmpRes.Matched : this.FileIndependent ? CmpRes.Unrelated : CmpRes.Mismatch;
+                        CmpRes.Matched : this.fileIndependent ? CmpRes.Unrelated : CmpRes.Mismatch;
                 }
             }
             return CmpRes.Unrelated;
         }
 
+        public void SetModelCheckResult(HashViewModel model)
+        {
+            if (model != null && model.AlgoInOutModels != null)
+            {
+                foreach (AlgoInOutModel inOut in model.AlgoInOutModels)
+                {
+                    inOut.HashCmpResult = this.GetCheckResult(inOut.AlgoName, inOut.HashResult);
+                }
+            }
+        }
+
         public string[] GetExistingAlgoNames()
         {
-            return this.algHashDict.Keys.Where(i => i != string.Empty).ToArray();
+            return this.algoHashDict.Keys.Where(i => i != string.Empty).ToArray();
         }
 
         public int[] GetExistingDigestLengths()
         {
-            return this.algHashDict.Values.SelectMany(i => i).Select(j => j.Length).Distinct().ToArray();
+            return this.algoHashDict.Values.SelectMany(i => i).Select(j => j.Length).Distinct().ToArray();
         }
     }
 
-    internal class HashChecklist : IEnumerable<KeyValuePair<string, AlgHashMap>>
+    internal class HashChecklist : IEnumerable<KeyValuePair<string, HashChecker>>
     {
-        // "utf-8", "gb2312", "utf-16", "gb18030"
-        private static readonly Encoding[] supportedEncodings =
-            new Encoding[] {
-                Encoding.GetEncoding(Encoding.UTF8.CodePage,
-                    new EncoderExceptionFallback(),
-                    new DecoderExceptionFallback()),
-                Encoding.GetEncoding(Encoding.Default.CodePage,
-                    new EncoderExceptionFallback(),
-                    new DecoderExceptionFallback()),
-                Encoding.GetEncoding("gb18030",
-                    new EncoderExceptionFallback(),
-                    new DecoderExceptionFallback()),
-                Encoding.GetEncoding(Encoding.Unicode.CodePage,
-                    new EncoderExceptionFallback(),
-                    new DecoderExceptionFallback()),
-            };
+        private static readonly char[] directorySeparators =
+            new char[] { '/', '\\' };
+        private static readonly Encoding[] supportedEncodings = new Encoding[]
+        {
+            Encoding.GetEncoding(Encoding.UTF8.CodePage,
+                new EncoderExceptionFallback(),
+                new DecoderExceptionFallback()),
+            Encoding.GetEncoding(Encoding.Default.CodePage,
+                new EncoderExceptionFallback(),
+                new DecoderExceptionFallback()),
+            Encoding.GetEncoding("gb18030",
+                new EncoderExceptionFallback(),
+                new DecoderExceptionFallback()),
+            Encoding.GetEncoding(Encoding.Unicode.CodePage,
+                new EncoderExceptionFallback(),
+                new DecoderExceptionFallback()),
+        };
 
-        public string ReasonForFailure { get; private set; }
-
-        private Dictionary<string, AlgHashMap> algHashMapOfFiles =
-            new Dictionary<string, AlgHashMap>(StringComparer.OrdinalIgnoreCase);
+        private Dictionary<string, HashChecker> fileHashCheckerDict =
+            new Dictionary<string, HashChecker>(StringComparer.OrdinalIgnoreCase);
 
         public HashChecklist() { }
 
@@ -127,38 +137,53 @@ namespace HashCalculator
             this.UpdateWithFile(filePath);
         }
 
+        public string ReasonForFailure { get; private set; }
+
+        public bool KeysAreRelativePaths { get; private set; }
+
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return this.algHashMapOfFiles.GetEnumerator();
+            return this.fileHashCheckerDict.GetEnumerator();
         }
 
-        public IEnumerator<KeyValuePair<string, AlgHashMap>> GetEnumerator()
+        public IEnumerator<KeyValuePair<string, HashChecker>> GetEnumerator()
         {
-            return this.algHashMapOfFiles.GetEnumerator();
+            return this.fileHashCheckerDict.GetEnumerator();
+        }
+
+        private void Initialize()
+        {
+            this.ReasonForFailure = null;
+            this.KeysAreRelativePaths = false;
+            this.fileHashCheckerDict.Clear();
         }
 
         public bool IsNameInChecklist(string fileName)
         {
-            if (!string.IsNullOrEmpty(fileName) && this.algHashMapOfFiles.ContainsKey(fileName))
+            if (!string.IsNullOrEmpty(fileName) && this.fileHashCheckerDict.ContainsKey(fileName))
             {
-                this.algHashMapOfFiles[fileName].IsExistingFile = true;
+                this.fileHashCheckerDict[fileName].IsExistingFile = true;
                 return true;
             }
             return false;
         }
 
-        public bool AddCheckItem(string algoName, string hashString, string fileName)
+        public bool AddChecklistItem(string algo, string hash, string relpath)
         {
-            if (algoName != null && hashString != null && fileName != null &&
-                CommonUtils.HashBytesFromString(hashString) is byte[] hash)
+            if (algo == null || hash == null || relpath == null)
             {
-                if (this.algHashMapOfFiles.TryGetValue(fileName, out AlgHashMap algoHashMap))
+                return false;
+            }
+            if (CommonUtils.HashBytesFromString(hash) is byte[] hashBytes)
+            {
+                relpath = relpath.Replace('/', '\\');
+                if (this.fileHashCheckerDict.TryGetValue(relpath, out HashChecker checker))
                 {
-                    algoHashMap.AddAlgHashMapOfFile(fileName, algoName, hash);
+                    checker.AddCheckerItem(relpath, algo, hashBytes);
                 }
                 else
                 {
-                    this.algHashMapOfFiles[fileName] = new AlgHashMap(fileName, algoName, hash);
+                    this.fileHashCheckerDict[relpath] = new HashChecker(relpath, algo, hashBytes);
                 }
                 return true;
             }
@@ -189,8 +214,7 @@ namespace HashCalculator
 
         public string UpdateWithFile(string filePath)
         {
-            this.ReasonForFailure = null;
-            this.algHashMapOfFiles.Clear();
+            this.Initialize();
             try
             {
                 bool contentDecoded = false;
@@ -238,7 +262,7 @@ namespace HashCalculator
             }
             catch (Exception ex)
             {
-                this.algHashMapOfFiles.Clear();
+                this.fileHashCheckerDict.Clear();
                 this.ReasonForFailure = $"出现异常导致搜集校验依据失败，详情：\n{ex.Message}";
             }
             return this.ReasonForFailure;
@@ -246,9 +270,9 @@ namespace HashCalculator
 
         public string UpdateWithText(string paragraph)
         {
-            bool anyPaser = false, anyItemAdded = false;
-            this.ReasonForFailure = null;
-            this.algHashMapOfFiles.Clear();
+            bool anyPaser = false;
+            bool anyItemAdded = false;
+            this.Initialize();
             foreach (TemplateForChecklistModel parser in this.GetParsers(null))
             {
                 anyPaser = true;
@@ -271,44 +295,87 @@ namespace HashCalculator
 
         public string UpdateWithChecklist(HashChecklist checklist)
         {
+            this.Initialize();
             this.ReasonForFailure = checklist.ReasonForFailure;
-            this.algHashMapOfFiles = checklist.algHashMapOfFiles;
+            this.fileHashCheckerDict = checklist.fileHashCheckerDict;
             checklist.DestroyChecklist();
             return this.ReasonForFailure;
         }
 
         public void DestroyChecklist()
         {
-            this.algHashMapOfFiles = new Dictionary<string, AlgHashMap>();
+            this.Initialize();
+            this.fileHashCheckerDict = new Dictionary<string, HashChecker>();
             this.ReasonForFailure = "校验依据内容已被清空";
         }
 
-        public bool TryGetAlgHashMapOfFile(string fileName, out AlgHashMap hashMap)
+        public bool TryGetFileHashChecker(string mapKey, out HashChecker checker)
         {
-            if (fileName == null)
+            if (mapKey != null)
             {
-                hashMap = default(AlgHashMap);
-                return false;
+                if (!this.KeysAreRelativePaths)
+                {
+                    mapKey = Path.GetFileName(mapKey);
+                }
+                return this.fileHashCheckerDict.TryGetValue(mapKey, out checker);
             }
-            return this.algHashMapOfFiles.TryGetValue(fileName, out hashMap);
+            checker = null;
+            return false;
         }
 
-        public AlgHashMap GetAlgHashMapOfFile(string fileName)
+        public bool TryGetFileOrEmptyHashChecker(string mapKey, out HashChecker checker)
         {
-            if (fileName == null || !this.algHashMapOfFiles.Any())
+            if (mapKey != null && this.fileHashCheckerDict.Any())
             {
-                return default(AlgHashMap);
+                if (!this.KeysAreRelativePaths)
+                {
+                    mapKey = Path.GetFileName(mapKey);
+                }
+                return this.fileHashCheckerDict.TryGetValue(mapKey, out checker)
+                    || this.fileHashCheckerDict.TryGetValue(string.Empty, out checker);
             }
-            // Windows 文件名不区分大小写 (algHashMapOfFiles 使用了忽略大小写的比较器)
-            if (this.algHashMapOfFiles.TryGetValue(fileName, out AlgHashMap algoHashMapOfFile))
+            checker = null;
+            return false;
+        }
+
+        /// <summary>
+        /// 断言 HashChecklist 里所有文件标识都是相对路径并取得所有文件完整路径
+        /// </summary>
+        public bool AssertRelativeGetFull(string rootDir, out IEnumerable<string> fullPaths)
+        {
+            if (!string.IsNullOrWhiteSpace(rootDir) && this.fileHashCheckerDict.Any())
             {
-                return algoHashMapOfFile;
+                // 如果所有 Key 都不含 "\" 或 "/" 则进一步判断是否是相对路径
+                if (!this.fileHashCheckerDict.Keys.Any(i => i.IndexOfAny(directorySeparators) != -1))
+                {
+                    List<string> filePathList = new List<string>();
+                    foreach (KeyValuePair<string, HashChecker> pair in this.fileHashCheckerDict)
+                    {
+                        string filePath = Path.Combine(rootDir, pair.Key);
+                        if (!File.Exists(filePath))
+                        {
+                            // 如果有一个路径找不到文件，则视所有 Key 为非相对路径，
+                            // 返回 false 和 null 结果，意味着调用者需要自行枚举文件找到目标
+                            fullPaths = null;
+                            return false;
+                        }
+                        filePathList.Add(filePath);
+                    }
+                    // 如果所有 Key 与 parentDir 连接都能找到文件，也视所有 Key 为相对路径
+                    fullPaths = filePathList;
+                    this.KeysAreRelativePaths = true;
+                    return true;
+                }
+                // 只要某个 Key 含有一个 "\" 或 "/" 则视所有 Key 为相对路径，不管文件是否存在
+                else
+                {
+                    fullPaths = this.fileHashCheckerDict.Keys.Select(rel => Path.Combine(rootDir, rel));
+                    this.KeysAreRelativePaths = true;
+                    return true;
+                }
             }
-            else if (this.algHashMapOfFiles.TryGetValue(string.Empty, out AlgHashMap algoHashMapOfNonFile))
-            {
-                return algoHashMapOfNonFile;
-            }
-            return default(AlgHashMap);
+            fullPaths = null;
+            return false;
         }
     }
 }

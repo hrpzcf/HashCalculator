@@ -12,7 +12,7 @@ namespace HashCalculator
         private readonly string[] paths = null;
         private readonly SearchMethod searchMethod;
         private readonly HashChecklist hashChecklist = null;
-        private readonly string pathsParentDir = null;
+        private readonly string parentDir = null;
         private static readonly char[] invalidFnameChars = Path.GetInvalidFileNameChars();
 
         public CancellationToken StopSearchingToken { get; set; }
@@ -31,7 +31,7 @@ namespace HashCalculator
 
         public PathPackage(string parent, IEnumerable<string> paths, SearchMethod method, HashChecklist checklist)
         {
-            this.pathsParentDir = parent;
+            this.parentDir = parent;
             this.paths = paths is string[] array ? array : paths.ToArray();
             this.searchMethod = method;
             this.hashChecklist = checklist;
@@ -49,89 +49,171 @@ namespace HashCalculator
 
         private IEnumerator<HashModelArg> EnumerateModelArgs()
         {
-            foreach (string path in this.paths ?? Array.Empty<string>())
+            if (this.hashChecklist == null)
             {
-                if (this.StopSearchingToken != null &&
-                    this.StopSearchingToken.IsCancellationRequested)
+                foreach (string path in this.paths ?? Array.Empty<string>())
                 {
-                    yield break;
-                }
-                if (Directory.Exists(path))
-                {
-                    IEnumerator<FileInfo> enumerator;
-                    try
+                    if (this.StopSearchingToken != null &&
+                        this.StopSearchingToken.IsCancellationRequested)
                     {
-                        DirectoryInfo directoryInfo = new DirectoryInfo(path);
-                        switch (this.searchMethod)
-                        {
-                            default:
-                            case SearchMethod.Children:
-                                enumerator = directoryInfo.EnumerateFiles().GetEnumerator();
-                                break;
-                            case SearchMethod.Descendants:
-                                enumerator = directoryInfo.EnumerateFiles("*", SearchOption.AllDirectories)
-                                    .GetEnumerator();
-                                break;
-                            case SearchMethod.DontSearch:
-                                continue;
-                        }
+                        yield break;
                     }
-                    catch (Exception)
+                    if (File.Exists(path))
                     {
-                        continue;
+                        yield return new HashModelArg(this.parentDir, path, this.PresetAlgoTypes,
+                            this.hashChecklist);
                     }
-                    // 不直接遍历 EnumerateFiles 返回的 IEnumerable 的原因：
-                    // 遍历过程中捕捉不到 UnauthorizedAccessException 异常(?)
-                    while (true)
+                    else if (Directory.Exists(path))
                     {
+                        IEnumerator<FileInfo> enumerator;
                         try
                         {
-                            if (!enumerator.MoveNext())
+                            DirectoryInfo directoryInfo = new DirectoryInfo(path);
+                            switch (this.searchMethod)
                             {
-                                break;
+                                default:
+                                case SearchMethod.Children:
+                                    enumerator = directoryInfo.EnumerateFiles().GetEnumerator();
+                                    break;
+                                case SearchMethod.Descendants:
+                                    enumerator = directoryInfo.EnumerateFiles("*", SearchOption.AllDirectories)
+                                        .GetEnumerator();
+                                    break;
+                                case SearchMethod.DontSearch:
+                                    continue;
                             }
                         }
                         catch (Exception)
                         {
-                            // 不使用 continue 而使用 break 的原因：
-                            // 如果因权限等问题导致 MoveNext 抛出异常，那下一轮结果也是 false(?)
-                            break;
+                            continue;
                         }
-                        if (this.hashChecklist == null ||
-                            this.hashChecklist.IsNameInChecklist(enumerator.Current.Name))
+                        // 不直接遍历 EnumerateFiles 方法返回的 IEnumerable 的原因：遍历过程抛出异常，
+                        // 需要使用 try-catch 包裹整个 foreach，但 try-catch 内又不允许 yield return
+                        while (true)
                         {
-                            yield return new HashModelArg(this.pathsParentDir,
-                                enumerator.Current.FullName, this.PresetAlgoTypes, this.hashChecklist);
-                        }
-                        if (this.StopSearchingToken.IsCancellationRequested)
-                        {
-                            yield break;
-                        }
-                    }
-                    if (this.hashChecklist != null)
-                    {
-                        foreach (KeyValuePair<string, AlgHashMap> pair in this.hashChecklist)
-                        {
-                            if (string.IsNullOrEmpty(pair.Key) || pair.Key.IndexOfAny(invalidFnameChars) != -1)
-                            {
-                                yield return new HashModelArg(true, true, this.PresetAlgoTypes);
-                            }
-                            // 此属性由 HashChecklist.IsNameInChecklist 方法更改
-                            else if (!pair.Value.IsExistingFile)
-                            {
-                                yield return new HashModelArg(pair.Key, true, this.PresetAlgoTypes);
-                            }
                             if (this.StopSearchingToken.IsCancellationRequested)
                             {
                                 yield break;
                             }
+                            try
+                            {
+                                if (!enumerator.MoveNext())
+                                {
+                                    break;
+                                }
+                            }
+                            catch (Exception)
+                            {
+                                continue;
+                            }
+                            yield return new HashModelArg(this.parentDir, enumerator.Current.FullName,
+                                this.PresetAlgoTypes, this.hashChecklist);
                         }
                     }
                 }
-                else if (File.Exists(path))
+            }
+            else
+            {
+                if (this.hashChecklist.AssertRelativeGetFull(this.parentDir,
+                    out IEnumerable<string> fullPaths))
                 {
-                    yield return new HashModelArg(this.pathsParentDir, path, this.PresetAlgoTypes,
-                        this.hashChecklist);
+                    foreach (string path in fullPaths)
+                    {
+                        if (this.StopSearchingToken.IsCancellationRequested)
+                        {
+                            yield break;
+                        }
+                        HashModelArg argument = new HashModelArg(this.parentDir, path,
+                            this.PresetAlgoTypes, this.hashChecklist);
+                        if (!File.Exists(path))
+                        {
+                            argument.Deprecated = true;
+                            argument.Message = "找不到文件，可能哈希值清单与此文件相对位置不正确";
+                        }
+                        yield return argument;
+                    }
+                }
+                else
+                {
+                    foreach (string path in this.paths ?? Array.Empty<string>())
+                    {
+                        if (this.StopSearchingToken != null &&
+                            this.StopSearchingToken.IsCancellationRequested)
+                        {
+                            yield break;
+                        }
+                        if (File.Exists(path))
+                        {
+                            yield return new HashModelArg(this.parentDir, path, this.PresetAlgoTypes,
+                                this.hashChecklist);
+                        }
+                        else if (Directory.Exists(path))
+                        {
+                            IEnumerator<FileInfo> enumerator;
+                            try
+                            {
+                                DirectoryInfo directoryInfo = new DirectoryInfo(path);
+                                switch (this.searchMethod)
+                                {
+                                    default:
+                                    case SearchMethod.Children:
+                                        enumerator = directoryInfo.EnumerateFiles().GetEnumerator();
+                                        break;
+                                    case SearchMethod.Descendants:
+                                        enumerator = directoryInfo.EnumerateFiles("*", SearchOption.AllDirectories)
+                                            .GetEnumerator();
+                                        break;
+                                    case SearchMethod.DontSearch:
+                                        continue;
+                                }
+                            }
+                            catch (Exception)
+                            {
+                                continue;
+                            }
+                            // 不直接遍历 EnumerateFiles 方法返回的 IEnumerable 的原因：遍历过程抛出异常，
+                            // 需要使用 try-catch 包裹整个 foreach，但 try-catch 内又不允许 yield return
+                            while (true)
+                            {
+                                if (this.StopSearchingToken.IsCancellationRequested)
+                                {
+                                    yield break;
+                                }
+                                try
+                                {
+                                    if (!enumerator.MoveNext())
+                                    {
+                                        break;
+                                    }
+                                }
+                                catch (Exception)
+                                {
+                                    continue;
+                                }
+                                if (this.hashChecklist.IsNameInChecklist(enumerator.Current.Name))
+                                {
+                                    yield return new HashModelArg(this.parentDir, enumerator.Current.FullName,
+                                        this.PresetAlgoTypes, this.hashChecklist);
+                                }
+                            }
+                            foreach (KeyValuePair<string, HashChecker> pair in this.hashChecklist)
+                            {
+                                if (this.StopSearchingToken.IsCancellationRequested)
+                                {
+                                    yield break;
+                                }
+                                if (string.IsNullOrEmpty(pair.Key) || pair.Key.IndexOfAny(invalidFnameChars) != -1)
+                                {
+                                    yield return new HashModelArg(this.PresetAlgoTypes);
+                                }
+                                // 此属性由 HashChecklist.IsNameInChecklist 方法更改
+                                else if (!pair.Value.IsExistingFile)
+                                {
+                                    yield return new HashModelArg(pair.Key, this.PresetAlgoTypes);
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

@@ -49,7 +49,7 @@ namespace HashCalculator
         private RelayCommand refreshOriginalModelsCmd;
         private RelayCommand forceRefreshOriginalModelsCmd;
         private RelayCommand selectChecklistFileCmd;
-        private RelayCommand startVerifyHashValueCmd;
+        private RelayCommand startCheckHashResultsCmd;
         private RelayCommand openSettingsPanelCmd;
         private RelayCommand openAboutWindowCmd;
         private RelayCommand selectFilesToHashCmd;
@@ -304,7 +304,7 @@ namespace HashCalculator
             {
                 lock (this.displayingModelLock)
                 {
-                    foreach (HashModelArg arg in models.Select(i => i.HashModelArg))
+                    foreach (HashModelArg arg in models.Select(i => i.Arguments))
                     {
                         if (token.IsCancellationRequested)
                         {
@@ -545,7 +545,7 @@ namespace HashCalculator
                     {
                         stringBuilder.Append(model.FileInfo.Name);
                     }
-                    else if (!model.HashModelArg.Deprecated)
+                    else if (!model.Arguments.Deprecated)
                     {
                         fullPathCopied = true;
                         stringBuilder.Append(model.FileInfo.FullName);
@@ -606,7 +606,7 @@ namespace HashCalculator
                 foreach (HashViewModel model in selectedModels)
                 {
                     bool isMatched = false;
-                    if (!Path.IsPathRooted(model.HashModelArg.FilePath))
+                    if (!Path.IsPathRooted(model.Arguments.FilePath))
                     {
                         continue;
                     }
@@ -1182,20 +1182,20 @@ namespace HashCalculator
             }
         }
 
-        private void CheckFileHashValueAction(object param)
+        private void StartCheckHashResultsAction(object param)
         {
             this.CheckFilesHashBasedOnStringOrChecklist(null);
         }
 
-        public ICommand StartVerifyHashValueCmd
+        public ICommand StartCheckHashResultsCmd
         {
             get
             {
-                if (this.startVerifyHashValueCmd is null)
+                if (this.startCheckHashResultsCmd is null)
                 {
-                    this.startVerifyHashValueCmd = new RelayCommand(this.CheckFileHashValueAction);
+                    this.startCheckHashResultsCmd = new RelayCommand(this.StartCheckHashResultsAction);
                 }
-                return this.startVerifyHashValueCmd;
+                return this.startCheckHashResultsCmd;
             }
         }
 

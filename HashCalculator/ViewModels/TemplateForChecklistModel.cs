@@ -88,9 +88,9 @@ namespace HashCalculator
                 Template = "^#$algo$\\s\\*?$hash$\\s\\*?$name$\\r?$"
             };
 
-        private const string algoGroupName = "algo";
-        private const string hashGroupName = "hash";
-        private const string nameGroupName = "name";
+        private const string algoGroup = "algo";
+        private const string hashGroup = "hash";
+        private const string nameGroup = "name";
         private static readonly RegexOptions defaultOptions =
             RegexOptions.ExplicitCapture | RegexOptions.Multiline;
         private string extension = null;
@@ -101,9 +101,9 @@ namespace HashCalculator
             new ReadOnlyDictionary<string, string>(
                 new Dictionary<string, string>()
                 {
-                    {"$algo$", "(?<algo>[A-Za-z0-9-]+)" },
-                    {"$hash$", "(?<hash>[A-Za-z0-9+/=]+)" },
-                    {"$name$", "(?<name>[^:*?\"<>|\t\v\f\r\n]+)" },
+                    {$"${algoGroup}$", $"(?<{algoGroup}>[A-Za-z0-9-]+)" },
+                    {$"${nameGroup}$", $"(?<{nameGroup}>[^:*?\"<>|\t\v\f\r\n]+)" },
+                    {$"${hashGroup}$", $"(?<{hashGroup}>[A-Za-z0-9+/=]+)" },
                 }
             );
 
@@ -175,7 +175,7 @@ namespace HashCalculator
 
         internal bool ExtendChecklistWithLines(string lines, HashChecklist checklist)
         {
-            bool result = false;
+            int checkItemCount = 0;
             if (!string.IsNullOrEmpty(lines) && checklist != null && this.InitializePattern())
             {
                 try
@@ -183,21 +183,16 @@ namespace HashCalculator
                     MatchCollection matches = Regex.Matches(lines, this.regexPattern, defaultOptions);
                     foreach (Match match in matches)
                     {
-#if DEBUG
-                        string algo = match.Groups[algoGroupName].Value;
-                        string hash = match.Groups[hashGroupName].Value;
-                        string name = match.Groups[nameGroupName].Value;
-                        result = checklist.AddCheckItem(algo, hash, name);
-                        Console.WriteLine($"algo: {algo}; hash: {hash}; name: {name}");
-#else
-                        result = checklist.AddCheckItem(match.Groups[algoGroupName].Value, match.Groups[hashGroupName].Value,
-                            match.Groups[nameGroupName].Value);
-#endif
+                        if (checklist.AddChecklistItem(match.Groups[algoGroup].Value, match.Groups[hashGroup].Value,
+                            match.Groups[nameGroup].Value))
+                        {
+                            ++checkItemCount;
+                        }
                     }
                 }
                 catch (Exception) { }
             }
-            return result;
+            return checkItemCount != 0;
         }
     }
 }
