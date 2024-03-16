@@ -1123,6 +1123,7 @@ namespace HashCalculator
                 TemplateForExportModel.TxtModel.Copy(null),
                 TemplateForExportModel.CsvModel.Copy(null),
                 TemplateForExportModel.HcbModel.Copy(null),
+                TemplateForExportModel.SfvModel.Copy(null),
                 TemplateForExportModel.AllModel.Copy(null)
             };
         }

@@ -127,15 +127,30 @@ namespace HashCalculator
                 new DecoderExceptionFallback()),
         };
 
-        private Dictionary<string, HashChecker> fileHashCheckerDict =
-            new Dictionary<string, HashChecker>(StringComparer.OrdinalIgnoreCase);
+        private Dictionary<string, HashChecker> fileHashCheckerDict = null;
+
+        public static HashChecklist Text(string text)
+        {
+            HashChecklist checklist = new HashChecklist();
+            checklist.UpdateWithText(text);
+            return checklist;
+        }
+
+        public static HashChecklist File(string filePath)
+        {
+            HashChecklist checklist = new HashChecklist();
+            checklist.UpdateWithFile(filePath);
+            return checklist;
+        }
+
+        public static HashChecklist Checklist(HashChecklist old)
+        {
+            HashChecklist checklist = new HashChecklist();
+            checklist.UpdateWithChecklist(old);
+            return checklist;
+        }
 
         public HashChecklist() { }
-
-        public HashChecklist(string filePath)
-        {
-            this.UpdateWithFile(filePath);
-        }
 
         public string ReasonForFailure { get; private set; }
 
@@ -155,7 +170,15 @@ namespace HashCalculator
         {
             this.ReasonForFailure = null;
             this.KeysAreRelativePaths = false;
-            this.fileHashCheckerDict.Clear();
+            if (this.fileHashCheckerDict == null)
+            {
+                this.fileHashCheckerDict = new Dictionary<string, HashChecker>(
+                    StringComparer.OrdinalIgnoreCase);
+            }
+            else
+            {
+                this.fileHashCheckerDict.Clear();
+            }
         }
 
         public bool IsNameInChecklist(string fileName)
@@ -262,8 +285,8 @@ namespace HashCalculator
             }
             catch (Exception ex)
             {
-                this.fileHashCheckerDict.Clear();
-                this.ReasonForFailure = $"出现异常导致搜集校验依据失败，详情：\n{ex.Message}";
+                this.fileHashCheckerDict?.Clear();
+                this.ReasonForFailure = $"出现异常导致搜集校验依据失败：\n{ex.Message}";
             }
             return this.ReasonForFailure;
         }
@@ -295,18 +318,12 @@ namespace HashCalculator
 
         public string UpdateWithChecklist(HashChecklist checklist)
         {
-            this.Initialize();
-            this.ReasonForFailure = checklist.ReasonForFailure;
             this.fileHashCheckerDict = checklist.fileHashCheckerDict;
-            checklist.DestroyChecklist();
+            this.ReasonForFailure = checklist.ReasonForFailure;
+            this.KeysAreRelativePaths = checklist.KeysAreRelativePaths;
+            checklist.fileHashCheckerDict = null;
+            checklist.Initialize();
             return this.ReasonForFailure;
-        }
-
-        public void DestroyChecklist()
-        {
-            this.Initialize();
-            this.fileHashCheckerDict = new Dictionary<string, HashChecker>();
-            this.ReasonForFailure = "校验依据内容已被清空";
         }
 
         public bool TryGetFileHashChecker(string mapKey, out HashChecker checker)
@@ -352,7 +369,7 @@ namespace HashCalculator
                     foreach (KeyValuePair<string, HashChecker> pair in this.fileHashCheckerDict)
                     {
                         string filePath = Path.Combine(rootDir, pair.Key);
-                        if (!File.Exists(filePath))
+                        if (!System.IO.File.Exists(filePath))
                         {
                             // 如果有一个路径找不到文件，则视所有 Key 为非相对路径，
                             // 返回 false 和 null 结果，意味着调用者需要自行枚举文件找到目标

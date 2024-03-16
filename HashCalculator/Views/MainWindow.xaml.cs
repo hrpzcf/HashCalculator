@@ -17,9 +17,12 @@ namespace HashCalculator
     {
         private bool hwndSourceHookAdded = false;
         private bool listenerAdded = false;
-        private long elapsedTickcountsSinceLastUpdateOfClipboard = 0;
+        private DateTime lastClipboardUpdateDateTime = DateTime.Now;
         private readonly MainWndViewModel viewModel = new MainWndViewModel();
+
         private static string[] startupArgs = null;
+        private static readonly TimeSpan clipboardTriggerMinInterval =
+            TimeSpan.FromMilliseconds(10);
 
         public static MainWindow This { get; private set; }
 
@@ -118,12 +121,12 @@ namespace HashCalculator
             if (msg == WM.WM_CLIPBOARDUPDATE)
             {
                 if (!Settings.Current.ClipboardUpdatedByMe &&
-                    DateTime.Now.Ticks - this.elapsedTickcountsSinceLastUpdateOfClipboard > 600)
+                    DateTime.Now - this.lastClipboardUpdateDateTime > clipboardTriggerMinInterval)
                 {
-                    this.viewModel.SetHashStringOrChecklistPath();
+                    this.viewModel.CheckHashUseClipboardText();
                 }
                 Settings.Current.ClipboardUpdatedByMe = false;
-                this.elapsedTickcountsSinceLastUpdateOfClipboard = DateTime.Now.Ticks;
+                this.lastClipboardUpdateDateTime = DateTime.Now;
             }
             return IntPtr.Zero;
         }
@@ -170,7 +173,7 @@ namespace HashCalculator
                 {
                     if (File.Exists(option.ChecklistPath))
                     {
-                        HashChecklist newChecklist = new HashChecklist(option.ChecklistPath);
+                        HashChecklist newChecklist = HashChecklist.File(option.ChecklistPath);
                         if (newChecklist.ReasonForFailure != null)
                         {
                             Application.Current.Dispatcher.Invoke(() =>
@@ -184,8 +187,8 @@ namespace HashCalculator
                             // 这里添加要计算哈希值的文件时，看作以多选文件的方式添，所以
                             // PathPackage 的 parent 参数应是 option.ChecklistPath 所在目录
                             string fileDir = Path.GetDirectoryName(option.ChecklistPath);
-                            PathPackage package = new PathPackage(fileDir, fileDir,
-                                Settings.Current.SelectedSearchMethodForChecklist, newChecklist);
+                            PathPackage package = new PathPackage(fileDir, fileDir, newChecklist,
+                                Settings.Current.SelectedSearchMethodForChecklist);
                             package.PresetAlgoTypes = this.GetAlgoTypesFromOption(option);
                             this.viewModel.BeginDisplayModels(package);
                         }

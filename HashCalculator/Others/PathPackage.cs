@@ -20,16 +20,16 @@ namespace HashCalculator
         public IEnumerable<AlgoType> PresetAlgoTypes { get; set; }
 
         public PathPackage(string parent, IEnumerable<string> paths, SearchMethod method) :
-            this(parent, paths, method, checklist: null)
+            this(parent, paths, checklist: null, method)
         {
         }
 
-        public PathPackage(string parent, string path, SearchMethod method, HashChecklist checklist) :
-             this(parent, paths: new string[] { path }, method, checklist)
+        public PathPackage(string parent, string path, HashChecklist checklist, SearchMethod method) :
+             this(parent, paths: new string[] { path }, checklist, method)
         {
         }
 
-        public PathPackage(string parent, IEnumerable<string> paths, SearchMethod method, HashChecklist checklist)
+        public PathPackage(string parent, IEnumerable<string> paths, HashChecklist checklist, SearchMethod method)
         {
             this.parentDir = parent;
             this.paths = paths is string[] array ? array : paths.ToArray();

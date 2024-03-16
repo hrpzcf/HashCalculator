@@ -20,7 +20,6 @@ namespace HashCalculator
 {
     internal class MainWndViewModel : NotifiableModel
     {
-        private readonly HashChecklist MainChecklist = new HashChecklist();
         private readonly ModelStarter starter =
             new ModelStarter(Settings.Current.SelectedTaskNumberLimit, 32);
         private static readonly Dispatcher synchronization =
@@ -204,29 +203,24 @@ namespace HashCalculator
             }
         }
 
-        public void SetHashStringOrChecklistPath()
+        public void CheckHashUseClipboardText()
         {
-            try
+            if (CommonUtils.ClipboardGetText(out string clipboardText) &&
+                clipboardText.Length >= Settings.Current.MinCopiedCharsToTriggerHashCheck &&
+                clipboardText.Length <= Settings.Current.MaxCopiedCharsToTriggerHashCheck)
             {
-                if (CommonUtils.ClipboardGetText(out string clipboardText) &&
-                    clipboardText.Length >= Settings.Current.MinCopiedCharsToTriggerHashCheck &&
-                    clipboardText.Length <= Settings.Current.MaxCopiedCharsToTriggerHashCheck)
+                HashChecklist checklist = File.Exists(clipboardText) ?
+                    HashChecklist.File(clipboardText) : HashChecklist.Text(clipboardText);
+                if (checklist.ReasonForFailure == null)
                 {
-                    HashChecklist checklist = new HashChecklist();
-                    string reasonForFailure = File.Exists(clipboardText) ?
-                        checklist.UpdateWithFile(clipboardText) : checklist.UpdateWithText(clipboardText);
-                    if (reasonForFailure == null)
+                    this.HashStringOrChecklistPath = clipboardText;
+                    if (this.State != RunningState.Started && this.CheckFilesHashBasedOnStringOrChecklist(checklist) &&
+                        Settings.Current.SwitchMainWndFgWhenNewHashCopied)
                     {
-                        this.HashStringOrChecklistPath = clipboardText;
-                        if (this.State != RunningState.Started && this.CheckFilesHashBasedOnStringOrChecklist(checklist) &&
-                            Settings.Current.SwitchMainWndFgWhenNewHashCopied)
-                        {
-                            CommonUtils.ShowWindowForeground(MainWindow.ProcessId);
-                        }
+                        CommonUtils.ShowWindowForeground(MainWindow.ProcessId);
                     }
                 }
             }
-            catch (Exception) { }
         }
 
         private void CheckStateAction(object state)
@@ -1095,12 +1089,8 @@ namespace HashCalculator
 
         public bool CheckFilesHashBasedOnStringOrChecklist(HashChecklist checklist)
         {
-            string reasonForFailure;
-            if (checklist != null)
-            {
-                reasonForFailure = this.MainChecklist.UpdateWithChecklist(checklist);
-            }
-            else
+            HashChecklist localChecklist;
+            if (checklist == null)
             {
                 if (string.IsNullOrEmpty(this.HashStringOrChecklistPath))
                 {
@@ -1110,50 +1100,52 @@ namespace HashCalculator
                 // HashStringOrChecklistPath 不是一个文件
                 if (!File.Exists(this.HashStringOrChecklistPath))
                 {
-                    reasonForFailure = this.MainChecklist.UpdateWithText(
-                        this.HashStringOrChecklistPath);
+                    localChecklist = HashChecklist.Text(this.HashStringOrChecklistPath);
                 }
                 // HashStringOrChecklistPath 是一个文件，但哈希结果列表不是空
                 else if (HashViewModels.Any())
                 {
-                    reasonForFailure = this.MainChecklist.UpdateWithFile(
-                        this.HashStringOrChecklistPath);
+                    localChecklist = HashChecklist.File(this.HashStringOrChecklistPath);
                 }
                 // HashStringOrChecklistPath 是一个文件，且哈希结果列表也是空
                 else
                 {
-                    HashChecklist newChecklist = new HashChecklist(this.HashStringOrChecklistPath);
-                    if ((reasonForFailure = newChecklist.ReasonForFailure) != null)
+                    HashChecklist newChecklist = HashChecklist.File(this.HashStringOrChecklistPath);
+                    if (newChecklist.ReasonForFailure != null)
                     {
-                        MessageBox.Show(MainWindow.This, reasonForFailure, "错误",
+                        MessageBox.Show(MainWindow.This, newChecklist.ReasonForFailure, "错误",
                             MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                     else
                     {
                         // 这里添加要计算哈希值的文件时，看作以多选文件的方式添，所以
                         // PathPackage 的 parent 参数应是 HashStringOrChecklistPath 所在目录
-                        string fileDir = Path.GetDirectoryName(this.HashStringOrChecklistPath);
-                        this.BeginDisplayModels(new PathPackage(fileDir, fileDir,
-                            Settings.Current.SelectedSearchMethodForChecklist, newChecklist));
+                        string checklistDir = Path.GetDirectoryName(this.HashStringOrChecklistPath);
+                        this.BeginDisplayModels(new PathPackage(checklistDir, checklistDir, newChecklist,
+                            Settings.Current.SelectedSearchMethodForChecklist));
                     }
-                    return reasonForFailure == null;
+                    return newChecklist.ReasonForFailure == null;
                 }
             }
-            if (reasonForFailure == null)
+            else
+            {
+                localChecklist = checklist;
+            }
+            if (localChecklist.ReasonForFailure == null)
             {
                 foreach (HashViewModel hm in HashViewModels)
                 {
-                    hm.SetHashCheckResultForModel(this.MainChecklist);
+                    hm.SetHashCheckResultForModel(localChecklist);
                 }
                 this.GenerateFileHashCheckReport();
             }
             else
             {
                 this.GenerateOriginFileHashCheckReport();
-                MessageBox.Show(MainWindow.This, reasonForFailure, "错误",
+                MessageBox.Show(MainWindow.This, localChecklist.ReasonForFailure, "错误",
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            return reasonForFailure == null;
+            return localChecklist.ReasonForFailure == null;
         }
 
         private void SelectChecklistFileAction(object param)

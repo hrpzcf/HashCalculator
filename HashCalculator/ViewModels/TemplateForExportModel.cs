@@ -12,13 +12,13 @@ namespace HashCalculator
             new TemplateForExportModel(
                 "所有文件",
                 null,
-                "$hash$ *$name$");
+                "$hash$ *$relpath$");
 
         public static readonly TemplateForExportModel CsvModel =
             new TemplateForExportModel(
                 "CSV文件",
                 ".csv",
-                "$algo$,$hash$,$name$")
+                "$algo$,$hash$,$relpath$")
             {
                 UsingEncoding = EncodingEnum.ANSI,
             };
@@ -27,13 +27,19 @@ namespace HashCalculator
             new TemplateForExportModel(
                 "校验依据",
                 ".hcb",
-                "#$algo$ *$hash$ *$name$");
+                "#$algo$ *$hash$ *$relpath$");
+
+        public static readonly TemplateForExportModel SfvModel =
+            new TemplateForExportModel(
+                "SFV文件",
+                ".sfv",
+                "$relpath$ $hash$");
 
         public static readonly TemplateForExportModel TxtModel =
             new TemplateForExportModel(
                 "文本文件",
                 ".txt",
-                "#$algo$ *$hash$ *$name$");
+                "#$algo$ *$hash$ *$relpath$");
 
         public TemplateForExportModel() { }
 
