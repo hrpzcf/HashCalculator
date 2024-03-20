@@ -479,7 +479,6 @@
     <EmbeddedResource Include="Assembly\XamlAnimatedGif.dll" />
     <None Include="Assembly\Microsoft.Bcl.HashCode.txt" />
     <EmbeddedResource Include="Assembly\Microsoft.Bcl.HashCode.dll" />
-    <EmbeddedResource Include="HashAlgos\AlgoDlls\README.md" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assembly\System.txt" />

@@ -75,43 +75,30 @@ namespace HashCalculator
             {
                 try
                 {
-                    if (!Directory.Exists(shellExtensionsDir))
+                    if (!Directory.Exists(Settings.ShellExtensionDir))
                     {
-                        try
-                        {
-                            Directory.CreateDirectory(shellExtensionsDir);
-                        }
-                        catch
-                        {
-                            return new FileNotFoundException($"创建 \"{shellExtensionsDir}\" 目录失败");
-                        }
+                        Directory.CreateDirectory(Settings.ShellExtensionDir);
                     }
-                    if (string.IsNullOrEmpty(executablePath))
-                    {
-                        return new FileNotFoundException("没有获取到当前程序的可执行文件路径");
-                    }
-                    if (File.Exists(shellExtensionsPath))
-                    {
-                        await UninstallShellExtension();
-                    }
+                    _ = await UninstallShellExtension();
                     if (AppLoading.Executing.GetManifestResourceStream(embeddedShellExtPath) is Stream manifest)
                     {
                         using (manifest)
                         {
-                            manifest.ToNewFile(shellExtensionsPath);
+                            manifest.ToNewFile(Settings.ShellExtensionFile);
                         }
                         Exception exception;
-                        if ((exception = RegisterShellExtDll(shellExtensionsPath, true)) != null)
+                        if ((exception = RegisterShellExtDll(Settings.ShellExtensionFile, true)) != null)
                         {
                             return exception;
                         }
                         SHELL32.SHChangeNotify(HChangeNotifyEventID.SHCNE_ASSOCCHANGED, HChangeNotifyFlags.SHCNF_IDLIST,
                             IntPtr.Zero, IntPtr.Zero);
+                        Settings.UpdateShellMenuConfigFilePath(Settings.ShellExtensionFile);
                         return await RegUpdateAppPathAsync();
                     }
                     else
                     {
-                        return new MissingManifestResourceException("找不到内嵌的外壳扩展模块资源");
+                        return new MissingManifestResourceException("未找到内嵌的外壳扩展模块资源");
                     }
                 }
                 catch (Exception exception)
@@ -125,23 +112,44 @@ namespace HashCalculator
         {
             return await Task.Run(async () =>
             {
-                if (File.Exists(shellExtensionsPath))
+                Exception exception = null;
+                string shellExtensionFile = GetCurrentShellExtension();
+                bool shellExtensionFileExist = File.Exists(shellExtensionFile);
+                if (shellExtensionFileExist)
                 {
-                    Exception exception;
-                    if ((exception = RegisterShellExtDll(shellExtensionsPath, false)) != null)
+                    exception = RegisterShellExtDll(shellExtensionFile, false);
+                }
+                else
+                {
+                    return new FileNotFoundException("没有安装外壳扩展模块，不需要卸载");
+                }
+                if (shellExtensionFileExist && exception == null)
+                {
+                    string oldMenuConfigFile = Settings.MenuConfigFile;
+                    string oldShellExtensionDir = Path.GetDirectoryName(shellExtensionFile);
+                    Settings.UpdateShellMenuConfigFilePath(string.Empty);
+                    if (!oldShellExtensionDir.Equals(Settings.ActiveConfigDir))
                     {
-                        return exception;
+                        try
+                        {
+                            if (File.Exists(Settings.MenuConfigFile))
+                            {
+                                File.Delete(Settings.MenuConfigFile);
+                            }
+                            File.Move(oldMenuConfigFile, Settings.MenuConfigFile);
+                        }
+                        catch { }
                     }
                     try
                     {
-                        File.Delete(shellExtensionsPath);
+                        File.Delete(shellExtensionFile);
                     }
                     catch (Exception e) when (e is IOException || e is UnauthorizedAccessException)
                     {
                         TerminateExplorer();
                         try
                         {
-                            File.Delete(shellExtensionsPath);
+                            File.Delete(shellExtensionFile);
                         }
                         catch { }
                     }
@@ -149,10 +157,7 @@ namespace HashCalculator
                         IntPtr.Zero, IntPtr.Zero);
                     return await RegDeleteAppPathAsync();
                 }
-                else
-                {
-                    return new FileNotFoundException($"没有在 \"{shellExtensionsDir}\" 目录找到外壳扩展模块");
-                }
+                return exception;
             });
         }
 
@@ -228,14 +233,29 @@ namespace HashCalculator
             return await HKCUDeleteNode(regPathAppPaths, nodeHashCalculatorAppPaths);
         }
 
+        public static string GetCurrentShellExtension()
+        {
+            try
+            {
+                string keyInprocServer32 = $"{regPathCLSID}\\{Info.ShlExtGuid}\\InprocServer32";
+                using (RegistryKey subKey = Registry.CurrentUser.OpenSubKey(keyInprocServer32, false))
+                {
+                    if (subKey?.GetValue(string.Empty) is string extPath && !string.IsNullOrEmpty(extPath))
+                    {
+                        return extPath;
+                    }
+                }
+            }
+            catch { }
+            return null;
+        }
+
         private const string keyNameHashCalculator = "HashCalculator.exe";
-        private const string regPathAppPaths = "Software\\Microsoft\\Windows\\CurrentVersion\\App Paths";
+        private const string regPathCLSID = "SOFTWARE\\Classes\\CLSID";
+        private const string regPathAppPaths = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths";
         private static readonly RegNode nodeHashCalculatorAppPaths;
         private static readonly string executablePath = Assembly.GetExecutingAssembly().Location;
         private static readonly string executableDir = Path.GetDirectoryName(executablePath);
-        private static readonly string shellExtensionName = Environment.Is64BitOperatingSystem ? "HashCalculator.dll" : "HashCalculator32.dll";
-        private static readonly string embeddedShellExtPath = $"HashCalculator.ShellExt.{shellExtensionName}";
-        private static readonly string shellExtensionsDir = Settings.ConfigDir.FullName;
-        private static readonly string shellExtensionsPath = Path.Combine(shellExtensionsDir, shellExtensionName);
+        private static readonly string embeddedShellExtPath = $"HashCalculator.ShellExt.{Settings.ShellExtensionName}";
     }
 }

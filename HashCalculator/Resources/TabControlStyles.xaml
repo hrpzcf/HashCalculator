@@ -9,7 +9,7 @@
 
     <Style x:Key="TabControlStyle1" TargetType="{x:Type TabControl}">
         <Setter Property="Padding" Value="2" />
-        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Background" Value="{StaticResource TabItem.Selected.Background}" />
         <Setter Property="BorderBrush" Value="{StaticResource TabItem.Selected.Border}" />

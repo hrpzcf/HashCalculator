@@ -14,13 +14,10 @@ namespace HashCalculator
 
     public class SettingsViewModel : NotifiableModel
     {
-        private bool mainWndTopmost = false;
-        private string lastUsedPath = string.Empty;
         private double mainWndWidth = 1100.0;
         private double mainWndHeight = 700.0;
         private double mainWndTop = double.NaN;
         private double mainWndLeft = double.NaN;
-        private WindowState mainWindowState = WindowState.Normal;
         private double settingsWndWidth = 660.0;
         private double settingsWndHeight = 565.0;
         private double algosPanelWidth = 450.0;
@@ -41,35 +38,46 @@ namespace HashCalculator
         private double markFilesProgressHeight = 200.0;
         private double restoreFilesProgressWidth = 400.0;
         private double restoreFilesProgressHeight = 200.0;
-        private int selectedTaskNumberLimit = 1;
-        private bool useDefaultOutputTypeWhenExporting = true;
-        private OutputType selectedOutputType = OutputType.BinaryUpper;
-        private ExportAlgo howToExportHashValues = ExportAlgo.AllCalculated;
-        private bool showResultText = false;
+
+        private bool mainWndTopmost = false;
         private bool noExportColumn = false;
         private bool noDurationColumn = false;
         private bool noFileSizeColumn = false;
         private bool noOutputTypeColumn = false;
+        private bool showResultText = false;
         private bool showExecutionTargetColumn = false;
         private bool showHashInTagColumn = false;
+        private bool generateTextInFormat = false;
         private bool filterOrCmderEnabled = true;
         private bool runInMultiInstanceMode = false;
-        private bool notSettingShellExtension = true;
+        private bool processingShellExtension = false;
         private bool preferChecklistAlgs = true;
         private bool parallelBetweenAlgos = true;
+        private bool displayMainWndButtonText = true;
+        private bool useDefaultOutputTypeWhenExporting = true;
         private bool monitorNewHashStringInClipboard = true;
         private bool switchMainWndFgWhenNewHashCopied = true;
-        private CmpRes algoToSwitchToAfterHashChecked = CmpRes.Matched;
-        private FetchAlgoOption fetchAlgorithmOption = FetchAlgoOption.TATSAMSHDL;
-        private bool displayMainWndButtonText = true;
+        private bool configurationSaveToUserDirectory = false;
         private bool caseOfCopiedAlgNameFollowsOutputType = false;
-        private bool generateTextInFormat = false;
-        private string formatForGenerateText = "#$algo$ *$hash$ *$name$";
         private bool exportInMainControlsChildExportsInRow = false;
+
+        private CmpRes algoToSwitchToAfterHashChecked = CmpRes.Matched;
+        private ExportAlgo howToExportHashValues = ExportAlgo.AllCalculated;
+        private FetchAlgoOption fetchAlgorithmOption = FetchAlgoOption.TATSAMSHDL;
+        private OutputType selectedOutputType = OutputType.BinaryUpper;
+        private WindowState mainWindowState = WindowState.Normal;
+
+        private string lastUsedPath = string.Empty;
+        private string displayingActiveConfigDir = null;
+        private string displayingShellExtensionDir = null;
+        private string formatForGenerateText = "#$algo$ *$hash$ *$name$";
+
         private TemplateForExportModel selectedExportTemplate;
         private TemplateForChecklistModel selectedChecklistTemplate;
         private ObservableCollection<TemplateForExportModel> templatesForExport = null;
         private ObservableCollection<TemplateForChecklistModel> templatesForChecklist = null;
+
+        private int selectedTaskNumberLimit = 1;
         private int minCopiedCharsToTriggerHashCheck = 8;
         private int maxCopiedCharsToTriggerHashCheck = 512;
 
@@ -782,6 +790,18 @@ namespace HashCalculator
             }
         }
 
+        public bool ConfigurationSaveToUserDirectory
+        {
+            get
+            {
+                return this.configurationSaveToUserDirectory;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.configurationSaveToUserDirectory, value);
+            }
+        }
+
         public ObservableCollection<TemplateForExportModel> TemplatesForExport
         {
             get
@@ -807,15 +827,41 @@ namespace HashCalculator
         }
 
         [JsonIgnore, XmlIgnore]
-        public bool NotSettingShellExtension
+        public string DisplayingActiveConfigDir
         {
             get
             {
-                return this.notSettingShellExtension;
+                return this.displayingActiveConfigDir;
             }
             set
             {
-                this.SetPropNotify(ref this.notSettingShellExtension, value);
+                this.SetPropNotify(ref this.displayingActiveConfigDir, value);
+            }
+        }
+
+        [JsonIgnore, XmlIgnore]
+        public string DisplayingShellExtensionDir
+        {
+            get
+            {
+                return this.displayingShellExtensionDir;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.displayingShellExtensionDir, value);
+            }
+        }
+
+        [JsonIgnore, XmlIgnore]
+        public bool ProcessingShellExtension
+        {
+            get
+            {
+                return this.processingShellExtension;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.processingShellExtension, value);
             }
         }
 
@@ -828,10 +874,10 @@ namespace HashCalculator
             {
                 return;
             }
-            this.NotSettingShellExtension = false;
+            this.ProcessingShellExtension = true;
             if (await ShellExtHelper.InstallShellExtension() is Exception exception1)
             {
-                MessageBox.Show(SettingsPanel.This, exception1.Message, "安装外壳扩展失败",
+                MessageBox.Show(SettingsPanel.This, exception1.Message, "安装失败",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
             }
             else
@@ -839,29 +885,17 @@ namespace HashCalculator
                 MessageBox.Show(SettingsPanel.This, $"安装外壳扩展成功！", "提示", MessageBoxButton.OK,
                     MessageBoxImage.Information);
             }
-            if (!File.Exists(Settings.MenuConfigUnicode))
+            if (!File.Exists(Settings.MenuConfigFile))
             {
-                if (File.Exists(Settings.MenuConfigFile))
-                {
-                    string reason = ShellMenuEditorModel.AnsiMenuConfigToUnicodeMenuConfig();
-                    if (string.IsNullOrEmpty(reason))
-                    {
-                        goto FinalizeAndReturn;
-                    }
-                    MessageBox.Show(SettingsPanel.This,
-                        $"无法将旧版快捷菜单配置文件转换为新版，将恢复为默认配置。\n{reason}", "警告",
-                        MessageBoxButton.OK, MessageBoxImage.Warning);
-                }
-                string exception2 = new ShellMenuEditorModel(SettingsPanel.This).SaveMenuListToJsonFile();
-                if (!string.IsNullOrEmpty(exception2))
+                string exception = new ShellMenuEditorModel(SettingsPanel.This).SaveMenuListToJsonFile();
+                if (!string.IsNullOrEmpty(exception))
                 {
                     MessageBox.Show(SettingsPanel.This,
-                        $"外壳扩展模块配置文件创建失败，快捷菜单可能无法显示，原因：{exception2}", "警告",
+                        $"外壳扩展模块配置文件创建失败，快捷菜单将无法显示，原因：{exception}", "警告",
                         MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
-        FinalizeAndReturn:
-            this.NotSettingShellExtension = true;
+            this.ProcessingShellExtension = false;
         }
 
         [JsonIgnore, XmlIgnore]
@@ -886,10 +920,10 @@ namespace HashCalculator
             {
                 return;
             }
-            this.NotSettingShellExtension = false;
+            this.ProcessingShellExtension = true;
             if (await ShellExtHelper.UninstallShellExtension() is Exception exception)
             {
-                MessageBox.Show(SettingsPanel.This, exception.Message, "卸载外壳扩展失败",
+                MessageBox.Show(SettingsPanel.This, exception.Message, "卸载失败",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
             }
             else
@@ -897,7 +931,7 @@ namespace HashCalculator
                 MessageBox.Show(SettingsPanel.This, $"卸载外壳扩展成功！", "提示", MessageBoxButton.OK,
                     MessageBoxImage.Information);
             }
-            this.NotSettingShellExtension = true;
+            this.ProcessingShellExtension = false;
         }
 
         [JsonIgnore, XmlIgnore]
@@ -1356,7 +1390,8 @@ namespace HashCalculator
                 i => i.AlgoType).ToArray();
         }
 
-        internal void OnSettingsViewModelDeserialized()
+        [OnDeserialized]
+        internal void OnSettingsViewModelDeserialized(StreamingContext context)
         {
             if (this.TemplatesForExport == null || !this.TemplatesForExport.Any())
             {
@@ -1370,12 +1405,7 @@ namespace HashCalculator
             {
                 model.Selected = this.SelectedAlgos?.Any(i => i == model.AlgoType) ?? false;
             }
-        }
-
-        [OnDeserialized]
-        internal void OnSettingsViewModelDeserialized(StreamingContext context)
-        {
-            this.OnSettingsViewModelDeserialized();
+            PropertyChanged += Settings.MoveConfigurationFiles;
         }
 
         [JsonIgnore, XmlIgnore]
@@ -1385,10 +1415,10 @@ namespace HashCalculator
         public static string FixAlgoDlls { get; } = "更新动态链接库";
 
         [JsonIgnore, XmlIgnore]
-        public static string ShellExtDir { get; } = "用户目录";
+        public static string ShellExtDir { get; } = "安装位置";
 
         [JsonIgnore, XmlIgnore]
-        public static string FixExePath { get; } = "修复程序路径";
+        public static string UpdateExePath { get; } = "更新程序路径";
 
         [JsonIgnore, XmlIgnore]
         public static string AlgosDllDir { get; } = "动态链接库目录";

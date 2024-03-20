@@ -276,39 +276,16 @@ namespace HashCalculator
             this.MenuList.Add(menuCheckHash);
         }
 
-        public static string AnsiMenuConfigToUnicodeMenuConfig()
-        {
-            try
-            {
-                using (StreamReader sr = new StreamReader(Settings.MenuConfigFile, Encoding.Default))
-                using (StreamWriter sw = new StreamWriter(Settings.MenuConfigUnicode, false, menuEncoding))
-                {
-                    sw.Write(sr.ReadToEnd());
-                }
-            }
-            catch (Exception ex)
-            {
-                return ex.Message;
-            }
-            return default(string);
-        }
-
         private string LoadMenuListFromJsonFile()
         {
-            if (!File.Exists(Settings.MenuConfigUnicode) &&
-                File.Exists(Settings.MenuConfigFile) &&
-                AnsiMenuConfigToUnicodeMenuConfig() is string reason)
-            {
-                return reason;
-            }
-            if (File.Exists(Settings.MenuConfigUnicode))
+            if (File.Exists(Settings.MenuConfigFile))
             {
                 try
                 {
                     JsonSerializer jsonSerializer = new JsonSerializer();
                     jsonSerializer.NullValueHandling = NullValueHandling.Ignore;
                     jsonSerializer.DefaultValueHandling = DefaultValueHandling.Populate;
-                    using (StreamReader sr = new StreamReader(Settings.MenuConfigUnicode, menuEncoding))
+                    using (StreamReader sr = new StreamReader(Settings.MenuConfigFile, menuEncoding))
                     using (JsonTextReader jsonTextReader = new JsonTextReader(sr))
                     {
                         this.MenuList = jsonSerializer.Deserialize<ObservableCollection<HcCtxMenuModel>>(jsonTextReader);
@@ -361,9 +338,9 @@ namespace HashCalculator
         {
             try
             {
-                if (!Directory.Exists(Settings.ConfigDir.FullName))
+                if (!Directory.Exists(Settings.ActiveConfigDir))
                 {
-                    Settings.ConfigDir.Create();
+                    Directory.CreateDirectory(Settings.ActiveConfigDir);
                 }
                 if (this.CheckIfMenuListAllValid() is string checkMenuResult)
                 {
@@ -372,11 +349,11 @@ namespace HashCalculator
                 JsonSerializer jsonSerializer = new JsonSerializer();
                 jsonSerializer.NullValueHandling = NullValueHandling.Ignore;
                 jsonSerializer.DefaultValueHandling = DefaultValueHandling.Ignore;
-                using (StreamWriter sw = new StreamWriter(Settings.MenuConfigUnicode, false, menuEncoding))
+                using (StreamWriter sw = new StreamWriter(Settings.MenuConfigFile, false, menuEncoding))
                 using (JsonTextWriter jsonTextWriter = new JsonTextWriter(sw))
                 {
                     jsonSerializer.Serialize(jsonTextWriter, this.MenuList, typeof(ObservableCollection<HcCtxMenuModel>));
-                    return default(string);
+                    return null;
                 }
             }
             catch (Exception exception)

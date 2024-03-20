@@ -88,11 +88,11 @@ namespace HashCalculator
             return new AlgoInOutModel(this.IAlgo.NewInstance());
         }
 
-        public void SetHashResultChangedHandler(PropertyChangedEventHandler e)
+        public void SetHashResultChangedHandler(PropertyChangedEventHandler handler)
         {
             if (!this._hashResultHandlerAdded)
             {
-                this.PropertyChanged += e;
+                this.PropertyChanged += handler;
                 this._hashResultHandlerAdded = true;
             }
         }

@@ -33,7 +33,7 @@
         TabStripPlacement="Left">
         <TabItem
             Padding="8"
-            Header="常规设置"
+            Header="常规设置选项"
             Style="{StaticResource TabItemStyle1}">
             <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                 <StackPanel Margin="8">
@@ -51,7 +51,7 @@
                                     SelectedValuePath="ItemValue" />
                             </StackPanel>
                             <TextBlock Style="{StaticResource DescTextBlockStyle}" Text="任务数上限选项中除了 1，其他选项都与下一个设置互斥，无法同时开启" />
-                            <TextBlock Style="{StaticResource DescTextBlockStyle}" Text="盲目选择高任务上限不一定能加快速度" />
+                            <TextBlock Style="{StaticResource DescTextBlockStyle}" Text="盲目选择高任务上限不一定能加快文件哈希值的计算速度" />
                             <CheckBox
                                 Margin="0,8,0,4"
                                 Padding="4,0,0,0"
@@ -189,7 +189,7 @@
         </TabItem>
         <TabItem
             Padding="8"
-            Header="显示设置"
+            Header="界面设置选项"
             Style="{StaticResource TabItemStyle1}">
             <StackPanel Margin="8">
                 <CheckBox
@@ -237,6 +237,7 @@
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                             <RowDefinition />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
@@ -251,7 +252,7 @@
                             Background="{x:Null}"
                             Command="{Binding InstallShellExtCmd}"
                             Content="安装右键菜单并关联文件(用户)"
-                            IsEnabled="{Binding NotSettingShellExtension}" />
+                            IsEnabled="{Binding ProcessingShellExtension, Converter={StaticResource ReverseBooleanValueCvt}}" />
                         <Button
                             Grid.Row="0"
                             Grid.Column="1"
@@ -260,16 +261,29 @@
                             Background="{x:Null}"
                             Command="{Binding UnInstallShellExtCmd}"
                             Content="卸载右键菜单并取消关联(用户)"
-                            IsEnabled="{Binding NotSettingShellExtension}" />
+                            IsEnabled="{Binding ProcessingShellExtension, Converter={StaticResource ReverseBooleanValueCvt}}" />
                         <StackPanel
                             Grid.Row="1"
+                            Grid.Column="0"
                             Grid.ColumnSpan="2"
-                            Margin="0,8,0,0">
-                            <StackPanel Orientation="Horizontal">
+                            Margin="0,8,0,0"
+                            Orientation="Horizontal">
+                            <TextBlock Foreground="Black" Text="安装位置：" />
+                            <TextBlock Style="{StaticResource DescTextBlockStyle}" Text="{Binding DisplayingShellExtensionDir}" />
+                        </StackPanel>
+                        <StackPanel
+                            Grid.Row="2"
+                            Grid.ColumnSpan="2"
+                            Margin="0,16,0,0">
+                            <TextBlock
+                                FontSize="8pt"
+                                Style="{StaticResource DescTextBlockStyle}"
+                                Text="1. 没有安装右键菜单时【安装位置】跟随配置文件的保存位置，已安装则显示实际安装位置" />
+                            <StackPanel Margin="0,4,0,0" Orientation="Horizontal">
                                 <TextBlock
                                     FontSize="8pt"
                                     Style="{StaticResource DescTextBlockStyle}"
-                                    Text="1. 安装右键菜单后，程序会在 " />
+                                    Text="2. 安装右键菜单后，程序会在 " />
                                 <TextBlock
                                     Cursor="Hand"
                                     Foreground="Blue"
@@ -284,17 +298,17 @@
                                 Margin="0,4,0,0"
                                 FontSize="8pt"
                                 Style="{StaticResource DescTextBlockStyle}"
-                                Text="2. 不可强制移动、删除、重命名 HashCalculator[32].dll 文件，否则右键菜单将失效" />
+                                Text="3. 不可强制移动、删除、重命名 HashCalculator[32].dll 文件，否则右键菜单将失效" />
                             <StackPanel Margin="0,4,0,0" Orientation="Horizontal">
                                 <TextBlock
                                     FontSize="8pt"
                                     Style="{StaticResource DescTextBlockStyle}"
-                                    Text="3. 移动或重命名 HashCalculator.exe 文件后，需 " />
+                                    Text="4. 移动或重命名 HashCalculator.exe 文件后，需 " />
                                 <TextBlock
                                     Cursor="Hand"
                                     Foreground="Red"
                                     MouseLeftButtonDown="OnTextBlockMouseLeftButtonDown"
-                                    Text="{Binding Source={x:Static local:SettingsViewModel.FixExePath}}" />
+                                    Text="{Binding Source={x:Static local:SettingsViewModel.UpdateExePath}}" />
                                 <TextBlock
                                     FontSize="8pt"
                                     Style="{StaticResource DescTextBlockStyle}"
@@ -304,23 +318,23 @@
                                 Margin="0,4,0,0"
                                 FontSize="8pt"
                                 Style="{StaticResource DescTextBlockStyle}"
-                                Text="4. 删除 HashCalculator.exe 前先卸载右键菜单，程序会清理注册表并删除菜单扩展模块" />
+                                Text="5. 删除 HashCalculator.exe 前先卸载右键菜单，程序会清理注册表并删除菜单扩展模块" />
                             <TextBlock
                                 Margin="0,4,0,0"
                                 FontSize="8pt"
-                                Foreground="LightSeaGreen"
+                                Foreground="Red"
                                 Style="{StaticResource DescTextBlockStyle}"
-                                Text="5. 下载新版本后先在旧版本上卸载右键菜单再打开新版本安装右键菜单以避免出现兼容问题" />
-                            <TextBlock
-                                Margin="0,4,0,0"
-                                FontSize="8pt"
-                                Style="{StaticResource DescTextBlockStyle}"
-                                Text="6. 关联 .hcb 文件后，通过 HashCalculator 导出的 .hcb 文件可通过双击进行快捷校验" />
+                                Text="6. 下载新版本后先在旧版本上卸载右键菜单再打开新版本安装右键菜单以避免出现兼容问题" />
                             <TextBlock
                                 Margin="0,4,0,0"
                                 FontSize="8pt"
                                 Style="{StaticResource DescTextBlockStyle}"
-                                Text="7. 通过双击打开 .hcb 文件进行快捷校验要求待被计算哈希值的文件与 .hcb 文件在同一目录下" />
+                                Text="7. 关联 .hcb 文件后，使用 HashCalculator 导出的 .hcb 文件可通过双击进行快速校验" />
+                            <TextBlock
+                                Margin="0,4,0,0"
+                                FontSize="8pt"
+                                Style="{StaticResource DescTextBlockStyle}"
+                                Text="8. 通过双击打开 .hcb 文件进行快速校验要求待计算哈希值的文件与 .hcb 文件在同一目录下" />
                         </StackPanel>
                     </Grid>
                 </GroupBox>
@@ -394,6 +408,7 @@
                                 Grid.Row="0"
                                 Grid.Column="1"
                                 Margin="16,0,0,0"
+                                FontSize="8pt"
                                 Style="{StaticResource DescTextBlockStyle}"
                                 Text="在复制时此占位符将被替换为实际算法名。" />
                             <TextBlock
@@ -405,6 +420,7 @@
                                 Grid.Row="1"
                                 Grid.Column="1"
                                 Margin="16,0,0,0"
+                                FontSize="8pt"
                                 Style="{StaticResource DescTextBlockStyle}"
                                 Text="在复制时此占位符将被替换为实际哈希值。" />
                             <TextBlock
@@ -416,6 +432,7 @@
                                 Grid.Row="2"
                                 Grid.Column="1"
                                 Margin="16,0,0,0"
+                                FontSize="8pt"
                                 Style="{StaticResource DescTextBlockStyle}"
                                 Text="在复制时此占位符将被替换为实际文件完整路径。" />
                             <TextBlock
@@ -427,6 +444,7 @@
                                 Grid.Row="3"
                                 Grid.Column="1"
                                 Margin="16,0,0,0"
+                                FontSize="8pt"
                                 Style="{StaticResource DescTextBlockStyle}"
                                 Text="此占位符将被替换为实际文件相对路径，起点是被添加的对象所在目录。" />
                             <TextBlock
@@ -438,19 +456,23 @@
                                 Grid.Row="4"
                                 Grid.Column="1"
                                 Margin="16,0,0,0"
+                                FontSize="8pt"
                                 Style="{StaticResource DescTextBlockStyle}"
                                 Text="在复制时此占位符将被替换为实际文件名。" />
                         </Grid>
                         <TextBlock
                             Margin="0,8,0,0"
+                            FontSize="8pt"
                             Style="{StaticResource DescTextBlockStyle}"
                             Text="此设置影响软件所有与复制哈希值相关的按钮或菜单的复制结果。" />
                         <TextBlock
                             Margin="0,2,0,0"
+                            FontSize="8pt"
                             Style="{StaticResource DescTextBlockStyle}"
                             Text="模版输入框留空效果与选择【使用复制按钮或右键菜单时只复制哈希值】相同。" />
                         <TextBlock
                             Margin="0,2,0,0"
+                            FontSize="8pt"
                             Style="{StaticResource DescTextBlockStyle}"
                             Text="此模板对于那些会复制出多行内容的按钮或菜单来说是每一行的模版。" />
                     </StackPanel>
@@ -656,6 +678,7 @@
                                         Grid.Row="0"
                                         Grid.Column="1"
                                         Margin="16,0,0,0"
+                                        FontSize="8pt"
                                         Style="{StaticResource DescTextBlockStyle}"
                                         Text="导出计算结果时此占位符将被替换为实际算法名。" />
                                     <TextBlock
@@ -667,6 +690,7 @@
                                         Grid.Row="1"
                                         Grid.Column="1"
                                         Margin="16,0,0,0"
+                                        FontSize="8pt"
                                         Style="{StaticResource DescTextBlockStyle}"
                                         Text="导出计算结果时此占位符将被替换为实际哈希值。" />
                                     <TextBlock
@@ -678,6 +702,7 @@
                                         Grid.Row="2"
                                         Grid.Column="1"
                                         Margin="16,0,0,0"
+                                        FontSize="8pt"
                                         Style="{StaticResource DescTextBlockStyle}"
                                         Text="导出计算结果时此占位符将被替换为实际文件完整路径。" />
                                     <TextBlock
@@ -689,6 +714,7 @@
                                         Grid.Row="3"
                                         Grid.Column="1"
                                         Margin="16,0,0,0"
+                                        FontSize="8pt"
                                         Style="{StaticResource DescTextBlockStyle}"
                                         Text="此占位符将被替换为实际文件相对路径，起点是被添加的对象所在目录。" />
                                     <TextBlock
@@ -700,6 +726,7 @@
                                         Grid.Row="4"
                                         Grid.Column="1"
                                         Margin="16,0,0,0"
+                                        FontSize="8pt"
                                         Style="{StaticResource DescTextBlockStyle}"
                                         Text="导出计算结果时此占位符将被替换为实际文件名。" />
                                 </Grid>
@@ -709,6 +736,7 @@
                                     Text="如何使用以上设置好的方案来导出计算结果？" />
                                 <TextBlock
                                     Margin="0,2,0,0"
+                                    FontSize="8pt"
                                     Style="{StaticResource DescTextBlockStyle}"
                                     Text="点击【导出结果】按钮打开【另存为】对话框后在【保存类型】下拉列表内选择方案。" />
                             </StackPanel>
@@ -838,6 +866,7 @@
                                 Text="对于输入【校验依据】输入框的字符串：" />
                             <TextBlock
                                 Margin="24,0,0,0"
+                                FontSize="8pt"
                                 Style="{StaticResource DescTextBlockStyle}"
                                 Text="程序会按顺序使用【用于类型】为空的方案，直到成功或全部失败；" />
                             <TextBlock
@@ -846,14 +875,17 @@
                                 Text="作为校验依据打开的文件或输入【校验依据】输入框的文件：" />
                             <TextBlock
                                 Margin="24,0,0,0"
+                                FontSize="8pt"
                                 Style="{StaticResource DescTextBlockStyle}"
                                 Text="程序会按顺序使用【用于类型】与文件扩展名匹配的方案，直到成功或全部失败；" />
                             <TextBlock
                                 Margin="24,0,0,0"
+                                FontSize="8pt"
                                 Style="{StaticResource DescTextBlockStyle}"
                                 Text="如果仍然没有成功，则按顺序使用【用于类型】为空的方案，直到成功或全部失败；" />
                             <TextBlock
                                 Margin="24,0,0,0"
+                                FontSize="8pt"
                                 Style="{StaticResource DescTextBlockStyle}"
                                 Text="如果文件没有扩展名，则按顺序使用【用于类型】为空的方案，直到成功或全部失败；" />
                             <TextBlock
@@ -863,7 +895,7 @@
                             <TextBlock
                                 Margin="0,0,0,0"
                                 Foreground="Black"
-                                Text="两个“$”号包围的字符串是本软件预定义的正则表达式命名组：" />
+                                Text="被两个“$”号包围的字符串是本软件预定义的正则表达式命名组：" />
                             <Grid Margin="0,4,0,0">
                                 <Grid.RowDefinitions>
                                     <RowDefinition />
@@ -906,10 +938,11 @@
                                     Grid.Column="1"
                                     Margin="16,0,0,0"
                                     Style="{StaticResource DescTextBlockStyle}"
-                                    Text="等同 (?&lt;name&gt;[^:*?&quot;&lt;&gt;|\r\n]+)，此位置的匹配结果作为文件名。" />
+                                    Text="等同 (?&lt;name&gt;[^:*?\&quot;&lt;&gt;|\t\v\f\r\n]+)，此位置的匹配结果作为文件名。" />
                             </Grid>
                             <TextBlock
                                 Margin="0,4,0,0"
+                                FontSize="8pt"
                                 Style="{StaticResource DescTextBlockStyle}"
                                 Text="你也可以自定义命名组，可用的组名： algo 和 hash 和 name" />
                             <TextBlock
@@ -918,12 +951,59 @@
                                 Text="如何使用以上设置好的方案来解析校验依据？" />
                             <TextBlock
                                 Margin="0,2,0,0"
+                                FontSize="8pt"
                                 Style="{StaticResource DescTextBlockStyle}"
                                 Text="程序会在校验时自动选择方案，具体的选择方式见紧接在表格下方的说明。" />
                         </StackPanel>
                     </Grid>
                 </GroupBox>
             </ScrollViewer>
+        </TabItem>
+        <TabItem
+            Padding="8"
+            Header="配置文件保存位置"
+            Style="{StaticResource TabItemStyle1}">
+            <GroupBox
+                Margin="4"
+                Padding="4,8,4,4"
+                Foreground="#FF006FD6"
+                Header="软件配置文件的储存位置">
+                <StackPanel>
+                    <RadioButton
+                        Padding="4,0,0,0"
+                        Content="{Binding Source={x:Static local:Settings.ActiveConfigDir}, Converter={StaticResource ConfigurationLoadedFromExecCvt}}"
+                        IsChecked="{Binding ConfigurationSaveToUserDirectory, Converter={StaticResource ReverseBooleanValueCvt}}"
+                        IsEnabled="{Binding ProcessingShellExtension, Converter={StaticResource ReverseBooleanValueCvt}}" />
+                    <RadioButton
+                        Margin="0,4,0,0"
+                        Padding="4,0,0,0"
+                        Content="{Binding Source={x:Static local:Settings.ActiveConfigDir}, Converter={StaticResource ConfigurationLoadedFromUserCvt}}"
+                        IsChecked="{Binding ConfigurationSaveToUserDirectory}"
+                        IsEnabled="{Binding ProcessingShellExtension, Converter={StaticResource ReverseBooleanValueCvt}}" />
+                    <StackPanel Margin="0,4,0,0" Orientation="Horizontal">
+                        <TextBlock Foreground="Black" Text="所选位置实际路径：" />
+                        <TextBlock
+                            Margin="0,0,0,0"
+                            Style="{StaticResource DescTextBlockStyle}"
+                            Text="{Binding DisplayingActiveConfigDir}" />
+                    </StackPanel>
+                    <TextBlock
+                        Margin="0,16,0,0"
+                        FontSize="8pt"
+                        Style="{StaticResource DescTextBlockStyle}"
+                        Text="软件启动时优先从当前目录查找配置文件并加载，如果找不到则到用户目录查找。" />
+                    <TextBlock
+                        Margin="0,4,0,0"
+                        FontSize="8pt"
+                        Style="{StaticResource DescTextBlockStyle}"
+                        Text="软件只会在启动时从配置文件加载一次配置，在正常退出时在所选位置保存配置文件。" />
+                    <TextBlock
+                        Margin="0,4,0,0"
+                        FontSize="8pt"
+                        Style="{StaticResource DescTextBlockStyle}"
+                        Text="如果想把软件复制到其他位置使用，则只需要复制 exe 文件和 json 配置文件即可。" />
+                </StackPanel>
+            </GroupBox>
         </TabItem>
         <TabItem
             Padding="8"

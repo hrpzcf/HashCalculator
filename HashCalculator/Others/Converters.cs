@@ -1018,4 +1018,27 @@ namespace HashCalculator
             return this.Default;
         }
     }
+
+    internal class ConfigurationLoadedLocationCvt : IValueConverter
+    {
+        public string Display { get; set; }
+
+        public string Location { get; set; }
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is string location &&
+                !string.IsNullOrEmpty(this.Location) &&
+                location.Equals(this.Location, StringComparison.OrdinalIgnoreCase))
+            {
+                return $"{this.Display}（最近加载）";
+            }
+            return this.Display;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

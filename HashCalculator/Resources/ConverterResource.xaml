@@ -18,6 +18,14 @@
         x:Key="StringToDoubleDefaultZeroCvt"
         Default="0"
         Min="0" />
+    <local:ConfigurationLoadedLocationCvt
+        x:Key="ConfigurationLoadedFromExecCvt"
+        Display="当前目录"
+        Location="{x:Static local:Settings.ConfigDirExec}" />
+    <local:ConfigurationLoadedLocationCvt
+        x:Key="ConfigurationLoadedFromUserCvt"
+        Display="用户目录"
+        Location="{x:Static local:Settings.ConfigDirUser}" />
     <local:InvalidFileNameForegroundCvt x:Key="InvalidFileNameForegroundCvt" />
     <local:CmpResForegroundCvt x:Key="CmpResForegroundCvt" />
     <local:CmpResBackgroundCvt x:Key="CmpResBackgroundCvt" />

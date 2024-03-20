@@ -15,11 +15,11 @@ namespace HashCalculator
 
         public SettingsPanel()
         {
+            This = this;
             this.viewModel = Settings.Current;
             this.DataContext = this.viewModel;
             Settings.Current.RunInMultiInstMode = Initializer.RunMultiMode;
             this.InitializeComponent();
-            This = this;
         }
 
         private void SettingsPanelKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
@@ -41,7 +41,7 @@ namespace HashCalculator
 
         private void SettingsPanelClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            e.Cancel = !this.viewModel.NotSettingShellExtension;
+            e.Cancel = this.viewModel.ProcessingShellExtension;
         }
 
         private async void OnTextBlockMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -50,7 +50,7 @@ namespace HashCalculator
             {
                 if (textBlock.Text == SettingsViewModel.FixAlgoDlls)
                 {
-                    string message = Settings.ExtractEmbeddedAlgoDllAndReadme(force: true);
+                    string message = Settings.ExtractEmbeddedAlgoDllFile(force: true);
                     if (!string.IsNullOrEmpty(message))
                     {
                         MessageBox.Show(this, $"修复失败：\n{message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -62,9 +62,9 @@ namespace HashCalculator
                 }
                 else if (textBlock.Text == SettingsViewModel.ShellExtDir)
                 {
-                    CommonUtils.OpenFolderAndSelectItem(Settings.ConfigDir.FullName);
+                    CommonUtils.OpenFolderAndSelectItem(Settings.ShellExtensionDir);
                 }
-                else if (textBlock.Text == SettingsViewModel.FixExePath)
+                else if (textBlock.Text == SettingsViewModel.UpdateExePath)
                 {
                     Exception exception = await ShellExtHelper.RegUpdateAppPathAsync();
                     if (exception == null)
@@ -78,7 +78,7 @@ namespace HashCalculator
                 }
                 else if (textBlock.Text == SettingsViewModel.AlgosDllDir)
                 {
-                    CommonUtils.OpenFolderAndSelectItem(Settings.LibraryDir);
+                    CommonUtils.OpenFolderAndSelectItem(Settings.ActiveLibraryDir);
                 }
             }
         }
