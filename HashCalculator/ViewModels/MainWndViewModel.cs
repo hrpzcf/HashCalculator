@@ -205,7 +205,8 @@ namespace HashCalculator
 
         public void CheckHashUseClipboardText()
         {
-            if (CommonUtils.ClipboardGetText(out string clipboardText) &&
+            if (HashViewModels.AnyItem() &&
+                CommonUtils.ClipboardGetText(out string clipboardText) &&
                 clipboardText.Length >= Settings.Current.MinCopiedCharsToTriggerHashCheck &&
                 clipboardText.Length <= Settings.Current.MaxCopiedCharsToTriggerHashCheck)
             {
