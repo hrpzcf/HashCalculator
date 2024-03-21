@@ -102,7 +102,7 @@ namespace HashCalculator
                             switch (this.MarkFilesOption)
                             {
                                 case EditFileOption.OriginalFile:
-                                    using (FileStream stream = model.FileInfo.Open(FileMode.Open,
+                                    using (FileStream stream = model.Information.Open(FileMode.Open,
                                         FileAccess.Write))
                                     {
                                         new HcmDataHelper(stream).GenerateMarkedFile(model.CurrentInOutModel);
@@ -110,7 +110,7 @@ namespace HashCalculator
                                     goto RoundEndsAndNext;
                                 default:
                                 case EditFileOption.NewInSameLocation:
-                                    outputDirectory = model.FileInfo.DirectoryName;
+                                    outputDirectory = model.Information.DirectoryName;
                                     break;
                                 case EditFileOption.NewInNewLocation:
                                     outputDirectory = this.DirectoryUsedToSaveFiles;
@@ -127,7 +127,7 @@ namespace HashCalculator
                                 newFilePath = Path.Combine(outputDirectory, newFileName);
                             } while (File.Exists(newFilePath));
                             bool result = true;
-                            using (FileStream fileStream = model.FileInfo.OpenRead())
+                            using (FileStream fileStream = model.Information.OpenRead())
                             using (FileStream newFileStream = File.Create(newFilePath))
                             {
                                 HcmDataHelper hcmDataHelper = new HcmDataHelper(fileStream);

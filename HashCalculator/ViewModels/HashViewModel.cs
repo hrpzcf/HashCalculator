@@ -19,7 +19,7 @@ namespace HashCalculator
         private string _currentHashString = null;
         private string _errorDetails = string.Empty;
         private string _modelDetails = "暂无详情...";
-        private long _fileSize = 0L;
+        private long _fileLength = 0L;
         private long _progress = 0L;
         private long _maxProgress = 0L;
         private double _durationofTask = 0.0;
@@ -65,7 +65,15 @@ namespace HashCalculator
             this.Arguments = arg;
             this.SerialNumber = serial;
             this.FileName = arg.FileName;
-            this.FileInfo = new FileInfo(arg.FilePath);
+            this.Information = new FileInfo(arg.FilePath);
+            try
+            {
+                this.FileLength = this.Information.Length;
+            }
+            catch (Exception e) when (e is IOException || e is FileNotFoundException)
+            {
+                this.FileLength = -1;
+            }
             this.RelativePath = arg.FileRelativePath;
             this.InvalidFileName = arg.IsInvalidName;
             if (arg.PresetAlgos != null)
@@ -82,7 +90,7 @@ namespace HashCalculator
 
         public int SerialNumber { get; }
 
-        public FileInfo FileInfo { get; }
+        public FileInfo Information { get; }
 
         public string RelativePath { get; }
 
@@ -108,15 +116,15 @@ namespace HashCalculator
             }
         }
 
-        public long FileSize
+        public long FileLength
         {
             get
             {
-                return this._fileSize;
+                return this._fileLength;
             }
             private set
             {
-                this.SetPropNotify(ref this._fileSize, value);
+                this.SetPropNotify(ref this._fileLength, value);
             }
         }
 
@@ -468,15 +476,22 @@ namespace HashCalculator
 
         public void ResetHashViewModel()
         {
-            this.ErrorDetails = string.Empty;
-            this.FileSize = 0;
             this.DurationofTask = 0.0;
+            this.ErrorDetails = string.Empty;
+            this.GroupId = null;
             this.Progress = 0;
             this.MaxProgress = 0;
             this.State = HashState.NoState;
             this.Result = HashResult.NoResult;
-            this.GroupId = null;
             this.IsExecutionTarget = false;
+            try
+            {
+                this.FileLength = this.Information.Length;
+            }
+            catch (Exception e) when (e is IOException || e is FileNotFoundException)
+            {
+                this.FileLength = -1;
+            }
             if (this.AlgoInOutModels != null)
             {
                 foreach (var model in this.AlgoInOutModels)
@@ -731,7 +746,7 @@ namespace HashCalculator
                 goto FinishingTouchesBeforeExiting;
             }
             // 需要调用 FileInfo 的 Refresh 方法才能更新 FileInfo.Exists
-            else if (!File.Exists(this.FileInfo.FullName))
+            else if (!File.Exists(this.Information.FullName))
             {
                 synchronization.Invoke(() =>
                 {
@@ -743,12 +758,13 @@ namespace HashCalculator
             byte[] buffer = null;
             try
             {
-                using (FileStream fs = File.OpenRead(this.FileInfo.FullName))
+                using (FileStream fs = this.Information.OpenRead())
                 {
                     synchronization.Invoke(() =>
                     {
                         this.MakeSureAlgoModelArrayNotEmpty();
-                        this.FileSize = fs.Length;
+                        // 刷新大小，应对文件被添加后，计算前发生变化或被替换的情况
+                        this.FileLength = fs.Length;
                         this.Progress = 0L;
                         this.MaxProgress = fs.Length;
                         if (this.SelectedOutputType == OutputType.Unknown)
@@ -770,7 +786,7 @@ namespace HashCalculator
                         model.Algo.Initialize();
                     }
                     int actualReadCount = 0;
-                    GlobalUtils.Suggest(ref buffer, this.FileSize);
+                    GlobalUtils.Suggest(ref buffer, this.FileLength);
                     Action<int> updateProgress = size => { this.Progress += size; };
                     bool terminateByCancellation = false;
                     if (Settings.Current.ParallelBetweenAlgos)
@@ -876,7 +892,7 @@ namespace HashCalculator
             synchronization.Invoke(() =>
             {
                 this.DurationofTask = duration;
-                this.ModelDetails = $"文件名称：{this.FileName}\n文件大小：{CommonUtils.FileSizeCvt(this.FileSize)}\n"
+                this.ModelDetails = $"文件名称：{this.FileName}\n文件大小：{CommonUtils.FileSizeCvt(this.FileLength)}\n"
                     + $"任务任务耗时：{duration:f2}秒";
                 this.State = HashState.Finished;
             });

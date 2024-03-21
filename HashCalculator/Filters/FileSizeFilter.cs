@@ -47,8 +47,8 @@ namespace HashCalculator
                 {
                     if (model.Matched)
                     {
-                        if ((lowerLimit >= 0 && model.FileSize < lowerLimit) ||
-                            (upperLimit >= 0 && upperLimit >= lowerLimit && model.FileSize > upperLimit))
+                        if ((lowerLimit >= 0 && model.FileLength < lowerLimit) ||
+                            (upperLimit >= 0 && upperLimit >= lowerLimit && model.FileLength > upperLimit))
                         {
                             model.Matched = false;
                         }

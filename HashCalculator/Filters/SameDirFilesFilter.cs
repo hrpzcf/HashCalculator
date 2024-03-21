@@ -42,7 +42,7 @@ namespace HashCalculator
                     {
                         continue;
                     }
-                    string dirPath = model.FileInfo.DirectoryName;
+                    string dirPath = model.Information.DirectoryName;
                     if (groupByDirPath.ContainsKey(dirPath))
                     {
                         groupByDirPath[dirPath].Add(model);

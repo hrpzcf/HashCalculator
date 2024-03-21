@@ -88,23 +88,23 @@ namespace HashCalculator
                             continue;
                         }
                         string fileNewPath = Path.Combine(
-                               model.FileInfo.DirectoryName, $"{newFileName}{model.FileInfo.Extension}");
+                               model.Information.DirectoryName, $"{newFileName}{model.Information.Extension}");
                         int number = 1;
                     TryRenameFile:
                         try
                         {
                             // 有可能重命名只改变原文件名大小写，即“已存在”的是即将重命名的文件本身，
                             // 这种情况重命名是可以成功的，不需要添加序号后缀
-                            if (!File.Exists(fileNewPath) || model.FileInfo.FullName.Equals(
+                            if (!File.Exists(fileNewPath) || model.Information.FullName.Equals(
                                 fileNewPath, StringComparison.OrdinalIgnoreCase))
                             {
-                                model.FileInfo.MoveTo(fileNewPath);
-                                model.FileName = model.FileInfo.Name;
+                                model.Information.MoveTo(fileNewPath);
+                                model.FileName = model.Information.Name;
                             }
                             else
                             {
                                 fileNewPath = Path.Combine(
-                                    model.FileInfo.DirectoryName, $"{newFileName} ({++number}){model.FileInfo.Extension}");
+                                    model.Information.DirectoryName, $"{newFileName} ({++number}){model.Information.Extension}");
                                 goto TryRenameFile;
                             }
                         }

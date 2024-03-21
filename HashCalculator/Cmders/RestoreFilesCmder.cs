@@ -107,7 +107,7 @@ namespace HashCalculator
                             switch (this.RestoreFilesOption)
                             {
                                 case EditFileOption.OriginalFile:
-                                    using (FileStream fileStream = model.FileInfo.Open(
+                                    using (FileStream fileStream = model.Information.Open(
                                         FileMode.Open, FileAccess.ReadWrite))
                                     {
                                         if (new HcmDataHelper(fileStream).RestoreMarkedFile())
@@ -118,7 +118,7 @@ namespace HashCalculator
                                     goto RoundEndsAndNext;
                                 default:
                                 case EditFileOption.NewInSameLocation:
-                                    outputDirectory = model.FileInfo.DirectoryName;
+                                    outputDirectory = model.Information.DirectoryName;
                                     break;
                                 case EditFileOption.NewInNewLocation:
                                     outputDirectory = this.DirectoryUsedToSaveFiles;
@@ -135,7 +135,7 @@ namespace HashCalculator
                                 newFilePath = Path.Combine(outputDirectory, newFileName);
                             } while (File.Exists(newFilePath));
                             bool result = true;
-                            using (FileStream fileStream = model.FileInfo.OpenRead())
+                            using (FileStream fileStream = model.Information.OpenRead())
                             using (FileStream newFileStream = File.Create(newFilePath))
                             {
                                 HcmDataHelper hcmDataHelper = new HcmDataHelper(fileStream);
@@ -261,7 +261,7 @@ namespace HashCalculator
                         doubleProgressModel.CurrentString = model.FileName;
                         try
                         {
-                            using (FileStream fileStream = model.FileInfo.OpenRead())
+                            using (FileStream fileStream = model.Information.OpenRead())
                             {
                                 if (!new HcmDataHelper(fileStream).ReadHcmData(out HcmData hcmData))
                                 {

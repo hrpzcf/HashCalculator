@@ -650,11 +650,11 @@ namespace HashCalculator
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is long bytesLength)
+            if (value is long bytesLength && bytesLength >= 0)
             {
                 return CommonUtils.FileSizeCvt(bytesLength);
             }
-            return "未知大小";
+            return "N/A";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

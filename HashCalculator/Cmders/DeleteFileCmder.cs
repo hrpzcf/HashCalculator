@@ -67,12 +67,12 @@ namespace HashCalculator
                             {
                                 foreach (HashViewModel model in targets)
                                 {
-                                    try { model.FileInfo.Delete(); } catch (Exception) { }
+                                    try { model.Information.Delete(); } catch (Exception) { }
                                 }
                             }
                             else
                             {
-                                string pathsInOneString = '\0'.Join(targets.Select(i => i.FileInfo.FullName));
+                                string pathsInOneString = '\0'.Join(targets.Select(i => i.Information.FullName));
                                 CommonUtils.SendToRecycleBin(MainWindow.WndHandle, pathsInOneString);
                             }
                         });

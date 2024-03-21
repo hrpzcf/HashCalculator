@@ -32,7 +32,7 @@ namespace HashCalculator
                     {
                         continue;
                     }
-                    model.FileIndex = model.FileInfo.FullName.GetFileIndex();
+                    model.FileIndex = model.Information.FullName.GetFileIndex();
                     if (model.FileIndex == null)
                     {
                         model.Matched = false;

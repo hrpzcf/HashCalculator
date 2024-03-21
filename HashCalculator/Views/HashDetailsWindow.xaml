@@ -46,7 +46,7 @@
                 Grid.Column="1"
                 Padding="2,4"
                 IsReadOnly="True"
-                Text="{Binding FileInfo.FullName, Mode=OneWay}"
+                Text="{Binding Information.FullName, Mode=OneWay}"
                 TextWrapping="Wrap" />
         </Grid>
         <Grid Grid.Row="1" Margin="0,8,0,0">
@@ -80,8 +80,8 @@
                 IsReadOnly="True">
                 <TextBox.Text>
                     <MultiBinding Mode="OneWay" StringFormat="{}{1} ({0} 字节)">
-                        <Binding Path="FileSize" />
-                        <Binding Converter="{StaticResource BytesToIntuitiveFileSizeCvt}" Path="FileSize" />
+                        <Binding Path="FileLength" />
+                        <Binding Converter="{StaticResource BytesToIntuitiveFileSizeCvt}" Path="FileLength" />
                     </MultiBinding>
                 </TextBox.Text>
             </TextBox>

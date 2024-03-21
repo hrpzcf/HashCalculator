@@ -127,14 +127,19 @@ namespace HashCalculator
         {
             int INVALID_HANDLE_VALUE = -1;
             IntPtr fileHandle = new IntPtr(INVALID_HANDLE_VALUE);
-            CmpableFileIndex fileIndex = default;
+            CmpableFileIndex fileIndex = null;
             if (!Path.IsPathRooted(filePath) || !File.Exists(filePath))
             {
                 goto FinalizeAndReturnResult;
             }
-            fileHandle = KERNEL32.CreateFileW(filePath, 0U,
-                FileShare.Read | FileShare.Write | FileShare.Delete, IntPtr.Zero, FileMode.Open,
-                FileAttributes.Normal | FileAttributes.ReparsePoint, IntPtr.Zero);
+            fileHandle = KERNEL32.CreateFileW(
+                filePath,
+                0U,
+                FileShare.ReadWrite,
+                IntPtr.Zero,
+                FileMode.Open,
+                FileAttributes.Normal,
+                IntPtr.Zero);
             if (fileHandle.ToInt32() == INVALID_HANDLE_VALUE)
             {
                 goto FinalizeAndReturnResult;

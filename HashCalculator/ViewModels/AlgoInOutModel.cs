@@ -174,9 +174,9 @@ namespace HashCalculator
                     }
                     formatBuilder.Replace("$algo$", algoName);
                     formatBuilder.Replace("$hash$", BytesToStrByOutputTypeCvt.Convert(this.HashResult, output));
-                    formatBuilder.Replace("$name$", parent.FileInfo.Name);
+                    formatBuilder.Replace("$name$", parent.Information.Name);
                     formatBuilder.Replace("$path$", parent.Arguments.Deprecated ?
-                        parent.FileInfo.Name : parent.FileInfo.FullName);
+                        parent.Information.Name : parent.Information.FullName);
                     formatBuilder.Replace("$relpath$", parent.RelativePath);
                     return formatBuilder.ToString();
                 }

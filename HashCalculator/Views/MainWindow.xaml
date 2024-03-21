@@ -448,13 +448,13 @@
                                 Background="{Binding FdGroupId, Converter={StaticResource CmpColorToSolidColorBrushCvt}}"
                                 Foreground="{Binding InvalidFileName, Converter={StaticResource InvalidFileNameForegroundCvt}}"
                                 Text="{Binding FileName}"
-                                ToolTip="{Binding FileInfo}" />
+                                ToolTip="{Binding Information}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn
                     Header="文件大小"
-                    SortMemberPath="FileSize"
+                    SortMemberPath="FileLength"
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoFileSizeColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
                     <DataGridTemplateColumn.HeaderStyle>
                         <Style TargetType="{x:Type DataGridColumnHeader}">
@@ -466,9 +466,9 @@
                             <TextBlock
                                 Padding="8,0"
                                 HorizontalAlignment="Right"
-                                Text="{Binding FileSize, Converter={StaticResource BytesToIntuitiveFileSizeCvt}}">
+                                Text="{Binding FileLength, Converter={StaticResource BytesToIntuitiveFileSizeCvt}}">
                                 <TextBlock.ToolTip>
-                                    <ToolTip Content="{Binding FileSize, Mode=OneWay}" ContentStringFormat="{}{0} 字节" />
+                                    <ToolTip Content="{Binding FileLength, Mode=OneWay}" ContentStringFormat="{}{0} 字节" />
                                 </TextBlock.ToolTip>
                             </TextBlock>
                         </DataTemplate>

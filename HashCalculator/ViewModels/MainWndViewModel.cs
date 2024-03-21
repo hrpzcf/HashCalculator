@@ -538,12 +538,12 @@ namespace HashCalculator
                     }
                     if (copyName)
                     {
-                        stringBuilder.Append(model.FileInfo.Name);
+                        stringBuilder.Append(model.Information.Name);
                     }
                     else if (!model.Arguments.Deprecated)
                     {
                         fullPathCopied = true;
-                        stringBuilder.Append(model.FileInfo.FullName);
+                        stringBuilder.Append(model.Information.FullName);
                     }
                 }
                 if (stringBuilder.Length != 0)
@@ -607,17 +607,17 @@ namespace HashCalculator
                     }
                     foreach (string key in groupByDir.Keys)
                     {
-                        if (model.FileInfo.ParentSameWith(key))
+                        if (model.Information.ParentSameWith(key))
                         {
                             isMatched = true;
-                            groupByDir[key].Add(model.FileInfo.Name);
+                            groupByDir[key].Add(model.Information.Name);
                             break;
                         }
                     }
                     if (!isMatched)
                     {
-                        groupByDir[model.FileInfo.DirectoryName] = new List<string> {
-                            model.FileInfo.Name };
+                        groupByDir[model.Information.DirectoryName] = new List<string> {
+                            model.Information.Name };
                     }
                 }
                 if (groupByDir.Any())
@@ -651,13 +651,13 @@ namespace HashCalculator
                 for (int i = 0; i < count; ++i)
                 {
                     var model = (HashViewModel)selectedModels[i];
-                    if (!File.Exists(model.FileInfo.FullName))
+                    if (!File.Exists(model.Information.FullName))
                     {
                         continue;
                     }
                     SHELL32.ShellExecuteW(MainWindow.WndHandle, "open",
-                        model.FileInfo.FullName, null,
-                        Path.GetDirectoryName(model.FileInfo.FullName), ShowCmd.SW_SHOWNORMAL);
+                        model.Information.FullName, null,
+                        Path.GetDirectoryName(model.Information.FullName), ShowCmd.SW_SHOWNORMAL);
                 }
             }
         }
@@ -682,15 +682,15 @@ namespace HashCalculator
                 for (int i = 0; i < count; ++i)
                 {
                     HashViewModel model = (HashViewModel)selectedModels[i];
-                    if (File.Exists(model.FileInfo.FullName))
+                    if (File.Exists(model.Information.FullName))
                     {
                         var shellExecuteInfo = new SHELLEXECUTEINFOW();
                         shellExecuteInfo.cbSize = Marshal.SizeOf(shellExecuteInfo);
                         shellExecuteInfo.fMask = SEMaskFlags.SEE_MASK_INVOKEIDLIST;
                         shellExecuteInfo.hwnd = MainWindow.WndHandle;
                         shellExecuteInfo.lpVerb = "properties";
-                        shellExecuteInfo.lpFile = model.FileInfo.FullName;
-                        shellExecuteInfo.lpDirectory = model.FileInfo.DirectoryName;
+                        shellExecuteInfo.lpFile = model.Information.FullName;
+                        shellExecuteInfo.lpDirectory = model.Information.DirectoryName;
                         shellExecuteInfo.nShow = ShowCmd.SW_SHOWNORMAL;
                         SHELL32.ShellExecuteExW(ref shellExecuteInfo);
                     }
@@ -788,7 +788,7 @@ namespace HashCalculator
                             {
                                 try
                                 {
-                                    model.FileInfo.Delete();
+                                    model.Information.Delete();
                                 }
                                 catch (Exception)
                                 {
@@ -803,7 +803,7 @@ namespace HashCalculator
                         }
                         else
                         {
-                            string allInOneStr = '\0'.Join(targets.Select(i => i.FileInfo.FullName));
+                            string allInOneStr = '\0'.Join(targets.Select(i => i.Information.FullName));
                             if (!CommonUtils.SendToRecycleBin(MainWindow.WndHandle, allInOneStr))
                             {
                                 return "移动文件到回收站失败，可能部分文件未移动！";
