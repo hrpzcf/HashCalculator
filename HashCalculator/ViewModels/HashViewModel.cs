@@ -709,7 +709,7 @@ namespace HashCalculator
             {
                 foreach (AlgoInOutModel item in this.AlgoInOutModels)
                 {
-                    CmpRes hashCheckResult = checker.GetCheckResult(item.AlgoName, item.HashResult);
+                    CmpRes hashCheckResult = checker.GetCheckResult(item.AlgoType, item.HashResult);
                     item.HashCmpResult = hashCheckResult;
                     if (Settings.Current.AlgoToSwitchToAfterHashChecked != CmpRes.NoResult &&
                         hashCheckResult == Settings.Current.AlgoToSwitchToAfterHashChecked &&

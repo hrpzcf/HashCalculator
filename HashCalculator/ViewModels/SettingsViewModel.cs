@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -72,6 +73,7 @@ namespace HashCalculator
         private string displayingShellExtensionDir = null;
         private string formatForGenerateText = "#$algo$ *$hash$ *$name$";
 
+        private AlgoInOutModel selectedAlgoInOutModel;
         private TemplateForExportModel selectedExportTemplate;
         private TemplateForChecklistModel selectedChecklistTemplate;
         private ObservableCollection<TemplateForExportModel> templatesForExport = null;
@@ -98,6 +100,8 @@ namespace HashCalculator
         private RelayCommand moveChecklistTemplateUpCmd;
         private RelayCommand moveChecklistTemplateDownCmd;
         private RelayCommand removeChecklistTemplateCmd;
+
+        private RelayCommand resetAlgorithmAliasCmd;
 
         public SettingsViewModel()
         {
@@ -428,8 +432,6 @@ namespace HashCalculator
                 this.SetPropNotify(ref this.restoreFilesProgressHeight, value);
             }
         }
-
-        public AlgoType[] SelectedAlgos { get; set; }
 
         public OutputType SelectedOutputType
         {
@@ -802,6 +804,10 @@ namespace HashCalculator
             }
         }
 
+        public AlgoType[] SelectedAlgos { get; set; }
+
+        public Dictionary<AlgoType, string[]> AlgorithmAliasList { get; set; }
+
         public ObservableCollection<TemplateForExportModel> TemplatesForExport
         {
             get
@@ -967,6 +973,19 @@ namespace HashCalculator
                     this.openEditContextMenuCmd = new RelayCommand(this.OpenEditContextMenuAction);
                 }
                 return this.openEditContextMenuCmd;
+            }
+        }
+
+        [JsonIgnore, XmlIgnore]
+        public AlgoInOutModel SelectedInOutModelForAlias
+        {
+            get
+            {
+                return this.selectedAlgoInOutModel;
+            }
+            set
+            {
+                this.SetPropNotify(ref this.selectedAlgoInOutModel, value);
             }
         }
 
@@ -1373,6 +1392,29 @@ namespace HashCalculator
             }
         }
 
+        private void ResetAlgorithmAliasAction(object param)
+        {
+            foreach (AlgoInOutModel model in AlgosPanelModel.ProvidedAlgos)
+            {
+                model.ResetAlias();
+            }
+            MessageBox.Show(SettingsPanel.This, "已将所有算法的别名恢复到默认状态！", "提示",
+                MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        [JsonIgnore, XmlIgnore]
+        public ICommand ResetAlgorithmAliasCmd
+        {
+            get
+            {
+                if (this.resetAlgorithmAliasCmd == null)
+                {
+                    this.resetAlgorithmAliasCmd = new RelayCommand(this.ResetAlgorithmAliasAction);
+                }
+                return this.resetAlgorithmAliasCmd;
+            }
+        }
+
         [OnSerializing]
         internal void OnSettingsViewModelSerializing(StreamingContext context)
         {
@@ -1385,6 +1427,14 @@ namespace HashCalculator
             {
                 // 非 null 但空，统一设置为 null
                 this.TemplatesForChecklist = null;
+            }
+            this.AlgorithmAliasList = AlgosPanelModel.ProvidedAlgos.Where(
+                i => i.AlgorithmAlias != null && i.AlgorithmAlias.Length != 0).ToDictionary(
+                j => j.AlgoType, k => k.AlgorithmAlias);
+            if (!this.AlgorithmAliasList.Any())
+            {
+                // 内容为空，统一设置为 null
+                this.AlgorithmAliasList = null;
             }
             this.SelectedAlgos = AlgosPanelModel.ProvidedAlgos.Where(i => i.Selected).Select(
                 i => i.AlgoType).ToArray();
@@ -1400,6 +1450,20 @@ namespace HashCalculator
             if (this.TemplatesForChecklist == null || !this.TemplatesForChecklist.Any())
             {
                 this.ResetTemplatesForChecklist();
+            }
+            if (this.AlgorithmAliasList != null)
+            {
+                foreach (var keyValuePair in this.AlgorithmAliasList)
+                {
+                    foreach (AlgoInOutModel inOut in AlgosPanelModel.ProvidedAlgos)
+                    {
+                        if (inOut.AlgoType == keyValuePair.Key)
+                        {
+                            inOut.AlgorithmAlias = keyValuePair.Value;
+                            break;
+                        }
+                    }
+                }
             }
             foreach (AlgoInOutModel model in AlgosPanelModel.ProvidedAlgos)
             {

@@ -970,6 +970,61 @@
         </TabItem>
         <TabItem
             Padding="8"
+            Header="哈希算法别名"
+            Style="{StaticResource TabItemStyle1}">
+            <StackPanel Margin="4">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock VerticalAlignment="Center" Text="要设置别名的本地算法：" />
+                    <ComboBox
+                        MinWidth="115"
+                        VerticalContentAlignment="Center"
+                        DisplayMemberPath="AlgoName"
+                        ItemsSource="{Binding Source={x:Static local:AlgosPanelModel.ProvidedAlgos}}"
+                        SelectedIndex="0"
+                        SelectedItem="{Binding SelectedInOutModelForAlias}" />
+                    <Button
+                        Margin="16,0,0,0"
+                        Padding="16,4"
+                        Background="{x:Null}"
+                        Command="{Binding ResetAlgorithmAliasCmd}"
+                        Content="全部恢复默认" />
+                </StackPanel>
+                <TextBlock Margin="0,8,0,0" Text="要设置的别名：" />
+                <TextBox
+                    Padding="2"
+                    AcceptsReturn="True"
+                    MinLines="3"
+                    Text="{Binding SelectedInOutModelForAlias.AlgorithmAlias, Converter={StaticResource AlgorithmAliasStringToStringArrayCvt}, UpdateSourceTrigger=LostFocus}"
+                    TextWrapping="Wrap" />
+                <TextBlock
+                    Margin="0,8,0,0"
+                    FontSize="8pt"
+                    Style="{StaticResource DescTextBlockStyle}"
+                    Text="1. 别名的作用是帮助 HashCalculator 识别那些“不认识”的算法名，例如， -" />
+                <TextBlock
+                    Margin="0,4,0,0"
+                    FontSize="8pt"
+                    Style="{StaticResource DescTextBlockStyle}"
+                    Text="当 HashCalculator 解析校验依据时遇到一个算法名“XXH364”，因为本地并没有 -" />
+                <TextBlock
+                    Margin="0,4,0,0"
+                    FontSize="8pt"
+                    Style="{StaticResource DescTextBlockStyle}"
+                    Text="这样名字的算法所以无法识别。这时你可以给本地“XXH3-64”算法增加一个叫“XXH364”的别名， -" />
+                <TextBlock
+                    Margin="0,4,0,0"
+                    FontSize="8pt"
+                    Style="{StaticResource DescTextBlockStyle}"
+                    Text="这样当 HashCalculator 遇到“XXH364”时就知道它实际上就是本地的“XXH3-64”算法。" />
+                <TextBlock
+                    Margin="0,4,0,0"
+                    FontSize="8pt"
+                    Style="{StaticResource DescTextBlockStyle}"
+                    Text="2. 别名不区分大小写，可以用空格、英文逗号、换行符来分隔多个不同的别名。" />
+            </StackPanel>
+        </TabItem>
+        <TabItem
+            Padding="8"
             Header="配置文件保存位置"
             Style="{StaticResource TabItemStyle1}">
             <GroupBox

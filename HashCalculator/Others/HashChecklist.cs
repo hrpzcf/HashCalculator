@@ -11,8 +11,8 @@ namespace HashCalculator
     {
         private bool fileIndependent;
 
-        private readonly Dictionary<string, List<byte[]>> algoHashDict =
-            new Dictionary<string, List<byte[]>>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<AlgoType, List<byte[]>> algoHashDict =
+            new Dictionary<AlgoType, List<byte[]>>();
 
         public bool IsExistingFile { get; set; }
 
@@ -23,33 +23,34 @@ namespace HashCalculator
 
         public bool AddCheckerItem(string relpath, string algoName, byte[] hashBytes)
         {
-            if (relpath == null || algoName == null || hashBytes == null)
+            if (relpath != null && algoName != null && hashBytes != null &&
+                AlgosPanelModel.TryGetAlgoType(algoName, out AlgoType algorithm))
             {
-                return false;
+                this.fileIndependent = relpath == string.Empty;
+                if (this.algoHashDict.TryGetValue(algorithm, out var hashValues))
+                {
+                    hashValues.Add(hashBytes);
+                }
+                else
+                {
+                    this.algoHashDict[algorithm] = new List<byte[]>() { hashBytes };
+                }
+                return true;
             }
-            this.fileIndependent = relpath == string.Empty;
-            if (this.algoHashDict.TryGetValue(algoName, out var hashValues))
-            {
-                hashValues.Add(hashBytes);
-            }
-            else
-            {
-                this.algoHashDict[algoName] = new List<byte[]>() { hashBytes };
-            }
-            return true;
+            return false;
         }
 
-        public CmpRes GetCheckResult(string algoName, byte[] hashBytes)
+        public CmpRes GetCheckResult(AlgoType algoType, byte[] hashBytes)
         {
-            if (algoName == null || hashBytes == null || !this.algoHashDict.Any())
+            if (hashBytes == null || !this.algoHashDict.Any())
             {
                 return CmpRes.Unrelated;
             }
-            bool algoNameIndependent = false;
-            if (!this.algoHashDict.TryGetValue(algoName, out List<byte[]> hashValues))
+            bool algoTypeIndependent = false;
+            if (!this.algoHashDict.TryGetValue(algoType, out List<byte[]> hashValues))
             {
-                algoNameIndependent = true;
-                this.algoHashDict.TryGetValue(string.Empty, out hashValues);
+                algoTypeIndependent = true;
+                this.algoHashDict.TryGetValue(AlgoType.Unknown, out hashValues);
             }
             if (hashValues != null)
             {
@@ -57,7 +58,7 @@ namespace HashCalculator
                 {
                     return CmpRes.Uncertain;
                 }
-                if (algoNameIndependent)
+                if (algoTypeIndependent)
                 {
                     if (hashValues.Contains(hashBytes, BytesComparer.Default))
                     {
@@ -91,14 +92,14 @@ namespace HashCalculator
             {
                 foreach (AlgoInOutModel inOut in model.AlgoInOutModels)
                 {
-                    inOut.HashCmpResult = this.GetCheckResult(inOut.AlgoName, inOut.HashResult);
+                    inOut.HashCmpResult = this.GetCheckResult(inOut.AlgoType, inOut.HashResult);
                 }
             }
         }
 
-        public string[] GetExistingAlgoNames()
+        public AlgoType[] GetExistingAlgoTypes()
         {
-            return this.algoHashDict.Keys.Where(i => i != string.Empty).ToArray();
+            return this.algoHashDict.Keys.Where(i => i != AlgoType.Unknown).ToArray();
         }
 
         public int[] GetExistingDigestLengths()

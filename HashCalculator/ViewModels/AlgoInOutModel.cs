@@ -5,21 +5,35 @@ using System.Windows.Input;
 
 namespace HashCalculator
 {
-    internal class AlgoInOutModel : NotifiableModel
+    public class AlgoInOutModel : NotifiableModel
     {
-        private RelayCommand _copyHashResultCmd;
-        private byte[] _hashResult;
         private CmpRes _hashCmpResult;
+        private byte[] _hashResult;
         private bool _export = false;
         private bool _selected = false;
         private bool _hashResultHandlerAdded = false;
+        private string[] _algorithmAlias = null;
+        private readonly string[] _presetAlias = null;
+        private RelayCommand _copyHashResultCmd;
 
-        public AlgoInOutModel(IHashAlgoInfo algoInfo)
+        public AlgoInOutModel(IHashAlgoInfo algoInfo, string[] preset)
         {
+            this.IAlgo = algoInfo;
             this.AlgoName = algoInfo.AlgoName;
             this.AlgoType = algoInfo.AlgoType;
             this.Algo = (HashAlgorithm)algoInfo;
+            this._presetAlias = preset;
+            this.AlgorithmAlias = preset;
+        }
+
+        public AlgoInOutModel(IHashAlgoInfo algoInfo, string[] preset, string[] alias)
+        {
             this.IAlgo = algoInfo;
+            this.AlgoName = algoInfo.AlgoName;
+            this.AlgoType = algoInfo.AlgoType;
+            this.Algo = (HashAlgorithm)algoInfo;
+            this._presetAlias = preset;
+            this.AlgorithmAlias = alias;
         }
 
         public string AlgoName { get; }
@@ -32,22 +46,13 @@ namespace HashCalculator
 
         public bool Export
         {
-            get
-            {
-                return this._export;
-            }
-            set
-            {
-                this.SetPropNotify(ref this._export, value);
-            }
+            get => this._export;
+            set => this.SetPropNotify(ref this._export, value);
         }
 
         public bool Selected
         {
-            get
-            {
-                return this._selected;
-            }
+            get => this._selected;
             set
             {
                 // AlgoGroupModel 类根据此属性的变化计数
@@ -61,31 +66,31 @@ namespace HashCalculator
 
         public byte[] HashResult
         {
-            get
-            {
-                return this._hashResult;
-            }
-            set
-            {
-                this.SetPropNotify(ref this._hashResult, value);
-            }
+            get => this._hashResult;
+            set => this.SetPropNotify(ref this._hashResult, value);
         }
 
         public CmpRes HashCmpResult
         {
-            get
-            {
-                return this._hashCmpResult;
-            }
-            set
-            {
-                this.SetPropNotify(ref this._hashCmpResult, value);
-            }
+            get => this._hashCmpResult;
+            set => this.SetPropNotify(ref this._hashCmpResult, value);
+        }
+
+        public string[] AlgorithmAlias
+        {
+            get => this._algorithmAlias;
+            set => this.SetPropNotify(ref this._algorithmAlias, value);
         }
 
         public AlgoInOutModel NewAlgoInOutModel()
         {
-            return new AlgoInOutModel(this.IAlgo.NewInstance());
+            return new AlgoInOutModel(this.IAlgo.NewInstance(), this.AlgorithmAlias,
+                this._presetAlias);
+        }
+
+        public void ResetAlias()
+        {
+            this.AlgorithmAlias = this._presetAlias;
         }
 
         public void SetHashResultChangedHandler(PropertyChangedEventHandler handler)
@@ -129,7 +134,7 @@ namespace HashCalculator
         /// 参数 output 为 OutputType.Unknown 代表按 parent.SelectedOutputType 格式化哈希值，<br/>
         /// 如果 parent.SelectedOutputType 也是 OutputType.Unknown，则使用 Settings.Current.SelectedOutputType。
         /// </summary>
-        public string GenerateTextInFormat(HashViewModel parent, string format, OutputType output,
+        internal string GenerateTextInFormat(HashViewModel parent, string format, OutputType output,
             bool endLine, bool seeExport, bool casedAlgName)
         {
             if (parent != null && !parent.Arguments.IsInvalidName && this.HashResult != null &&

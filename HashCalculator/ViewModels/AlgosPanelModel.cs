@@ -14,96 +14,96 @@ namespace HashCalculator
             new AlgoInOutModel[]
             {
                 // XxHash
-                new AlgoInOutModel(new FastXxHashXXH32()),
-                new AlgoInOutModel(new FastXxHashXXH64()),
-                new AlgoInOutModel(new FastXxHashXXH3_64()),
-                new AlgoInOutModel(new FastXxHashXXH3_128()),
+                new AlgoInOutModel(new FastXxHashXXH32(), new string[]{"XXH-32"}),
+                new AlgoInOutModel(new FastXxHashXXH64(), new string[]{"XXH-64"}),
+                new AlgoInOutModel(new FastXxHashXXH3_64(), new string[]{"XXH364"}),
+                new AlgoInOutModel(new FastXxHashXXH3_128(), new string[]{"XXH3128"}),
                 // SM3
-                new AlgoInOutModel(new GmSslSM3()),
+                new AlgoInOutModel(new GmSslSM3(), null),
                 // MD4/MD5
-                new AlgoInOutModel(new LibRHashMD4()),
-                new AlgoInOutModel(new NetCryptoCngMD5()),
+                new AlgoInOutModel(new LibRHashMD4(), null),
+                new AlgoInOutModel(new NetCryptoCngMD5(), null),
                 // CrcHash
-                new AlgoInOutModel(new StbrummeRepoCrc32()),
-                new AlgoInOutModel(new OpenHashTabCrc64()),
+                new AlgoInOutModel(new StbrummeRepoCrc32(), null),
+                new AlgoInOutModel(new OpenHashTabCrc64(), null),
                 // QuickXor
-                new AlgoInOutModel(new NamazsoQuickXor()),
+                new AlgoInOutModel(new NamazsoQuickXor(), new string[]{"QuickXorHash"}),
                 // Whirlpool
-                new AlgoInOutModel(new LibRHashWhirlpool()),
+                new AlgoInOutModel(new LibRHashWhirlpool(), null),
                 // eD2k
-                new AlgoInOutModel(new LibRHashED2K()),
+                new AlgoInOutModel(new LibRHashED2K(), null),
                 // Has160
-                new AlgoInOutModel(new LibRHashHas160()),
+                new AlgoInOutModel(new LibRHashHas160(), new string[]{"Has-160"}),
                 // RipeMD160
-                new AlgoInOutModel(new LibRHashRipeMD160()),
+                new AlgoInOutModel(new LibRHashRipeMD160(), new string[]{"RipeMD-160"}),
                 // SHA1
-                new AlgoInOutModel(new NetCryptoCngSHA1()),
+                new AlgoInOutModel(new NetCryptoCngSHA1(), new string[]{"SHA1"}),
             });
         private static readonly AlgoGroupModel _groupSHA2 = new AlgoGroupModel(
             "SHA2",
             new AlgoInOutModel[]
             {
-                new AlgoInOutModel(new LibRHashSHA224()),
-                new AlgoInOutModel(new NetCryptoCngSHA256()),
-                new AlgoInOutModel(new NetCryptoCngSHA384()),
-                new AlgoInOutModel(new NetCryptoCngSHA512()),
+                new AlgoInOutModel(new LibRHashSHA224(), new string[]{"SHA224"}),
+                new AlgoInOutModel(new NetCryptoCngSHA256(), new string[]{"SHA256"}),
+                new AlgoInOutModel(new NetCryptoCngSHA384(), new string[]{"SHA384"}),
+                new AlgoInOutModel(new NetCryptoCngSHA512(), new string[]{"SHA512"}),
             });
         private static readonly AlgoGroupModel _groupSHA3 = new AlgoGroupModel(
             "SHA3",
             new AlgoInOutModel[]
             {
-                new AlgoInOutModel(new ExtendedKcpSHA3(224)),
-                new AlgoInOutModel(new ExtendedKcpSHA3(256)),
-                new AlgoInOutModel(new ExtendedKcpSHA3(384)),
-                new AlgoInOutModel(new ExtendedKcpSHA3(512)),
+                new AlgoInOutModel(new ExtendedKcpSHA3(224), new string[]{"SHA3224"}),
+                new AlgoInOutModel(new ExtendedKcpSHA3(256), new string[]{"SHA3256"}),
+                new AlgoInOutModel(new ExtendedKcpSHA3(384), new string[]{"SHA3384"}),
+                new AlgoInOutModel(new ExtendedKcpSHA3(512), new string[]{"SHA3512"}),
             });
         private static readonly AlgoGroupModel _groupBLAKE2b = new AlgoGroupModel(
             "BLAKE2B",
             new AlgoInOutModel[]
             {
-                new AlgoInOutModel(new OfficialImplBlake2b(224)),
-                new AlgoInOutModel(new OfficialImplBlake2b(256)),
-                new AlgoInOutModel(new OfficialImplBlake2b(384)),
-                new AlgoInOutModel(new OfficialImplBlake2b(512)),
+                new AlgoInOutModel(new OfficialImplBlake2b(224), new string[]{"Blake2b224"}),
+                new AlgoInOutModel(new OfficialImplBlake2b(256), new string[]{"Blake2b256"}),
+                new AlgoInOutModel(new OfficialImplBlake2b(384), new string[]{"Blake2b384"}),
+                new AlgoInOutModel(new OfficialImplBlake2b(512), new string[]{"Blake2b","Blake2b512"}),
             });
         private static readonly AlgoGroupModel _groupBLAKE2bp = new AlgoGroupModel(
             "BLAKE2BP",
             new AlgoInOutModel[]
             {
-                new AlgoInOutModel(new OfficialImplBlake2bp(224)),
-                new AlgoInOutModel(new OfficialImplBlake2bp(256)),
-                new AlgoInOutModel(new OfficialImplBlake2bp(384)),
-                new AlgoInOutModel(new OfficialImplBlake2bp(512)),
+                new AlgoInOutModel(new OfficialImplBlake2bp(224), new string[]{"Blake2bp224"}),
+                new AlgoInOutModel(new OfficialImplBlake2bp(256), new string[]{"Blake2bp256"}),
+                new AlgoInOutModel(new OfficialImplBlake2bp(384), new string[]{"Blake2bp384"}),
+                new AlgoInOutModel(new OfficialImplBlake2bp(512), new string[]{"Blake2bp","Blake2bp512"}),
             });
         private static readonly AlgoGroupModel _groupBLAKE2s = new AlgoGroupModel(
             "BLAKE2S",
             new AlgoInOutModel[]
             {
-                new AlgoInOutModel(new OfficialImplBlake2s(224)),
-                new AlgoInOutModel(new OfficialImplBlake2s(256)),
+                new AlgoInOutModel(new OfficialImplBlake2s(224), new string[]{"Blake2s224"}),
+                new AlgoInOutModel(new OfficialImplBlake2s(256), new string[]{"Blake2s","Blake2s256"}),
             });
         private static readonly AlgoGroupModel _groupBLAKE2sp = new AlgoGroupModel(
             "BLAKE2SP",
             new AlgoInOutModel[]
             {
-                new AlgoInOutModel(new OfficialImplBlake2sp(224)),
-                new AlgoInOutModel(new OfficialImplBlake2sp(256)),
+                new AlgoInOutModel(new OfficialImplBlake2sp(224), new string[]{"Blake2sp224"}),
+                new AlgoInOutModel(new OfficialImplBlake2sp(256), new string[]{"Blake2sp","Blake2sp256"}),
             });
         private static readonly AlgoGroupModel _groupBLAKE3 = new AlgoGroupModel(
             "BLAKE3",
             new AlgoInOutModel[]
             {
-                new AlgoInOutModel(new OfficialImplBlake3(224)),
-                new AlgoInOutModel(new OfficialImplBlake3(256)),
-                new AlgoInOutModel(new OfficialImplBlake3(384)),
-                new AlgoInOutModel(new OfficialImplBlake3(512)),
+                new AlgoInOutModel(new OfficialImplBlake3(224), new string[]{"Blake3224"}),
+                new AlgoInOutModel(new OfficialImplBlake3(256), new string[]{"Blake3","Blake3256"}),
+                new AlgoInOutModel(new OfficialImplBlake3(384), new string[]{"Blake3384"}),
+                new AlgoInOutModel(new OfficialImplBlake3(512), new string[]{"Blake3512"}),
             });
         private static readonly AlgoGroupModel _groupStreebog = new AlgoGroupModel(
             "STREEBOG",
             new AlgoInOutModel[]
             {
-                new AlgoInOutModel(new Gost34112012Streebog(256)),
-                new AlgoInOutModel(new Gost34112012Streebog(512)),
+                new AlgoInOutModel(new Gost34112012Streebog(256), new string[]{"GOST-2012-256","GOST 2012 (256)"}),
+                new AlgoInOutModel(new Gost34112012Streebog(512), new string[]{"GOST-2012-512","GOST 2012 (512)"}),
             });
         private readonly static AlgoGroupModel _groupAllAlgos = new AlgoGroupModel(
             "总览视图",
@@ -128,19 +128,30 @@ namespace HashCalculator
                 _groupAllAlgos,
             };
 
-        public static AlgoInOutModel[] ProvidedAlgos { get => _groupAllAlgos.Items; }
+        public static AlgoInOutModel[] ProvidedAlgos => _groupAllAlgos.Items;
 
-        public static AlgoInOutModel[] FromAlgoName(string name)
+        public static bool TryGetAlgoType(string name, out AlgoType algorithm)
         {
-            return ProvidedAlgos.Where(
-                i => i.AlgoName.Equals(name, StringComparison.OrdinalIgnoreCase)).Select(
-                i => i.NewAlgoInOutModel()).ToArray();
-        }
-
-        public static AlgoInOutModel[] FromAlgoType(AlgoType algoType)
-        {
-            return ProvidedAlgos.Where(i => i.AlgoType == algoType).Select(
-                i => i.NewAlgoInOutModel()).ToArray();
+            if (name == string.Empty)
+            {
+                algorithm = AlgoType.Unknown;
+                return true;
+            }
+            if (Enum.TryParse(name.Replace("-", "_"), true, out algorithm))
+            {
+                return true;
+            }
+            foreach (AlgoInOutModel model in ProvidedAlgos)
+            {
+                if (model.AlgorithmAlias != null &&
+                    model.AlgorithmAlias.Contains(name, StringComparer.OrdinalIgnoreCase))
+                {
+                    algorithm = model.AlgoType;
+                    return true;
+                }
+            }
+            algorithm = AlgoType.Unknown;
+            return false;
         }
 
         public static IEnumerable<AlgoInOutModel> GetSelectedAlgos()
@@ -168,29 +179,14 @@ namespace HashCalculator
             return default(AlgoInOutModel[]);
         }
 
-        public static AlgoInOutModel NewInOutModelByType(AlgoType algoType)
+        public static List<AlgoInOutModel> NewInOutModelsByNames(AlgoType[] algoTypes)
         {
-            if (algoType != AlgoType.Unknown)
-            {
-                foreach (AlgoInOutModel model in ProvidedAlgos)
-                {
-                    if (model.AlgoType == algoType)
-                    {
-                        return model.NewAlgoInOutModel();
-                    }
-                }
-            }
-            return default(AlgoInOutModel);
-        }
-
-        public static List<AlgoInOutModel> NewInOutModelsByNames(string[] algoNames)
-        {
-            if (algoNames != null)
+            if (algoTypes != null)
             {
                 List<AlgoInOutModel> algoInstances = new List<AlgoInOutModel>();
                 foreach (AlgoInOutModel model in ProvidedAlgos)
                 {
-                    if (algoNames.Contains(model.AlgoName, StringComparer.OrdinalIgnoreCase))
+                    if (algoTypes.Contains(model.AlgoType))
                     {
                         algoInstances.Add(model.NewAlgoInOutModel());
                     }
@@ -242,10 +238,10 @@ namespace HashCalculator
                 if (checklist.TryGetFileHashChecker(fileName, out HashChecker checker))
                 {
                     IEnumerable<AlgoInOutModel> inOutModels;
-                    string[] algoNames = checker.GetExistingAlgoNames();
-                    if (algoNames.Length != 0)
+                    AlgoType[] algoTypes = checker.GetExistingAlgoTypes();
+                    if (algoTypes.Length != 0)
                     {
-                        inOutModels = NewInOutModelsByNames(algoNames);
+                        inOutModels = NewInOutModelsByNames(algoTypes);
                         if (inOutModels != null)
                         {
                             finalInOutModels.AddRange(inOutModels);

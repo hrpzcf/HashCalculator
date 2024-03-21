@@ -1,7 +1,8 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:HashCalculator">
+    xmlns:local="clr-namespace:HashCalculator"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib">
     <local:StringToValidIntValueCvt
         x:Key="StringToIntDefaultZeroCvt"
         Default="0"
@@ -73,4 +74,5 @@
     <local:DisplayHcmDataHashValueCvt x:Key="DisplayHcmDataHashValueCvt" />
     <local:DisplayHcmDataBackgroundCvt x:Key="DisplayHcmDataBackgroundCvt" />
     <local:AlgoInOutModelsToNumberCvt x:Key="AlgoInOutModelsToNumberCvt" />
+    <local:StringToStringArrayCvt x:Key="AlgorithmAliasStringToStringArrayCvt" />
 </ResourceDictionary>
