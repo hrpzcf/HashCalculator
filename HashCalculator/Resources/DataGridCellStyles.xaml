@@ -9,7 +9,7 @@
                         Background="{TemplateBinding Background}"
                         FocusVisualStyle="{x:Null}"
                         SnapsToDevicePixels="True">
-                        <ContentPresenter VerticalAlignment="Center" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                        <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
                     </Border>
                 </ControlTemplate>
             </Setter.Value>

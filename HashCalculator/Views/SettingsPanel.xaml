@@ -548,6 +548,7 @@
                                 CellStyle="{StaticResource CellStyleNormal}"
                                 HeadersVisibility="Column"
                                 HorizontalGridLinesBrush="#FF969696"
+                                HorizontalScrollBarVisibility="Disabled"
                                 IsReadOnly="True"
                                 ItemsSource="{Binding Source={x:Static local:Settings.Current}, Path=TemplatesForExport}"
                                 KeyDown="SettingsPanelKeyDown"
@@ -584,15 +585,17 @@
                                                     Margin="2"
                                                     Padding="2"
                                                     FontFamily="Consolas"
-                                                    Text="{Binding Template, UpdateSourceTrigger=LostFocus}" />
+                                                    Text="{Binding Template, UpdateSourceTrigger=LostFocus}"
+                                                    TextWrapping="WrapWithOverflow" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
-                                    <DataGridTemplateColumn Header="文件编码">
+                                    <DataGridTemplateColumn MinWidth="70" Header="文件编码">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
                                                 <ComboBox
                                                     Margin="2"
+                                                    VerticalAlignment="Center"
                                                     DisplayMemberPath="Display"
                                                     ItemsSource="{Binding Path=(local:TemplateForExportModel.AvailableEncodings)}"
                                                     SelectedValue="{Binding UsingEncoding, UpdateSourceTrigger=PropertyChanged}"
@@ -771,6 +774,7 @@
                             CellStyle="{StaticResource CellStyleNormal}"
                             HeadersVisibility="Column"
                             HorizontalGridLinesBrush="#FF969696"
+                            HorizontalScrollBarVisibility="Disabled"
                             IsReadOnly="True"
                             ItemsSource="{Binding Source={x:Static local:Settings.Current}, Path=TemplatesForChecklist}"
                             KeyDown="SettingsPanelKeyDown"
@@ -795,7 +799,7 @@
                                             <TextBox
                                                 Margin="2"
                                                 Padding="2"
-                                                LostFocus="OnTextBoxExtensionLostFocus"
+                                                AcceptsReturn="True"
                                                 Text="{Binding Extension, UpdateSourceTrigger=LostFocus}" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
@@ -807,7 +811,8 @@
                                                 Margin="2"
                                                 Padding="2"
                                                 FontFamily="Consolas"
-                                                Text="{Binding Template, UpdateSourceTrigger=LostFocus}" />
+                                                Text="{Binding Template, UpdateSourceTrigger=LostFocus}"
+                                                TextWrapping="WrapWithOverflow" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
@@ -891,11 +896,15 @@
                             <TextBlock
                                 Margin="0,8,0,0"
                                 Foreground="Black"
-                                Text="表格中的【解析方式表达式】实际上是正则表达式的 C# 版本，其中：" />
+                                Text="表格中的【用于类型】可以用换行、空格、逗号等方式分隔多个扩展名；" />
                             <TextBlock
-                                Margin="0,0,0,0"
+                                Margin="0,2,0,0"
                                 Foreground="Black"
-                                Text="被两个“$”号包围的字符串是本软件预定义的正则表达式命名组：" />
+                                Text="而【解析方式表达式】实际上是正则表达式的 C# 版本，其中被两个“$”号 -" />
+                            <TextBlock
+                                Margin="0,2,0,0"
+                                Foreground="Black"
+                                Text="围起来的字符串是本软件预定义的正则表达式命名组：" />
                             <Grid Margin="0,4,0,0">
                                 <Grid.RowDefinitions>
                                     <RowDefinition />
@@ -944,7 +953,7 @@
                                 Margin="0,4,0,0"
                                 FontSize="8pt"
                                 Style="{StaticResource DescTextBlockStyle}"
-                                Text="你也可以自定义命名组，可用的组名： algo 和 hash 和 name" />
+                                Text="你也可以自定义正则表达式命名组，可用的组名： algo 和 hash 和 name。" />
                             <TextBlock
                                 Margin="0,8,0,0"
                                 Foreground="Black"

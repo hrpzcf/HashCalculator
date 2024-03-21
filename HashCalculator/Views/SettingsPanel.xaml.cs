@@ -88,7 +88,7 @@ namespace HashCalculator
             int index;
             if (sender is TextBox textBox && (index = textBox.Text.IndexOfAny(invalidChars)) != -1)
             {
-                MessageBox.Show(this, $"文件扩展名不能包含字符 <{textBox.Text[index]}>，此方案将不起作用！", "警告",
+                MessageBox.Show(this, $"文件扩展名不能包含 <{textBox.Text[index]}> 字符，此方案将不起作用！", "警告",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 await Task.Delay(200);
                 this.viewModel.SelectedTemplateForExport = textBox.DataContext as TemplateForExportModel;

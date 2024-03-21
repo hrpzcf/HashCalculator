@@ -219,8 +219,7 @@ namespace HashCalculator
             {
                 foreach (var model in Settings.Current.TemplatesForChecklist)
                 {
-                    if (!string.IsNullOrEmpty(model.Extension) &&
-                        extension.Equals(model.Extension, StringComparison.OrdinalIgnoreCase))
+                    if (model.ContainsExtension(extension))
                     {
                         yield return model;
                     }
@@ -228,7 +227,7 @@ namespace HashCalculator
             }
             foreach (TemplateForChecklistModel template in Settings.Current.TemplatesForChecklist)
             {
-                if (string.IsNullOrEmpty(template.Extension))
+                if (template.ContainsExtension(null))
                 {
                     yield return template;
                 }

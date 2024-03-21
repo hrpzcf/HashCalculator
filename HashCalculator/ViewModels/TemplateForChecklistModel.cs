@@ -122,8 +122,7 @@ namespace HashCalculator
         {
             get
             {
-                return string.IsNullOrEmpty(this.extension) ? string.Empty :
-                    this.extension[0] == '.' ? this.extension : $".{this.extension}";
+                return this.extension ?? string.Empty;
             }
             set
             {
@@ -161,6 +160,15 @@ namespace HashCalculator
                 return !string.IsNullOrEmpty(this.regexPattern);
             }
             return false;
+        }
+
+        public bool ContainsExtension(string fileExtension)
+        {
+            if (string.IsNullOrEmpty(fileExtension))
+            {
+                return string.IsNullOrEmpty(this.extension);
+            }
+            return this.extension.IndexOf(fileExtension, StringComparison.OrdinalIgnoreCase) != -1;
         }
 
         public TemplateForChecklistModel Copy(string nameSuffix)
