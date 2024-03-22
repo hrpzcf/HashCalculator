@@ -102,8 +102,8 @@ namespace HashCalculator
             "STREEBOG",
             new AlgoInOutModel[]
             {
-                new AlgoInOutModel(new Gost34112012Streebog(256), "GOST-2012-256,GOST 2012 (256)"),
-                new AlgoInOutModel(new Gost34112012Streebog(512), "GOST-2012-512,GOST 2012 (512)"),
+                new AlgoInOutModel(new Gost34112012Streebog(256), "Streebog256,GOST-2012-256,GOST 2012 (256)"),
+                new AlgoInOutModel(new Gost34112012Streebog(512), "Streebog512,GOST-2012-512,GOST 2012 (512)"),
             });
         private readonly static AlgoGroupModel _groupAllAlgos = new AlgoGroupModel(
             "总览视图",
