@@ -59,10 +59,13 @@ namespace HashCalculator
                     using (Stream stream = Executing.GetManifestResourceStream(
                         string.Format("HashCalculator.Assembly.{0}.dll", assemblyName)))
                     {
-                        byte[] assemblyBytes = new byte[stream.Length];
-                        if (stream?.Read(assemblyBytes, 0, assemblyBytes.Length) == assemblyBytes.Length)
+                        if (stream != null)
                         {
-                            return Assembly.Load(assemblyBytes);
+                            byte[] assemblyBytes = new byte[stream.Length];
+                            if (stream.Read(assemblyBytes, 0, assemblyBytes.Length) == assemblyBytes.Length)
+                            {
+                                return Assembly.Load(assemblyBytes);
+                            }
                         }
                     }
                 }
