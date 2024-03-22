@@ -68,8 +68,7 @@ namespace HashCalculator
         {
             get
             {
-                return this.SizeDelegates?.GetWindowWidth?.Invoke()
-                    ?? 400.0;
+                return this.SizeDelegates?.GetWindowWidth?.Invoke() ?? 400.0;
             }
             set
             {
@@ -81,8 +80,7 @@ namespace HashCalculator
         {
             get
             {
-                return this.SizeDelegates?.GetWindowHeight?.Invoke()
-                    ?? 200.0;
+                return this.SizeDelegates?.GetWindowHeight?.Invoke() ?? 200.0;
             }
             set
             {

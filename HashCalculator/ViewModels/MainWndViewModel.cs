@@ -919,7 +919,7 @@ namespace HashCalculator
                 MessageBox.Show(this.OwnerWnd, "主窗口列表中没有可以导出的结果。", "提示");
                 return;
             }
-            if (!Settings.Current.TemplatesForExport?.Any() ?? true)
+            if (Settings.Current.TemplatesForExport?.Any() != true)
             {
                 MessageBox.Show(this.OwnerWnd, "没有导出方案可用，请到【导出结果设置】中添加。", "提示",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -1493,20 +1493,20 @@ namespace HashCalculator
 
         private void ChangeAlgosExportStateAction(object param)
         {
-            if (param is HashViewModel model)
+            if (param is HashViewModel model && model.CurrentInOutModel != null)
             {
                 if (Settings.Current.ExportInMainControlsChildExports)
                 {
                     if (model.AlgoInOutModels?.AnyItem() == true)
                     {
-                        bool export = !model.CurrentInOutModel?.Export ?? true;
+                        bool export = !model.CurrentInOutModel.Export;
                         foreach (AlgoInOutModel inOut in model.AlgoInOutModels)
                         {
                             inOut.Export = export;
                         }
                     }
                 }
-                else if (model.CurrentInOutModel != null)
+                else
                 {
                     model.CurrentInOutModel.Export = !model.CurrentInOutModel.Export;
                 }

@@ -806,7 +806,7 @@ namespace HashCalculator
 
         public AlgoType[] SelectedAlgos { get; set; }
 
-        public Dictionary<AlgoType, string[]> AlgorithmAliasList { get; set; }
+        public Dictionary<AlgoType, string> AlgorithmAliasList { get; set; }
 
         public ObservableCollection<TemplateForExportModel> TemplatesForExport
         {
@@ -1429,7 +1429,7 @@ namespace HashCalculator
                 this.TemplatesForChecklist = null;
             }
             this.AlgorithmAliasList = AlgosPanelModel.ProvidedAlgos.Where(
-                i => i.AlgorithmAlias != null && i.AlgorithmAlias.Length != 0).ToDictionary(
+                i => !string.IsNullOrWhiteSpace(i.AlgorithmAlias)).ToDictionary(
                 j => j.AlgoType, k => k.AlgorithmAlias);
             if (!this.AlgorithmAliasList.Any())
             {
@@ -1467,9 +1467,9 @@ namespace HashCalculator
             }
             foreach (AlgoInOutModel model in AlgosPanelModel.ProvidedAlgos)
             {
-                model.Selected = this.SelectedAlgos?.Any(i => i == model.AlgoType) ?? false;
+                model.Selected = this.SelectedAlgos?.Contains(model.AlgoType) ?? false;
             }
-            PropertyChanged += Settings.MoveConfigurationFiles;
+            this.PropertyChanged += Settings.MoveConfigurationFiles;
         }
 
         [JsonIgnore, XmlIgnore]

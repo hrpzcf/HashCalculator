@@ -122,7 +122,7 @@ namespace HashCalculator
         {
             get
             {
-                return this.extension ?? string.Empty;
+                return this.extension;
             }
             set
             {
@@ -168,7 +168,7 @@ namespace HashCalculator
             {
                 return string.IsNullOrEmpty(this.extension);
             }
-            return this.extension.IndexOf(fileExtension, StringComparison.OrdinalIgnoreCase) != -1;
+            return this.extension?.IndexOf(fileExtension, StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
         public TemplateForChecklistModel Copy(string nameSuffix)

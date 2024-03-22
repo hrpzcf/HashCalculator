@@ -896,7 +896,7 @@
                             <TextBlock
                                 Margin="0,8,0,0"
                                 Foreground="Black"
-                                Text="表格中的【用于类型】可以用换行、空格、逗号等方式分隔多个扩展名；" />
+                                Text="表格中的【用于类型】支持输入多个扩展名，每行一个；" />
                             <TextBlock
                                 Margin="0,2,0,0"
                                 Foreground="Black"
@@ -904,7 +904,7 @@
                             <TextBlock
                                 Margin="0,2,0,0"
                                 Foreground="Black"
-                                Text="围起来的字符串是本软件预定义的正则表达式命名组：" />
+                                Text="包围起来的字符串是本软件预定义的正则表达式命名组：" />
                             <Grid Margin="0,4,0,0">
                                 <Grid.RowDefinitions>
                                     <RowDefinition />
@@ -994,7 +994,7 @@
                     Padding="2"
                     AcceptsReturn="True"
                     MinLines="3"
-                    Text="{Binding SelectedInOutModelForAlias.AlgorithmAlias, Converter={StaticResource AlgorithmAliasStringToStringArrayCvt}, UpdateSourceTrigger=LostFocus}"
+                    Text="{Binding SelectedInOutModelForAlias.AlgorithmAlias, UpdateSourceTrigger=LostFocus}"
                     TextWrapping="Wrap" />
                 <TextBlock
                     Margin="0,8,0,0"
@@ -1005,12 +1005,12 @@
                     Margin="0,4,0,0"
                     FontSize="8pt"
                     Style="{StaticResource DescTextBlockStyle}"
-                    Text="当 HashCalculator 解析校验依据时遇到一个算法名“XXH364”，因为本地并没有 -" />
+                    Text="当 HashCalculator 解析校验依据时遇到一个算法名“XXH364”，因为本地并没有叫 -" />
                 <TextBlock
                     Margin="0,4,0,0"
                     FontSize="8pt"
                     Style="{StaticResource DescTextBlockStyle}"
-                    Text="这样名字的算法所以无法识别。这时你可以给本地“XXH3-64”算法增加一个叫“XXH364”的别名， -" />
+                    Text="这个名字的算法所以无法识别。这时你可以给本地“XXH3-64”算法增加一个叫“XXH364”的别名， -" />
                 <TextBlock
                     Margin="0,4,0,0"
                     FontSize="8pt"
@@ -1020,7 +1020,7 @@
                     Margin="0,4,0,0"
                     FontSize="8pt"
                     Style="{StaticResource DescTextBlockStyle}"
-                    Text="2. 别名不区分大小写，可以用空格、英文逗号、换行符来分隔多个不同的别名。" />
+                    Text="2. 别名不区分大小写，可以通过英文逗号、换行来分隔多个不同的别名。" />
             </StackPanel>
         </TabItem>
         <TabItem

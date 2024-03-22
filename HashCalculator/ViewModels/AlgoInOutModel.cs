@@ -1,4 +1,7 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Input;
@@ -12,28 +15,32 @@ namespace HashCalculator
         private bool _export = false;
         private bool _selected = false;
         private bool _hashResultHandlerAdded = false;
-        private string[] _algorithmAlias = null;
-        private readonly string[] _presetAlias = null;
+        private string _algorithmAlias = null;
+        private IEnumerable<string> _algoAliasWords = null;
+        private readonly string _presetAlias = null;
         private RelayCommand _copyHashResultCmd;
 
-        public AlgoInOutModel(IHashAlgoInfo algoInfo, string[] preset)
+        private static readonly string[] separators = new string[]
         {
-            this.IAlgo = algoInfo;
-            this.AlgoName = algoInfo.AlgoName;
-            this.AlgoType = algoInfo.AlgoType;
-            this.Algo = (HashAlgorithm)algoInfo;
-            this._presetAlias = preset;
-            this.AlgorithmAlias = preset;
+            ",",
+            "\n",
+            "\r\n",
+        };
+
+        public AlgoInOutModel(IHashAlgoInfo algoInfo, string preset) :
+            this(algoInfo, preset, alias: null)
+        {
         }
 
-        public AlgoInOutModel(IHashAlgoInfo algoInfo, string[] preset, string[] alias)
+        public AlgoInOutModel(IHashAlgoInfo algoInfo, string preset, string alias)
         {
             this.IAlgo = algoInfo;
             this.AlgoName = algoInfo.AlgoName;
             this.AlgoType = algoInfo.AlgoType;
             this.Algo = (HashAlgorithm)algoInfo;
             this._presetAlias = preset;
-            this.AlgorithmAlias = alias;
+            this.PropertyChanged += this.GenerateAliasWords;
+            this.AlgorithmAlias = alias ?? preset;
         }
 
         public string AlgoName { get; }
@@ -76,7 +83,7 @@ namespace HashCalculator
             set => this.SetPropNotify(ref this._hashCmpResult, value);
         }
 
-        public string[] AlgorithmAlias
+        public string AlgorithmAlias
         {
             get => this._algorithmAlias;
             set => this.SetPropNotify(ref this._algorithmAlias, value);
@@ -88,9 +95,23 @@ namespace HashCalculator
                 this._presetAlias);
         }
 
+        public bool IsMyAliasWord(string alias, StringComparer comparer)
+        {
+            return this._algoAliasWords?.Contains(alias, comparer) ?? false;
+        }
+
         public void ResetAlias()
         {
             this.AlgorithmAlias = this._presetAlias;
+        }
+
+        private void GenerateAliasWords(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(this.AlgorithmAlias))
+            {
+                this._algoAliasWords = this.AlgorithmAlias?.Split(separators,
+                    StringSplitOptions.RemoveEmptyEntries).Select(i => i.Trim());
+            }
         }
 
         public void SetHashResultChangedHandler(PropertyChangedEventHandler handler)

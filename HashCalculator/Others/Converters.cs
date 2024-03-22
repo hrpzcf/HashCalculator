@@ -1041,30 +1041,4 @@ namespace HashCalculator
             throw new NotImplementedException();
         }
     }
-
-    internal class StringToStringArrayCvt : IValueConverter
-    {
-        private static readonly string[] _separators =
-            new string[] { ",", " ", "\r\n" };
-
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value is string[] array)
-            {
-                string separator = _separators == null || _separators.Length == 0 ?
-                    " " : _separators[0];
-                return separator.Join(array);
-            }
-            return null;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value is string text)
-            {
-                return text.Split(_separators, StringSplitOptions.RemoveEmptyEntries);
-            }
-            return null;
-        }
-    }
 }

@@ -9,7 +9,7 @@ namespace HashCalculator
 {
     public partial class AppLoading : Application
     {
-        private static readonly string[] reqAsmbNames = new string[]
+        private static readonly string[] assemblyNames = new string[]
         {
             "System.Buffers",
             "System.Memory",
@@ -53,24 +53,24 @@ namespace HashCalculator
         {
             try
             {
-                string asmbName = new AssemblyName(arg.Name).Name;
-                if (!reqAsmbNames.Contains(asmbName))
+                string assemblyName = new AssemblyName(arg.Name).Name;
+                if (assemblyNames.Contains(assemblyName))
                 {
-                    return default(Assembly);
-                }
-                using (Stream stream = Executing.GetManifestResourceStream(
-                    string.Format("HashCalculator.Assembly.{0}.dll", asmbName)))
-                {
-                    if (stream?.TryGetBytes(out byte[] assemblyBytes) == true)
+                    using (Stream stream = Executing.GetManifestResourceStream(
+                        string.Format("HashCalculator.Assembly.{0}.dll", assemblyName)))
                     {
-                        return Assembly.Load(assemblyBytes);
+                        byte[] assemblyBytes = new byte[stream.Length];
+                        if (stream?.Read(assemblyBytes, 0, assemblyBytes.Length) == assemblyBytes.Length)
+                        {
+                            return Assembly.Load(assemblyBytes);
+                        }
                     }
                 }
             }
             catch (Exception)
             {
             }
-            return default(Assembly);
+            return null;
         }
 
         private void RunApplication()
@@ -82,16 +82,9 @@ namespace HashCalculator
 
         private void UnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            string excContent;
             // 剪贴板无法打开(CLIPBRD_E_CANT_OPEN)错误代码：0x800401D0
-            if ((uint)e.Exception.HResult == 0x800401D0)
-            {
-                excContent = "复制哈希结果失败";
-            }
-            else
-            {
-                excContent = "意外的异常，可打开帮助页面末尾链接向开发者反馈";
-            }
+            string excContent = (uint)e.Exception.HResult == 0x800401D0 ?
+                "复制哈希结果失败" : "未知异常，可打开关于页面打开反馈链接向开发者反馈";
             e.Handled = true;
             MessageBox.Show($"{excContent}：\n{e.Exception.Message}", "错误");
         }
