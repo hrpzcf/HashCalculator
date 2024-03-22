@@ -198,6 +198,8 @@ namespace HashCalculator
                     {
                         formatBuilder.Append('\n');
                     }
+                    formatBuilder.Replace("$newline$", "\n");
+                    formatBuilder.Replace("$newlinew$", "\r\n");
                     formatBuilder.Replace("$algo$", algoName);
                     formatBuilder.Replace("$hash$", BytesToStrByOutputTypeCvt.Convert(this.HashResult, output));
                     formatBuilder.Replace("$name$", parent.Information.Name);
