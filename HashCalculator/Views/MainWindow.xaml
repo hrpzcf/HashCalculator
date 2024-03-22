@@ -334,7 +334,7 @@
             AllowDrop="True"
             AutoGenerateColumns="False"
             Background="Transparent"
-            CellStyle="{StaticResource CellStyleNormal}"
+            CellStyle="{StaticResource CellStyleNormal1}"
             Drop="DataGridHashingFilesDrop"
             Grid.IsSharedSizeScope="True"
             HeadersVisibility="Column"

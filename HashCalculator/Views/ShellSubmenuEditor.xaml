@@ -31,7 +31,7 @@
         <DataGrid
             Grid.Row="0"
             AutoGenerateColumns="False"
-            CellStyle="{StaticResource CellStyleNormal}"
+            CellStyle="{StaticResource CellStyleNormal1}"
             HeadersVisibility="Column"
             HorizontalGridLinesBrush="#FF969696"
             IsReadOnly="True"

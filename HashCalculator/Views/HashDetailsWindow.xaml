@@ -101,7 +101,7 @@
             Grid.Row="2"
             Margin="0,8,0,0"
             AutoGenerateColumns="False"
-            CellStyle="{StaticResource CellStyleNormal}"
+            CellStyle="{StaticResource CellStyleNormal1}"
             Grid.IsSharedSizeScope="True"
             HeadersVisibility="Column"
             HorizontalGridLinesBrush="#FF969696"
