@@ -394,6 +394,8 @@
                                 <RowDefinition />
                                 <RowDefinition />
                                 <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -459,6 +461,30 @@
                                 FontSize="8pt"
                                 Style="{StaticResource DescTextBlockStyle}"
                                 Text="在复制时此占位符将被替换为实际文件名。" />
+                            <TextBlock
+                                Grid.Row="5"
+                                Grid.Column="0"
+                                Foreground="Black"
+                                Text="$newline$" />
+                            <TextBlock
+                                Grid.Row="5"
+                                Grid.Column="1"
+                                Margin="16,0,0,0"
+                                FontSize="8pt"
+                                Style="{StaticResource DescTextBlockStyle}"
+                                Text="在复制时时此占位符将被替换为 UNIX 风格换行符 \n。" />
+                            <TextBlock
+                                Grid.Row="6"
+                                Grid.Column="0"
+                                Foreground="Black"
+                                Text="$newlinew$" />
+                            <TextBlock
+                                Grid.Row="6"
+                                Grid.Column="1"
+                                Margin="16,0,0,0"
+                                FontSize="8pt"
+                                Style="{StaticResource DescTextBlockStyle}"
+                                Text="在复制时时此占位符将被替换为 Windows 风格换行符 \r\n。" />
                         </Grid>
                         <TextBlock
                             Margin="0,8,0,0"
