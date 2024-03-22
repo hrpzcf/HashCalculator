@@ -18,6 +18,10 @@ namespace HashCalculator
 
         public string WikiGitHub => "https://github.com/hrpzcf/HashCalculator/wiki";
 
+        public string ChangeLogGitee => "https://gitee.com/hrpzcf/HashCalculator/blob/main/CHANGELOG.md";
+
+        public string ChangeLogGitHub => "https://github.com/hrpzcf/HashCalculator/blob/main/CHANGELOG.md";
+
         public string Title => Info.Title;
 
         public string Author => Info.Author;
@@ -25,14 +29,6 @@ namespace HashCalculator
         public string Ver => Info.Ver;
 
         public string Published => Info.Published;
-
-        private void OpenWebSiteAction(object param)
-        {
-            if (param is string url)
-            {
-                SHELL32.ShellExecuteW(MainWindow.WndHandle, "open", url, null, null, ShowCmd.SW_NORMAL);
-            }
-        }
 
         public ICommand OpenWebSiteCmd
         {
@@ -43,6 +39,14 @@ namespace HashCalculator
                     this.openWebSiteCmd = new RelayCommand(this.OpenWebSiteAction);
                 }
                 return this.openWebSiteCmd;
+            }
+        }
+
+        private void OpenWebSiteAction(object param)
+        {
+            if (param is string url)
+            {
+                SHELL32.ShellExecuteW(MainWindow.WndHandle, "open", url, null, null, ShowCmd.SW_NORMAL);
             }
         }
 

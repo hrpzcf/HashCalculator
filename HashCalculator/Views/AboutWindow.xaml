@@ -67,6 +67,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
@@ -149,6 +150,33 @@
                     CommandParameter="{Binding WikiGitee}"
                     TextDecorations="None">
                     Gitee Wiki
+                </Hyperlink>
+            </TextBlock>
+            <TextBlock
+                Grid.Row="3"
+                Grid.Column="0"
+                Margin="0,10,0,0"
+                Text="更新日志：" />
+            <TextBlock
+                Grid.Row="3"
+                Grid.Column="1"
+                Margin="0,10,0,0">
+                <Hyperlink
+                    Command="{Binding OpenWebSiteCmd}"
+                    CommandParameter="{Binding ChangeLogGitHub}"
+                    TextDecorations="None">
+                    GitHub Log
+                </Hyperlink>
+            </TextBlock>
+            <TextBlock
+                Grid.Row="3"
+                Grid.Column="2"
+                Margin="16,10,0,0">
+                <Hyperlink
+                    Command="{Binding OpenWebSiteCmd}"
+                    CommandParameter="{Binding ChangeLogGitee}"
+                    TextDecorations="None">
+                    Gitee Log
                 </Hyperlink>
             </TextBlock>
         </Grid>
