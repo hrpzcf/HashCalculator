@@ -192,7 +192,6 @@ namespace HashCalculator
                                 break;
                         }
                     }
-                    // "$algo$", "$hash$", "$path$", "$name$", "$relpath$"
                     StringBuilder formatBuilder = new StringBuilder(format);
                     if (endLine)
                     {

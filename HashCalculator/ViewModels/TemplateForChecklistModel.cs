@@ -37,7 +37,7 @@ namespace HashCalculator
             {
                 Name = "SUMS文件",
                 Extension = ".sums",
-                Template = "^#(?<algo>[A-Za-z0-9-( )]+)#.*\\r?\\n$hash$ \\*?$name$\\r?$"
+                Template = "^#(?<algo>[A-Za-z0-9( )-]+)#.*\\r?\\n$hash$ \\*?$name$\\r?$"
             };
 
         public static readonly TemplateForChecklistModel HashFile =
@@ -45,7 +45,7 @@ namespace HashCalculator
             {
                 Name = "HASH文件",
                 Extension = ".hash",
-                Template = "^#(?<algo>[A-Za-z0-9-( )]+)#.*\\r?\\n$hash$ \\*?$name$\\r?$"
+                Template = "^#(?<algo>[A-Za-z0-9( )-]+)#.*\\r?\\n$hash$ \\*?$name$\\r?$"
             };
 
         public static readonly TemplateForChecklistModel SfvFile =
