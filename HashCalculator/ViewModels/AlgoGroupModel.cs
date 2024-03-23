@@ -24,14 +24,8 @@ namespace HashCalculator
 
         public int SelectedAlgoCount
         {
-            get
-            {
-                return this._selectedAlgoCount;
-            }
-            set
-            {
-                this.SetPropNotify(ref this._selectedAlgoCount, value);
-            }
+            get => this._selectedAlgoCount;
+            set => this.SetPropNotify(ref this._selectedAlgoCount, value);
         }
 
         public IEnumerable<AlgoInOutModel> ConcatItems(params AlgoGroupModel[] groups)

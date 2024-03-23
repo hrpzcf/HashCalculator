@@ -21,26 +21,14 @@ namespace HashCalculator
 
         public AbsHashesCmder SelectedCmder
         {
-            get
-            {
-                return this.selectedCmder;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.selectedCmder, value);
-            }
+            get => this.selectedCmder;
+            set => this.SetPropNotify(ref this.selectedCmder, value);
         }
 
         public AbsHashViewFilter SelectedFilter
         {
-            get
-            {
-                return this.selectedFilter;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.selectedFilter, value);
-            }
+            get => this.selectedFilter;
+            set => this.SetPropNotify(ref this.selectedFilter, value);
         }
 
         public AbsHashesCmder SelectTableLinesCmder { get; }

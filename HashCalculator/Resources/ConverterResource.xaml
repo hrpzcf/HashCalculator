@@ -21,12 +21,20 @@
         Min="0" />
     <local:ConfigurationLoadedLocationCvt
         x:Key="ConfigurationLoadedFromExecCvt"
-        Display="当前目录"
+        Display="程序目录"
         Location="{x:Static local:Settings.ConfigDirExec}" />
     <local:ConfigurationLoadedLocationCvt
         x:Key="ConfigurationLoadedFromUserCvt"
         Display="用户目录"
         Location="{x:Static local:Settings.ConfigDirUser}" />
+    <local:BetweenConfigLocationAndBooleanCvt
+        x:Key="ConfigLocationExecToTrueCvt"
+        Boolean="True"
+        Loccation="ExecDir" />
+    <local:BetweenConfigLocationAndBooleanCvt
+        x:Key="ConfigLocationUserToTrueCvt"
+        Boolean="True"
+        Loccation="UserDir" />
     <local:InvalidFileNameForegroundCvt x:Key="InvalidFileNameForegroundCvt" />
     <local:CmpResForegroundCvt x:Key="CmpResForegroundCvt" />
     <local:CmpResBackgroundCvt x:Key="CmpResBackgroundCvt" />

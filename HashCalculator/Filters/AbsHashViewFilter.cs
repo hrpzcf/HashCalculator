@@ -36,14 +36,8 @@ namespace HashCalculator
 
         public bool Selected
         {
-            get
-            {
-                return this._selected;
-            }
-            set
-            {
-                this.SetPropNotify(ref this._selected, value);
-            }
+            get => this._selected;
+            set => this.SetPropNotify(ref this._selected, value);
         }
     }
 }

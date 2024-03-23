@@ -262,14 +262,8 @@ namespace HashCalculator
 
         public AlgoGroupModel SelectedAlgoGroup
         {
-            get
-            {
-                return this._selectedAlgoGroup;
-            }
-            set
-            {
-                this.SetPropNotify(ref this._selectedAlgoGroup, value);
-            }
+            get => this._selectedAlgoGroup;
+            set => this.SetPropNotify(ref this._selectedAlgoGroup, value);
         }
 
         private void ClearAllSelectedAction(object param)

@@ -141,14 +141,8 @@ namespace HashCalculator
 
         public string HashStringOrChecklistPath
         {
-            get
-            {
-                return this.hashValueStringOrChecklistPath;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.hashValueStringOrChecklistPath, value);
-            }
+            get => this.hashValueStringOrChecklistPath;
+            set => this.SetPropNotify(ref this.hashValueStringOrChecklistPath, value);
         }
 
         public RunningState State
@@ -174,14 +168,8 @@ namespace HashCalculator
 
         public int TobeComputedModelsCount
         {
-            get
-            {
-                return this.tobeComputedModelsCount;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.tobeComputedModelsCount, value);
-            }
+            get => this.tobeComputedModelsCount;
+            set => this.SetPropNotify(ref this.tobeComputedModelsCount, value);
         }
 
         private CancellationTokenSource Cancellation

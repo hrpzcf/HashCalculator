@@ -106,98 +106,50 @@ namespace HashCalculator
 
         public string FileName
         {
-            get
-            {
-                return this._fileName;
-            }
-            set
-            {
-                this.SetPropNotify(ref this._fileName, value);
-            }
+            get => this._fileName;
+            set => this.SetPropNotify(ref this._fileName, value);
         }
 
         public long FileLength
         {
-            get
-            {
-                return this._fileLength;
-            }
-            private set
-            {
-                this.SetPropNotify(ref this._fileLength, value);
-            }
+            get => this._fileLength;
+            set => this.SetPropNotify(ref this._fileLength, value);
         }
 
         public string CurrentHashString
         {
-            get
-            {
-                return this._currentHashString;
-            }
-            set
-            {
-                this.SetPropNotify(ref this._currentHashString, value);
-            }
+            get => this._currentHashString;
+            set => this.SetPropNotify(ref this._currentHashString, value);
         }
 
         public AlgoInOutModel CurrentInOutModel
         {
-            get
-            {
-                return this._currentInOutModel;
-            }
-            set
-            {
-                this.SetPropNotify(ref this._currentInOutModel, value);
-            }
+            get => this._currentInOutModel;
+            set => this.SetPropNotify(ref this._currentInOutModel, value);
         }
 
         public HcmData HcmDataFromFile
         {
-            get
-            {
-                return this._hcmDataFromFile;
-            }
-            set
-            {
-                this.SetPropNotify(ref this._hcmDataFromFile, value);
-            }
+            get => this._hcmDataFromFile;
+            set => this.SetPropNotify(ref this._hcmDataFromFile, value);
         }
 
         public ComparableColor GroupId
         {
-            get
-            {
-                return this._groupId;
-            }
-            set
-            {
-                this.SetPropNotify(ref this._groupId, value);
-            }
+            get => this._groupId;
+            set => this.SetPropNotify(ref this._groupId, value);
         }
 
         public ComparableColor FdGroupId
         {
-            get
-            {
-                return this._folderGroupId;
-            }
-            set
-            {
-                this.SetPropNotify(ref this._folderGroupId, value);
-            }
+            get => this._folderGroupId;
+            set => this.SetPropNotify(ref this._folderGroupId, value);
         }
 
         public AlgoInOutModel[] AlgoInOutModels
         {
-            get
-            {
-                return this._algoInOutModels;
-            }
-            private set
-            {
-                this.SetPropNotify(ref this._algoInOutModels, value);
-            }
+            get => this._algoInOutModels;
+            set => this.SetPropNotify(ref this._algoInOutModels, value);
         }
 
         public HashState State
@@ -238,87 +190,45 @@ namespace HashCalculator
 
         public long Progress
         {
-            get
-            {
-                return this._progress;
-            }
-            private set
-            {
-                this.SetPropNotify(ref this._progress, value);
-            }
+            get => this._progress;
+            set => this.SetPropNotify(ref this._progress, value);
         }
 
         public long MaxProgress
         {
-            get
-            {
-                return this._maxProgress;
-            }
-            private set
-            {
-                this.SetPropNotify(ref this._maxProgress, value);
-            }
+            get => this._maxProgress;
+            set => this.SetPropNotify(ref this._maxProgress, value);
         }
 
         public string ErrorDetails
         {
-            get
-            {
-                return this._errorDetails;
-            }
-            set
-            {
-                this.SetPropNotify(ref this._errorDetails, value);
-            }
+            get => this._errorDetails;
+            set => this.SetPropNotify(ref this._errorDetails, value);
         }
 
         public string ModelDetails
         {
-            get
-            {
-                return this._modelDetails;
-            }
-            private set
-            {
-                this.SetPropNotify(ref this._modelDetails, value);
-            }
+            get => this._modelDetails;
+            set => this.SetPropNotify(ref this._modelDetails, value);
         }
 
         public double DurationofTask
         {
-            get
-            {
-                return this._durationofTask;
-            }
-            private set
-            {
-                this.SetPropNotify(ref this._durationofTask, value);
-            }
+            get => this._durationofTask;
+            set => this.SetPropNotify(ref this._durationofTask, value);
         }
 
         public bool IsExecutionTarget
         {
-            get
-            {
-                return this._isExecutionTarget;
-            }
-            set
-            {
-                this.SetPropNotify(ref this._isExecutionTarget, value);
-            }
+            get => this._isExecutionTarget;
+            set => this.SetPropNotify(ref this._isExecutionTarget, value);
         }
 
         // Xaml 绑定会更改此值，不使用 private set
         public OutputType SelectedOutputType
         {
-            get
-            {
-                return this._selectedOutput;
-            }
-            set
-            {
-                this.SetPropNotify(ref this._selectedOutput, value);
-            }
+            get => this._selectedOutput;
+            set => this.SetPropNotify(ref this._selectedOutput, value);
         }
 
         private void CopyThisModelCurHashAction(object param)

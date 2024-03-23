@@ -58,7 +58,6 @@ namespace HashCalculator
         private bool useDefaultOutputTypeWhenExporting = true;
         private bool monitorNewHashStringInClipboard = true;
         private bool switchMainWndFgWhenNewHashCopied = true;
-        private bool configurationSaveToUserDirectory = false;
         private bool caseOfCopiedAlgNameFollowsOutputType = false;
         private bool exportInMainControlsChildExportsInRow = false;
 
@@ -67,6 +66,7 @@ namespace HashCalculator
         private FetchAlgoOption fetchAlgorithmOption = FetchAlgoOption.TATSAMSHDL;
         private OutputType selectedOutputType = OutputType.BinaryUpper;
         private WindowState mainWindowState = WindowState.Normal;
+        private ConfigLocation locationForSavingConfigFiles = ConfigLocation.Unset;
 
         private string lastUsedPath = string.Empty;
         private string displayingActiveConfigDir = null;
@@ -123,326 +123,164 @@ namespace HashCalculator
 
         public bool MainWndTopmost
         {
-            get
-            {
-                return this.mainWndTopmost;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.mainWndTopmost, value);
-            }
+            get => this.mainWndTopmost;
+            set => this.SetPropNotify(ref this.mainWndTopmost, value);
         }
 
         public double MainWindowTop
         {
-            get
-            {
-                return this.mainWndTop;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.mainWndTop, value);
-            }
+            get => this.mainWndTop;
+            set => this.SetPropNotify(ref this.mainWndTop, value);
         }
 
         public double MainWindowLeft
         {
-            get
-            {
-                return this.mainWndLeft;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.mainWndLeft, value);
-            }
+            get => this.mainWndLeft;
+            set => this.SetPropNotify(ref this.mainWndLeft, value);
         }
 
         public double MainWndWidth
         {
-            get
-            {
-                return this.mainWndWidth;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.mainWndWidth, value);
-            }
+            get => this.mainWndWidth;
+            set => this.SetPropNotify(ref this.mainWndWidth, value);
         }
 
         public double MainWndHeight
         {
-            get
-            {
-                return this.mainWndHeight;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.mainWndHeight, value);
-            }
+            get => this.mainWndHeight;
+            set => this.SetPropNotify(ref this.mainWndHeight, value);
         }
 
         public WindowState MainWindowState
         {
-            get
-            {
-                return this.mainWindowState;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.mainWindowState, value);
-            }
+            get => this.mainWindowState;
+            set => this.SetPropNotify(ref this.mainWindowState, value);
         }
 
         public double SettingsWndWidth
         {
-            get
-            {
-                return this.settingsWndWidth;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.settingsWndWidth, value);
-            }
+            get => this.settingsWndWidth;
+            set => this.SetPropNotify(ref this.settingsWndWidth, value);
         }
 
         public double SettingsWndHeight
         {
-            get
-            {
-                return this.settingsWndHeight;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.settingsWndHeight, value);
-            }
+            get => this.settingsWndHeight;
+            set => this.SetPropNotify(ref this.settingsWndHeight, value);
         }
 
         public double AlgosPanelWidth
         {
-            get
-            {
-                return this.algosPanelWidth;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.algosPanelWidth, value);
-            }
+            get => this.algosPanelWidth;
+            set => this.SetPropNotify(ref this.algosPanelWidth, value);
         }
 
         public double AlgosPanelHeight
         {
-            get
-            {
-                return this.algosPanelHeight;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.algosPanelHeight, value);
-            }
+            get => this.algosPanelHeight;
+            set => this.SetPropNotify(ref this.algosPanelHeight, value);
         }
 
         public double HashDetailsWndWidth
         {
-            get
-            {
-                return this.hashDetailsWidth;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.hashDetailsWidth, value);
-            }
+            get => this.hashDetailsWidth;
+            set => this.SetPropNotify(ref this.hashDetailsWidth, value);
         }
 
         public double HashDetailsWndHeight
         {
-            get
-            {
-                return this.hashDetailsHeight;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.hashDetailsHeight, value);
-            }
+            get => this.hashDetailsHeight;
+            set => this.SetPropNotify(ref this.hashDetailsHeight, value);
         }
 
         public double FilterAndCmderWndWidth
         {
-            get
-            {
-                return this.filterAndCmderWndWidth;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.filterAndCmderWndWidth, value);
-            }
+            get => this.filterAndCmderWndWidth;
+            set => this.SetPropNotify(ref this.filterAndCmderWndWidth, value);
         }
 
         public double FilterAndCmderWndHeight
         {
-            get
-            {
-                return this.filterAndCmderWndHeight;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.filterAndCmderWndHeight, value);
-            }
+            get => this.filterAndCmderWndHeight;
+            set => this.SetPropNotify(ref this.filterAndCmderWndHeight, value);
         }
 
         public double CmdPanelTopRelToMainWnd
         {
-            get
-            {
-                return this.cmdPanelTopRelToMainWnd;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.cmdPanelTopRelToMainWnd, value);
-            }
+            get => this.cmdPanelTopRelToMainWnd;
+            set => this.SetPropNotify(ref this.cmdPanelTopRelToMainWnd, value);
         }
 
         public double CmdPanelLeftRelToMainWnd
         {
-            get
-            {
-                return this.cmdPanelLeftRelToMainWnd;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.cmdPanelLeftRelToMainWnd, value);
-            }
+            get => this.cmdPanelLeftRelToMainWnd;
+            set => this.SetPropNotify(ref this.cmdPanelLeftRelToMainWnd, value);
         }
 
         public double ShellMenuEditorWidth
         {
-            get
-            {
-                return this.shellMenuEditorWidth;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.shellMenuEditorWidth, value);
-            }
+            get => this.shellMenuEditorWidth;
+            set => this.SetPropNotify(ref this.shellMenuEditorWidth, value);
         }
 
         public double ShellMenuEditorHeight
         {
-            get
-            {
-                return this.shellMenuEditorHeight;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.shellMenuEditorHeight, value);
-            }
+            get => this.shellMenuEditorHeight;
+            set => this.SetPropNotify(ref this.shellMenuEditorHeight, value);
         }
 
         public double ShellSubmenuEditorWidth
         {
-            get
-            {
-                return this.shellSubmenuEditorWidth;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.shellSubmenuEditorWidth, value);
-            }
+            get => this.shellSubmenuEditorWidth;
+            set => this.SetPropNotify(ref this.shellSubmenuEditorWidth, value);
         }
 
         public double ShellSubmenuEditorHeight
         {
-            get
-            {
-                return this.shellSubmenuEditorHeight;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.shellSubmenuEditorHeight, value);
-            }
+            get => this.shellSubmenuEditorHeight;
+            set => this.SetPropNotify(ref this.shellSubmenuEditorHeight, value);
         }
 
         public double MainWndDelFileProgressWidth
         {
-            get
-            {
-                return this.mainWndDelFileProgressWidth;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.mainWndDelFileProgressWidth, value);
-            }
+            get => this.mainWndDelFileProgressWidth;
+            set => this.SetPropNotify(ref this.mainWndDelFileProgressWidth, value);
         }
 
         public double MainWndDelFileProgressHeight
         {
-            get
-            {
-                return this.mainWndDelFileProgressHeight;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.mainWndDelFileProgressHeight, value);
-            }
+            get => this.mainWndDelFileProgressHeight;
+            set => this.SetPropNotify(ref this.mainWndDelFileProgressHeight, value);
         }
 
         public double MarkFilesProgressWidth
         {
-            get
-            {
-                return this.markFilesProgressWidth;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.markFilesProgressWidth, value);
-            }
+            get => this.markFilesProgressWidth;
+            set => this.SetPropNotify(ref this.markFilesProgressWidth, value);
         }
 
         public double MarkFilesProgressHeight
         {
-            get
-            {
-                return this.markFilesProgressHeight;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.markFilesProgressHeight, value);
-            }
+            get => this.markFilesProgressHeight;
+            set => this.SetPropNotify(ref this.markFilesProgressHeight, value);
         }
 
         public double RestoreFilesProgressWidth
         {
-            get
-            {
-                return this.restoreFilesProgressWidth;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.restoreFilesProgressWidth, value);
-            }
+            get => this.restoreFilesProgressWidth;
+            set => this.SetPropNotify(ref this.restoreFilesProgressWidth, value);
         }
 
         public double RestoreFilesProgressHeight
         {
-            get
-            {
-                return this.restoreFilesProgressHeight;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.restoreFilesProgressHeight, value);
-            }
+            get => this.restoreFilesProgressHeight;
+            set => this.SetPropNotify(ref this.restoreFilesProgressHeight, value);
         }
 
         public OutputType SelectedOutputType
         {
-            get
-            {
-                return this.selectedOutputType;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.selectedOutputType, value);
-            }
+            get => this.selectedOutputType;
+            set => this.SetPropNotify(ref this.selectedOutputType, value);
         }
 
         public SearchMethod SelectedSearchMethodForDragDrop { get; set; } =
@@ -469,139 +307,73 @@ namespace HashCalculator
 
         public bool ShowResultText
         {
-            get
-            {
-                return this.showResultText;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.showResultText, value);
-            }
+            get => this.showResultText;
+            set => this.SetPropNotify(ref this.showResultText, value);
         }
 
         public bool NoExportColumn
         {
-            get
-            {
-                return this.noExportColumn;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.noExportColumn, value);
-            }
+            get => this.noExportColumn;
+            set => this.SetPropNotify(ref this.noExportColumn, value);
         }
 
         public bool NoDurationColumn
         {
-            get
-            {
-                return this.noDurationColumn;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.noDurationColumn, value);
-            }
+            get => this.noDurationColumn;
+            set => this.SetPropNotify(ref this.noDurationColumn, value);
         }
 
         public bool NoFileSizeColumn
         {
-            get
-            {
-                return this.noFileSizeColumn;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.noFileSizeColumn, value);
-            }
+            get => this.noFileSizeColumn;
+            set => this.SetPropNotify(ref this.noFileSizeColumn, value);
         }
 
         public bool NoOutputTypeColumn
         {
-            get
-            {
-                return this.noOutputTypeColumn;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.noOutputTypeColumn, value);
-            }
+            get => this.noOutputTypeColumn;
+            set => this.SetPropNotify(ref this.noOutputTypeColumn, value);
         }
 
         [JsonIgnore, XmlIgnore]
         public bool ShowExecutionTargetColumn
         {
-            get
-            {
-                return this.showExecutionTargetColumn;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.showExecutionTargetColumn, value);
-            }
+            get => this.showExecutionTargetColumn;
+            set => this.SetPropNotify(ref this.showExecutionTargetColumn, value);
         }
 
         [JsonIgnore, XmlIgnore]
         public bool ShowHashInTagColumn
         {
-            get
-            {
-                return this.showHashInTagColumn;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.showHashInTagColumn, value);
-            }
+            get => this.showHashInTagColumn;
+            set => this.SetPropNotify(ref this.showHashInTagColumn, value);
         }
 
         [JsonIgnore, XmlIgnore]
         public bool FilterOrCmderEnabled
         {
-            get
-            {
-                return this.filterOrCmderEnabled;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.filterOrCmderEnabled, value);
-            }
+            get => this.filterOrCmderEnabled;
+            set => this.SetPropNotify(ref this.filterOrCmderEnabled, value);
         }
 
         public bool PermanentlyDeleteFiles { get; set; }
 
         public bool RunInMultiInstMode
         {
-            get
-            {
-                return this.runInMultiInstanceMode;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.runInMultiInstanceMode, value);
-            }
+            get => this.runInMultiInstanceMode;
+            set => this.SetPropNotify(ref this.runInMultiInstanceMode, value);
         }
 
         public ExportAlgo HowToExportHashValues
         {
-            get
-            {
-                return this.howToExportHashValues;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.howToExportHashValues, value);
-            }
+            get => this.howToExportHashValues;
+            set => this.SetPropNotify(ref this.howToExportHashValues, value);
         }
 
         public bool UseDefaultOutputTypeWhenExporting
         {
-            get
-            {
-                return this.useDefaultOutputTypeWhenExporting;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.useDefaultOutputTypeWhenExporting, value);
-            }
+            get => this.useDefaultOutputTypeWhenExporting;
+            set => this.SetPropNotify(ref this.useDefaultOutputTypeWhenExporting, value);
         }
 
         public string LastUsedPath
@@ -622,14 +394,8 @@ namespace HashCalculator
 
         public bool PreferChecklistAlgs
         {
-            get
-            {
-                return this.preferChecklistAlgs;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.preferChecklistAlgs, value);
-            }
+            get => this.preferChecklistAlgs;
+            set => this.SetPropNotify(ref this.preferChecklistAlgs, value);
         }
 
         public bool ParallelBetweenAlgos
@@ -650,50 +416,26 @@ namespace HashCalculator
 
         public bool MonitorNewHashStringInClipboard
         {
-            get
-            {
-                return this.monitorNewHashStringInClipboard;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.monitorNewHashStringInClipboard, value);
-            }
+            get => this.monitorNewHashStringInClipboard;
+            set => this.SetPropNotify(ref this.monitorNewHashStringInClipboard, value);
         }
 
         public bool SwitchMainWndFgWhenNewHashCopied
         {
-            get
-            {
-                return this.switchMainWndFgWhenNewHashCopied;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.switchMainWndFgWhenNewHashCopied, value);
-            }
+            get => this.switchMainWndFgWhenNewHashCopied;
+            set => this.SetPropNotify(ref this.switchMainWndFgWhenNewHashCopied, value);
         }
 
         public FetchAlgoOption FetchAlgorithmOption
         {
-            get
-            {
-                return this.fetchAlgorithmOption;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.fetchAlgorithmOption, value);
-            }
+            get => this.fetchAlgorithmOption;
+            set => this.SetPropNotify(ref this.fetchAlgorithmOption, value);
         }
 
         public bool DisplayMainWndButtonText
         {
-            get
-            {
-                return this.displayMainWndButtonText;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.displayMainWndButtonText, value);
-            }
+            get => this.displayMainWndButtonText;
+            set => this.SetPropNotify(ref this.displayMainWndButtonText, value);
         }
 
         public int MinCopiedCharsToTriggerHashCheck
@@ -734,74 +476,38 @@ namespace HashCalculator
 
         public CmpRes AlgoToSwitchToAfterHashChecked
         {
-            get
-            {
-                return this.algoToSwitchToAfterHashChecked;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.algoToSwitchToAfterHashChecked, value);
-            }
+            get => this.algoToSwitchToAfterHashChecked;
+            set => this.SetPropNotify(ref this.algoToSwitchToAfterHashChecked, value);
         }
 
         public bool GenerateTextInFormat
         {
-            get
-            {
-                return this.generateTextInFormat;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.generateTextInFormat, value);
-            }
+            get => this.generateTextInFormat;
+            set => this.SetPropNotify(ref this.generateTextInFormat, value);
         }
 
         public string FormatForGenerateText
         {
-            get
-            {
-                return this.formatForGenerateText;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.formatForGenerateText, value);
-            }
+            get => this.formatForGenerateText;
+            set => this.SetPropNotify(ref this.formatForGenerateText, value);
+        }
+
+        public ConfigLocation LocationForSavingConfigFiles
+        {
+            get => this.locationForSavingConfigFiles;
+            set => this.SetPropNotify(ref this.locationForSavingConfigFiles, value);
         }
 
         public bool ExportInMainControlsChildExports
         {
-            get
-            {
-                return this.exportInMainControlsChildExportsInRow;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.exportInMainControlsChildExportsInRow, value);
-            }
+            get => this.exportInMainControlsChildExportsInRow;
+            set => this.SetPropNotify(ref this.exportInMainControlsChildExportsInRow, value);
         }
 
         public bool CaseOfCopiedAlgNameFollowsOutputType
         {
-            get
-            {
-                return this.caseOfCopiedAlgNameFollowsOutputType;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.caseOfCopiedAlgNameFollowsOutputType, value);
-            }
-        }
-
-        public bool ConfigurationSaveToUserDirectory
-        {
-            get
-            {
-                return this.configurationSaveToUserDirectory;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.configurationSaveToUserDirectory, value);
-            }
+            get => this.caseOfCopiedAlgNameFollowsOutputType;
+            set => this.SetPropNotify(ref this.caseOfCopiedAlgNameFollowsOutputType, value);
         }
 
         public AlgoType[] SelectedAlgos { get; set; }
@@ -835,40 +541,22 @@ namespace HashCalculator
         [JsonIgnore, XmlIgnore]
         public string DisplayingActiveConfigDir
         {
-            get
-            {
-                return this.displayingActiveConfigDir;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.displayingActiveConfigDir, value);
-            }
+            get => this.displayingActiveConfigDir;
+            set => this.SetPropNotify(ref this.displayingActiveConfigDir, value);
         }
 
         [JsonIgnore, XmlIgnore]
         public string DisplayingShellExtensionDir
         {
-            get
-            {
-                return this.displayingShellExtensionDir;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.displayingShellExtensionDir, value);
-            }
+            get => this.displayingShellExtensionDir;
+            set => this.SetPropNotify(ref this.displayingShellExtensionDir, value);
         }
 
         [JsonIgnore, XmlIgnore]
         public bool ProcessingShellExtension
         {
-            get
-            {
-                return this.processingShellExtension;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.processingShellExtension, value);
-            }
+            get => this.processingShellExtension;
+            set => this.SetPropNotify(ref this.processingShellExtension, value);
         }
 
         private async void InstallShellExtAction(object param)
@@ -979,40 +667,22 @@ namespace HashCalculator
         [JsonIgnore, XmlIgnore]
         public AlgoInOutModel SelectedInOutModelForAlias
         {
-            get
-            {
-                return this.selectedAlgoInOutModel;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.selectedAlgoInOutModel, value);
-            }
+            get => this.selectedAlgoInOutModel;
+            set => this.SetPropNotify(ref this.selectedAlgoInOutModel, value);
         }
 
         [JsonIgnore, XmlIgnore]
         public TemplateForExportModel SelectedTemplateForExport
         {
-            get
-            {
-                return this.selectedExportTemplate;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.selectedExportTemplate, value);
-            }
+            get => this.selectedExportTemplate;
+            set => this.SetPropNotify(ref this.selectedExportTemplate, value);
         }
 
         [JsonIgnore, XmlIgnore]
         public TemplateForChecklistModel SelectedTemplateForChecklist
         {
-            get
-            {
-                return this.selectedChecklistTemplate;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.selectedChecklistTemplate, value);
-            }
+            get => this.selectedChecklistTemplate;
+            set => this.SetPropNotify(ref this.selectedChecklistTemplate, value);
         }
 
         private void AddExportTemplateAction(object param)

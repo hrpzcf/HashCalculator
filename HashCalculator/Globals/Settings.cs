@@ -83,28 +83,30 @@ namespace HashCalculator
             ActiveConfigFile = Path.Combine(ActiveConfigDir, appConfigFileName);
         }
 
-        public static void UpdateConfigurationPaths(bool userData)
+        public static void UpdateConfigurationPaths(ConfigLocation location)
         {
             if (File.Exists(ActiveConfigFile))
             {
                 try
                 {
-                    string dirToBeUsed = userData ? ConfigDirUser : ConfigDirExec;
-                    if (dirToBeUsed.Equals(ActiveConfigDir))
+                    string switchTo = location == ConfigLocation.ExecDir ?
+                        ConfigDirExec : location == ConfigLocation.UserDir ?
+                            ConfigDirUser : null;
+                    if (switchTo == null || switchTo.Equals(ActiveConfigDir))
                     {
                         return;
                     }
-                    if (!Directory.Exists(dirToBeUsed))
+                    if (!Directory.Exists(switchTo))
                     {
-                        Directory.CreateDirectory(dirToBeUsed);
+                        Directory.CreateDirectory(switchTo);
                     }
-                    string newConfigFilePath = Path.Combine(dirToBeUsed, appConfigFileName);
+                    string newConfigFilePath = Path.Combine(switchTo, appConfigFileName);
                     if (File.Exists(newConfigFilePath))
                     {
                         File.Delete(newConfigFilePath);
                     }
                     File.Move(ActiveConfigFile, newConfigFilePath);
-                    ActiveConfigDir = dirToBeUsed;
+                    ActiveConfigDir = switchTo;
                     ActiveConfigFile = newConfigFilePath;
                     // 外壳扩展路径为 null 说明扩展未安装，可以移动右键菜单配置文件
                     // 否则并不能移动右键菜单配置文件，需要在外壳扩展被卸载后触发移动
@@ -167,14 +169,14 @@ namespace HashCalculator
 
         public static async void MoveConfigurationFiles(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(SettingsViewModel.ConfigurationSaveToUserDirectory))
+            if (e.PropertyName == nameof(SettingsViewModel.LocationForSavingConfigFiles))
             {
                 if (sender is SettingsViewModel settingsViewModel)
                 {
                     settingsViewModel.ProcessingShellExtension = true;
                     await Task.Run(() =>
                     {
-                        UpdateConfigurationPaths(settingsViewModel.ConfigurationSaveToUserDirectory);
+                        UpdateConfigurationPaths(settingsViewModel.LocationForSavingConfigFiles);
                     });
                     settingsViewModel.ProcessingShellExtension = false;
                 }

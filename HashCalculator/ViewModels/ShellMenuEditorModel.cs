@@ -36,26 +36,14 @@ namespace HashCalculator
 
         public ObservableCollection<HcCtxMenuModel> MenuList
         {
-            get
-            {
-                return this._menuList;
-            }
-            private set
-            {
-                this.SetPropNotify(ref this._menuList, value);
-            }
+            get => this._menuList;
+            set => this.SetPropNotify(ref this._menuList, value);
         }
 
         public HcCtxMenuModel SelectedMenu
         {
-            get
-            {
-                return this._selectedMenu;
-            }
-            set
-            {
-                this.SetPropNotify(ref this._selectedMenu, value);
-            }
+            get => this._selectedMenu;
+            set => this.SetPropNotify(ref this._selectedMenu, value);
         }
 
         private void SaveMenusAction(object param)

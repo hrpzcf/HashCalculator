@@ -1041,4 +1041,35 @@ namespace HashCalculator
             throw new NotImplementedException();
         }
     }
+
+    internal class BetweenConfigLocationAndBooleanCvt : IValueConverter
+    {
+        public bool Boolean { get; set; }
+
+        public ConfigLocation Loccation { get; set; }
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is ConfigLocation location && location == this.Loccation)
+            {
+                return this.Boolean;
+            }
+            else
+            {
+                return !this.Boolean;
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is bool boolean && boolean == this.Boolean)
+            {
+                return this.Loccation;
+            }
+            else
+            {
+                return ConfigLocation.Unset;
+            }
+        }
+    }
 }

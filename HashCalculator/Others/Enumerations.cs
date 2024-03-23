@@ -346,4 +346,25 @@
         /// </summary>
         NewInNewLocation
     }
+
+    /// <summary>
+    /// 程序配置文件的保存位置
+    /// </summary>
+    public enum ConfigLocation
+    {
+        /// <summary>
+        /// 首次运行，未设置
+        /// </summary>
+        Unset,
+
+        /// <summary>
+        /// 保存到程序可执行文件所在位置
+        /// </summary>
+        ExecDir,
+
+        /// <summary>
+        /// 保存到用户目录下的 AppData\Local\HashCalculator 目录
+        /// </summary>
+        UserDir,
+    }
 }
