@@ -68,7 +68,14 @@ namespace HashCalculator
             this.Information = new FileInfo(arg.FilePath);
             try
             {
-                this.FileLength = this.Information.Length;
+                if (!arg.Deprecated)
+                {
+                    this.FileLength = this.Information.Length;
+                }
+                else
+                {
+                    this.FileLength = -1;
+                }
             }
             catch (Exception e) when (e is IOException || e is FileNotFoundException)
             {
@@ -396,7 +403,14 @@ namespace HashCalculator
             this.IsExecutionTarget = false;
             try
             {
-                this.FileLength = this.Information.Length;
+                if (!this.Arguments.Deprecated)
+                {
+                    this.FileLength = this.Information.Length;
+                }
+                else
+                {
+                    this.FileLength = -1;
+                }
             }
             catch (Exception e) when (e is IOException || e is FileNotFoundException)
             {
