@@ -27,27 +27,28 @@ namespace HashCalculator
 
         public bool CheckPanelPosition()
         {
+            bool positionChanged = false;
             if (this.Left < 0.0)
             {
                 this.Left = 0.0;
-                return true;
+                positionChanged = true;
             }
             else if (this.Left + this.Width > SystemParameters.WorkArea.Width)
             {
                 this.Left = SystemParameters.WorkArea.Width - this.Width;
-                return true;
+                positionChanged = true;
             }
             if (this.Top < 0.0)
             {
                 this.Top = 0.0;
-                return true;
+                positionChanged = true;
             }
             else if (this.Top + this.Height > SystemParameters.WorkArea.Height)
             {
                 this.Top = SystemParameters.WorkArea.Height - this.Height;
-                return true;
+                positionChanged = true;
             }
-            return false;
+            return positionChanged;
         }
 
         private void CommandPanelKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
