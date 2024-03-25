@@ -27,8 +27,8 @@ namespace HashCalculator
         private double hashDetailsHeight = 800.0;
         private double filterAndCmderWndWidth = 540.0;
         private double filterAndCmderWndHeight = 640.0;
-        private double cmdPanelTopRelToMainWnd = 0.0;
-        private double cmdPanelLeftRelToMainWnd = 0.0;
+        private double filterAndCmderWndTop = double.NaN;
+        private double filterAndCmderWndLeft = double.NaN;
         private double shellMenuEditorWidth = 600.0;
         private double shellMenuEditorHeight = 400.0;
         private double shellSubmenuEditorWidth = 400.0;
@@ -60,6 +60,7 @@ namespace HashCalculator
         private bool switchMainWndFgWhenNewHashCopied = true;
         private bool caseOfCopiedAlgNameFollowsOutputType = false;
         private bool exportInMainControlsChildExportsInRow = false;
+        private bool filterAndCmderWndFollowsMainWnd = false;
 
         private CmpRes algoToSwitchToAfterHashChecked = CmpRes.Matched;
         private ExportAlgo howToExportHashValues = ExportAlgo.AllCalculated;
@@ -205,17 +206,21 @@ namespace HashCalculator
             set => this.SetPropNotify(ref this.filterAndCmderWndHeight, value);
         }
 
-        public double CmdPanelTopRelToMainWnd
+        public double FilterAndCmderWndTop
         {
-            get => this.cmdPanelTopRelToMainWnd;
-            set => this.SetPropNotify(ref this.cmdPanelTopRelToMainWnd, value);
+            get => this.filterAndCmderWndTop;
+            set => this.SetPropNotify(ref this.filterAndCmderWndTop, value);
         }
 
-        public double CmdPanelLeftRelToMainWnd
+        public double FilterAndCmderWndLeft
         {
-            get => this.cmdPanelLeftRelToMainWnd;
-            set => this.SetPropNotify(ref this.cmdPanelLeftRelToMainWnd, value);
+            get => this.filterAndCmderWndLeft;
+            set => this.SetPropNotify(ref this.filterAndCmderWndLeft, value);
         }
+
+        public double FilterPanelTopRelToMain { get; set; }
+
+        public double FilterPanelLeftRelToMain { get; set; }
 
         public double ShellMenuEditorWidth
         {
@@ -490,6 +495,17 @@ namespace HashCalculator
         {
             get => this.formatForGenerateText;
             set => this.SetPropNotify(ref this.formatForGenerateText, value);
+        }
+
+        public bool FilterAndCmderWndFollowsMainWnd
+        {
+            get => this.filterAndCmderWndFollowsMainWnd;
+            set
+            {
+                this.FilterPanelTopRelToMain = this.FilterAndCmderWndTop - this.MainWindowTop;
+                this.FilterPanelLeftRelToMain = this.FilterAndCmderWndLeft - this.MainWindowLeft;
+                this.SetPropNotify(ref this.filterAndCmderWndFollowsMainWnd, value);
+            }
         }
 
         public ConfigLocation LocationForSavingConfigFiles

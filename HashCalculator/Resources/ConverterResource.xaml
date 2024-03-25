@@ -35,6 +35,26 @@
         x:Key="ConfigLocationUserToTrueCvt"
         Boolean="True"
         Loccation="UserDir" />
+    <local:AssociatedMainAndFilterWndPositionCvt
+        x:Key="MainWndTopCvt"
+        ForLeft="False"
+        ForMainWnd="True"
+        Settings="{x:Static local:Settings.Current}" />
+    <local:AssociatedMainAndFilterWndPositionCvt
+        x:Key="MainWndLeftCvt"
+        ForLeft="True"
+        ForMainWnd="True"
+        Settings="{x:Static local:Settings.Current}" />
+    <local:AssociatedMainAndFilterWndPositionCvt
+        x:Key="FilterWndTopCvt"
+        ForLeft="False"
+        ForMainWnd="False"
+        Settings="{x:Static local:Settings.Current}" />
+    <local:AssociatedMainAndFilterWndPositionCvt
+        x:Key="FilterWndLeftCvt"
+        ForLeft="True"
+        ForMainWnd="False"
+        Settings="{x:Static local:Settings.Current}" />
     <local:InvalidFileNameForegroundCvt x:Key="InvalidFileNameForegroundCvt" />
     <local:CmpResForegroundCvt x:Key="CmpResForegroundCvt" />
     <local:CmpResBackgroundCvt x:Key="CmpResBackgroundCvt" />
@@ -66,8 +86,6 @@
     <local:RadioExportCurrentAlgoCvt x:Key="RadioExportCurrentAlgoCvt" />
     <local:RadioExportAllCalculatedAlgosCvt x:Key="RadioExportAllCalculatedAlgosCvt" />
     <local:BytesToIntuitiveFileSizeCvt x:Key="BytesToIntuitiveFileSizeCvt" />
-    <local:CommandPanelTopCvt x:Key="CommandPanelTopCvt" />
-    <local:CommandPanelLeftCvt x:Key="CommandPanelLeftCvt" />
     <local:MultiLineTextToStrArrayCvt x:Key="MultiLineTextToStrArrayCvt" />
     <local:CmpColorToSolidColorBrushCvt x:Key="CmpColorToSolidColorBrushCvt" />
     <local:MultiCmpColorToSolidColorBrushCvt x:Key="MultiCmpColorToSolidColorBrushCvt" />

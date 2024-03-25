@@ -220,6 +220,11 @@
                 <CheckBox
                     Margin="0,0,0,4"
                     Padding="4,0,0,0"
+                    Content="使【筛选与操作】窗口跟随主窗口移动"
+                    IsChecked="{Binding FilterAndCmderWndFollowsMainWnd, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <CheckBox
+                    Margin="0,0,0,4"
+                    Padding="4,0,0,0"
                     Content="显示主窗口按钮的名称"
                     IsChecked="{Binding DisplayMainWndButtonText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </StackPanel>

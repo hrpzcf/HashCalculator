@@ -27,35 +27,29 @@
         </ResourceDictionary>
     </Window.Resources>
     <Window.Top>
-        <MultiBinding
-            Converter="{StaticResource CommandPanelTopCvt}"
-            Mode="TwoWay"
-            UpdateSourceTrigger="PropertyChanged">
+        <MultiBinding Converter="{StaticResource FilterWndTopCvt}" Mode="TwoWay">
             <Binding
-                Mode="TwoWay"
+                Mode="OneWay"
                 Path="MainWindowTop"
                 Source="{x:Static local:Settings.Current}"
                 UpdateSourceTrigger="PropertyChanged" />
             <Binding
                 Mode="TwoWay"
-                Path="CmdPanelTopRelToMainWnd"
+                Path="FilterAndCmderWndTop"
                 Source="{x:Static local:Settings.Current}"
                 UpdateSourceTrigger="PropertyChanged" />
         </MultiBinding>
     </Window.Top>
     <Window.Left>
-        <MultiBinding
-            Converter="{StaticResource CommandPanelLeftCvt}"
-            Mode="TwoWay"
-            UpdateSourceTrigger="PropertyChanged">
+        <MultiBinding Converter="{StaticResource FilterWndLeftCvt}" Mode="TwoWay">
             <Binding
-                Mode="TwoWay"
+                Mode="OneWay"
                 Path="MainWindowLeft"
                 Source="{x:Static local:Settings.Current}"
                 UpdateSourceTrigger="PropertyChanged" />
             <Binding
                 Mode="TwoWay"
-                Path="CmdPanelLeftRelToMainWnd"
+                Path="FilterAndCmderWndLeft"
                 Source="{x:Static local:Settings.Current}"
                 UpdateSourceTrigger="PropertyChanged" />
         </MultiBinding>
@@ -145,14 +139,32 @@
                             ToolTip="{Binding SelectedFilter.Description}" />
                     </Grid>
                 </GroupBox>
-                <DockPanel
+                <Grid
                     Grid.Row="1"
                     Grid.Column="1"
                     Margin="4,0,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <CheckBox
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Padding="4,0,0,0"
+                        VerticalAlignment="Center"
+                        Content="本窗口跟随主窗口移动"
+                        IsChecked="{Binding Source={x:Static local:Settings.Current}, Path=FilterAndCmderWndFollowsMainWnd, UpdateSourceTrigger=PropertyChanged}" />
                     <StackPanel
+                        Grid.Row="1"
+                        Grid.Column="0"
                         Margin="0,0,0,6"
                         VerticalAlignment="Bottom"
-                        DockPanel.Dock="Left"
                         Orientation="Horizontal">
                         <Button
                             Width="32"
@@ -182,13 +194,28 @@
                             <Image Source="/Images/clear_filter_64.png" />
                         </Button>
                     </StackPanel>
+                    <!--  正在加载动图  -->
+                    <Image
+                        Grid.Row="0"
+                        Grid.RowSpan="2"
+                        Grid.Column="1"
+                        Width="32"
+                        Height="32"
+                        Margin="0,0,16,8"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        gif:AnimationBehavior.RepeatBehavior="Forever"
+                        gif:AnimationBehavior.SourceUri="/Images/loading.gif"
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=FilterOrCmderEnabled, Converter={StaticResource TrueToVisibilityHiddenCvt}}" />
                     <!--  筛选器的刷新按钮  -->
                     <Button
+                        Grid.Row="0"
+                        Grid.RowSpan="2"
+                        Grid.Column="2"
                         Width="64"
                         Height="64"
                         HorizontalAlignment="Right"
                         Command="{Binding RefreshFiltersCmd}"
-                        DockPanel.Dock="Right"
                         Style="{StaticResource ImageButtonStyle2}"
                         ToolTip="应用已勾选的筛选器并刷新主窗口表格视图...">
                         <Button.IsEnabled>
@@ -199,17 +226,7 @@
                         </Button.IsEnabled>
                         <Image Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnRefreshFiltersEnabledImgSrcCvt}}" />
                     </Button>
-                    <Image
-                        Width="32"
-                        Height="32"
-                        Margin="0,0,16,8"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Bottom"
-                        gif:AnimationBehavior.RepeatBehavior="Forever"
-                        gif:AnimationBehavior.SourceUri="/Images/loading.gif"
-                        DockPanel.Dock="Right"
-                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=FilterOrCmderEnabled, Converter={StaticResource TrueToVisibilityHiddenCvt}}" />
-                </DockPanel>
+                </Grid>
             </Grid>
         </GroupBox>
         <GroupBox Grid.Row="1" Margin="0,8,0,0">

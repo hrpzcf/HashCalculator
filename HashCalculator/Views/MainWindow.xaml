@@ -12,9 +12,7 @@
     d:Height="300"
     d:Width="1100"
     Icon="/Images/icon.ico"
-    Left="{Binding Source={x:Static local:Settings.Current}, Path=MainWindowLeft, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     SnapsToDevicePixels="True"
-    Top="{Binding Source={x:Static local:Settings.Current}, Path=MainWindowTop, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     Topmost="{Binding Source={x:Static local:Settings.Current}, Path=MainWndTopmost}"
     UseLayoutRounding="True"
     WindowState="{Binding Source={x:Static local:Settings.Current}, Path=MainWindowState, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -40,6 +38,34 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
+    <Window.Top>
+        <MultiBinding Converter="{StaticResource MainWndTopCvt}" Mode="TwoWay">
+            <Binding
+                Mode="TwoWay"
+                Path="MainWindowTop"
+                Source="{x:Static local:Settings.Current}"
+                UpdateSourceTrigger="PropertyChanged" />
+            <Binding
+                Mode="OneWayToSource"
+                Path="FilterAndCmderWndTop"
+                Source="{x:Static local:Settings.Current}"
+                UpdateSourceTrigger="PropertyChanged" />
+        </MultiBinding>
+    </Window.Top>
+    <Window.Left>
+        <MultiBinding Converter="{StaticResource MainWndLeftCvt}" Mode="TwoWay">
+            <Binding
+                Mode="TwoWay"
+                Path="MainWindowLeft"
+                Source="{x:Static local:Settings.Current}"
+                UpdateSourceTrigger="PropertyChanged" />
+            <Binding
+                Mode="OneWayToSource"
+                Path="FilterAndCmderWndLeft"
+                Source="{x:Static local:Settings.Current}"
+                UpdateSourceTrigger="PropertyChanged" />
+        </MultiBinding>
+    </Window.Left>
     <Grid Margin="8,0,8,8">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />

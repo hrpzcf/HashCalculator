@@ -663,40 +663,6 @@ namespace HashCalculator
         }
     }
 
-    internal class CommandPanelTopCvt : IMultiValueConverter
-    {
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (values.All(i => i is double))
-            {
-                return (double)values[0] + (double)values[1];
-            }
-            return 0.0;
-        }
-
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
-        {
-            return new object[] { Binding.DoNothing, (double)value - Settings.Current.MainWindowTop };
-        }
-    }
-
-    internal class CommandPanelLeftCvt : IMultiValueConverter
-    {
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (values.All(i => i is double))
-            {
-                return (double)values[0] + (double)values[1];
-            }
-            return 0.0;
-        }
-
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
-        {
-            return new object[] { Binding.DoNothing, (double)value - Settings.Current.MainWindowLeft };
-        }
-    }
-
     internal class MultiLineTextToStrArrayCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -1070,6 +1036,77 @@ namespace HashCalculator
             {
                 return ConfigLocation.Unset;
             }
+        }
+    }
+
+    internal class AssociatedMainAndFilterWndPositionCvt : IMultiValueConverter
+    {
+        /// <summary>
+        /// true 是给窗口的左上角横坐标用的，否则是纵坐标用的
+        /// </summary>
+        public bool ForLeft { get; set; }
+
+        /// <summary>
+        /// true 是给主窗口用的，否则是给【筛选和操作】窗口用的
+        /// </summary>
+        public bool ForMainWnd { get; set; }
+
+        public SettingsViewModel Settings { get; set; }
+
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (values[0] is double mainWndCoord && values[1] is double filterWndCoord)
+            {
+                return this.ForMainWnd ? mainWndCoord : filterWndCoord;
+            }
+            return Binding.DoNothing;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            if (value is double filterOrMainWndCoord && this.Settings != null)
+            {
+                if (this.ForMainWnd)
+                {
+                    if (this.Settings.FilterAndCmderWndFollowsMainWnd)
+                    {
+                        double filterTopOrLeft = this.ForLeft ?
+                            filterOrMainWndCoord + this.Settings.FilterPanelLeftRelToMain :
+                                filterOrMainWndCoord + this.Settings.FilterPanelTopRelToMain;
+                        return new object[] { filterOrMainWndCoord, filterTopOrLeft };
+                    }
+                    else
+                    {
+                        if (!this.ForLeft)
+                        {
+                            this.Settings.FilterPanelTopRelToMain = this.Settings.FilterAndCmderWndTop -
+                                filterOrMainWndCoord;
+                        }
+                        else
+                        {
+                            this.Settings.FilterPanelLeftRelToMain = this.Settings.FilterAndCmderWndLeft -
+                                filterOrMainWndCoord;
+                        }
+                        return new object[] { filterOrMainWndCoord, Binding.DoNothing };
+                    }
+                }
+                else
+                {
+                    if (this.Settings.FilterAndCmderWndFollowsMainWnd)
+                    {
+                        if (!this.ForLeft)
+                        {
+                            this.Settings.FilterPanelTopRelToMain = filterOrMainWndCoord - this.Settings.MainWindowTop;
+                        }
+                        else
+                        {
+                            this.Settings.FilterPanelLeftRelToMain = filterOrMainWndCoord - this.Settings.MainWindowLeft;
+                        }
+                    }
+                    return new object[] { Binding.DoNothing, filterOrMainWndCoord };
+                }
+            }
+            return new object[] { Binding.DoNothing, Binding.DoNothing };
         }
     }
 }
