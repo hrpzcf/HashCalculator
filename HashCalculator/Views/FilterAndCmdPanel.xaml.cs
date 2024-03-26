@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Interop;
 
 namespace HashCalculator
 {
     public partial class FilterAndCmdPanel : Window
     {
+        private WindowInteropHelper _interopHelper;
         private readonly FilterAndCmdPanelModel model;
 
         public static FilterAndCmdPanel This { get; private set; }
@@ -16,7 +18,7 @@ namespace HashCalculator
             This = this;
             this.Closed += handler;
             this.Closed += this.PanelClosed;
-            this.Loaded += (s, e) => { this.CheckPanelPosition(); };
+            this.Loaded += this.FilterAndCmderWndLoaded;
             this.InitializeComponent();
         }
 
@@ -25,27 +27,40 @@ namespace HashCalculator
             this.model.ClearFiltersAndRefresh();
         }
 
+        private void FilterAndCmderWndLoaded(object sender, RoutedEventArgs e)
+        {
+            this._interopHelper = new WindowInteropHelper(this);
+            this.CheckPanelPosition();
+        }
+
         public bool CheckPanelPosition()
         {
             bool positionChanged = false;
-            if (this.Left < 0.0)
+            if (!CommonUtils.GetWindowRectWithoutShadedArea(
+                this._interopHelper.Handle, out RECT rectangle))
             {
-                this.Left = 0.0;
+                return positionChanged;
+            }
+            // 窗口左、右、下阴影厚度（上无阴影厚度）
+            double thickness = rectangle.left - this.Left - 1;
+            if (rectangle.left < 0)
+            {
+                this.Left = -thickness;
                 positionChanged = true;
             }
-            else if (this.Left + this.Width > SystemParameters.WorkArea.Width)
+            else if (rectangle.right > SystemParameters.WorkArea.Width)
             {
-                this.Left = SystemParameters.WorkArea.Width - this.Width;
+                this.Left = SystemParameters.WorkArea.Width - this.Width + thickness;
                 positionChanged = true;
             }
-            if (this.Top < 0.0)
+            if (rectangle.top < 0)
             {
                 this.Top = 0.0;
                 positionChanged = true;
             }
-            else if (this.Top + this.Height > SystemParameters.WorkArea.Height)
+            else if (rectangle.bottom > SystemParameters.WorkArea.Height)
             {
-                this.Top = SystemParameters.WorkArea.Height - this.Height;
+                this.Top = SystemParameters.WorkArea.Height - this.Height + thickness;
                 positionChanged = true;
             }
             return positionChanged;

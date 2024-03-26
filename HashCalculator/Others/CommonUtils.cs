@@ -521,5 +521,44 @@ namespace HashCalculator
             }
             return default(string);
         }
+
+        /// <summary>
+        /// 获取一个窗口不含阴影部分但含标题栏的的矩形坐标，坐标相对于屏幕
+        /// </summary>
+        public static bool GetWindowRectWithoutShadedArea(IntPtr handle, out RECT rectangle)
+        {
+            rectangle = new RECT();
+            // 注意获得的坐标不是相对于屏幕的坐标，而是相对于窗口客户区自身的坐标
+            // 所以 left 和 top 都是 0，right 和 bottom 就是窗口客户区的宽度和高度
+            RECT clientRect = new RECT();
+            if (!USER32.GetClientRect(handle, ref clientRect))
+            {
+                return false;
+            }
+            // 获取的坐标是窗口相对于屏幕的坐标
+            // 需要注意的是左右横坐标和下纵坐标包含窗口阴影区域，上纵坐标不含阴影区域
+            RECT windowRect = new RECT();
+            if (!USER32.GetWindowRect(handle, ref windowRect))
+            {
+                return false;
+            }
+            // 将客户区左上角的坐标转为相对于窗口的坐标
+            POINT clientLeftTop = new POINT(clientRect.left, clientRect.top);
+            if (!USER32.ClientToScreen(handle, ref clientLeftTop))
+            {
+                return false;
+            }
+            // 将客户区右下角的坐标转为相对于窗口的坐标
+            POINT clientRightBottom = new POINT(clientRect.right, clientRect.bottom);
+            if (!USER32.ClientToScreen(handle, ref clientRightBottom))
+            {
+                return false;
+            }
+            rectangle.left = clientLeftTop.x;
+            rectangle.top = windowRect.top;
+            rectangle.right = clientRightBottom.x;
+            rectangle.bottom = clientRightBottom.y;
+            return true;
+        }
     }
 }
