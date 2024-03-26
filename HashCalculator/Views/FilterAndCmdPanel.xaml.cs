@@ -35,35 +35,45 @@ namespace HashCalculator
 
         public bool CheckPanelPosition()
         {
-            bool positionChanged = false;
+            bool windowStateChanged = false;
+            if (this.Visibility != Visibility.Visible)
+            {
+                this.Visibility = Visibility.Visible;
+                windowStateChanged = true;
+            }
+            if (this.WindowState == WindowState.Minimized)
+            {
+                this.WindowState = WindowState.Normal;
+                windowStateChanged = true;
+            }
             if (!CommonUtils.GetWindowRectWithoutShadedArea(
                 this._interopHelper.Handle, out RECT rectangle))
             {
-                return positionChanged;
+                return windowStateChanged;
             }
             // 窗口左、右、下阴影厚度（上无阴影厚度）
             double thickness = rectangle.left - this.Left - 1;
             if (rectangle.left < 0)
             {
                 this.Left = -thickness;
-                positionChanged = true;
+                windowStateChanged = true;
             }
             else if (rectangle.right > SystemParameters.WorkArea.Width)
             {
                 this.Left = SystemParameters.WorkArea.Width - this.Width + thickness;
-                positionChanged = true;
+                windowStateChanged = true;
             }
             if (rectangle.top < 0)
             {
                 this.Top = 0.0;
-                positionChanged = true;
+                windowStateChanged = true;
             }
             else if (rectangle.bottom > SystemParameters.WorkArea.Height)
             {
                 this.Top = SystemParameters.WorkArea.Height - this.Height + thickness;
-                positionChanged = true;
+                windowStateChanged = true;
             }
-            return positionChanged;
+            return windowStateChanged;
         }
 
         private void CommandPanelKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
