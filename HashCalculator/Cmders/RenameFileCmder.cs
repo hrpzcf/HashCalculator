@@ -46,10 +46,10 @@ namespace HashCalculator
 
         private void RenameFilesAction(object param)
         {
-            if (Settings.Current.ShowExecutionTargetColumn && Settings.Current.FilterOrCmderEnabled &&
+            if (Settings.Current.FilterAndCmderEnabled &&
                 this.RefModels is IEnumerable<HashViewModel> models)
             {
-                Settings.Current.FilterOrCmderEnabled = false;
+                Settings.Current.FilterAndCmderEnabled = false;
                 if (!models.Any(i => i.IsExecutionTarget && i.AlgoInOutModels != null))
                 {
                     MessageBox.Show(MainWindow.This, "没有任何可重命名的目标文件", "提示",
@@ -113,8 +113,8 @@ namespace HashCalculator
                     model.IsExecutionTarget = false;
                 }
             FinishingTouches:
-                Settings.Current.FilterOrCmderEnabled = true;
-                Settings.Current.ShowExecutionTargetColumn = false;
+                Settings.Current.FilterAndCmderEnabled = true;
+                Settings.Current.IsMainRowSelectedByCheckBox = false;
             }
         }
 

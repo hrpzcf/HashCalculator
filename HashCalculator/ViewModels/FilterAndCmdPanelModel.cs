@@ -173,11 +173,11 @@ namespace HashCalculator
 
         private async void RefreshFiltersAction(object param)
         {
-            if (!Settings.Current.FilterOrCmderEnabled)
+            if (!Settings.Current.FilterAndCmderEnabled)
             {
                 return;
             }
-            Settings.Current.FilterOrCmderEnabled = false;
+            Settings.Current.FilterAndCmderEnabled = false;
             this.SelectTableLinesCmder.Reset();
             foreach (AbsHashesCmder cmder in this.HashModelCmders)
             {
@@ -239,7 +239,7 @@ namespace HashCalculator
                     }
                 }
             }
-            Settings.Current.FilterOrCmderEnabled = true;
+            Settings.Current.FilterAndCmderEnabled = true;
         }
 
         public ICommand RefreshFiltersCmd

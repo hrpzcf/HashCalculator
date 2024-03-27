@@ -37,19 +37,25 @@ namespace HashCalculator
 
         public override void Reset()
         {
-            this.DeselectAllModelsAction(null);
-            Settings.Current.ShowExecutionTargetColumn = false;
+            if (this.RefModels is IEnumerable<HashViewModel> models)
+            {
+                foreach (HashViewModel model in models)
+                {
+                    model.IsExecutionTarget = false;
+                }
+                Settings.Current.IsMainRowSelectedByCheckBox = false;
+            }
         }
 
         private void SelectAllModelsAction(object param)
         {
             if (this.RefModels is IEnumerable<HashViewModel> models)
             {
+                Settings.Current.IsMainRowSelectedByCheckBox = true;
                 foreach (HashViewModel model in models)
                 {
                     model.IsExecutionTarget = model.Matched;
                 }
-                Settings.Current.ShowExecutionTargetColumn = true;
             }
         }
 
@@ -69,11 +75,11 @@ namespace HashCalculator
         {
             if (this.RefModels is IEnumerable<HashViewModel> models)
             {
+                Settings.Current.IsMainRowSelectedByCheckBox = true;
                 foreach (HashViewModel model in models)
                 {
                     model.IsExecutionTarget = false;
                 }
-                Settings.Current.ShowExecutionTargetColumn = true;
             }
         }
 
@@ -93,11 +99,11 @@ namespace HashCalculator
         {
             if (this.RefModels is IEnumerable<HashViewModel> models)
             {
+                Settings.Current.IsMainRowSelectedByCheckBox = true;
                 foreach (HashViewModel model in models)
                 {
                     model.IsExecutionTarget = model.Matched && !model.IsExecutionTarget;
                 }
-                Settings.Current.ShowExecutionTargetColumn = true;
             }
         }
 
@@ -117,6 +123,7 @@ namespace HashCalculator
         {
             if (this.RefModels is IEnumerable<HashViewModel> models)
             {
+                Settings.Current.IsMainRowSelectedByCheckBox = true;
                 foreach (HashViewModel model in models)
                 {
                     model.IsExecutionTarget = false;
@@ -130,7 +137,6 @@ namespace HashCalculator
                         model.IsExecutionTarget = true;
                     }
                 }
-                Settings.Current.ShowExecutionTargetColumn = true;
             }
         }
 
@@ -150,6 +156,7 @@ namespace HashCalculator
         {
             if (this.RefModels is IEnumerable<HashViewModel> models)
             {
+                Settings.Current.IsMainRowSelectedByCheckBox = true;
                 foreach (HashViewModel model in models)
                 {
                     model.IsExecutionTarget = false;
@@ -163,7 +170,6 @@ namespace HashCalculator
                         model.IsExecutionTarget = true;
                     }
                 }
-                Settings.Current.ShowExecutionTargetColumn = true;
             }
         }
 
@@ -204,12 +210,12 @@ namespace HashCalculator
         {
             if (this.RefModels is IEnumerable<HashViewModel> models)
             {
+                Settings.Current.IsMainRowSelectedByCheckBox = true;
                 foreach (HashViewModel model in models)
                 {
                     model.IsExecutionTarget = false;
                 }
                 this.CheckCollectionViewGroupItems(this.BoundDataGridView.Groups);
-                Settings.Current.ShowExecutionTargetColumn = true;
             }
         }
 

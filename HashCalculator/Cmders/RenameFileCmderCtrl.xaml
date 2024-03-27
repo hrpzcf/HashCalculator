@@ -12,6 +12,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/ConverterResource.xaml" />
                 <ResourceDictionary Source="/Resources/CmderButtonStyles.xaml" />
                 <ResourceDictionary Source="/Resources/DescTextBlockStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
@@ -80,7 +81,6 @@
             Command="{Binding RenameFilesCmd}"
             Content="重命名"
             Foreground="White"
-            IsEnabled="{Binding Source={x:Static local:Settings.Current}, Path=ShowExecutionTargetColumn}"
             Style="{StaticResource IndepButtonStyle}"
             ToolTip="把指定算法的哈希值转换为指定格式的字符串，将该字符串作为文件名重命名操作目标所指的文件" />
         <CheckBox

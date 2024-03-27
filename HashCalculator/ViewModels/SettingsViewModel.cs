@@ -46,7 +46,7 @@ namespace HashCalculator
         private bool noFileSizeColumn = false;
         private bool noOutputTypeColumn = false;
         private bool showResultText = false;
-        private bool showExecutionTargetColumn = false;
+        private bool isMainRowSelectedByCheckBox = false;
         private bool showHashInTagColumn = false;
         private bool generateTextInFormat = false;
         private bool filterOrCmderEnabled = true;
@@ -341,10 +341,17 @@ namespace HashCalculator
         }
 
         [JsonIgnore, XmlIgnore]
-        public bool ShowExecutionTargetColumn
+        public bool IsMainRowSelectedByCheckBox
         {
-            get => this.showExecutionTargetColumn;
-            set => this.SetPropNotify(ref this.showExecutionTargetColumn, value);
+            get => this.isMainRowSelectedByCheckBox;
+            set => this.SetPropNotify(ref this.isMainRowSelectedByCheckBox, value);
+        }
+
+        [JsonIgnore, XmlIgnore]
+        public bool FilterAndCmderEnabled
+        {
+            get => this.filterOrCmderEnabled;
+            set => this.SetPropNotify(ref this.filterOrCmderEnabled, value);
         }
 
         [JsonIgnore, XmlIgnore]
@@ -352,13 +359,6 @@ namespace HashCalculator
         {
             get => this.showHashInTagColumn;
             set => this.SetPropNotify(ref this.showHashInTagColumn, value);
-        }
-
-        [JsonIgnore, XmlIgnore]
-        public bool FilterOrCmderEnabled
-        {
-            get => this.filterOrCmderEnabled;
-            set => this.SetPropNotify(ref this.filterOrCmderEnabled, value);
         }
 
         public bool PermanentlyDeleteFiles { get; set; }

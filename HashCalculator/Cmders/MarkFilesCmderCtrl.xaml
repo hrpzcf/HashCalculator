@@ -96,7 +96,6 @@
                 Command="{Binding GenerateMarkedFilesCmd}"
                 Content="开始处理"
                 Foreground="White"
-                IsEnabled="{Binding Source={x:Static local:Settings.Current}, Path=ShowExecutionTargetColumn}"
                 Style="{StaticResource IndepButtonStyle}"
                 ToolTip="向文件添加由算法、哈希值和随机数据等组成的哈希标记以改变文件的哈希值。" />
             <CheckBox

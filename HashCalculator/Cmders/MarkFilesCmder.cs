@@ -165,11 +165,10 @@ namespace HashCalculator
 
         private async void GenerateMarkedFilesAction(object param)
         {
-            if (Settings.Current.ShowExecutionTargetColumn &&
-                Settings.Current.FilterOrCmderEnabled &&
+            if (Settings.Current.FilterAndCmderEnabled &&
                 this.RefModels is IEnumerable<HashViewModel> hashViewModels)
             {
-                Settings.Current.FilterOrCmderEnabled = false;
+                Settings.Current.FilterAndCmderEnabled = false;
                 if (this.MarkFilesOption == EditFileOption.NewInNewLocation)
                 {
                     if (string.IsNullOrEmpty(this.DirectoryUsedToSaveFiles) ||
@@ -226,8 +225,8 @@ namespace HashCalculator
                         MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             FinishingTouches:
-                Settings.Current.FilterOrCmderEnabled = true;
-                Settings.Current.ShowExecutionTargetColumn = false;
+                Settings.Current.FilterAndCmderEnabled = true;
+                Settings.Current.IsMainRowSelectedByCheckBox = false;
             }
         }
 

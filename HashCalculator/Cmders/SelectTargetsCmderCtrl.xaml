@@ -12,17 +12,23 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/ConverterResource.xaml" />
                 <ResourceDictionary Source="/Resources/CmderButtonStyles.xaml" />
                 <ResourceDictionary Source="/Resources/DescTextBlockStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        <WrapPanel Grid.Column="0">
+        <WrapPanel Grid.Row="0" Grid.Column="0">
             <Button
                 Margin="2"
                 Padding="20,6"
@@ -85,6 +91,7 @@
                 ToolTip="取消选择所有行。" />
         </WrapPanel>
         <Button
+            Grid.Row="0"
             Grid.Column="1"
             Margin="4,0,2,0"
             Padding="20,6"
@@ -96,5 +103,20 @@
             Foreground="WhiteSmoke"
             Style="{StaticResource IndepButtonStyle}"
             ToolTip="取消选择所有行并隐藏主窗口的【操作目标】列。" />
+        <TextBlock
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            Margin="0,4,0,0"
+            FontSize="8pt"
+            Style="{StaticResource DescTextBlockStyle}"
+            Text="可以用以上按钮来显示【操作目标】列并选中操作目标，也可以取消后在主窗口选择多行作为目标" />
+        <TextBlock
+            Grid.Row="2"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            FontSize="8pt"
+            Style="{StaticResource DescTextBlockStyle}"
+            Text="当主窗口显示【操作目标】列时以该列被勾选的对象作为目标，不显示则以选择的行作为目标" />
     </Grid>
 </UserControl>

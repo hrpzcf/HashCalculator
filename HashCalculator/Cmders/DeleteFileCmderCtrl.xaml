@@ -12,6 +12,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/ConverterResource.xaml" />
                 <ResourceDictionary Source="/Resources/CmderButtonStyles.xaml" />
                 <ResourceDictionary Source="/Resources/DescTextBlockStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
@@ -39,7 +40,6 @@
             Command="{Binding DeleteFileDirectlyCmd}"
             Content="删除"
             Foreground="White"
-            IsEnabled="{Binding Source={x:Static local:Settings.Current}, Path=ShowExecutionTargetColumn}"
             Style="{StaticResource IndepButtonStyle}"
             ToolTip="直接删除操作目标，删除前请确认是否正确勾选了要删除的文件" />
         <Button
@@ -53,7 +53,6 @@
             Command="{Binding MoveToRecycleBinCmd}"
             Content="移到回收站"
             Foreground="White"
-            IsEnabled="{Binding Source={x:Static local:Settings.Current}, Path=ShowExecutionTargetColumn}"
             Style="{StaticResource IndepButtonStyle}"
             ToolTip="把操作目标所指文件移动到回收站，删除前请确认是否正确勾选了要删除的文件" />
         <CheckBox

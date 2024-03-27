@@ -318,16 +318,11 @@ namespace HashCalculator
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            Debug.Assert(values != null && values.Length == 2);
-            if (values[0] is RunningState state && state == RunningState.Started)
-            {
-                return false;
-            }
-            if (values[1] is bool filterOrCmderEnabled && !filterOrCmderEnabled)
-            {
-                return false;
-            }
-            return true;
+            Debug.Assert(values?.Length == 2);
+            return values[0] is RunningState state &&
+                state != RunningState.Started &&
+                values[1] is bool filterAndCmderEnabled &&
+                filterAndCmderEnabled;
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
@@ -1107,6 +1102,37 @@ namespace HashCalculator
                 }
             }
             return new object[] { Binding.DoNothing, Binding.DoNothing };
+        }
+    }
+
+    internal class CanExecuteCmdOnTargetsCvt : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            Debug.Assert(values?.Length == 2);
+            return values[0] is bool canExecuteCmdOnTargets &&
+                values[1] is bool showExecutionTargetColumn && (
+                canExecuteCmdOnTargets || showExecutionTargetColumn);
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class StateAndSelectionWayToMonitoring : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            Debug.Assert(values?.Length == 2);
+            return values[0] is RunningState state && values[1] is bool selectedByCheckbox &&
+                state != RunningState.Started && !selectedByCheckbox;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
         }
     }
 }

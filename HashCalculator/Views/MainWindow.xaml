@@ -375,6 +375,15 @@
             VirtualizingPanel.IsContainerVirtualizable="True"
             VirtualizingPanel.IsVirtualizing="True"
             VirtualizingPanel.VirtualizationMode="Recycling">
+            <local:MultiSelectorAttach.Monitoring>
+                <MultiBinding Converter="{StaticResource StateAndSelectionWayToMonitoring}" Mode="OneWay">
+                    <Binding Mode="OneWay" Path="State" />
+                    <Binding
+                        Mode="OneWay"
+                        Path="IsMainRowSelectedByCheckBox"
+                        Source="{x:Static local:Settings.Current}" />
+                </MultiBinding>
+            </local:MultiSelectorAttach.Monitoring>
             <DataGrid.ContextMenu>
                 <ContextMenu>
                     <MenuItem
@@ -521,7 +530,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="操作目标" Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowExecutionTargetColumn, Converter={StaticResource TrueToVisibilityVisibleCvt}, Mode=OneWay}">
+                <DataGridTemplateColumn Header="操作目标" Visibility="{Binding Source={x:Static local:Settings.Current}, Path=IsMainRowSelectedByCheckBox, Converter={StaticResource TrueToVisibilityVisibleCvt}, Mode=OneWay}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid>

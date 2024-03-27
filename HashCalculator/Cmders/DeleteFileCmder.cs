@@ -33,11 +33,10 @@ namespace HashCalculator
 
         private async void DeleteOrMoveToRecycleBin(bool toRecyclebin)
         {
-            if (Settings.Current.ShowExecutionTargetColumn &&
-                Settings.Current.FilterOrCmderEnabled &&
+            if (Settings.Current.FilterAndCmderEnabled &&
                 this.RefModels is ObservableCollection<HashViewModel> hashViewModels)
             {
-                Settings.Current.FilterOrCmderEnabled = false;
+                Settings.Current.FilterAndCmderEnabled = false;
                 if (hashViewModels.Any(i => i.IsExecutionTarget))
                 {
                     string promptInfo = toRecyclebin ? "确定把操作目标所指的文件移动到回收站吗？" :
@@ -62,7 +61,6 @@ namespace HashCalculator
                         }
                         await Task.Run(() =>
                         {
-
                             if (!toRecyclebin)
                             {
                                 foreach (HashViewModel model in targets)
@@ -76,7 +74,7 @@ namespace HashCalculator
                                 CommonUtils.SendToRecycleBin(MainWindow.WndHandle, pathsInOneString);
                             }
                         });
-                        MainWndViewModel.CurrentModel.GenerateFileHashCheckReport();
+                        MainWndViewModel.ThisModel.GenerateFileHashCheckReport();
                     }
                 }
                 else
@@ -85,8 +83,8 @@ namespace HashCalculator
                         MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             FinishingTouches:
-                Settings.Current.FilterOrCmderEnabled = true;
-                Settings.Current.ShowExecutionTargetColumn = false;
+                Settings.Current.FilterAndCmderEnabled = true;
+                Settings.Current.IsMainRowSelectedByCheckBox = false;
             }
         }
 

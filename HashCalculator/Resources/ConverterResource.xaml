@@ -55,6 +55,7 @@
         ForLeft="True"
         ForMainWnd="False"
         Settings="{x:Static local:Settings.Current}" />
+    <local:CanExecuteCmdOnTargetsCvt x:Key="CanExecuteCmdOnTargetsCvt" />
     <local:InvalidFileNameForegroundCvt x:Key="InvalidFileNameForegroundCvt" />
     <local:CmpResForegroundCvt x:Key="CmpResForegroundCvt" />
     <local:CmpResBackgroundCvt x:Key="CmpResBackgroundCvt" />
@@ -100,4 +101,5 @@
     <local:DisplayHcmDataHashValueCvt x:Key="DisplayHcmDataHashValueCvt" />
     <local:DisplayHcmDataBackgroundCvt x:Key="DisplayHcmDataBackgroundCvt" />
     <local:AlgoInOutModelsToNumberCvt x:Key="AlgoInOutModelsToNumberCvt" />
+    <local:StateAndSelectionWayToMonitoring x:Key="StateAndSelectionWayToMonitoring" />
 </ResourceDictionary>

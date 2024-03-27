@@ -170,11 +170,10 @@ namespace HashCalculator
 
         private async void RestoreMarkedFilesAction(object param)
         {
-            if (Settings.Current.ShowExecutionTargetColumn &&
-                Settings.Current.FilterOrCmderEnabled &&
+            if (Settings.Current.FilterAndCmderEnabled &&
                 this.RefModels is IEnumerable<HashViewModel> hashViewModels)
             {
-                Settings.Current.FilterOrCmderEnabled = false;
+                Settings.Current.FilterAndCmderEnabled = false;
                 if (this.RestoreFilesOption == EditFileOption.NewInNewLocation)
                 {
                     if (string.IsNullOrEmpty(this.DirectoryUsedToSaveFiles) ||
@@ -230,8 +229,8 @@ namespace HashCalculator
                         MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             FinishingTouches:
-                Settings.Current.FilterOrCmderEnabled = true;
-                Settings.Current.ShowExecutionTargetColumn = false;
+                Settings.Current.FilterAndCmderEnabled = true;
+                Settings.Current.IsMainRowSelectedByCheckBox = false;
             }
         }
 
@@ -296,11 +295,10 @@ namespace HashCalculator
 
         private async void ShowFilesHcmDataAction(object param)
         {
-            if (Settings.Current.ShowExecutionTargetColumn &&
-                Settings.Current.FilterOrCmderEnabled &&
+            if (Settings.Current.FilterAndCmderEnabled &&
                 this.RefModels is IEnumerable<HashViewModel> hashViewModels)
             {
-                Settings.Current.FilterOrCmderEnabled = false;
+                Settings.Current.FilterAndCmderEnabled = false;
                 if (hashViewModels.Any(i => i.IsExecutionTarget))
                 {
                     IEnumerable<HashViewModel> targets = hashViewModels.Where(i => i.IsExecutionTarget);
@@ -327,8 +325,8 @@ namespace HashCalculator
                     MessageBox.Show(MainWindow.This, "没有找到任何操作目标，请刷新筛选或手动勾选操作目标！", "提示",
                         MessageBoxButton.OK, MessageBoxImage.Information);
                 }
-                Settings.Current.FilterOrCmderEnabled = true;
-                Settings.Current.ShowExecutionTargetColumn = false;
+                Settings.Current.FilterAndCmderEnabled = true;
+                Settings.Current.IsMainRowSelectedByCheckBox = false;
             }
         }
 

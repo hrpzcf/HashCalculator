@@ -64,7 +64,7 @@
     /// <summary>
     /// 哈希值计算队列任务的完成状态，用于 MainWndViewModel 类
     /// </summary>
-    internal enum RunningState
+    public enum RunningState
     {
         /// <summary>
         /// 启动前

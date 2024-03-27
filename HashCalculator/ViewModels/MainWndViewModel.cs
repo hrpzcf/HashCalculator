@@ -20,25 +20,27 @@ namespace HashCalculator
 {
     internal class MainWndViewModel : NotifiableModel
     {
-        private readonly ModelStarter starter =
-            new ModelStarter(Settings.Current.SelectedTaskNumberLimit, 32);
+        private const int interval = 800;
+        private readonly Timer checkStateTimer = null;
+        private readonly ModelStarter starter = new ModelStarter(
+            Settings.Current.SelectedTaskNumberLimit, 32);
         private static readonly Dispatcher synchronization =
             Application.Current.Dispatcher;
         private readonly Action<HashModelArg> addModelAction;
+        private readonly object displayingModelLock = new object();
+        private readonly object changeRunningStateLock = new object();
         private volatile int serial = 0;
         private int computedModelsCount = 0;
         private int tobeComputedModelsCount = 0;
+        private List<HashViewModel> displayedModels = new List<HashViewModel>();
         private CancellationTokenSource _cancellation = new CancellationTokenSource();
         private CancellationTokenSource searchCancellation = new CancellationTokenSource();
-        private List<HashViewModel> displayedModels = new List<HashViewModel>();
         private string hashCheckReport = string.Empty;
         private string hashValueStringOrChecklistPath = null;
-        private const int interval = 800;
-        private readonly Timer checkStateTimer;
-        private RunningState runningState = RunningState.None;
         private FilterAndCmdPanel commandPanelInst = null;
-        private readonly object displayingModelLock = new object();
-        private readonly object changeRunningStateLock = new object();
+        private IList selectedHashViewModels = null;
+        private RunningState runningState = RunningState.None;
+
         private RelayCommand openCommandPanelCmd;
         private RelayCommand openSelectAlgoWndCmd;
         private RelayCommand mainWindowTopmostCmd;
@@ -81,7 +83,7 @@ namespace HashCalculator
 
         public MainWndViewModel()
         {
-            CurrentModel = this;
+            ThisModel = this;
             HashViewModelsViewSrc = new CollectionViewSource();
             HashViewModelsViewSrc.Source = HashViewModels;
             HashViewModelsView = HashViewModelsViewSrc.View;
@@ -90,7 +92,7 @@ namespace HashCalculator
             this.checkStateTimer = new Timer(this.CheckStateAction);
         }
 
-        public static MainWndViewModel CurrentModel
+        public static MainWndViewModel ThisModel
         {
             get;
             private set;
@@ -133,9 +135,22 @@ namespace HashCalculator
                     return this.hashCheckReport;
                 }
             }
+            set => this.SetPropNotify(ref this.hashCheckReport, value);
+        }
+
+        public IList SelectedHashViewModels
+        {
+            get => this.selectedHashViewModels;
             set
             {
-                this.SetPropNotify(ref this.hashCheckReport, value);
+                if (value != null)
+                {
+                    foreach (HashViewModel model in HashViewModels)
+                    {
+                        model.IsExecutionTarget = value.Contains(model);
+                    }
+                }
+                this.SetPropNotify(ref this.selectedHashViewModels, value);
             }
         }
 
@@ -147,10 +162,7 @@ namespace HashCalculator
 
         public RunningState State
         {
-            get
-            {
-                return this.runningState;
-            }
+            get => this.runningState;
             set
             {
                 if ((this.runningState != RunningState.Started) && value == RunningState.Started)
@@ -174,10 +186,7 @@ namespace HashCalculator
 
         private CancellationTokenSource Cancellation
         {
-            get
-            {
-                return this._cancellation;
-            }
+            get => this._cancellation;
             set
             {
                 if (value is null)

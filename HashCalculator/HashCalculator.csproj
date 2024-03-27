@@ -217,6 +217,7 @@
     <Compile Include="Native\Methods.cs" />
     <Compile Include="Others\HcmDataHelper.cs" />
     <Compile Include="Others\HcmData.cs" />
+    <Compile Include="Others\MultiSelectorAttach.cs" />
     <Compile Include="ViewModels\AboutWindowModel.cs" />
     <Compile Include="ViewModels\DoubleProgressModel.cs" />
     <Compile Include="ViewModels\TemplateForChecklistModel.cs" />

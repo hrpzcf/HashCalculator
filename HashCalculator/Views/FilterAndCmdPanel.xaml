@@ -206,7 +206,7 @@
                         VerticalAlignment="Bottom"
                         gif:AnimationBehavior.RepeatBehavior="Forever"
                         gif:AnimationBehavior.SourceUri="/Images/loading.gif"
-                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=FilterOrCmderEnabled, Converter={StaticResource TrueToVisibilityHiddenCvt}}" />
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=FilterAndCmderEnabled, Converter={StaticResource TrueToVisibilityHiddenCvt}}" />
                     <!--  筛选器的刷新按钮  -->
                     <Button
                         Grid.Row="0"
@@ -220,8 +220,8 @@
                         ToolTip="应用已勾选的筛选器并刷新主窗口表格视图...">
                         <Button.IsEnabled>
                             <MultiBinding Converter="{StaticResource CmdPanelCriticalControlsEnabledCvt}">
-                                <Binding Path="State" Source="{x:Static local:MainWndViewModel.CurrentModel}" />
-                                <Binding Path="FilterOrCmderEnabled" Source="{x:Static local:Settings.Current}" />
+                                <Binding Path="State" Source="{x:Static local:MainWndViewModel.ThisModel}" />
+                                <Binding Path="FilterAndCmderEnabled" Source="{x:Static local:Settings.Current}" />
                             </MultiBinding>
                         </Button.IsEnabled>
                         <Image Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnRefreshFiltersEnabledImgSrcCvt}}" />
@@ -239,8 +239,8 @@
             </GroupBox.Header>
             <GroupBox.IsEnabled>
                 <MultiBinding Converter="{StaticResource CmdPanelCriticalControlsEnabledCvt}">
-                    <Binding Path="State" Source="{x:Static local:MainWndViewModel.CurrentModel}" />
-                    <Binding Path="FilterOrCmderEnabled" Source="{x:Static local:Settings.Current}" />
+                    <Binding Path="State" Source="{x:Static local:MainWndViewModel.ThisModel}" />
+                    <Binding Path="FilterAndCmderEnabled" Source="{x:Static local:Settings.Current}" />
                 </MultiBinding>
             </GroupBox.IsEnabled>
             <Grid Margin="0,4,0,0">

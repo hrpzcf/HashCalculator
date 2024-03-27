@@ -47,7 +47,6 @@
                     Command="{Binding RestoreMarkedFilesCmd}"
                     Content="开始还原"
                     Foreground="White"
-                    IsEnabled="{Binding Source={x:Static local:Settings.Current}, Path=ShowExecutionTargetColumn}"
                     Style="{StaticResource IndepButtonStyle}"
                     ToolTip="还原被改变过哈希值的文件，如果保存位置有同名文件则给文件名添加数字后缀后保存。" />
                 <Button
@@ -60,7 +59,6 @@
                     Command="{Binding ShowFilesHcmDataCmd}"
                     Content="显示哈希标记"
                     Foreground="White"
-                    IsEnabled="{Binding Source={x:Static local:Settings.Current}, Path=ShowExecutionTargetColumn}"
                     Style="{StaticResource IndepButtonStyle}"
                     ToolTip="在主窗口的【哈希标记】列中显示被改变过哈希值的文件内记录的原文件哈希值和算法。" />
                 <Button
