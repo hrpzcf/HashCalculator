@@ -331,37 +331,21 @@ namespace HashCalculator
         }
     }
 
-    internal class TrueToVisibilityHiddenCvt : IValueConverter
+    internal class BooleanToVisibilityCvt : IValueConverter
     {
+        public bool Boolean { get; set; }
+
+        public Visibility Default { get; set; }
+
+        public Visibility Fallback { get; set; }
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value is bool hidden && hidden ? Visibility.Hidden : Visibility.Visible;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    internal class TrueToVisibilityVisibleCvt : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return value is bool visible && visible ? Visibility.Visible : Visibility.Hidden;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    internal class FalseToVisibilityCollapsedCvt : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return value is bool visible && !visible ? Visibility.Collapsed : Visibility.Visible;
+            if (value is bool boolean && boolean == this.Boolean)
+            {
+                return this.Default;
+            }
+            return this.Fallback;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

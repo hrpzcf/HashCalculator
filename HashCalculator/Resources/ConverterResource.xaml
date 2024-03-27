@@ -55,6 +55,26 @@
         ForLeft="True"
         ForMainWnd="False"
         Settings="{x:Static local:Settings.Current}" />
+    <local:BooleanToVisibilityCvt
+        x:Key="TrueToVisibilityHiddenCvt"
+        Boolean="True"
+        Default="Hidden"
+        Fallback="Visible" />
+    <local:BooleanToVisibilityCvt
+        x:Key="TrueToVisibilityVisibleCvt"
+        Boolean="True"
+        Default="Visible"
+        Fallback="Hidden" />
+    <local:BooleanToVisibilityCvt
+        x:Key="TrueToVisibilityCollapsedCvt"
+        Boolean="True"
+        Default="Collapsed"
+        Fallback="Visible" />
+    <local:BooleanToVisibilityCvt
+        x:Key="FalseToVisibilityCollapsedCvt"
+        Boolean="False"
+        Default="Collapsed"
+        Fallback="Visible" />
     <local:CanExecuteCmdOnTargetsCvt x:Key="CanExecuteCmdOnTargetsCvt" />
     <local:InvalidFileNameForegroundCvt x:Key="InvalidFileNameForegroundCvt" />
     <local:CmpResForegroundCvt x:Key="CmpResForegroundCvt" />
@@ -68,9 +88,6 @@
     <local:StateFinishedResultNotSucceedToVisibilityCvt x:Key="StateFinishedResultNotSucceedToVisibilityCvt" />
     <local:MainModelStateToBooleanCvt x:Key="MainModelStateToBooleanCvt" />
     <local:CmdPanelCriticalControlsEnabledCvt x:Key="CmdPanelCriticalControlsEnabledCvt" />
-    <local:TrueToVisibilityHiddenCvt x:Key="TrueToVisibilityHiddenCvt" />
-    <local:TrueToVisibilityVisibleCvt x:Key="TrueToVisibilityVisibleCvt" />
-    <local:FalseToVisibilityCollapsedCvt x:Key="FalseToVisibilityCollapsedCvt" />
     <local:ReverseBooleanValueCvt x:Key="ReverseBooleanValueCvt" />
     <local:SubBtnPauseImageSrcCvt x:Key="SubBtnPauseImageSrcCvt" />
     <local:SubBtnPauseToolTipCvt x:Key="SubBtnPauseToolTipCvt" />
