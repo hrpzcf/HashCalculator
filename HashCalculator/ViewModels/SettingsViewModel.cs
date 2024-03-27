@@ -26,7 +26,7 @@ namespace HashCalculator
         private double hashDetailsWidth = 1200.0;
         private double hashDetailsHeight = 800.0;
         private double filterAndCmderWndWidth = 540.0;
-        private double filterAndCmderWndHeight = 640.0;
+        private double filterAndCmderWndHeight = 440.0;
         private double filterAndCmderWndTop = double.NaN;
         private double filterAndCmderWndLeft = double.NaN;
         private double shellMenuEditorWidth = 600.0;
