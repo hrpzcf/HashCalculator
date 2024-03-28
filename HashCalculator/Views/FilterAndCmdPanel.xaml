@@ -22,6 +22,8 @@
                 <ResourceDictionary Source="/Resources/DataGridCellStyles.xaml" />
                 <ResourceDictionary Source="/Resources/DataGridRowStyles.xaml" />
                 <ResourceDictionary Source="/Resources/DescTextBlockStyles.xaml" />
+                <ResourceDictionary Source="/Resources/TabControlStyles.xaml" />
+                <ResourceDictionary Source="/Resources/TabControlItemStyles.xaml" />
                 <ResourceDictionary Source="/Resources/ImageButtonStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -56,11 +58,53 @@
     </Window.Left>
     <Grid Margin="8">
         <Grid.RowDefinitions>
-            <RowDefinition />
             <RowDefinition Height="Auto" />
+            <RowDefinition />
         </Grid.RowDefinitions>
-        <TabControl Grid.Row="0">
-            <TabItem Header="筛选器和设置">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Grid
+            Grid.Row="0"
+            Grid.Column="1"
+            Margin="0,0,0,6"
+            Panel.ZIndex="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <CheckBox
+                Grid.Row="0"
+                Grid.Column="0"
+                Margin="0,2,0,0"
+                Padding="4,0,0,0"
+                Content="使本窗口跟随主窗口移动"
+                IsChecked="{Binding Source={x:Static local:Settings.Current}, Path=FilterAndCmderWndFollowsMainWnd, UpdateSourceTrigger=PropertyChanged}" />
+            <!--  动图正在加载  -->
+            <Image
+                Grid.Row="0"
+                Grid.Column="1"
+                Width="16"
+                Height="16"
+                Margin="8,0,0,0"
+                gif:AnimationBehavior.RepeatBehavior="Forever"
+                gif:AnimationBehavior.SourceUri="/Images/loading.gif"
+                Visibility="{Binding Source={x:Static local:Settings.Current}, Path=FilterAndCmderEnabled, Converter={StaticResource TrueToVisibilityCollapsedCvt}}" />
+        </Grid>
+        <TabControl
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            Style="{StaticResource TabControlStyle2}">
+            <TabItem
+                Padding="16,0,16,6"
+                FontSize="11pt"
+                FontWeight="Bold"
+                Foreground="#555555"
+                Header="筛选器和设置"
+                Style="{StaticResource TabItemStyle2}">
                 <Border Padding="4" BorderThickness="0">
                     <Border.IsEnabled>
                         <MultiBinding Converter="{StaticResource CmdPanelCriticalControlsEnabledCvt}">
@@ -82,6 +126,9 @@
                             Grid.RowSpan="2"
                             Grid.Column="0"
                             d:ItemsSource="{d:SampleData}"
+                            FontSize="9pt"
+                            FontWeight="Normal"
+                            Foreground="Black"
                             ItemsSource="{Binding HashModelFilters}"
                             SelectedIndex="0"
                             SelectedItem="{Binding SelectedFilter}"
@@ -111,7 +158,10 @@
                             Grid.Row="0"
                             Grid.Column="1"
                             Margin="4,0,0,0"
-                            Padding="4,6,4,0">
+                            Padding="4,6,4,0"
+                            FontSize="9pt"
+                            FontWeight="Normal"
+                            Foreground="Black">
                             <GroupBox.Header>
                                 <TextBlock
                                     VerticalAlignment="Top"
@@ -187,8 +237,8 @@
                             <!--  筛选器的刷新按钮  -->
                             <Button
                                 Grid.Column="4"
-                                Width="48"
-                                Height="48"
+                                Width="64"
+                                Height="64"
                                 HorizontalAlignment="Right"
                                 Command="{Binding RefreshFiltersCmd}"
                                 Style="{StaticResource ImageButtonStyle2}"
@@ -199,7 +249,13 @@
                     </Grid>
                 </Border>
             </TabItem>
-            <TabItem Header="操作器和设置">
+            <TabItem
+                Padding="16,0,16,6"
+                FontSize="11pt"
+                FontWeight="Bold"
+                Foreground="#555555"
+                Header="操作器和设置"
+                Style="{StaticResource TabItemStyle2}">
                 <Border Padding="4" BorderThickness="0">
                     <Border.IsEnabled>
                         <MultiBinding Converter="{StaticResource CmdPanelCriticalControlsEnabledCvt}">
@@ -223,7 +279,10 @@
                             Padding="0,2,0,0"
                             d:DataContext="{d:DesignInstance Type=local:SelectTargetsCmder}"
                             BorderBrush="Violet"
-                            DataContext="{Binding SelectTableLinesCmder}">
+                            DataContext="{Binding SelectTableLinesCmder}"
+                            FontSize="9pt"
+                            FontWeight="Normal"
+                            Foreground="Black">
                             <GroupBox.Header>
                                 <TextBlock
                                     Margin="3,0,0,0"
@@ -238,6 +297,9 @@
                             Grid.Column="0"
                             Margin="0,4,0,0"
                             d:ItemsSource="{d:SampleData}"
+                            FontSize="9pt"
+                            FontWeight="Normal"
+                            Foreground="Black"
                             ItemsSource="{Binding HashModelCmders}"
                             SelectedIndex="0"
                             SelectedItem="{Binding SelectedCmder}"
@@ -260,7 +322,10 @@
                             Grid.Row="1"
                             Grid.Column="1"
                             Margin="4,4,0,0"
-                            Padding="4,6,4,0">
+                            Padding="4,6,4,0"
+                            FontSize="9pt"
+                            FontWeight="Normal"
+                            Foreground="Black">
                             <GroupBox.Header>
                                 <TextBlock
                                     VerticalAlignment="Top"
@@ -273,30 +338,5 @@
                 </Border>
             </TabItem>
         </TabControl>
-        <Grid Grid.Row="1" Margin="0,4,0,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <CheckBox
-                Grid.Row="0"
-                Grid.Column="0"
-                Margin="-1,2,0,0"
-                Padding="4,0,0,0"
-                VerticalAlignment="Bottom"
-                Content="使本窗口跟随主窗口移动"
-                IsChecked="{Binding Source={x:Static local:Settings.Current}, Path=FilterAndCmderWndFollowsMainWnd, UpdateSourceTrigger=PropertyChanged}" />
-            <!--  动图正在加载  -->
-            <Image
-                Grid.Row="0"
-                Grid.Column="1"
-                Width="16"
-                Height="16"
-                Margin="12,0,0,0"
-                HorizontalAlignment="Left"
-                gif:AnimationBehavior.RepeatBehavior="Forever"
-                gif:AnimationBehavior.SourceUri="/Images/loading.gif"
-                Visibility="{Binding Source={x:Static local:Settings.Current}, Path=FilterAndCmderEnabled, Converter={StaticResource TrueToVisibilityCollapsedCvt}}" />
-        </Grid>
     </Grid>
 </Window>

@@ -16,17 +16,17 @@ namespace HashCalculator
     public class SettingsViewModel : NotifiableModel
     {
         private double mainWndWidth = 1100.0;
-        private double mainWndHeight = 700.0;
+        private double mainWndHeight = 760.0;
         private double mainWndTop = double.NaN;
         private double mainWndLeft = double.NaN;
-        private double settingsWndWidth = 660.0;
-        private double settingsWndHeight = 565.0;
+        private double settingsWndWidth = 680.0;
+        private double settingsWndHeight = 560.0;
         private double algosPanelWidth = 450.0;
         private double algosPanelHeight = 410.0;
         private double hashDetailsWidth = 1200.0;
         private double hashDetailsHeight = 800.0;
         private double filterAndCmderWndWidth = 540.0;
-        private double filterAndCmderWndHeight = 440.0;
+        private double filterAndCmderWndHeight = 430.0;
         private double filterAndCmderWndTop = double.NaN;
         private double filterAndCmderWndLeft = double.NaN;
         private double shellMenuEditorWidth = 600.0;
