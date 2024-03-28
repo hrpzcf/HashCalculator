@@ -102,7 +102,6 @@
                 Padding="16,0,16,6"
                 FontSize="11pt"
                 FontWeight="Bold"
-                Foreground="#555555"
                 Header="筛选器和设置"
                 Style="{StaticResource TabItemStyle2}">
                 <Border Padding="4" BorderThickness="0">
@@ -253,7 +252,6 @@
                 Padding="16,0,16,6"
                 FontSize="11pt"
                 FontWeight="Bold"
-                Foreground="#555555"
                 Header="操作器和设置"
                 Style="{StaticResource TabItemStyle2}">
                 <Border Padding="4" BorderThickness="0">
