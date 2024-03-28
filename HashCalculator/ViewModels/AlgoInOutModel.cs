@@ -172,10 +172,11 @@ namespace HashCalculator
                         output = Settings.Current.SelectedOutputType;
                     }
                 }
+                string lineBreak = Settings.Current.UseUnixStyleLineBreaks ? "\n" : "\r\n";
                 if (string.IsNullOrEmpty(format))
                 {
                     string text = BytesToStrByOutputTypeCvt.Convert(this.HashResult, output);
-                    return endLine ? $"{text}\n" : text;
+                    return endLine ? $"{text}{lineBreak}" : text;
                 }
                 else
                 {
@@ -195,10 +196,9 @@ namespace HashCalculator
                     StringBuilder formatBuilder = new StringBuilder(format);
                     if (endLine)
                     {
-                        formatBuilder.Append('\n');
+                        formatBuilder.Append(lineBreak);
                     }
-                    formatBuilder.Replace("$newline$", "\n");
-                    formatBuilder.Replace("$newlinew$", "\r\n");
+                    formatBuilder.Replace("$newline$", lineBreak);
                     formatBuilder.Replace("$algo$", algoName);
                     formatBuilder.Replace("$hash$", BytesToStrByOutputTypeCvt.Convert(this.HashResult, output));
                     formatBuilder.Replace("$name$", parent.Information.Name);

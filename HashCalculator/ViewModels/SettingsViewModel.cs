@@ -61,6 +61,7 @@ namespace HashCalculator
         private bool caseOfCopiedAlgNameFollowsOutputType = false;
         private bool exportInMainControlsChildExportsInRow = false;
         private bool filterAndCmderWndFollowsMainWnd = false;
+        private bool useUnixStyleLineBreaks = true;
 
         private CmpRes algoToSwitchToAfterHashChecked = CmpRes.Matched;
         private ExportAlgo howToExportHashValues = ExportAlgo.AllCalculated;
@@ -495,6 +496,12 @@ namespace HashCalculator
         {
             get => this.formatForGenerateText;
             set => this.SetPropNotify(ref this.formatForGenerateText, value);
+        }
+
+        public bool UseUnixStyleLineBreaks
+        {
+            get => this.useUnixStyleLineBreaks;
+            set => this.SetPropNotify(ref this.useUnixStyleLineBreaks, value);
         }
 
         public bool FilterAndCmderWndFollowsMainWnd
