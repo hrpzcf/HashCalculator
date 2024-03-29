@@ -197,7 +197,7 @@
     <!--  TabItemStyle2  -->
     <Style x:Key="TabItemStyle2" TargetType="{x:Type TabItem}">
         <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
-        <Setter Property="Foreground" Value="#666666" />
+        <Setter Property="Foreground" Value="Black" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderBrush" Value="#E0E0E0" />
         <Setter Property="Margin" Value="0" />
