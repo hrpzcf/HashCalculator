@@ -4,28 +4,37 @@ using System.Runtime.InteropServices;
 
 namespace HashCalculator
 {
+    internal static class GDI32
+    {
+        /// <summary>
+        /// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getdevicecaps
+        /// </summary>
+        [DllImport("gdi32.dll")]
+        internal static extern int GetDeviceCaps(IntPtr hdc, int index);
+    }
+
     internal static class USER32
     {
         /// <summary>
-        /// https://learn.microsoft.com/zh-cn/windows/win32/api/winuser/nf-winuser-getclientrect
+        /// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclientrect
         /// </summary>
         [DllImport("user32.dll")]
         internal static extern bool GetClientRect(IntPtr hWnd, ref RECT lpRect);
 
         /// <summary>
-        /// https://learn.microsoft.com/zh-cn/windows/win32/api/winuser/nf-winuser-getwindowrect
+        /// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowrect
         /// </summary>
         [DllImport("user32.dll")]
         internal static extern bool GetWindowRect(IntPtr hWnd, ref RECT lpRect);
 
         /// <summary>
-        /// https://learn.microsoft.com/zh-cn/windows/win32/api/winuser/nf-winuser-clienttoscreen
+        /// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-clienttoscreen
         /// </summary>
         [DllImport("user32.dll")]
         internal static extern bool ClientToScreen(IntPtr hWnd, ref POINT lpPoint);
 
         /// <summary>
-        /// https://learn.microsoft.com/zh-cn/windows/win32/api/winuser/nf-winuser-screentoclient
+        /// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-screentoclient
         /// </summary>
         [DllImport("user32.dll")]
         internal static extern bool ScreenToClient(IntPtr hWnd, ref POINT lpPoint);

@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Media;
+using Drawing = System.Drawing;
 
 namespace HashCalculator
 {
@@ -559,6 +560,17 @@ namespace HashCalculator
             rectangle.right = clientRightBottom.x;
             rectangle.bottom = clientRightBottom.y;
             return true;
+        }
+
+        public static double GetScreenScalingFactor()
+        {
+            Drawing.Graphics graphics = Drawing.Graphics.FromHwnd(IntPtr.Zero);
+            IntPtr desktop = graphics.GetHdc();
+            // 以像素为单位的实际横向分辨率
+            int actualScreenWidth = GDI32.GetDeviceCaps(desktop, (int)DeviceCap.HORZRES);
+            // 缩放后 SystemParameters.PrimaryScreenWidth 值变小
+            double screenScalingFactor = actualScreenWidth / SystemParameters.PrimaryScreenWidth;
+            return screenScalingFactor;
         }
     }
 }

@@ -2,6 +2,32 @@
 
 namespace HashCalculator
 {
+    /// <summary>
+    /// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getdevicecaps
+    /// </summary>
+    internal enum DeviceCap
+    {
+        /// <summary>
+        /// Horizontal width in pixels
+        /// </summary>
+        HORZRES = 8,
+
+        /// <summary>
+        /// Vertical height in pixels
+        /// </summary>
+        VERTRES = 10,
+
+        /// <summary>
+        /// Vertical height of entire desktop in pixels
+        /// </summary>
+        DESKTOPVERTRES = 117,
+
+        /// <summary>
+        /// Horizontal width of entire desktop in pixels
+        /// </summary>
+        DESKTOPHORZRES = 118,
+    }
+
     internal enum FileFuncFlags : uint
     {
         FO_MOVE = 0x1,
