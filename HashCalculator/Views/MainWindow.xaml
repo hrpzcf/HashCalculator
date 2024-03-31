@@ -27,6 +27,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/ApplicationIcons.xaml" />
                 <ResourceDictionary Source="/Resources/AlgosButtonStyles.xaml" />
                 <ResourceDictionary Source="/Resources/ComboBoxStyle1.xaml" />
                 <ResourceDictionary Source="/Resources/ComboBoxStyle2.xaml" />
@@ -102,7 +103,10 @@
                         Command="{Binding OpenSelectAlgoWndCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
                         ToolTip="此设置影响变更后才开始计算的行，包括通过【新增计算】/【计算未完成项】/【重新计算】按钮发起的任务">
-                        <Image Source="/Images/algorithm_32.png" />
+                        <Image
+                            Width="32"
+                            Height="32"
+                            Source="{StaticResource algorithmDrawingImage}" />
                     </Button>
                     <TextBlock
                         Margin="0,2"
@@ -128,7 +132,10 @@
                             Command="{Binding RefreshAllOutputTypeCmd}"
                             Style="{StaticResource ImageButtonStyle2}"
                             ToolTip="将表格内所有行的哈希值输出方式刷新为【默认输出方式】下拉列表所选择的输出方式">
-                            <Image Source="/Images/refresh_output_32.png" />
+                            <Image
+                                Width="32"
+                                Height="32"
+                                Source="{StaticResource refresh_outputDrawingImage}" />
                         </Button>
                     </StackPanel>
                     <TextBlock
@@ -143,7 +150,10 @@
                         Command="{Binding OpenCommandPanelCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
                         ToolTip="打开【筛选与操作】窗口以进行筛选/对筛选结果进行操作，或关闭已打开的【筛选与操作】窗口">
-                        <Image Source="/Images/filter_32.png" />
+                        <Image
+                            Width="32"
+                            Height="32"
+                            Source="{StaticResource filterDrawingImage}" />
                     </Button>
                     <TextBlock
                         Margin="0,2"
@@ -157,7 +167,10 @@
                         Command="{Binding SelectFilesToHashCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
                         ToolTip="打开【选择文件】对话框以选择/多选文件进行计算，也可以将文件和文件夹直接拖放到表格中">
-                        <Image Source="/Images/select_file_32.png" />
+                        <Image
+                            Width="32"
+                            Height="32"
+                            Source="{StaticResource select_fileDrawingImage}" />
                     </Button>
                     <TextBlock
                         Margin="0,2"
@@ -171,7 +184,10 @@
                         Command="{Binding SelectFolderToHashCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
                         ToolTip="打开【选择文件夹】对话框以选择/多选文件夹进行计算，也可以将文件和文件夹直接拖放到表格中">
-                        <Image Source="/Images/select_folder_32.png" />
+                        <Image
+                            Width="32"
+                            Height="32"
+                            Source="{StaticResource select_folderDrawingImage}" />
                     </Button>
                     <TextBlock
                         Margin="0,2"
@@ -185,7 +201,10 @@
                         Command="{Binding StopEnumeratingPackageCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
                         ToolTip="如果程序正持续搜索文件并向表格添加新文件，则立即停止搜索文件，但不停止现有的哈希值计算任务">
-                        <Image Source="/Images/stop_searching_32.png" />
+                        <Image
+                            Width="32"
+                            Height="32"
+                            Source="{StaticResource stop_searchingDrawingImage}" />
                     </Button>
                     <TextBlock
                         Margin="0,2"
@@ -200,7 +219,10 @@
                         IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBooleanCvt}}"
                         Style="{StaticResource ImageButtonStyle2}"
                         ToolTip="将表格中所有行的哈希值计算结果导出为文本文件&#10;导出的内容使用的输出方式受到【默认输出方式】的控制而不受各行自己的【输出方式】的控制&#10;只有计算成功且【导出】列被勾选的行的结果会被导出">
-                        <Image Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnExportEnabledImgSrcCvt}}" />
+                        <Image
+                            Width="32"
+                            Height="32"
+                            Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnExportEnabledImgSrcCvt}}" />
                     </Button>
                     <TextBlock
                         Margin="0,2"
@@ -215,7 +237,10 @@
                         IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBooleanCvt}}"
                         Style="{StaticResource ImageButtonStyle2}"
                         ToolTip="复制表格中所有的行到新行并使用【默认算法】中所选的算法重新计算新行的哈希值">
-                        <Image Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnNewLineEnabledImgSrcCvt}}" />
+                        <Image
+                            Width="32"
+                            Height="32"
+                            Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnNewLineEnabledImgSrcCvt}}" />
                     </Button>
                     <TextBlock
                         Margin="0,2"
@@ -230,7 +255,10 @@
                         IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBooleanCvt}}"
                         Style="{StaticResource ImageButtonStyle2}"
                         ToolTip="使用【默认算法】中所选的算法重新计算表格中那些没有计算成功的行的哈希值">
-                        <Image Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnRefreshEnabledImgSrcCvt}}" />
+                        <Image
+                            Width="32"
+                            Height="32"
+                            Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnRefreshEnabledImgSrcCvt}}" />
                     </Button>
                     <TextBlock
                         Margin="0,2"
@@ -245,7 +273,10 @@
                         IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBooleanCvt}}"
                         Style="{StaticResource ImageButtonStyle2}"
                         ToolTip="使用【默认算法】中所选的算法重新计算表格中的所有行的哈希值">
-                        <Image Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnForceRefreshEnabledImgSrcCvt}}" />
+                        <Image
+                            Width="32"
+                            Height="32"
+                            Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnForceRefreshEnabledImgSrcCvt}}" />
                     </Button>
                     <TextBlock
                         Margin="0,2"
@@ -259,7 +290,10 @@
                         Command="{Binding ClearAllTableLinesCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
                         ToolTip="停止表格中的所有任务并清空表格 (任务进行时直接清空有可能出现剩下一行未被清除的情况)">
-                        <Image Source="/Images/clear_panel_32.png" />
+                        <Image
+                            Width="32"
+                            Height="32"
+                            Source="{StaticResource clear_tableDrawingImage}" />
                     </Button>
                     <TextBlock
                         Margin="0,2"
@@ -273,7 +307,10 @@
                         Command="{Binding ContinueDisplayedModelsCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
                         ToolTip="继续所有已被暂停的哈希值计算任务，注意：此按钮不会启动已停止的任务">
-                        <Image Source="/Images/continue_32.png" />
+                        <Image
+                            Width="32"
+                            Height="32"
+                            Source="{StaticResource continue_tasksDrawingImage}" />
                     </Button>
                     <TextBlock
                         Margin="0,2"
@@ -287,7 +324,10 @@
                         Command="{Binding PauseDisplayedModelsCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
                         ToolTip="暂停所有正在运行的哈希值计算任务 (计算大量小文件时可能会部分暂停不成功，需要多次点击)">
-                        <Image Source="/Images/pause_32.png" />
+                        <Image
+                            Width="32"
+                            Height="32"
+                            Source="{StaticResource pause_tasksDrawingImage}" />
                     </Button>
                     <TextBlock
                         Margin="0,2"
@@ -301,7 +341,10 @@
                         Command="{Binding CancelDisplayedModelsCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
                         ToolTip="取消或停止所有排队中、运行中和已暂停的哈希值计算任务">
-                        <Image Source="/Images/cancel_32.png" />
+                        <Image
+                            Width="32"
+                            Height="32"
+                            Source="{StaticResource cancel_tasksDrawingImage}" />
                     </Button>
                     <TextBlock
                         Margin="0,2"
@@ -315,7 +358,10 @@
                         Command="{Binding MainWindowTopmostCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
                         ToolTip="重复点击时在【置顶】与【未置顶】之间切换主窗口的状态，按钮为灰色代表主窗口是未置顶状态，否则是置顶状态">
-                        <Image Source="{Binding Source={x:Static local:Settings.Current}, Path=MainWndTopmost, Converter={StaticResource BtnTopmostEnabledImgSrcCvt}}" />
+                        <Image
+                            Width="32"
+                            Height="32"
+                            Source="{Binding Source={x:Static local:Settings.Current}, Path=MainWndTopmost, Converter={StaticResource BtnTopmostEnabledImgSrcCvt}}" />
                     </Button>
                     <TextBlock
                         Margin="0,2"
@@ -329,7 +375,10 @@
                         Command="{Binding OpenSettingsPanelCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
                         ToolTip="打开软件的【设置】面板">
-                        <Image Source="/Images/settings_32.png" />
+                        <Image
+                            Width="32"
+                            Height="32"
+                            Source="{StaticResource settingsDrawingImage}" />
                     </Button>
                     <TextBlock
                         Margin="0,2"
@@ -343,7 +392,10 @@
                         Command="{Binding OpenAboutWindowCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
                         ToolTip="打开软件的【关于】面板">
-                        <Image Source="/Images/using_help_32.png" />
+                        <Image
+                            Width="32"
+                            Height="32"
+                            Source="{StaticResource aboutDrawingImage}" />
                     </Button>
                     <TextBlock
                         Margin="0,2"
@@ -620,7 +672,10 @@
                                     Style="{StaticResource ImageButtonStyle1}"
                                     ToolTip="停止..."
                                     Visibility="{Binding State, Converter={StaticResource StateRunningToVisiblityCvt}}">
-                                    <Image Source="/Images/stop.png" />
+                                    <Image
+                                        Width="16"
+                                        Height="16"
+                                        Source="{StaticResource stop_oneDrawingImage}" />
                                 </Button>
                                 <Button
                                     Grid.Column="3"
@@ -629,7 +684,10 @@
                                     Style="{StaticResource ImageButtonStyle1}"
                                     ToolTip="{Binding State, Converter={StaticResource SubBtnPauseToolTipCvt}}"
                                     Visibility="{Binding State, Converter={StaticResource StateRunningToVisiblityCvt}}">
-                                    <Image Source="{Binding State, Converter={StaticResource SubBtnPauseImageSrcCvt}}" />
+                                    <Image
+                                        Width="16"
+                                        Height="16"
+                                        Source="{Binding State, Converter={StaticResource SubBtnPauseImageSrcCvt}}" />
                                 </Button>
                                 <!--  正排队  -->
                                 <Button
@@ -639,7 +697,10 @@
                                     Style="{StaticResource ImageButtonStyle1}"
                                     ToolTip="取消..."
                                     Visibility="{Binding State, Converter={StaticResource StateWaitingToVisiblityCvt}}">
-                                    <Image Source="/Images/cancel.png" />
+                                    <Image
+                                        Width="16"
+                                        Height="16"
+                                        Source="{StaticResource cancel_oneDrawingImage}" />
                                 </Button>
                                 <!--  已成功  -->
                                 <Button
@@ -671,7 +732,10 @@
                                             <Binding Path="Result" />
                                         </MultiBinding>
                                     </Button.Visibility>
-                                    <Image Source="/Images/copy_16.png" />
+                                    <Image
+                                        Width="16"
+                                        Height="16"
+                                        Source="{StaticResource copy_oneDrawingImage}" />
                                 </Button>
                                 <Button
                                     Grid.Column="3"
@@ -685,7 +749,10 @@
                                             <Binding Path="Result" />
                                         </MultiBinding>
                                     </Button.Visibility>
-                                    <Image Source="/Images/copy_multi_16.png" />
+                                    <Image
+                                        Width="16"
+                                        Height="16"
+                                        Source="{StaticResource copy_multiDrawingImage}" />
                                 </Button>
                                 <!--  未成功  -->
                                 <Button
@@ -700,7 +767,10 @@
                                             <Binding Path="Result" />
                                         </MultiBinding>
                                     </Button.Visibility>
-                                    <Image Source="/Images/start.png" />
+                                    <Image
+                                        Width="16"
+                                        Height="16"
+                                        Source="{StaticResource start_oneDrawingImage}" />
                                 </Button>
                             </Grid>
                         </DataTemplate>
@@ -835,8 +905,9 @@
                     gif:AnimationBehavior.SourceUri="/Images/loading.gif"
                     Visibility="{Binding State, Converter={StaticResource LoadingImageVisiblityCvt}}" />
                 <Image
-                    Source="/Images/list_count_16.png"
-                    Stretch="None"
+                    Width="16"
+                    Height="16"
+                    Source="{StaticResource total_linesDrawingImage}"
                     ToolTip="表格总行数..." />
                 <TextBlock
                     Padding="4,0"
@@ -845,9 +916,10 @@
                     Text="{Binding Source={x:Static local:MainWndViewModel.HashViewModels}, Path=Count}"
                     ToolTip="表格总行数..." />
                 <Image
+                    Width="16"
+                    Height="16"
                     Margin="6,0,0,0"
-                    Source="/Images/remaining_16.png"
-                    Stretch="None"
+                    Source="{StaticResource remainingDrawingImage}"
                     ToolTip="待计算行数..." />
                 <TextBlock
                     Padding="4,0"

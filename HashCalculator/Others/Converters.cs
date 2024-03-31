@@ -6,7 +6,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace HashCalculator
 {
@@ -178,23 +177,69 @@ namespace HashCalculator
         }
     }
 
-    internal class SubBtnPauseImageSrcCvt : IValueConverter
+    internal class BooleanToIconResourceCvt : IValueConverter
     {
-        private readonly BitmapImage paused =
-            new BitmapImage(new Uri("/Images/pause.png", UriKind.Relative));
-        private readonly BitmapImage notPaused =
-            new BitmapImage(new Uri("/Images/continue.png", UriKind.Relative));
+        public static ResourceDictionary ResourceDict = null;
+
+        public bool State { get; set; }
+
+        public string Resource { get; set; }
+
+        public string OtherResource { get; set; }
+
+        public BooleanToIconResourceCvt()
+        {
+            if (ResourceDict == null)
+            {
+                ResourceDict = new ResourceDictionary();
+                ResourceDict.Source = new Uri("/Resources/ApplicationIcons.xaml", UriKind.Relative);
+            }
+        }
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if ((HashState)value == HashState.Running)
+            if (ResourceDict != null)
             {
-                return this.paused;
+                return value is bool state && this.State == state ?
+                    ResourceDict[$"{this.Resource}DrawingImage"] :
+                        ResourceDict[$"{this.OtherResource}DrawingImage"];
             }
-            else
+            return null;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class HashStateToIconResourceCvt : IValueConverter
+    {
+        public HashState State { get; set; }
+
+        public string Resource { get; set; }
+
+        public string OtherResource { get; set; }
+
+        public HashStateToIconResourceCvt()
+        {
+            if (BooleanToIconResourceCvt.ResourceDict == null)
             {
-                return this.notPaused;
+                BooleanToIconResourceCvt.ResourceDict = new ResourceDictionary();
+                BooleanToIconResourceCvt.ResourceDict.Source =
+                    new Uri("/Resources/ApplicationIcons.xaml", UriKind.Relative);
             }
+        }
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (BooleanToIconResourceCvt.ResourceDict != null)
+            {
+                return value is HashState state && this.State == state ?
+                    BooleanToIconResourceCvt.ResourceDict[$"{this.Resource}DrawingImage"] :
+                        BooleanToIconResourceCvt.ResourceDict[$"{this.OtherResource}DrawingImage"];
+            }
+            return null;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -346,150 +391,6 @@ namespace HashCalculator
                 return this.Default;
             }
             return this.Fallback;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    internal class BtnExportEnabledImgSrcCvt : IValueConverter
-    {
-        private static readonly BitmapImage enabled =
-            new BitmapImage(new Uri("/Images/export_32.png", UriKind.Relative));
-        private static readonly BitmapImage disabled =
-            new BitmapImage(new Uri("/Images/export_32_gray.png", UriKind.Relative));
-
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            switch ((bool)value)
-            {
-                case true:
-                    return enabled;
-                default:
-                    return disabled;
-            }
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    internal class BtnNewLineEnabledImgSrcCvt : IValueConverter
-    {
-        private static readonly BitmapImage enabled =
-            new BitmapImage(new Uri("/Images/new_line_32.png", UriKind.Relative));
-        private static readonly BitmapImage disabled =
-            new BitmapImage(new Uri("/Images/new_line_32_gray.png", UriKind.Relative));
-
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            switch ((bool)value)
-            {
-                case true:
-                    return enabled;
-                default:
-                    return disabled;
-            }
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    internal class BtnRefreshEnabledImgSrcCvt : IValueConverter
-    {
-        private static readonly BitmapImage enabled =
-            new BitmapImage(new Uri("/Images/refresh_32.png", UriKind.Relative));
-        private static readonly BitmapImage disabled =
-            new BitmapImage(new Uri("/Images/refresh_32_gray.png", UriKind.Relative));
-
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            switch ((bool)value)
-            {
-                case true:
-                    return enabled;
-                default:
-                    return disabled;
-            }
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    internal class BtnForceRefreshEnabledImgSrcCvt : IValueConverter
-    {
-        private static readonly BitmapImage enabled =
-            new BitmapImage(new Uri("/Images/refresh_force_32.png", UriKind.Relative));
-        private static readonly BitmapImage disabled =
-            new BitmapImage(new Uri("/Images/refresh_force_32_gray.png", UriKind.Relative));
-
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            switch ((bool)value)
-            {
-                case true:
-                    return enabled;
-                default:
-                    return disabled;
-            }
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    internal class BtnTopmostEnabledImgSrcCvt : IValueConverter
-    {
-        private static readonly BitmapImage enabled =
-            new BitmapImage(new Uri("/Images/topmost_32.png", UriKind.Relative));
-        private static readonly BitmapImage disabled =
-            new BitmapImage(new Uri("/Images/topmost_32_gray.png", UriKind.Relative));
-
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            switch ((bool)value)
-            {
-                case true:
-                    return enabled;
-                default:
-                    return disabled;
-            }
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    internal class BtnRefreshFiltersEnabledImgSrcCvt : IValueConverter
-    {
-        private static readonly BitmapImage enabled =
-            new BitmapImage(new Uri("/Images/refresh_64.png", UriKind.Relative));
-        private static readonly BitmapImage disabled =
-            new BitmapImage(new Uri("/Images/refresh_64_gray.png", UriKind.Relative));
-
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            switch ((bool)value)
-            {
-                case true:
-                    return enabled;
-                default:
-                    return disabled;
-            }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

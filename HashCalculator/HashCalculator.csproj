@@ -334,6 +334,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Resources\ApplicationIcons.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Resources\CmderButtonStyles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -430,42 +434,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\arrow_up_64.png" />
-    <Resource Include="Images\arrow_down_64.png" />
-    <Resource Include="Images\clear_filter_64.png" />
     <Resource Include="Images\icon.ico" />
-    <Resource Include="Images\start.png" />
-    <Resource Include="Images\stop.png" />
-    <Resource Include="Images\cancel.png" />
-    <Resource Include="Images\copy_16.png" />
-    <Resource Include="Images\pause.png" />
-    <Resource Include="Images\continue.png" />
-    <Resource Include="Images\select_file_32.png" />
-    <Resource Include="Images\select_folder_32.png" />
-    <Resource Include="Images\settings_32.png" />
-    <Resource Include="Images\using_help_32.png" />
-    <Resource Include="Images\clear_panel_32.png" />
-    <Resource Include="Images\export_32.png" />
-    <Resource Include="Images\continue_32.png" />
-    <Resource Include="Images\pause_32.png" />
-    <Resource Include="Images\cancel_32.png" />
-    <Resource Include="Images\new_line_32.png" />
-    <Resource Include="Images\refresh_32.png" />
-    <Resource Include="Images\refresh_force_32.png" />
-    <Resource Include="Images\export_32_gray.png" />
-    <Resource Include="Images\new_line_32_gray.png" />
-    <Resource Include="Images\refresh_force_32_gray.png" />
-    <Resource Include="Images\refresh_32_gray.png" />
-    <Resource Include="Images\topmost_32.png" />
-    <Resource Include="Images\topmost_32_gray.png" />
-    <Resource Include="Images\list_count_16.png" />
-    <Resource Include="Images\refresh_output_32.png" />
-    <Resource Include="Images\remaining_16.png" />
     <Resource Include="Images\loading.gif" />
-    <Resource Include="Images\stop_searching_32.png" />
-    <Resource Include="Images\filter_32.png" />
-    <Resource Include="Images\refresh_64.png" />
-    <Resource Include="Images\refresh_64_gray.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ShellExt\HashCalculator.dll" />
@@ -498,12 +468,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assembly\Newtonsoft.Json.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\copy_multi_16.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\algorithm_32.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

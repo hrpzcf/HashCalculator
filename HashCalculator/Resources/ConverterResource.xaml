@@ -75,6 +75,56 @@
         Boolean="False"
         Default="Collapsed"
         Fallback="Visible" />
+    <local:BooleanToIconResourceCvt
+        x:Key="BtnExportEnabledImgSrcCvt"
+        OtherResource="export_gray"
+        Resource="export"
+        State="True" />
+    <local:BooleanToIconResourceCvt
+        x:Key="BtnNewLineEnabledImgSrcCvt"
+        OtherResource="calculate_newlines_gray"
+        Resource="calculate_newlines"
+        State="True" />
+    <local:BooleanToIconResourceCvt
+        x:Key="BtnRefreshEnabledImgSrcCvt"
+        OtherResource="calculate_noresults_gray"
+        Resource="calculate_noresults"
+        State="True" />
+    <local:BooleanToIconResourceCvt
+        x:Key="BtnForceRefreshEnabledImgSrcCvt"
+        OtherResource="calculate_force_gray"
+        Resource="calculate_force"
+        State="True" />
+    <local:BooleanToIconResourceCvt
+        x:Key="BtnTopmostEnabledImgSrcCvt"
+        OtherResource="topmost_gray"
+        Resource="topmost"
+        State="True" />
+    <local:BooleanToIconResourceCvt
+        x:Key="BtnMoveFilterUpEnabledImgSrcCvt"
+        OtherResource="arrow_up_gray"
+        Resource="arrow_up"
+        State="True" />
+    <local:BooleanToIconResourceCvt
+        x:Key="BtnMoveFilterDownEnabledImgSrcCvt"
+        OtherResource="arrow_down_gray"
+        Resource="arrow_down"
+        State="True" />
+    <local:BooleanToIconResourceCvt
+        x:Key="BtnClearFiltersEnabledImgSrcCvt"
+        OtherResource="clear_filters_gray"
+        Resource="clear_filters"
+        State="True" />
+    <local:BooleanToIconResourceCvt
+        x:Key="BtnRefreshFiltersEnabledImgSrcCvt"
+        OtherResource="refresh_filters_gray"
+        Resource="refresh_filters"
+        State="True" />
+    <local:HashStateToIconResourceCvt
+        x:Key="SubBtnPauseImageSrcCvt"
+        OtherResource="start_one"
+        Resource="pause_one"
+        State="Running" />
     <local:CanExecuteCmdOnTargetsCvt x:Key="CanExecuteCmdOnTargetsCvt" />
     <local:InvalidFileNameForegroundCvt x:Key="InvalidFileNameForegroundCvt" />
     <local:CmpResForegroundCvt x:Key="CmpResForegroundCvt" />
@@ -89,14 +139,7 @@
     <local:MainModelStateToBooleanCvt x:Key="MainModelStateToBooleanCvt" />
     <local:CmdPanelCriticalControlsEnabledCvt x:Key="CmdPanelCriticalControlsEnabledCvt" />
     <local:ReverseBooleanValueCvt x:Key="ReverseBooleanValueCvt" />
-    <local:SubBtnPauseImageSrcCvt x:Key="SubBtnPauseImageSrcCvt" />
     <local:SubBtnPauseToolTipCvt x:Key="SubBtnPauseToolTipCvt" />
-    <local:BtnExportEnabledImgSrcCvt x:Key="BtnExportEnabledImgSrcCvt" />
-    <local:BtnNewLineEnabledImgSrcCvt x:Key="BtnNewLineEnabledImgSrcCvt" />
-    <local:BtnRefreshEnabledImgSrcCvt x:Key="BtnRefreshEnabledImgSrcCvt" />
-    <local:BtnForceRefreshEnabledImgSrcCvt x:Key="BtnForceRefreshEnabledImgSrcCvt" />
-    <local:BtnRefreshFiltersEnabledImgSrcCvt x:Key="BtnRefreshFiltersEnabledImgSrcCvt" />
-    <local:BtnTopmostEnabledImgSrcCvt x:Key="BtnTopmostEnabledImgSrcCvt" />
     <local:LoadingImageVisiblityCvt x:Key="LoadingImageVisiblityCvt" />
     <local:BytesToStrByOutputTypeCvt x:Key="BytesToStrByOutputTypeCvt" />
     <local:CopyModelsHashMenuEnabledCvt x:Key="CopyModelsHashMenuEnabledCvt" />

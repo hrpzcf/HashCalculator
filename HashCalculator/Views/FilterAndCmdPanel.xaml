@@ -208,7 +208,7 @@
                                 CommandParameter="{Binding}"
                                 Style="{StaticResource ImageButtonStyle2}"
                                 ToolTip="上移筛选器...">
-                                <Image Source="/Images/arrow_up_64.png" />
+                                <Image Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnMoveFilterUpEnabledImgSrcCvt}}" />
                             </Button>
                             <Button
                                 Grid.Column="1"
@@ -219,7 +219,7 @@
                                 Command="{Binding MoveFilterDownCmd}"
                                 Style="{StaticResource ImageButtonStyle2}"
                                 ToolTip="下移筛选器...">
-                                <Image Source="/Images/arrow_down_64.png" />
+                                <Image Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnMoveFilterDownEnabledImgSrcCvt}}" />
                             </Button>
                             <Button
                                 Grid.Column="2"
@@ -230,13 +230,14 @@
                                 Command="{Binding ClearFilterSelectionCmd}"
                                 Style="{StaticResource ImageButtonStyle2}"
                                 ToolTip="取消所有筛选器的启用状态...">
-                                <Image Source="/Images/clear_filter_64.png" />
+                                <Image Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnClearFiltersEnabledImgSrcCvt}}" />
                             </Button>
                             <!--  筛选器的刷新按钮  -->
                             <Button
                                 Grid.Column="4"
                                 Width="64"
                                 Height="64"
+                                Margin="0,4,0,-4"
                                 HorizontalAlignment="Right"
                                 Command="{Binding RefreshFiltersCmd}"
                                 Style="{StaticResource ImageButtonStyle2}"
