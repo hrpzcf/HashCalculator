@@ -524,7 +524,8 @@ namespace HashCalculator
         }
 
         /// <summary>
-        /// 获取一个窗口不含阴影部分但含标题栏的的矩形坐标，坐标相对于屏幕
+        /// 获取一个窗口不含阴影部分但含标题栏的的矩形坐标，坐标相对于屏幕。<br/>
+        /// 该矩形的坐标是以像素为单位的实际坐标，不受系统缩放影响。
         /// </summary>
         public static bool GetWindowRectWithoutShadedArea(IntPtr handle, out RECT rectangle)
         {
@@ -568,7 +569,8 @@ namespace HashCalculator
             IntPtr desktop = graphics.GetHdc();
             // 以像素为单位的实际横向分辨率
             int actualScreenWidth = GDI32.GetDeviceCaps(desktop, (int)DeviceCap.HORZRES);
-            // 缩放后 SystemParameters.PrimaryScreenWidth 值变小
+            graphics.ReleaseHdc(desktop);
+            // 缩放率变大 SystemParameters.PrimaryScreenWidth 变小，反之同理
             double screenScalingFactor = actualScreenWidth / SystemParameters.PrimaryScreenWidth;
             return screenScalingFactor;
         }

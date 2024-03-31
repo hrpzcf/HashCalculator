@@ -51,6 +51,8 @@ namespace HashCalculator
             {
                 return windowStateChanged;
             }
+            double scalingFactor = CommonUtils.GetScreenScalingFactor();
+            rectangle.Transform(scalingFactor);
             // 窗口左、右、下阴影厚度（上无阴影厚度）
             double thickness = rectangle.left - this.Left - 1;
             if (rectangle.left < 0)
