@@ -46,31 +46,36 @@ namespace HashCalculator
                 this.WindowState = WindowState.Normal;
                 windowStateChanged = true;
             }
-            if (!CommonUtils.GetWindowRectWithoutShadedArea(
-                this._interopHelper.Handle, out RECT rectangle))
+            // 窗口阴影厚度（左、右、下，值是实际像素数，与系统缩放率无关）
+            int actualThickness = CommonUtils.GetWndShadowlessRect(
+                this._interopHelper.Handle, out RECT rectangle);
+            if (actualThickness == -1)
             {
                 return windowStateChanged;
             }
             double scalingFactor = CommonUtils.GetScreenScalingFactor();
-            rectangle.Transform(scalingFactor);
-            // 窗口左、右、下阴影厚度（上无阴影厚度）
-            double thickness = rectangle.left - this.Left - 1;
-            if (rectangle.left < 0)
+            double left = rectangle.left / scalingFactor;
+            double top = rectangle.top / scalingFactor;
+            double right = rectangle.right / scalingFactor;
+            double bottom = rectangle.bottom / scalingFactor;
+            // 因为 WPF 窗口的位置属性与缩放率相关，所以要计算与缩放率相关的阴影厚度
+            double thickness = actualThickness / scalingFactor;
+            if (left < 0.0)
             {
                 this.Left = -thickness;
                 windowStateChanged = true;
             }
-            else if (rectangle.right > SystemParameters.WorkArea.Width)
+            else if (right > SystemParameters.WorkArea.Width)
             {
                 this.Left = SystemParameters.WorkArea.Width - this.Width + thickness;
                 windowStateChanged = true;
             }
-            if (rectangle.top < 0)
+            if (top < 0.0)
             {
                 this.Top = 0.0;
                 windowStateChanged = true;
             }
-            else if (rectangle.bottom > SystemParameters.WorkArea.Height)
+            else if (bottom > SystemParameters.WorkArea.Height)
             {
                 this.Top = SystemParameters.WorkArea.Height - this.Height + thickness;
                 windowStateChanged = true;

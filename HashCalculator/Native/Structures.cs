@@ -19,18 +19,6 @@ namespace HashCalculator
     [StructLayout(LayoutKind.Sequential)]
     internal struct RECT
     {
-        public void Transform(double scaling)
-        {
-            if (scaling < 1.0 || scaling > 5.0)
-            {
-                throw new ArgumentException("Scaling out of range");
-            }
-            this.left = (int)Math.Round(this.left / scaling);
-            this.top = (int)Math.Round(this.top / scaling);
-            this.right = (int)Math.Round(this.right / scaling);
-            this.bottom = (int)Math.Round(this.bottom / scaling);
-        }
-
         public int left;
         public int top;
         public int right;

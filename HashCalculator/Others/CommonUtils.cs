@@ -524,43 +524,46 @@ namespace HashCalculator
         }
 
         /// <summary>
-        /// 获取一个窗口不含阴影部分但含标题栏的的矩形坐标，坐标相对于屏幕。<br/>
-        /// 该矩形的坐标是以像素为单位的实际坐标，不受系统缩放影响。
+        /// 获取指定的句柄所指的窗口不含阴影部分但含标题栏的的矩形坐标。<br/>
+        /// 该矩形的坐标以“像素”为单位，坐标相对于屏幕实际坐标，不受系统缩放的影响。<br/>
+        /// 如果函数成功则返回 >= 0 的值，该值是窗口阴影的厚度，否则返回 -1。
         /// </summary>
-        public static bool GetWindowRectWithoutShadedArea(IntPtr handle, out RECT rectangle)
+        public static int GetWndShadowlessRect(IntPtr handle, out RECT rectangle)
         {
+            int thickness = -1;
             rectangle = new RECT();
             // 注意获得的坐标不是相对于屏幕的坐标，而是相对于窗口客户区自身的坐标
             // 所以 left 和 top 都是 0，right 和 bottom 就是窗口客户区的宽度和高度
             RECT clientRect = new RECT();
             if (!USER32.GetClientRect(handle, ref clientRect))
             {
-                return false;
+                return thickness;
             }
             // 获取的坐标是窗口相对于屏幕的坐标
             // 需要注意的是左右横坐标和下纵坐标包含窗口阴影区域，上纵坐标不含阴影区域
             RECT windowRect = new RECT();
             if (!USER32.GetWindowRect(handle, ref windowRect))
             {
-                return false;
+                return thickness;
             }
             // 将客户区左上角的坐标转为相对于窗口的坐标
             POINT clientLeftTop = new POINT(clientRect.left, clientRect.top);
             if (!USER32.ClientToScreen(handle, ref clientLeftTop))
             {
-                return false;
+                return thickness;
             }
             // 将客户区右下角的坐标转为相对于窗口的坐标
             POINT clientRightBottom = new POINT(clientRect.right, clientRect.bottom);
             if (!USER32.ClientToScreen(handle, ref clientRightBottom))
             {
-                return false;
+                return thickness;
             }
             rectangle.left = clientLeftTop.x;
             rectangle.top = windowRect.top;
             rectangle.right = clientRightBottom.x;
             rectangle.bottom = clientRightBottom.y;
-            return true;
+            thickness = clientLeftTop.x - windowRect.left - 1;
+            return thickness;
         }
 
         public static double GetScreenScalingFactor()
