@@ -27,7 +27,7 @@ namespace HashCalculator
 
         public OutputType BeingUsedOutput { get; set; } = OutputType.BinaryLower;
 
-        public AlgoInOutModel[] AlgoInOutModels { get => this._algos; }
+        public AlgoInOutModel[] AlgoInOutModels => this._algos;
 
         public AlgoType SelectedAlgo { get; set; }
 

@@ -28,20 +28,17 @@ namespace HashCalculator
             set => this.SetPropNotify(ref this._selectedAlgoCount, value);
         }
 
-        public IEnumerable<AlgoInOutModel> ConcatItems(params AlgoGroupModel[] groups)
+        public IEnumerable<AlgoInOutModel> CombineItems(params AlgoGroupModel[] groups)
         {
             foreach (AlgoInOutModel model in this.Items)
             {
                 yield return model;
             }
-            if (groups != null)
+            foreach (AlgoGroupModel group in groups)
             {
-                foreach (AlgoGroupModel group in groups)
+                foreach (AlgoInOutModel model in group.Items)
                 {
-                    foreach (AlgoInOutModel model in group.Items)
-                    {
-                        yield return model;
-                    }
+                    yield return model;
                 }
             }
         }

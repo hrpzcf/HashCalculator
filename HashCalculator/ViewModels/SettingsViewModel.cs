@@ -75,7 +75,7 @@ namespace HashCalculator
         private string displayingShellExtensionDir = null;
         private string formatForGenerateText = "#$algo$ *$hash$ *$name$";
 
-        private AlgoInOutModel selectedAlgoInOutModel;
+        private AlgoInOutModel selectedAlgoInOutModel = AlgosPanelModel.ProvidedAlgos[0];
         private TemplateForExportModel selectedExportTemplate;
         private TemplateForChecklistModel selectedChecklistTemplate;
         private ObservableCollection<TemplateForExportModel> templatesForExport = null;

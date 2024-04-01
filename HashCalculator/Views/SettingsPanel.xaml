@@ -393,7 +393,6 @@
                         VerticalContentAlignment="Center"
                         DisplayMemberPath="AlgoName"
                         ItemsSource="{Binding Source={x:Static local:AlgosPanelModel.ProvidedAlgos}}"
-                        SelectedIndex="0"
                         SelectedItem="{Binding SelectedInOutModelForAlias}" />
                     <Button
                         Margin="16,0,0,0"
