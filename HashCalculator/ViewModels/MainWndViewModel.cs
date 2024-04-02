@@ -286,7 +286,7 @@ namespace HashCalculator
                         {
                             arg.PresetAlgos = null;
                         }
-                        synchronization.Invoke(this.addModelAction, DispatcherPriority.Background, arg);
+                        synchronization.Invoke(this.addModelAction, DispatcherPriority.Loaded, arg);
                     }
                 }
             }, token);
@@ -314,7 +314,7 @@ namespace HashCalculator
                             {
                                 break;
                             }
-                            synchronization.Invoke(this.addModelAction, DispatcherPriority.Background, arg);
+                            synchronization.Invoke(this.addModelAction, DispatcherPriority.Loaded, arg);
                         }
                     }
                 }
