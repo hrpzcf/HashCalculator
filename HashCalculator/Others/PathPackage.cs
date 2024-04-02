@@ -47,6 +47,49 @@ namespace HashCalculator
             return this.EnumerateModelArgs();
         }
 
+        private IEnumerable<string> EnumerateFiles(string root)
+        {
+            switch (this.searchMethod)
+            {
+                default:
+                case SearchMethod.Children:
+                    foreach (string file in Directory.EnumerateFiles(root))
+                    {
+                        yield return file;
+                    }
+                    break;
+                case SearchMethod.Descendants:
+                    Stack<string> directoryExplorer = new Stack<string>();
+                    directoryExplorer.Push(root);
+                    while (directoryExplorer.Count > 0)
+                    {
+                        IEnumerable<string> fileFullPathsEnumerable;
+                        string currentDirectory = directoryExplorer.Pop();
+                        try
+                        {
+                            fileFullPathsEnumerable = Directory.EnumerateFiles(currentDirectory);
+                            string[] currentSubDirectories = Directory.GetDirectories(currentDirectory);
+                            Array.Reverse(currentSubDirectories);
+                            foreach (string directory in currentSubDirectories)
+                            {
+                                directoryExplorer.Push(directory);
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            continue;
+                        }
+                        foreach (string fileFullPath in fileFullPathsEnumerable)
+                        {
+                            yield return fileFullPath;
+                        }
+                    }
+                    break;
+                case SearchMethod.DontSearch:
+                    break;
+            }
+        }
+
         private IEnumerator<HashModelArg> EnumerateModelArgs()
         {
             if (this.hashChecklist == null)
@@ -65,49 +108,14 @@ namespace HashCalculator
                     }
                     else if (Directory.Exists(path))
                     {
-                        IEnumerator<FileInfo> enumerator;
-                        try
-                        {
-                            DirectoryInfo directoryInfo = new DirectoryInfo(path);
-                            switch (this.searchMethod)
-                            {
-                                default:
-                                case SearchMethod.Children:
-                                    enumerator = directoryInfo.EnumerateFiles().GetEnumerator();
-                                    break;
-                                case SearchMethod.Descendants:
-                                    enumerator = directoryInfo.EnumerateFiles("*", SearchOption.AllDirectories)
-                                        .GetEnumerator();
-                                    break;
-                                case SearchMethod.DontSearch:
-                                    continue;
-                            }
-                        }
-                        catch (Exception)
-                        {
-                            continue;
-                        }
-                        // 不直接遍历 EnumerateFiles 方法返回的 IEnumerable 的原因：遍历过程抛出异常，
-                        // 需要使用 try-catch 包裹整个 foreach，但 try-catch 内又不允许 yield return
-                        while (true)
+                        foreach (string fileFullPath in this.EnumerateFiles(path))
                         {
                             if (this.StopSearchingToken.IsCancellationRequested)
                             {
                                 yield break;
                             }
-                            try
-                            {
-                                if (!enumerator.MoveNext())
-                                {
-                                    break;
-                                }
-                            }
-                            catch (Exception)
-                            {
-                                continue;
-                            }
-                            yield return new HashModelArg(this.parentDir, enumerator.Current.FullName,
-                                this.PresetAlgoTypes, this.hashChecklist);
+                            yield return new HashModelArg(this.parentDir, fileFullPath, this.PresetAlgoTypes,
+                                this.hashChecklist);
                         }
                     }
                 }
@@ -149,50 +157,15 @@ namespace HashCalculator
                         }
                         else if (Directory.Exists(path))
                         {
-                            IEnumerator<FileInfo> enumerator;
-                            try
-                            {
-                                DirectoryInfo directoryInfo = new DirectoryInfo(path);
-                                switch (this.searchMethod)
-                                {
-                                    default:
-                                    case SearchMethod.Children:
-                                        enumerator = directoryInfo.EnumerateFiles().GetEnumerator();
-                                        break;
-                                    case SearchMethod.Descendants:
-                                        enumerator = directoryInfo.EnumerateFiles("*", SearchOption.AllDirectories)
-                                            .GetEnumerator();
-                                        break;
-                                    case SearchMethod.DontSearch:
-                                        continue;
-                                }
-                            }
-                            catch (Exception)
-                            {
-                                continue;
-                            }
-                            // 不直接遍历 EnumerateFiles 方法返回的 IEnumerable 的原因：遍历过程抛出异常，
-                            // 需要使用 try-catch 包裹整个 foreach，但 try-catch 内又不允许 yield return
-                            while (true)
+                            foreach (string fileFullPath in this.EnumerateFiles(path))
                             {
                                 if (this.StopSearchingToken.IsCancellationRequested)
                                 {
                                     yield break;
                                 }
-                                try
+                                if (this.hashChecklist.IsNameInChecklist(Path.GetFileName(fileFullPath)))
                                 {
-                                    if (!enumerator.MoveNext())
-                                    {
-                                        break;
-                                    }
-                                }
-                                catch (Exception)
-                                {
-                                    continue;
-                                }
-                                if (this.hashChecklist.IsNameInChecklist(enumerator.Current.Name))
-                                {
-                                    yield return new HashModelArg(this.parentDir, enumerator.Current.FullName,
+                                    yield return new HashModelArg(this.parentDir, fileFullPath,
                                         this.PresetAlgoTypes, this.hashChecklist);
                                 }
                             }
