@@ -9,11 +9,13 @@ namespace HashCalculator
 {
     internal class PathPackage : IEnumerable<HashModelArg>
     {
+        private static readonly string recyclebin = "$Recycle.Bin";
+        private static readonly char[] invalidFnameChars = Path.GetInvalidFileNameChars();
+
         private readonly string[] paths = null;
         private readonly SearchMethod searchMethod;
         private readonly HashChecklist hashChecklist = null;
         private readonly string parentDir = null;
-        private static readonly char[] invalidFnameChars = Path.GetInvalidFileNameChars();
 
         public CancellationToken StopSearchingToken { get; set; }
 
@@ -49,39 +51,54 @@ namespace HashCalculator
 
         private IEnumerable<string> EnumerateFiles(string root)
         {
+            IEnumerable<string> filePathsEnumerable;
             switch (this.searchMethod)
             {
                 default:
                 case SearchMethod.Children:
-                    foreach (string file in Directory.EnumerateFiles(root))
+                    try
+                    {
+                        filePathsEnumerable = Directory.EnumerateFiles(root);
+                    }
+                    catch (Exception)
+                    {
+                        yield break;
+                    }
+                    foreach (string file in filePathsEnumerable)
                     {
                         yield return file;
                     }
                     break;
                 case SearchMethod.Descendants:
+                    bool isPartitionRoot = root.EndsWith(":\\");
                     Stack<string> directoryExplorer = new Stack<string>();
                     directoryExplorer.Push(root);
                     while (directoryExplorer.Count > 0)
                     {
-                        IEnumerable<string> fileFullPathsEnumerable;
                         string currentDirectory = directoryExplorer.Pop();
                         try
                         {
-                            fileFullPathsEnumerable = Directory.EnumerateFiles(currentDirectory);
-                            string[] currentSubDirectories = Directory.GetDirectories(currentDirectory);
-                            Array.Reverse(currentSubDirectories);
-                            foreach (string directory in currentSubDirectories)
+                            filePathsEnumerable = Directory.EnumerateFiles(currentDirectory);
+                            string[] subDirectories = Directory.GetDirectories(currentDirectory);
+                            // Stack 后进先出的特性符合遍历文件的深度优先原则，但这个特性
+                            // 也会造成以倒序的方式遍历同级的目录，所以要翻转同级目录入栈顺序
+                            for (int i = subDirectories.Length - 1; i >= 0; --i)
                             {
-                                directoryExplorer.Push(directory);
+                                string directory = subDirectories[i];
+                                if (!isPartitionRoot || !Path.GetFileName(directory).Equals(recyclebin,
+                                    StringComparison.OrdinalIgnoreCase))
+                                {
+                                    directoryExplorer.Push(directory);
+                                }
                             }
                         }
                         catch (Exception)
                         {
                             continue;
                         }
-                        foreach (string fileFullPath in fileFullPathsEnumerable)
+                        foreach (string fileInCurrentDirectory in filePathsEnumerable)
                         {
-                            yield return fileFullPath;
+                            yield return fileInCurrentDirectory;
                         }
                     }
                     break;
