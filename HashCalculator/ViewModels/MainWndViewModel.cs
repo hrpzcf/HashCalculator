@@ -269,26 +269,6 @@ namespace HashCalculator
             model.StartupModel(false);
         }
 
-        public async void BeginDisplayModels(PathPackage package)
-        {
-            CancellationToken token = this.Cancellation.Token;
-            package.StopSearchingToken = this.searchCancellation.Token;
-            await Task.Run(() =>
-            {
-                lock (this.displayingModelLock)
-                {
-                    foreach (HashModelArg arg in package)
-                    {
-                        if (token.IsCancellationRequested)
-                        {
-                            break;
-                        }
-                        synchronization.Invoke(this.addModelAction, DispatcherPriority.Background, arg);
-                    }
-                }
-            }, token);
-        }
-
         public async void BeginDisplayModels(IEnumerable<HashViewModel> models, bool resetAlg)
         {
             CancellationToken token = this.Cancellation.Token;
@@ -307,6 +287,35 @@ namespace HashCalculator
                             arg.PresetAlgos = null;
                         }
                         synchronization.Invoke(this.addModelAction, DispatcherPriority.Background, arg);
+                    }
+                }
+            }, token);
+        }
+
+        public async void BeginDisplayModels(params PathPackage[] packages)
+        {
+            CancellationToken token = this.Cancellation.Token;
+            await Task.Run(() =>
+            {
+                lock (this.displayingModelLock)
+                {
+                    CancellationToken stopSearchingToken = this.searchCancellation.Token;
+                    foreach (PathPackage package in packages)
+                    {
+                        if (token.IsCancellationRequested ||
+                            stopSearchingToken.IsCancellationRequested)
+                        {
+                            break;
+                        }
+                        package.StopSearchingToken = stopSearchingToken;
+                        foreach (HashModelArg arg in package)
+                        {
+                            if (token.IsCancellationRequested)
+                            {
+                                break;
+                            }
+                            synchronization.Invoke(this.addModelAction, DispatcherPriority.Background, arg);
+                        }
                     }
                 }
             }, token);
@@ -1236,8 +1245,9 @@ namespace HashCalculator
             {
                 return;
             }
-            Settings.Current.LastUsedPath = Path.GetDirectoryName(fileOpen.FileNames.ElementAt(0));
-            this.BeginDisplayModels(new PathPackage(Settings.Current.LastUsedPath, fileOpen.FileNames,
+            string parentDir = Path.GetDirectoryName(fileOpen.FileNames.First());
+            Settings.Current.LastUsedPath = parentDir;
+            this.BeginDisplayModels(new PathPackage(parentDir, fileOpen.FileNames,
                 Settings.Current.SelectedSearchMethodForDragDrop));
         }
 
@@ -1271,9 +1281,11 @@ namespace HashCalculator
             {
                 searchMethod = SearchMethod.Children;
             }
-            Settings.Current.LastUsedPath = Path.GetDirectoryName(folderOpen.FileNames.ElementAt(0));
-            this.BeginDisplayModels(new PathPackage(Settings.Current.LastUsedPath, folderOpen.FileNames,
-                searchMethod));
+            string firstDir = folderOpen.FileNames.First();
+            // firstDir 是分区根目录时 GetDirectoryName 返回 null
+            string parentDir = Path.GetDirectoryName(firstDir) ?? firstDir;
+            Settings.Current.LastUsedPath = parentDir;
+            this.BeginDisplayModels(new PathPackage(parentDir, folderOpen.FileNames, searchMethod));
         }
 
         public ICommand SelectFolderToHashCmd

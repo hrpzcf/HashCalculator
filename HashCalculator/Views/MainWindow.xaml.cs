@@ -158,15 +158,20 @@ namespace HashCalculator
                 {
                     if (option.FilePaths != null)
                     {
-                        string[] filePathArray = option.FilePaths.ToArray();
-                        if (filePathArray.Length > 0)
+                        string[] filePaths = option.FilePaths.ToArray();
+                        // 此处逻辑针对命令行传来的待计算文件/文件夹路径，一般由右键菜单生成命令
+                        // 如果是用户手动输入命令，则这些路径有可能分属不同的父目录，所以逐个处理
+                        PathPackage[] packages = new PathPackage[filePaths.Length];
+                        for (int i = 0; i < filePaths.Length; ++i)
                         {
-                            string fileDir = Path.GetDirectoryName(filePathArray[0]);
-                            PathPackage package = new PathPackage(fileDir, filePathArray,
+                            // 当 filePaths[i] 是分区根目录时 GetDirectoryName 返回 null
+                            string parent = Path.GetDirectoryName(filePaths[i]) ?? filePaths[i];
+                            PathPackage package = new PathPackage(parent, filePaths[i],
                                 Settings.Current.SelectedSearchMethodForDragDrop);
+                            packages[i] = package;
                             package.PresetAlgoTypes = this.GetAlgoTypesFromOption(option);
-                            this.viewModel.BeginDisplayModels(package);
                         }
+                        this.viewModel.BeginDisplayModels(packages);
                     }
                 })
                 .WithParsed<VerifyHash>(option =>
@@ -186,8 +191,8 @@ namespace HashCalculator
                         {
                             // 这里添加要计算哈希值的文件时，看作以多选文件的方式添，所以
                             // PathPackage 的 parent 参数应是 option.ChecklistPath 所在目录
-                            string fileDir = Path.GetDirectoryName(option.ChecklistPath);
-                            PathPackage package = new PathPackage(fileDir, fileDir, newChecklist,
+                            string filesDir = Path.GetDirectoryName(option.ChecklistPath);
+                            PathPackage package = new PathPackage(filesDir, filesDir, newChecklist,
                                 Settings.Current.SelectedSearchMethodForChecklist);
                             package.PresetAlgoTypes = this.GetAlgoTypesFromOption(option);
                             this.viewModel.BeginDisplayModels(package);
@@ -245,9 +250,21 @@ namespace HashCalculator
             if (e.Data.GetDataPresent(DataFormats.FileDrop) &&
                 e.Data.GetData(DataFormats.FileDrop) is string[] data && data.Length != 0)
             {
-                string fileDir = Path.GetDirectoryName(data[0]);
-                this.viewModel.BeginDisplayModels(new PathPackage(fileDir, data,
-                    Settings.Current.SelectedSearchMethodForDragDrop));
+                // 当用户把本地磁盘分区图标拖入程序窗口
+                if (data[0].EndsWith(":\\"))
+                {
+                    // 只要确定第一个是分区根目录，那其他项也都是分区根目录
+                    // 因为 Windows 不支持把不同区域的内容同时拖入程序窗口
+                    this.viewModel.BeginDisplayModels(data.Select(
+                        partition => new PathPackage(partition, partition,
+                        Settings.Current.SelectedSearchMethodForDragDrop)).ToArray());
+                }
+                else
+                {
+                    string parentDir = Path.GetDirectoryName(data[0]);
+                    this.viewModel.BeginDisplayModels(new PathPackage(parentDir, data,
+                        Settings.Current.SelectedSearchMethodForDragDrop));
+                }
             }
         }
 
