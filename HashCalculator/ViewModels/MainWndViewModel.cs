@@ -1269,7 +1269,7 @@ namespace HashCalculator
             SearchMethod searchMethod = Settings.Current.SelectedSearchMethodForDragDrop;
             if (searchMethod == SearchMethod.DontSearch)
             {
-                searchMethod = SearchMethod.Descendants;
+                searchMethod = SearchMethod.Children;
             }
             Settings.Current.LastUsedPath = Path.GetDirectoryName(folderOpen.FileNames.ElementAt(0));
             this.BeginDisplayModels(new PathPackage(Settings.Current.LastUsedPath, folderOpen.FileNames,

@@ -1208,7 +1208,7 @@ namespace HashCalculator
         };
 
         [JsonIgnore, XmlIgnore]
-        public GenericItemModel[] AvailableDroppedSearchPolicies { get; } =
+        public GenericItemModel[] AvailableDroppedSearchMethods { get; } =
         {
             new GenericItemModel("搜索该文件夹的一代子文件", SearchMethod.Children),
             new GenericItemModel("搜索该文件夹的全部子文件", SearchMethod.Descendants),
@@ -1216,7 +1216,7 @@ namespace HashCalculator
         };
 
         [JsonIgnore, XmlIgnore]
-        public GenericItemModel[] AvailableQVSearchPolicies { get; } =
+        public GenericItemModel[] AvailableQVSearchMethods { get; } =
         {
             new GenericItemModel("搜索依据所在目录的一代子文件", SearchMethod.Children),
             new GenericItemModel("搜索依据所在目录的所有子文件", SearchMethod.Descendants),
