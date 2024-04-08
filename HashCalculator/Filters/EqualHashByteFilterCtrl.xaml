@@ -6,38 +6,57 @@
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DataContext="{d:DesignInstance Type=local:EqualHashByteFilter}"
-    d:DesignHeight="160"
-    d:DesignWidth="300"
+    d:DesignHeight="200"
+    d:DesignWidth="400"
     mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/ConverterResource.xaml" />
                 <ResourceDictionary Source="/Resources/DescTextBlockStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
     <StackPanel>
-        <StackPanel Orientation="Horizontal">
+        <RadioButton
+            Padding="4,0,0,0"
+            Content="在表格显示的所有行的指定算法的计算结果中查找相同项"
+            IsChecked="{Binding CheckEmbeddedHashValue, Converter={StaticResource ReverseBooleanValueCvt}}" />
+        <StackPanel Margin="18,2,0,0" Orientation="Horizontal">
             <TextBlock
                 Grid.Row="0"
                 Grid.Column="0"
                 VerticalAlignment="Center"
-                DockPanel.Dock="Left"
                 Text="关注的算法：" />
             <ComboBox
                 Grid.Row="0"
                 Grid.Column="1"
-                MinWidth="108"
+                MinWidth="115"
                 VerticalAlignment="Center"
                 DisplayMemberPath="AlgoName"
-                DockPanel.Dock="Right"
+                IsEnabled="{Binding CheckEmbeddedHashValue, Converter={StaticResource ReverseBooleanValueCvt}}"
                 ItemsSource="{Binding Items}"
                 SelectedItem="{Binding Param}" />
         </StackPanel>
+        <RadioButton
+            Margin="0,8,0,0"
+            Padding="4,0,0,0"
+            Content="在表格显示的所有行的内嵌哈希值中查找相同项(忽略算法)"
+            IsChecked="{Binding CheckEmbeddedHashValue}" />
         <TextBlock
-            Margin="0,4,0,0"
+            Margin="18,0,0,0"
+            FontSize="8pt"
             Style="{StaticResource DescTextBlockStyle}"
-            Text="按关注算法的哈希值对当前显示的行进行分组" />
+            Text="只有通过本软件添加标记改变哈希值的文件有内嵌的哈希值" />
+        <TextBlock
+            Margin="18,0,0,0"
+            FontSize="8pt"
+            Style="{StaticResource DescTextBlockStyle}"
+            Text="内嵌的哈希值是文件被添加标记之前的哈希值，即原文件哈希值" />
+        <TextBlock
+            Margin="0,8,0,0"
+            Style="{StaticResource DescTextBlockStyle}"
+            Text="程序将按关注的算法的哈希值是否相同对当前显示的行进行分组" />
         <TextBlock
             Margin="0,2,0,0"
             Style="{StaticResource DescTextBlockStyle}"

@@ -151,6 +151,14 @@ namespace HashCalculator
         }
 
         /// <summary>
+        /// 从文件中读取哈希标记（HCM 标记）
+        /// </summary>
+        public static bool ReadHcmData(Stream stream, out HcmData hcmData)
+        {
+            return new HcmDataHelper(stream).ReadHcmData(out hcmData);
+        }
+
+        /// <summary>
         /// 从带有哈希标记 (HCM 标记) 的文件中还原出无标记的文件。
         /// </summary>
         public bool RestoreMarkedFile()

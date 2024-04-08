@@ -112,16 +112,17 @@ namespace HashCalculator
                                     {
                                         if (new HcmDataHelper(fileStream).RestoreMarkedFile())
                                         {
+                                            model.EhGroupId = null;
                                             model.HcmDataFromFile = null;
                                         }
                                     }
                                     goto RoundEndsAndNext;
+                                case EditFileOption.NewInNewLocation:
+                                    outputDirectory = this.DirectoryUsedToSaveFiles;
+                                    break;
                                 default:
                                 case EditFileOption.NewInSameLocation:
                                     outputDirectory = model.Information.DirectoryName;
-                                    break;
-                                case EditFileOption.NewInNewLocation:
-                                    outputDirectory = this.DirectoryUsedToSaveFiles;
                                     break;
                             }
                             string extension = Path.GetExtension(model.FileName);
@@ -197,8 +198,8 @@ namespace HashCalculator
                         }
                     }
                 }
-                if (this.CheckIfUsingDistinctFilesFilter && !hashViewModels.Where(
-                    i => i.Matched).All(i => i.FileIndex != null))
+                if (this.CheckIfUsingDistinctFilesFilter && hashViewModels.Where(
+                    i => i.Matched).Any(i => i.FileIndex == null))
                 {
                     if (MessageBox.Show(MainWindow.This, "没有应用【有效的文件】筛选器，要继续操作吗？", "提示",
                         MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
@@ -262,14 +263,8 @@ namespace HashCalculator
                         {
                             using (FileStream fileStream = model.Information.OpenRead())
                             {
-                                if (!new HcmDataHelper(fileStream).ReadHcmData(out HcmData hcmData))
-                                {
-                                    model.HcmDataFromFile = null;
-                                }
-                                else
-                                {
-                                    model.HcmDataFromFile = hcmData;
-                                }
+                                HcmDataHelper.ReadHcmData(fileStream, out HcmData hcmData);
+                                model.HcmDataFromFile = hcmData;
                             }
                         }
                         catch (Exception) { }

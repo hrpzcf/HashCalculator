@@ -117,6 +117,6 @@
             Grid.ColumnSpan="2"
             FontSize="8pt"
             Style="{StaticResource DescTextBlockStyle}"
-            Text="当主窗口显示【操作目标】列时以该列被勾选的对象作为目标，不显示则以选择的行作为目标" />
+            Text="当主窗口显示【操作目标】列时以该列被勾选的对象作为目标，不显示则以主窗口选择的行作为目标" />
     </Grid>
 </UserControl>

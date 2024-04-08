@@ -29,6 +29,7 @@ namespace HashCalculator
         private AlgoInOutModel[] _algoInOutModels = null;
         private ComparableColor _groupId = null;
         private ComparableColor _folderGroupId = null;
+        private ComparableColor _embeddedHashGroupId = null;
         private HashResult _currentResult = HashResult.NoResult;
         private HashState _currentState = HashState.NoState;
         private OutputType _selectedOutput = OutputType.Unknown;
@@ -151,6 +152,12 @@ namespace HashCalculator
         {
             get => this._folderGroupId;
             set => this.SetPropNotify(ref this._folderGroupId, value);
+        }
+
+        public ComparableColor EhGroupId
+        {
+            get => this._embeddedHashGroupId;
+            set => this.SetPropNotify(ref this._embeddedHashGroupId, value);
         }
 
         public AlgoInOutModel[] AlgoInOutModels
@@ -358,6 +365,27 @@ namespace HashCalculator
             }
         }
 
+        public bool ReadAndPopulateHcmData()
+        {
+            try
+            {
+                using (FileStream fileStream = this.Information.OpenRead())
+                {
+                    HcmDataHelper helper = new HcmDataHelper(fileStream);
+                    if (helper.ReadHcmData(out HcmData hcmData) && hcmData.DataReliable)
+                    {
+                        this.HcmDataFromFile = hcmData;
+                        return true;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+            }
+            this.HcmDataFromFile = null;
+            return false;
+        }
+
         private void MakeSureAlgoModelArrayNotEmpty()
         {
             if (this.AlgoInOutModels == null || this.AlgoInOutModels.Length == 0)
@@ -483,6 +511,7 @@ namespace HashCalculator
             if (this.State == HashState.NoState || this.State == HashState.Waiting)
             {
                 this.State = HashState.Finished;
+                // TODO: 是否需要 InvokeAsync?
                 this.ModelReleasedEvent?.InvokeAsync(this);
             }
             Monitor.Exit(this.computeHashOperationLock);

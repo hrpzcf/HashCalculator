@@ -1,12 +1,30 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace HashCalculator
 {
     internal abstract class AbsHashViewFilter : NotifiableModel
     {
         private bool _selected = false;
+
+        public AbsHashViewFilter()
+        {
+            this.FilterChangedCmd = new RelayCommand(
+                obj =>
+                {
+                    if (!this.Selected) { this.Reset(); }
+                });
+        }
+
+        public ICommand FilterChangedCmd { get; }
+
+        public bool Selected
+        {
+            get => this._selected;
+            set => this.SetPropNotify(ref this._selected, value);
+        }
 
         public abstract string Display { get; }
 
@@ -33,11 +51,5 @@ namespace HashCalculator
         public virtual void Reset() { }
 
         public abstract void FilterObjects(IEnumerable<HashViewModel> models);
-
-        public bool Selected
-        {
-            get => this._selected;
-            set => this.SetPropNotify(ref this._selected, value);
-        }
     }
 }

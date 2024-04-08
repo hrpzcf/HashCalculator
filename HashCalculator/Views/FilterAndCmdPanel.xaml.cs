@@ -24,7 +24,7 @@ namespace HashCalculator
 
         private void PanelClosed(object sender, EventArgs e)
         {
-            this.model.ClearFiltersAndRefresh();
+            this.model.ResetFiltersAndRefresh();
         }
 
         private void FilterAndCmderWndLoaded(object sender, RoutedEventArgs e)

@@ -19,7 +19,13 @@ namespace HashCalculator
 
     internal class EqualHashByteFilter : AbsHashViewFilter
     {
+        private static readonly PropertyGroupDescription groupIdDesc =
+            new PropertyGroupDescription(nameof(HashViewModel.GroupId));
+        private static readonly PropertyGroupDescription ehGroupIdDesc =
+            new PropertyGroupDescription(nameof(HashViewModel.EhGroupId));
+
         private AlgoInOutModel[] _algos;
+        private bool checkEmbeddedHashValue = false;
 
         public override ContentControl UserInterface { get; }
 
@@ -31,33 +37,49 @@ namespace HashCalculator
 
         public override object[] Items
         {
-            get
-            {
-                return this._algos;
-            }
-            set
-            {
-                this._algos = value as AlgoInOutModel[];
-            }
+            get => this._algos;
+            set => this._algos = value as AlgoInOutModel[];
         }
 
         public override GroupDescription[] GroupDescriptions { get; } =
-            new GroupDescription[] {
-                new PropertyGroupDescription(nameof(HashViewModel.GroupId)),
-            };
+            new GroupDescription[1];
+
+        public bool CheckEmbeddedHashValue
+        {
+            get => this.checkEmbeddedHashValue;
+            set => this.SetPropNotify(ref this.checkEmbeddedHashValue, value);
+        }
 
         public EqualHashByteFilter()
         {
-            this._algos = AlgosPanelModel.ProvidedAlgos
-                .Select(i => i.NewAlgoInOutModel()).ToArray();
+            this._algos = AlgosPanelModel.ProvidedAlgos.Select(
+                i => i.NewAlgoInOutModel()).ToArray();
             this.Param = this._algos[0];
             this.UserInterface = new EqualHashByteFilterCtrl(this);
         }
 
+        public override void Reset()
+        {
+            Settings.Current.ShowHashInTagColumn = false;
+        }
+
         public override void FilterObjects(IEnumerable<HashViewModel> models)
+        {
+            if (!this.CheckEmbeddedHashValue)
+            {
+                this.FilterHashValue(models);
+            }
+            else
+            {
+                this.FilterEmbeddedHashValue(models);
+            }
+        }
+
+        private void FilterHashValue(IEnumerable<HashViewModel> models)
         {
             if (models != null && this.Param is AlgoInOutModel focusedAlgo)
             {
+                this.GroupDescriptions[0] = groupIdDesc;
                 Dictionary<byte[], ModelCurAlgoDict> groupByHashBytes =
                     new Dictionary<byte[], ModelCurAlgoDict>(BytesComparer.Default);
                 foreach (HashViewModel model in models)
@@ -131,6 +153,66 @@ namespace HashCalculator
                         model.GroupId = tuple.Item2;
                     }
                 }
+            }
+        }
+
+        private void FilterEmbeddedHashValue(IEnumerable<HashViewModel> models)
+        {
+            if (models != null)
+            {
+                this.GroupDescriptions[0] = ehGroupIdDesc;
+                Dictionary<byte[], List<HashViewModel>> groupByHashBytes =
+                    new Dictionary<byte[], List<HashViewModel>>(BytesComparer.Default);
+                foreach (HashViewModel model in models)
+                {
+                    if (!model.Matched)
+                    {
+                        continue;
+                    }
+                    if (!model.ReadAndPopulateHcmData())
+                    {
+                        model.Matched = false;
+                        continue;
+                    }
+                    if (groupByHashBytes.ContainsKey(model.HcmDataFromFile.Hash))
+                    {
+                        groupByHashBytes[model.HcmDataFromFile.Hash].Add(model);
+                    }
+                    else
+                    {
+                        groupByHashBytes[model.HcmDataFromFile.Hash] = new List<HashViewModel>()
+                        {
+                            model
+                        };
+                    }
+                }
+                Dictionary<byte[], List<HashViewModel>> finalHashModels =
+                    new Dictionary<byte[], List<HashViewModel>>(BytesComparer.Default);
+                foreach (KeyValuePair<byte[], List<HashViewModel>> pair in groupByHashBytes)
+                {
+                    if (pair.Value.Count < 2)
+                    {
+                        pair.Value[0].Matched = false;
+                    }
+                    else
+                    {
+                        finalHashModels.Add(pair.Key, pair.Value);
+                    }
+                }
+                if (!finalHashModels.Any())
+                {
+                    return;
+                }
+                IEnumerable<ComparableColor> colors =
+                    CommonUtils.ColorGenerator(finalHashModels.Count).Select(i => new ComparableColor(i));
+                foreach (var tuple in finalHashModels.ZipElements(colors))
+                {
+                    foreach (HashViewModel model in tuple.Item1.Value)
+                    {
+                        model.EhGroupId = tuple.Item2;
+                    }
+                }
+                Settings.Current.ShowHashInTagColumn = true;
             }
         }
     }

@@ -141,8 +141,7 @@
                                     <StackPanel Orientation="Horizontal">
                                         <CheckBox
                                             VerticalAlignment="Center"
-                                            Command="{Binding ElementName=cmdPanel, Path=DataContext.FilterChangedCmd}"
-                                            CommandParameter="{Binding}"
+                                            Command="{Binding FilterChangedCmd}"
                                             IsChecked="{Binding Selected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                         <TextBlock
                                             Padding="8,1,32,1"

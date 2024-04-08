@@ -867,13 +867,13 @@
                                     Grid.Column="0"
                                     Padding="4"
                                     VerticalAlignment="Center"
-                                    Background="{Binding HcmDataFromFile, Converter={StaticResource DisplayHcmDataBackgroundCvt}}"
+                                    Background="{Binding EhGroupId, Converter={StaticResource CmpColorToSolidColorBrushCvt}}"
                                     Text="{Binding HcmDataFromFile, Converter={StaticResource DisplayHcmDataHashNameCvt}}" />
                                 <TextBlock
                                     Grid.Column="1"
                                     Padding="4"
                                     VerticalAlignment="Center"
-                                    Background="{Binding HcmDataFromFile, Converter={StaticResource DisplayHcmDataBackgroundCvt}}"
+                                    Background="{Binding EhGroupId, Converter={StaticResource CmpColorToSolidColorBrushCvt}}"
                                     TextTrimming="CharacterEllipsis">
                                     <TextBlock.Text>
                                         <MultiBinding Converter="{StaticResource DisplayHcmDataHashValueCvt}">

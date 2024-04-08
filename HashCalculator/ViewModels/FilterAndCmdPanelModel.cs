@@ -12,7 +12,6 @@ namespace HashCalculator
         private AbsHashesCmder selectedCmder;
         private AbsHashViewFilter selectedFilter;
         private RelayCommand refreshFiltersCmd;
-        private RelayCommand filterChangedCmd;
         private RelayCommand moveFilterUpCmd;
         private RelayCommand moveFilterDownCmd;
         private RelayCommand clearFilterSelectionCmd;
@@ -68,37 +67,14 @@ namespace HashCalculator
         {
         }
 
-        public void ClearFiltersAndRefresh()
+        public void ResetFiltersAndRefresh()
         {
             foreach (AbsHashViewFilter filter in this.HashModelFilters)
             {
                 filter.Reset();
             }
-            this.RefreshFiltersAction(false);  // 传入 false 表示不筛选
-        }
-
-        private void FilterChangedAction(object param)
-        {
-            if (param is AbsHashViewFilter filter)
-            {
-                if (!filter.Selected)
-                {
-                    filter.Reset();
-                }
-                this.SelectedFilter = filter;
-            }
-        }
-
-        public ICommand FilterChangedCmd
-        {
-            get
-            {
-                if (this.filterChangedCmd == null)
-                {
-                    this.filterChangedCmd = new RelayCommand(this.FilterChangedAction);
-                }
-                return this.filterChangedCmd;
-            }
+            // 传入 false 表示不筛选
+            this.RefreshFiltersAction(false);
         }
 
         private void MoveFilterUpAction(object param)
@@ -192,6 +168,7 @@ namespace HashCalculator
                     model.FileIndex = null;
                     model.GroupId = null;
                     model.FdGroupId = null;
+                    model.EhGroupId = null;
                 }
                 if (filteringShouldBeApplied)
                 {

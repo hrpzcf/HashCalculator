@@ -776,22 +776,6 @@ namespace HashCalculator
         }
     }
 
-    internal class DisplayHcmDataBackgroundCvt : IValueConverter
-    {
-        private static readonly SolidColorBrush transparent = new SolidColorBrush(Colors.Transparent);
-        private static readonly SolidColorBrush errors = new SolidColorBrush(Color.FromArgb(60, 255, 0, 0));
-
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return (value is HcmData hcmData && !hcmData.DataReliable) ? errors : transparent;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
     internal class AlgoInOutModelsToNumberCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
