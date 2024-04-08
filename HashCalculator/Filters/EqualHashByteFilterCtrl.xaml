@@ -55,14 +55,17 @@
             Text="内嵌的哈希值是文件被添加标记之前的哈希值，即原文件哈希值" />
         <TextBlock
             Margin="0,8,0,0"
+            FontSize="8pt"
             Style="{StaticResource DescTextBlockStyle}"
             Text="程序将按关注的算法的哈希值是否相同对当前显示的行进行分组" />
         <TextBlock
             Margin="0,2,0,0"
+            FontSize="8pt"
             Style="{StaticResource DescTextBlockStyle}"
             Text="1. 此筛选器以其前面已启用筛选器的结果为基础进行分组，对筛选顺序敏感" />
         <TextBlock
             Margin="0,2,0,0"
+            FontSize="8pt"
             Foreground="OrangeRed"
             Style="{StaticResource DescTextBlockStyle}"
             Text="2. 多数情况下建议作为最后一个筛选器，否则可能得不到预期结果" />

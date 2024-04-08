@@ -77,6 +77,7 @@
             Grid.Column="0"
             Grid.ColumnSpan="4"
             Margin="0,4,0,0"
+            FontSize="8pt"
             Style="{StaticResource DescTextBlockStyle}"
             Text="如果【文件大小上限 &lt; 文件大小下限】则代表不设上限" />
     </Grid>

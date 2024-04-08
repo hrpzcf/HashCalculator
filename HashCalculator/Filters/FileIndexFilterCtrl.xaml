@@ -18,11 +18,13 @@
     <StackPanel>
         <TextBlock
             Margin="0,2,0,0"
+            FontSize="8pt"
             Style="{StaticResource DescTextBlockStyle}"
-            Text="不显示不存在或无法访问的文件" />
+            Text="1. 不显示不存在或无法访问的文件" />
         <TextBlock
             Margin="0,2,0,0"
+            FontSize="8pt"
             Style="{StaticResource DescTextBlockStyle}"
-            Text="重复添加到表格的文件只显示其中一行" />
+            Text="2. 重复添加到表格的文件只显示其中一行" />
     </StackPanel>
 </UserControl>

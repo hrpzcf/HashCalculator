@@ -19,26 +19,32 @@
     <StackPanel>
         <TextBlock
             Margin="0,2,0,0"
+            FontSize="8pt"
             Style="{StaticResource DescTextBlockStyle}"
             Text="按文件所在的文件夹对当前显示的行进行分组" />
         <TextBlock
             Margin="0,2,0,0"
+            FontSize="8pt"
             Style="{StaticResource DescTextBlockStyle}"
             Text="一个文件夹的子文件夹视为与该文件夹是不同的文件夹" />
         <TextBlock
             Margin="0,2,0,0"
+            FontSize="8pt"
             Style="{StaticResource DescTextBlockStyle}"
             Text="1. 此筛选器以其前面已启用筛选器的结果为基础进行分组，对筛选顺序敏感" />
         <TextBlock
             Margin="0,2,0,0"
+            FontSize="8pt"
             Style="{StaticResource DescTextBlockStyle}"
             Text="2. 此筛选器在【相同哈希值】前和后有不同的分组显示效果：" />
         <TextBlock
             Margin="0,2,0,0"
+            FontSize="8pt"
             Style="{StaticResource DescTextBlockStyle}"
             Text="   在前面时是在相同文件夹组中再细分显示相同哈希值组，反之同理" />
         <TextBlock
             Margin="0,2,0,0"
+            FontSize="8pt"
             Foreground="OrangeRed"
             Style="{StaticResource DescTextBlockStyle}"
             Text="3. 多数情况下建议将其放在紧接着【相同哈希值】筛选器的前面或后面" />

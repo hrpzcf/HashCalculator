@@ -34,6 +34,7 @@
         </StackPanel>
         <TextBlock
             Margin="0,4,0,0"
+            FontSize="8pt"
             Style="{StaticResource DescTextBlockStyle}"
             Text="如果【结束序号 &lt; 开始序号】则代表结束序号不设上限" />
     </StackPanel>
