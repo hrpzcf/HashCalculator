@@ -11,6 +11,7 @@ namespace HashCalculator
     {
         private RelayCommand cancelSelectionCmd = null;
         private RelayCommand selectSameHashGroupCmd = null;
+        private RelayCommand selectSameEmbeddedHashGroupCmd = null;
         private RelayCommand selectSameFolderGroupCmd = null;
         private RelayCommand selectHybridGroupsCmd = null;
         private RelayCommand selectAllModelsCmd = null;
@@ -149,6 +150,39 @@ namespace HashCalculator
                     this.selectSameHashGroupCmd = new RelayCommand(this.SelectSameHashGroupAction);
                 }
                 return this.selectSameHashGroupCmd;
+            }
+        }
+
+        private void SelectSameEmbeddedHashGroupAction(object param)
+        {
+            if (this.RefModels is IEnumerable<HashViewModel> models)
+            {
+                Settings.Current.IsMainRowSelectedByCheckBox = true;
+                foreach (HashViewModel model in models)
+                {
+                    model.IsExecutionTarget = false;
+                }
+                IEnumerable<IGrouping<ComparableColor, HashViewModel>> byEhGroupId =
+                    models.Where(i => i.Matched && i.EhGroupId != null).GroupBy(i => i.EhGroupId);
+                foreach (IGrouping<ComparableColor, HashViewModel> group in byEhGroupId)
+                {
+                    foreach (HashViewModel model in group.Skip(1))
+                    {
+                        model.IsExecutionTarget = true;
+                    }
+                }
+            }
+        }
+
+        public ICommand SelectSameEmbeddedHashGroupCmd
+        {
+            get
+            {
+                if (this.selectSameEmbeddedHashGroupCmd == null)
+                {
+                    this.selectSameEmbeddedHashGroupCmd = new RelayCommand(this.SelectSameEmbeddedHashGroupAction);
+                }
+                return this.selectSameEmbeddedHashGroupCmd;
             }
         }
 

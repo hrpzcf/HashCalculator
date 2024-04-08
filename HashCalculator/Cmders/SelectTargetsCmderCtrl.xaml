@@ -42,6 +42,16 @@
             <Button
                 Margin="2"
                 Padding="20,6"
+                Background="DarkSlateGray"
+                BorderThickness="1"
+                Command="{Binding SelectSameEmbeddedHashGroupCmd}"
+                Content="按相同内嵌哈希值组选择"
+                Foreground="WhiteSmoke"
+                Style="{StaticResource IndepButtonStyle}"
+                ToolTip="只针对【相同哈希值】筛选器的分组结果，每组选择除了第一行外的所有行，否则取消选择所有行。" />
+            <Button
+                Margin="2"
+                Padding="20,6"
                 Background="DarkCyan"
                 BorderThickness="1"
                 Command="{Binding SelectSameFolderGroupCmd}"
