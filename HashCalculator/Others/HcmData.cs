@@ -108,11 +108,13 @@ namespace HashCalculator
         private byte[] hashBytes = null;
         private byte[] randomData = null;
         private byte[] randomBytes = null;
+        private HcmInfo hcmInfo;
+        private bool readFromFile = false;
         private readonly byte[] separator = { 0x0A, 0x00 };
         private readonly int randomLower = 2;
         private readonly int randomUpper = 8;
-        private HcmInfo hcmInfo;
-        private bool readFromFile = false;
+
+        private static readonly Random random = new Random();
 
         /// <summary>
         /// 本程序自定义的 HCM 文件头，用于标记文件含有哈希值标记。
@@ -326,7 +328,6 @@ namespace HashCalculator
 
         public void RefreshRandomData()
         {
-            Random random = new Random();
             int length = random.Next(this.randomLower, this.randomUpper);
             this.randomBytes = new byte[length * 2];
             this.hcmInfo.RandomLength = (byte)this.randomBytes.Length;
