@@ -110,13 +110,13 @@
             Margin="0,4,0,0"
             FontSize="8pt"
             Style="{StaticResource DescTextBlockStyle}"
-            Text="可以用以上按钮来显示【操作目标】列并选中操作目标，也可以取消后在主窗口选择多行作为目标" />
+            Text="可以用以上按钮来显示【操作目标】列并勾选操作目标，也可以取消后在主窗口选中多行作为目标" />
         <TextBlock
             Grid.Row="2"
             Grid.Column="0"
             Grid.ColumnSpan="2"
             FontSize="8pt"
             Style="{StaticResource DescTextBlockStyle}"
-            Text="当主窗口显示【操作目标】列时以该列被勾选的对象作为目标，不显示则以主窗口选择的行作为目标" />
+            Text="当主窗口显示【操作目标】列时以该列被勾选的对象为目标，不显示则以主窗口被选中的行为目标" />
     </Grid>
 </UserControl>
