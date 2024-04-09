@@ -360,7 +360,5 @@ MigrationBackup/
 .ionide/
 
 # Others
-/ShellExtensions/ShellExtensions_i.c
-/ShellExtensions/ShellExtensions_i.h
+*_i.h
 /HashCalculator/ShellExt
-/HashCalculator/Images/* - 副本.png
