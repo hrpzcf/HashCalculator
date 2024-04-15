@@ -15,9 +15,9 @@ namespace HashCalculator
 {
     public partial class MainWindow : Window
     {
-        private bool hwndSourceHookAdded = false;
         private bool listenerAdded = false;
         private DateTime lastClipboardUpdateDateTime = DateTime.Now;
+        private PresentationSource presentationSrc = null;
         private readonly MainWndViewModel viewModel = new MainWndViewModel();
 
         private static string[] startupArgs = null;
@@ -46,6 +46,11 @@ namespace HashCalculator
         private void MainWindowClosed(object sender, EventArgs e)
         {
             this.RemoveClipboardListener();
+            if (this.presentationSrc is HwndSource hwndSource)
+            {
+                hwndSource.RemoveHook(this.WindowProcedure);
+                hwndSource.Dispose();
+            }
             this.ProcIdMonitorFlag = false;
             // 此处与 ProcessIdMonitorProc 方法内的 PIdSynchronizer.Set 不重复，原因：
             // 如果是本进程实例内的 ProcessIdMonitorProc 方法内的 PIdSynchronizer.Wait 抢到了锁，
@@ -71,10 +76,10 @@ namespace HashCalculator
 
         private void MainWindowRendered(object sender, EventArgs e)
         {
-            if (PresentationSource.FromVisual(this) is HwndSource hwndSrc)
+            this.presentationSrc = PresentationSource.FromVisual(this);
+            if (this.presentationSrc is HwndSource hwndSrc)
             {
-                hwndSrc.AddHook(new HwndSourceHook(this.WndProc));
-                this.hwndSourceHookAdded = true;
+                hwndSrc.AddHook(this.WindowProcedure);
                 if (Settings.Current.MonitorNewHashStringInClipboard)
                 {
                     this.AddClipboardListener();
@@ -100,8 +105,7 @@ namespace HashCalculator
 
         public void AddClipboardListener()
         {
-            if (this.hwndSourceHookAdded && WndHandle != IntPtr.Zero &&
-                !this.listenerAdded)
+            if (WndHandle != IntPtr.Zero && !this.listenerAdded)
             {
                 this.listenerAdded = USER32.AddClipboardFormatListener(WndHandle);
             }
@@ -116,7 +120,7 @@ namespace HashCalculator
             }
         }
 
-        private IntPtr WndProc(IntPtr h, int msg, IntPtr w, IntPtr l, ref bool _)
+        private IntPtr WindowProcedure(IntPtr h, int msg, IntPtr w, IntPtr l, ref bool _)
         {
             if (msg == WM.WM_CLIPBOARDUPDATE)
             {
