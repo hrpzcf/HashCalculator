@@ -12,6 +12,11 @@ namespace HashCalculator
     {
         private readonly AlgoInOutModel[] _algos;
         private RelayCommand renameFilesCmd;
+        private RenameFileMethod methodForRenameFile;
+        private bool automaticallyFocusAlgorithm = true;
+        private string fileNameSeparator = defaultSeparator;
+
+        private const string defaultSeparator = " - ";
 
         public override ContentControl UserInterface { get; }
 
@@ -27,9 +32,27 @@ namespace HashCalculator
 
         public OutputType BeingUsedOutput { get; set; } = OutputType.BinaryLower;
 
+        public bool AutomaticallyFocusAlgorithm
+        {
+            get => this.automaticallyFocusAlgorithm;
+            set => this.SetPropNotify(ref this.automaticallyFocusAlgorithm, value);
+        }
+
+        public AlgoType SelectedAlgorithmType { get; set; }
+
         public AlgoInOutModel[] AlgoInOutModels => this._algos;
 
-        public AlgoType SelectedAlgo { get; set; }
+        public string FileNameSeparator
+        {
+            get => this.fileNameSeparator;
+            set => this.SetPropNotify(ref this.fileNameSeparator, value);
+        }
+
+        public RenameFileMethod MethodForRenameFile
+        {
+            get => this.methodForRenameFile;
+            set => this.SetPropNotify(ref this.methodForRenameFile, value);
+        }
 
         public bool CheckIfUsingDistinctFilesFilter { get; set; } = true;
 
@@ -40,7 +63,7 @@ namespace HashCalculator
         public RenameFileCmder(IEnumerable<HashViewModel> models) : base(models)
         {
             this._algos = AlgosPanelModel.ProvidedAlgos;
-            this.SelectedAlgo = this._algos[0].AlgoType;
+            this.SelectedAlgorithmType = this._algos[0].AlgoType;
             this.UserInterface = new RenameFileCmderCtrl(this);
         }
 
@@ -56,55 +79,97 @@ namespace HashCalculator
                         MessageBoxButton.OK, MessageBoxImage.Information);
                     goto FinishingTouches;
                 }
-                else if (MessageBox.Show(MainWindow.This, "用哈希值作为文件名重命名操作目标所指的文件吗？", "确认",
-                     MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+                else if (MessageBox.Show(
+                    MainWindow.This, "用哈希值作为文件名重命名操作目标所指的文件吗？", "确认",
+                    MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
                 {
                     goto FinishingTouches;
                 }
-                if (this.CheckIfUsingDistinctFilesFilter &&
-                    !models.Where(i => i.Matched).All(i => i.FileIndex != null))
+                if (this.CheckIfUsingDistinctFilesFilter && !models.Where(i => i.Matched).All(
+                    i => i.FileIndex != null))
                 {
-                    if (MessageBox.Show(MainWindow.This, "没有应用【有效的文件】筛选器，要继续操作吗？", "提示",
+                    if (MessageBox.Show(
+                        MainWindow.This, "没有应用【有效的文件】筛选器，要继续操作吗？", "提示",
                         MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
                     {
                         goto FinishingTouches;
                     }
                 }
+                AlgoType focusedAlgorithmType = default(AlgoType);
+                if (this.AutomaticallyFocusAlgorithm)
+                {
+                    HashViewModel model = models.FirstOrDefault(
+                        i => i.Matched &&
+                        i.CurrentInOutModel != null &&
+                        i.CurrentInOutModel.AlgoType != AlgoType.Unknown);
+                    if (model != null)
+                    {
+                        focusedAlgorithmType = model.CurrentInOutModel.AlgoType;
+                    }
+                }
+                else if (this.SelectedAlgorithmType != AlgoType.Unknown)
+                {
+                    focusedAlgorithmType = this.SelectedAlgorithmType;
+                }
                 foreach (HashViewModel model in models)
                 {
-                    if (model.IsExecutionTarget && model.AlgoInOutModels != null)
+                    if (model.Result == HashResult.Succeeded &&
+                        model.IsExecutionTarget &&
+                        model.AlgoInOutModels != null &&
+                        File.Exists(model.Information.FullName))
                     {
-                        string newFileName = null;
+                        string hashString = null;
                         foreach (AlgoInOutModel algo in model.AlgoInOutModels)
                         {
-                            if (algo.AlgoType == this.SelectedAlgo)
+                            if (algo.AlgoType == focusedAlgorithmType)
                             {
-                                newFileName = BytesToStrByOutputTypeCvt.Convert(algo.HashResult, this.BeingUsedOutput);
+                                hashString = BytesToStrByOutputTypeCvt.Convert(algo.HashResult,
+                                    this.BeingUsedOutput);
                                 break;
                             }
                         }
-                        if (string.IsNullOrEmpty(newFileName) || newFileName.Equals(model.FileName))
+                        if (string.IsNullOrEmpty(hashString) || hashString.Equals(model.FileName))
                         {
                             continue;
                         }
-                        string fileNewPath = Path.Combine(
-                               model.Information.DirectoryName, $"{newFileName}{model.Information.Extension}");
+                        if (this.fileNameSeparator == null)
+                        {
+                            this.fileNameSeparator = defaultSeparator;
+                        }
+                        string nameNoExt, newNameNoExt;
+                        switch (this.MethodForRenameFile)
+                        {
+                            case RenameFileMethod.AddToEnd:
+                                nameNoExt = Path.GetFileNameWithoutExtension(model.FileName);
+                                newNameNoExt = $"{nameNoExt}{this.fileNameSeparator}{hashString}";
+                                break;
+                            case RenameFileMethod.AddToFront:
+                                nameNoExt = Path.GetFileNameWithoutExtension(model.FileName);
+                                newNameNoExt = $"{hashString}{this.fileNameSeparator}{nameNoExt}";
+                                break;
+                            default:
+                            case RenameFileMethod.ReplaceAll:
+                                newNameNoExt = hashString;
+                                break;
+                        }
+                        string fileNewPath = Path.Combine(model.Information.DirectoryName,
+                            $"{newNameNoExt}{model.Information.Extension}");
                         int number = 1;
                     TryRenameFile:
                         try
                         {
                             // 有可能重命名只改变原文件名大小写，即“已存在”的是即将重命名的文件本身，
                             // 这种情况重命名是可以成功的，不需要添加序号后缀
-                            if (!File.Exists(fileNewPath) || model.Information.FullName.Equals(
-                                fileNewPath, StringComparison.OrdinalIgnoreCase))
+                            if (!File.Exists(fileNewPath) ||
+                                model.Information.FullName.Equals(fileNewPath, StringComparison.OrdinalIgnoreCase))
                             {
                                 model.Information.MoveTo(fileNewPath);
                                 model.FileName = model.Information.Name;
                             }
                             else
                             {
-                                fileNewPath = Path.Combine(
-                                    model.Information.DirectoryName, $"{newFileName} ({++number}){model.Information.Extension}");
+                                fileNewPath = Path.Combine(model.Information.DirectoryName,
+                                    $"{newNameNoExt} ({++number}){model.Information.Extension}");
                                 goto TryRenameFile;
                             }
                         }

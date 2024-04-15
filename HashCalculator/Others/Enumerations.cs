@@ -367,4 +367,23 @@
         /// </summary>
         UserDir,
     }
+
+    /// <summary>
+    /// 【重命名文件】筛选器的重命名逻辑
+    /// </summary>
+    public enum RenameFileMethod
+    {
+        /// <summary>
+        /// 哈希值添加到原文件名的后面
+        /// </summary>
+        AddToEnd,
+        /// <summary>
+        /// 哈希值添加到原文件名的前面
+        /// </summary>
+        AddToFront,
+        /// <summary>
+        /// 删除原文件名只用哈希值作为新文件名
+        /// </summary>
+        ReplaceAll,
+    }
 }

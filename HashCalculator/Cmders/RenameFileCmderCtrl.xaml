@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DataContext="{d:DesignInstance Type=local:RenameFileCmder}"
     d:DesignHeight="200"
-    d:DesignWidth="300"
+    d:DesignWidth="350"
     mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -25,52 +25,71 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
             <ColumnDefinition />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        <TextBlock
+        <RadioButton
             Grid.Row="0"
             Grid.Column="0"
-            VerticalAlignment="Center"
-            Text="关注的算法："
-            ToolTip="使用该算法的哈希值，如果操作目标没有完成该算法则不重命名该对象所指文件" />
-        <ComboBox
-            Grid.Row="0"
-            Grid.Column="1"
-            Width="{Binding ElementName=outputComboBox, Path=ActualWidth}"
-            VerticalAlignment="Center"
-            VerticalContentAlignment="Center"
-            DisplayMemberPath="AlgoName"
-            ItemsSource="{Binding AlgoInOutModels}"
-            SelectedValue="{Binding SelectedAlgo}"
-            SelectedValuePath="AlgoType"
-            ToolTip="使用该算法的哈希值，如果操作目标没有完成该算法则不重命名该对象所指文件" />
-        <TextBlock
+            Grid.ColumnSpan="2"
+            Content="指定关注的算法为第一行当前显示的算法"
+            IsChecked="{Binding AutomaticallyFocusAlgorithm}" />
+        <Grid
             Grid.Row="1"
             Grid.Column="0"
-            Margin="0,2,0,0"
-            VerticalAlignment="Center"
-            Text="哈希值格式："
-            ToolTip="把哈希值转换为该格式的字符串作为文件名，不支持 Base64 的原因是某些字符不能作为文件名" />
-        <ComboBox
-            x:Name="outputComboBox"
-            Grid.Row="1"
-            Grid.Column="1"
-            Margin="0,2,0,0"
-            VerticalAlignment="Center"
-            VerticalContentAlignment="Center"
-            DisplayMemberPath="Display"
-            ItemsSource="{Binding OutputTypes}"
-            SelectedValue="{Binding BeingUsedOutput}"
-            SelectedValuePath="ItemValue"
-            ToolTip="把哈希值转换为该格式的字符串作为文件名，不支持 Base64 的原因是某些字符不能作为文件名" />
+            Margin="0,2,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <RadioButton
+                Grid.Column="0"
+                Padding="4,0,0,0"
+                VerticalAlignment="Center"
+                Content="指定关注的算法为："
+                IsChecked="{Binding AutomaticallyFocusAlgorithm, Converter={StaticResource ReverseBooleanValueCvt}}"
+                ToolTip="使用该算法的哈希值，如果操作目标没有完成该算法则不重命名该对象所指文件" />
+            <ComboBox
+                Grid.Column="1"
+                VerticalAlignment="Center"
+                DisplayMemberPath="AlgoName"
+                IsEnabled="{Binding AutomaticallyFocusAlgorithm, Converter={StaticResource ReverseBooleanValueCvt}}"
+                ItemsSource="{Binding AlgoInOutModels}"
+                SelectedValue="{Binding SelectedAlgorithmType}"
+                SelectedValuePath="AlgoType"
+                ToolTip="使用该算法的哈希值，如果操作目标没有完成该算法则不重命名该对象所指文件" />
+        </Grid>
+        <Grid
+            Grid.Row="2"
+            Grid.Column="0"
+            Margin="0,4,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                Grid.Column="0"
+                VerticalAlignment="Center"
+                Text="作为文件名的哈希值格式："
+                ToolTip="把哈希值转换为该格式的字符串作为文件名，不支持 Base64 的原因是某些字符不能作为文件名" />
+            <ComboBox
+                Grid.Column="1"
+                VerticalAlignment="Center"
+                DisplayMemberPath="Display"
+                ItemsSource="{Binding OutputTypes}"
+                SelectedValue="{Binding BeingUsedOutput}"
+                SelectedValuePath="ItemValue"
+                ToolTip="把哈希值转换为该格式的字符串作为文件名，不支持 Base64 的原因是某些字符不能作为文件名" />
+        </Grid>
         <Button
             Grid.Row="0"
-            Grid.RowSpan="2"
+            Grid.RowSpan="3"
             Grid.Column="2"
             Margin="4,0,0,0"
             Padding="16,6"
@@ -83,8 +102,62 @@
             Foreground="White"
             Style="{StaticResource IndepButtonStyle}"
             ToolTip="把指定算法的哈希值转换为指定格式的字符串，将该字符串作为文件名重命名操作目标所指的文件" />
+        <Grid
+            Grid.Row="3"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            Margin="0,4,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <RadioButton
+                Grid.Row="0"
+                Grid.Column="0"
+                Padding="4,0,0,0"
+                Content="添加到原文件名的后面"
+                IsChecked="{Binding MethodForRenameFile, Converter={StaticResource RenameMethodAddToEndToTrueCvt}}" />
+            <RadioButton
+                Grid.Row="0"
+                Grid.Column="1"
+                Padding="4,0,0,0"
+                Content="添加到原文件名的前面"
+                IsChecked="{Binding MethodForRenameFile, Converter={StaticResource RenameMethodAddToFrontToTrueCvt}}" />
+            <RadioButton
+                Grid.Row="1"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="0,2,0,0"
+                Padding="4,0,0,0"
+                Content="使用哈希值代替原文件名"
+                IsChecked="{Binding MethodForRenameFile, Converter={StaticResource RenameMethodReplaceAllToTrueCvt}}" />
+        </Grid>
+        <Grid
+            Grid.Row="4"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            Margin="0,4,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                Grid.Column="0"
+                VerticalAlignment="Center"
+                Text="添加到原文件名前面或后面时使用的分隔符：" />
+            <TextBox
+                Grid.Column="1"
+                Padding="1,2,1,2"
+                MaxLines="1"
+                PreviewTextInput="TextBoxPreviewTextInput"
+                Text="{Binding FileNameSeparator, UpdateSourceTrigger=LostFocus}" />
+        </Grid>
         <CheckBox
-            Grid.Row="2"
+            Grid.Row="5"
             Grid.ColumnSpan="3"
             Margin="0,4,0,0"
             Padding="4,0,0,0"
@@ -93,7 +166,7 @@
             IsChecked="{Binding CheckIfUsingDistinctFilesFilter}"
             ToolTip="检查当前显示的所有行是否都已经经过【有效的文件】筛选器的筛选" />
         <TextBlock
-            Grid.Row="3"
+            Grid.Row="6"
             Grid.ColumnSpan="3"
             Margin="0,4,0,0"
             FontSize="8pt"
@@ -101,7 +174,7 @@
             Style="{StaticResource DescTextBlockStyle}"
             Text="应用【有效的文件】筛选器过滤重复目标可以避免重复重命名" />
         <TextBlock
-            Grid.Row="4"
+            Grid.Row="7"
             Grid.ColumnSpan="3"
             FontSize="8pt"
             Foreground="OrangeRed"

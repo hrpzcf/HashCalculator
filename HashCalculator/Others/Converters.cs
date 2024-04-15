@@ -1004,4 +1004,35 @@ namespace HashCalculator
             throw new NotImplementedException();
         }
     }
+
+    internal class RenameFileMethodToBooleanCvt : IValueConverter
+    {
+        public RenameFileMethod Method { get; set; }
+
+        public bool Boolean { get; set; }
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is RenameFileMethod method && method == this.Method)
+            {
+                return this.Boolean;
+            }
+            else
+            {
+                return !this.Boolean;
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is bool boolean && boolean == this.Boolean)
+            {
+                return this.Method;
+            }
+            else
+            {
+                return Binding.DoNothing;
+            }
+        }
+    }
 }

@@ -125,6 +125,18 @@
         OtherResource="start_one"
         Resource="pause_one"
         State="Running" />
+    <local:RenameFileMethodToBooleanCvt
+        x:Key="RenameMethodAddToEndToTrueCvt"
+        Boolean="True"
+        Method="AddToEnd" />
+    <local:RenameFileMethodToBooleanCvt
+        x:Key="RenameMethodAddToFrontToTrueCvt"
+        Boolean="True"
+        Method="AddToFront" />
+    <local:RenameFileMethodToBooleanCvt
+        x:Key="RenameMethodReplaceAllToTrueCvt"
+        Boolean="True"
+        Method="ReplaceAll" />
     <local:CanExecuteCmdOnTargetsCvt x:Key="CanExecuteCmdOnTargetsCvt" />
     <local:InvalidFileNameForegroundCvt x:Key="InvalidFileNameForegroundCvt" />
     <local:CmpResForegroundCvt x:Key="CmpResForegroundCvt" />
