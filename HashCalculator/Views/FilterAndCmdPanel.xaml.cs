@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Interop;
 
 namespace HashCalculator
@@ -88,6 +89,14 @@ namespace HashCalculator
             if (e.Key == System.Windows.Input.Key.Escape)
             {
                 this.Close();
+            }
+        }
+
+        private void FiltersItemPreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (sender is CheckBox checkBox && checkBox.DataContext is AbsHashViewFilter filter)
+            {
+                this.model.SelectedFilter = filter;
             }
         }
     }

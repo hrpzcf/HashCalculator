@@ -29,7 +29,9 @@
         </ResourceDictionary>
     </Window.Resources>
     <Window.Top>
-        <MultiBinding Converter="{StaticResource FilterWndTopCvt}" Mode="TwoWay">
+        <MultiBinding
+            Converter="{StaticResource FilterWndTopCvt}"
+            Mode="TwoWay">
             <Binding
                 Mode="OneWay"
                 Path="MainWindowTop"
@@ -43,7 +45,9 @@
         </MultiBinding>
     </Window.Top>
     <Window.Left>
-        <MultiBinding Converter="{StaticResource FilterWndLeftCvt}" Mode="TwoWay">
+        <MultiBinding
+            Converter="{StaticResource FilterWndLeftCvt}"
+            Mode="TwoWay">
             <Binding
                 Mode="OneWay"
                 Path="MainWindowLeft"
@@ -103,11 +107,17 @@
                 FontSize="11pt"
                 Header="筛选器和设置"
                 Style="{StaticResource TabItemStyle2}">
-                <Border Padding="4" BorderThickness="0">
+                <Border
+                    Padding="4"
+                    BorderThickness="0">
                     <Border.IsEnabled>
                         <MultiBinding Converter="{StaticResource CmdPanelCriticalControlsEnabledCvt}">
-                            <Binding Path="State" Source="{x:Static local:MainWndViewModel.ThisModel}" />
-                            <Binding Path="FilterAndCmderEnabled" Source="{x:Static local:Settings.Current}" />
+                            <Binding
+                                Path="State"
+                                Source="{x:Static local:MainWndViewModel.ThisModel}" />
+                            <Binding
+                                Path="FilterAndCmderEnabled"
+                                Source="{x:Static local:Settings.Current}" />
                         </MultiBinding>
                     </Border.IsEnabled>
                     <Grid>
@@ -142,7 +152,8 @@
                                         <CheckBox
                                             VerticalAlignment="Center"
                                             Command="{Binding FilterChangedCmd}"
-                                            IsChecked="{Binding Selected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                            IsChecked="{Binding Selected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            PreviewMouseDown="FiltersItemPreviewMouseDown" />
                                         <TextBlock
                                             Padding="8,1,32,1"
                                             Text="{Binding Display}"
@@ -171,7 +182,9 @@
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
-                                <ContentControl Grid.Row="0" Content="{Binding SelectedFilter.UserInterface}" />
+                                <ContentControl
+                                    Grid.Row="0"
+                                    Content="{Binding SelectedFilter.UserInterface}" />
                                 <TextBlock
                                     Grid.Row="1"
                                     Margin="0,8,0,0"
@@ -252,11 +265,17 @@
                 FontSize="11pt"
                 Header="操作器和设置"
                 Style="{StaticResource TabItemStyle2}">
-                <Border Padding="4" BorderThickness="0">
+                <Border
+                    Padding="4"
+                    BorderThickness="0">
                     <Border.IsEnabled>
                         <MultiBinding Converter="{StaticResource CmdPanelCriticalControlsEnabledCvt}">
-                            <Binding Path="State" Source="{x:Static local:MainWndViewModel.ThisModel}" />
-                            <Binding Path="FilterAndCmderEnabled" Source="{x:Static local:Settings.Current}" />
+                            <Binding
+                                Path="State"
+                                Source="{x:Static local:MainWndViewModel.ThisModel}" />
+                            <Binding
+                                Path="FilterAndCmderEnabled"
+                                Source="{x:Static local:Settings.Current}" />
                         </MultiBinding>
                     </Border.IsEnabled>
                     <Grid>
@@ -328,7 +347,9 @@
                                     Foreground="#FF006FD6"
                                     Text="{Binding SelectedCmder.Display, StringFormat=[ {0} ] 的功能面板：}" />
                             </GroupBox.Header>
-                            <ContentControl Grid.Row="0" Content="{Binding SelectedCmder.UserInterface}" />
+                            <ContentControl
+                                Grid.Row="0"
+                                Content="{Binding SelectedCmder.UserInterface}" />
                         </GroupBox>
                     </Grid>
                 </Border>
