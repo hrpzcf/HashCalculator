@@ -26,6 +26,7 @@ namespace HashCalculator
 
         private AlgoInOutModel[] _algos;
         private bool checkEmbeddedHashValue = false;
+        private bool automaticallyFocusAlgorithm = true;
 
         public override ContentControl UserInterface { get; }
 
@@ -48,6 +49,12 @@ namespace HashCalculator
         {
             get => this.checkEmbeddedHashValue;
             set => this.SetPropNotify(ref this.checkEmbeddedHashValue, value);
+        }
+
+        public bool AutomaticallyFocusAlgorithm
+        {
+            get => this.automaticallyFocusAlgorithm;
+            set => this.SetPropNotify(ref this.automaticallyFocusAlgorithm, value);
         }
 
         public EqualHashByteFilter()
@@ -77,8 +84,23 @@ namespace HashCalculator
 
         private void FilterHashValue(IEnumerable<HashViewModel> models)
         {
-            if (models != null && this.Param is AlgoInOutModel focusedAlgo)
+            if (models != null)
             {
+                AlgoType focusedAlgoType = default(AlgoType);
+                if (this.AutomaticallyFocusAlgorithm)
+                {
+                    HashViewModel model = models.FirstOrDefault(
+                        i => i.CurrentInOutModel != null &&
+                        i.CurrentInOutModel.AlgoType != AlgoType.Unknown);
+                    if (model != null)
+                    {
+                        focusedAlgoType = model.CurrentInOutModel.AlgoType;
+                    }
+                }
+                else if (this.Param is AlgoInOutModel)
+                {
+                    focusedAlgoType = (this.Param as AlgoInOutModel).AlgoType;
+                }
                 this.GroupDescriptions[0] = groupIdDesc;
                 Dictionary<byte[], ModelCurAlgoDict> groupByHashBytes =
                     new Dictionary<byte[], ModelCurAlgoDict>(BytesComparer.Default);
@@ -97,7 +119,7 @@ namespace HashCalculator
                         bool modelMatched = false;
                         foreach (AlgoInOutModel algo in model.AlgoInOutModels)
                         {
-                            if (algo.AlgoType == focusedAlgo.AlgoType)
+                            if (algo.AlgoType == focusedAlgoType)
                             {
                                 if (algo.HashResult != null)
                                 {

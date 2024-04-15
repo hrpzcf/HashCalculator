@@ -22,21 +22,31 @@
             Padding="4,0,0,0"
             Content="在表格显示的所有行的指定算法的计算结果中查找相同项"
             IsChecked="{Binding CheckEmbeddedHashValue, Converter={StaticResource ReverseBooleanValueCvt}}" />
-        <StackPanel Margin="18,2,0,0" Orientation="Horizontal">
-            <TextBlock
-                Grid.Row="0"
-                Grid.Column="0"
-                VerticalAlignment="Center"
-                Text="关注的算法：" />
-            <ComboBox
-                Grid.Row="0"
-                Grid.Column="1"
-                MinWidth="115"
-                VerticalAlignment="Center"
-                DisplayMemberPath="AlgoName"
-                IsEnabled="{Binding CheckEmbeddedHashValue, Converter={StaticResource ReverseBooleanValueCvt}}"
-                ItemsSource="{Binding Items}"
-                SelectedItem="{Binding Param}" />
+        <StackPanel
+            Margin="18,4,0,0"
+            IsEnabled="{Binding CheckEmbeddedHashValue, Converter={StaticResource ReverseBooleanValueCvt}}">
+            <RadioButton
+                Content="指定算法为第一行当前显示的算法"
+                IsChecked="{Binding AutomaticallyFocusAlgorithm}" />
+            <StackPanel
+                Margin="0,2,0,0"
+                Orientation="Horizontal">
+                <RadioButton
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Padding="4,0,0,0"
+                    VerticalAlignment="Center"
+                    Content="指定算法为："
+                    IsChecked="{Binding AutomaticallyFocusAlgorithm, Converter={StaticResource ReverseBooleanValueCvt}}" />
+                <ComboBox
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    MinWidth="115"
+                    VerticalAlignment="Center"
+                    DisplayMemberPath="AlgoName"
+                    ItemsSource="{Binding Items}"
+                    SelectedItem="{Binding Param}" />
+            </StackPanel>
         </StackPanel>
         <RadioButton
             Margin="0,8,0,0"
@@ -57,7 +67,7 @@
             Margin="0,8,0,0"
             FontSize="8pt"
             Style="{StaticResource DescTextBlockStyle}"
-            Text="程序将按关注的算法的哈希值是否相同对当前显示的行进行分组" />
+            Text="程序将按指定的算法的哈希值是否相同对当前显示的行进行分组" />
         <TextBlock
             Margin="0,2,0,0"
             FontSize="8pt"
