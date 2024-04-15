@@ -132,25 +132,49 @@ namespace HashCalculator
         public double MainWindowTop
         {
             get => this.mainWndTop;
-            set => this.SetPropNotify(ref this.mainWndTop, value);
+            set
+            {
+                if (this.MainWindowState == WindowState.Normal)
+                {
+                    this.SetPropNotify(ref this.mainWndTop, value);
+                }
+            }
         }
 
         public double MainWindowLeft
         {
             get => this.mainWndLeft;
-            set => this.SetPropNotify(ref this.mainWndLeft, value);
+            set
+            {
+                if (this.MainWindowState == WindowState.Normal)
+                {
+                    this.SetPropNotify(ref this.mainWndLeft, value);
+                }
+            }
         }
 
         public double MainWndWidth
         {
             get => this.mainWndWidth;
-            set => this.SetPropNotify(ref this.mainWndWidth, value);
+            set
+            {
+                if (this.MainWindowState == WindowState.Normal)
+                {
+                    this.SetPropNotify(ref this.mainWndWidth, value);
+                }
+            }
         }
 
         public double MainWndHeight
         {
             get => this.mainWndHeight;
-            set => this.SetPropNotify(ref this.mainWndHeight, value);
+            set
+            {
+                if (this.MainWindowState == WindowState.Normal)
+                {
+                    this.SetPropNotify(ref this.mainWndHeight, value);
+                }
+            }
         }
 
         public WindowState MainWindowState
@@ -539,26 +563,14 @@ namespace HashCalculator
 
         public ObservableCollection<TemplateForExportModel> TemplatesForExport
         {
-            get
-            {
-                return this.templatesForExport;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.templatesForExport, value);
-            }
+            get => this.templatesForExport;
+            set => this.SetPropNotify(ref this.templatesForExport, value);
         }
 
         public ObservableCollection<TemplateForChecklistModel> TemplatesForChecklist
         {
-            get
-            {
-                return this.templatesForChecklist;
-            }
-            set
-            {
-                this.SetPropNotify(ref this.templatesForChecklist, value);
-            }
+            get => this.templatesForChecklist;
+            set => this.SetPropNotify(ref this.templatesForChecklist, value);
         }
 
         [JsonIgnore, XmlIgnore]
