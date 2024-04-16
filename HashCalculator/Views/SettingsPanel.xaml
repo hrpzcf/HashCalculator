@@ -121,15 +121,15 @@
                                 x:Name="checkBoxPreferChecklistAlgs"
                                 Margin="0,8,0,0"
                                 Padding="4,0,0,0"
-                                Content="首选校验依据文件内指定的哈希算法"
+                                Content="首选校验依据文件内容指定算法 &gt; 校验依据文件扩展名指定算法"
                                 IsChecked="{Binding PreferChecklistAlgs, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             <StackPanel
-                                Margin="20,8,0,4"
+                                Margin="20,4,0,4"
                                 Orientation="Horizontal">
                                 <TextBlock
                                     VerticalAlignment="Center"
                                     Foreground="Black"
-                                    Text="当校验依据内未指定算法时：" />
+                                    Text="当校验依据文件内容和扩展名皆未指定算法时：" />
                                 <ComboBox
                                     DisplayMemberPath="Display"
                                     IsEnabled="{Binding ElementName=checkBoxPreferChecklistAlgs, Path=IsChecked}"

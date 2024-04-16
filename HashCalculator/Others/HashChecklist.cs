@@ -16,28 +16,22 @@ namespace HashCalculator
 
         public bool IsExistingFile { get; set; }
 
-        public HashChecker(string relpath, string algoName, byte[] hashBytes)
+        public HashChecker(string relpath, AlgoType algoType, byte[] hashBytes)
         {
-            this.AddCheckerItem(relpath, algoName, hashBytes);
+            this.AddCheckerItem(relpath, algoType, hashBytes);
         }
 
-        public bool AddCheckerItem(string relpath, string algoName, byte[] hashBytes)
+        public void AddCheckerItem(string relpath, AlgoType algo, byte[] hashBytes)
         {
-            if (relpath != null && algoName != null && hashBytes != null &&
-                AlgosPanelModel.TryGetAlgoType(algoName, out AlgoType algorithm))
+            if (this.algoHashDict.ContainsKey(algo))
             {
-                this.fileIndependent = relpath == string.Empty;
-                if (this.algoHashDict.TryGetValue(algorithm, out var hashValues))
-                {
-                    hashValues.Add(hashBytes);
-                }
-                else
-                {
-                    this.algoHashDict[algorithm] = new List<byte[]>() { hashBytes };
-                }
-                return true;
+                this.algoHashDict[algo].Add(hashBytes);
             }
-            return false;
+            else
+            {
+                this.algoHashDict[algo] = new List<byte[]>() { hashBytes };
+            }
+            this.fileIndependent = relpath == string.Empty;
         }
 
         public CmpRes GetCheckResult(AlgoType algoType, byte[] hashBytes)
@@ -153,6 +147,9 @@ namespace HashCalculator
 
         public HashChecklist() { }
 
+        public AlgoType AlgoTypeFromFileExt { get; set; } =
+            AlgoType.Unknown;
+
         public string ReasonForFailure { get; private set; }
 
         public bool KeysAreRelativePaths { get; private set; }
@@ -198,16 +195,21 @@ namespace HashCalculator
             {
                 return false;
             }
+            if (!AlgosPanelModel.TryGetAlgoType(algo, out AlgoType algoType) ||
+                algoType == AlgoType.Unknown)
+            {
+                algoType = this.AlgoTypeFromFileExt;
+            }
             if (CommonUtils.HashBytesFromString(hash) is byte[] hashBytes)
             {
                 relpath = relpath.Replace('/', '\\');
-                if (this.fileHashCheckerDict.TryGetValue(relpath, out HashChecker checker))
+                if (this.fileHashCheckerDict.ContainsKey(relpath))
                 {
-                    checker.AddCheckerItem(relpath, algo, hashBytes);
+                    this.fileHashCheckerDict[relpath].AddCheckerItem(relpath, algoType, hashBytes);
                 }
                 else
                 {
-                    this.fileHashCheckerDict[relpath] = new HashChecker(relpath, algo, hashBytes);
+                    this.fileHashCheckerDict[relpath] = new HashChecker(relpath, algoType, hashBytes);
                 }
                 return true;
             }
@@ -240,6 +242,12 @@ namespace HashCalculator
             this.Initialize();
             try
             {
+                string fileExt = Path.GetExtension(filePath);
+                if (AlgosPanelModel.TryGetAlgoType(fileExt.TrimStart('.'),
+                    out AlgoType algoType))
+                {
+                    this.AlgoTypeFromFileExt = algoType;
+                }
                 bool contentDecoded = false;
                 foreach (Encoding encoding in supportedEncodings)
                 {
@@ -257,7 +265,6 @@ namespace HashCalculator
                         contentDecoded = true;
                         bool anyPaser = false;
                         bool anyItemAdded = false;
-                        string fileExt = Path.GetExtension(filePath);
                         foreach (TemplateForChecklistModel parser in this.GetParsers(fileExt))
                         {
                             anyPaser = true;
