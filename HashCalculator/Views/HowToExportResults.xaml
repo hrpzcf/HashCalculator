@@ -1,0 +1,100 @@
+﻿<Window
+    x:Class="HashCalculator.HowToExportResults"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:HashCalculator"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DataContext="{d:DesignInstance local:SettingsViewModel}"
+    KeyDown="WindowKeyDown"
+    ResizeMode="NoResize"
+    ShowInTaskbar="False"
+    SizeToContent="WidthAndHeight"
+    SnapsToDevicePixels="True"
+    UseLayoutRounding="True"
+    WindowStartupLocation="CenterOwner"
+    mc:Ignorable="d">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/ConverterResource.xaml" />
+                <ResourceDictionary Source="/Resources/DescTextBlockStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid Margin="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <GroupBox
+            Grid.Row="0"
+            Grid.Column="0"
+            Padding="4,8,4,0"
+            Foreground="#FF006FD6"
+            Header="导出计算结果时导出哪些算法的结果">
+            <StackPanel>
+                <RadioButton
+                    VerticalContentAlignment="Center"
+                    Content="仅导出每行当前显示的算法的结果"
+                    IsChecked="{Binding HowToExportHashValues, Converter={StaticResource RadioExportCurrentAlgoCvt}}" />
+                <RadioButton
+                    Margin="0,8,0,0"
+                    VerticalContentAlignment="Center"
+                    Content="导出每行所有已计算的算法的结果"
+                    IsChecked="{Binding HowToExportHashValues, Converter={StaticResource RadioExportAllCalculatedAlgosCvt}}" />
+            </StackPanel>
+        </GroupBox>
+        <CheckBox
+            Grid.Row="1"
+            Margin="0,8,0,0"
+            Padding="4,0,0,0"
+            Content="导出计算结果时使用默认输出方式输出哈希值而不是各行的输出方式"
+            IsChecked="{Binding UseDefaultOutputTypeWhenExporting}" />
+        <StackPanel
+            Grid.Row="2"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            Margin="0,8,0,0">
+            <CheckBox
+                Padding="4,0,0,0"
+                Content="把每种算法的结果分别导出到以算法名为扩展名的不同文件中"
+                IsChecked="{Binding EachAlgoExportedToSeparateFile}" />
+            <TextBlock
+                Margin="18,2,0,0"
+                FontSize="8pt"
+                Style="{StaticResource DescTextBlockStyle}"
+                Text="如果开启此选项，则导出结果时在【另存为】对话框的【文件类型】下拉列表选择" />
+            <TextBlock
+                Margin="18,2,0,0"
+                FontSize="8pt"
+                Style="{StaticResource DescTextBlockStyle}"
+                Text="的方案只有导出模板和文件编码起作用，扩展名不起作用，用算法名作为扩展名。" />
+            <TextBlock
+                Margin="18,2,0,0"
+                FontSize="8pt"
+                Style="{StaticResource DescTextBlockStyle}"
+                Text="同时【导出计算结果时导出哪些算法的结果】设置不生效，默认导出所有算法结果。" />
+        </StackPanel>
+        <CheckBox
+            Grid.Row="3"
+            Grid.Column="0"
+            Margin="0,8,0,0"
+            Padding="4,0,0,0"
+            Content="每次导出结果时都打开导出参数小窗口以设置本次的导出参数"
+            IsChecked="{Binding AskUserHowToExportResultsEveryTime}" />
+        <Button
+            Grid.Row="4"
+            Grid.Column="0"
+            Margin="0,8,0,0"
+            Padding="24,8"
+            HorizontalAlignment="Right"
+            Background="{x:Null}"
+            Click="ButtonConfirmClick"
+            Content="确定"
+            IsDefault="True" />
+    </Grid>
+</Window>

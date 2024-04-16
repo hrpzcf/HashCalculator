@@ -69,11 +69,11 @@ namespace HashCalculator
 
         public EncodingEnum UsingEncoding { get; set; }
 
-        public string GetFilterFormat()
+        public string GetFilterFormat(bool noExt)
         {
             if (this.IsValidProps())
             {
-                if (string.IsNullOrEmpty(this.Extension))
+                if (noExt || string.IsNullOrEmpty(this.Extension))
                 {
                     return $"{this.Name}|*.*";
                 }

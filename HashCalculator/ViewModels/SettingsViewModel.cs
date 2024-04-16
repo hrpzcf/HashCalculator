@@ -58,10 +58,12 @@ namespace HashCalculator
         private bool useDefaultOutputTypeWhenExporting = true;
         private bool monitorNewHashStringInClipboard = true;
         private bool switchMainWndFgWhenNewHashCopied = true;
+        private bool filterAndCmderWndFollowsMainWnd = false;
         private bool caseOfCopiedAlgNameFollowsOutputType = false;
         private bool exportInMainControlsChildExportsInRow = false;
-        private bool filterAndCmderWndFollowsMainWnd = false;
         private bool useUnixStyleLineBreaks = true;
+        private bool eachAlgoExportedToSeparateFile = false;
+        private bool askUserHowToExportResultsEveryTime = true;
 
         private CmpRes algoToSwitchToAfterHashChecked = CmpRes.Matched;
         private ExportAlgo howToExportHashValues = ExportAlgo.AllCalculated;
@@ -406,6 +408,8 @@ namespace HashCalculator
             set => this.SetPropNotify(ref this.useDefaultOutputTypeWhenExporting, value);
         }
 
+        public string LastSavedName { get; set; }
+
         public string LastUsedPath
         {
             get
@@ -526,6 +530,18 @@ namespace HashCalculator
         {
             get => this.useUnixStyleLineBreaks;
             set => this.SetPropNotify(ref this.useUnixStyleLineBreaks, value);
+        }
+
+        public bool EachAlgoExportedToSeparateFile
+        {
+            get => this.eachAlgoExportedToSeparateFile;
+            set => this.SetPropNotify(ref this.eachAlgoExportedToSeparateFile, value);
+        }
+
+        public bool AskUserHowToExportResultsEveryTime
+        {
+            get => this.askUserHowToExportResultsEveryTime;
+            set => this.SetPropNotify(ref this.askUserHowToExportResultsEveryTime, value);
         }
 
         public bool FilterAndCmderWndFollowsMainWnd

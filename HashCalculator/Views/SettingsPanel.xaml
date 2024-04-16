@@ -35,11 +35,17 @@
             Padding="8"
             Header="常规设置选项"
             Style="{StaticResource TabItemStyle1}">
-            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <ScrollViewer
+                HorizontalScrollBarVisibility="Auto"
+                VerticalScrollBarVisibility="Auto">
                 <StackPanel Margin="8">
-                    <GroupBox Foreground="#FF006FD6" Header="哈希值计算任务设置">
+                    <GroupBox
+                        Foreground="#FF006FD6"
+                        Header="哈希值计算任务设置">
                         <StackPanel>
-                            <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
+                            <StackPanel
+                                Margin="0,8,0,0"
+                                Orientation="Horizontal">
                                 <TextBlock
                                     VerticalAlignment="Center"
                                     Foreground="Black"
@@ -72,7 +78,9 @@
                         Foreground="#FF006FD6"
                         Header="文件搜索策略">
                         <StackPanel>
-                            <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
+                            <StackPanel
+                                Margin="0,8,0,0"
+                                Orientation="Horizontal">
                                 <TextBlock
                                     VerticalAlignment="Center"
                                     Foreground="Black"
@@ -83,7 +91,9 @@
                                     SelectedValue="{Binding SelectedSearchMethodForDragDrop, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                     SelectedValuePath="ItemValue" />
                             </StackPanel>
-                            <StackPanel Margin="0,8,0,4" Orientation="Horizontal">
+                            <StackPanel
+                                Margin="0,8,0,4"
+                                Orientation="Horizontal">
                                 <TextBlock
                                     VerticalAlignment="Center"
                                     Foreground="Black"
@@ -113,7 +123,9 @@
                                 Padding="4,0,0,0"
                                 Content="首选校验依据文件内指定的哈希算法"
                                 IsChecked="{Binding PreferChecklistAlgs, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                            <StackPanel Margin="20,8,0,4" Orientation="Horizontal">
+                            <StackPanel
+                                Margin="20,8,0,4"
+                                Orientation="Horizontal">
                                 <TextBlock
                                     VerticalAlignment="Center"
                                     Foreground="Black"
@@ -169,8 +181,12 @@
                             </StackPanel>
                         </StackPanel>
                     </GroupBox>
-                    <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
-                        <TextBlock VerticalAlignment="Center" Text="校验时自动把算法切换到：" />
+                    <StackPanel
+                        Margin="0,8,0,0"
+                        Orientation="Horizontal">
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Text="校验时自动把算法切换到：" />
                         <ComboBox
                             DisplayMemberPath="Display"
                             ItemsSource="{Binding AvailableResultsToSwitchTo}"
@@ -291,8 +307,12 @@
                             Grid.ColumnSpan="2"
                             Margin="0,8,0,0"
                             Orientation="Horizontal">
-                            <TextBlock Foreground="Black" Text="安装位置：" />
-                            <TextBlock Style="{StaticResource DescTextBlockStyle}" Text="{Binding DisplayingShellExtensionDir}" />
+                            <TextBlock
+                                Foreground="Black"
+                                Text="安装位置：" />
+                            <TextBlock
+                                Style="{StaticResource DescTextBlockStyle}"
+                                Text="{Binding DisplayingShellExtensionDir}" />
                         </StackPanel>
                         <StackPanel
                             Grid.Row="2"
@@ -302,7 +322,9 @@
                                 FontSize="8pt"
                                 Style="{StaticResource DescTextBlockStyle}"
                                 Text="1. 没有安装右键菜单时【安装位置】跟随配置文件的保存位置，已安装则显示实际安装位置" />
-                            <StackPanel Margin="0,4,0,0" Orientation="Horizontal">
+                            <StackPanel
+                                Margin="0,4,0,0"
+                                Orientation="Horizontal">
                                 <TextBlock
                                     FontSize="8pt"
                                     Style="{StaticResource DescTextBlockStyle}"
@@ -322,7 +344,9 @@
                                 FontSize="8pt"
                                 Style="{StaticResource DescTextBlockStyle}"
                                 Text="3. 不可强制移动、删除、重命名 HashCalculator[32].dll 文件，否则右键菜单将失效" />
-                            <StackPanel Margin="0,4,0,0" Orientation="Horizontal">
+                            <StackPanel
+                                Margin="0,4,0,0"
+                                Orientation="Horizontal">
                                 <TextBlock
                                     FontSize="8pt"
                                     Style="{StaticResource DescTextBlockStyle}"
@@ -387,7 +411,9 @@
             Style="{StaticResource TabItemStyle1}">
             <StackPanel Margin="4">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock VerticalAlignment="Center" Text="要设置别名的本地算法：" />
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        Text="要设置别名的本地算法：" />
                     <ComboBox
                         MinWidth="115"
                         VerticalContentAlignment="Center"
@@ -401,7 +427,9 @@
                         Command="{Binding ResetAlgorithmAliasCmd}"
                         Content="全部恢复默认" />
                 </StackPanel>
-                <TextBlock Margin="0,8,0,0" Text="要设置的别名：" />
+                <TextBlock
+                    Margin="0,8,0,0"
+                    Text="要设置的别名：" />
                 <TextBox
                     Padding="2"
                     AcceptsReturn="True"
@@ -585,6 +613,8 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition />
                     </Grid.RowDefinitions>
                     <GroupBox
@@ -594,12 +624,11 @@
                         Header="导出计算结果时导出哪些算法的结果">
                         <StackPanel>
                             <RadioButton
-                                Margin="8,0"
                                 VerticalContentAlignment="Center"
                                 Content="仅导出每行当前显示的算法的结果"
                                 IsChecked="{Binding HowToExportHashValues, Converter={StaticResource RadioExportCurrentAlgoCvt}}" />
                             <RadioButton
-                                Margin="8,8,0,0"
+                                Margin="0,8,0,0"
                                 VerticalContentAlignment="Center"
                                 Content="导出每行所有已计算的算法的结果"
                                 IsChecked="{Binding HowToExportHashValues, Converter={StaticResource RadioExportAllCalculatedAlgosCvt}}" />
@@ -613,12 +642,43 @@
                         IsChecked="{Binding UseDefaultOutputTypeWhenExporting}" />
                     <CheckBox
                         Grid.Row="2"
-                        Margin="0,8,0,0"
+                        Margin="0,4,0,0"
                         Padding="4,0,0,0"
                         Content="使主窗口的【导出】复选框控制该行所有子算法的【导出】而非当前算法"
                         IsChecked="{Binding ExportInMainControlsChildExports}" />
-                    <GroupBox
+                    <StackPanel
                         Grid.Row="3"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Margin="0,4,0,0">
+                        <CheckBox
+                            Padding="4,0,0,0"
+                            Content="把每种算法的结果分别导出到以算法名为扩展名的不同文件中"
+                            IsChecked="{Binding EachAlgoExportedToSeparateFile}" />
+                        <TextBlock
+                            Margin="18,0,0,0"
+                            FontSize="8pt"
+                            Style="{StaticResource DescTextBlockStyle}"
+                            Text="如果开启此选项，则导出结果时在【另存为】对话框的【文件类型】下拉列表选择" />
+                        <TextBlock
+                            Margin="18,0,0,0"
+                            FontSize="8pt"
+                            Style="{StaticResource DescTextBlockStyle}"
+                            Text="的方案只有导出模板和文件编码起作用，扩展名不起作用，用算法名作为扩展名。" />
+                        <TextBlock
+                            Margin="18,0,0,0"
+                            FontSize="8pt"
+                            Style="{StaticResource DescTextBlockStyle}"
+                            Text="同时【导出计算结果时导出哪些算法的结果】设置不生效，默认导出所有算法结果。" />
+                    </StackPanel>
+                    <CheckBox
+                        Grid.Row="4"
+                        Margin="0,4,0,0"
+                        Padding="4,0,0,0"
+                        Content="每次导出结果时都打开导出参数小窗口以设置本次的导出参数"
+                        IsChecked="{Binding AskUserHowToExportResultsEveryTime}" />
+                    <GroupBox
+                        Grid.Row="5"
                         Margin="0,8,0,0"
                         Padding="0,8,0,0"
                         Foreground="#FF006FD6"
@@ -681,7 +741,9 @@
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
-                                    <DataGridTemplateColumn MinWidth="70" Header="文件编码">
+                                    <DataGridTemplateColumn
+                                        MinWidth="70"
+                                        Header="文件编码">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
                                                 <ComboBox
@@ -741,6 +803,7 @@
                             </StackPanel>
                             <StackPanel
                                 Grid.Row="1"
+                                Grid.Column="0"
                                 Grid.ColumnSpan="2"
                                 Margin="0,4,0,0">
                                 <TextBlock
@@ -846,7 +909,7 @@
                                     Margin="0,2,0,0"
                                     FontSize="8pt"
                                     Style="{StaticResource DescTextBlockStyle}"
-                                    Text="点击【导出结果】按钮打开【另存为】对话框后在【保存类型】下拉列表内选择方案。" />
+                                    Text="点击【导出结果】按钮打开【另存为】对话框后，在【保存类型】下拉列表内选择方案。" />
                             </StackPanel>
                         </Grid>
                     </GroupBox>
@@ -1094,8 +1157,12 @@
                         Content="{Binding Source={x:Static local:Settings.ActiveConfigDir}, Converter={StaticResource ConfigurationLoadedFromUserCvt}}"
                         IsChecked="{Binding LocationForSavingConfigFiles, Converter={StaticResource ConfigLocationUserToTrueCvt}}"
                         IsEnabled="{Binding ProcessingShellExtension, Converter={StaticResource ReverseBooleanValueCvt}}" />
-                    <StackPanel Margin="0,4,0,0" Orientation="Horizontal">
-                        <TextBlock Foreground="Black" Text="实际保存位置：" />
+                    <StackPanel
+                        Margin="0,4,0,0"
+                        Orientation="Horizontal">
+                        <TextBlock
+                            Foreground="Black"
+                            Text="实际保存位置：" />
                         <TextBlock
                             Margin="0,0,0,0"
                             Style="{StaticResource DescTextBlockStyle}"
@@ -1125,14 +1192,18 @@
             Style="{StaticResource TabItemStyle1}">
             <StackPanel Margin="4">
                 <StackPanel>
-                    <TextBlock Style="{StaticResource DescTextBlockStyle}" Text="某个 (系列) 算法总是计算失败？" />
+                    <TextBlock
+                        Style="{StaticResource DescTextBlockStyle}"
+                        Text="某个 (系列) 算法总是计算失败？" />
                     <TextBlock
                         Margin="0,4,0,0"
                         Cursor="Hand"
                         Foreground="Blue"
                         MouseLeftButtonDown="OnTextBlockMouseLeftButtonDown"
                         Text="{Binding Source={x:Static local:SettingsViewModel.FixAlgoDlls}}" />
-                    <StackPanel Margin="0,4,0,0" Orientation="Horizontal">
+                    <StackPanel
+                        Margin="0,4,0,0"
+                        Orientation="Horizontal">
                         <TextBlock
                             FontSize="8pt"
                             Style="{StaticResource DescTextBlockStyle}"

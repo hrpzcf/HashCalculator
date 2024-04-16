@@ -931,11 +931,23 @@ namespace HashCalculator
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
+            if (Settings.Current.AskUserHowToExportResultsEveryTime)
+            {
+                HowToExportResults howToExportResults = new HowToExportResults()
+                {
+                    Owner = this.OwnerWnd,
+                };
+                if (howToExportResults.ShowDialog() != true)
+                {
+                    return;
+                }
+            }
             var usedModels = new List<TemplateForExportModel>();
             StringBuilder filterStringBuilder = new StringBuilder();
             foreach (TemplateForExportModel model in Settings.Current.TemplatesForExport)
             {
-                if (model.GetFilterFormat() is string filterFormat)
+                if (model.GetFilterFormat(Settings.Current.EachAlgoExportedToSeparateFile)
+                    is string filterFormat)
                 {
                     usedModels.Add(model);
                     filterStringBuilder.Append(filterFormat);
@@ -949,23 +961,34 @@ namespace HashCalculator
             if (!usedModels.Any())
             {
                 MessageBox.Show(this.OwnerWnd,
-                    "没有可用方案，可能方案的扩展名中存在不能用作文件名的字符，请到【导出结果设置】中修改。", "提示",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                    "没有可用方案，可能方案的扩展名中存在不能用作文件名的字符，请到【导出结果设置】中修改。",
+                    "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
             try
             {
+                string presetName = Settings.Current.LastSavedName;
+                string defaultNoExt = "hashsums";
+                string nameNoExt = string.IsNullOrEmpty(presetName) ? defaultNoExt :
+                    Path.GetFileNameWithoutExtension(presetName);
+                if (string.IsNullOrEmpty(nameNoExt))
+                {
+                    nameNoExt = defaultNoExt;
+                }
+                presetName = Settings.Current.EachAlgoExportedToSeparateFile ? nameNoExt :
+                    $"{nameNoExt}{usedModels[0].Extension}";
                 SaveFileDialog saveFileDialog = new SaveFileDialog()
                 {
                     ValidateNames = true,
                     Filter = filterStringBuilder.ToString(),
-                    FileName = $"hashsums{usedModels[0].Extension}",
+                    FileName = presetName,
                     InitialDirectory = Settings.Current.LastUsedPath,
                 };
                 if (saveFileDialog.ShowDialog() != true)
                 {
                     return;
                 }
+                Settings.Current.LastSavedName = Path.GetFileName(saveFileDialog.FileName);
                 Settings.Current.LastUsedPath = Path.GetDirectoryName(saveFileDialog.FileName);
                 OutputType output = OutputType.Unknown;
                 if (Settings.Current.UseDefaultOutputTypeWhenExporting)
@@ -975,24 +998,122 @@ namespace HashCalculator
                 bool all = Settings.Current.HowToExportHashValues != ExportAlgo.Current;
                 TemplateForExportModel model = usedModels.ElementAt(saveFileDialog.FilterIndex - 1);
                 Encoding encoding = model.GetEncoding();
-                string formatForExport = model.Template;
-                using (FileStream fileStream = File.Create(saveFileDialog.FileName))
-                using (StreamWriter streamWriter = new StreamWriter(fileStream, encoding))
+                if (Settings.Current.EachAlgoExportedToSeparateFile)
                 {
-                    foreach (HashViewModel hm in HashViewModels.Where(i => i.Result == HashResult.Succeeded))
-                    {
-                        if (hm.GenerateTextInFormat(formatForExport, output, all, endLine: true, seeExport: true,
-                            casedName: false) is string text)
-                        {
-                            streamWriter.Write(text);
-                        }
-                    }
+                    this.EachAlgoExportedToSeparateFile(saveFileDialog.FileName, encoding,
+                        model.Template, output);
+                }
+                else
+                {
+                    this.AlgorithmResultsExportedToSameFile(saveFileDialog.FileName, encoding,
+                        model.Template, output, all);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this.OwnerWnd, $"哈希值导出失败，异常信息：{ex.Message}", "错误",
+                MessageBox.Show(this.OwnerWnd, $"导出哈希值失败，异常信息：{ex.Message}", "错误",
                     MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void EachAlgoExportedToSeparateFile(string file, Encoding encoding, string format,
+            OutputType output)
+        {
+            var algoTypes = new Dictionary<AlgoType, string>();
+            List<HashViewModel> validHashViews = new List<HashViewModel>();
+            foreach (HashViewModel hashView in HashViewModels)
+            {
+                if (hashView.Result == HashResult.Succeeded &&
+                    hashView.AlgoInOutModels != null)
+                {
+                    foreach (AlgoInOutModel inOutModel in hashView.AlgoInOutModels)
+                    {
+                        if (!algoTypes.ContainsKey(inOutModel.AlgoType))
+                        {
+                            string fileFullPath = Path.ChangeExtension(file,
+                                inOutModel.AlgoName.ToLower());
+                            algoTypes.Add(inOutModel.AlgoType, fileFullPath);
+                        }
+                    }
+                    validHashViews.Add(hashView);
+                }
+            }
+            List<string> existedFiles = new List<string>();
+            foreach (string filePath in algoTypes.Values)
+            {
+                if (File.Exists(filePath))
+                {
+                    existedFiles.Add(filePath);
+                }
+            }
+            if (existedFiles.Count > 0)
+            {
+                string paths = '\n'.Join(existedFiles);
+                if (MessageBox.Show(this.OwnerWnd,
+                    $"已存在以下文件，继续导出将会覆盖原文件，仍然要导出吗？\n{paths}", "警告",
+                    MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes)
+                {
+                    return;
+                }
+            }
+            HashSet<AlgoType> algoTypesSet = algoTypes.Keys.ToHashSet();
+            foreach (HashViewModel hashView in validHashViews)
+            {
+                HashSet<AlgoType> typesSet = hashView.AlgoInOutModels.Select(
+                    i => i.AlgoType).ToHashSet();
+                if (!algoTypesSet.SetEquals(typesSet))
+                {
+                    if (MessageBox.Show(this.OwnerWnd,
+                        "并非所有行包含的算法都一样，如果仍要导出结果，则导出的每个清单里 包含的" +
+                        "文件数量不一样，仍然要导出吗？", "警告",
+                        MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+            }
+            foreach (KeyValuePair<AlgoType, string> keyValuePair in algoTypes)
+            {
+                using (FileStream fileStream = File.Create(keyValuePair.Value))
+                using (StreamWriter streamWriter = new StreamWriter(fileStream, encoding))
+                {
+                    foreach (HashViewModel hashView in validHashViews)
+                    {
+                        foreach (AlgoInOutModel inOutModel in hashView.AlgoInOutModels)
+                        {
+                            if (inOutModel.AlgoType == keyValuePair.Key)
+                            {
+                                if (inOutModel.GenerateTextInFormat(hashView, format, output, endLine: true,
+                                seeExport: true, casedAlgName: false) is string text)
+                                {
+                                    streamWriter.Write(text);
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void AlgorithmResultsExportedToSameFile(string file, Encoding encoding, string format,
+            OutputType output, bool all)
+        {
+            using (FileStream fileStream = File.Create(file))
+            using (StreamWriter streamWriter = new StreamWriter(fileStream, encoding))
+            {
+                foreach (HashViewModel hm in HashViewModels.Where(i => i.Result == HashResult.Succeeded))
+                {
+                    if (hm.GenerateTextInFormat(format, output, all, endLine: true, seeExport: true,
+                        casedName: false) is string text)
+                    {
+                        streamWriter.Write(text);
+                    }
+                }
             }
         }
 
