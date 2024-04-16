@@ -151,13 +151,13 @@
                                 Content="有新复制的哈希信息时自动填充校验依据文本框并校验"
                                 IsChecked="{Binding MonitorNewHashStringInClipboard, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             <CheckBox
-                                Margin="20,8,0,0"
+                                Margin="20,4,0,0"
                                 Padding="4,0,0,0"
                                 Content="完成哈希值校验后把主窗口带到前台"
                                 IsChecked="{Binding SwitchMainWndFgWhenNewHashCopied, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 IsEnabled="{Binding ElementName=checkBoxVerifyWhenClipbaordNewHash, Path=IsChecked}" />
                             <StackPanel
-                                Margin="20,8,0,4"
+                                Margin="20,4,0,4"
                                 IsEnabled="{Binding ElementName=checkBoxVerifyWhenClipbaordNewHash, Path=IsChecked}"
                                 Orientation="Horizontal">
                                 <TextBlock
