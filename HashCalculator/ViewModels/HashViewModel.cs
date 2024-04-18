@@ -739,7 +739,7 @@ namespace HashCalculator
                         model.Algo.Initialize();
                     }
                     int actualReadCount = 0;
-                    GlobalUtils.Suggest(ref buffer, this.FileLength);
+                    CommonUtils.Suggest(ref buffer, this.FileLength);
                     Action<int> updateProgress = size => { this.Progress += size; };
                     bool terminateByCancellation = false;
                     if (Settings.Current.ParallelBetweenAlgos)
@@ -830,7 +830,7 @@ namespace HashCalculator
             }
             finally
             {
-                GlobalUtils.MakeSureBuffer(ref buffer, 0);
+                CommonUtils.MakeSureBuffer(ref buffer, 0);
             }
         FinishingTouchesBeforeExiting:
             if (this.AlgoInOutModels != null)

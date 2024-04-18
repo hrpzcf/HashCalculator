@@ -7,6 +7,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Media;
 using Microsoft.Win32;
 
 namespace HashCalculator
@@ -406,6 +408,41 @@ namespace HashCalculator
                 return smallerValueBytes;
             }
             return default(byte[]);
+        }
+
+        public static T GetDepParent<T>(this DependencyObject child) where T : DependencyObject
+        {
+            while (child != null)
+            {
+                DependencyObject parent = VisualTreeHelper.GetParent(child);
+                if (parent is T resultObject)
+                {
+                    return resultObject;
+                }
+                child = parent;
+            }
+            return default(T);
+        }
+
+        public static IEnumerable<T> GetDepChilds<T>(this DependencyObject parent) where T : DependencyObject
+        {
+            int count = VisualTreeHelper.GetChildrenCount(parent);
+            for (int index = 0; index < count; ++index)
+            {
+                var childObject = VisualTreeHelper.GetChild(parent, index);
+                if (childObject is T resultObject1)
+                {
+                    yield return resultObject1;
+                }
+                else if (childObject != null)
+                {
+                    foreach (T resultObject2 in GetDepChilds<T>(childObject))
+                    {
+                        yield return resultObject2;
+                    }
+                }
+            }
+            yield break;
         }
     }
 }

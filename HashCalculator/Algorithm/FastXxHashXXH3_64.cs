@@ -9,22 +9,22 @@ namespace HashCalculator
         private IntPtr _state = IntPtr.Zero;
         private XXHErrorCode _errorCode = XXHErrorCode.XXH_OK;
 
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr xxh3_64_new();
 
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern XXHErrorCode xxh3_64_init(IntPtr statePtr);
 
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern XXHErrorCode xxh3_64_update(IntPtr statePtr, byte[] input, ulong length);
 
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern XXHErrorCode xxh3_64_update(IntPtr statePtr, ref byte input, ulong length);
 
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern ulong xxh3_64_final(IntPtr statePtr);
 
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern XXHErrorCode xxh3_64_delete(IntPtr statePtr);
 
         public int DigestLength => 8;

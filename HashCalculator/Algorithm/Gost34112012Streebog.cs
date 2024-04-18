@@ -10,22 +10,22 @@ namespace HashCalculator
         private AlgoType algoType = AlgoType.Unknown;
         private IntPtr _state = IntPtr.Zero;
 
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr streebog_new();
 
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern void streebog_delete(IntPtr state);
 
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern void streebog_init(IntPtr state, uint bitLength);
 
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern void streebog_update(IntPtr state, byte[] input, ulong size);
 
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern void streebog_update(IntPtr state, ref byte input, ulong size);
 
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern void streebog_final(IntPtr state, byte[] output);
 
         public int DigestLength { get; }

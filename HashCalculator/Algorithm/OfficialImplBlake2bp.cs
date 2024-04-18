@@ -5,22 +5,22 @@ namespace HashCalculator
 {
     internal class OfficialImplBlake2bp : OfficialImplBlake2
     {
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr blake2bp_new();
 
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern void blake2bp_delete(IntPtr statePtr);
 
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern int blake2bp_init(IntPtr statePtr, ulong outlen);
 
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern int blake2bp_update(IntPtr statePtr, byte[] input, ulong inlen);
 
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern int blake2bp_update(IntPtr statePtr, ref byte input, ulong inlen);
 
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern int blake2bp_final(IntPtr statePtr, byte[] output, ulong outlen);
 
         public override int MaxOutputLength => 64;

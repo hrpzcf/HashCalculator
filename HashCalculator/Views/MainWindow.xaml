@@ -427,7 +427,7 @@
             VirtualizingPanel.IsContainerVirtualizable="True"
             VirtualizingPanel.IsVirtualizing="True"
             VirtualizingPanel.VirtualizationMode="Recycling">
-            <local:MultiSelectorAttach.Monitoring>
+            <local:ExecTargetAttach.Monitoring>
                 <MultiBinding Converter="{StaticResource StateAndSelectionWayToMonitoring}" Mode="OneWay">
                     <Binding Mode="OneWay" Path="State" />
                     <Binding
@@ -435,7 +435,7 @@
                         Path="IsMainRowSelectedByCheckBox"
                         Source="{x:Static local:Settings.Current}" />
                 </MultiBinding>
-            </local:MultiSelectorAttach.Monitoring>
+            </local:ExecTargetAttach.Monitoring>
             <DataGrid.ContextMenu>
                 <ContextMenu>
                     <MenuItem

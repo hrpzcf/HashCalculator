@@ -41,7 +41,7 @@
     <ApplicationIcon>Images\icon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>HashCalculator.AppLoading</StartupObject>
+    <StartupObject>HashCalculator.Loading</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CommandLine, Version=2.9.1.0, Culture=neutral, PublicKeyToken=5a870481e358d379, processorArchitecture=MSIL">
@@ -109,7 +109,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppLoading.cs" />
+    <Compile Include="Settings\Loading.cs" />
     <Compile Include="Cmders\MarkFilesCmder.cs" />
     <Compile Include="Cmders\MarkFilesCmderCtrl.xaml.cs">
       <DependentUpon>MarkFilesCmderCtrl.xaml</DependentUpon>
@@ -131,34 +131,32 @@
     <Compile Include="Cmders\SelectTargetsCmderCtrl.xaml.cs">
       <DependentUpon>SelectTargetsCmderCtrl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Globals\GlobalUtils.cs" />
-    <Compile Include="Globals\Embedded.cs" />
     <Compile Include="Initializer\Initializer.cs" />
     <Compile Include="Initializer\MappedInfo.cs" />
-    <Compile Include="HashAlgos\GmSslSM3.cs" />
-    <Compile Include="HashAlgos\Gost34112012Streebog.cs" />
-    <Compile Include="HashAlgos\LibRHashMD4.cs" />
-    <Compile Include="HashAlgos\LibRHashHas160.cs" />
-    <Compile Include="HashAlgos\LibRHashRipeMD160.cs" />
-    <Compile Include="HashAlgos\LibRHashED2K.cs" />
-    <Compile Include="HashAlgos\NamazsoQuickXor.cs" />
-    <Compile Include="HashAlgos\OfficialImplBlake2.cs" />
-    <Compile Include="Globals\Settings.cs" />
-    <Compile Include="HashAlgos\LibRHashSHA224.cs" />
-    <Compile Include="HashAlgos\LibRHashWhirlpool.cs" />
-    <Compile Include="HashAlgos\OfficialImplBlake2b.cs" />
-    <Compile Include="HashAlgos\IHashAlgoInfo.cs" />
-    <Compile Include="HashAlgos\OfficialImplBlake3.cs" />
-    <Compile Include="HashAlgos\FastXxHashXXH3_128.cs" />
-    <Compile Include="HashAlgos\FastXxHashXXH3_64.cs" />
-    <Compile Include="HashAlgos\FastXxHashXXH32.cs" />
-    <Compile Include="HashAlgos\FastXxHashXXH64.cs" />
-    <Compile Include="HashAlgos\NetCryptoCngAbs.cs" />
-    <Compile Include="HashAlgos\NetCryptoCngMD5.cs" />
-    <Compile Include="HashAlgos\NetCryptoCngSHA1.cs" />
-    <Compile Include="HashAlgos\NetCryptoCngSHA256.cs" />
-    <Compile Include="HashAlgos\NetCryptoCngSHA384.cs" />
-    <Compile Include="HashAlgos\NetCryptoCngSHA512.cs" />
+    <Compile Include="Algorithm\GmSslSM3.cs" />
+    <Compile Include="Algorithm\Gost34112012Streebog.cs" />
+    <Compile Include="Algorithm\LibRHashMD4.cs" />
+    <Compile Include="Algorithm\LibRHashHas160.cs" />
+    <Compile Include="Algorithm\LibRHashRipeMD160.cs" />
+    <Compile Include="Algorithm\LibRHashED2K.cs" />
+    <Compile Include="Algorithm\NamazsoQuickXor.cs" />
+    <Compile Include="Algorithm\OfficialImplBlake2.cs" />
+    <Compile Include="Settings\Settings.cs" />
+    <Compile Include="Algorithm\LibRHashSHA224.cs" />
+    <Compile Include="Algorithm\LibRHashWhirlpool.cs" />
+    <Compile Include="Algorithm\OfficialImplBlake2b.cs" />
+    <Compile Include="Algorithm\IHashAlgoInfo.cs" />
+    <Compile Include="Algorithm\OfficialImplBlake3.cs" />
+    <Compile Include="Algorithm\FastXxHashXXH3_128.cs" />
+    <Compile Include="Algorithm\FastXxHashXXH3_64.cs" />
+    <Compile Include="Algorithm\FastXxHashXXH32.cs" />
+    <Compile Include="Algorithm\FastXxHashXXH64.cs" />
+    <Compile Include="Algorithm\NetCryptoCngAbs.cs" />
+    <Compile Include="Algorithm\NetCryptoCngMD5.cs" />
+    <Compile Include="Algorithm\NetCryptoCngSHA1.cs" />
+    <Compile Include="Algorithm\NetCryptoCngSHA256.cs" />
+    <Compile Include="Algorithm\NetCryptoCngSHA384.cs" />
+    <Compile Include="Algorithm\NetCryptoCngSHA512.cs" />
     <Compile Include="Filters\CmpResultFilter.cs" />
     <Compile Include="Filters\CmpResultFilterCtrl.xaml.cs">
       <DependentUpon>CmpResultFilterCtrl.xaml</DependentUpon>
@@ -181,12 +179,12 @@
     <Compile Include="Filters\HashAlgoFilterCtrl.xaml.cs">
       <DependentUpon>HashAlgoFilterCtrl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="HashAlgos\OfficialImplBlake2bp.cs" />
-    <Compile Include="HashAlgos\OfficialImplBlake2s.cs" />
-    <Compile Include="HashAlgos\OfficialImplBlake2sp.cs" />
-    <Compile Include="HashAlgos\ExtendedKcpSHA3.cs" />
-    <Compile Include="HashAlgos\OpenHashTabCrc64.cs" />
-    <Compile Include="HashAlgos\StbrummeRepoCrc32.cs" />
+    <Compile Include="Algorithm\OfficialImplBlake2bp.cs" />
+    <Compile Include="Algorithm\OfficialImplBlake2s.cs" />
+    <Compile Include="Algorithm\OfficialImplBlake2sp.cs" />
+    <Compile Include="Algorithm\ExtendedKcpSHA3.cs" />
+    <Compile Include="Algorithm\OpenHashTabCrc64.cs" />
+    <Compile Include="Algorithm\StbrummeRepoCrc32.cs" />
     <Compile Include="Native\Constants.cs" />
     <Compile Include="Native\Structures.cs" />
     <Compile Include="Others\BytesComparer.cs" />
@@ -218,7 +216,7 @@
     <Compile Include="Native\Methods.cs" />
     <Compile Include="Others\HcmDataHelper.cs" />
     <Compile Include="Others\HcmData.cs" />
-    <Compile Include="Others\MultiSelectorAttach.cs" />
+    <Compile Include="Property\ExecTargetAttach.cs" />
     <Compile Include="ViewModels\AboutWindowModel.cs" />
     <Compile Include="ViewModels\DoubleProgressModel.cs" />
     <Compile Include="ViewModels\TemplateForChecklistModel.cs" />
@@ -417,7 +415,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Info.cs" />
+    <Compile Include="Settings\Info.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -467,8 +465,8 @@
     <EmbeddedResource Include="Assembly\System.Runtime.CompilerServices.Unsafe.dll" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="HashAlgos\AlgoDlls\hashalgs64.dll" />
-    <EmbeddedResource Include="HashAlgos\AlgoDlls\hashalgs32.dll" />
+    <EmbeddedResource Include="Algorithm\AlgoDlls\hashalgs64.dll" />
+    <EmbeddedResource Include="Algorithm\AlgoDlls\hashalgs32.dll" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Assembly\Newtonsoft.Json.dll" />

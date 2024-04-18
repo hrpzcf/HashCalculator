@@ -64,7 +64,7 @@ namespace HashCalculator
             try
             {
                 this._stream.Position = start;
-                GlobalUtils.Suggest(ref buffer, count);
+                CommonUtils.Suggest(ref buffer, count);
                 double progressValue = 0L;
                 long remainingCount = count;
                 int actualReadCount = 0;
@@ -91,7 +91,7 @@ namespace HashCalculator
             }
             finally
             {
-                GlobalUtils.MakeSureBuffer(ref buffer, 0);
+                CommonUtils.MakeSureBuffer(ref buffer, 0);
             }
             return false;
         }

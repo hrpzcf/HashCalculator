@@ -10,22 +10,22 @@ namespace HashCalculator
         private AlgoType algoType = AlgoType.Unknown;
         private IntPtr _state = IntPtr.Zero;
 
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr blake3_new();
 
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern void blake3_delete(IntPtr state);
 
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern void blake3_init(IntPtr state);
 
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern void blake3_update(IntPtr state, byte[] input, ulong size);
 
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern void blake3_update(IntPtr state, ref byte input, ulong size);
 
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern void blake3_final(IntPtr state, byte[] output, ulong size);
 
         public int DigestLength { get; }

@@ -80,7 +80,7 @@ namespace HashCalculator
                         Directory.CreateDirectory(Settings.ShellExtensionDir);
                     }
                     _ = await UninstallShellExtension();
-                    if (AppLoading.Executing.GetManifestResourceStream(embeddedShellExtPath) is Stream manifest)
+                    if (Loading.Executing.GetManifestResourceStream(embeddedShellExtPath) is Stream manifest)
                     {
                         using (manifest)
                         {

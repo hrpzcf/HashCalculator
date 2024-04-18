@@ -16,6 +16,11 @@ namespace HashCalculator
         private const string libraryDirName = "Library";
         private const string hashCalculatorDirName = "HashCalculator";
 
+        /// <summary>
+        /// 算法的实现库名称 (外置的动态链接库)
+        /// </summary>
+        public const string HashAlgs = "hashalgs.dll";
+
         public static string ShellExtensionName { get; } = Environment.Is64BitOperatingSystem ?
             "HashCalculator.dll" : "HashCalculator32.dll";
 
@@ -216,7 +221,7 @@ namespace HashCalculator
             bool settingsModelLoaded = false;
             if (ActiveConfigDir.Equals(ConfigDirExec))
             {
-                string unusedDll = Path.Combine(LibraryDirUser, Embedded.HashAlgs);
+                string unusedDll = Path.Combine(LibraryDirUser, HashAlgs);
                 try
                 {
                     if (File.Exists(unusedDll))
@@ -232,7 +237,7 @@ namespace HashCalculator
             }
             else if (ActiveConfigDir.Equals(ConfigDirUser))
             {
-                string unusedDll = Path.Combine(LibraryDirExec, Embedded.HashAlgs);
+                string unusedDll = Path.Combine(LibraryDirExec, HashAlgs);
                 if (File.Exists(unusedDll))
                 {
                     try
@@ -279,7 +284,7 @@ namespace HashCalculator
 
         public static string ExtractEmbeddedAlgoDllFile(bool force)
         {
-            string newFileFullPath = Path.Combine(ActiveLibraryDir, Embedded.HashAlgs);
+            string newFileFullPath = Path.Combine(ActiveLibraryDir, HashAlgs);
             if (force || Current.PreviousVer != Info.Ver || !File.Exists(newFileFullPath))
             {
                 try
@@ -290,9 +295,9 @@ namespace HashCalculator
                     }
                     string resourcePath = string.Format("{0}.{1}{2}.dll",
                         hashAlgoDllResPrefix,
-                        Path.GetFileNameWithoutExtension(Embedded.HashAlgs),
+                        Path.GetFileNameWithoutExtension(HashAlgs),
                         Environment.Is64BitProcess ? "64" : "32");
-                    using (Stream stream = AppLoading.Executing.GetManifestResourceStream(resourcePath))
+                    using (Stream stream = Loading.Executing.GetManifestResourceStream(resourcePath))
                     {
                         if (stream != null)
                         {

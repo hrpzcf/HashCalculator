@@ -121,10 +121,10 @@ namespace HashCalculator
         /// </summary>
         private static readonly byte[] MARKER = { 0xF3, 0x48, 0x43, 0x4D };
 
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern uint crc32_update(byte[] input, ulong in_len, uint prevCrc32);
 
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern uint crc32_update(ref byte input, ulong in_len, uint prevCrc32);
 
         public HcmData(long position, bool marker = false)

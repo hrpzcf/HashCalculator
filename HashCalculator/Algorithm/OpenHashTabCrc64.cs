@@ -8,10 +8,10 @@ namespace HashCalculator
     {
         private ulong previousCrc64 = 0ul;
 
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern ulong crc64_update(ulong prevCrc32, byte[] input, ulong in_len);
 
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern ulong crc64_update(ulong prevCrc32, ref byte input, ulong in_len);
 
         public int DigestLength => 8;

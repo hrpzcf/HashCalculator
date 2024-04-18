@@ -4,39 +4,39 @@ using System.Security.Cryptography;
 
 namespace HashCalculator
 {
-    internal class LibRHashED2K : HashAlgorithm, IHashAlgoInfo
+    internal class LibRHashWhirlpool : HashAlgorithm, IHashAlgoInfo
     {
         private IntPtr _state = IntPtr.Zero;
 
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr ed2k_new();
+        [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        private static extern IntPtr whirlpool_new();
 
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void ed2k_delete(IntPtr state);
+        [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        private static extern void whirlpool_delete(IntPtr state);
 
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void ed2k_init(IntPtr state);
+        [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        private static extern void whirlpool_init(IntPtr state);
 
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void ed2k_update(IntPtr state, byte[] input, ulong inlen);
+        [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        private static extern void whirlpool_update(IntPtr state, byte[] input, ulong inlen);
 
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void ed2k_update(IntPtr state, ref byte input, ulong inlen);
+        [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        private static extern void whirlpool_update(IntPtr state, ref byte input, ulong inlen);
 
-        [DllImport(Embedded.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void ed2k_final(IntPtr state, byte[] output);
+        [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+        private static extern void whirlpool_final(IntPtr state, byte[] output);
 
-        public string AlgoName => "eD2k";
+        public int DigestLength { get; } = 64;
 
-        public AlgoType AlgoType => AlgoType.ED2K;
+        public string AlgoName => "Whirlpool";
 
-        public int DigestLength => 16;
+        public AlgoType AlgoType => AlgoType.WHIRLPOOL;
 
         private void DeleState()
         {
             if (this._state != IntPtr.Zero)
             {
-                ed2k_delete(this._state);
+                whirlpool_delete(this._state);
                 this._state = IntPtr.Zero;
             }
         }
@@ -50,17 +50,17 @@ namespace HashCalculator
         public override void Initialize()
         {
             this.DeleState();
-            this._state = ed2k_new();
+            this._state = whirlpool_new();
             if (this._state == IntPtr.Zero)
             {
                 throw new Exception("Initialization failed");
             }
-            ed2k_init(this._state);
+            whirlpool_init(this._state);
         }
 
         public IHashAlgoInfo NewInstance()
         {
-            return new LibRHashED2K();
+            return new LibRHashWhirlpool();
         }
 
         protected override void HashCore(byte[] array, int ibStart, int cbSize)
@@ -71,13 +71,13 @@ namespace HashCalculator
             }
             if (ibStart == 0 && cbSize == array.Length)
             {
-                ed2k_update(this._state, array, (ulong)cbSize);
+                whirlpool_update(this._state, array, (ulong)cbSize);
             }
             else
             {
                 ReadOnlySpan<byte> span = new ReadOnlySpan<byte>(array, ibStart, cbSize);
                 ref byte input = ref MemoryMarshal.GetReference(span);
-                ed2k_update(this._state, ref input, (ulong)cbSize);
+                whirlpool_update(this._state, ref input, (ulong)cbSize);
             }
         }
 
@@ -88,7 +88,7 @@ namespace HashCalculator
                 throw new InvalidOperationException("Not initialized yet");
             }
             byte[] resultBuffer = new byte[this.DigestLength];
-            ed2k_final(this._state, resultBuffer);
+            whirlpool_final(this._state, resultBuffer);
             return resultBuffer;
         }
     }

@@ -6,13 +6,13 @@ using System.Windows.Controls.Primitives;
 
 namespace HashCalculator
 {
-    public class MultiSelectorAttach
+    public static class ExecTargetAttach
     {
         public static readonly DependencyProperty MonitoringProperty =
             DependencyProperty.RegisterAttached(
                 "Monitoring",
                 typeof(bool),
-                typeof(MultiSelectorAttach),
+                typeof(ExecTargetAttach),
                 new PropertyMetadata(false, MonitoringCallBack)
             );
 

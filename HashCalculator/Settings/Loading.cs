@@ -7,7 +7,7 @@ using System.Windows.Threading;
 
 namespace HashCalculator
 {
-    public partial class AppLoading : Application
+    public class Loading : Application
     {
         private static readonly string[] assemblyNames = new string[]
         {
@@ -29,7 +29,7 @@ namespace HashCalculator
         {
             Settings.StartupArgs = args;
             Settings.SetProcessEnvVar();
-            AppLoading app = new AppLoading();
+            Loading app = new Loading();
             app.Exit += ApplicationExit;
             app.Startup += ApplicationStartup;
             AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
