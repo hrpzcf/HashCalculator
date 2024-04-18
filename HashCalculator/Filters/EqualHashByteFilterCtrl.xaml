@@ -22,15 +22,9 @@
             Padding="4,0,0,0"
             Content="在表格显示的所有行的指定算法的计算结果中查找相同项"
             IsChecked="{Binding CheckEmbeddedHashValue, Converter={StaticResource ReverseBooleanValueCvt}}" />
-        <StackPanel
-            Margin="18,4,0,0"
-            IsEnabled="{Binding CheckEmbeddedHashValue, Converter={StaticResource ReverseBooleanValueCvt}}">
-            <RadioButton
-                Content="指定算法为第一行当前显示的算法"
-                IsChecked="{Binding AutomaticallyFocusAlgorithm}" />
-            <StackPanel
-                Margin="0,2,0,0"
-                Orientation="Horizontal">
+        <StackPanel Margin="18,4,0,0" IsEnabled="{Binding CheckEmbeddedHashValue, Converter={StaticResource ReverseBooleanValueCvt}}">
+            <RadioButton Content="指定算法为第一行当前显示的算法" IsChecked="{Binding AutomaticallyFocusAlgorithm}" />
+            <StackPanel Margin="0,2,0,0" Orientation="Horizontal">
                 <RadioButton
                     Grid.Row="0"
                     Grid.Column="0"
