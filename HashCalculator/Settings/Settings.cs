@@ -12,7 +12,7 @@ namespace HashCalculator
     {
         private const string appConfigFileName = "settings.json";
         private const string menuConfigFileName = "menus_unicode.json";
-        private const string hashAlgoDllResPrefix = "HashCalculator.HashAlgos.AlgoDlls";
+        private const string hashAlgoDllResPrefix = "HashCalculator.Algorithm.AlgoDlls";
         private const string libraryDirName = "Library";
         private const string hashCalculatorDirName = "HashCalculator";
 
