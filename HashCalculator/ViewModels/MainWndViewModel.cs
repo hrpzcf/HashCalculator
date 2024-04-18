@@ -296,9 +296,9 @@ namespace HashCalculator
             CancellationToken token = this.Cancellation.Token;
             await Task.Run(() =>
             {
+                CancellationToken stopSearchingToken = this.searchCancellation.Token;
                 lock (this.displayingModelLock)
                 {
-                    CancellationToken stopSearchingToken = this.searchCancellation.Token;
                     foreach (PathPackage package in packages)
                     {
                         if (token.IsCancellationRequested ||
