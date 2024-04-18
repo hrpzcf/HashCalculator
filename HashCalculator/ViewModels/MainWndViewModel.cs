@@ -20,7 +20,7 @@ namespace HashCalculator
 {
     internal class MainWndViewModel : NotifiableModel
     {
-        private const int interval = 800;
+        private const int interval = 600;
         private readonly Timer checkStateTimer = null;
         private readonly ModelStarter starter = new ModelStarter(
             Settings.Current.SelectedTaskNumberLimit, 32);
