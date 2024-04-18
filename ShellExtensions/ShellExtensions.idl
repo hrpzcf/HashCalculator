@@ -2,7 +2,6 @@
 // 生成类型库(ShellExtensions.tlb)和封送处理代码。
 
 import "oaidl.idl";
-import "ocidl.idl";
 
 [
     object,
@@ -43,5 +42,4 @@ library ShellExtensionsLib
     };
 };
 
-import "shobjidl.idl";
 import "shobjidl.idl";

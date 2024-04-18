@@ -1,11 +1,11 @@
 ﻿#include "pch.h"
-#include <Windows.h>
+#include "commons.h"
+#include "ResString.h"
+#include "tiny-json.h"
 #include <map>
 #include <string>
 #include <strsafe.h>
-#include "tiny-json.h"
-#include "commons.h"
-#include "ResString.h"
+#include <Windows.h>
 
 using std::pair;
 using std::map;

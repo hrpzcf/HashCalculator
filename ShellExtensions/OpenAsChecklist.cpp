@@ -1,8 +1,8 @@
 ﻿#include "pch.h"
-#include <shlobj_core.h>
-#include <strsafe.h>
 #include "commons.h"
 #include "OpenAsChecklist.h"
+#include <shlobj_core.h>
+#include <strsafe.h>
 
 
 VOID COpenAsChecklist::CreateGUIProcessVerifyHash(LPCSTR algo) const {

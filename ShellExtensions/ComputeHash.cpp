@@ -3,10 +3,10 @@
 // https://blog.csdn.net/u012741077/article/details/50642895
 
 #include "pch.h"
-#include <shlobj_core.h>
-#include <strsafe.h>
 #include "commons.h"
 #include "ComputeHash.h"
+#include <shlobj_core.h>
+#include <strsafe.h>
 
 
 VOID CComputeHash::CreateGUIProcessComputeHash(LPCSTR algo) {
