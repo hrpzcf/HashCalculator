@@ -259,8 +259,7 @@ namespace HashCalculator
 
         private void AddModelAction(HashModelArg arg)
         {
-            Interlocked.Increment(ref this.serial);
-            HashViewModel model = new HashViewModel(this.serial, arg);
+            HashViewModel model = new HashViewModel(++this.serial, arg);
             this.displayedModels.Add(model);
             model.ModelCapturedEvent += this.ModelCapturedAction;
             model.ModelCapturedEvent += this.starter.PendingModel;
