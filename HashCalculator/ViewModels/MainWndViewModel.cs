@@ -366,13 +366,13 @@ namespace HashCalculator
                     }
                 }
             }
-            StringBuilder sb = new StringBuilder();
-            sb.Append($"总行数：{HashViewModels.Count}\n已成功：{succeeded}\n");
-            sb.Append($"已失败：{hasFailed}\n已取消：{canceled}\n\n");
-            sb.Append($"校验汇总：\n算法数：{totalHash}\n");
-            sb.Append($"已匹配：{matched}\n不匹配：{mismatch}\n");
-            sb.Append($"不确定：{uncertain}\n无关联：{unrelated}\n未校验：{noresult}");
-            this.Report = sb.ToString();
+            StringBuilder builder = new StringBuilder();
+            builder.Append($"总行数：{HashViewModels.Count}\n已成功：{succeeded}\n");
+            builder.Append($"已失败：{hasFailed}\n已取消：{canceled}\n\n");
+            builder.Append($"校验汇总：\n算法数：{totalHash}\n");
+            builder.Append($"已匹配：{matched}\n不匹配：{mismatch}\n");
+            builder.Append($"不确定：{uncertain}\n无关联：{unrelated}\n未校验：{noresult}");
+            this.Report = builder.ToString();
         }
 
         /// <summary>
