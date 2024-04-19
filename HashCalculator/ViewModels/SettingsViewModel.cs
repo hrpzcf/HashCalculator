@@ -64,6 +64,7 @@ namespace HashCalculator
         private bool useUnixStyleLineBreaks = true;
         private bool eachAlgoExportedToSeparateFile = false;
         private bool askUserHowToExportResultsEveryTime = true;
+        private bool delayTheStartOfCalculationTasks = false;
 
         private CmpRes algoToSwitchToAfterHashChecked = CmpRes.Matched;
         private ExportAlgo howToExportHashValues = ExportAlgo.AllCalculated;
@@ -86,6 +87,7 @@ namespace HashCalculator
         private int selectedTaskNumberLimit = 1;
         private int minCopiedCharsToTriggerHashCheck = 8;
         private int maxCopiedCharsToTriggerHashCheck = 512;
+        private int millisecondsOfDelayedStartup = 360;
 
         private RelayCommand installShellExtCmd;
         private RelayCommand unInstallShellExtCmd;
@@ -572,6 +574,18 @@ namespace HashCalculator
         {
             get => this.caseOfCopiedAlgNameFollowsOutputType;
             set => this.SetPropNotify(ref this.caseOfCopiedAlgNameFollowsOutputType, value);
+        }
+
+        public int MillisecondsOfDelayedStartup
+        {
+            get => this.millisecondsOfDelayedStartup;
+            set => this.SetPropNotify(ref this.millisecondsOfDelayedStartup, value);
+        }
+
+        public bool DelayTheStartOfCalculationTasks
+        {
+            get => this.delayTheStartOfCalculationTasks;
+            set => this.SetPropNotify(ref this.delayTheStartOfCalculationTasks, value);
         }
 
         public AlgoType[] SelectedAlgos { get; set; }

@@ -90,19 +90,26 @@ namespace HashCalculator
         /// <summary>
         /// 为 HashViewModel 的 ModelCapturedEvent 和 ModelReleasedEvent 事件提供异步执行的扩展方法 
         /// </summary>
-        /// <param name="action"></param>
-        /// <param name="model"></param>
-        public static async void InvokeAsync(this Action<HashViewModel> action, HashViewModel model)
+        public static void InvokeAsync(this Action<HashViewModel> action, HashViewModel model)
         {
+            InvokeAsync(action, model, 0);
+        }
+
+        /// <summary>
+        /// 为 HashViewModel 的 ModelCapturedEvent 和 ModelReleasedEvent 事件提供延迟异步执行的扩展方法 
+        /// </summary>
+        public static async void InvokeAsync(this Action<HashViewModel> action, HashViewModel model, int delay)
+        {
+            if (delay > 0)
+            {
+                await Task.Delay(delay);
+            }
             await Task.Run(() => { action.Invoke(model); });
         }
 
         /// <summary>
         /// 为 IEnumerable<T> 类型提供返回 HashSet<T> 的 ToHashSet 扩展方法
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="enumerale"></param>
-        /// <returns></returns>
         public static HashSet<T> ToHashSet<T>(this IEnumerable<T> enumerale)
         {
             return new HashSet<T>(enumerale);
@@ -111,10 +118,6 @@ namespace HashCalculator
         /// <summary>
         /// 为 IEnumerable<T> 类型提供返回 HashSet<T> 的 ToHashSet 扩展方法
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="enumerale"></param>
-        /// <param name="comparer"></param>
-        /// <returns></returns>
         public static HashSet<T> ToHashSet<T>(this IEnumerable<T> enumerale, IEqualityComparer<T> comparer)
         {
             return new HashSet<T>(enumerale, comparer);
@@ -123,8 +126,6 @@ namespace HashCalculator
         /// <summary>
         /// 为 string 类型的文件完整路径提供获取文件唯一标识符的扩展方法
         /// </summary>
-        /// <param name="filePath"></param>
-        /// <returns></returns>
         public static CmpableFileIndex GetFileIndex(this string filePath)
         {
             int INVALID_HANDLE_VALUE = -1;
@@ -162,11 +163,6 @@ namespace HashCalculator
         /// <summary>
         /// 为 IEnumerable<T> 对象提供与另一个 IEnumerable<T> 合并遍历子元素的扩展方法
         /// </summary>
-        /// <typeparam name="T1"></typeparam>
-        /// <typeparam name="T2"></typeparam>
-        /// <param name="enum1"></param>
-        /// <param name="enum2"></param>
-        /// <returns></returns>
         public static IEnumerable<Tuple<T1, T2>> ZipElements<T1, T2>(this IEnumerable<T1> enum1, IEnumerable<T2> enum2)
         {
             if (enum1 == null || enum2 == null)

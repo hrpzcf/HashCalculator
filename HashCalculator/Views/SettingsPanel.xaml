@@ -37,40 +37,7 @@
             Style="{StaticResource TabItemStyle1}">
             <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                 <StackPanel Margin="8">
-                    <GroupBox Foreground="#FF006FD6" Header="哈希值计算任务设置">
-                        <StackPanel>
-                            <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
-                                <TextBlock
-                                    VerticalAlignment="Center"
-                                    Foreground="Black"
-                                    Text="同时进行的任务数上限：" />
-                                <ComboBox
-                                    DisplayMemberPath="Display"
-                                    ItemsSource="{Binding AvailableTaskNumLimits}"
-                                    SelectedValue="{Binding SelectedTaskNumberLimit, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                    SelectedValuePath="ItemValue" />
-                            </StackPanel>
-                            <TextBlock
-                                Margin="18,2,0,0"
-                                FontSize="8pt"
-                                Style="{StaticResource DescTextBlockStyle}"
-                                Text="任务数上限选项中除了 1，其他选项都与下一个设置互斥，无法同时开启；" />
-                            <TextBlock
-                                Margin="18,0,0,0"
-                                FontSize="8pt"
-                                Style="{StaticResource DescTextBlockStyle}"
-                                Text="盲目选择高任务上限不一定能加快文件哈希值的计算速度" />
-                            <CheckBox
-                                Margin="0,8,0,4"
-                                Padding="4,0,0,0"
-                                Content="任务包含多个算法时多个算法之间并行计算"
-                                IsChecked="{Binding ParallelBetweenAlgos, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                        </StackPanel>
-                    </GroupBox>
-                    <GroupBox
-                        Margin="0,8,0,0"
-                        Foreground="#FF006FD6"
-                        Header="文件搜索策略">
+                    <GroupBox Foreground="#FF006FD6" Header="文件搜索策略">
                         <StackPanel>
                             <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
                                 <TextBlock
@@ -245,6 +212,57 @@
                     Padding="4,0,0,0"
                     Content="显示主窗口按钮的名称"
                     IsChecked="{Binding DisplayMainWndButtonText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </StackPanel>
+        </TabItem>
+        <TabItem
+            Padding="8"
+            Header="任务设置选项"
+            Style="{StaticResource TabItemStyle1}">
+            <StackPanel Margin="8">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        Foreground="Black"
+                        Text="同时进行的任务数上限：" />
+                    <ComboBox
+                        DisplayMemberPath="Display"
+                        ItemsSource="{Binding AvailableTaskNumLimits}"
+                        SelectedValue="{Binding SelectedTaskNumberLimit, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        SelectedValuePath="ItemValue" />
+                </StackPanel>
+                <TextBlock
+                    Margin="18,2,0,0"
+                    FontSize="8pt"
+                    Style="{StaticResource DescTextBlockStyle}"
+                    Text="任务数上限选项中除了 1，其他选项都与下一个设置互斥，无法同时开启；" />
+                <TextBlock
+                    Margin="18,0,0,0"
+                    FontSize="8pt"
+                    Style="{StaticResource DescTextBlockStyle}"
+                    Text="盲目选择高任务上限不一定能加快文件哈希值的计算速度" />
+                <CheckBox
+                    Margin="0,8,0,0"
+                    Padding="4,0,0,0"
+                    Content="任务包含多个算法时多个算法之间并行计算"
+                    IsChecked="{Binding ParallelBetweenAlgos, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <CheckBox
+                    Margin="0,8,0,0"
+                    Padding="4,0,0,0"
+                    Content="延迟启动被添加到表格中的哈希值计算任务"
+                    IsChecked="{Binding DelayTheStartOfCalculationTasks, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <StackPanel Margin="18,2,0,0" Orientation="Horizontal">
+                    <TextBlock VerticalAlignment="Center" Text="延迟启动的毫秒数：" />
+                    <TextBox
+                        MinWidth="100"
+                        Padding="0,1"
+                        MaxLines="1"
+                        Text="{Binding MillisecondsOfDelayedStartup, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                </StackPanel>
+                <TextBlock
+                    Margin="18,2,0,0"
+                    FontSize="8pt"
+                    Style="{StaticResource DescTextBlockStyle}"
+                    Text="此项设置可一定程度缓解“添加任务”和“启动任务”同时进行导致的表格显示卡顿" />
             </StackPanel>
         </TabItem>
         <TabItem

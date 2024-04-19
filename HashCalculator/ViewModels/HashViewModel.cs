@@ -465,6 +465,11 @@ namespace HashCalculator
 
         public bool StartupModel(bool force)
         {
+            return this.StartupModel(force, delay: 0);
+        }
+
+        public bool StartupModel(bool force, int delay)
+        {
             bool startupModelResult = false;
             if (Monitor.TryEnter(this.computeHashOperationLock))
             {
@@ -495,7 +500,7 @@ namespace HashCalculator
                 if (conditionMatched)
                 {
                     this.ResetHashViewModel();
-                    this.ModelCapturedEvent?.InvokeAsync(this);
+                    this.ModelCapturedEvent?.InvokeAsync(this, delay);
                     startupModelResult = true;
                 }
                 Monitor.Exit(this.computeHashOperationLock);

@@ -265,7 +265,14 @@ namespace HashCalculator
             model.ModelCapturedEvent += this.starter.PendingModel;
             model.ModelReleasedEvent += this.ModelReleasedAction;
             HashViewModels.Add(model);
-            model.StartupModel(false);
+            if (Settings.Current.DelayTheStartOfCalculationTasks)
+            {
+                model.StartupModel(force: false, Settings.Current.MillisecondsOfDelayedStartup);
+            }
+            else
+            {
+                model.StartupModel(force: false);
+            }
         }
 
         public async void BeginDisplayModels(IEnumerable<HashViewModel> models, bool resetAlg)
