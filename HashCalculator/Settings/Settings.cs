@@ -90,50 +90,55 @@ namespace HashCalculator
 
         public static void UpdateConfigurationPaths(ConfigLocation location)
         {
-            if (File.Exists(ActiveConfigFile))
+            try
             {
-                try
+                if (location == ConfigLocation.Unset)
                 {
-                    string switchTo = location == ConfigLocation.ExecDir ?
-                        ConfigDirExec : location == ConfigLocation.UserDir ?
-                            ConfigDirUser : null;
-                    if (switchTo == null || switchTo.Equals(ActiveConfigDir))
+                    return;
+                }
+                string switchToDir = location == ConfigLocation.UserDir ?
+                    ConfigDirUser : ConfigDirExec;
+                if (switchToDir.Equals(ActiveConfigDir))
+                {
+                    return;
+                }
+                string oldConfigFilePath = ActiveConfigFile;
+                ActiveConfigDir = switchToDir;
+                ActiveConfigFile = Path.Combine(switchToDir, appConfigFileName);
+                if (!Directory.Exists(switchToDir))
+                {
+                    Directory.CreateDirectory(switchToDir);
+                }
+                if (File.Exists(oldConfigFilePath))
+                {
+                    if (File.Exists(ActiveConfigFile))
                     {
-                        return;
+                        File.Delete(ActiveConfigFile);
                     }
-                    if (!Directory.Exists(switchTo))
+                    File.Move(oldConfigFilePath, ActiveConfigFile);
+                }
+                // 外壳扩展路径为 null 说明扩展未安装，可以移动右键菜单配置文件
+                // 否则并不能移动右键菜单配置文件，需要在外壳扩展被卸载后触发移动
+                if (ShellExtHelper.GetCurrentShellExtension() == null)
+                {
+                    string oldMenuConfigFile = MenuConfigFile;
+                    MenuConfigFile = Path.Combine(ActiveConfigDir, menuConfigFileName);
+                    ShellExtensionDir = ActiveConfigDir;
+                    ShellExtensionFile = Path.Combine(ActiveConfigDir, ShellExtensionName);
+                    if (File.Exists(oldMenuConfigFile))
                     {
-                        Directory.CreateDirectory(switchTo);
-                    }
-                    string newConfigFilePath = Path.Combine(switchTo, appConfigFileName);
-                    if (File.Exists(newConfigFilePath))
-                    {
-                        File.Delete(newConfigFilePath);
-                    }
-                    File.Move(ActiveConfigFile, newConfigFilePath);
-                    ActiveConfigDir = switchTo;
-                    ActiveConfigFile = newConfigFilePath;
-                    // 外壳扩展路径为 null 说明扩展未安装，可以移动右键菜单配置文件
-                    // 否则并不能移动右键菜单配置文件，需要在外壳扩展被卸载后触发移动
-                    if (ShellExtHelper.GetCurrentShellExtension() == null &&
-                        File.Exists(MenuConfigFile))
-                    {
-                        string newMenuConfigFile = Path.Combine(ActiveConfigDir, menuConfigFileName);
-                        if (File.Exists(newMenuConfigFile))
+                        if (File.Exists(MenuConfigFile))
                         {
-                            File.Delete(newMenuConfigFile);
+                            File.Delete(MenuConfigFile);
                         }
-                        File.Move(MenuConfigFile, newMenuConfigFile);
-                        MenuConfigFile = newMenuConfigFile;
-                        ShellExtensionDir = ActiveConfigDir;
-                        ShellExtensionFile = Path.Combine(ActiveConfigDir, ShellExtensionName);
+                        File.Move(oldMenuConfigFile, MenuConfigFile);
                     }
                 }
-                catch
-                {
-                }
-                UpdateDisplayingPaths();
             }
+            catch
+            {
+            }
+            UpdateDisplayingPaths();
         }
 
         /// <summary>
@@ -172,19 +177,18 @@ namespace HashCalculator
             Current.DisplayingShellExtensionDir = ShellExtensionDir;
         }
 
-        public static async void MoveConfigurationFiles(object sender, PropertyChangedEventArgs e)
+        public static async void MoveConfigFiles(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(SettingsViewModel.LocationForSavingConfigFiles))
+            if (e.PropertyName == nameof(SettingsViewModel.LocationForSavingConfigFiles) &&
+                sender is SettingsViewModel settingsViewModel &&
+                !settingsViewModel.ProcessingShellExtension)
             {
-                if (sender is SettingsViewModel settingsViewModel)
+                settingsViewModel.ProcessingShellExtension = true;
+                await Task.Run(() =>
                 {
-                    settingsViewModel.ProcessingShellExtension = true;
-                    await Task.Run(() =>
-                    {
-                        UpdateConfigurationPaths(settingsViewModel.LocationForSavingConfigFiles);
-                    });
-                    settingsViewModel.ProcessingShellExtension = false;
-                }
+                    UpdateConfigurationPaths(settingsViewModel.LocationForSavingConfigFiles);
+                });
+                settingsViewModel.ProcessingShellExtension = false;
             }
         }
 
@@ -218,7 +222,7 @@ namespace HashCalculator
         /// </summary>
         public static bool LoadSettings()
         {
-            bool settingsModelLoaded = false;
+            bool settingsViewModelLoaded = false;
             if (ActiveConfigDir.Equals(ConfigDirExec))
             {
                 string unusedDll = Path.Combine(LibraryDirUser, HashAlgs);
@@ -233,7 +237,9 @@ namespace HashCalculator
                         Directory.Delete(LibraryDirUser);
                     }
                 }
-                catch { }
+                catch
+                {
+                }
             }
             else if (ActiveConfigDir.Equals(ConfigDirUser))
             {
@@ -244,7 +250,9 @@ namespace HashCalculator
                     {
                         File.Delete(unusedDll);
                     }
-                    catch { }
+                    catch
+                    {
+                    }
                 }
             }
             try
@@ -253,14 +261,15 @@ namespace HashCalculator
                 {
                     JsonSerializer jsonSerializer = new JsonSerializer();
                     jsonSerializer.NullValueHandling = NullValueHandling.Ignore;
-                    using (StreamReader sr = new StreamReader(ActiveConfigFile))
+                    // 读取所有字符串的原因是尽早关闭文件以免影响反序列化导致
+                    // SettingsViewModel.LocationForSavingConfigFiles 属性变化
+                    // 触发的移动配置文件位置的操作（无法移动还没有关闭的文件）
+                    string jContent = File.ReadAllText(ActiveConfigFile);
+                    using (StringReader sr = new StringReader(jContent))
                     using (JsonTextReader jsonTextReader = new JsonTextReader(sr))
                     {
-                        if (jsonSerializer.Deserialize<SettingsViewModel>(jsonTextReader) is SettingsViewModel model)
-                        {
-                            Current = model;
-                            settingsModelLoaded = true;
-                        }
+                        jsonSerializer.Populate(jsonTextReader, Current);
+                        settingsViewModelLoaded = true;
                     }
                 }
             }
@@ -269,12 +278,12 @@ namespace HashCalculator
                 MessageBox.Show($"设置加载失败：{ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
             UpdateDisplayingPaths();
-            if (!settingsModelLoaded)
+            if (!settingsViewModelLoaded)
             {
                 Current.ResetTemplatesForExport();
                 Current.ResetTemplatesForChecklist();
             }
-            return settingsModelLoaded;
+            return settingsViewModelLoaded;
         }
 
         public static void SetProcessEnvVar()

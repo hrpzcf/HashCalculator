@@ -119,6 +119,7 @@ namespace HashCalculator
                 this.mainWndTop = (SystemParameters.PrimaryScreenHeight
                     - this.mainWndHeight) / 2;
             }
+            this.PropertyChanged += Settings.MoveConfigFiles;
         }
 
         public string PreviousVer { get; set; }
@@ -1190,7 +1191,6 @@ namespace HashCalculator
             {
                 model.Selected = this.SelectedAlgos?.Contains(model.AlgoType) ?? false;
             }
-            this.PropertyChanged += Settings.MoveConfigurationFiles;
         }
 
         [JsonIgnore, XmlIgnore]
