@@ -491,6 +491,7 @@
                                 <RowDefinition />
                                 <RowDefinition />
                                 <RowDefinition />
+                                <RowDefinition />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -568,6 +569,18 @@
                                 FontSize="8pt"
                                 Style="{StaticResource DescTextBlockStyle}"
                                 Text="在复制时此占位符将被替换为 Windows 换行符。" />
+                            <TextBlock
+                                Grid.Row="6"
+                                Grid.Column="0"
+                                Foreground="Black"
+                                Text="$horztab$" />
+                            <TextBlock
+                                Grid.Row="6"
+                                Grid.Column="1"
+                                Margin="16,0,0,0"
+                                FontSize="8pt"
+                                Style="{StaticResource DescTextBlockStyle}"
+                                Text="在复制时此占位符将被替换为横向制表符（ &quot;\t&quot; ）。" />
                         </Grid>
                         <TextBlock
                             Margin="0,8,0,0"
@@ -811,6 +824,7 @@
                                         <RowDefinition />
                                         <RowDefinition />
                                         <RowDefinition />
+                                        <RowDefinition />
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
@@ -888,6 +902,18 @@
                                         FontSize="8pt"
                                         Style="{StaticResource DescTextBlockStyle}"
                                         Text="导出计算结果时此占位符将被替换为 Unix 或 Windows 换行符。" />
+                                    <TextBlock
+                                        Grid.Row="6"
+                                        Grid.Column="0"
+                                        Foreground="Black"
+                                        Text="$horztab$" />
+                                    <TextBlock
+                                        Grid.Row="6"
+                                        Grid.Column="1"
+                                        Margin="16,0,0,0"
+                                        FontSize="8pt"
+                                        Style="{StaticResource DescTextBlockStyle}"
+                                        Text="导出计算结果时此占位符将被替换为横向制表符（ &quot;\t&quot; ）。" />
                                 </Grid>
                                 <TextBlock
                                     Margin="0,8,0,0"

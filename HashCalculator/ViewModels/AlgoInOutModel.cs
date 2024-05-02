@@ -198,6 +198,7 @@ namespace HashCalculator
                     {
                         formatBuilder.Append(lineBreak);
                     }
+                    formatBuilder.Replace("$horztab$", "\t");
                     formatBuilder.Replace("$newline$", lineBreak);
                     formatBuilder.Replace("$algo$", algoName);
                     formatBuilder.Replace("$hash$", BytesToStrByOutputTypeCvt.Convert(this.HashResult, output));
