@@ -1563,8 +1563,8 @@ namespace HashCalculator
                         new GenericItemModel("暂停任务", new RelayCommand(this.PauseSelectedModelsAction)),
                         new GenericItemModel("继续任务", new RelayCommand(this.ContinueSelectedModelsAction)),
                         new GenericItemModel("取消任务", new RelayCommand(this.CancelSelectedModelsAction)),
-                        new GenericItemModel("新增计算", new RelayCommand(this.RestartSelectedModelsNewLineAction)),
-                        new GenericItemModel("启动未成功行", new RelayCommand(this.RestartSelectedUnsucceededModelsAction)),
+                        new GenericItemModel("新行重算", new RelayCommand(this.RestartSelectedModelsNewLineAction)),
+                        new GenericItemModel("计算缺值项", new RelayCommand(this.RestartSelectedUnsucceededModelsAction)),
                         new GenericItemModel("重新计算", new RelayCommand(this.RestartSelectedModelsForceAction)),
                     };
                 }

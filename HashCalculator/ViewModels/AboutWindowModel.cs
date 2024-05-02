@@ -91,7 +91,7 @@ namespace HashCalculator
             new GenericItemModel(
                 "xxHash",
                 "https://github.com/Cyan4973/xxHash",
-                "提供 XXH 系列哈希算法的实现"),
+                "提供 XXH 系列极快速哈希算法的实现"),
             new GenericItemModel(
                 "CommandLine",
                 "https://github.com/commandlineparser/commandline",

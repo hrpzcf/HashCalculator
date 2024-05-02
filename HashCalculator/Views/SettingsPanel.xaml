@@ -390,11 +390,11 @@
                             HorizontalAlignment="Left"
                             Background="{x:Null}"
                             Command="{Binding OpenEditContextMenuCmd}"
-                            Content="打开快捷菜单配置文件编辑器" />
+                            Content="打开右键菜单集成配置编辑器" />
                         <TextBlock
                             Margin="0,4,0,0"
                             Style="{StaticResource DescTextBlockStyle}"
-                            Text="自定义要集成到系统右键菜单上的 HashCalculator 菜单项，提高操作效率" />
+                            Text="通过编辑配置实现自定义要集成到系统右键菜单上的 HashCalculator 菜单项，提高操作效率" />
                     </StackPanel>
                 </GroupBox>
             </StackPanel>
@@ -586,7 +586,7 @@
                             Margin="0,8,0,0"
                             FontSize="8pt"
                             Style="{StaticResource DescTextBlockStyle}"
-                            Text="此设置影响软件所有与复制哈希值相关的按钮或菜单的复制结果。" />
+                            Text="此设置影响软件所有与复制计算结果相关的按钮或菜单的复制效果。" />
                         <TextBlock
                             Margin="0,2,0,0"
                             FontSize="8pt"

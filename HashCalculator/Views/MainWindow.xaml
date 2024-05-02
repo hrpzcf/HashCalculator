@@ -456,7 +456,7 @@
                             </Style>
                         </MenuItem.ItemContainerStyle>
                     </MenuItem>
-                    <MenuItem Header="当前显示的算法切换为" ItemsSource="{Binding SwitchDisplayedAlgoCmds}">
+                    <MenuItem Header="切换当前显示的算法" ItemsSource="{Binding SwitchDisplayedAlgoCmds}">
                         <MenuItem.ItemContainerStyle>
                             <Style TargetType="MenuItem">
                                 <Setter Property="Header" Value="{Binding Display}" />
@@ -480,9 +480,9 @@
                     <MenuItem
                         Command="{Binding CopyFilesFullPathCmd}"
                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
-                        Header="复制完整路径" />
+                        Header="复制文件的完整路径" />
                     <MenuItem
-                        Header="复制所选行当前哈希值"
+                        Header="复制所选行当前结果"
                         IsEnabled="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems, Converter={StaticResource CopyModelsHashMenuEnabledCvt}}"
                         ItemsSource="{Binding CopyModelsHashMenuCmds}">
                         <MenuItem.ItemContainerStyle>
@@ -494,7 +494,7 @@
                         </MenuItem.ItemContainerStyle>
                     </MenuItem>
                     <MenuItem
-                        Header="复制所选行所有哈希值"
+                        Header="复制所选行所有结果"
                         IsEnabled="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems, Converter={StaticResource CopyModelsHashMenuEnabledCvt}}"
                         ItemsSource="{Binding CopyModelsAllHashesMenuCmds}">
                         <MenuItem.ItemContainerStyle>
