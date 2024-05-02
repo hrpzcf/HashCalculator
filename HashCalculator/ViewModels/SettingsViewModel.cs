@@ -41,11 +41,13 @@ namespace HashCalculator
         private double restoreFilesProgressHeight = 200.0;
 
         private bool mainWndTopmost = false;
-        private bool noExportColumn = false;
-        private bool noDurationColumn = false;
+        private bool showResultText = false;
+        private bool noSerialNumColumn = false;
         private bool noFileSizeColumn = false;
         private bool noOutputTypeColumn = false;
-        private bool showResultText = false;
+        private bool noDurationColumn = false;
+        private bool noExportColumn = false;
+        private bool noCmpResultColumn = false;
         private bool isMainRowSelectedByCheckBox = false;
         private bool showHashInTagColumn = false;
         private bool generateTextInFormat = false;
@@ -346,16 +348,10 @@ namespace HashCalculator
             set => this.SetPropNotify(ref this.showResultText, value);
         }
 
-        public bool NoExportColumn
+        public bool NoSerialNumColumn
         {
-            get => this.noExportColumn;
-            set => this.SetPropNotify(ref this.noExportColumn, value);
-        }
-
-        public bool NoDurationColumn
-        {
-            get => this.noDurationColumn;
-            set => this.SetPropNotify(ref this.noDurationColumn, value);
+            get => this.noSerialNumColumn;
+            set => this.SetPropNotify(ref this.noSerialNumColumn, value);
         }
 
         public bool NoFileSizeColumn
@@ -368,6 +364,24 @@ namespace HashCalculator
         {
             get => this.noOutputTypeColumn;
             set => this.SetPropNotify(ref this.noOutputTypeColumn, value);
+        }
+
+        public bool NoDurationColumn
+        {
+            get => this.noDurationColumn;
+            set => this.SetPropNotify(ref this.noDurationColumn, value);
+        }
+
+        public bool NoExportColumn
+        {
+            get => this.noExportColumn;
+            set => this.SetPropNotify(ref this.noExportColumn, value);
+        }
+
+        public bool NoCmpResultColumn
+        {
+            get => this.noCmpResultColumn;
+            set => this.SetPropNotify(ref this.noCmpResultColumn, value);
         }
 
         [JsonIgnore, XmlIgnore]

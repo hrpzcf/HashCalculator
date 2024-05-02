@@ -180,8 +180,18 @@
                 <CheckBox
                     Margin="0,0,0,4"
                     Padding="4,0,0,0"
+                    Content="不显示【序号】列"
+                    IsChecked="{Binding NoSerialNumColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <CheckBox
+                    Margin="0,0,0,4"
+                    Padding="4,0,0,0"
                     Content="不显示【文件大小】列"
                     IsChecked="{Binding NoFileSizeColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <CheckBox
+                    Margin="0,0,0,4"
+                    Padding="4,0,0,0"
+                    Content="不显示【输出方式】列"
+                    IsChecked="{Binding NoOutputTypeColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <CheckBox
                     Margin="0,0,0,4"
                     Padding="4,0,0,0"
@@ -195,8 +205,8 @@
                 <CheckBox
                     Margin="0,0,0,4"
                     Padding="4,0,0,0"
-                    Content="不显示【输出方式】列"
-                    IsChecked="{Binding NoOutputTypeColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    Content="不显示【校验结果】列"
+                    IsChecked="{Binding NoCmpResultColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <CheckBox
                     Margin="0,0,0,4"
                     Padding="4,0,0,0"

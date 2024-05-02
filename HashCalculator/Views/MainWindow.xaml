@@ -522,7 +522,10 @@
                 </ContextMenu>
             </DataGrid.ContextMenu>
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding SerialNumber}" Header="序号" />
+                <DataGridTextColumn
+                    Binding="{Binding SerialNumber}"
+                    Header="序号"
+                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoSerialNumColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}" />
                 <DataGridTemplateColumn
                     MinWidth="180"
                     Header="文件名"
@@ -824,7 +827,8 @@
                     MinWidth="60"
                     CanUserSort="True"
                     Header="校验结果"
-                    SortMemberPath="CurrentInOutModel.HashCmpResult">
+                    SortMemberPath="CurrentInOutModel.HashCmpResult"
+                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoCmpResultColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Label
