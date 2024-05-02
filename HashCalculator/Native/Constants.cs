@@ -533,4 +533,84 @@ namespace HashCalculator
         /// </summary>
         SHCNF_FLUSHNOWAIT = 0x2000
     }
+
+    /// <summary>
+    /// https://learn.microsoft.com/zh-cn/windows/win32/api/shellapi/nf-shellapi-shgetfileinfow
+    /// </summary>
+    [Flags]
+    internal enum SHGFI : uint
+    {
+        /// <summary>
+        /// 版本 5.0。 将相应的覆盖应用于文件的图标。 还必须设置 SHGFI_ICON 标志。
+        /// </summary>
+        SHGFI_ADDOVERLAYS = 0x000000020,
+        /// <summary>
+        /// 修改SHGFI_ATTRIBUTES以指示 psfi 上的 SHFILEINFO 结构的 dwAttributes 成员包含所需的特定属性。 这些属性将传递给 IShellFolder：：GetAttributesOf。 如果未指定此标志，0xFFFFFFFF将传递给 IShellFolder：：GetAttributesOf，请求所有属性。 不能使用 SHGFI_ICON 标志指定此标志。
+        /// </summary>
+        SHGFI_ATTR_SPECIFIED = 0x000020000,
+        /// <summary>
+        /// 检索项属性。 属性将复制到 psfi 参数中指定的结构的 dwAttributes 成员。 这些属性与从 IShellFolder：：GetAttributesOf 获取的属性相同。
+        /// </summary>
+        SHGFI_ATTRIBUTES = 0x000000800,
+        /// <summary>
+        /// 检索文件的显示名称，即 Windows 资源管理器中显示的名称。 该名称将复制到 psfi 中指定的结构的 szDisplayName 成员。 返回的显示名称使用长文件名（如果有），而不是文件名的 8.3 格式。 请注意，显示名称可能会受到设置的影响，例如是否显示扩展。
+        /// </summary>
+        SHGFI_DISPLAYNAME = 0x000000200,
+        /// <summary>
+        /// 如果 pszPath 标识了可执行文件，则检索可执行文件的类型。 信息将打包到返回值中。 此标志不能与任何其他标志一起指定。
+        /// </summary>
+        SHGFI_EXETYPE = 0x000002000,
+        /// <summary>
+        /// 检索表示文件图标的句柄，以及系统映像列表中图标的索引。 句柄将复制到 psfi 指定的结构的 hIcon 成员，并将索引复制到 iIcon 成员。
+        /// </summary>
+        SHGFI_ICON = 0x000000100,
+        /// <summary>
+        /// 检索包含表示 pszPath 指定的文件的图标的文件的名称，该文件的图标处理程序的 IExtractIcon：：GetIconLocation 方法返回。 此外，检索该文件中的图标索引。 包含图标的文件的名称将复制到 psfi 指定的结构的 szDisplayName 成员。 图标的索引将复制到该结构的 iIcon 成员。
+        /// </summary>
+        SHGFI_ICONLOCATION = 0x000001000,
+        /// <summary>
+        /// 修改 SHGFI_ICON，使函数检索文件的大型图标。 还必须设置 SHGFI_ICON 标志。
+        /// </summary>
+        SHGFI_LARGEICON = 0x000000000,
+        /// <summary>
+        /// 修改 SHGFI_ICON，使函数将链接覆盖添加到文件的图标。 还必须设置 SHGFI_ICON 标志。
+        /// </summary>
+        SHGFI_LINKOVERLAY = 0x000008000,
+        /// <summary>
+        /// 修改 SHGFI_ICON，使函数检索文件的打开图标。 还用于修改 SHGFI_SYSICONINDEX，使函数返回包含文件打开小图标的系统映像列表的句柄。 容器对象显示一个打开图标，指示容器处于打开状态。 还必须设置 SHGFI_ICON 和/或 SHGFI_SYSICONINDEX 标志。
+        /// </summary>
+        SHGFI_OPENICON = 0x000000002,
+        /// <summary>
+        /// 版本 5.0。 返回覆盖图标的索引。 覆盖索引的值在 psfi 指定的结构的 iIcon 成员的八位中返回。 此标志还要求设置 SHGFI_ICON 。
+        /// </summary>
+        SHGFI_OVERLAYINDEX = 0x000000040,
+        /// <summary>
+        /// 指示 pszPath 是 ITEMIDLIST 结构的地址，而不是路径名称。
+        /// </summary>
+        SHGFI_PIDL = 0x000000008,
+        /// <summary>
+        /// 修改 SHGFI_ICON，使函数将文件的图标与系统突出显示颜色混合。 还必须设置 SHGFI_ICON 标志。
+        /// </summary>
+        SHGFI_SELECTED = 0x000010000,
+        /// <summary>
+        /// 修改 SHGFI_ICON，使函数检索 Shell 大小的图标。 如果未指定此标志，函数将根据系统指标值调整图标大小。 还必须设置 SHGFI_ICON 标志。
+        /// </summary>
+        SHGFI_SHELLICONSIZE = 0x000000004,
+        /// <summary>
+        /// 修改 SHGFI_ICON，使函数检索文件的小图标。 还用于修改 SHGFI_SYSICONINDEX，使 函数返回包含小图标图像的系统图像列表的句柄。 还必须设置 SHGFI_ICON 和/或 SHGFI_SYSICONINDEX 标志。
+        /// </summary>
+        SHGFI_SMALLICON = 0x000000001,
+        /// <summary>
+        /// 检索系统映像列表图标的索引。 如果成功，索引将复制到 psfi 的 iIcon 成员。 返回值是系统映像列表的句柄。 只有索引成功复制到 iIcon 的那些图像才有效。 尝试访问系统映像列表中的其他映像将导致未定义的行为。
+        /// </summary>
+        SHGFI_SYSICONINDEX = 0x000004000,
+        /// <summary>
+        /// 检索描述文件类型的字符串。 字符串将复制到 psfi 中指定的结构的 szTypeName 成员。
+        /// </summary>
+        SHGFI_TYPENAME = 0x000000400,
+        /// <summary>
+        /// 指示函数不应尝试访问 pszPath 指定的文件。 相反，它的行为应与 pszPath 指定的文件存在一样，其中包含在 dwFileAttributes 中传递的文件属性。 此标志不能与 SHGFI_ATTRIBUTES、 SHGFI_EXETYPE或 SHGFI_PIDL 标志组合使用。
+        /// </summary>
+        SHGFI_USEFILEATTRIBUTES = 0x000000010,
+    }
 }

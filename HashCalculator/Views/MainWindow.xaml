@@ -532,13 +532,26 @@
                     SortMemberPath="FileName">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock
-                                Margin="1,0"
-                                Padding="4"
-                                Background="{Binding FdGroupId, Converter={StaticResource CmpColorToSolidColorBrushCvt}}"
-                                Foreground="{Binding InvalidFileName, Converter={StaticResource InvalidFileNameForegroundCvt}}"
-                                Text="{Binding FileName}"
-                                ToolTip="{Binding Information}" />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="fileIcon" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Image
+                                    Grid.Column="0"
+                                    Margin="1"
+                                    VerticalAlignment="Center"
+                                    Source="{Binding FileIcon}" />
+                                <TextBlock
+                                    Grid.Column="1"
+                                    Margin="1"
+                                    Padding="4"
+                                    VerticalAlignment="Center"
+                                    Background="{Binding FdGroupId, Converter={StaticResource CmpColorToSolidColorBrushCvt}}"
+                                    Foreground="{Binding InvalidFileName, Converter={StaticResource InvalidFileNameForegroundCvt}}"
+                                    Text="{Binding FileName}"
+                                    ToolTip="{Binding Information}" />
+                            </Grid>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

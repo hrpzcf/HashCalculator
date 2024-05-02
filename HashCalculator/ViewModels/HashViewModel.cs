@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
 namespace HashCalculator
@@ -71,6 +72,10 @@ namespace HashCalculator
             {
                 if (!arg.Deprecated)
                 {
+                    if (Settings.Current.ShowFileIcon)
+                    {
+                        this.FileIcon = CommonUtils.GetFileIcon(arg.FilePath);
+                    }
                     this.FileLength = this.Information.Length;
                 }
                 else
@@ -99,6 +104,8 @@ namespace HashCalculator
         public int SerialNumber { get; }
 
         public FileInfo Information { get; }
+
+        public BitmapSource FileIcon { get; }
 
         public string RelativePath { get; }
 

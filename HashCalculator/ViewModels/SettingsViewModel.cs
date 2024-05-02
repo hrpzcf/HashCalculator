@@ -41,6 +41,7 @@ namespace HashCalculator
         private double restoreFilesProgressHeight = 200.0;
 
         private bool mainWndTopmost = false;
+        private bool showFileIcon = true;
         private bool showResultText = false;
         private bool noSerialNumColumn = false;
         private bool noFileSizeColumn = false;
@@ -340,6 +341,12 @@ namespace HashCalculator
                     this.ParallelBetweenAlgos = false;
                 }
             }
+        }
+
+        public bool ShowFileIcon
+        {
+            get => this.showFileIcon;
+            set => this.SetPropNotify(ref this.showFileIcon, value);
         }
 
         public bool ShowResultText

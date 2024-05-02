@@ -25,6 +25,21 @@ namespace HashCalculator
         public int bottom;
     }
 
+    /// <summary>
+    /// https://learn.microsoft.com/zh-cn/windows/win32/api/shellapi/ns-shellapi-shfileinfow
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+    internal struct SHFILEINFOW
+    {
+        public IntPtr hIcon;
+        public int iIcon;
+        public uint dwAttributes;
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
+        public string szDisplayName;
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 80)]
+        public string szTypeName;
+    }
+
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     internal struct SHFILEOPSTRUCTW64
     {

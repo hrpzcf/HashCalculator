@@ -8,7 +8,9 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows;
+using System.Windows.Interop;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Drawing = System.Drawing;
 
 namespace HashCalculator
@@ -21,6 +23,8 @@ namespace HashCalculator
         private const double kb = 1024D;
         private const double mb = 1048576D;
         private const double gb = 1073741824D;
+
+        private static readonly uint shfileinfowSize = (uint)Marshal.SizeOf(typeof(SHFILEINFOW));
 
         private static readonly char[] dirSeparators = new char[] {
             Path.DirectorySeparatorChar,
@@ -603,6 +607,32 @@ namespace HashCalculator
             // 缩放率变大 SystemParameters.PrimaryScreenWidth 变小，反之同理
             double screenScalingFactor = actualScreenWidth / SystemParameters.PrimaryScreenWidth;
             return screenScalingFactor;
+        }
+
+        public static BitmapSource GetFileIcon(string filePath, bool largeIcon = false)
+        {
+            if (File.Exists(filePath))
+            {
+                SHFILEINFOW info = new SHFILEINFOW();
+                SHGFI uFlags = SHGFI.SHGFI_ICON | (largeIcon ? SHGFI.SHGFI_LARGEICON : SHGFI.SHGFI_SMALLICON);
+                UIntPtr result = SHELL32.SHGetFileInfoW(filePath, 0, ref info, shfileinfowSize, uFlags);
+                if (result.ToUInt32() != 0)
+                {
+                    try
+                    {
+                        Drawing.Icon icon = Drawing.Icon.FromHandle(info.hIcon);
+                        BitmapSource bitmapImage = Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty,
+                            BitmapSizeOptions.FromEmptyOptions());
+                        return bitmapImage;
+                    }
+                    catch (Exception) { }
+                    finally
+                    {
+                        USER32.DestroyIcon(info.hIcon);
+                    }
+                }
+            }
+            return default(BitmapSource);
         }
     }
 }

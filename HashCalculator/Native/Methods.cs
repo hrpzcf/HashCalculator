@@ -34,6 +34,12 @@ namespace HashCalculator
         internal static extern bool ClientToScreen(IntPtr hWnd, ref POINT lpPoint);
 
         /// <summary>
+        /// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroyicon
+        /// </summary>
+        [DllImport("user32.dll")]
+        internal static extern bool DestroyIcon(IntPtr hIcon);
+
+        /// <summary>
         /// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-screentoclient
         /// </summary>
         [DllImport("user32.dll")]
@@ -183,6 +189,13 @@ namespace HashCalculator
 
     internal static class SHELL32
     {
+        /// <summary>
+        /// https://learn.microsoft.com/zh-cn/windows/win32/api/shellapi/nf-shellapi-shgetfileinfow
+        /// </summary>
+        [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
+        internal static extern UIntPtr SHGetFileInfoW([MarshalAs(UnmanagedType.LPWStr)] string pszPath,
+            uint dwFileAttributes, ref SHFILEINFOW psfi, uint cbFileInfo, SHGFI uFlags);
+
         /// <summary>
         /// http://www.pinvoke.net/default.aspx/shell32/SHOpenFolderAndSelectItems.html
         /// https://learn.microsoft.com/en-us/windows/win32/api/shlobj_core/nf-shlobj_core-shparsedisplayname
