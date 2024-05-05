@@ -426,6 +426,7 @@
             VerticalGridLinesBrush="#FF969696"
             VirtualizingPanel.IsContainerVirtualizable="True"
             VirtualizingPanel.IsVirtualizing="True"
+            VirtualizingPanel.IsVirtualizingWhenGrouping="True"
             VirtualizingPanel.VirtualizationMode="Recycling">
             <local:ExecTargetAttach.Monitoring>
                 <MultiBinding Converter="{StaticResource StateAndSelectionWayToMonitoring}" Mode="OneWay">

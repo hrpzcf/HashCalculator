@@ -320,6 +320,7 @@ namespace HashCalculator
             private readonly double _minValue;
             private readonly int _count;
             private readonly float _increments;
+            private static readonly Random random = new Random();
 
             public CyclingDouble(double minValue, double maxValue, int count)
             {
@@ -343,7 +344,6 @@ namespace HashCalculator
 
             public IEnumerator<double> GetEnumerator()
             {
-                Random random = new Random();
                 double[] doubleHues = new double[this._count];
                 // 色环随机起点，避免每次都是 0° (正红) 为起点
                 double start = (random.NextDouble() * this._maxValue) + this._minValue;
@@ -382,14 +382,16 @@ namespace HashCalculator
                 (byte)((color & 0xFF0000u) >> 16));
         }
 
-        public static Color[] ColorGenerator(int number)
+        public static Color[] ColorGenerator(int count, int luminance = 190, int saturation = 240)
         {
-            List<Color> colors = new List<Color>(number);
+            List<Color> colors = new List<Color>(count);
             // 函数 ColorHLSToRGB 三个参数范围都是 0~240
-            double MAX_HLS = 240.0;
-            foreach (double H in new CyclingDouble(0.0, MAX_HLS, number))
+            double MAX_HUE = 240.0;
+            luminance = luminance < 0 ? 0 : luminance > 240 ? 240 : luminance;
+            saturation = saturation < 0 ? 0 : saturation > 240 ? 240 : saturation;
+            foreach (double H in new CyclingDouble(0.0, MAX_HUE, count))
             {
-                colors.Add(RgbDwordToColor(SHLWAPI.ColorHLSToRGB((int)H, 200, 230)));
+                colors.Add(RgbDwordToColor(SHLWAPI.ColorHLSToRGB((ushort)H, (ushort)luminance, (ushort)saturation)));
             }
             return colors.ToArray();
         }

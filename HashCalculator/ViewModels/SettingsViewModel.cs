@@ -68,6 +68,7 @@ namespace HashCalculator
         private bool eachAlgoExportedToSeparateFile = false;
         private bool askUserHowToExportResultsEveryTime = true;
         private bool delayTheStartOfCalculationTasks = false;
+        private bool markTheSameHashValues = false;
 
         private CmpRes algoToSwitchToAfterHashChecked = CmpRes.Matched;
         private ExportAlgo howToExportHashValues = ExportAlgo.AllCalculated;
@@ -389,6 +390,12 @@ namespace HashCalculator
         {
             get => this.noCmpResultColumn;
             set => this.SetPropNotify(ref this.noCmpResultColumn, value);
+        }
+
+        public bool MarkTheSameHashValues
+        {
+            get => this.markTheSameHashValues;
+            set => this.SetPropNotify(ref this.markTheSameHashValues, value);
         }
 
         [JsonIgnore, XmlIgnore]

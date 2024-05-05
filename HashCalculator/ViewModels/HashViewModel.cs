@@ -28,9 +28,9 @@ namespace HashCalculator
         private HcmData _hcmDataFromFile = null;
         private AlgoInOutModel _currentInOutModel = null;
         private AlgoInOutModel[] _algoInOutModels = null;
-        private ComparableColor _groupId = null;
-        private ComparableColor _folderGroupId = null;
+        private ComparableColor _hashGroupId = null;
         private ComparableColor _embeddedHashGroupId = null;
+        private ComparableColor _folderGroupId = null;
         private HashResult _currentResult = HashResult.NoResult;
         private HashState _currentState = HashState.NoState;
         private OutputType _selectedOutput = OutputType.Unknown;
@@ -149,22 +149,31 @@ namespace HashCalculator
             set => this.SetPropNotify(ref this._hcmDataFromFile, value);
         }
 
+        /// <summary>
+        /// 相同哈希值分组标识
+        /// </summary>
         public ComparableColor GroupId
         {
-            get => this._groupId;
-            set => this.SetPropNotify(ref this._groupId, value);
+            get => this._hashGroupId;
+            set => this.SetPropNotify(ref this._hashGroupId, value);
         }
 
-        public ComparableColor FdGroupId
-        {
-            get => this._folderGroupId;
-            set => this.SetPropNotify(ref this._folderGroupId, value);
-        }
-
+        /// <summary>
+        /// 相同的内嵌哈希值分组标识
+        /// </summary>
         public ComparableColor EhGroupId
         {
             get => this._embeddedHashGroupId;
             set => this.SetPropNotify(ref this._embeddedHashGroupId, value);
+        }
+
+        /// <summary>
+        /// 相同文件夹分组标识
+        /// </summary>
+        public ComparableColor FdGroupId
+        {
+            get => this._folderGroupId;
+            set => this.SetPropNotify(ref this._folderGroupId, value);
         }
 
         public AlgoInOutModel[] AlgoInOutModels

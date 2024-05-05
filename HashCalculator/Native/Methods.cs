@@ -184,7 +184,7 @@ namespace HashCalculator
         /// https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-colorhlstorgb
         /// </summary>
         [DllImport("shlwapi.dll")]
-        public static extern uint ColorHLSToRGB(int wHue, int wLuminance, int wSaturation);
+        public static extern uint ColorHLSToRGB(ushort wHue, ushort wLuminance, ushort wSaturation);
     }
 
     internal static class SHELL32

@@ -147,6 +147,21 @@
                     <CheckBox
                         Margin="0,8,0,0"
                         Padding="4,0,0,0"
+                        Content="不要计算空文件的哈希值以避免造成【文件内容相同】的误导"
+                        IsChecked="{Binding DoNotHashForEmptyFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <CheckBox
+                        Margin="0,8,0,0"
+                        Padding="4,0,0,0"
+                        Content="所有任务完成计算后使用颜色来标记相同的哈希值"
+                        IsChecked="{Binding MarkTheSameHashValues, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBlock
+                        Margin="18,2,0,0"
+                        FontSize="8pt"
+                        Style="{StaticResource DescTextBlockStyle}"
+                        Text="此项功能是筛选与操作面板的【相同哈希值】筛选器的简化便捷版，只关注当前算法" />
+                    <CheckBox
+                        Margin="0,8,0,0"
+                        Padding="4,0,0,0"
                         Content="右键选择删除文件时直接永久删除而不是移动到回收站"
                         IsChecked="{Binding PermanentlyDeleteFiles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <CheckBox
@@ -154,21 +169,6 @@
                         Padding="4,0,0,0"
                         Content="允许运行多个应用程序实例，包括被系统右键菜单或关联的文件启动"
                         IsChecked="{Binding RunInMultiInstMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <CheckBox
-                        Margin="0,8,0,0"
-                        Padding="4,0,0,0"
-                        Content="不要计算空文件的哈希值以避免造成【文件内容相同】的误导"
-                        IsChecked="{Binding DoNotHashForEmptyFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <CheckBox
-                        Margin="0,8,0,0"
-                        Padding="4,0,0,0"
-                        Content="导出计算结果时使用 Unix 换行符，取消勾选则使用 Windows 换行符"
-                        IsChecked="{Binding UseUnixStyleLineBreaks, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <TextBlock
-                        Margin="18,2,0,0"
-                        FontSize="8pt"
-                        Style="{StaticResource DescTextBlockStyle}"
-                        Text="此项设置也影响导出计算结果时 $newline$ 占位符所代表的换行符类型" />
                 </StackPanel>
             </ScrollViewer>
         </TabItem>
@@ -633,6 +633,7 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition />
                     </Grid.RowDefinitions>
                     <GroupBox
@@ -664,8 +665,19 @@
                         Padding="4,0,0,0"
                         Content="使主窗口的【导出】复选框控制该行所有子算法的【导出】而非当前算法"
                         IsChecked="{Binding ExportInMainControlsChildExports}" />
+                    <StackPanel Grid.Row="3" Margin="0,4,0,0">
+                        <CheckBox
+                            Padding="4,0,0,0"
+                            Content="导出计算结果时使用 Unix 换行符，取消勾选则使用 Windows 换行符"
+                            IsChecked="{Binding UseUnixStyleLineBreaks, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock
+                            Margin="18,2,0,0"
+                            FontSize="8pt"
+                            Style="{StaticResource DescTextBlockStyle}"
+                            Text="此项设置也影响导出计算结果时 $newline$ 占位符所代表的换行符类型" />
+                    </StackPanel>
                     <StackPanel
-                        Grid.Row="3"
+                        Grid.Row="4"
                         Grid.Column="0"
                         Grid.ColumnSpan="2"
                         Margin="0,4,0,0">
@@ -690,13 +702,13 @@
                             Text="同时【导出计算结果时导出哪些算法的结果】设置不生效，默认导出所有算法结果。" />
                     </StackPanel>
                     <CheckBox
-                        Grid.Row="4"
+                        Grid.Row="5"
                         Margin="0,4,0,0"
                         Padding="4,0,0,0"
                         Content="每次导出结果时都打开导出参数小窗口以设置本次的导出参数"
                         IsChecked="{Binding AskUserHowToExportResultsEveryTime}" />
                     <GroupBox
-                        Grid.Row="5"
+                        Grid.Row="6"
                         Margin="0,8,0,0"
                         Padding="0,8,0,0"
                         Foreground="#FF006FD6"

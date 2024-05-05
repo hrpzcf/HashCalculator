@@ -333,6 +333,8 @@ namespace HashCalculator
                 uncertain, succeeded, canceled, hasFailed, totalHash;
             noresult = unrelated = matched = mismatch =
                 uncertain = succeeded = canceled = hasFailed = totalHash = 0;
+            Dictionary<byte[], List<HashViewModel>> hashViewModels =
+                new Dictionary<byte[], List<HashViewModel>>(BytesComparer.Default);
             foreach (HashViewModel hm in HashViewModels)
             {
                 switch (hm.Result)
@@ -345,6 +347,15 @@ namespace HashCalculator
                         break;
                     case HashResult.Succeeded:
                         ++succeeded;
+                        if (Settings.Current.MarkTheSameHashValues)
+                        {
+                            byte[] key = hm.CurrentInOutModel.HashResult;
+                            if (!hashViewModels.ContainsKey(key))
+                            {
+                                hashViewModels[key] = new List<HashViewModel>();
+                            }
+                            hashViewModels[key].Add(hm);
+                        }
                         break;
                 }
                 if (hm.AlgoInOutModels != null)
@@ -380,6 +391,20 @@ namespace HashCalculator
             builder.Append($"已匹配：{matched}\n不匹配：{mismatch}\n");
             builder.Append($"不确定：{uncertain}\n无关联：{unrelated}\n未校验：{noresult}");
             this.Report = builder.ToString();
+            if (Settings.Current.MarkTheSameHashValues)
+            {
+                KeyValuePair<byte[], List<HashViewModel>>[] finalModels = hashViewModels.Where(
+                    i => i.Value.Count > 1).ToArray();
+                IEnumerable<ComparableColor> colors = CommonUtils.ColorGenerator(finalModels.Length).Select(
+                    i => new ComparableColor(i));
+                foreach (var tuple in finalModels.ZipElements(colors))
+                {
+                    foreach (HashViewModel hashViewModel in tuple.Item1.Value)
+                    {
+                        hashViewModel.GroupId = tuple.Item2;
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -1146,7 +1171,7 @@ namespace HashCalculator
             }
             else
             {
-                if (this.displayedModels.Any())
+                if (this.displayedModels.Count > 0)
                 {
                     List<HashViewModel> args = this.displayedModels;
                     this.displayedModels = new List<HashViewModel>();
