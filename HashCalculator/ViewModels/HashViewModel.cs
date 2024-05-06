@@ -365,7 +365,7 @@ namespace HashCalculator
 
         private void ShowHashDetailsWindowAction(object param)
         {
-            new HashDetailsWnd(this) { Owner = MainWindow.This }.ShowDialog();
+            new HashDetailsWnd(this) { Owner = MainWindow.Current }.ShowDialog();
         }
 
         public ICommand ShowHashDetailsWindowCmd

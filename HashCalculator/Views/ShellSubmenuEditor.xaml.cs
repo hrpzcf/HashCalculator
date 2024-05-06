@@ -4,11 +4,11 @@ namespace HashCalculator
 {
     public partial class ShellSubmenuEditor : Window
     {
-        public static ShellSubmenuEditor This { get; private set; }
+        public static ShellSubmenuEditor Current { get; private set; }
 
         public ShellSubmenuEditor(HcCtxMenuModel hcCtxMenuModel)
         {
-            This = this;
+            Current = this;
             this.DataContext = hcCtxMenuModel;
             this.InitializeComponent();
         }

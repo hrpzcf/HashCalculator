@@ -24,8 +24,7 @@ namespace HashCalculator
         private readonly Timer checkStateTimer = null;
         private readonly ModelStarter starter = new ModelStarter(
             Settings.Current.SelectedTaskNumberLimit, 32);
-        private static readonly Dispatcher synchronization =
-            Application.Current.Dispatcher;
+        private readonly Dispatcher synchronization = null;
         private readonly Action<HashModelArg> addModelAction;
         private readonly object displayingModelLock = new object();
         private readonly object changeRunningStateLock = new object();
@@ -81,24 +80,26 @@ namespace HashCalculator
             SetWindowHeight = height => Settings.Current.MainWndDelFileProgressHeight = height,
         };
 
-        public MainWndViewModel()
+        public MainWndViewModel(MainWindow window)
         {
-            ThisModel = this;
+            Current = this;
             HashViewModelsViewSrc = new CollectionViewSource();
             HashViewModelsViewSrc.Source = HashViewModels;
             HashViewModelsView = HashViewModelsViewSrc.View;
             Settings.Current.PropertyChanged += this.SettingsPropChangedAction;
+            this.OwnerWnd = window;
+            this.synchronization = window.Dispatcher;
             this.addModelAction = new Action<HashModelArg>(this.AddModelAction);
             this.checkStateTimer = new Timer(this.CheckStateAction);
         }
 
-        public static MainWndViewModel ThisModel
+        public static MainWndViewModel Current
         {
             get;
             private set;
         }
 
-        public Window OwnerWnd { get; set; }
+        public MainWindow OwnerWnd { get; }
 
         /// <summary>
         /// 使用此属性相当于 HashViewModelsViewSrc.View 的简写
@@ -229,7 +230,7 @@ namespace HashCalculator
                 this.computedModelsCount = 0;
                 if (this.TobeComputedModelsCount == 0)
                 {
-                    synchronization.Invoke(() => { this.State = RunningState.Stopped; });
+                    this.synchronization.Invoke(() => { this.State = RunningState.Stopped; });
                     this.checkStateTimer.Change(-1, -1);
                 }
             }
@@ -251,7 +252,7 @@ namespace HashCalculator
             {
                 if (++this.TobeComputedModelsCount == 1)
                 {
-                    synchronization.Invoke(() => { this.State = RunningState.Started; });
+                    this.synchronization.Invoke(() => { this.State = RunningState.Started; });
                     this.checkStateTimer.Change(interval, interval);
                 }
             }
@@ -292,7 +293,7 @@ namespace HashCalculator
                         {
                             arg.PresetAlgos = null;
                         }
-                        synchronization.Invoke(this.addModelAction, DispatcherPriority.Loaded, arg);
+                        this.synchronization.Invoke(this.addModelAction, DispatcherPriority.Input, arg);
                     }
                 }
             }, token);
@@ -320,7 +321,7 @@ namespace HashCalculator
                             {
                                 break;
                             }
-                            synchronization.Invoke(this.addModelAction, DispatcherPriority.Loaded, arg);
+                            this.synchronization.Invoke(this.addModelAction, DispatcherPriority.Input, arg);
                         }
                     }
                 }
@@ -434,7 +435,7 @@ namespace HashCalculator
             else
             {
                 this.commandPanelInst = new FilterAndCmdPanel((o, e) => { this.commandPanelInst = null; });
-                this.commandPanelInst.Owner = MainWindow.This;
+                this.commandPanelInst.Owner = MainWindow.Current;
                 this.commandPanelInst.Show();
             }
         }
@@ -453,7 +454,7 @@ namespace HashCalculator
 
         private void OpenSelectAlgoWndAction(object param)
         {
-            new AlgosPanel() { Owner = MainWindow.This }.ShowDialog();
+            new AlgosPanel() { Owner = MainWindow.Current }.ShowDialog();
         }
 
         public ICommand OpenSelectAlgoWndCmd
@@ -855,7 +856,7 @@ namespace HashCalculator
                     finally
                     {
                         progress.AutoClose = true;
-                        synchronization.Invoke(() =>
+                        this.synchronization.Invoke(() =>
                         {
                             progressWindow.DialogResult = false;
                         });
@@ -1272,7 +1273,7 @@ namespace HashCalculator
                     HashChecklist newChecklist = HashChecklist.File(this.HashStringOrChecklistPath);
                     if (newChecklist.ReasonForFailure != null)
                     {
-                        MessageBox.Show(MainWindow.This, newChecklist.ReasonForFailure, "错误",
+                        MessageBox.Show(MainWindow.Current, newChecklist.ReasonForFailure, "错误",
                             MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                     else
@@ -1301,7 +1302,7 @@ namespace HashCalculator
             else
             {
                 this.GenerateOriginFileHashCheckReport();
-                MessageBox.Show(MainWindow.This, localChecklist.ReasonForFailure, "错误",
+                MessageBox.Show(MainWindow.Current, localChecklist.ReasonForFailure, "错误",
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
             return localChecklist.ReasonForFailure == null;
@@ -1369,7 +1370,7 @@ namespace HashCalculator
 
         private void OpenAboutWindowAction(object param)
         {
-            new AboutWindow() { Owner = MainWindow.This }.ShowDialog();
+            new AboutWindow() { Owner = MainWindow.Current }.ShowDialog();
         }
 
         public ICommand OpenAboutWindowCmd

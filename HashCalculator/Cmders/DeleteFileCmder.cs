@@ -41,13 +41,13 @@ namespace HashCalculator
                 {
                     string promptInfo = toRecyclebin ? "确定把操作目标所指的文件移动到回收站吗？" :
                         "确定直接删除操作目标所指的文件吗？";
-                    if (MessageBox.Show(MainWindow.This, promptInfo, "警告", MessageBoxButton.OKCancel,
+                    if (MessageBox.Show(MainWindow.Current, promptInfo, "警告", MessageBoxButton.OKCancel,
                         MessageBoxImage.Warning) == MessageBoxResult.OK)
                     {
                         if (this.CheckIfUsingDistinctFilesFilter &&
                             !hashViewModels.Where(i => i.Matched).All(i => i.FileIndex != null))
                         {
-                            if (MessageBox.Show(MainWindow.This, "没有应用【有效的文件】筛选器，要继续操作吗？", "提示",
+                            if (MessageBox.Show(MainWindow.Current, "没有应用【有效的文件】筛选器，要继续操作吗？", "提示",
                                 MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
                             {
                                 goto FinishingTouches;
@@ -74,12 +74,12 @@ namespace HashCalculator
                                 CommonUtils.SendToRecycleBin(MainWindow.WndHandle, pathsInOneString);
                             }
                         });
-                        MainWndViewModel.ThisModel.GenerateFileHashCheckReport();
+                        MainWndViewModel.Current.GenerateFileHashCheckReport();
                     }
                 }
                 else
                 {
-                    MessageBox.Show(MainWindow.This, "没有找到任何操作目标，请刷新筛选或手动勾选要删除的对象", "提示",
+                    MessageBox.Show(MainWindow.Current, "没有找到任何操作目标，请刷新筛选或手动勾选要删除的对象", "提示",
                         MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             FinishingTouches:

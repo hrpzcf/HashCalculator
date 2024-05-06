@@ -75,12 +75,12 @@ namespace HashCalculator
                 Settings.Current.FilterAndCmderEnabled = false;
                 if (!models.Any(i => i.IsExecutionTarget && i.AlgoInOutModels != null))
                 {
-                    MessageBox.Show(MainWindow.This, "没有任何可重命名的目标文件", "提示",
+                    MessageBox.Show(MainWindow.Current, "没有任何可重命名的目标文件", "提示",
                         MessageBoxButton.OK, MessageBoxImage.Information);
                     goto FinishingTouches;
                 }
                 else if (MessageBox.Show(
-                    MainWindow.This, "用哈希值作为文件名重命名操作目标所指的文件吗？", "确认",
+                    MainWindow.Current, "用哈希值作为文件名重命名操作目标所指的文件吗？", "确认",
                     MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
                 {
                     goto FinishingTouches;
@@ -89,7 +89,7 @@ namespace HashCalculator
                     i => i.FileIndex != null))
                 {
                     if (MessageBox.Show(
-                        MainWindow.This, "没有应用【有效的文件】筛选器，要继续操作吗？", "提示",
+                        MainWindow.Current, "没有应用【有效的文件】筛选器，要继续操作吗？", "提示",
                         MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
                     {
                         goto FinishingTouches;

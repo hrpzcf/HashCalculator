@@ -184,7 +184,7 @@ namespace HashCalculator
                             {
                                 Application.Current.Dispatcher.Invoke(() =>
                                 {
-                                    MessageBox.Show(MainWindow.This,
+                                    MessageBox.Show(MainWindow.Current,
                                         $"筛选器名：{filter.Display}\n错误详情：{ex.Message}", "筛选出错",
                                         MessageBoxButton.OK, MessageBoxImage.Error);
                                 });

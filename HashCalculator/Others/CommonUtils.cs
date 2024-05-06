@@ -470,7 +470,7 @@ namespace HashCalculator
             }
             if (!string.IsNullOrEmpty(reasonForFailure))
             {
-                MessageBox.Show(owner ?? MainWindow.This, reasonForFailure, "复制失败",
+                MessageBox.Show(owner ?? MainWindow.Current, reasonForFailure, "复制失败",
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
             return reasonForFailure == null;
@@ -499,7 +499,7 @@ namespace HashCalculator
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show(owner ?? MainWindow.This,
+                    MessageBox.Show(owner ?? MainWindow.Current,
                         $"错误详情：{e.Message}", "读取剪贴板失败", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 finally

@@ -11,11 +11,11 @@ namespace HashCalculator
         private readonly SettingsViewModel viewModel;
         private static readonly char[] invalidChars = Path.GetInvalidFileNameChars();
 
-        public static SettingsPanel This { get; private set; }
+        public static SettingsPanel Current { get; private set; }
 
         public SettingsPanel()
         {
-            This = this;
+            Current = this;
             this.viewModel = Settings.Current;
             this.DataContext = this.viewModel;
             Settings.Current.RunInMultiInstMode = Initializer.RunMultiMode;

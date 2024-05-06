@@ -18,15 +18,15 @@ namespace HashCalculator
         private bool listenerAdded = false;
         private DateTime lastClipboardUpdateDateTime = DateTime.Now;
         private PresentationSource presentationSrc = null;
-        private readonly MainWndViewModel viewModel = new MainWndViewModel();
+        private readonly MainWndViewModel viewModel = null;
 
         private static string[] startupArgs = null;
         private static readonly TimeSpan clipboardTriggerMinInterval =
             TimeSpan.FromMilliseconds(10);
 
-        public static MainWindow This { get; private set; }
-
         public static IntPtr WndHandle { get; private set; }
+
+        public static MainWindow Current { get; private set; }
 
         public static int ProcessId { get; } = Process.GetCurrentProcess().Id;
 
@@ -34,8 +34,8 @@ namespace HashCalculator
 
         public MainWindow()
         {
-            This = this;
-            this.viewModel.OwnerWnd = this;
+            Current = this;
+            this.viewModel = new MainWndViewModel(this);
             this.DataContext = this.viewModel;
             this.Closed += this.MainWindowClosed;
             this.Loaded += this.MainWindowLoaded;

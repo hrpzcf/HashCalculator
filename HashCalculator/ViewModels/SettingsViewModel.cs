@@ -656,7 +656,7 @@ namespace HashCalculator
         private async void InstallShellExtAction(object param)
         {
             if (MessageBox.Show(
-                SettingsPanel.This, "安装外壳扩展可能需要重启资源管理器，确定现在安装吗？", "询问",
+                SettingsPanel.Current, "安装外壳扩展可能需要重启资源管理器，确定现在安装吗？", "询问",
                 MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No)
                 == MessageBoxResult.No)
             {
@@ -665,20 +665,20 @@ namespace HashCalculator
             this.ProcessingShellExtension = true;
             if (await ShellExtHelper.InstallShellExtension() is Exception exception1)
             {
-                MessageBox.Show(SettingsPanel.This, exception1.Message, "安装失败",
+                MessageBox.Show(SettingsPanel.Current, exception1.Message, "安装失败",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
             }
             else
             {
-                MessageBox.Show(SettingsPanel.This, $"安装外壳扩展成功！", "提示", MessageBoxButton.OK,
+                MessageBox.Show(SettingsPanel.Current, $"安装外壳扩展成功！", "提示", MessageBoxButton.OK,
                     MessageBoxImage.Information);
             }
             if (!File.Exists(Settings.MenuConfigFile))
             {
-                string exception = new ShellMenuEditorModel(SettingsPanel.This).SaveMenuListToJsonFile();
+                string exception = new ShellMenuEditorModel(SettingsPanel.Current).SaveMenuListToJsonFile();
                 if (!string.IsNullOrEmpty(exception))
                 {
-                    MessageBox.Show(SettingsPanel.This,
+                    MessageBox.Show(SettingsPanel.Current,
                         $"外壳扩展模块配置文件创建失败，快捷菜单将无法显示，原因：{exception}", "警告",
                         MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
@@ -702,7 +702,7 @@ namespace HashCalculator
         private async void UnInstallShellExtAction(object param)
         {
             if (MessageBox.Show(
-                SettingsPanel.This, "卸载外壳扩展可能需要重启资源管理器，确定现在卸载吗？", "询问",
+                SettingsPanel.Current, "卸载外壳扩展可能需要重启资源管理器，确定现在卸载吗？", "询问",
                 MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No)
                 == MessageBoxResult.No)
             {
@@ -711,12 +711,12 @@ namespace HashCalculator
             this.ProcessingShellExtension = true;
             if (await ShellExtHelper.UninstallShellExtension() is Exception exception)
             {
-                MessageBox.Show(SettingsPanel.This, exception.Message, "卸载失败",
+                MessageBox.Show(SettingsPanel.Current, exception.Message, "卸载失败",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
             }
             else
             {
-                MessageBox.Show(SettingsPanel.This, $"卸载外壳扩展成功！", "提示", MessageBoxButton.OK,
+                MessageBox.Show(SettingsPanel.Current, $"卸载外壳扩展成功！", "提示", MessageBoxButton.OK,
                     MessageBoxImage.Information);
             }
             this.ProcessingShellExtension = false;
@@ -737,10 +737,10 @@ namespace HashCalculator
 
         private void OpenEditContextMenuAction(object param)
         {
-            SettingsPanel.This.Close();
+            SettingsPanel.Current.Close();
             ShellMenuEditor shellextEditor = new ShellMenuEditor()
             {
-                Owner = MainWindow.This
+                Owner = MainWindow.Current
             };
             shellextEditor.ShowDialog();
         }
@@ -815,7 +815,7 @@ namespace HashCalculator
                 }
                 else
                 {
-                    MessageBox.Show(SettingsPanel.This, "没有选择任何方案！", "提示", MessageBoxButton.OK,
+                    MessageBox.Show(SettingsPanel.Current, "没有选择任何方案！", "提示", MessageBoxButton.OK,
                         MessageBoxImage.Information);
                 }
             }
@@ -913,7 +913,7 @@ namespace HashCalculator
                 }
                 else
                 {
-                    MessageBox.Show(SettingsPanel.This, "没有选择任何方案！", "提示", MessageBoxButton.OK,
+                    MessageBox.Show(SettingsPanel.Current, "没有选择任何方案！", "提示", MessageBoxButton.OK,
                         MessageBoxImage.Information);
                 }
             }
@@ -948,7 +948,7 @@ namespace HashCalculator
         private void ResetExportTemplateAction(object param)
         {
             this.ResetTemplatesForExport();
-            MessageBox.Show(SettingsPanel.This, "已重置导出结果方案列表。", "提示",
+            MessageBox.Show(SettingsPanel.Current, "已重置导出结果方案列表。", "提示",
                 MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
@@ -1001,7 +1001,7 @@ namespace HashCalculator
                 }
                 else
                 {
-                    MessageBox.Show(SettingsPanel.This, "没有选择任何方案！", "提示", MessageBoxButton.OK,
+                    MessageBox.Show(SettingsPanel.Current, "没有选择任何方案！", "提示", MessageBoxButton.OK,
                         MessageBoxImage.Information);
                 }
             }
@@ -1099,7 +1099,7 @@ namespace HashCalculator
                 }
                 else
                 {
-                    MessageBox.Show(SettingsPanel.This, "没有选择任何方案！", "提示", MessageBoxButton.OK,
+                    MessageBox.Show(SettingsPanel.Current, "没有选择任何方案！", "提示", MessageBoxButton.OK,
                         MessageBoxImage.Information);
                 }
             }
@@ -1139,7 +1139,7 @@ namespace HashCalculator
         private void ResetChecklistTemplateAction(object param)
         {
             this.ResetTemplatesForChecklist();
-            MessageBox.Show(SettingsPanel.This, "已重置解析检验依据方案列表。", "提示",
+            MessageBox.Show(SettingsPanel.Current, "已重置解析检验依据方案列表。", "提示",
                 MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
@@ -1162,7 +1162,7 @@ namespace HashCalculator
             {
                 model.ResetAlias();
             }
-            MessageBox.Show(SettingsPanel.This, "已将所有算法的别名恢复到默认状态！", "提示",
+            MessageBox.Show(SettingsPanel.Current, "已将所有算法的别名恢复到默认状态！", "提示",
                 MessageBoxButton.OK, MessageBoxImage.Information);
         }
 

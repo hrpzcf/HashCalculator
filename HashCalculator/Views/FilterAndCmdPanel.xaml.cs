@@ -10,13 +10,13 @@ namespace HashCalculator
         private WindowInteropHelper _interopHelper;
         private readonly FilterAndCmdPanelModel model;
 
-        public static FilterAndCmdPanel This { get; private set; }
+        public static FilterAndCmdPanel Current { get; private set; }
 
         public FilterAndCmdPanel(EventHandler handler)
         {
             this.model = new FilterAndCmdPanelModel();
             this.DataContext = this.model;
-            This = this;
+            Current = this;
             this.Closed += handler;
             this.Closed += this.PanelClosed;
             this.Loaded += this.FilterAndCmderWndLoaded;

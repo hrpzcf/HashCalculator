@@ -174,7 +174,7 @@ namespace HashCalculator
                     if (string.IsNullOrEmpty(this.DirectoryUsedToSaveFiles) ||
                         !Path.IsPathRooted(this.DirectoryUsedToSaveFiles))
                     {
-                        MessageBox.Show(MainWindow.This, "请输入生成的新文件的保存目录的完整路径！", "提示",
+                        MessageBox.Show(MainWindow.Current, "请输入生成的新文件的保存目录的完整路径！", "提示",
                             MessageBoxButton.OK, MessageBoxImage.Warning);
                         goto FinishingTouches;
                     }
@@ -186,7 +186,7 @@ namespace HashCalculator
                         }
                         catch (Exception)
                         {
-                            MessageBox.Show(MainWindow.This, "用于保存生成的新文件的目录不存在且创建失败！", "错误",
+                            MessageBox.Show(MainWindow.Current, "用于保存生成的新文件的目录不存在且创建失败！", "错误",
                                 MessageBoxButton.OK, MessageBoxImage.Error);
                             goto FinishingTouches;
                         }
@@ -195,7 +195,7 @@ namespace HashCalculator
                 if (this.CheckIfUsingDistinctFilesFilter && !hashViewModels.Where(
                     i => i.Matched).All(i => i.FileIndex != null))
                 {
-                    if (MessageBox.Show(MainWindow.This, "没有应用【有效的文件】筛选器，要继续操作吗？", "提示",
+                    if (MessageBox.Show(MainWindow.Current, "没有应用【有效的文件】筛选器，要继续操作吗？", "提示",
                         MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
                     {
                         goto FinishingTouches;
@@ -207,21 +207,21 @@ namespace HashCalculator
                     DoubleProgressModel progressModel = new DoubleProgressModel(delegates);
                     DoubleProgressWindow progressWindow = new DoubleProgressWindow(progressModel)
                     {
-                        Owner = MainWindow.This
+                        Owner = MainWindow.Current
                     };
                     Task<string> genMarkedFilesTask = this.GenerateMarkedFiles(targets, progressWindow, progressModel);
                     progressWindow.ShowDialog();
                     string exceptionMessage = await genMarkedFilesTask;
                     if (!string.IsNullOrEmpty(exceptionMessage))
                     {
-                        MessageBox.Show(MainWindow.This, $"出现异常导致过程中断：{exceptionMessage}", "错误",
+                        MessageBox.Show(MainWindow.Current, $"出现异常导致过程中断：{exceptionMessage}", "错误",
                             MessageBoxButton.OK, MessageBoxImage.Error);
                         goto FinishingTouches;
                     }
                 }
                 else
                 {
-                    MessageBox.Show(MainWindow.This, "没有找到任何操作目标，请刷新筛选或手动勾选操作目标！", "提示",
+                    MessageBox.Show(MainWindow.Current, "没有找到任何操作目标，请刷新筛选或手动勾选操作目标！", "提示",
                         MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             FinishingTouches:

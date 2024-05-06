@@ -106,7 +106,7 @@
                 <Border Padding="4" BorderThickness="0">
                     <Border.IsEnabled>
                         <MultiBinding Converter="{StaticResource CmdPanelCriticalControlsEnabledCvt}">
-                            <Binding Path="State" Source="{x:Static local:MainWndViewModel.ThisModel}" />
+                            <Binding Path="State" Source="{x:Static local:MainWndViewModel.Current}" />
                             <Binding Path="FilterAndCmderEnabled" Source="{x:Static local:Settings.Current}" />
                         </MultiBinding>
                     </Border.IsEnabled>
@@ -256,7 +256,7 @@
                 <Border Padding="4" BorderThickness="0">
                     <Border.IsEnabled>
                         <MultiBinding Converter="{StaticResource CmdPanelCriticalControlsEnabledCvt}">
-                            <Binding Path="State" Source="{x:Static local:MainWndViewModel.ThisModel}" />
+                            <Binding Path="State" Source="{x:Static local:MainWndViewModel.Current}" />
                             <Binding Path="FilterAndCmderEnabled" Source="{x:Static local:Settings.Current}" />
                         </MultiBinding>
                     </Border.IsEnabled>
