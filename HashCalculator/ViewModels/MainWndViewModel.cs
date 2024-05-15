@@ -293,7 +293,7 @@ namespace HashCalculator
                         {
                             arg.PresetAlgos = null;
                         }
-                        this.synchronization.Invoke(this.addModelAction, DispatcherPriority.Input, arg);
+                        this.synchronization.Invoke(this.addModelAction, DispatcherPriority.Background, arg);
                     }
                 }
             }, token);
@@ -321,7 +321,7 @@ namespace HashCalculator
                             {
                                 break;
                             }
-                            this.synchronization.Invoke(this.addModelAction, DispatcherPriority.Input, arg);
+                            this.synchronization.Invoke(this.addModelAction, DispatcherPriority.Background, arg);
                         }
                     }
                 }
