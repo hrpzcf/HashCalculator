@@ -178,55 +178,66 @@
             Style="{StaticResource TabItemStyle1}">
             <StackPanel Margin="8">
                 <CheckBox
-                    Margin="0,0,0,4"
                     Padding="4,0,0,0"
                     Content="不显示【序号】列"
                     IsChecked="{Binding NoSerialNumColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <CheckBox
-                    Margin="0,0,0,4"
+                    Margin="0,4,0,0"
+                    Padding="4,0,0,0"
+                    Content="不显示【完整路径】列"
+                    IsChecked="{Binding NoFullPathColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <CheckBox
+                    Margin="0,4,0,0"
                     Padding="4,0,0,0"
                     Content="不显示【文件大小】列"
                     IsChecked="{Binding NoFileSizeColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <CheckBox
-                    Margin="0,0,0,4"
+                    Margin="0,4,0,0"
                     Padding="4,0,0,0"
                     Content="不显示【输出方式】列"
                     IsChecked="{Binding NoOutputTypeColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <CheckBox
-                    Margin="0,0,0,4"
+                    Margin="0,4,0,0"
                     Padding="4,0,0,0"
                     Content="不显示【任务耗时】列"
                     IsChecked="{Binding NoDurationColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <CheckBox
-                    Margin="0,0,0,4"
+                    Margin="0,4,0,0"
                     Padding="4,0,0,0"
                     Content="不显示【导出】列"
                     IsChecked="{Binding NoExportColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <CheckBox
-                    Margin="0,0,0,4"
+                    Margin="0,4,0,0"
                     Padding="4,0,0,0"
                     Content="不显示【校验结果】列"
                     IsChecked="{Binding NoCmpResultColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <CheckBox
-                    Margin="0,0,0,4"
+                    Margin="0,4,0,0"
                     Padding="4,0,0,0"
                     Content="在校验结果的色块中显示描述文字"
                     IsChecked="{Binding ShowResultText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <CheckBox
-                    Margin="0,0,0,4"
+                    Margin="0,4,0,0"
                     Padding="4,0,0,0"
                     Content="使【筛选与操作】窗口跟随主窗口移动"
                     IsChecked="{Binding FilterAndCmderWndFollowsMainWnd, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <CheckBox
-                    Margin="0,0,0,4"
+                    Margin="0,4,0,0"
                     Padding="4,0,0,0"
                     Content="显示主窗口按钮的名称"
                     IsChecked="{Binding DisplayMainWndButtonText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <CheckBox
-                    Margin="0,0,0,4"
+                    Margin="0,4,0,0"
                     Padding="4,0,0,0"
                     Content="显示新添加文件的图标"
                     IsChecked="{Binding ShowFileIcon, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <Button
+                    Margin="0,8,0,0"
+                    Padding="8,2"
+                    HorizontalAlignment="Left"
+                    Background="{x:Null}"
+                    Click="ResetMainWindowDataGridCOlumnsOrder"
+                    Content="重置主窗口表格列的顺序" />
             </StackPanel>
         </TabItem>
         <TabItem

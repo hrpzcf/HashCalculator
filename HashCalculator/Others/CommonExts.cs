@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using Microsoft.Win32;
 
@@ -439,6 +440,21 @@ namespace HashCalculator
                 }
             }
             yield break;
+        }
+
+        public static void ReorderDataGridColumns(this ObservableCollection<DataGridColumn> columns, Dictionary<string, int> order)
+        {
+            if (columns != null && order != null)
+            {
+                foreach (DataGridColumn column in columns)
+                {
+                    if (column.Header is string header && order.TryGetValue(header, out int index) && index >= 0 &&
+                        index < columns.Count && column.DisplayIndex != index)
+                    {
+                        column.DisplayIndex = index;
+                    }
+                }
+            }
         }
     }
 }

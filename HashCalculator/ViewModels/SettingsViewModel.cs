@@ -44,6 +44,7 @@ namespace HashCalculator
         private bool showFileIcon = true;
         private bool showResultText = false;
         private bool noSerialNumColumn = false;
+        private bool noFullPathColumn = false;
         private bool noFileSizeColumn = false;
         private bool noOutputTypeColumn = false;
         private bool noDurationColumn = false;
@@ -316,6 +317,8 @@ namespace HashCalculator
             set => this.SetPropNotify(ref this.restoreFilesProgressHeight, value);
         }
 
+        public Dictionary<string, int> ColumnsOrder { get; set; }
+
         public OutputType SelectedOutputType
         {
             get => this.selectedOutputType;
@@ -390,6 +393,12 @@ namespace HashCalculator
         {
             get => this.noCmpResultColumn;
             set => this.SetPropNotify(ref this.noCmpResultColumn, value);
+        }
+
+        public bool NoFullPathColumn
+        {
+            get => this.noFullPathColumn;
+            set => this.SetPropNotify(ref this.noFullPathColumn, value);
         }
 
         public bool MarkTheSameHashValues

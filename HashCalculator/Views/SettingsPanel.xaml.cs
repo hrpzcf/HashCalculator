@@ -44,6 +44,15 @@ namespace HashCalculator
             e.Cancel = this.viewModel.ProcessingShellExtension;
         }
 
+        private void ResetMainWindowDataGridCOlumnsOrder(object sender, RoutedEventArgs e)
+        {
+            int index = 0;
+            foreach (DataGridColumn column in MainWindow.Current.filesDataGrid.Columns)
+            {
+                column.DisplayIndex = index++;
+            }
+        }
+
         private async void OnTextBlockMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (sender is TextBlock textBlock)

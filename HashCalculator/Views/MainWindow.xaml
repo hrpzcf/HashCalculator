@@ -407,6 +407,7 @@
             </Grid>
         </ScrollViewer>
         <DataGrid
+            x:Name="filesDataGrid"
             Grid.Row="1"
             Margin="0,4,0,0"
             AllowDrop="True"
@@ -556,6 +557,10 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
+                <DataGridTextColumn
+                    Binding="{Binding Information}"
+                    Header="完整路径"
+                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoFullPathColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}" />
                 <DataGridTemplateColumn
                     Header="文件大小"
                     SortMemberPath="FileLength"
@@ -904,7 +909,6 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Width="*" CanUserSort="False" />
             </DataGrid.Columns>
         </DataGrid>
         <Grid Grid.Row="2" Margin="0,8,0,0">
