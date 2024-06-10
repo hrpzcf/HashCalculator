@@ -386,4 +386,31 @@
         /// </summary>
         ReplaceAll,
     }
+
+    /// <summary>
+    /// 一般用来指示某个注册表项在注册表的 HKCU 或 HKLM 分支中
+    /// </summary>
+    internal enum RegBranch
+    {
+        /// <summary>
+        /// 由于异常或其它原因未知指定的某个注册表项是否存在
+        /// </summary>
+        UNKNOWN,
+        /// <summary>
+        /// 指定的某个注册表项在 HKEY_CURRENT_USER 分支中
+        /// </summary>
+        HKCU,
+        /// <summary>
+        /// 指定的某个注册表项在 HKEY_LOCAL_MACHINE 分支中
+        /// </summary>
+        HKLM,
+        /// <summary>
+        /// 在 HKCU 和 HKLM 分支中都发现了指定的某个注册表项
+        /// </summary>
+        BOTH,
+        /// <summary>
+        /// 在 HKCU 和 HKLM 分支中都没有发现指定的某个注册表项
+        /// </summary>
+        NEITHER,
+    }
 }

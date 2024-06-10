@@ -16,31 +16,31 @@ using std::string;
 /// </summary>
 BOOL GetHashCalculatorPath(LPSTR* buffer, LPDWORD bufsize) {
     BOOL executionResult = FALSE;
-    HKEY keyAppPaths = nullptr;
-    HKEY keyCurrentUser = nullptr;
-    if (ERROR_SUCCESS != RegOpenCurrentUser(KEY_READ, &keyCurrentUser)) {
-        goto FinalizeAndReturn;
-    }
-    if (ERROR_SUCCESS != RegOpenKeyExA(keyCurrentUser, HCEXE_REGPATH, 0, KEY_READ, &keyAppPaths)) {
-        goto FinalizeAndReturn;
+    HKEY hKeyHcAppPath = nullptr;
+    HKEY hKeyCurrentUser = nullptr;
+    if (ERROR_SUCCESS != RegOpenCurrentUser(KEY_READ, &hKeyCurrentUser) ||
+        ERROR_SUCCESS != RegOpenKeyExA(hKeyCurrentUser, HCEXE_REGPATH, 0, KEY_READ, &hKeyHcAppPath)) {
+        if (ERROR_SUCCESS != RegOpenKeyExA(HKEY_LOCAL_MACHINE, HCEXE_REGPATH, 0, KEY_READ, &hKeyHcAppPath)) {
+            goto FinalizeAndReturn;
+        }
     }
     DWORD valueDataType;
-    LSTATUS status1 = RegGetValueA(keyAppPaths, HC_EXECUTABLE, NULL, RRF_RT_REG_SZ, &valueDataType, *buffer, bufsize);
+    LSTATUS status1 = RegGetValueA(hKeyHcAppPath, NULL, NULL, RRF_RT_REG_SZ, &valueDataType, *buffer, bufsize);
     if (ERROR_MORE_DATA == status1) {
         delete[] * buffer;
         *buffer = new CHAR[*bufsize]();
-        LSTATUS status2 = RegGetValueA(keyAppPaths, HC_EXECUTABLE, NULL, RRF_RT_REG_SZ, &valueDataType, *buffer, bufsize);
+        LSTATUS status2 = RegGetValueA(hKeyHcAppPath, NULL, NULL, RRF_RT_REG_SZ, &valueDataType, *buffer, bufsize);
         executionResult = ERROR_SUCCESS == status2 && REG_SZ == valueDataType;
     }
     else {
         executionResult = ERROR_SUCCESS == status1 && REG_SZ == valueDataType;
     }
 FinalizeAndReturn:
-    if (nullptr != keyAppPaths) {
-        RegCloseKey(keyAppPaths);
+    if (nullptr != hKeyHcAppPath) {
+        RegCloseKey(hKeyHcAppPath);
     }
-    if (nullptr != keyCurrentUser) {
-        RegCloseKey(keyCurrentUser);
+    if (nullptr != hKeyCurrentUser) {
+        RegCloseKey(hKeyCurrentUser);
     }
     return executionResult;
 }

@@ -78,11 +78,11 @@ namespace HashCalculator
                     Exception exception = await ShellExtHelper.RegUpdateAppPathAsync();
                     if (exception == null)
                     {
-                        MessageBox.Show(this, $"修复成功！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                        MessageBox.Show(this, $"更新成功！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                     else
                     {
-                        MessageBox.Show(this, $"修复失败：{exception.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show(this, $"更新失败：{exception.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
                 else if (textBlock.Text == SettingsViewModel.AlgosDllDir)

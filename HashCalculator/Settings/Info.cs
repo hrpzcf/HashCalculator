@@ -13,7 +13,7 @@ namespace HashCalculator
         public const string ProcIdGuid = "{DA4EEDE8-5767-472F-9A40-1B90D7097953}";
         public const string MappedGuid = "{EF36065E-10F3-4ABA-A66F-E68A42A8DA7D}";
         public const string TypeLibGuid = "{18D6B7F2-F466-481F-ADFC-849B5F9FBD0B}";
-        public const string ShlExtGuid = "{DE95CAC8-90D1-4C55-B81D-D7F6D527606C}";
+        public const string ShellExtGuid = "{DE95CAC8-90D1-4C55-B81D-D7F6D527606C}";
         public static readonly string AppName = executingAssembly.Name;
         public static readonly string Ver = $"{v.Major}.{v.Minor}.{v.Build}";
         public const string Title = "哈希值批量计算器";

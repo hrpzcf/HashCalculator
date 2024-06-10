@@ -119,7 +119,7 @@ namespace HashCalculator
                 }
                 // 外壳扩展路径为 null 说明扩展未安装，可以移动右键菜单配置文件
                 // 否则并不能移动右键菜单配置文件，需要在外壳扩展被卸载后触发移动
-                if (ShellExtHelper.GetCurrentShellExtension() == null)
+                if (ShellExtHelper.GetShellExtensionPath() == null)
                 {
                     string oldMenuConfigFile = MenuConfigFile;
                     MenuConfigFile = Path.Combine(ActiveConfigDir, menuConfigFileName);
@@ -150,7 +150,7 @@ namespace HashCalculator
         {
             if (shellExtFile == null)
             {
-                shellExtFile = ShellExtHelper.GetCurrentShellExtension();
+                shellExtFile = ShellExtHelper.GetShellExtensionPath();
             }
             if (File.Exists(shellExtFile))
             {
