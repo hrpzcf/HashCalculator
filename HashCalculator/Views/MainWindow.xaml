@@ -458,7 +458,7 @@
                             </Style>
                         </MenuItem.ItemContainerStyle>
                     </MenuItem>
-                    <MenuItem Header="切换当前显示的算法" ItemsSource="{Binding SwitchDisplayedAlgoCmds}">
+                    <MenuItem Header="切换所选行当前算法" ItemsSource="{Binding SwitchDisplayedAlgoCmds}">
                         <MenuItem.ItemContainerStyle>
                             <Style TargetType="MenuItem">
                                 <Setter Property="Header" Value="{Binding Display}" />
@@ -471,6 +471,15 @@
                                         </MultiBinding>
                                     </Setter.Value>
                                 </Setter>
+                            </Style>
+                        </MenuItem.ItemContainerStyle>
+                    </MenuItem>
+                    <MenuItem Header="切换所选行导出状态" ItemsSource="{Binding SwitchAlgoExportStateCmds}">
+                        <MenuItem.ItemContainerStyle>
+                            <Style TargetType="MenuItem">
+                                <Setter Property="Header" Value="{Binding Display}" />
+                                <Setter Property="Command" Value="{Binding ItemValue}" />
+                                <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}" />
                             </Style>
                         </MenuItem.ItemContainerStyle>
                     </MenuItem>

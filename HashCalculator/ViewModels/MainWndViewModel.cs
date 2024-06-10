@@ -70,6 +70,7 @@ namespace HashCalculator
         private GenericItemModel[] copyModelsHashMenuCmds;
         private GenericItemModel[] copyModelsAllHashesMenuCmds;
         private GenericItemModel[] ctrlHashViewModelTaskCmds;
+        private GenericItemModel[] switchAlgoExportStateCmds;
         private GenericItemModel[] switchDisplayedAlgoCmds;
 
         private static readonly SizeDelegates sizeDelegates = new SizeDelegates()
@@ -1614,6 +1615,69 @@ namespace HashCalculator
                     this.stopEnumeratingPackageCmd = new RelayCommand(this.StopEnumeratingPackageAction);
                 }
                 return this.stopEnumeratingPackageCmd;
+            }
+        }
+
+        /// <summary>
+        /// 改变所选行的当前导出状态
+        /// </summary>
+        private void ChangeCurExportState(object param, bool export)
+        {
+            if (param is IList selectedModels)
+            {
+                foreach (HashViewModel model in selectedModels)
+                {
+                    if (model.CurrentInOutModel != null)
+                    {
+                        model.CurrentInOutModel.Export = export;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 改变所选行的所有导出状态
+        /// </summary>
+        private void ChangeAllExportState(object param, bool export)
+        {
+            if (param is IList selectedModels)
+            {
+                foreach (HashViewModel model in selectedModels)
+                {
+                    if (model.AlgoInOutModels != null)
+                    {
+                        foreach (AlgoInOutModel inOutModel in model.AlgoInOutModels)
+                        {
+                            inOutModel.Export = export;
+                        }
+                    }
+                }
+            }
+        }
+
+        public GenericItemModel[] SwitchAlgoExportStateCmds
+        {
+            get
+            {
+                if (this.switchAlgoExportStateCmds == null)
+                {
+                    this.switchAlgoExportStateCmds = new GenericItemModel[]
+                    {
+                        new GenericItemModel(
+                            "启用所选行当前导出状态",
+                            new RelayCommand(obj => this.ChangeCurExportState(obj, true))),
+                        new GenericItemModel(
+                            "取消所选行当前导出状态",
+                            new RelayCommand(obj => this.ChangeCurExportState(obj, false))),
+                        new GenericItemModel(
+                            "启用所选行所有导出状态",
+                            new RelayCommand(obj => this.ChangeAllExportState(obj, true))),
+                        new GenericItemModel(
+                            "取消所选行所有导出状态",
+                            new RelayCommand(obj => this.ChangeAllExportState(obj, false))),
+                    };
+                }
+                return this.switchAlgoExportStateCmds;
             }
         }
 
