@@ -2,7 +2,7 @@ HKCR
 {
 	NoRemove CLSID
 	{
-		ForceRemove {de95cac8-90d1-4c55-b81d-d7f6d527606c} = s 'HashCalculator'
+		ForceRemove {DE95CAC8-90D1-4C55-B81D-D7F6D527606C} = s 'HashCalculator'
 		{
 			InprocServer32 = s '%MODULE%'
 			{
@@ -20,7 +20,7 @@ HKCR
 		{
 			NoRemove ContextMenuHandlers
 			{
-				ForceRemove HashCalculator = s '{de95cac8-90d1-4c55-b81d-d7f6d527606c}'
+				ForceRemove HashCalculator = s '{DE95CAC8-90D1-4C55-B81D-D7F6D527606C}'
 			}
 		}
 	}
@@ -31,7 +31,7 @@ HKCR
 		{
 			NoRemove ContextMenuHandlers
 			{
-				ForceRemove HashCalculator = s '{de95cac8-90d1-4c55-b81d-d7f6d527606c}'
+				ForceRemove HashCalculator = s '{DE95CAC8-90D1-4C55-B81D-D7F6D527606C}'
 			}
 		}
 
@@ -41,7 +41,7 @@ HKCR
 			{
 				NoRemove ContextMenuHandlers
 				{
-					ForceRemove HashCalculator = s '{de95cac8-90d1-4c55-b81d-d7f6d527606c}'
+					ForceRemove HashCalculator = s '{DE95CAC8-90D1-4C55-B81D-D7F6D527606C}'
 				}
 			}
 		}

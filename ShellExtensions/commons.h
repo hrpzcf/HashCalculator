@@ -10,7 +10,7 @@ using std::map;
 #define JSON_SUBMENUS               "Submenus"
 #define MENU_JSONNAME               "menus_unicode.json"
 #define HC_EXECUTABLE               "HashCalculator.exe"
-#define HCEXE_REGPATH               "Software\\Microsoft\\Windows\\CurrentVersion\\App Paths"
+#define HCEXE_REGPATH               "Software\\Microsoft\\Windows\\CurrentVersion\\App Paths\\HashCalculator.exe"
 #define MAX_JSON_PROP               480
 #define MAX_CMD_CHARS               32767
 

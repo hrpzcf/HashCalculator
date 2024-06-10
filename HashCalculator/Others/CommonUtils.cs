@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security.Principal;
 using System.Text;
 using System.Windows;
 using System.Windows.Interop;
@@ -150,6 +151,20 @@ namespace HashCalculator
             return 0 == intResult2;
         }
 
+        public static bool IsRunningAsAdministrator()
+        {
+            try
+            {
+                WindowsIdentity identity = WindowsIdentity.GetCurrent();
+                WindowsPrincipal principal = new WindowsPrincipal(identity);
+                return principal.IsInRole(WindowsBuiltInRole.Administrator);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         public static string ToBase64String(byte[] passedInBytes)
         {
             if (passedInBytes != null)
@@ -192,7 +207,9 @@ namespace HashCalculator
                 {
                     return Convert.FromBase64String(base64String);
                 }
-                catch { }
+                catch
+                {
+                }
             }
             return default(byte[]);
         }
@@ -210,7 +227,9 @@ namespace HashCalculator
                     }
                     return resultBytes;
                 }
-                catch { }
+                catch
+                {
+                }
             }
             return default(byte[]);
         }
