@@ -307,41 +307,29 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition />
                         </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <Button
-                            Grid.Row="0"
-                            Grid.Column="0"
-                            Margin="0,0,8,0"
-                            Padding="8"
-                            Background="{x:Null}"
-                            Command="{Binding InstallShellExtCmd}"
-                            Content="安装右键菜单并关联文件(用户)"
-                            IsEnabled="{Binding ProcessingShellExtension, Converter={StaticResource ReverseBooleanValueCvt}}" />
-                        <Button
-                            Grid.Row="0"
-                            Grid.Column="1"
-                            Margin="8,0,0,0"
-                            Padding="8"
-                            Background="{x:Null}"
-                            Command="{Binding UnInstallShellExtCmd}"
-                            Content="卸载右键菜单并取消关联(用户)"
-                            IsEnabled="{Binding ProcessingShellExtension, Converter={StaticResource ReverseBooleanValueCvt}}" />
+                        <StackPanel Grid.Row="0" Orientation="Horizontal">
+                            <Button
+                                Padding="32,8"
+                                Background="{x:Null}"
+                                Command="{Binding InstallShellExtCmd}"
+                                Content="安装右键菜单并关联文件"
+                                IsEnabled="{Binding ProcessingShellExtension, Converter={StaticResource ReverseBooleanValueCvt}}" />
+                            <Button
+                                Margin="32,0,0,0"
+                                Padding="32,8"
+                                Background="{x:Null}"
+                                Command="{Binding UnInstallShellExtCmd}"
+                                Content="卸载右键菜单并取消关联"
+                                IsEnabled="{Binding ProcessingShellExtension, Converter={StaticResource ReverseBooleanValueCvt}}" />
+                        </StackPanel>
                         <StackPanel
                             Grid.Row="1"
-                            Grid.Column="0"
-                            Grid.ColumnSpan="2"
                             Margin="0,8,0,0"
                             Orientation="Horizontal">
                             <TextBlock Foreground="Black" Text="安装位置：" />
                             <TextBlock Style="{StaticResource DescTextBlockStyle}" Text="{Binding DisplayingShellExtensionDir}" />
                         </StackPanel>
-                        <StackPanel
-                            Grid.Row="2"
-                            Grid.ColumnSpan="2"
-                            Margin="0,16,0,0">
+                        <StackPanel Grid.Row="2" Margin="0,16,0,0">
                             <TextBlock
                                 FontSize="8pt"
                                 Style="{StaticResource DescTextBlockStyle}"

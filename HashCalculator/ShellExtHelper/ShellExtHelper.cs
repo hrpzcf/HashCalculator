@@ -84,7 +84,7 @@ namespace HashCalculator
         {
             if (!File.Exists(path))
             {
-                return new FileNotFoundException($"扩展模块不存在：{path}");
+                return new FileNotFoundException($"扩展模块无法访问或丢失：{path}");
             }
             switch (GetShellExtLocation())
             {
@@ -96,7 +96,7 @@ namespace HashCalculator
                 case RegBranch.HKLM:
                 case RegBranch.BOTH:
                     string extra = RunningAsAdmin ? "" : "以管理员身份重新启动程序";
-                    return new Exception($"注册表已有外壳扩展模块信息(系统)，请先{extra}卸载右键菜单");
+                    return new Exception($"已存在外壳扩展模块信息(系统)，请先{extra}卸载右键菜单");
                 case RegBranch.NEITHER:
                     break;
             }
@@ -109,7 +109,7 @@ namespace HashCalculator
         {
             if (!File.Exists(path))
             {
-                return new FileNotFoundException($"扩展模块不存在：{path}");
+                return new FileNotFoundException($"扩展模块无法访问或丢失：{path}");
             }
             string argForHKLM = $"/s /u \"{path}\"";
             string argForHKCU = $"/s /u /i:user /n \"{path}\"";
@@ -128,7 +128,7 @@ namespace HashCalculator
                 case RegBranch.BOTH:
                     if (!RunningAsAdmin)
                     {
-                        return new Exception($"请以管理员身份重新启动程序以卸载右键菜单");
+                        return new Exception($"已存在外壳扩展模块信息(系统)，请以管理员身份重新启动程序以卸载右键菜单");
                     }
                     exception1 = ExecuteRegsvr32Command(argForHKLM);
                     if (location == RegBranch.BOTH)
@@ -190,7 +190,7 @@ namespace HashCalculator
                     }
                     else
                     {
-                        return new MissingManifestResourceException("未找到内嵌的右键菜单扩展模块资源");
+                        return new MissingManifestResourceException("内嵌的右键菜单扩展模块资源丢失");
                     }
                     if (RegisterShellExtDll(Settings.ShellExtensionFile) is Exception exception2)
                     {
@@ -214,52 +214,44 @@ namespace HashCalculator
             {
                 Exception exception1 = await RegDeleteAppPathAsync();
                 Exception exception2 = null;
-                if (GetShellExtensionPath() is string shellExtensionFile)
+                if (GetShellExtensionPath() is string shellExtensionFile &&
+                    (exception2 = DeregisterShellExtDll(shellExtensionFile)) == null)
                 {
-                    if (!File.Exists(shellExtensionFile))
+                    string oldMenuConfigFile = Settings.MenuConfigFile;
+                    string oldShellExtensionDir = Path.GetDirectoryName(shellExtensionFile);
+                    Settings.UpdateShellMenuConfigFilePath(string.Empty);
+                    if (!oldShellExtensionDir.Equals(Settings.ActiveConfigDir))
                     {
-                        exception2 = new FileNotFoundException("安装的右键菜单扩展模块丢失，卸载失败");
-                        goto FinalizeAndReturn;
-                    }
-                    if ((exception2 = DeregisterShellExtDll(shellExtensionFile)) == null)
-                    {
-                        string oldMenuConfigFile = Settings.MenuConfigFile;
-                        string oldShellExtensionDir = Path.GetDirectoryName(shellExtensionFile);
-                        Settings.UpdateShellMenuConfigFilePath(string.Empty);
-                        if (!oldShellExtensionDir.Equals(Settings.ActiveConfigDir))
+                        try
                         {
-                            try
+                            if (File.Exists(Settings.MenuConfigFile))
                             {
-                                if (File.Exists(Settings.MenuConfigFile))
-                                {
-                                    File.Delete(Settings.MenuConfigFile);
-                                }
-                                File.Move(oldMenuConfigFile, Settings.MenuConfigFile);
+                                File.Delete(Settings.MenuConfigFile);
                             }
-                            catch
-                            {
-                            }
+                            File.Move(oldMenuConfigFile, Settings.MenuConfigFile);
                         }
+                        catch
+                        {
+                        }
+                    }
+                    try
+                    {
+                        File.Delete(shellExtensionFile);
+                    }
+                    catch (Exception e) when (e is IOException || e is UnauthorizedAccessException)
+                    {
+                        TerminateExplorer();
                         try
                         {
                             File.Delete(shellExtensionFile);
                         }
-                        catch (Exception e) when (e is IOException || e is UnauthorizedAccessException)
+                        catch
                         {
-                            TerminateExplorer();
-                            try
-                            {
-                                File.Delete(shellExtensionFile);
-                            }
-                            catch
-                            {
-                            }
                         }
-                        SHELL32.SHChangeNotify(HChangeNotifyEventID.SHCNE_ASSOCCHANGED, HChangeNotifyFlags.SHCNF_IDLIST,
-                            IntPtr.Zero, IntPtr.Zero);
                     }
+                    SHELL32.SHChangeNotify(HChangeNotifyEventID.SHCNE_ASSOCCHANGED, HChangeNotifyFlags.SHCNF_IDLIST,
+                        IntPtr.Zero, IntPtr.Zero);
                 }
-            FinalizeAndReturn:
                 return JoinExceptionMessagesAndGenerateNew(exception1, exception2);
             });
         }
@@ -385,7 +377,7 @@ namespace HashCalculator
             {
                 default:
                 case RegBranch.UNKNOWN:
-                    return new Exception("未能确定注册表项 HashCalculator.exe 位置");
+                    return new Exception("无法确定注册表项 HashCalculator.exe 位置");
                 case RegBranch.HKCU:
                     exception1 = await RegistryWriteNode(Registry.CurrentUser, registryAppPaths, nodeHashCalculatorPath);
                     break;
@@ -393,7 +385,7 @@ namespace HashCalculator
                 case RegBranch.BOTH:
                     if (!RunningAsAdmin)
                     {
-                        return new Exception("请以管理员身份启动程序再尝试更新程序路径");
+                        return new Exception("请以管理员身份重新启动程序再尝试更新程序路径");
                     }
                     exception2 = await RegistryWriteNode(Registry.LocalMachine, registryAppPaths, nodeHashCalculatorPath);
                     if (location == RegBranch.BOTH)
@@ -418,7 +410,7 @@ namespace HashCalculator
             {
                 default:
                 case RegBranch.UNKNOWN:
-                    return new Exception("未能确定注册表项 HashCalculator.exe 位置");
+                    return new Exception("无法确定注册表项 HashCalculator.exe 位置");
                 case RegBranch.HKCU:
                     exception1 = await RegistryDeleteNode(Registry.CurrentUser, registryAppPaths, nodeHashCalculatorPath);
                     break;
@@ -426,7 +418,7 @@ namespace HashCalculator
                 case RegBranch.BOTH:
                     if (!RunningAsAdmin)
                     {
-                        return new Exception("请以管理员身份启动程序再尝试清理程序路径");
+                        return new Exception("请以管理员身份重新启动程序再尝试清理程序路径");
                     }
                     exception2 = await RegistryDeleteNode(Registry.LocalMachine, registryAppPaths, nodeHashCalculatorPath);
                     if (location == RegBranch.BOTH)

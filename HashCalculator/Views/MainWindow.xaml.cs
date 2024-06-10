@@ -66,6 +66,10 @@ namespace HashCalculator
 
         private void MainWindowLoaded(object sender, RoutedEventArgs e)
         {
+            if (ShellExtHelper.RunningAsAdmin)
+            {
+                this.Title += " （管理员）";
+            }
             WndHandle = new WindowInteropHelper(this).Handle;
             if (startupArgs != null)
             {
