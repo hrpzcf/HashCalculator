@@ -616,7 +616,14 @@ namespace HashCalculator
         public int MillisecondsOfDelayedStartup
         {
             get => this.millisecondsOfDelayedStartup;
-            set => this.SetPropNotify(ref this.millisecondsOfDelayedStartup, value);
+            set
+            {
+                if (value < 0)
+                {
+                    value = 0;
+                }
+                this.SetPropNotify(ref this.millisecondsOfDelayedStartup, value);
+            }
         }
 
         public bool DelayTheStartOfCalculationTasks
