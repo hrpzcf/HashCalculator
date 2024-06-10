@@ -421,7 +421,7 @@
             IsReadOnly="True"
             ItemsSource="{Binding Source={x:Static local:MainWndViewModel.HashViewModelsViewSrc}, IsAsync=True}"
             PreviewKeyDown="DataGridHashingFilesPrevKeyDown"
-            RowStyle="{StaticResource RowStyleNormal}"
+            RowStyle="{StaticResource MainTableRowStyle}"
             ScrollViewer.CanContentScroll="True"
             SelectionMode="Extended"
             VerticalGridLinesBrush="#FF969696"

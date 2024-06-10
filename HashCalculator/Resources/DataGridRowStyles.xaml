@@ -1,4 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/Resources/ConverterResource.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
     <Style x:Key="RowStyleNormal" TargetType="{x:Type DataGridRow}">
         <Setter Property="SnapsToDevicePixels" Value="true" />
         <Setter Property="Template">
@@ -39,11 +43,19 @@
         </Setter>
         <Style.Triggers>
             <Trigger Property="IsSelected" Value="True">
-                <Setter Property="Background" Value="#601890FF" />
+                <Setter Property="Background" Value="#A8D5FF" />
             </Trigger>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="#301890FF" />
+                <Setter Property="Background" Value="#D4EAFF" />
             </Trigger>
         </Style.Triggers>
+    </Style>
+
+    <!--  主窗口表格的样式  -->
+    <Style
+        x:Key="MainTableRowStyle"
+        BasedOn="{StaticResource RowStyleNormal}"
+        TargetType="{x:Type DataGridRow}">
+        <Setter Property="Background" Value="{Binding TableRowColor, Converter={StaticResource CmpColorToSolidColorBrushCvt}}" />
     </Style>
 </ResourceDictionary>

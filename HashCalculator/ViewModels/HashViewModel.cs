@@ -28,6 +28,7 @@ namespace HashCalculator
         private HcmData _hcmDataFromFile = null;
         private AlgoInOutModel _currentInOutModel = null;
         private AlgoInOutModel[] _algoInOutModels = null;
+        private ComparableColor _tableRowColor = null;
         private ComparableColor _hashGroupId = null;
         private ComparableColor _embeddedHashGroupId = null;
         private ComparableColor _folderGroupId = null;
@@ -147,6 +148,12 @@ namespace HashCalculator
         {
             get => this._hcmDataFromFile;
             set => this.SetPropNotify(ref this._hcmDataFromFile, value);
+        }
+
+        public ComparableColor TableRowColor
+        {
+            get => this._tableRowColor;
+            set => this.SetPropNotify(ref this._tableRowColor, value);
         }
 
         /// <summary>
