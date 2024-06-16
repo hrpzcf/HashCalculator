@@ -138,7 +138,7 @@ namespace HashCalculator
             catch
             {
             }
-            UpdateDisplayingPaths();
+            UpdateDisplayingInformation();
         }
 
         /// <summary>
@@ -167,14 +167,42 @@ namespace HashCalculator
             }
             if (update)
             {
-                UpdateDisplayingPaths();
+                UpdateDisplayingInformation();
             }
         }
 
-        public static void UpdateDisplayingPaths()
+        public static void UpdateDisplayingInformation(RegBranch branch = RegBranch.UNKNOWN)
         {
             Current.DisplayingActiveConfigDir = ActiveConfigDir;
             Current.DisplayingShellExtensionDir = ShellExtensionDir;
+            if (branch == RegBranch.UNKNOWN)
+            {
+                branch = ShellExtHelper.GetShellExtLocation();
+            }
+            switch (branch)
+            {
+                case RegBranch.HKCU:
+                    Current.DisplayingShellInstallationState = "已安装";
+                    Current.DisplayingShellInstallationScope = "当前用户";
+                    break;
+                case RegBranch.HKLM:
+                    Current.DisplayingShellInstallationState = "已安装";
+                    Current.DisplayingShellInstallationScope = "当前系统";
+                    break;
+                case RegBranch.BOTH:
+                    Current.DisplayingShellInstallationState = "已安装";
+                    Current.DisplayingShellInstallationScope = "当前系统和用户";
+                    break;
+                case RegBranch.NEITHER:
+                    Current.DisplayingShellInstallationState = "未安装";
+                    Current.DisplayingShellInstallationScope = ShellExtHelper.RunningAsAdmin ? "当前系统" : "当前用户";
+                    break;
+                default:
+                case RegBranch.UNKNOWN:
+                    Current.DisplayingShellInstallationState = "无法确定";
+                    Current.DisplayingShellInstallationScope = "无法确定";
+                    break;
+            }
         }
 
         public static async void MoveConfigFiles(object sender, PropertyChangedEventArgs e)
@@ -277,7 +305,7 @@ namespace HashCalculator
             {
                 MessageBox.Show($"设置加载失败：{ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
-            UpdateDisplayingPaths();
+            UpdateDisplayingInformation();
             if (!settingsViewModelLoaded)
             {
                 Current.ResetTemplatesForExport();

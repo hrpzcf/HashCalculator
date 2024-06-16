@@ -169,7 +169,7 @@ namespace HashCalculator
 
         public static async Task<Exception> InstallShellExtension()
         {
-            return await Task.Run(async () =>
+            Exception exception = await Task.Run(async () =>
             {
                 try
                 {
@@ -201,16 +201,18 @@ namespace HashCalculator
                     Settings.UpdateShellMenuConfigFilePath(Settings.ShellExtensionFile);
                     return await RegUpdateAppPathAsync();
                 }
-                catch (Exception exception)
+                catch (Exception exception3)
                 {
-                    return exception;
+                    return exception3;
                 }
             });
+            Settings.UpdateDisplayingInformation();
+            return exception;
         }
 
         public static async Task<Exception> UninstallShellExtension()
         {
-            return await Task.Run(async () =>
+            Exception exception = await Task.Run(async () =>
             {
                 Exception exception1 = await RegDeleteAppPathAsync();
                 Exception exception2 = null;
@@ -254,6 +256,8 @@ namespace HashCalculator
                 }
                 return JoinExceptionMessagesAndGenerateNew(exception1, exception2);
             });
+            Settings.UpdateDisplayingInformation();
+            return exception;
         }
 
         private static async Task<Exception> RegistryWriteNode(RegistryKey parent, string regPath, RegNode regNode)

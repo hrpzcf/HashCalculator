@@ -81,6 +81,8 @@ namespace HashCalculator
         private string lastUsedPath = string.Empty;
         private string displayingActiveConfigDir = null;
         private string displayingShellExtensionDir = null;
+        private string displayingShellInstallationScope = null;
+        private string displayingShellInstallationState = null;
         private string formatForGenerateText = "#$algo$ *$hash$ *$name$";
 
         private AlgoInOutModel selectedAlgoInOutModel = AlgosPanelModel.ProvidedAlgos[0];
@@ -660,6 +662,20 @@ namespace HashCalculator
         {
             get => this.displayingShellExtensionDir;
             set => this.SetPropNotify(ref this.displayingShellExtensionDir, value);
+        }
+
+        [JsonIgnore, XmlIgnore]
+        public string DisplayingShellInstallationScope
+        {
+            get => this.displayingShellInstallationScope;
+            set => this.SetPropNotify(ref this.displayingShellInstallationScope, value);
+        }
+
+        [JsonIgnore, XmlIgnore]
+        public string DisplayingShellInstallationState
+        {
+            get => this.displayingShellInstallationState;
+            set => this.SetPropNotify(ref this.displayingShellInstallationState, value);
         }
 
         [JsonIgnore, XmlIgnore]
