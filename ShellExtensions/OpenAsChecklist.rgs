@@ -29,7 +29,7 @@ HKCR
 	{
 		val FriendlyTypeName = s '@"%MODULE%",-107'
 
-		CLSID = s '{50b22df9-3ff8-428e-900f-f6ee89f1a18b}'
+		CLSID = s '{50B22DF9-3FF8-428E-900F-F6EE89F1A18B}'
 		DefaultIcon = s '"%MODULE%",-203'
 		shell
 		{
@@ -48,7 +48,7 @@ HKCR
 
 	NoRemove CLSID
 	{
-		ForceRemove {50b22df9-3ff8-428e-900f-f6ee89f1a18b} = s 'HashCalculator OpenAsChecklist'
+		ForceRemove {50B22DF9-3FF8-428E-900F-F6EE89F1A18B} = s 'HashCalculator OpenAsChecklist'
 		{
 			InprocServer32 = s '%MODULE%'
 			{
@@ -68,7 +68,7 @@ HKCR
 		{
 			NoRemove ContextMenuHandlers
 			{
-				ForceRemove 'HashCalculator OpenAsChecklist' = s '{50b22df9-3ff8-428e-900f-f6ee89f1a18b}'
+				ForceRemove 'HashCalculator OpenAsChecklist' = s '{50B22DF9-3FF8-428E-900F-F6EE89F1A18B}'
 			}
 		}
 	}
