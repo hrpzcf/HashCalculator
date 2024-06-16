@@ -23,6 +23,7 @@ class ATL_NO_VTABLE COpenAsChecklist :
     HBITMAP hBitmapMenu = nullptr;
     map<UINT, CHAR*> mCmdDict;
     VOID CreateGUIProcessVerifyHash(LPCSTR) const;
+
 public:
     COpenAsChecklist();
     ~COpenAsChecklist();
@@ -38,11 +39,8 @@ public:
 
     DECLARE_PROTECT_FINAL_CONSTRUCT();
 
-    HRESULT FinalConstruct() {
-        return S_OK;
-    }
-    void FinalRelease() {
-    }
+    HRESULT FinalConstruct() { return S_OK; }
+    void FinalRelease() {  }
     STDMETHOD(Initialize)(PCIDLIST_ABSOLUTE, IDataObject*, HKEY);
     STDMETHOD(QueryContextMenu)(HMENU, UINT, UINT, UINT, UINT);
     STDMETHOD(InvokeCommand)(CMINVOKECOMMANDINFO*);

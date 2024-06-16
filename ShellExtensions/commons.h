@@ -1,5 +1,6 @@
 #pragma once
 
+#include <limits.h>
 #include <map>
 
 using std::map;
@@ -11,8 +12,8 @@ using std::map;
 #define MENU_JSONNAME               "menus_unicode.json"
 #define HC_EXECUTABLE               "HashCalculator.exe"
 #define HCEXE_REGPATH               "Software\\Microsoft\\Windows\\CurrentVersion\\App Paths\\HashCalculator.exe"
-#define MAX_JSON_PROP               480
-#define MAX_CMD_CHARS               32767
+#define MAX_JSON_PROP               512
+#define MAX_CMD_CHARS               SHRT_MAX
 
 /// <summary>
     /// HashCalculator 的系统右键扩展菜单类型

@@ -43,11 +43,8 @@ public:
 
     DECLARE_PROTECT_FINAL_CONSTRUCT();
 
-    HRESULT FinalConstruct() {
-        return S_OK;
-    }
-    VOID FinalRelease() {
-    }
+    HRESULT FinalConstruct() { return S_OK; }
+    VOID FinalRelease() { }
     STDMETHOD(Initialize)(PCIDLIST_ABSOLUTE, IDataObject*, HKEY);
     STDMETHOD(QueryContextMenu)(HMENU, UINT, UINT, UINT, UINT);
     STDMETHOD(InvokeCommand)(CMINVOKECOMMANDINFO*);
