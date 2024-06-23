@@ -24,7 +24,6 @@ namespace HashCalculator
         private readonly Timer checkStateTimer = null;
         private readonly ModelStarter starter = new ModelStarter(
             Settings.Current.SelectedTaskNumberLimit, 32);
-        private readonly Dispatcher synchronization = null;
         private readonly Action<HashModelArg> addModelAction;
         private readonly object displayingModelLock = new object();
         private readonly object changeRunningStateLock = new object();
@@ -89,7 +88,7 @@ namespace HashCalculator
             HashViewModelsView = HashViewModelsViewSrc.View;
             Settings.Current.PropertyChanged += this.SettingsPropChangedAction;
             this.OwnerWnd = window;
-            this.synchronization = window.Dispatcher;
+            Synchronization = window.Dispatcher;
             this.addModelAction = new Action<HashModelArg>(this.AddModelAction);
             this.checkStateTimer = new Timer(this.CheckStateAction);
         }
@@ -120,6 +119,8 @@ namespace HashCalculator
             get;
             private set;
         }
+
+        public static Dispatcher Synchronization { get; private set; }
 
         public static ObservableCollection<HashViewModel> HashViewModels { get; }
             = new ObservableCollection<HashViewModel>();
@@ -231,7 +232,7 @@ namespace HashCalculator
                 this.computedModelsCount = 0;
                 if (this.TobeComputedModelsCount == 0)
                 {
-                    this.synchronization.Invoke(() => { this.State = RunningState.Stopped; });
+                    Synchronization.Invoke(() => { this.State = RunningState.Stopped; });
                     this.checkStateTimer.Change(-1, -1);
                 }
             }
@@ -247,13 +248,13 @@ namespace HashCalculator
 
         private void ModelCapturedAction(HashViewModel model)
         {
-            // 在最外层套上 synchronization.Invoke 在主线程执行逻辑虽然也能达到锁效果，
+            // 在最外层套上 Synchronization.Invoke 在主线程执行逻辑虽然也能达到锁效果，
             // 但每次更改 TobeComputedModelsCount 的值都要 Invoke 占用主线程资源，没有必要
             lock (this.changeRunningStateLock)
             {
                 if (++this.TobeComputedModelsCount == 1)
                 {
-                    this.synchronization.Invoke(() => { this.State = RunningState.Started; });
+                    Synchronization.Invoke(() => { this.State = RunningState.Started; });
                     this.checkStateTimer.Change(interval, interval);
                 }
             }
@@ -294,7 +295,7 @@ namespace HashCalculator
                         {
                             arg.PresetAlgos = null;
                         }
-                        this.synchronization.Invoke(this.addModelAction, DispatcherPriority.Background, arg);
+                        Synchronization.Invoke(this.addModelAction, DispatcherPriority.Background, arg);
                     }
                 }
             }, token);
@@ -322,7 +323,7 @@ namespace HashCalculator
                             {
                                 break;
                             }
-                            this.synchronization.Invoke(this.addModelAction, DispatcherPriority.Background, arg);
+                            Synchronization.Invoke(this.addModelAction, DispatcherPriority.Background, arg);
                         }
                     }
                 }
@@ -857,7 +858,7 @@ namespace HashCalculator
                     finally
                     {
                         progress.AutoClose = true;
-                        this.synchronization.Invoke(() =>
+                        Synchronization.Invoke(() =>
                         {
                             progressWindow.DialogResult = false;
                         });

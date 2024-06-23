@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Resources;
 using System.Security;
 using System.Threading.Tasks;
+using System.Windows;
 using Microsoft.Win32;
 
 namespace HashCalculator
@@ -167,6 +168,61 @@ namespace HashCalculator
             }
         }
 
+        private static Exception DeleteSubKeyTreeUnderRegistryRoot(RegistryKey root)
+        {
+            Debug.Assert(root != null, "强制删除注册表时给出的注册表根为空");
+            try
+            {
+                root.DeleteSubKeyTree(registryClsIdComputeHash, false);
+                root.DeleteSubKeyTree(registryMenuHandlersComputeHashAnyFile, false);
+                root.DeleteSubKeyTree(registryMenuHandlersComputeHashDirectory, false);
+                root.DeleteSubKeyTree(registryMenuHandlersComputeHashBackground, false);
+                root.DeleteSubKeyTree(registryApplications, false);
+                root.DeleteSubKeyTree(registryClsIdAsCheckList, false);
+                root.DeleteSubKeyTree(registryHcbFile, false);
+                root.DeleteSubKeyTree(registryProgIdChecklist, false);
+                root.DeleteSubKeyTree(registryMenuHandlersOpenAsChecklistAnyFile, false);
+                return null;
+            }
+            catch (Exception exception)
+            {
+                return exception;
+            }
+        }
+
+        private static async Task<Exception> ForceCleanRegistryKeysManually()
+        {
+            Exception exception1 = await RegDeleteAppPathAsync();
+            Exception exception2 = null;
+            Exception exception3 = null;
+            RegBranch location = GetShellExtLocation();
+            switch (location)
+            {
+                default:
+                case RegBranch.UNKNOWN:
+                    exception2 = new Exception("无法确定是否已安装外壳扩展模块");
+                    break;
+                case RegBranch.HKCU:
+                    exception2 = DeleteSubKeyTreeUnderRegistryRoot(Registry.CurrentUser);
+                    break;
+                case RegBranch.HKLM:
+                case RegBranch.BOTH:
+                    if (!RunningAsAdmin)
+                    {
+                        return new Exception($"找到外壳扩展模块信息(系统)，请以管理员身份重新启动程序再清理");
+                    }
+                    exception2 = DeleteSubKeyTreeUnderRegistryRoot(Registry.LocalMachine);
+                    if (location == RegBranch.BOTH)
+                    {
+                        exception3 = DeleteSubKeyTreeUnderRegistryRoot(Registry.CurrentUser);
+                    }
+                    break;
+                case RegBranch.NEITHER:
+                    break;
+            }
+            return JoinExceptionMessagesAndGenerateNew(exception1, exception2, exception3);
+        }
+
         public static async Task<Exception> InstallShellExtension()
         {
             Exception exception = await Task.Run(async () =>
@@ -251,29 +307,47 @@ namespace HashCalculator
                         {
                         }
                     }
-                    SHELL32.SHChangeNotify(HChangeNotifyEventID.SHCNE_ASSOCCHANGED, HChangeNotifyFlags.SHCNF_IDLIST,
-                        IntPtr.Zero, IntPtr.Zero);
                 }
                 return JoinExceptionMessagesAndGenerateNew(exception1, exception2);
             });
+            if (exception is FileNotFoundException)
+            {
+                Func<MessageBoxResult> callback = () =>
+                {
+                    return MessageBox.Show(
+                        SettingsPanel.Current,
+                        "已安装右键菜单但未找到或无法访问外壳扩展模块，" +
+                        "无法通过对模块进行反注册来清理右键菜单注册信息，是否直接删除这些信息？",
+                        "提示",
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Warning,
+                        MessageBoxResult.No);
+                };
+                if (MainWndViewModel.Synchronization.Invoke(callback) == MessageBoxResult.Yes)
+                {
+                    exception = await ForceCleanRegistryKeysManually();
+                }
+            }
+            SHELL32.SHChangeNotify(HChangeNotifyEventID.SHCNE_ASSOCCHANGED, HChangeNotifyFlags.SHCNF_IDLIST,
+                IntPtr.Zero, IntPtr.Zero);
             Settings.UpdateDisplayingInformation();
             return exception;
         }
 
-        private static async Task<Exception> RegistryWriteNode(RegistryKey parent, string regPath, RegNode regNode)
+        private static async Task<Exception> RegistryWriteNode(RegistryKey root, string subPath, RegNode regNode)
         {
-            Debug.Assert(parent != null && regNode != null);
-            if (!string.IsNullOrEmpty(regPath))
+            Debug.Assert(root != null && regNode != null);
+            if (!string.IsNullOrEmpty(subPath))
             {
                 return await Task.Run(() =>
                 {
                     try
                     {
-                        using (RegistryKey regKey = parent.CreateSubKey(regPath, true))
+                        using (RegistryKey regKey = root.CreateSubKey(subPath, true))
                         {
                             if (regKey == null)
                             {
-                                return new Exception($"无法打开注册表节点：{regPath}");
+                                return new Exception($"无法打开注册表节点：{subPath}");
                             }
                             if (!regKey.WriteNode(regNode))
                             {
@@ -291,16 +365,16 @@ namespace HashCalculator
             return new Exception($"需要打开的注册表节点为空");
         }
 
-        private static async Task<Exception> RegistryDeleteNode(RegistryKey parent, string regPath, RegNode regNode)
+        private static async Task<Exception> RegistryDeleteNode(RegistryKey root, string subPath, RegNode regNode)
         {
-            Debug.Assert(parent != null && regNode != null);
-            if (!string.IsNullOrEmpty(regPath))
+            Debug.Assert(root != null && regNode != null);
+            if (!string.IsNullOrEmpty(subPath))
             {
                 return await Task.Run(() =>
                 {
                     try
                     {
-                        using (RegistryKey regKey = parent.OpenSubKey(regPath, true))
+                        using (RegistryKey regKey = root.OpenSubKey(subPath, true))
                         {
                             if (regKey != null)
                             {
@@ -309,7 +383,7 @@ namespace HashCalculator
                             }
                             else
                             {
-                                return new Exception($"无法打开注册表节点：{regPath}");
+                                return new Exception($"无法打开注册表节点：{subPath}");
                             }
                         }
                     }
@@ -364,7 +438,7 @@ namespace HashCalculator
 
         public static RegBranch GetShellExtLocation()
         {
-            return GetLocationOfOneInRegistry($"{registryCLSID}\\{Info.ShellExtGuid}");
+            return GetLocationOfOneInRegistry($"{registryCLSID}\\{Info.RegGuidComputeHash}");
         }
 
         public static RegBranch GetExecutableLocation()
@@ -455,9 +529,32 @@ namespace HashCalculator
         }
 
         private const string keyNameHashCalculator = "HashCalculator.exe";
-        private const string registryCLSID = "SOFTWARE\\Classes\\CLSID";
+        private const string registryClasses = "SOFTWARE\\Classes";
         private const string registryAppPaths = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths";
-        private static readonly string registryInprocServer32 = $"CLSID\\{Info.ShellExtGuid}\\InprocServer32";
+        private static readonly string registryCLSID = $"{registryClasses}\\CLSID";
+
+        // 外壳扩展模块 ComputeHash 部分写入的注册表路径
+        private static readonly string registryClsIdComputeHash = $"{registryCLSID}\\{Info.RegGuidComputeHash}";
+        private static readonly string registryMenuHandlersComputeHash =
+            $"{registryClasses}\\{{0}}\\shellex\\ContextMenuHandlers\\HashCalculator";
+        private static readonly string registryMenuHandlersComputeHashAnyFile = string.Format(
+            registryMenuHandlersComputeHash, "*");
+        private static readonly string registryMenuHandlersComputeHashDirectory = string.Format(
+            registryMenuHandlersComputeHash, "Directory");
+        private static readonly string registryMenuHandlersComputeHashBackground = string.Format(
+            registryMenuHandlersComputeHash, "Directory\\Background");
+
+        // 外壳扩展模块 Open As CheckList 部分写入的注册表路径
+        private static readonly string registryClsIdAsCheckList = $"{registryCLSID}\\{Info.RegGuidAsCheckList}";
+        private static readonly string registryProgIdChecklist = $"{registryClasses}\\HashCalculator.Checklist";
+        private static readonly string registryApplications = $"{registryClasses}\\Applications\\HashCalculator.exe";
+        private static readonly string registryHcbFile = $"{registryClasses}\\.hcb";
+        private static readonly string registryMenuHandlersOpenAsChecklistAnyFile = $"{registryClasses}\\*\\shellex\\" +
+            "ContextMenuHandlers\\HashCalculator OpenAsChecklist";
+
+        // 这个注册表路径直接拼在 HKEY_CLASSES_ROOT 后即可
+        private static readonly string registryInprocServer32 = $"CLSID\\{Info.RegGuidComputeHash}\\InprocServer32";
+
         private static readonly RegNode nodeHashCalculatorPath;
         private static readonly string executablePath = Assembly.GetExecutingAssembly().Location;
         private static readonly string executableDir = Path.GetDirectoryName(executablePath);
