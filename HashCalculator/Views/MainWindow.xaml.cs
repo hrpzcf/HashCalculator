@@ -79,6 +79,15 @@ namespace HashCalculator
             thread.IsBackground = true;
             thread.Start();
             this.filesDataGrid.Columns.ReorderDataGridColumns(Settings.Current.ColumnsOrder);
+            if (Settings.Current.PreviousVer != Info.Ver && Settings.NotificationShouldBeDisplayedOnce)
+            {
+                NotificationWindow window = new NotificationWindow()
+                {
+                    Owner = this
+                };
+                window.ShowDialog();
+            }
+            Settings.Current.PreviousVer = Info.Ver;
         }
 
         private void MainWindowRendered(object sender, EventArgs e)

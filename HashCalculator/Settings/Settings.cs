@@ -49,6 +49,8 @@ namespace HashCalculator
         public static SettingsViewModel Current { get; private set; }
             = new SettingsViewModel();
 
+        public static bool NotificationShouldBeDisplayedOnce { get; } = true;
+
         static Settings()
         {
             // 配置文件目录 1：位于程序目录
@@ -339,7 +341,6 @@ namespace HashCalculator
                         if (stream != null)
                         {
                             stream.ToNewFile(newFileFullPath);
-                            Current.PreviousVer = Info.Ver;
                         }
                         else
                         {
