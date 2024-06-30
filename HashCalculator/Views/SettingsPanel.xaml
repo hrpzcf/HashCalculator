@@ -152,7 +152,7 @@
                     <CheckBox
                         Margin="0,8,0,0"
                         Padding="4,0,0,0"
-                        Content="所有任务完成计算后使用颜色来标记相同的哈希值"
+                        Content="所有任务完成计算后使用颜色来标记哈希值相同的行"
                         IsChecked="{Binding MarkTheSameHashValues, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <TextBlock
                         Margin="18,2,0,0"
@@ -231,13 +231,173 @@
                     Padding="4,0,0,0"
                     Content="显示新添加文件的图标"
                     IsChecked="{Binding ShowFileIcon, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <GroupBox
+                    Margin="0,8,0,0"
+                    Padding="0,2,0,0"
+                    Foreground="#FF006FD6"
+                    Header="用颜色来标记哈希值相同的行时的颜色参数">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            Foreground="Black"
+                            Text="颜色亮度：" />
+                        <Slider
+                            Grid.Column="1"
+                            Maximum="230"
+                            Minimum="30"
+                            TickFrequency="1"
+                            Value="{Binding LuminanceOfTableRowsWithSameHash, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock
+                            Grid.Column="2"
+                            Width="30"
+                            Margin="4,0,0,0"
+                            Foreground="Black"
+                            Text="{Binding LuminanceOfTableRowsWithSameHash}" />
+                        <TextBlock
+                            Grid.Column="3"
+                            Margin="16,0,0,0"
+                            VerticalAlignment="Center"
+                            Foreground="Black"
+                            Text="饱和度：" />
+                        <Slider
+                            Grid.Column="4"
+                            Maximum="240"
+                            Minimum="10"
+                            TickFrequency="1"
+                            Value="{Binding SaturationOfTableRowsWithSameHash, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock
+                            Grid.Column="5"
+                            Width="30"
+                            Margin="4,0,0,0"
+                            Foreground="Black"
+                            Text="{Binding SaturationOfTableRowsWithSameHash}" />
+                    </Grid>
+                </GroupBox>
+                <GroupBox
+                    Margin="0,4,0,0"
+                    Padding="0,2,0,0"
+                    Foreground="#FF006FD6"
+                    Header="相同哈希值筛选器给哈希值列上色时的颜色参数">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            Foreground="Black"
+                            Text="颜色亮度：" />
+                        <Slider
+                            Grid.Column="1"
+                            Maximum="230"
+                            Minimum="30"
+                            TickFrequency="1"
+                            Value="{Binding LuminanceOfTableCellsWithSameHash, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock
+                            Grid.Column="2"
+                            Width="30"
+                            Margin="4,0,0,0"
+                            Foreground="Black"
+                            Text="{Binding LuminanceOfTableCellsWithSameHash}" />
+                        <TextBlock
+                            Grid.Column="3"
+                            Margin="16,0,0,0"
+                            VerticalAlignment="Center"
+                            Foreground="Black"
+                            Text="饱和度：" />
+                        <Slider
+                            Grid.Column="4"
+                            Maximum="240"
+                            Minimum="10"
+                            TickFrequency="1"
+                            Value="{Binding SaturationOfTableCellsWithSameHash, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock
+                            Grid.Column="5"
+                            Width="30"
+                            Margin="4,0,0,0"
+                            Foreground="Black"
+                            Text="{Binding SaturationOfTableCellsWithSameHash}" />
+                    </Grid>
+                </GroupBox>
+                <GroupBox
+                    Margin="0,4,0,0"
+                    Padding="0,2,0,0"
+                    Foreground="#FF006FD6"
+                    Header="相同文件夹筛选器给文件名列上色时的颜色参数">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            Foreground="Black"
+                            Text="颜色亮度：" />
+                        <Slider
+                            Grid.Column="1"
+                            Maximum="230"
+                            Minimum="30"
+                            TickFrequency="1"
+                            Value="{Binding LuminanceOfTableCellsWithSameDirectory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock
+                            Grid.Column="2"
+                            Width="30"
+                            Margin="4,0,0,0"
+                            Foreground="Black"
+                            Text="{Binding LuminanceOfTableCellsWithSameDirectory}" />
+                        <TextBlock
+                            Grid.Column="3"
+                            Margin="16,0,0,0"
+                            VerticalAlignment="Center"
+                            Foreground="Black"
+                            Text="饱和度：" />
+                        <Slider
+                            Grid.Column="4"
+                            Maximum="240"
+                            Minimum="10"
+                            TickFrequency="1"
+                            Value="{Binding SaturationOfTableCellsWithSameDirectory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock
+                            Grid.Column="5"
+                            Width="30"
+                            Margin="4,0,0,0"
+                            Foreground="Black"
+                            Text="{Binding SaturationOfTableCellsWithSameDirectory}" />
+                    </Grid>
+                </GroupBox>
+                <Button
+                    Margin="0,4,0,0"
+                    Padding="8,2"
+                    HorizontalAlignment="Left"
+                    Background="{x:Null}"
+                    Command="{Binding ResetLuminanceAndSaturationValuesCmd}"
+                    Content="重置所有颜色亮度和饱和度值" />
                 <Button
                     Margin="0,8,0,0"
                     Padding="8,2"
                     HorizontalAlignment="Left"
                     Background="{x:Null}"
-                    Click="ResetMainWindowDataGridCOlumnsOrder"
-                    Content="重置主窗口表格列的顺序" />
+                    Click="ResetMainWindowDataGridColumnsOrder"
+                    Content="重置主窗口表格所有列的顺序" />
             </StackPanel>
         </TabItem>
         <TabItem

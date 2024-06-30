@@ -95,6 +95,12 @@ namespace HashCalculator
         private int minCopiedCharsToTriggerHashCheck = 8;
         private int maxCopiedCharsToTriggerHashCheck = 512;
         private int millisecondsOfDelayedStartup = 360;
+        private int luminanceOfTableRowsWithSameHash = 220;
+        private int saturationOfTableRowsWithSameHash = 200;
+        private int luminanceOfTableCellsWithSameDirectory = 190;
+        private int saturationOfTableCellsWithSameDirectory = 240;
+        private int luminanceOfTableCellsWithSameHash = 190;
+        private int saturationOfTableCellsWithSameHash = 240;
 
         private RelayCommand installShellExtCmd;
         private RelayCommand unInstallShellExtCmd;
@@ -115,6 +121,7 @@ namespace HashCalculator
         private RelayCommand removeChecklistTemplateCmd;
 
         private RelayCommand resetAlgorithmAliasCmd;
+        private RelayCommand resetLuminanceAndSaturationValuesCmd;
 
         public SettingsViewModel()
         {
@@ -632,6 +639,78 @@ namespace HashCalculator
         {
             get => this.delayTheStartOfCalculationTasks;
             set => this.SetPropNotify(ref this.delayTheStartOfCalculationTasks, value);
+        }
+
+        private static void AdjustLuminanceOrSaturation(ref int target)
+        {
+            if (target < 0)
+            {
+                target = 0;
+            }
+            else if (target > 240)
+            {
+                target = 240;
+            }
+        }
+
+        public int LuminanceOfTableRowsWithSameHash
+        {
+            get => this.luminanceOfTableRowsWithSameHash;
+            set
+            {
+                AdjustLuminanceOrSaturation(ref value);
+                this.SetPropNotify(ref this.luminanceOfTableRowsWithSameHash, value);
+            }
+        }
+
+        public int SaturationOfTableRowsWithSameHash
+        {
+            get => this.saturationOfTableRowsWithSameHash;
+            set
+            {
+                AdjustLuminanceOrSaturation(ref value);
+                this.SetPropNotify(ref this.saturationOfTableRowsWithSameHash, value);
+            }
+        }
+
+        public int LuminanceOfTableCellsWithSameDirectory
+        {
+            get => this.luminanceOfTableCellsWithSameDirectory;
+            set
+            {
+                AdjustLuminanceOrSaturation(ref value);
+                this.SetPropNotify(ref this.luminanceOfTableCellsWithSameDirectory, value);
+            }
+        }
+
+        public int SaturationOfTableCellsWithSameDirectory
+        {
+            get => this.saturationOfTableCellsWithSameDirectory;
+            set
+            {
+                AdjustLuminanceOrSaturation(ref value);
+                this.SetPropNotify(ref this.saturationOfTableCellsWithSameDirectory, value);
+            }
+        }
+
+        public int LuminanceOfTableCellsWithSameHash
+        {
+            get => this.luminanceOfTableCellsWithSameHash;
+            set
+            {
+                AdjustLuminanceOrSaturation(ref value);
+                this.SetPropNotify(ref this.luminanceOfTableCellsWithSameHash, value);
+            }
+        }
+
+        public int SaturationOfTableCellsWithSameHash
+        {
+            get => this.saturationOfTableCellsWithSameHash;
+            set
+            {
+                AdjustLuminanceOrSaturation(ref value);
+                this.SetPropNotify(ref this.saturationOfTableCellsWithSameHash, value);
+            }
         }
 
         public AlgoType[] SelectedAlgos { get; set; }
@@ -1208,6 +1287,31 @@ namespace HashCalculator
                     this.resetAlgorithmAliasCmd = new RelayCommand(this.ResetAlgorithmAliasAction);
                 }
                 return this.resetAlgorithmAliasCmd;
+            }
+        }
+
+        private void ResetLuminanceAndSaturationValuesAction(object param)
+        {
+            this.LuminanceOfTableRowsWithSameHash = 220;
+            this.SaturationOfTableRowsWithSameHash = 200;
+
+            this.LuminanceOfTableCellsWithSameHash = 190;
+            this.SaturationOfTableCellsWithSameHash = 240;
+
+            this.LuminanceOfTableCellsWithSameDirectory = 190;
+            this.SaturationOfTableCellsWithSameDirectory = 240;
+        }
+
+        [JsonIgnore, XmlIgnore]
+        public ICommand ResetLuminanceAndSaturationValuesCmd
+        {
+            get
+            {
+                if (this.resetLuminanceAndSaturationValuesCmd == null)
+                {
+                    this.resetLuminanceAndSaturationValuesCmd = new RelayCommand(this.ResetLuminanceAndSaturationValuesAction);
+                }
+                return this.resetLuminanceAndSaturationValuesCmd;
             }
         }
 

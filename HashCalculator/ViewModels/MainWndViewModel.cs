@@ -398,8 +398,10 @@ namespace HashCalculator
             {
                 KeyValuePair<byte[], List<HashViewModel>>[] finalModels = hashViewModels.Where(
                     i => i.Value.Count > 1).ToArray();
-                IEnumerable<ComparableColor> colors = CommonUtils.ColorGenerator(finalModels.Length, 190, 190)
-                    .Select(i => new ComparableColor(i));
+                IEnumerable<ComparableColor> colors = CommonUtils.ColorGenerator(
+                    finalModels.Length,
+                    Settings.Current.LuminanceOfTableRowsWithSameHash,
+                    Settings.Current.SaturationOfTableRowsWithSameHash).Select(i => new ComparableColor(i));
                 foreach (var tuple in finalModels.ZipElements(colors))
                 {
                     foreach (HashViewModel hashViewModel in tuple.Item1.Value)

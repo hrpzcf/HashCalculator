@@ -166,8 +166,10 @@ namespace HashCalculator
                 {
                     return;
                 }
-                IEnumerable<ComparableColor> colors =
-                    CommonUtils.ColorGenerator(finalHashModels.Count).Select(i => new ComparableColor(i));
+                IEnumerable<ComparableColor> colors = CommonUtils.ColorGenerator(
+                    finalHashModels.Count,
+                    Settings.Current.LuminanceOfTableCellsWithSameHash,
+                    Settings.Current.SaturationOfTableCellsWithSameHash).Select(i => new ComparableColor(i));
                 foreach (var tuple in finalHashModels.ZipElements(colors))
                 {
                     foreach (HashViewModel model in tuple.Item1.Value.Keys)
@@ -225,8 +227,10 @@ namespace HashCalculator
                 {
                     return;
                 }
-                IEnumerable<ComparableColor> colors =
-                    CommonUtils.ColorGenerator(finalHashModels.Count).Select(i => new ComparableColor(i));
+                IEnumerable<ComparableColor> colors = CommonUtils.ColorGenerator(
+                    finalHashModels.Count,
+                    Settings.Current.LuminanceOfTableCellsWithSameHash,
+                    Settings.Current.SaturationOfTableCellsWithSameHash).Select(i => new ComparableColor(i));
                 foreach (var tuple in finalHashModels.ZipElements(colors))
                 {
                     foreach (HashViewModel model in tuple.Item1.Value)
