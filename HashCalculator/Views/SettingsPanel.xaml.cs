@@ -44,7 +44,7 @@ namespace HashCalculator
             e.Cancel = this.viewModel.ProcessingShellExtension;
         }
 
-        private void ResetMainWindowDataGridCOlumnsOrder(object sender, RoutedEventArgs e)
+        private void ResetMainWindowDataGridColumnsOrder(object sender, RoutedEventArgs e)
         {
             int index = 0;
             foreach (DataGridColumn column in MainWindow.Current.filesDataGrid.Columns)

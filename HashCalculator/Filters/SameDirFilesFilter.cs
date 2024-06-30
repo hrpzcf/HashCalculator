@@ -55,7 +55,10 @@ namespace HashCalculator
                 if (groupByDirPath.Any())
                 {
                     IEnumerable<ComparableColor> colors =
-                        CommonUtils.ColorGenerator(groupByDirPath.Count).Select(i => new ComparableColor(i));
+                        CommonUtils.ColorGenerator(
+                            groupByDirPath.Count,
+                            Settings.Current.LuminanceOfTableCellsWithSameDirectory,
+                            Settings.Current.SaturationOfTableCellsWithSameDirectory).Select(i => new ComparableColor(i));
                     foreach (var tuple in groupByDirPath.ZipElements(colors))
                     {
                         foreach (HashViewModel model in tuple.Item1.Value)
