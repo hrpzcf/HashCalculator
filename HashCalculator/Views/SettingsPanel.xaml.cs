@@ -53,13 +53,13 @@ namespace HashCalculator
             }
         }
 
-        private async void OnTextBlockMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void OnTextBlockMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (sender is TextBlock textBlock)
             {
                 if (textBlock.Text == SettingsViewModel.FixAlgoDlls)
                 {
-                    string message = Settings.ExtractEmbeddedAlgoDllFile(force: true);
+                    string message = Settings.ExtractEmbeddedAlgoDll(force: true);
                     if (!string.IsNullOrEmpty(message))
                     {
                         MessageBox.Show(this, $"修复失败：\n{message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -75,7 +75,7 @@ namespace HashCalculator
                 }
                 else if (textBlock.Text == SettingsViewModel.UpdateExePath)
                 {
-                    Exception exception = await ShellExtHelper.RegUpdateAppPathAsync();
+                    Exception exception = ShellExtHelper.RegUpdateAppPath();
                     if (exception == null)
                     {
                         MessageBox.Show(this, $"更新成功！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);

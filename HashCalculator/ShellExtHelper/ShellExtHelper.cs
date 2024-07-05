@@ -6,7 +6,6 @@ using System.Linq;
 using System.Reflection;
 using System.Resources;
 using System.Security;
-using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.Win32;
 
@@ -190,9 +189,9 @@ namespace HashCalculator
             }
         }
 
-        private static async Task<Exception> ForceCleanRegistryKeysManually()
+        private static Exception ForceCleanRegistryKeysManually()
         {
-            Exception exception1 = await RegDeleteAppPathAsync();
+            Exception exception1 = RegDeleteAppPath();
             Exception exception2 = null;
             Exception exception3 = null;
             RegBranch location = GetShellExtLocation();
@@ -223,93 +222,88 @@ namespace HashCalculator
             return JoinExceptionMessagesAndGenerateNew(exception1, exception2, exception3);
         }
 
-        public static async Task<Exception> InstallShellExtension()
+        public static Exception InstallShellExtension()
         {
-            Exception exception = await Task.Run(async () =>
+            Exception exception;
+            try
             {
-                try
+                if (!Directory.Exists(Settings.ShellExtensionDir))
                 {
-                    if (!Directory.Exists(Settings.ShellExtensionDir))
-                    {
-                        Directory.CreateDirectory(Settings.ShellExtensionDir);
-                    }
-                    if (await UninstallShellExtension() is Exception exception1)
-                    {
-                        return exception1;
-                    }
-                    if (Loading.Executing.GetManifestResourceStream(embeddedShellExtPath) is Stream manifest)
-                    {
-                        using (manifest)
-                        {
-                            manifest.ToNewFile(Settings.ShellExtensionFile);
-                        }
-                    }
-                    else
-                    {
-                        return new MissingManifestResourceException("内嵌的右键菜单扩展模块资源丢失");
-                    }
-                    if (RegisterShellExtDll(Settings.ShellExtensionFile) is Exception exception2)
-                    {
-                        return exception2;
-                    }
-                    SHELL32.SHChangeNotify(HChangeNotifyEventID.SHCNE_ASSOCCHANGED, HChangeNotifyFlags.SHCNF_IDLIST,
-                        IntPtr.Zero, IntPtr.Zero);
-                    Settings.UpdateShellMenuConfigFilePath(Settings.ShellExtensionFile);
-                    return await RegUpdateAppPathAsync();
+                    Directory.CreateDirectory(Settings.ShellExtensionDir);
                 }
-                catch (Exception exception3)
+                if (UninstallShellExtension() is Exception exception1)
                 {
-                    return exception3;
+                    exception = exception1;
                 }
-            });
+                if (Loading.Executing.GetManifestResourceStream(embeddedShellExtPath) is Stream manifest)
+                {
+                    using (manifest)
+                    {
+                        manifest.ToNewFile(Settings.ShellExtensionFile);
+                    }
+                }
+                else
+                {
+                    exception = new MissingManifestResourceException("内嵌的右键菜单扩展模块资源丢失");
+                }
+                if (RegisterShellExtDll(Settings.ShellExtensionFile) is Exception exception2)
+                {
+                    exception = exception2;
+                }
+                SHELL32.SHChangeNotify(HChangeNotifyEventID.SHCNE_ASSOCCHANGED, HChangeNotifyFlags.SHCNF_IDLIST,
+                    IntPtr.Zero, IntPtr.Zero);
+                Settings.UpdateShellMenuConfigFilePath(Settings.ShellExtensionFile);
+                exception = RegUpdateAppPath();
+            }
+            catch (Exception exception3)
+            {
+                exception = exception3;
+            }
             Settings.UpdateDisplayingInformation();
             return exception;
         }
 
-        public static async Task<Exception> UninstallShellExtension()
+        public static Exception UninstallShellExtension()
         {
-            Exception exception = await Task.Run(async () =>
+            Exception exception1 = RegDeleteAppPath();
+            Exception exception2 = null;
+            if (GetShellExtensionPath() is string shellExtensionFile &&
+                (exception2 = DeregisterShellExtDll(shellExtensionFile)) == null)
             {
-                Exception exception1 = await RegDeleteAppPathAsync();
-                Exception exception2 = null;
-                if (GetShellExtensionPath() is string shellExtensionFile &&
-                    (exception2 = DeregisterShellExtDll(shellExtensionFile)) == null)
+                string oldMenuConfigFile = Settings.MenuConfigFile;
+                string oldShellExtensionDir = Path.GetDirectoryName(shellExtensionFile);
+                Settings.UpdateShellMenuConfigFilePath(string.Empty);
+                if (!oldShellExtensionDir.Equals(Settings.ActiveConfigDir))
                 {
-                    string oldMenuConfigFile = Settings.MenuConfigFile;
-                    string oldShellExtensionDir = Path.GetDirectoryName(shellExtensionFile);
-                    Settings.UpdateShellMenuConfigFilePath(string.Empty);
-                    if (!oldShellExtensionDir.Equals(Settings.ActiveConfigDir))
+                    try
                     {
-                        try
+                        if (File.Exists(Settings.MenuConfigFile))
                         {
-                            if (File.Exists(Settings.MenuConfigFile))
-                            {
-                                File.Delete(Settings.MenuConfigFile);
-                            }
-                            File.Move(oldMenuConfigFile, Settings.MenuConfigFile);
+                            File.Delete(Settings.MenuConfigFile);
                         }
-                        catch
-                        {
-                        }
+                        File.Move(oldMenuConfigFile, Settings.MenuConfigFile);
                     }
+                    catch
+                    {
+                    }
+                }
+                try
+                {
+                    File.Delete(shellExtensionFile);
+                }
+                catch (Exception e) when (e is IOException || e is UnauthorizedAccessException)
+                {
+                    TerminateExplorer();
                     try
                     {
                         File.Delete(shellExtensionFile);
                     }
-                    catch (Exception e) when (e is IOException || e is UnauthorizedAccessException)
+                    catch
                     {
-                        TerminateExplorer();
-                        try
-                        {
-                            File.Delete(shellExtensionFile);
-                        }
-                        catch
-                        {
-                        }
                     }
                 }
-                return JoinExceptionMessagesAndGenerateNew(exception1, exception2);
-            });
+            }
+            Exception exception = JoinExceptionMessagesAndGenerateNew(exception1, exception2);
             if (exception is FileNotFoundException)
             {
                 Func<MessageBoxResult> callback = () =>
@@ -325,7 +319,7 @@ namespace HashCalculator
                 };
                 if (MainWndViewModel.Synchronization.Invoke(callback) == MessageBoxResult.Yes)
                 {
-                    exception = await ForceCleanRegistryKeysManually();
+                    exception = ForceCleanRegistryKeysManually();
                 }
             }
             SHELL32.SHChangeNotify(HChangeNotifyEventID.SHCNE_ASSOCCHANGED, HChangeNotifyFlags.SHCNF_IDLIST,
@@ -334,64 +328,58 @@ namespace HashCalculator
             return exception;
         }
 
-        private static async Task<Exception> RegistryWriteNode(RegistryKey root, string subPath, RegNode regNode)
+        private static Exception RegistryWriteNode(RegistryKey root, string subPath, RegNode regNode)
         {
             Debug.Assert(root != null && regNode != null);
             if (!string.IsNullOrEmpty(subPath))
             {
-                return await Task.Run(() =>
+                try
                 {
-                    try
+                    using (RegistryKey regKey = root.CreateSubKey(subPath, true))
                     {
-                        using (RegistryKey regKey = root.CreateSubKey(subPath, true))
+                        if (regKey == null)
                         {
-                            if (regKey == null)
-                            {
-                                return new Exception($"无法打开注册表节点：{subPath}");
-                            }
-                            if (!regKey.WriteNode(regNode))
-                            {
-                                return new Exception($"写入注册表节点失败：{regNode.Name}");
-                            }
+                            return new Exception($"无法打开注册表节点：{subPath}");
                         }
-                        return null;
+                        if (!regKey.WriteNode(regNode))
+                        {
+                            return new Exception($"写入注册表节点失败：{regNode.Name}");
+                        }
                     }
-                    catch (Exception exception)
-                    {
-                        return exception;
-                    }
-                });
+                    return null;
+                }
+                catch (Exception exception)
+                {
+                    return exception;
+                }
             }
             return new Exception($"需要打开的注册表节点为空");
         }
 
-        private static async Task<Exception> RegistryDeleteNode(RegistryKey root, string subPath, RegNode regNode)
+        private static Exception RegistryDeleteNode(RegistryKey root, string subPath, RegNode regNode)
         {
             Debug.Assert(root != null && regNode != null);
             if (!string.IsNullOrEmpty(subPath))
             {
-                return await Task.Run(() =>
+                try
                 {
-                    try
+                    using (RegistryKey regKey = root.OpenSubKey(subPath, true))
                     {
-                        using (RegistryKey regKey = root.OpenSubKey(subPath, true))
+                        if (regKey != null)
                         {
-                            if (regKey != null)
-                            {
-                                regKey.DeleteSubKeyTree(regNode.Name, false);
-                                return null;
-                            }
-                            else
-                            {
-                                return new Exception($"无法打开注册表节点：{subPath}");
-                            }
+                            regKey.DeleteSubKeyTree(regNode.Name, false);
+                            return null;
+                        }
+                        else
+                        {
+                            return new Exception($"无法打开注册表节点：{subPath}");
                         }
                     }
-                    catch (Exception exception)
-                    {
-                        return exception;
-                    }
-                });
+                }
+                catch (Exception exception)
+                {
+                    return exception;
+                }
             }
             return new Exception($"需要打开的注册表节点为空");
         }
@@ -446,7 +434,7 @@ namespace HashCalculator
             return GetLocationOfOneInRegistry($"{registryAppPaths}\\{keyNameHashCalculator}");
         }
 
-        public static async Task<Exception> RegUpdateAppPathAsync()
+        public static Exception RegUpdateAppPath()
         {
             Exception exception1 = null;
             Exception exception2 = null;
@@ -457,7 +445,7 @@ namespace HashCalculator
                 case RegBranch.UNKNOWN:
                     return new Exception("无法确定注册表项 HashCalculator.exe 位置");
                 case RegBranch.HKCU:
-                    exception1 = await RegistryWriteNode(Registry.CurrentUser, registryAppPaths, nodeHashCalculatorPath);
+                    exception1 = RegistryWriteNode(Registry.CurrentUser, registryAppPaths, nodeHashCalculatorPath);
                     break;
                 case RegBranch.HKLM:
                 case RegBranch.BOTH:
@@ -465,21 +453,21 @@ namespace HashCalculator
                     {
                         return new Exception("请以管理员身份重新启动程序再尝试更新程序路径");
                     }
-                    exception2 = await RegistryWriteNode(Registry.LocalMachine, registryAppPaths, nodeHashCalculatorPath);
+                    exception2 = RegistryWriteNode(Registry.LocalMachine, registryAppPaths, nodeHashCalculatorPath);
                     if (location == RegBranch.BOTH)
                     {
-                        exception1 = await RegistryWriteNode(Registry.CurrentUser, registryAppPaths, nodeHashCalculatorPath);
+                        exception1 = RegistryWriteNode(Registry.CurrentUser, registryAppPaths, nodeHashCalculatorPath);
                     }
                     break;
                 case RegBranch.NEITHER:
                     RegistryKey root = RunningAsAdmin ? Registry.LocalMachine : Registry.CurrentUser;
-                    exception1 = await RegistryWriteNode(root, registryAppPaths, nodeHashCalculatorPath);
+                    exception1 = RegistryWriteNode(root, registryAppPaths, nodeHashCalculatorPath);
                     break;
             }
             return JoinExceptionMessagesAndGenerateNew(exception1, exception2);
         }
 
-        public static async Task<Exception> RegDeleteAppPathAsync()
+        public static Exception RegDeleteAppPath()
         {
             Exception exception1 = null;
             Exception exception2 = null;
@@ -490,7 +478,7 @@ namespace HashCalculator
                 case RegBranch.UNKNOWN:
                     return new Exception("无法确定注册表项 HashCalculator.exe 位置");
                 case RegBranch.HKCU:
-                    exception1 = await RegistryDeleteNode(Registry.CurrentUser, registryAppPaths, nodeHashCalculatorPath);
+                    exception1 = RegistryDeleteNode(Registry.CurrentUser, registryAppPaths, nodeHashCalculatorPath);
                     break;
                 case RegBranch.HKLM:
                 case RegBranch.BOTH:
@@ -498,10 +486,10 @@ namespace HashCalculator
                     {
                         return new Exception("请以管理员身份重新启动程序再尝试清理程序路径");
                     }
-                    exception2 = await RegistryDeleteNode(Registry.LocalMachine, registryAppPaths, nodeHashCalculatorPath);
+                    exception2 = RegistryDeleteNode(Registry.LocalMachine, registryAppPaths, nodeHashCalculatorPath);
                     if (location == RegBranch.BOTH)
                     {
-                        exception1 = await RegistryDeleteNode(Registry.CurrentUser, registryAppPaths, nodeHashCalculatorPath);
+                        exception1 = RegistryDeleteNode(Registry.CurrentUser, registryAppPaths, nodeHashCalculatorPath);
                     }
                     break;
                 case RegBranch.NEITHER:

@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml.Serialization;
@@ -774,7 +775,7 @@ namespace HashCalculator
                 return;
             }
             this.ProcessingShellExtension = true;
-            if (await ShellExtHelper.InstallShellExtension() is Exception exception1)
+            if (await Task.Run(ShellExtHelper.InstallShellExtension) is Exception exception1)
             {
                 MessageBox.Show(SettingsPanel.Current, exception1.Message, "安装失败",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -790,7 +791,7 @@ namespace HashCalculator
                 if (!string.IsNullOrEmpty(exception))
                 {
                     MessageBox.Show(SettingsPanel.Current,
-                        $"外壳扩展模块配置文件创建失败，快捷菜单将无法显示，原因：{exception}", "警告",
+                        $"外壳扩展模块配置文件创建失败，快捷菜单将不显示，原因：{exception}", "警告",
                         MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
@@ -820,7 +821,7 @@ namespace HashCalculator
                 return;
             }
             this.ProcessingShellExtension = true;
-            if (await ShellExtHelper.UninstallShellExtension() is Exception exception)
+            if (await Task.Run(ShellExtHelper.UninstallShellExtension) is Exception exception)
             {
                 MessageBox.Show(SettingsPanel.Current, exception.Message, "卸载失败",
                     MessageBoxButton.OK, MessageBoxImage.Warning);

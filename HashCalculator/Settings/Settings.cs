@@ -321,7 +321,7 @@ namespace HashCalculator
             Environment.SetEnvironmentVariable("PATH", ActiveLibraryDir);
         }
 
-        public static string ExtractEmbeddedAlgoDllFile(bool force)
+        public static string ExtractEmbeddedAlgoDll(bool force)
         {
             string newFileFullPath = Path.Combine(ActiveLibraryDir, HashAlgs);
             if (force || Current.PreviousVer != Info.Ver || !File.Exists(newFileFullPath))
