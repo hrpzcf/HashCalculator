@@ -651,16 +651,16 @@
                 <GroupBox
                     Padding="0,8,0,0"
                     Foreground="#FF006FD6"
-                    Header="是否使用复制模版">
+                    Header="当点击含有【按模板复制】字样的按钮或菜单时">
                     <StackPanel>
                         <RadioButton
                             Padding="4,0,0,0"
-                            Content="使用含有【按模板复制】字样的按钮或菜单时只复制哈希值"
+                            Content="不使用复制模板，仅复制哈希值"
                             IsChecked="{Binding GenerateTextInFormat, Converter={StaticResource ReverseBooleanValueCvt}}" />
                         <RadioButton
                             Margin="0,4,0,0"
                             VerticalAlignment="Center"
-                            Content="使用以下自定义模版来定制想要复制出来的内容"
+                            Content="使用以下模版来定制想要复制出来的内容"
                             IsChecked="{Binding GenerateTextInFormat}" />
                         <TextBox
                             Margin="0,4,0,0"
