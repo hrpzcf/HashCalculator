@@ -108,7 +108,7 @@
                             <CheckBox
                                 Margin="20,4,0,0"
                                 Padding="4,0,0,0"
-                                Content="完成哈希值校验后把主窗口带到前台"
+                                Content="完成哈希值校验后把主窗口带到前台 (管理员模式下可能不生效)"
                                 IsChecked="{Binding SwitchMainWndFgWhenNewHashCopied, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 IsEnabled="{Binding ElementName=checkBoxVerifyWhenClipbaordNewHash, Path=IsChecked}" />
                             <StackPanel
@@ -655,7 +655,7 @@
                     <StackPanel>
                         <RadioButton
                             Padding="4,0,0,0"
-                            Content="使用与【复制哈希值】相关按钮或菜单时只复制哈希值"
+                            Content="使用含有【按模板复制】字样的按钮或菜单时只复制哈希值"
                             IsChecked="{Binding GenerateTextInFormat, Converter={StaticResource ReverseBooleanValueCvt}}" />
                         <RadioButton
                             Margin="0,4,0,0"
@@ -776,12 +776,12 @@
                             Margin="0,8,0,0"
                             FontSize="8pt"
                             Style="{StaticResource DescTextBlockStyle}"
-                            Text="此设置影响软件所有与复制计算结果相关的按钮或菜单的复制效果。" />
+                            Text="此设置影响所有含有【按模板复制】字样的按钮或菜单的复制效果。" />
                         <TextBlock
                             Margin="0,2,0,0"
                             FontSize="8pt"
                             Style="{StaticResource DescTextBlockStyle}"
-                            Text="模版输入框留空效果与选择【使用复制按钮或右键菜单时只复制哈希值】相同。" />
+                            Text="模版输入框留空效果与选择【使用与复制结果相关按钮或菜单时只复制哈希值】相同。" />
                         <TextBlock
                             Margin="0,2,0,0"
                             FontSize="8pt"

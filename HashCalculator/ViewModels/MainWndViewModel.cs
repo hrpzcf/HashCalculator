@@ -66,11 +66,14 @@ namespace HashCalculator
         private RelayCommand removeSelectedModelsCmd;
         private RelayCommand stopEnumeratingPackageCmd;
         private RelayCommand changeAlgosExportStateCmd;
+        private RelayCommand copyModelsCurHashWithNoFormatCmd;
+        private RelayCommand copyModelsAllHashWithNoFormatCmd;
+
         private GenericItemModel[] copyModelsHashMenuCmds;
         private GenericItemModel[] copyModelsAllHashesMenuCmds;
-        private GenericItemModel[] ctrlHashViewModelTaskCmds;
-        private GenericItemModel[] switchAlgoExportStateCmds;
         private GenericItemModel[] switchDisplayedAlgoCmds;
+        private GenericItemModel[] switchAlgoExportStateCmds;
+        private GenericItemModel[] ctrlHashViewModelTaskCmds;
 
         private static readonly SizeDelegates sizeDelegates = new SizeDelegates()
         {
@@ -631,6 +634,61 @@ namespace HashCalculator
                     this.copyFilesFullPathCmd = new RelayCommand(this.CopyFilesPathAction);
                 }
                 return this.copyFilesFullPathCmd;
+            }
+        }
+
+        private void CopyModelsHashWithNoFormatAction(object param, OutputType outputType, bool copyAll)
+        {
+            if (param is IList selectedModels && selectedModels.AnyItem())
+            {
+                StringBuilder stringBuilder = new StringBuilder();
+                foreach (HashViewModel model in selectedModels)
+                {
+                    if (model.GenerateTextInFormat(null, outputType, copyAll, endLine: true, seeExport: false,
+                        casedName: false) is string text)
+                    {
+                        stringBuilder.Append(text);
+                    }
+                }
+                if (stringBuilder.Length > 0)
+                {
+                    stringBuilder.Remove(stringBuilder.Length - 1, 1);
+                    CommonUtils.ClipboardSetText(stringBuilder.ToString());
+                }
+            }
+        }
+
+        private void CopyModelsCurHashWithNoFormatAction(object param)
+        {
+            this.CopyModelsHashWithNoFormatAction(param, OutputType.Unknown, copyAll: false);
+        }
+
+        public ICommand CopyModelsCurHashWithNoFormatCmd
+        {
+            get
+            {
+                if (this.copyModelsCurHashWithNoFormatCmd == null)
+                {
+                    this.copyModelsCurHashWithNoFormatCmd = new RelayCommand(this.CopyModelsCurHashWithNoFormatAction);
+                }
+                return this.copyModelsCurHashWithNoFormatCmd;
+            }
+        }
+
+        private void CopyModelsAllHashWithNoFormatAction(object param)
+        {
+            this.CopyModelsHashWithNoFormatAction(param, OutputType.Unknown, copyAll: true);
+        }
+
+        public ICommand CopyModelsAllHashWithNoFormatCmd
+        {
+            get
+            {
+                if (this.copyModelsAllHashWithNoFormatCmd == null)
+                {
+                    this.copyModelsAllHashWithNoFormatCmd = new RelayCommand(this.CopyModelsAllHashWithNoFormatAction);
+                }
+                return this.copyModelsAllHashWithNoFormatCmd;
             }
         }
 

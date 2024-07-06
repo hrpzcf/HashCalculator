@@ -493,7 +493,7 @@
                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
                         Header="复制文件的完整路径" />
                     <MenuItem
-                        Header="复制所选行当前结果"
+                        Header="按模板复制所选行当前结果"
                         IsEnabled="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems, Converter={StaticResource CopyModelsHashMenuEnabledCvt}}"
                         ItemsSource="{Binding CopyModelsHashMenuCmds}">
                         <MenuItem.ItemContainerStyle>
@@ -505,7 +505,7 @@
                         </MenuItem.ItemContainerStyle>
                     </MenuItem>
                     <MenuItem
-                        Header="复制所选行所有结果"
+                        Header="按模板复制所选行所有结果"
                         IsEnabled="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems, Converter={StaticResource CopyModelsHashMenuEnabledCvt}}"
                         ItemsSource="{Binding CopyModelsAllHashesMenuCmds}">
                         <MenuItem.ItemContainerStyle>
@@ -516,6 +516,16 @@
                             </Style>
                         </MenuItem.ItemContainerStyle>
                     </MenuItem>
+                    <MenuItem
+                        Command="{Binding CopyModelsCurHashWithNoFormatCmd}"
+                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
+                        Header="复制所选行当前哈希值"
+                        IsEnabled="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems, Converter={StaticResource CopyModelsHashMenuEnabledCvt}}" />
+                    <MenuItem
+                        Command="{Binding CopyModelsAllHashWithNoFormatCmd}"
+                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
+                        Header="复制所选行所有哈希值"
+                        IsEnabled="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems, Converter={StaticResource CopyModelsHashMenuEnabledCvt}}" />
                     <Separator />
                     <MenuItem
                         Command="{Binding DeleteSelectedModelsFileCmd}"
@@ -756,7 +766,7 @@
                                     Padding="4"
                                     Command="{Binding CopyThisModelCurHashCmd}"
                                     Style="{StaticResource ImageButtonStyle1}"
-                                    ToolTip="复制该行当前结果...">
+                                    ToolTip="按模板复制该行当前结果...">
                                     <Button.Visibility>
                                         <MultiBinding Converter="{StaticResource StateFinishedResultSucceededToVisibilityCvt}">
                                             <Binding Path="State" />
@@ -773,7 +783,7 @@
                                     Padding="4"
                                     Command="{Binding CopyThisModelAllHashesCmd}"
                                     Style="{StaticResource ImageButtonStyle1}"
-                                    ToolTip="复制该行所有结果...">
+                                    ToolTip="按模板复制该行所有结果...">
                                     <Button.Visibility>
                                         <MultiBinding Converter="{StaticResource StateFinishedResultSucceededToVisibilityCvt}">
                                             <Binding Path="State" />
