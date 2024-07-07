@@ -407,7 +407,7 @@
             </Grid>
         </ScrollViewer>
         <DataGrid
-            x:Name="filesDataGrid"
+            x:Name="MainWindowTable"
             Grid.Row="1"
             Margin="0,4,0,0"
             AllowDrop="True"

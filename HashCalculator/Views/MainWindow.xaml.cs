@@ -60,7 +60,7 @@ namespace HashCalculator
             // 如果是其他进程实例内的 ProcessIdMonitorProc 方法内的 PIdSynchronizer.Wait 抢到了锁，
             // 则直接进入步骤 3，本进程实例 ProcessIdMonitorProc 方法内的 PIdSynchronizer.Wait 抢不到锁不会往下执行。
             Initializer.PIdSynchronizer.Set();
-            Settings.Current.ColumnsOrder = this.filesDataGrid.Columns.ToDictionary(
+            Settings.Current.ColumnsOrder = this.MainWindowTable.Columns.ToDictionary(
                 c => c.Header.ToString(), c => new ColumnProperty(c.DisplayIndex, c.Width));
         }
 
@@ -78,7 +78,7 @@ namespace HashCalculator
             Thread thread = new Thread(this.ProcessIdMonitorProc);
             thread.IsBackground = true;
             thread.Start();
-            this.filesDataGrid.Columns.ReorderDataGridColumns(Settings.Current.ColumnsOrder);
+            this.MainWindowTable.Columns.ReorderDataGridColumns(Settings.Current.ColumnsOrder);
             if (Settings.Current.PreviousVer != Info.Ver && Settings.NotificationShouldBeDisplayedOnce)
             {
                 NotificationWindow window = new NotificationWindow()

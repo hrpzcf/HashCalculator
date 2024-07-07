@@ -396,8 +396,15 @@
                     Padding="8,2"
                     HorizontalAlignment="Left"
                     Background="{x:Null}"
-                    Click="ResetMainWindowDataGridColumnsOrder"
+                    Click="ResetMainWindowDataGridColumnsIndex"
                     Content="重置主窗口表格所有列的顺序" />
+                <Button
+                    Margin="0,8,0,0"
+                    Padding="8,2"
+                    HorizontalAlignment="Left"
+                    Background="{x:Null}"
+                    Click="ResetMainWindowDataGridColumnsWidth"
+                    Content="重置主窗口表格所有列的宽度" />
             </StackPanel>
         </TabItem>
         <TabItem

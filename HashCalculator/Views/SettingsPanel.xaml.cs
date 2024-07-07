@@ -44,12 +44,20 @@ namespace HashCalculator
             e.Cancel = this.viewModel.ProcessingShellExtension;
         }
 
-        private void ResetMainWindowDataGridColumnsOrder(object sender, RoutedEventArgs e)
+        private void ResetMainWindowDataGridColumnsIndex(object sender, RoutedEventArgs e)
         {
             int index = 0;
-            foreach (DataGridColumn column in MainWindow.Current.filesDataGrid.Columns)
+            foreach (DataGridColumn column in MainWindow.Current.MainWindowTable.Columns)
             {
                 column.DisplayIndex = index++;
+            }
+        }
+
+        private void ResetMainWindowDataGridColumnsWidth(object sender, RoutedEventArgs e)
+        {
+            foreach (DataGridColumn column in MainWindow.Current.MainWindowTable.Columns)
+            {
+                column.Width = DataGridLength.Auto;
             }
         }
 
