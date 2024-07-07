@@ -327,7 +327,7 @@ namespace HashCalculator
             set => this.SetPropNotify(ref this.restoreFilesProgressHeight, value);
         }
 
-        public Dictionary<string, int> ColumnsOrder { get; set; }
+        public Dictionary<string, ColumnProperty> ColumnsOrder { get; set; }
 
         public OutputType SelectedOutputType
         {
