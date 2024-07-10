@@ -1361,6 +1361,140 @@
         </TabItem>
         <TabItem
             Padding="8"
+            Header="快捷操作设置"
+            Style="{StaticResource TabItemStyle1}">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <GroupBox
+                    Margin="4"
+                    Padding="4,8,4,4"
+                    Foreground="#FF006FD6"
+                    Header="部分列的鼠标左键双击行为">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Foreground="Black"
+                            Text="序号列：" />
+                        <ComboBox
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Width="150"
+                            HorizontalAlignment="Left"
+                            DisplayMemberPath="Display"
+                            ItemsSource="{Binding AvailableColLeftDoubleClickCmds}"
+                            SelectedValue="{Binding SerialColumnLeftDoubleClick}"
+                            SelectedValuePath="ItemValue" />
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Margin="0,8,0,0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Foreground="Black"
+                            Text="文件名列：" />
+                        <ComboBox
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Width="150"
+                            Margin="0,8,0,0"
+                            HorizontalAlignment="Left"
+                            DisplayMemberPath="Display"
+                            ItemsSource="{Binding AvailableColLeftDoubleClickCmds}"
+                            SelectedValue="{Binding FileNameColumnLeftDoubleClick}"
+                            SelectedValuePath="ItemValue" />
+                        <TextBlock
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            Margin="0,8,0,0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Foreground="Black"
+                            Text="完整路径列：" />
+                        <ComboBox
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            Width="150"
+                            Margin="0,8,0,0"
+                            HorizontalAlignment="Left"
+                            DisplayMemberPath="Display"
+                            ItemsSource="{Binding AvailableColLeftDoubleClickCmds}"
+                            SelectedValue="{Binding FullPathColumnLeftDoubleClick}"
+                            SelectedValuePath="ItemValue" />
+                        <TextBlock
+                            Grid.Row="3"
+                            Grid.Column="0"
+                            Margin="0,8,0,0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Foreground="Black"
+                            Text="文件大小列：" />
+                        <ComboBox
+                            Grid.Row="3"
+                            Grid.Column="1"
+                            Width="150"
+                            Margin="0,8,0,0"
+                            HorizontalAlignment="Left"
+                            DisplayMemberPath="Display"
+                            ItemsSource="{Binding AvailableColLeftDoubleClickCmds}"
+                            SelectedValue="{Binding FileSizeColumnLeftDoubleClick}"
+                            SelectedValuePath="ItemValue" />
+                        <TextBlock
+                            Grid.Row="4"
+                            Grid.Column="0"
+                            Margin="0,8,0,0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Foreground="Black"
+                            Text="哈希值列：" />
+                        <ComboBox
+                            Grid.Row="4"
+                            Grid.Column="1"
+                            Width="150"
+                            Margin="0,8,0,0"
+                            HorizontalAlignment="Left"
+                            DisplayMemberPath="Display"
+                            ItemsSource="{Binding AvailableColLeftDoubleClickCmds}"
+                            SelectedValue="{Binding HashValueColumnLeftDoubleClick}"
+                            SelectedValuePath="ItemValue" />
+                        <TextBlock
+                            Grid.Row="5"
+                            Grid.Column="0"
+                            Margin="0,8,0,0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Foreground="Black"
+                            Text="任务耗时列：" />
+                        <ComboBox
+                            Grid.Row="5"
+                            Grid.Column="1"
+                            Width="150"
+                            Margin="0,8,0,0"
+                            HorizontalAlignment="Left"
+                            DisplayMemberPath="Display"
+                            ItemsSource="{Binding AvailableColLeftDoubleClickCmds}"
+                            SelectedValue="{Binding DurationColumnLeftDoubleClick}"
+                            SelectedValuePath="ItemValue" />
+                    </Grid>
+                </GroupBox>
+            </ScrollViewer>
+        </TabItem>
+        <TabItem
+            Padding="8"
             Header="配置文件保存位置"
             Style="{StaticResource TabItemStyle1}">
             <GroupBox

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -41,6 +42,7 @@ namespace HashCalculator
         private RelayCommand copyThisModelCurHashCmd;
         private RelayCommand copyThisModelAllHashesCmd;
         private RelayCommand showHashDetailsWindowCmd;
+        private RelayCommand tableColumnDoubleClickCmd;
 
         private static readonly Dispatcher synchronization =
             Application.Current.Dispatcher;
@@ -327,8 +329,7 @@ namespace HashCalculator
             {
                 if (this.shutdownModelSelfCmd is null)
                 {
-                    this.shutdownModelSelfCmd =
-                        new RelayCommand(this.ShutdownModelSelfAction);
+                    this.shutdownModelSelfCmd = new RelayCommand(this.ShutdownModelSelfAction);
                 }
                 return this.shutdownModelSelfCmd;
             }
@@ -345,8 +346,7 @@ namespace HashCalculator
             {
                 if (this.restartModelSelfCmd is null)
                 {
-                    this.restartModelSelfCmd =
-                        new RelayCommand(this.RestartModelSelfAction);
+                    this.restartModelSelfCmd = new RelayCommand(this.RestartModelSelfAction);
                 }
                 return this.restartModelSelfCmd;
             }
@@ -363,8 +363,7 @@ namespace HashCalculator
             {
                 if (this.pauseOrContinueModelSelfCmd is null)
                 {
-                    this.pauseOrContinueModelSelfCmd =
-                        new RelayCommand(this.PauseOrContinueModelSelfAction);
+                    this.pauseOrContinueModelSelfCmd = new RelayCommand(this.PauseOrContinueModelSelfAction);
                 }
                 return this.pauseOrContinueModelSelfCmd;
             }
@@ -381,10 +380,104 @@ namespace HashCalculator
             {
                 if (this.showHashDetailsWindowCmd == null)
                 {
-                    this.showHashDetailsWindowCmd =
-                        new RelayCommand(this.ShowHashDetailsWindowAction);
+                    this.showHashDetailsWindowCmd = new RelayCommand(this.ShowHashDetailsWindowAction);
                 }
                 return this.showHashDetailsWindowCmd;
+            }
+        }
+
+        private void TableColumnDoubleClickAction(object param)
+        {
+            if (param is string commandString)
+            {
+                switch (commandString)
+                {
+                    case SettingsViewModel.CmdStrShowDetails:
+                        if (this.Result == HashResult.Succeeded)
+                        {
+                            this.ShowHashDetailsWindowAction(null);
+                        }
+                        else
+                        {
+                            MessageBox.Show(MainWindow.Current, "没有完成哈希值计算！", "提示",
+                                MessageBoxButton.OK, MessageBoxImage.Warning);
+                        }
+                        break;
+                    case SettingsViewModel.CmdStrOpenFile:
+                        if (File.Exists(this.Information.FullName))
+                        {
+                            SHELL32.ShellExecuteW(MainWindow.WndHandle, "open",
+                                this.Information.FullName, null, this.Information.DirectoryName,
+                                ShowCmd.SW_SHOWNORMAL);
+                        }
+                        break;
+                    case SettingsViewModel.CmdStrExploreFile:
+                        if (File.Exists(this.Information.FullName))
+                        {
+                            CommonUtils.OpenFolderAndSelectItem(this.Information.FullName);
+                        }
+                        break;
+                    case SettingsViewModel.CmdStrShowFileProperties:
+                        if (File.Exists(this.Information.FullName))
+                        {
+                            var shellExecuteInformation = new SHELLEXECUTEINFOW();
+                            shellExecuteInformation.cbSize = Marshal.SizeOf(shellExecuteInformation);
+                            shellExecuteInformation.fMask = SEMaskFlags.SEE_MASK_INVOKEIDLIST;
+                            shellExecuteInformation.hwnd = MainWindow.WndHandle;
+                            shellExecuteInformation.lpVerb = "properties";
+                            shellExecuteInformation.lpFile = this.Information.FullName;
+                            shellExecuteInformation.lpDirectory = this.Information.DirectoryName;
+                            shellExecuteInformation.nShow = ShowCmd.SW_SHOWNORMAL;
+                            SHELL32.ShellExecuteExW(ref shellExecuteInformation);
+                        }
+                        break;
+                    case SettingsViewModel.CmdStrCopyCurHash:
+                        if (this.GenerateTextInFormat(format: null, this.SelectedOutputType, all: false,
+                            endLine: false, seeExport: false, casedName: false) is string hashValue)
+                        {
+                            CommonUtils.ClipboardSetText(hashValue);
+                        }
+                        break;
+                    case SettingsViewModel.CmdStrCopyAllHash:
+                        if (this.GenerateTextInFormat(format: null, this.SelectedOutputType, all: true,
+                            endLine: false, seeExport: false, casedName: false) is string allHashValues)
+                        {
+                            CommonUtils.ClipboardSetText(allHashValues);
+                        }
+                        break;
+                    case SettingsViewModel.CmdStrCopyCurHashByTemplate:
+                        this.CopyThisModelCurHashAction(null);
+                        break;
+                    case SettingsViewModel.CmdStrCopyAllHashByTemplate:
+                        this.CopyThisModelAllHashesAction(null);
+                        break;
+                    case SettingsViewModel.CmdStrCopyFileName:
+                        CommonUtils.ClipboardSetText(this.Information.Name);
+                        break;
+                    case SettingsViewModel.CmdStrCopyFilePath:
+                        if (!this.Arguments.Deprecated)
+                        {
+                            CommonUtils.ClipboardSetText(this.Information.FullName);
+                        }
+                        else
+                        {
+                            MessageBox.Show(MainWindow.Current, "文件不存在，未复制完整路径！", "提示",
+                                MessageBoxButton.OK, MessageBoxImage.Warning);
+                        }
+                        break;
+                }
+            }
+        }
+
+        public ICommand TableColumnDoubleClickCmd
+        {
+            get
+            {
+                if (this.tableColumnDoubleClickCmd == null)
+                {
+                    this.tableColumnDoubleClickCmd = new RelayCommand(this.TableColumnDoubleClickAction);
+                }
+                return this.tableColumnDoubleClickCmd;
             }
         }
 
