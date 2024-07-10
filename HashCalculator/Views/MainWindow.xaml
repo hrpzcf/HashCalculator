@@ -543,12 +543,25 @@
                 </ContextMenu>
             </DataGrid.ContextMenu>
             <DataGrid.Columns>
-                <DataGridTextColumn
-                    Binding="{Binding SerialNumber}"
-                    Header="序号"
-                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoSerialNumColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}" />
                 <DataGridTemplateColumn
-                    MinWidth="180"
+                    Header="序号"
+                    SortMemberPath="SerialNumber"
+                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoSerialNumColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Padding="2" Text="{Binding SerialNumber}">
+                                <TextBlock.InputBindings>
+                                    <MouseBinding
+                                        Command="{Binding TableColumnDoubleClickCmd}"
+                                        CommandParameter="{Binding Source={x:Static local:Settings.Current}, Path=SerialColumnLeftDoubleClick}"
+                                        MouseAction="LeftDoubleClick" />
+                                </TextBlock.InputBindings>
+                            </TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn
+                    MinWidth="100"
                     Header="文件名"
                     SortMemberPath="FileName">
                     <DataGridTemplateColumn.CellTemplate>
@@ -571,15 +584,41 @@
                                     Background="{Binding FdGroupId, Converter={StaticResource CmpColorToSolidColorBrushCvt}}"
                                     Foreground="{Binding InvalidFileName, Converter={StaticResource InvalidFileNameForegroundCvt}}"
                                     Text="{Binding FileName}"
-                                    ToolTip="{Binding Information}" />
+                                    TextTrimming="CharacterEllipsis"
+                                    ToolTip="{Binding Information}">
+                                    <TextBlock.InputBindings>
+                                        <MouseBinding
+                                            Command="{Binding TableColumnDoubleClickCmd}"
+                                            CommandParameter="{Binding Source={x:Static local:Settings.Current}, Path=FileNameColumnLeftDoubleClick}"
+                                            MouseAction="LeftDoubleClick" />
+                                    </TextBlock.InputBindings>
+                                </TextBlock>
                             </Grid>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn
-                    Binding="{Binding Information}"
+                <DataGridTemplateColumn
+                    MinWidth="100"
+                    CanUserSort="False"
                     Header="完整路径"
-                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoFullPathColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}" />
+                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoFullPathColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock
+                                Padding="2,0"
+                                Text="{Binding Information}"
+                                TextTrimming="CharacterEllipsis"
+                                ToolTip="{Binding Information}">
+                                <TextBlock.InputBindings>
+                                    <MouseBinding
+                                        Command="{Binding TableColumnDoubleClickCmd}"
+                                        CommandParameter="{Binding Source={x:Static local:Settings.Current}, Path=FullPathColumnLeftDoubleClick}"
+                                        MouseAction="LeftDoubleClick" />
+                                </TextBlock.InputBindings>
+                            </TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTemplateColumn
                     Header="文件大小"
                     SortMemberPath="FileLength"
@@ -598,6 +637,12 @@
                                 <TextBlock.ToolTip>
                                     <ToolTip Content="{Binding FileLength, Mode=OneWay}" ContentStringFormat="{}{0} 字节" />
                                 </TextBlock.ToolTip>
+                                <TextBlock.InputBindings>
+                                    <MouseBinding
+                                        Command="{Binding TableColumnDoubleClickCmd}"
+                                        CommandParameter="{Binding Source={x:Static local:Settings.Current}, Path=FileSizeColumnLeftDoubleClick}"
+                                        MouseAction="LeftDoubleClick" />
+                                </TextBlock.InputBindings>
                             </TextBlock>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -679,7 +724,10 @@
                                         </MultiBinding>
                                     </TextBlock.Visibility>
                                     <TextBlock.InputBindings>
-                                        <MouseBinding Command="{Binding ShowHashDetailsWindowCmd}" MouseAction="LeftDoubleClick" />
+                                        <MouseBinding
+                                            Command="{Binding TableColumnDoubleClickCmd}"
+                                            CommandParameter="{Binding Source={x:Static local:Settings.Current}, Path=HashValueColumnLeftDoubleClick}"
+                                            MouseAction="LeftDoubleClick" />
                                     </TextBlock.InputBindings>
                                 </TextBlock>
                                 <TextBlock
@@ -841,11 +889,23 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn
+                <DataGridTemplateColumn
                     MinWidth="80"
-                    Binding="{Binding DurationofTask, StringFormat=f2}"
                     Header="任务耗时 (秒)"
-                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoDurationColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}" />
+                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoDurationColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Padding="2" Text="{Binding DurationofTask, StringFormat=f2}">
+                                <TextBlock.InputBindings>
+                                    <MouseBinding
+                                        Command="{Binding TableColumnDoubleClickCmd}"
+                                        CommandParameter="{Binding Source={x:Static local:Settings.Current}, Path=DurationColumnLeftDoubleClick}"
+                                        MouseAction="LeftDoubleClick" />
+                                </TextBlock.InputBindings>
+                            </TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTemplateColumn
                     CanUserSort="True"
                     Header="导出"

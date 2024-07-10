@@ -85,6 +85,12 @@ namespace HashCalculator
         private string displayingShellInstallationScope = null;
         private string displayingShellInstallationState = null;
         private string formatForGenerateText = "#$algo$ *$hash$ *$name$";
+        private string serialColumnLeftDoubleClick = null;
+        private string fileNameColumnLeftDoubleClick = null;
+        private string fullPathColumnLeftDoubleClick = null;
+        private string fileSizeColumnLeftDoubleClick = null;
+        private string hashValueColumnLeftDoubleClick = CmdStrShowDetails;
+        private string durationColumnLeftDoubleClick = null;
 
         private AlgoInOutModel selectedAlgoInOutModel = AlgosPanelModel.ProvidedAlgos[0];
         private TemplateForExportModel selectedExportTemplate;
@@ -123,6 +129,36 @@ namespace HashCalculator
 
         private RelayCommand resetAlgorithmAliasCmd;
         private RelayCommand resetLuminanceAndSaturationValuesCmd;
+
+        [JsonIgnore, XmlIgnore]
+        public const string CmdStrShowDetails = "SHOW_DETAILS";
+
+        [JsonIgnore, XmlIgnore]
+        public const string CmdStrOpenFile = "OPEN_FILE";
+
+        [JsonIgnore, XmlIgnore]
+        public const string CmdStrExploreFile = "EXPLORE_FILE";
+
+        [JsonIgnore, XmlIgnore]
+        public const string CmdStrShowFileProperties = "SHOW_FILE_PROPERTIES";
+
+        [JsonIgnore, XmlIgnore]
+        public const string CmdStrCopyCurHash = "COPY_CUR_HASH";
+
+        [JsonIgnore, XmlIgnore]
+        public const string CmdStrCopyAllHash = "COPY_ALL_HASH";
+
+        [JsonIgnore, XmlIgnore]
+        public const string CmdStrCopyCurHashByTemplate = "COPY_CUR_HASH_BY_TEMPLATE";
+
+        [JsonIgnore, XmlIgnore]
+        public const string CmdStrCopyAllHashByTemplate = "COPY_ALL_HASH_BY_TEMPLATE";
+
+        [JsonIgnore, XmlIgnore]
+        public const string CmdStrCopyFileName = "COPY_FILE_NAME";
+
+        [JsonIgnore, XmlIgnore]
+        public const string CmdStrCopyFilePath = "COPY_FILE_PATH";
 
         public SettingsViewModel()
         {
@@ -327,7 +363,8 @@ namespace HashCalculator
             set => this.SetPropNotify(ref this.restoreFilesProgressHeight, value);
         }
 
-        public Dictionary<string, ColumnProperty> ColumnsOrder { get; set; }
+        public Dictionary<string, ColumnProperty> ColumnsOrder { get; } =
+             new Dictionary<string, ColumnProperty>();
 
         public OutputType SelectedOutputType
         {
@@ -712,6 +749,42 @@ namespace HashCalculator
                 AdjustLuminanceOrSaturation(ref value);
                 this.SetPropNotify(ref this.saturationOfTableCellsWithSameHash, value);
             }
+        }
+
+        public string SerialColumnLeftDoubleClick
+        {
+            get => this.serialColumnLeftDoubleClick;
+            set => this.SetPropNotify(ref this.serialColumnLeftDoubleClick, value);
+        }
+
+        public string FileNameColumnLeftDoubleClick
+        {
+            get => this.fileNameColumnLeftDoubleClick;
+            set => this.SetPropNotify(ref this.fileNameColumnLeftDoubleClick, value);
+        }
+
+        public string FullPathColumnLeftDoubleClick
+        {
+            get => this.fullPathColumnLeftDoubleClick;
+            set => this.SetPropNotify(ref this.fullPathColumnLeftDoubleClick, value);
+        }
+
+        public string FileSizeColumnLeftDoubleClick
+        {
+            get => this.fileSizeColumnLeftDoubleClick;
+            set => this.SetPropNotify(ref this.fileSizeColumnLeftDoubleClick, value);
+        }
+
+        public string HashValueColumnLeftDoubleClick
+        {
+            get => this.hashValueColumnLeftDoubleClick;
+            set => this.SetPropNotify(ref this.hashValueColumnLeftDoubleClick, value);
+        }
+
+        public string DurationColumnLeftDoubleClick
+        {
+            get => this.durationColumnLeftDoubleClick;
+            set => this.SetPropNotify(ref this.durationColumnLeftDoubleClick, value);
         }
 
         public AlgoType[] SelectedAlgos { get; set; }
@@ -1412,6 +1485,22 @@ namespace HashCalculator
             new GenericItemModel("8", 8),
             new GenericItemModel("16", 16),
             new GenericItemModel("32", 32),
+        };
+
+        [JsonIgnore, XmlIgnore]
+        public GenericItemModel[] AvailableColLeftDoubleClickCmds { get; } =
+        {
+            new GenericItemModel("未指定", null),
+            new GenericItemModel("打开详情窗口", CmdStrShowDetails),
+            new GenericItemModel("打开文件", CmdStrOpenFile),
+            new GenericItemModel("打开文件位置", CmdStrExploreFile),
+            new GenericItemModel("打开文件属性", CmdStrShowFileProperties),
+            new GenericItemModel("复制当前哈希值", CmdStrCopyCurHash),
+            new GenericItemModel("复制所有哈希值", CmdStrCopyAllHash),
+            new GenericItemModel("按模板复制当前结果", CmdStrCopyCurHashByTemplate),
+            new GenericItemModel("按模板复制所有结果", CmdStrCopyAllHashByTemplate),
+            new GenericItemModel("复制文件名", CmdStrCopyFileName),
+            new GenericItemModel("复制文件完整路径", CmdStrCopyFilePath),
         };
 
         [JsonIgnore, XmlIgnore]
