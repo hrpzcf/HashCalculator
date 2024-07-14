@@ -456,6 +456,11 @@
                     FontSize="8pt"
                     Style="{StaticResource DescTextBlockStyle}"
                     Text="此项设置可一定程度缓解“添加任务”和“启动任务”同时进行导致的表格显示卡顿" />
+                <CheckBox
+                    Margin="0,8,0,0"
+                    Padding="4,0,0,0"
+                    Content="文件被添加后自动启动对该文件的计算任务"
+                    IsChecked="{Binding AutomaticallyStartTaskAfterFileAdded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </StackPanel>
         </TabItem>
         <TabItem
