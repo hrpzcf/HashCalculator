@@ -19,7 +19,7 @@ namespace HashCalculator
     {
         private string _fileName = string.Empty;
         private string _currentHashString = null;
-        private string _errorDetails = string.Empty;
+        private string _errorDetails = "未开始...";
         private string _modelDetails = "暂无详情...";
         private long _fileLength = 0L;
         private long _progress = 0L;
@@ -33,8 +33,8 @@ namespace HashCalculator
         private ComparableColor _hashGroupId = null;
         private ComparableColor _embeddedHashGroupId = null;
         private ComparableColor _folderGroupId = null;
-        private HashResult _currentResult = HashResult.NoResult;
         private HashState _currentState = HashState.NoState;
+        private HashResult _currentResult = HashResult.NoResult;
         private OutputType _selectedOutput = OutputType.Unknown;
         private RelayCommand shutdownModelSelfCmd;
         private RelayCommand restartModelSelfCmd;
@@ -202,7 +202,7 @@ namespace HashCalculator
                 this.SetPropNotify(ref this._currentState, value);
                 if (value == HashState.NoState)
                 {
-                    this.ErrorDetails = string.Empty;
+                    this.ErrorDetails = "未开始...";
                 }
                 else if (value == HashState.Waiting)
                 {
@@ -538,10 +538,10 @@ namespace HashCalculator
         public void ResetHashViewModel()
         {
             this.DurationofTask = 0.0;
-            this.ErrorDetails = string.Empty;
             this.GroupId = null;
             this.Progress = 0;
             this.MaxProgress = 0;
+            // 设置 this.State 后 ErrorDetails 也被自动设置
             this.State = HashState.NoState;
             this.Result = HashResult.NoResult;
             this.IsExecutionTarget = false;
@@ -643,10 +643,16 @@ namespace HashCalculator
             if (Monitor.TryEnter(this.computeHashOperationLock))
             {
                 this.cancellation?.Cancel();
-                if (this.State == HashState.NoState || this.State == HashState.Waiting)
+                switch (this.State)
                 {
-                    this.State = HashState.Finished;
-                    this.ModelReleasedEvent?.InvokeAsync(this);
+                    case HashState.NoState:
+                        this.State = HashState.Finished;
+                        this.Result = HashResult.Canceled;
+                        break;
+                    case HashState.Waiting:
+                        this.State = HashState.Finished;
+                        this.ModelReleasedEvent?.InvokeAsync(this);
+                        break;
                 }
                 Monitor.Exit(this.computeHashOperationLock);
             }
@@ -675,6 +681,10 @@ namespace HashCalculator
                 this.manualPauseController.Set();
                 this.State = HashState.Running;
                 return true;
+            }
+            else if (this.State == HashState.NoState)
+            {
+                return this.StartupModel(false);
             }
             return false;
         }

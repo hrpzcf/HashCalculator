@@ -147,7 +147,7 @@
     <local:StateWaitingToVisiblityCvt x:Key="StateWaitingToVisiblityCvt" />
     <local:StateFinishedResultSucceededToVisibilityCvt x:Key="StateFinishedResultSucceededToVisibilityCvt" />
     <local:StateNotRunningResultSucceededToVisibilityCvt x:Key="StateNotRunningResultSucceededToVisibilityCvt" />
-    <local:StateFinishedResultNotSucceedToVisibilityCvt x:Key="StateFinishedResultNotSucceedToVisibilityCvt" />
+    <local:StateNoStateFinishedResultNotSucceedToVisibilityCvt x:Key="StateNoStateFinishedResultNotSucceedToVisibilityCvt" />
     <local:MainModelStateToBooleanCvt x:Key="MainModelStateToBooleanCvt" />
     <local:CmdPanelCriticalControlsEnabledCvt x:Key="CmdPanelCriticalControlsEnabledCvt" />
     <local:ReverseBooleanValueCvt x:Key="ReverseBooleanValueCvt" />

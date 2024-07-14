@@ -71,6 +71,7 @@ namespace HashCalculator
         private bool askUserHowToExportResultsEveryTime = true;
         private bool delayTheStartOfCalculationTasks = false;
         private bool markTheSameHashValues = false;
+        private bool automaticallyStartTaskAfterFileAdded = true;
 
         private CmpRes algoToSwitchToAfterHashChecked = CmpRes.Matched;
         private ExportAlgo howToExportHashValues = ExportAlgo.AllCalculated;
@@ -454,11 +455,10 @@ namespace HashCalculator
             set => this.SetPropNotify(ref this.markTheSameHashValues, value);
         }
 
-        [JsonIgnore, XmlIgnore]
-        public bool IsMainRowSelectedByCheckBox
+        public bool AutomaticallyStartTaskAfterFileAdded
         {
-            get => this.isMainRowSelectedByCheckBox;
-            set => this.SetPropNotify(ref this.isMainRowSelectedByCheckBox, value);
+            get => this.automaticallyStartTaskAfterFileAdded;
+            set => this.SetPropNotify(ref this.automaticallyStartTaskAfterFileAdded, value);
         }
 
         [JsonIgnore, XmlIgnore]
@@ -473,6 +473,13 @@ namespace HashCalculator
         {
             get => this.showHashInTagColumn;
             set => this.SetPropNotify(ref this.showHashInTagColumn, value);
+        }
+
+        [JsonIgnore, XmlIgnore]
+        public bool IsMainRowSelectedByCheckBox
+        {
+            get => this.isMainRowSelectedByCheckBox;
+            set => this.SetPropNotify(ref this.isMainRowSelectedByCheckBox, value);
         }
 
         public bool PermanentlyDeleteFiles { get; set; }

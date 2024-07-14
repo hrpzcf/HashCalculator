@@ -270,17 +270,17 @@ namespace HashCalculator
         }
     }
 
-    internal class StateFinishedResultNotSucceedToVisibilityCvt : IMultiValueConverter
+    internal class StateNoStateFinishedResultNotSucceedToVisibilityCvt : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             Debug.Assert(values != null && values.Length == 2);
-            if (!(values[0] is HashState hashState) || hashState != HashState.Finished)
+            if (!(values[0] is HashState hashState) ||
+                (hashState != HashState.NoState && hashState != HashState.Finished))
             {
                 return Visibility.Hidden;
             }
-            if (!(values[1] is HashResult hashResult) ||
-                (hashResult != HashResult.Canceled && hashResult != HashResult.Failed))
+            if (!(values[1] is HashResult hashResult) || hashResult == HashResult.Succeeded)
             {
                 return Visibility.Hidden;
             }

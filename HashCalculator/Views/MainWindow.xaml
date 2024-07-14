@@ -289,7 +289,7 @@
                     <Button
                         Command="{Binding ClearAllTableLinesCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
-                        ToolTip="停止表格中的所有任务并清空表格 (任务进行时直接清空有可能出现剩下一行未被清除的情况)">
+                        ToolTip="停止表格中的所有正在运行的任务并清空表格所有内容">
                         <Image
                             Width="32"
                             Height="32"
@@ -306,7 +306,7 @@
                     <Button
                         Command="{Binding ContinueDisplayedModelsCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
-                        ToolTip="继续所有已被暂停的哈希值计算任务，注意：此按钮不会启动已停止的任务">
+                        ToolTip="开始所有未开始或已暂停的计算任务，但不会重新开始已停止的任务">
                         <Image
                             Width="32"
                             Height="32"
@@ -316,14 +316,14 @@
                         Margin="0,2"
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
-                        Text="全部继续"
+                        Text="全部开始"
                         Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
                 <StackPanel Grid.Column="13" Margin="8,0,0,0">
                     <Button
                         Command="{Binding PauseDisplayedModelsCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
-                        ToolTip="暂停所有正在运行的哈希值计算任务 (计算大量小文件时可能会部分暂停不成功，需要多次点击)">
+                        ToolTip="暂停所有正在运行的计算任务 (计算大量小文件时可能会暂停不成功，需多次点击)">
                         <Image
                             Width="32"
                             Height="32"
@@ -340,7 +340,7 @@
                     <Button
                         Command="{Binding CancelDisplayedModelsCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
-                        ToolTip="取消或停止所有排队中、运行中和已暂停的哈希值计算任务">
+                        ToolTip="取消或停止所有未开始、排队中、运行中和已暂停的计算任务">
                         <Image
                             Width="32"
                             Height="32"
@@ -357,7 +357,7 @@
                     <Button
                         Command="{Binding MainWindowTopmostCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
-                        ToolTip="重复点击时在【置顶】与【未置顶】之间切换主窗口的状态，按钮为灰色代表主窗口是未置顶状态，否则是置顶状态">
+                        ToolTip="点击时把主窗口状态切换为【置顶】或【非置顶】，按钮为灰色代表主窗口非置顶，否则是已置顶">
                         <Image
                             Width="32"
                             Height="32"
@@ -851,7 +851,7 @@
                                     Style="{StaticResource ImageButtonStyle1}"
                                     ToolTip="开始...">
                                     <Button.Visibility>
-                                        <MultiBinding Converter="{StaticResource StateFinishedResultNotSucceedToVisibilityCvt}">
+                                        <MultiBinding Converter="{StaticResource StateNoStateFinishedResultNotSucceedToVisibilityCvt}">
                                             <Binding Path="State" />
                                             <Binding Path="Result" />
                                         </MultiBinding>
