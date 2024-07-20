@@ -136,7 +136,7 @@
                 Margin="0,4,0,0"
                 FontSize="8pt"
                 Foreground="OrangeRed"
-                Text="所选的操作目标中没有被改变过哈希值的文件将被忽略" />
+                Text="所选的操作目标中没有哈希标记的文件将被忽略" />
             <TextBlock
                 Grid.Row="8"
                 Grid.Column="0"

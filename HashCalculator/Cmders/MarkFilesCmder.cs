@@ -87,12 +87,12 @@ namespace HashCalculator
         {
             try
             {
-                IEnumerable<HashViewModel> succeededModels = models.Where(
-                    i => i.Result == HashResult.Succeeded);
-                doubleProgressModel.TotalCount = succeededModels.Count();
+                IEnumerable<HashViewModel> validModels = models.Where(
+                    i => i.Result == HashResult.NoResult || i.Result == HashResult.Succeeded);
+                doubleProgressModel.TotalCount = validModels.Count();
                 await Task.Run(() =>
                 {
-                    foreach (HashViewModel model in succeededModels)
+                    foreach (HashViewModel model in validModels)
                     {
                         doubleProgressModel.CurrentValue = 0.0;
                         doubleProgressModel.CurrentString = model.FileName;

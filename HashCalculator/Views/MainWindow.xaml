@@ -306,7 +306,7 @@
                     <Button
                         Command="{Binding ContinueDisplayedModelsCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
-                        ToolTip="开始所有未开始或已暂停的计算任务，但不会重新开始已停止的任务">
+                        ToolTip="开始所有未开始或已暂停的任务，但不会重新开始已停止的任务">
                         <Image
                             Width="32"
                             Height="32"
@@ -967,12 +967,20 @@
                                 </Grid.ColumnDefinitions>
                                 <TextBlock
                                     Grid.Column="0"
+                                    Grid.ColumnSpan="2"
+                                    Padding="4"
+                                    VerticalAlignment="Center"
+                                    Background="Transparent"
+                                    Text="{Binding HcmDataFromFile, Converter={StaticResource DisplayHcmDataErrorInfoCvt}}" />
+                                <TextBlock
+                                    Grid.Column="0"
                                     Padding="4"
                                     VerticalAlignment="Center"
                                     Background="{Binding EhGroupId, Converter={StaticResource CmpColorToSolidColorBrushCvt}}"
                                     Text="{Binding HcmDataFromFile, Converter={StaticResource DisplayHcmDataHashNameCvt}}" />
                                 <TextBlock
                                     Grid.Column="1"
+                                    Margin="4,0,0,0"
                                     Padding="4"
                                     VerticalAlignment="Center"
                                     Background="{Binding EhGroupId, Converter={StaticResource CmpColorToSolidColorBrushCvt}}"

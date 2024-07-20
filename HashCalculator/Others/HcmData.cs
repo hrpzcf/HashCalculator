@@ -137,15 +137,15 @@ namespace HashCalculator
         /// 指示本实例数据是否已被全部填充
         /// </summary>
         public bool Populated =>
-            this.hcmInfo.NameLength != 0 &&
-            this.hcmInfo.HashLength != 0 &&
+            this.randomBytes != null &&
+            (this.nameBytes == null ? this.hcmInfo.NameLength == 0 :
+                this.hcmInfo.NameLength != 0) &&
+            (this.hashBytes == null ? this.hcmInfo.HashLength == 0 :
+                this.hcmInfo.HashLength != 0) &&
             this.hcmInfo.RandomLength != 0 &&
             this.hcmInfo.IsHcmDataMarker() &&
-            this.nameBytes != null &&
-            this.hashBytes != null &&
-            this.randomBytes != null &&
             this.hcmInfo.DataLength == HcmInfo.UnmanagedSize +
-                this.nameBytes.Length + this.hashBytes.Length +
+                (this.nameBytes?.Length ?? 0) + (this.hashBytes?.Length ?? 0) +
                 this.randomBytes.Length;
 
         /// <summary>
@@ -177,12 +177,13 @@ namespace HashCalculator
         {
             get
             {
-                if (this.name == null)
+                if (this.name == null &&
+                    this.nameBytes?.FromBytesWithLargerValue() is byte[] smallerBytes &&
+                    smallerBytes.Length > 0)
                 {
                     try
                     {
-                        this.name = Encoding.ASCII.GetString(
-                            this.nameBytes.FromBytesWithLargerValue());
+                        this.name = Encoding.ASCII.GetString(smallerBytes);
                     }
                     catch (Exception)
                     {
@@ -198,7 +199,7 @@ namespace HashCalculator
             {
                 if (this.hash == null)
                 {
-                    this.hash = this.hashBytes.FromBytesWithLargerValue();
+                    this.hash = this.hashBytes?.FromBytesWithLargerValue();
                 }
                 return this.hash;
             }
@@ -243,8 +244,14 @@ namespace HashCalculator
                 hash = crc32_update(hashLengthBytes, (ulong)hashLengthBytes.Length, hash);
                 hash = crc32_update(ref this.hcmInfo.RandomLength, 1ul, hash);
                 hash = crc32_update(this.separator, (ulong)this.separator.Length, hash);
-                hash = crc32_update(this.nameBytes, (ulong)this.nameBytes.Length, hash);
-                hash = crc32_update(this.hashBytes, (ulong)this.hashBytes.Length, hash);
+                if (this.nameBytes != null)
+                {
+                    hash = crc32_update(this.nameBytes, (ulong)this.nameBytes.Length, hash);
+                }
+                if (this.hashBytes != null)
+                {
+                    hash = crc32_update(this.hashBytes, (ulong)this.hashBytes.Length, hash);
+                }
                 return true;
             }
             catch (Exception)
@@ -265,8 +272,14 @@ namespace HashCalculator
                     {
                         stream.Seek(0L, SeekOrigin.End);
                         stream.Write(this.separator, 0, this.separator.Length);
-                        stream.Write(this.nameBytes, 0, this.nameBytes.Length);
-                        stream.Write(this.hashBytes, 0, this.hashBytes.Length);
+                        if (this.nameBytes != null)
+                        {
+                            stream.Write(this.nameBytes, 0, this.nameBytes.Length);
+                        }
+                        if (this.hashBytes != null)
+                        {
+                            stream.Write(this.hashBytes, 0, this.hashBytes.Length);
+                        }
                         stream.Write(this.randomBytes, 0, this.randomBytes.Length);
                         stream.Write(hcmInfoBytes, 0, hcmInfoBytes.Length);
                         return true;
@@ -300,16 +313,22 @@ namespace HashCalculator
                 this.hcmInfo = info;
                 stream.Seek(-info.DataLength, SeekOrigin.End);
                 this.name = null;
-                this.nameBytes = new byte[info.NameLength];
-                if (stream.Read(this.nameBytes, 0, info.NameLength) != info.NameLength)
+                if (info.NameLength > 0)
                 {
-                    return false;
+                    this.nameBytes = new byte[info.NameLength];
+                    if (stream.Read(this.nameBytes, 0, info.NameLength) != info.NameLength)
+                    {
+                        return false;
+                    }
                 }
                 this.hash = null;
-                this.hashBytes = new byte[info.HashLength];
-                if (stream.Read(this.hashBytes, 0, info.HashLength) != info.HashLength)
+                if (info.HashLength > 0)
                 {
-                    return false;
+                    this.hashBytes = new byte[info.HashLength];
+                    if (stream.Read(this.hashBytes, 0, info.HashLength) != info.HashLength)
+                    {
+                        return false;
+                    }
                 }
                 this.randomData = null;
                 this.randomBytes = new byte[info.RandomLength];
@@ -326,7 +345,7 @@ namespace HashCalculator
             }
         }
 
-        public void RefreshRandomData()
+        public void RefreshRandomBytes()
         {
             int length = random.Next(this.randomLower, this.randomUpper);
             this.randomBytes = new byte[length * 2];
