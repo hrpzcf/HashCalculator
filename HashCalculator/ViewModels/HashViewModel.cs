@@ -19,7 +19,7 @@ namespace HashCalculator
     {
         private string _fileName = string.Empty;
         private string _currentHashString = null;
-        private string _errorDetails = "未开始...";
+        private string _errorDetails = "任务未开始...";
         private string _modelDetails = "暂无详情...";
         private long _fileLength = 0L;
         private long _progress = 0L;
@@ -202,7 +202,7 @@ namespace HashCalculator
                 this.SetPropNotify(ref this._currentState, value);
                 if (value == HashState.NoState)
                 {
-                    this.ErrorDetails = "未开始...";
+                    this.ErrorDetails = "任务未开始...";
                 }
                 else if (value == HashState.Waiting)
                 {
@@ -487,8 +487,7 @@ namespace HashCalculator
             {
                 using (FileStream fileStream = this.Information.OpenRead())
                 {
-                    HcmDataHelper helper = new HcmDataHelper(fileStream);
-                    if (helper.ReadHcmData(out HcmData hcmData) && hcmData.DataReliable)
+                    if (new HcmDataHelper(fileStream).ReadHcmData(out HcmData hcmData))
                     {
                         this.HcmDataFromFile = hcmData;
                         return true;

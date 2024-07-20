@@ -193,7 +193,7 @@ namespace HashCalculator
                     {
                         continue;
                     }
-                    if (!model.ReadAndPopulateHcmData())
+                    if (!model.ReadAndPopulateHcmData() || model.HcmDataFromFile.Hash == null)
                     {
                         model.Matched = false;
                         continue;

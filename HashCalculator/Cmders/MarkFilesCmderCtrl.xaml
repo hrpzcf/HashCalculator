@@ -116,7 +116,7 @@
                 FontSize="8pt"
                 Foreground="OrangeRed"
                 Style="{StaticResource DescTextBlockStyle}"
-                Text="所选的操作目标中没有完成哈希值计算的目标都将被忽略" />
+                Text="此工具只处理任务状态为未开始和已成功的操作目标" />
             <TextBlock
                 Grid.Row="7"
                 Grid.Column="0"
@@ -124,7 +124,7 @@
                 FontSize="8pt"
                 Foreground="OrangeRed"
                 Style="{StaticResource DescTextBlockStyle}"
-                Text="添加的哈希标记由目标当前显示的哈希值和随机数据构成" />
+                Text="添加的哈希标记由目标当前哈希值(如果有)和随机数据等构成" />
             <TextBlock
                 Grid.Row="8"
                 Grid.Column="0"

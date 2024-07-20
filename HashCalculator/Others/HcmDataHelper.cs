@@ -27,10 +27,8 @@ namespace HashCalculator
 
         private static bool AvailableInOutModel(AlgoInOutModel model)
         {
-            return model != null &&
-                model.AlgoType != AlgoType.Unknown &&
-                model.HashResult != null &&
-                model.HashResult.Length != 0;
+            return model == null || (model.AlgoType != AlgoType.Unknown &&
+                model.HashResult?.Length > 0);
         }
 
         private static bool SetStreamLength(FileStream fileStream, long position)
@@ -105,9 +103,10 @@ namespace HashCalculator
             if (StreamWritable(stream))
             {
                 HcmData hcmData = new HcmData(stream.Length, marker: true);
-                if (hcmData.TrySetNameBytes(model.AlgoName) && hcmData.TrySetHashBytes(model.HashResult))
+                if (model == null || (hcmData.TrySetNameBytes(model.AlgoName) &&
+                    hcmData.TrySetHashBytes(model.HashResult)))
                 {
-                    hcmData.RefreshRandomData();
+                    hcmData.RefreshRandomBytes();
                     return hcmData.TryWriteDataToStream(stream);
                 }
             }

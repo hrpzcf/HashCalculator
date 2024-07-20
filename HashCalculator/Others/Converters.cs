@@ -741,11 +741,12 @@ namespace HashCalculator
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is HcmData hcmData)
+            if (value is HcmData hcmData &&
+                hcmData.DataReliable && hcmData.Name != null)
             {
-                return hcmData.DataReliable ? hcmData.Name : "<异常>";
+                return $"算法: {hcmData.Name}";
             }
-            return default(string);
+            return string.Empty;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -759,18 +760,40 @@ namespace HashCalculator
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             Debug.Assert(values != null && values.Length == 2);
-            if (values[0] is HcmData hcmData && values[1] is OutputType outputType)
+            if (values[0] is HcmData hcmData &&
+                values[1] is OutputType outputType &&
+                hcmData.DataReliable && hcmData.Hash != null)
             {
-                if (!hcmData.DataReliable)
-                {
-                    return "文件内的哈希标记已损坏";
-                }
-                return BytesToStrByOutputTypeCvt.Convert(hcmData.Hash, outputType);
+                return $"哈希值: {BytesToStrByOutputTypeCvt.Convert(hcmData.Hash, outputType)}";
             }
-            return default(string);
+            return string.Empty;
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class DisplayHcmDataErrorInfoCvt : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is HcmData hcmData)
+            {
+                if (!hcmData.DataReliable)
+                {
+                    return "哈希标记数据已损坏";
+                }
+                else if (hcmData.Name == null)
+                {
+                    return "哈希标记不含原文件哈希值";
+                }
+            }
+            return string.Empty;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }
