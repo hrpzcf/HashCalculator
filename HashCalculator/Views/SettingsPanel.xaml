@@ -221,15 +221,25 @@
                     Padding="4,0,0,0"
                     Content="使【筛选与操作】窗口跟随主窗口移动"
                     IsChecked="{Binding FilterAndCmderWndFollowsMainWnd, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <StackPanel Margin="0,4,0,0">
+                    <CheckBox
+                        Padding="4,0,0,0"
+                        Content="显示主窗口工具按钮"
+                        IsChecked="{Binding DisplayMainWindowButtons, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBlock
+                        Margin="16,2,0,0"
+                        Style="{StaticResource DescTextBlockStyle}"
+                        Text="取消勾选并关闭设置面板后可通过点击右键菜单“显示工具按钮”重新显示" />
+                </StackPanel>
                 <CheckBox
                     Margin="0,4,0,0"
                     Padding="4,0,0,0"
-                    Content="显示主窗口按钮的名称"
+                    Content="显示主窗口工具按钮的名称"
                     IsChecked="{Binding DisplayMainWndButtonText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <CheckBox
                     Margin="0,4,0,0"
                     Padding="4,0,0,0"
-                    Content="显示新添加文件的图标"
+                    Content="显示新添加到表格的文件的图标"
                     IsChecked="{Binding ShowFileIcon, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <GroupBox
                     Margin="0,8,0,0"

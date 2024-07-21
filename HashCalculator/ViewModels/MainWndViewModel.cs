@@ -68,6 +68,7 @@ namespace HashCalculator
         private RelayCommand changeAlgosExportStateCmd;
         private RelayCommand copyModelsCurHashWithNoFormatCmd;
         private RelayCommand copyModelsAllHashWithNoFormatCmd;
+        private RelayCommand displayMainWindowButtonsCmd;
 
         private GenericItemModel[] copyModelsHashMenuCmds;
         private GenericItemModel[] copyModelsAllHashesMenuCmds;
@@ -810,6 +811,23 @@ namespace HashCalculator
                     this.openFilesPropertyCmd = new RelayCommand(this.OpenFilesPropertyAction);
                 }
                 return this.openFilesPropertyCmd;
+            }
+        }
+
+        private void DisplayMainWindowButtonsAction(object param)
+        {
+            Settings.Current.DisplayMainWindowButtons = true;
+        }
+
+        public ICommand DisplayMainWindowButtonsCmd
+        {
+            get
+            {
+                if (this.displayMainWindowButtonsCmd == null)
+                {
+                    this.displayMainWindowButtonsCmd = new RelayCommand(this.DisplayMainWindowButtonsAction);
+                }
+                return this.displayMainWindowButtonsCmd;
             }
         }
 
