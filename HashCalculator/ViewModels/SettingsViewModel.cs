@@ -59,6 +59,7 @@ namespace HashCalculator
         private bool processingShellExtension = false;
         private bool preferChecklistAlgs = true;
         private bool parallelBetweenAlgos = true;
+        private bool displayMainWindowButtons = true;
         private bool displayMainWndButtonText = true;
         private bool useDefaultOutputTypeWhenExporting = true;
         private bool monitorNewHashStringInClipboard = true;
@@ -558,6 +559,12 @@ namespace HashCalculator
         {
             get => this.fetchAlgorithmOption;
             set => this.SetPropNotify(ref this.fetchAlgorithmOption, value);
+        }
+
+        public bool DisplayMainWindowButtons
+        {
+            get => this.displayMainWindowButtons;
+            set => this.SetPropNotify(ref this.displayMainWindowButtons, value);
         }
 
         public bool DisplayMainWndButtonText

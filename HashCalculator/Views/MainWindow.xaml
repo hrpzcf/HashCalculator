@@ -76,7 +76,8 @@
         <ScrollViewer
             Grid.Row="0"
             HorizontalScrollBarVisibility="Auto"
-            VerticalScrollBarVisibility="Disabled">
+            VerticalScrollBarVisibility="Disabled"
+            Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWindowButtons, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
             <Grid Margin="0,4,0,2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -540,6 +541,11 @@
                         Command="{Binding OpenFilesPropertyCmd}"
                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
                         Header="文件属性" />
+                    <Separator Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWindowButtons, Converter={StaticResource TrueToVisibilityCollapsedCvt}}" />
+                    <MenuItem
+                        Command="{Binding DisplayMainWindowButtonsCmd}"
+                        Header="显示工具按钮"
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWindowButtons, Converter={StaticResource TrueToVisibilityCollapsedCvt}}" />
                 </ContextMenu>
             </DataGrid.ContextMenu>
             <DataGrid.Columns>
