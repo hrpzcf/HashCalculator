@@ -147,7 +147,7 @@
                     <CheckBox
                         Margin="0,8,0,0"
                         Padding="4,0,0,0"
-                        Content="不要计算空文件的哈希值以避免造成【文件内容相同】的误导"
+                        Content="不计算空文件的哈希值以避免造成【文件内容相同】的误导"
                         IsChecked="{Binding DoNotHashForEmptyFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <CheckBox
                         Margin="0,8,0,0"
@@ -164,6 +164,11 @@
                         Padding="4,0,0,0"
                         Content="右键选择删除文件时直接永久删除而不是移动到回收站"
                         IsChecked="{Binding PermanentlyDeleteFiles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <CheckBox
+                        Margin="0,8,0,0"
+                        Padding="4,0,0,0"
+                        Content="通过命令行、系统右键菜单、关联的文件启动计算前先将表格现有的内容清空"
+                        IsChecked="{Binding ClearTableBeforeAddingFilesByCmdLine, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <CheckBox
                         Margin="0,8,0,0"
                         Padding="4,0,0,0"
