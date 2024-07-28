@@ -729,10 +729,7 @@ namespace HashCalculator
         {
             if (queueContainsThis)
             {
-                synchronization.Invoke(() =>
-                {
-                    this.State = HashState.Waiting;
-                });
+                synchronization.Invoke(() => { this.State = HashState.Waiting; });
                 return false;
             }
             // 增加一个 private bool MarkAsWaiting 方法的原因是：

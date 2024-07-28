@@ -318,8 +318,7 @@ namespace HashCalculator
                 {
                     foreach (PathPackage package in packages)
                     {
-                        if (token.IsCancellationRequested ||
-                            stopSearchingToken.IsCancellationRequested)
+                        if (token.IsCancellationRequested || stopSearchingToken.IsCancellationRequested)
                         {
                             break;
                         }
@@ -1013,12 +1012,12 @@ namespace HashCalculator
             }
         }
 
-        private void ClearAllTableLinesAction(object param)
+        public void ClearAllTableLinesAction(object param)
         {
             this.CancelDisplayedModelsAction(null);
             this.serial = 0;
-            this.displayedModels.Clear();
             HashViewModels.Clear();
+            this.displayedModels.Clear();
         }
 
         public ICommand ClearAllTableLinesCmd

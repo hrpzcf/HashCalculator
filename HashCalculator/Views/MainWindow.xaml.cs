@@ -192,6 +192,13 @@ namespace HashCalculator
                 {
                     if (option.FilePaths != null)
                     {
+                        if (Settings.Current.ClearTableBeforeAddingFilesByCmdLine)
+                        {
+                            MainWndViewModel.Synchronization.Invoke(() =>
+                            {
+                                MainWndViewModel.Current.ClearAllTableLinesAction(null);
+                            });
+                        }
                         string[] filePaths = option.FilePaths.ToArray();
                         // 此处逻辑针对命令行传来的待计算文件/文件夹路径，一般由右键菜单生成命令
                         // 如果是用户手动输入命令，则这些路径有可能分属不同的父目录，所以逐个处理
@@ -223,6 +230,13 @@ namespace HashCalculator
                         }
                         else
                         {
+                            if (Settings.Current.ClearTableBeforeAddingFilesByCmdLine)
+                            {
+                                MainWndViewModel.Synchronization.Invoke(() =>
+                                {
+                                    MainWndViewModel.Current.ClearAllTableLinesAction(null);
+                                });
+                            }
                             // 这里添加要计算哈希值的文件时，看作以多选文件的方式添，所以
                             // PathPackage 的 parent 参数应是 option.ChecklistPath 所在目录
                             string filesDir = Path.GetDirectoryName(option.ChecklistPath);

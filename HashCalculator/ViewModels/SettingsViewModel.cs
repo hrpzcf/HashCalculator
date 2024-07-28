@@ -73,6 +73,7 @@ namespace HashCalculator
         private bool delayTheStartOfCalculationTasks = false;
         private bool markTheSameHashValues = false;
         private bool automaticallyStartTaskAfterFileAdded = true;
+        private bool clearTableBeforeAddingFilesByCmdLine = false;
 
         private CmpRes algoToSwitchToAfterHashChecked = CmpRes.Matched;
         private ExportAlgo howToExportHashValues = ExportAlgo.AllCalculated;
@@ -460,6 +461,12 @@ namespace HashCalculator
         {
             get => this.automaticallyStartTaskAfterFileAdded;
             set => this.SetPropNotify(ref this.automaticallyStartTaskAfterFileAdded, value);
+        }
+
+        public bool ClearTableBeforeAddingFilesByCmdLine
+        {
+            get => this.clearTableBeforeAddingFilesByCmdLine;
+            set => this.SetPropNotify(ref this.clearTableBeforeAddingFilesByCmdLine, value);
         }
 
         [JsonIgnore, XmlIgnore]
