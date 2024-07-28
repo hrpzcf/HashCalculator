@@ -97,7 +97,6 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0">
                     <Button
@@ -386,23 +385,6 @@
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="设置"
-                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
-                </StackPanel>
-                <StackPanel Grid.Column="17" Margin="8,0,0,0">
-                    <Button
-                        Command="{Binding OpenAboutWindowCmd}"
-                        Style="{StaticResource ImageButtonStyle2}"
-                        ToolTip="打开软件的【关于】面板">
-                        <Image
-                            Width="32"
-                            Height="32"
-                            Source="{StaticResource aboutDrawingImage}" />
-                    </Button>
-                    <TextBlock
-                        Margin="0,2"
-                        HorizontalAlignment="Center"
-                        Style="{StaticResource ImgButtonTextStyle1}"
-                        Text="关于"
                         Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
             </Grid>

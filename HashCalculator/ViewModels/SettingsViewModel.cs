@@ -133,6 +133,8 @@ namespace HashCalculator
         private RelayCommand resetAlgorithmAliasCmd;
         private RelayCommand resetLuminanceAndSaturationValuesCmd;
 
+        private RelayCommand openBrowserNavigateToWebsiteCmd;
+
         [JsonIgnore, XmlIgnore]
         public const string CmdStrShowDetails = "SHOW_DETAILS";
 
@@ -1410,6 +1412,27 @@ namespace HashCalculator
             }
         }
 
+        private void OpenBrowserNavigateToWebsiteAction(object param)
+        {
+            if (param is string url)
+            {
+                SHELL32.ShellExecuteW(MainWindow.WndHandle, "open", url, null, null, ShowCmd.SW_NORMAL);
+            }
+        }
+
+        [JsonIgnore, XmlIgnore]
+        public ICommand OpenBrowserNavigateToWebsiteCmd
+        {
+            get
+            {
+                if (this.openBrowserNavigateToWebsiteCmd == null)
+                {
+                    this.openBrowserNavigateToWebsiteCmd = new RelayCommand(this.OpenBrowserNavigateToWebsiteAction);
+                }
+                return this.openBrowserNavigateToWebsiteCmd;
+            }
+        }
+
         [OnSerializing]
         internal void OnSettingsViewModelSerializing(StreamingContext context)
         {
@@ -1555,6 +1578,107 @@ namespace HashCalculator
             new GenericItemModel("校验结果是【已匹配】的算法", CmpRes.Matched),
             new GenericItemModel("校验结果是【不匹配】的算法", CmpRes.Mismatch),
             new GenericItemModel("校验结果是【不确定】的算法", CmpRes.Uncertain),
+        };
+
+        [JsonIgnore, XmlIgnore]
+        public string SrcGitee => "https://gitee.com/hrpzcf/HashCalculator";
+
+        [JsonIgnore, XmlIgnore]
+        public string SrcGitHub => "https://github.com/hrpzcf/HashCalculator";
+
+        [JsonIgnore, XmlIgnore]
+        public string IssueGitee => "https://gitee.com/hrpzcf/HashCalculator/issues";
+
+        [JsonIgnore, XmlIgnore]
+        public string IssueGitHub => "https://github.com/hrpzcf/HashCalculator/issues";
+
+        [JsonIgnore, XmlIgnore]
+        public string WikiGitee => "https://gitee.com/hrpzcf/HashCalculator/wikis/Home";
+
+        [JsonIgnore, XmlIgnore]
+        public string WikiGitHub => "https://github.com/hrpzcf/HashCalculator/wiki";
+
+        [JsonIgnore, XmlIgnore]
+        public string ChangeLogGitee => "https://gitee.com/hrpzcf/HashCalculator/blob/main/CHANGELOG.md";
+
+        [JsonIgnore, XmlIgnore]
+        public string ChangeLogGitHub => "https://github.com/hrpzcf/HashCalculator/blob/main/CHANGELOG.md";
+
+        [JsonIgnore, XmlIgnore]
+        public string Title => Info.Title;
+
+        [JsonIgnore, XmlIgnore]
+        public string Author => Info.Author;
+
+        [JsonIgnore, XmlIgnore]
+        public string Ver => Info.Ver;
+
+        [JsonIgnore, XmlIgnore]
+        public string Published => Info.Published;
+
+        [JsonIgnore, XmlIgnore]
+        public GenericItemModel[] OpenSourceProjects { get; } = new GenericItemModel[]
+        {
+            new GenericItemModel(
+                "BLAKE2",
+                "https://github.com/BLAKE2/BLAKE2",
+                "提供 BLAKE2 系列哈希算法的实现"),
+            new GenericItemModel(
+                "BLAKE3",
+                "https://github.com/BLAKE3-team/BLAKE3",
+                "提供 BLAKE3 系列哈希算法的实现"),
+            new GenericItemModel(
+                "CRC32",
+                "https://github.com/stbrumme/crc32",
+                "提供 CRC32 哈希算法的实现"),
+            new GenericItemModel(
+                "GmSSL",
+                "https://github.com/guanzhi/GmSSL",
+                "提供 SM3 哈希算法的实现"),
+            new GenericItemModel(
+                "OpenHashTab",
+                "https://github.com/namazso/OpenHashTab",
+                "提供 CRC64 哈希算法的实现"),
+            new GenericItemModel(
+                "QuickXorHash",
+                "https://github.com/namazso/QuickXorHash",
+                "提供 QuickXor 哈希算法的实现"),
+            new GenericItemModel(
+                "RHash",
+                "https://github.com/rhash/RHash",
+                "提供 eD2k/Has160/MD4/RipeMD160/SHA224/Whirlpool 算法的实现"),
+            new GenericItemModel(
+                "Streebog",
+                "https://github.com/adegtyarev/streebog",
+                "提供 Streebog 系列哈希算法的实现"),
+            new GenericItemModel(
+                "XKCP",
+                "https://github.com/XKCP/XKCP",
+                "提供 SHA3 系列哈希算法的实现"),
+            new GenericItemModel(
+                "xxHash",
+                "https://github.com/Cyan4973/xxHash",
+                "提供 XXH 系列极快速哈希算法的实现"),
+            new GenericItemModel(
+                "CommandLine",
+                "https://github.com/commandlineparser/commandline",
+                "用于解析命令行参数"),
+            new GenericItemModel(
+                "Newtonsoft.Json",
+                "https://www.newtonsoft.com/json",
+                "用于读取和保存本软件的相关配置文件"),
+            new GenericItemModel(
+                "tiny-json",
+                "https://github.com/rafagafe/tiny-json",
+                "用于读取和保存外壳扩展的相关配置文件"),
+            new GenericItemModel(
+                "WindowsAPICodePack",
+                "https://github.com/aybe/Windows-API-Code-Pack-1.1",
+                "用于调用系统接口打开文件/文件夹选择对话框"),
+            new GenericItemModel(
+                "XamlAnimatedGif",
+                "https://github.com/XamlAnimatedGif/XamlAnimatedGif",
+                "用于在图形用户界面上显示动态图片"),
         };
     }
 }

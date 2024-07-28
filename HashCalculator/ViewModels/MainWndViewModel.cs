@@ -50,7 +50,6 @@ namespace HashCalculator
         private RelayCommand selectChecklistFileCmd;
         private RelayCommand startCheckHashResultsCmd;
         private RelayCommand openSettingsPanelCmd;
-        private RelayCommand openAboutWindowCmd;
         private RelayCommand selectFilesToHashCmd;
         private RelayCommand selectFolderToHashCmd;
         private RelayCommand cancelDisplayedModelsCmd;
@@ -1447,23 +1446,6 @@ namespace HashCalculator
                     this.openSettingsPanelCmd = new RelayCommand(this.OpenSettingsPanelAction);
                 }
                 return this.openSettingsPanelCmd;
-            }
-        }
-
-        private void OpenAboutWindowAction(object param)
-        {
-            new AboutWindow() { Owner = MainWindow.Current }.ShowDialog();
-        }
-
-        public ICommand OpenAboutWindowCmd
-        {
-            get
-            {
-                if (this.openAboutWindowCmd is null)
-                {
-                    this.openAboutWindowCmd = new RelayCommand(this.OpenAboutWindowAction);
-                }
-                return this.openAboutWindowCmd;
             }
         }
 

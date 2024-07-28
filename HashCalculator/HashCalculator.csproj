@@ -218,7 +218,6 @@
     <Compile Include="Others\HcmDataHelper.cs" />
     <Compile Include="Others\HcmData.cs" />
     <Compile Include="Property\ExecTargetAttach.cs" />
-    <Compile Include="ViewModels\AboutWindowModel.cs" />
     <Compile Include="ViewModels\DoubleProgressModel.cs" />
     <Compile Include="ViewModels\TemplateForChecklistModel.cs" />
     <Compile Include="ViewModels\TemplateForExportModel.cs" />
@@ -244,9 +243,6 @@
     <Compile Include="Others\Enumerations.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\ShellMenuEditorModel.cs" />
-    <Compile Include="Views\AboutWindow.xaml.cs">
-      <DependentUpon>AboutWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\AlgosPanel.xaml.cs">
       <DependentUpon>AlgosPanel.xaml</DependentUpon>
     </Compile>
@@ -388,10 +384,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\DescTextBlockStyles.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\AboutWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
