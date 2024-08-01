@@ -43,15 +43,15 @@ namespace HashCalculator
         private RelayCommand openSelectAlgoWndCmd;
         private RelayCommand mainWindowTopmostCmd;
         private RelayCommand clearAllTableLinesCmd;
-        private RelayCommand exportHashResultCmd;
+        private RelayCommand exportHashResultsCmd;
         private RelayCommand copyAndRestartModelsCmd;
         private RelayCommand refreshOriginalModelsCmd;
         private RelayCommand forceRefreshOriginalModelsCmd;
         private RelayCommand selectChecklistFileCmd;
         private RelayCommand startCheckHashResultsCmd;
-        private RelayCommand openSettingsPanelCmd;
+        private RelayCommand openSettingsWindowCmd;
         private RelayCommand selectFilesToHashCmd;
-        private RelayCommand selectFolderToHashCmd;
+        private RelayCommand selectFoldersToHashCmd;
         private RelayCommand cancelDisplayedModelsCmd;
         private RelayCommand pauseDisplayedModelsCmd;
         private RelayCommand continueDisplayedModelsCmd;
@@ -1230,15 +1230,15 @@ namespace HashCalculator
             }
         }
 
-        public ICommand ExportHashResultCmd
+        public ICommand ExportHashResultsCmd
         {
             get
             {
-                if (this.exportHashResultCmd is null)
+                if (this.exportHashResultsCmd is null)
                 {
-                    this.exportHashResultCmd = new RelayCommand(this.ExporHashResultAction);
+                    this.exportHashResultsCmd = new RelayCommand(this.ExporHashResultAction);
                 }
-                return this.exportHashResultCmd;
+                return this.exportHashResultsCmd;
             }
         }
 
@@ -1437,15 +1437,15 @@ namespace HashCalculator
             new SettingsPanel() { Owner = this.OwnerWnd }.ShowDialog();
         }
 
-        public ICommand OpenSettingsPanelCmd
+        public ICommand OpenSettingsWindowCmd
         {
             get
             {
-                if (this.openSettingsPanelCmd is null)
+                if (this.openSettingsWindowCmd is null)
                 {
-                    this.openSettingsPanelCmd = new RelayCommand(this.OpenSettingsPanelAction);
+                    this.openSettingsWindowCmd = new RelayCommand(this.OpenSettingsPanelAction);
                 }
-                return this.openSettingsPanelCmd;
+                return this.openSettingsWindowCmd;
             }
         }
 
@@ -1505,15 +1505,15 @@ namespace HashCalculator
             this.BeginDisplayModels(new PathPackage(parentDir, folderOpen.FileNames, searchMethod));
         }
 
-        public ICommand SelectFolderToHashCmd
+        public ICommand SelectFoldersToHashCmd
         {
             get
             {
-                if (this.selectFolderToHashCmd is null)
+                if (this.selectFoldersToHashCmd is null)
                 {
-                    this.selectFolderToHashCmd = new RelayCommand(this.SelectFolderToHashAction);
+                    this.selectFoldersToHashCmd = new RelayCommand(this.SelectFolderToHashAction);
                 }
-                return this.selectFolderToHashCmd;
+                return this.selectFoldersToHashCmd;
             }
         }
 
