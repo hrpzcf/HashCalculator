@@ -75,6 +75,23 @@ namespace HashCalculator
         private bool automaticallyStartTaskAfterFileAdded = true;
         private bool clearTableBeforeAddingFilesByCmdLine = false;
 
+        // 主窗口顶部各按钮的显示与否
+        private bool showOpenSelectAlgoWndButton = true;
+        private bool showSelectedOutputTypeButton = true;
+        private bool showOpenCommandPanelButton = true;
+        private bool showSelectFilesToHashButton = true;
+        private bool showSelectFoldersToHashButton = true;
+        private bool showStopEnumeratingPackageButton = true;
+        private bool showExportHashResultsButton = true;
+        private bool showCopyAndRestartModelsButton = true;
+        private bool showRefreshOriginalModelsButton = true;
+        private bool showForceRefreshOriginalModelsButton = true;
+        private bool showClearAllTableLinesButton = true;
+        private bool showPauseDisplayedModelsButton = true;
+        private bool showCancelDisplayedModelsButton = true;
+        private bool showContinueDisplayedModelsButton = true;
+        private bool showMainWindowTopmostButton = true;
+
         private CmpRes algoToSwitchToAfterHashChecked = CmpRes.Matched;
         private ExportAlgo howToExportHashValues = ExportAlgo.AllCalculated;
         private FetchAlgoOption fetchAlgorithmOption = FetchAlgoOption.TATSAMSHDL;
@@ -469,6 +486,96 @@ namespace HashCalculator
         {
             get => this.clearTableBeforeAddingFilesByCmdLine;
             set => this.SetPropNotify(ref this.clearTableBeforeAddingFilesByCmdLine, value);
+        }
+
+        public bool ShowOpenSelectAlgoWndButton
+        {
+            get => this.showOpenSelectAlgoWndButton;
+            set => this.SetPropNotify(ref this.showOpenSelectAlgoWndButton, value);
+        }
+
+        public bool ShowSelectedOutputTypeButton
+        {
+            get => this.showSelectedOutputTypeButton;
+            set => this.SetPropNotify(ref this.showSelectedOutputTypeButton, value);
+        }
+
+        public bool ShowOpenCommandPanelButton
+        {
+            get => this.showOpenCommandPanelButton;
+            set => this.SetPropNotify(ref this.showOpenCommandPanelButton, value);
+        }
+
+        public bool ShowSelectFilesToHashButton
+        {
+            get => this.showSelectFilesToHashButton;
+            set => this.SetPropNotify(ref this.showSelectFilesToHashButton, value);
+        }
+
+        public bool ShowSelectFoldersToHashButton
+        {
+            get => this.showSelectFoldersToHashButton;
+            set => this.SetPropNotify(ref this.showSelectFoldersToHashButton, value);
+        }
+
+        public bool ShowStopEnumeratingPackageButton
+        {
+            get => this.showStopEnumeratingPackageButton;
+            set => this.SetPropNotify(ref this.showStopEnumeratingPackageButton, value);
+        }
+
+        public bool ShowExportHashResultsButton
+        {
+            get => this.showExportHashResultsButton;
+            set => this.SetPropNotify(ref this.showExportHashResultsButton, value);
+        }
+
+        public bool ShowCopyAndRestartModelsButton
+        {
+            get => this.showCopyAndRestartModelsButton;
+            set => this.SetPropNotify(ref this.showCopyAndRestartModelsButton, value);
+        }
+
+        public bool ShowRefreshOriginalModelsButton
+        {
+            get => this.showRefreshOriginalModelsButton;
+            set => this.SetPropNotify(ref this.showRefreshOriginalModelsButton, value);
+        }
+
+        public bool ShowForceRefreshOriginalModelsButton
+        {
+            get => this.showForceRefreshOriginalModelsButton;
+            set => this.SetPropNotify(ref this.showForceRefreshOriginalModelsButton, value);
+        }
+
+        public bool ShowClearAllTableLinesButton
+        {
+            get => this.showClearAllTableLinesButton;
+            set => this.SetPropNotify(ref this.showClearAllTableLinesButton, value);
+        }
+
+        public bool ShowPauseDisplayedModelsButton
+        {
+            get => this.showPauseDisplayedModelsButton;
+            set => this.SetPropNotify(ref this.showPauseDisplayedModelsButton, value);
+        }
+
+        public bool ShowCancelDisplayedModelsButton
+        {
+            get => this.showCancelDisplayedModelsButton;
+            set => this.SetPropNotify(ref this.showCancelDisplayedModelsButton, value);
+        }
+
+        public bool ShowContinueDisplayedModelsButton
+        {
+            get => this.showContinueDisplayedModelsButton;
+            set => this.SetPropNotify(ref this.showContinueDisplayedModelsButton, value);
+        }
+
+        public bool ShowMainWindowTopmostButton
+        {
+            get => this.showMainWindowTopmostButton;
+            set => this.SetPropNotify(ref this.showMainWindowTopmostButton, value);
         }
 
         [JsonIgnore, XmlIgnore]

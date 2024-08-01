@@ -230,12 +230,94 @@
                     <StackPanel Margin="0,4,0,0">
                         <CheckBox
                             Padding="4,0,0,0"
-                            Content="显示主窗口工具按钮"
+                            Content="显示主窗口所有工具按钮"
                             IsChecked="{Binding DisplayMainWindowButtons, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         <TextBlock
                             Margin="16,2,0,0"
                             Style="{StaticResource DescTextBlockStyle}"
-                            Text="取消勾选并关闭设置面板后可通过点击右键菜单“显示工具按钮”重新显示" />
+                            Text="取消勾选并关闭设置窗口后可通过点击右键菜单“显示工具按钮”重新显示" />
+                        <Expander
+                            Margin="-4,4,0,0"
+                            Foreground="#FF006FD6"
+                            Header="分别设置要显示的工具按钮">
+                            <StackPanel>
+                                <CheckBox
+                                    Margin="16,0,0,0"
+                                    Padding="4,0,0,0"
+                                    Content="显示【默认算法】按钮"
+                                    IsChecked="{Binding ShowOpenSelectAlgoWndButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <CheckBox
+                                    Margin="16,4,0,0"
+                                    Padding="4,0,0,0"
+                                    Content="显示【默认输出方式】按钮"
+                                    IsChecked="{Binding ShowSelectedOutputTypeButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <CheckBox
+                                    Margin="16,4,0,0"
+                                    Padding="4,0,0,0"
+                                    Content="显示【筛选与操作】按钮"
+                                    IsChecked="{Binding ShowOpenCommandPanelButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <CheckBox
+                                    Margin="16,4,0,0"
+                                    Padding="4,0,0,0"
+                                    Content="显示【选择文件】按钮"
+                                    IsChecked="{Binding ShowSelectFilesToHashButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <CheckBox
+                                    Margin="16,4,0,0"
+                                    Padding="4,0,0,0"
+                                    Content="显示【选择目录】按钮"
+                                    IsChecked="{Binding ShowSelectFoldersToHashButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <CheckBox
+                                    Margin="16,4,0,0"
+                                    Padding="4,0,0,0"
+                                    Content="显示【停止搜索】按钮"
+                                    IsChecked="{Binding ShowStopEnumeratingPackageButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <CheckBox
+                                    Margin="16,4,0,0"
+                                    Padding="4,0,0,0"
+                                    Content="显示【导出结果】按钮"
+                                    IsChecked="{Binding ShowExportHashResultsButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <CheckBox
+                                    Margin="16,4,0,0"
+                                    Padding="4,0,0,0"
+                                    Content="显示【新行重算】按钮"
+                                    IsChecked="{Binding ShowCopyAndRestartModelsButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <CheckBox
+                                    Margin="16,4,0,0"
+                                    Padding="4,0,0,0"
+                                    Content="显示【计算缺值项】按钮"
+                                    IsChecked="{Binding ShowRefreshOriginalModelsButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <CheckBox
+                                    Margin="16,4,0,0"
+                                    Padding="4,0,0,0"
+                                    Content="显示【重新计算】按钮"
+                                    IsChecked="{Binding ShowForceRefreshOriginalModelsButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <CheckBox
+                                    Margin="16,4,0,0"
+                                    Padding="4,0,0,0"
+                                    Content="显示【清空表格】按钮"
+                                    IsChecked="{Binding ShowClearAllTableLinesButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <CheckBox
+                                    Margin="16,4,0,0"
+                                    Padding="4,0,0,0"
+                                    Content="显示【全部开始】按钮"
+                                    IsChecked="{Binding ShowContinueDisplayedModelsButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <CheckBox
+                                    Margin="16,4,0,0"
+                                    Padding="4,0,0,0"
+                                    Content="显示【全部暂停】按钮"
+                                    IsChecked="{Binding ShowPauseDisplayedModelsButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <CheckBox
+                                    Margin="16,4,0,0"
+                                    Padding="4,0,0,0"
+                                    Content="显示【全部取消】按钮"
+                                    IsChecked="{Binding ShowCancelDisplayedModelsButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <CheckBox
+                                    Margin="16,4,0,0"
+                                    Padding="4,0,0,0"
+                                    Content="显示【置顶窗口】按钮"
+                                    IsChecked="{Binding ShowMainWindowTopmostButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            </StackPanel>
+                        </Expander>
                     </StackPanel>
                     <CheckBox
                         Margin="0,4,0,0"
