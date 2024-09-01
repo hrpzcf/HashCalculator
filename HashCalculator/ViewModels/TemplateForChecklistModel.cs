@@ -88,6 +88,22 @@ namespace HashCalculator
                 Template = "^#$algo$\\s\\*?$hash$\\s\\*?$name$\\r?$"
             };
 
+        public static readonly TemplateForChecklistModel AnyFile5 =
+            new TemplateForChecklistModel()
+            {
+                Name = "通用五",
+                Extension = null,
+                Template = "^$hash$\\|$name$\\r?$"
+            };
+
+        public static readonly TemplateForChecklistModel AnyFile6 =
+            new TemplateForChecklistModel()
+            {
+                Name = "通用六",
+                Extension = null,
+                Template = "^$hash$\\|\\d+\\|$name$\\r?$"
+            };
+
         private const string algoGroup = "algo";
         private const string hashGroup = "hash";
         private const string nameGroup = "name";
