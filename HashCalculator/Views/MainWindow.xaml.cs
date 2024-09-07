@@ -172,7 +172,8 @@ namespace HashCalculator
                 List<AlgoType> resolvedAlgoTypeList = new List<AlgoType>();
                 foreach (string algoTypeStr in option.Algos.Split(','))
                 {
-                    if (Enum.TryParse(algoTypeStr, true, out AlgoType algoType))
+                    if (AlgosPanelModel.TryGetAlgoType(algoTypeStr, out AlgoType algoType) &&
+                        algoType != AlgoType.UNKNOWN)
                     {
                         resolvedAlgoTypeList.Add(algoType);
                     }
