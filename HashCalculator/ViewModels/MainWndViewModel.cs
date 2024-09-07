@@ -1347,6 +1347,19 @@ namespace HashCalculator
                 else if (HashViewModels.Any())
                 {
                     localChecklist = HashChecklist.File(this.HashStringOrChecklistPath);
+                    try
+                    {
+                        string parent = Path.GetDirectoryName(this.HashStringOrChecklistPath);
+                        // TODO: 统一 AssertRelativeGetFull 方法的调用方式
+                        // 目前的情况是在此处有调用，在 PathPackage 内也有调用
+                        localChecklist.AssertRelativeGetFull(parent, out _);
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show(MainWindow.Current, "无法获取哈希值清单文件所在目录", "错误",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                        return false;
+                    }
                 }
                 // HashStringOrChecklistPath 是一个文件，且哈希结果列表也是空
                 else

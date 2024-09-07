@@ -274,12 +274,12 @@ namespace HashCalculator
                         try
                         {
                             checklistLines = reader.ReadToEnd();
+                            contentDecoded = true;
                         }
                         catch (DecoderFallbackException)
                         {
                             continue;
                         }
-                        contentDecoded = true;
                         bool anyPaser = false;
                         bool anyItemAdded = false;
                         foreach (TemplateForChecklistModel parser in this.GetParsers(fileExt))
