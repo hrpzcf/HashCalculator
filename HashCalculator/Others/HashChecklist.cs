@@ -16,6 +16,8 @@ namespace HashCalculator
 
         public bool IsExistingFile { get; set; }
 
+        public HashChecker() { }
+
         public HashChecker(string relpath, AlgoType algoType, byte[] hashBytes)
         {
             this.AddCheckerItem(relpath, algoType, hashBytes);
@@ -44,24 +46,18 @@ namespace HashCalculator
             if (!this.algoHashDict.TryGetValue(algoType, out List<byte[]> hashValues))
             {
                 algoTypeIndependent = true;
-                this.algoHashDict.TryGetValue(AlgoType.Unknown, out hashValues);
+                this.algoHashDict.TryGetValue(AlgoType.UNKNOWN, out hashValues);
             }
             if (hashValues != null)
             {
-                if (!hashValues.Any())
+                if (hashValues.Count == 0)
                 {
                     return CmpRes.Uncertain;
                 }
                 if (algoTypeIndependent)
                 {
-                    if (hashValues.Contains(hashBytes, BytesComparer.Default))
-                    {
-                        return CmpRes.Matched;
-                    }
-                    else
-                    {
-                        return CmpRes.Unrelated;
-                    }
+                    return hashValues.Contains(hashBytes, BytesComparer.Default) ?
+                        CmpRes.Matched : CmpRes.Unrelated;
                 }
                 else
                 {
@@ -93,7 +89,7 @@ namespace HashCalculator
 
         public AlgoType[] GetExistingAlgoTypes()
         {
-            return this.algoHashDict.Keys.Where(i => i != AlgoType.Unknown).ToArray();
+            return this.algoHashDict.Keys.Where(i => i != AlgoType.UNKNOWN).ToArray();
         }
 
         public int[] GetExistingDigestLengths()
@@ -138,6 +134,14 @@ namespace HashCalculator
             return checklist;
         }
 
+        public static HashChecklist File(string filePath, IEnumerable<AlgoType> algoTypes)
+        {
+            HashChecklist checklist = new HashChecklist();
+            checklist.AlgoTypesFromOption = algoTypes?.ToArray();
+            checklist.UpdateWithFile(filePath);
+            return checklist;
+        }
+
         public static HashChecklist Checklist(HashChecklist old)
         {
             HashChecklist checklist = new HashChecklist();
@@ -148,7 +152,9 @@ namespace HashCalculator
         public HashChecklist() { }
 
         public AlgoType AlgoTypeFromFileExt { get; set; } =
-            AlgoType.Unknown;
+            AlgoType.UNKNOWN;
+
+        public AlgoType[] AlgoTypesFromOption { get; set; }
 
         public string ReasonForFailure { get; private set; }
 
@@ -196,20 +202,31 @@ namespace HashCalculator
                 return false;
             }
             if (!AlgosPanelModel.TryGetAlgoType(algo, out AlgoType algoType) ||
-                algoType == AlgoType.Unknown)
+                algoType == AlgoType.UNKNOWN)
             {
                 algoType = this.AlgoTypeFromFileExt;
             }
             if (CommonUtils.HashBytesFromString(hash) is byte[] hashBytes)
             {
                 relpath = relpath.Replace('/', '\\');
-                if (this.fileHashCheckerDict.ContainsKey(relpath))
+                if (!this.fileHashCheckerDict.TryGetValue(relpath, out var hashChecker))
                 {
-                    this.fileHashCheckerDict[relpath].AddCheckerItem(relpath, algoType, hashBytes);
+                    hashChecker = new HashChecker();
+                    this.fileHashCheckerDict[relpath] = hashChecker;
                 }
-                else
+                // 从依据内容和扩展名推断 algoType 后，无论是否仍是 UNKNOWN，都添加到 HashChecker
+                hashChecker.AddCheckerItem(relpath, algoType, hashBytes);
+                // 如果 algoType 仍然是 UNKNOWN，则假定解析依据所得哈希值对应算法与启动校验时指定的算法相同
+                // 遍历启动校验时用户指定的算法，如该算法的摘要长度与 hashBytes 长度相同则添加到 HashChecker
+                if (algoType == AlgoType.UNKNOWN && this.AlgoTypesFromOption?.Any() == true)
                 {
-                    this.fileHashCheckerDict[relpath] = new HashChecker(relpath, algoType, hashBytes);
+                    foreach (AlgoType fallbackAlgoType in this.AlgoTypesFromOption)
+                    {
+                        if (fallbackAlgoType.DigestLength() == hashBytes.Length)
+                        {
+                            hashChecker.AddCheckerItem(relpath, fallbackAlgoType, hashBytes);
+                        }
+                    }
                 }
                 return true;
             }
@@ -326,6 +343,7 @@ namespace HashCalculator
         public string UpdateWithChecklist(HashChecklist checklist)
         {
             this.fileHashCheckerDict = checklist.fileHashCheckerDict;
+            this.AlgoTypesFromOption = checklist.AlgoTypesFromOption;
             this.ReasonForFailure = checklist.ReasonForFailure;
             this.KeysAreRelativePaths = checklist.KeysAreRelativePaths;
             checklist.fileHashCheckerDict = null;

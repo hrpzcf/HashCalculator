@@ -19,8 +19,6 @@ namespace HashCalculator
         /// <summary>
         /// 为 IList 类型对象提供低成本检查集合是否为空的扩展方法
         /// </summary>
-        /// <param name="source"></param>
-        /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static bool AnyItem(this IList source)
         {
@@ -34,9 +32,6 @@ namespace HashCalculator
         /// <summary>
         /// 为 FileInfo 对象提供检查父目录路径与指定字符串是否相同的扩展方法
         /// </summary>
-        /// <param name="info"></param>
-        /// <param name="toCompare"></param>
-        /// <returns></returns>
         public static bool ParentSameWith(this FileInfo info, string toCompare)
         {
             return info.DirectoryName.Equals(toCompare, StringComparison.OrdinalIgnoreCase);
@@ -461,6 +456,18 @@ namespace HashCalculator
                     }
                 }
             }
+        }
+
+        public static int DigestLength(this AlgoType algoType)
+        {
+            foreach (AlgoInOutModel algoInOutModel in AlgosPanelModel.ProvidedAlgos)
+            {
+                if (algoInOutModel.AlgoType == algoType)
+                {
+                    return algoInOutModel.IAlgo.DigestLength;
+                }
+            }
+            return default(int);
         }
     }
 }

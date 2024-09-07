@@ -123,6 +123,8 @@
     /// </summary>
     public enum AlgoType
     {
+        // 未知
+        UNKNOWN = -1,
         // XxHash
         XXH32,
         XXH64,
@@ -193,7 +195,6 @@
         HAS160,
         // RipeMD160
         RIPEMD160,
-        Unknown = -1,
     }
 
     public enum OutputType

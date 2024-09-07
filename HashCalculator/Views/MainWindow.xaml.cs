@@ -219,7 +219,9 @@ namespace HashCalculator
                 {
                     if (File.Exists(option.ChecklistPath))
                     {
-                        HashChecklist newChecklist = HashChecklist.File(option.ChecklistPath);
+                        IEnumerable<AlgoType> types = this.GetAlgoTypesFromOption(option);
+                        HashChecklist newChecklist = HashChecklist.File(option.ChecklistPath,
+                            types);
                         if (newChecklist.ReasonForFailure != null)
                         {
                             Application.Current.Dispatcher.Invoke(() =>
@@ -242,7 +244,7 @@ namespace HashCalculator
                             string filesDir = Path.GetDirectoryName(option.ChecklistPath);
                             PathPackage package = new PathPackage(filesDir, filesDir, newChecklist,
                                 Settings.Current.SelectedSearchMethodForChecklist);
-                            package.PresetAlgoTypes = this.GetAlgoTypesFromOption(option);
+                            package.PresetAlgoTypes = types;
                             this.viewModel.BeginDisplayModels(package);
                         }
                     }
