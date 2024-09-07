@@ -134,7 +134,7 @@ namespace HashCalculator
         {
             if (name == string.Empty)
             {
-                algorithm = AlgoType.Unknown;
+                algorithm = AlgoType.UNKNOWN;
                 return true;
             }
             if (Enum.TryParse(name.Replace("-", "_"), true, out algorithm))
@@ -149,7 +149,7 @@ namespace HashCalculator
                     return true;
                 }
             }
-            algorithm = AlgoType.Unknown;
+            algorithm = AlgoType.UNKNOWN;
             return false;
         }
 

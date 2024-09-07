@@ -27,7 +27,7 @@ namespace HashCalculator
 
         private static bool AvailableInOutModel(AlgoInOutModel model)
         {
-            return model == null || (model.AlgoType != AlgoType.Unknown &&
+            return model == null || (model.AlgoType != AlgoType.UNKNOWN &&
                 model.HashResult?.Length > 0);
         }
 

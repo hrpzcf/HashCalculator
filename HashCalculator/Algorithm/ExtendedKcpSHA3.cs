@@ -8,7 +8,7 @@ namespace HashCalculator
     {
         private readonly int bitLength;
         private int _errorCode = 0;
-        private AlgoType algoType = AlgoType.Unknown;
+        private AlgoType algoType = AlgoType.UNKNOWN;
         private IntPtr _state = IntPtr.Zero;
 
         [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
@@ -37,7 +37,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.algoType == AlgoType.Unknown &&
+                if (this.algoType == AlgoType.UNKNOWN &&
                     Enum.TryParse($"SHA3_{this.bitLength}", true, out AlgoType algo))
                 {
                     this.algoType = algo;

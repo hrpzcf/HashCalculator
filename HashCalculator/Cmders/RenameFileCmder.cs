@@ -101,13 +101,13 @@ namespace HashCalculator
                     HashViewModel model = models.FirstOrDefault(
                         i => i.Matched &&
                         i.CurrentInOutModel != null &&
-                        i.CurrentInOutModel.AlgoType != AlgoType.Unknown);
+                        i.CurrentInOutModel.AlgoType != AlgoType.UNKNOWN);
                     if (model != null)
                     {
                         focusedAlgorithmType = model.CurrentInOutModel.AlgoType;
                     }
                 }
-                else if (this.SelectedAlgorithmType != AlgoType.Unknown)
+                else if (this.SelectedAlgorithmType != AlgoType.UNKNOWN)
                 {
                     focusedAlgorithmType = this.SelectedAlgorithmType;
                 }

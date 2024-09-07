@@ -7,7 +7,7 @@ namespace HashCalculator
     internal abstract class OfficialImplBlake2 : HashAlgorithm, IHashAlgoInfo
     {
         public readonly int bitLength;
-        private AlgoType algoType = AlgoType.Unknown;
+        private AlgoType algoType = AlgoType.UNKNOWN;
         private int _errorCode = 0;
         private IntPtr _statePtr = IntPtr.Zero;
 
@@ -23,7 +23,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.algoType == AlgoType.Unknown &&
+                if (this.algoType == AlgoType.UNKNOWN &&
                     Enum.TryParse($"{this.NamePrefix}_{this.bitLength}", true, out AlgoType algo))
                 {
                     this.algoType = algo;

@@ -7,7 +7,7 @@ namespace HashCalculator
     internal class OfficialImplBlake3 : HashAlgorithm, IHashAlgoInfo
     {
         private readonly int bitLength;
-        private AlgoType algoType = AlgoType.Unknown;
+        private AlgoType algoType = AlgoType.UNKNOWN;
         private IntPtr _state = IntPtr.Zero;
 
         [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
@@ -36,7 +36,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.algoType == AlgoType.Unknown &&
+                if (this.algoType == AlgoType.UNKNOWN &&
                     Enum.TryParse($"BLAKE3_{this.bitLength}", true, out AlgoType algo))
                 {
                     this.algoType = algo;
