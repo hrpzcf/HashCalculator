@@ -227,9 +227,9 @@ namespace HashCalculator
             Exception exception;
             try
             {
-                if (!Directory.Exists(Settings.ShellExtensionDir))
+                if (!Directory.Exists(Settings.ConfigInfo.ShellExtensionDir))
                 {
-                    Directory.CreateDirectory(Settings.ShellExtensionDir);
+                    Directory.CreateDirectory(Settings.ConfigInfo.ShellExtensionDir);
                 }
                 if (UninstallShellExtension() is Exception exception1)
                 {
@@ -239,20 +239,20 @@ namespace HashCalculator
                 {
                     using (manifest)
                     {
-                        manifest.ToNewFile(Settings.ShellExtensionFile);
+                        manifest.ToNewFile(Settings.ConfigInfo.ShellExtensionFile);
                     }
                 }
                 else
                 {
                     exception = new MissingManifestResourceException("内嵌的右键菜单扩展模块资源丢失");
                 }
-                if (RegisterShellExtDll(Settings.ShellExtensionFile) is Exception exception2)
+                if (RegisterShellExtDll(Settings.ConfigInfo.ShellExtensionFile) is Exception exception2)
                 {
                     exception = exception2;
                 }
                 SHELL32.SHChangeNotify(HChangeNotifyEventID.SHCNE_ASSOCCHANGED, HChangeNotifyFlags.SHCNF_IDLIST,
                     IntPtr.Zero, IntPtr.Zero);
-                Settings.UpdateShellMenuConfigFilePath(Settings.ShellExtensionFile);
+                Settings.UpdateShellMenuConfigFilePath(Settings.ConfigInfo.ShellExtensionFile);
                 exception = RegUpdateAppPath();
             }
             catch (Exception exception3)
@@ -270,18 +270,18 @@ namespace HashCalculator
             if (GetShellExtensionPath() is string shellExtensionFile &&
                 (exception2 = DeregisterShellExtDll(shellExtensionFile)) == null)
             {
-                string oldMenuConfigFile = Settings.MenuConfigFile;
-                string oldShellExtensionDir = Path.GetDirectoryName(shellExtensionFile);
+                string oldMenuConfigFile = Settings.ConfigInfo.MenuConfigFile;
+                string oldShellExtensionDir = Settings.ConfigInfo.ShellExtensionDir;
                 Settings.UpdateShellMenuConfigFilePath(string.Empty);
-                if (!oldShellExtensionDir.Equals(Settings.ActiveConfigDir))
+                if (!oldShellExtensionDir.Equals(Settings.ConfigInfo.ActiveConfigDir))
                 {
                     try
                     {
-                        if (File.Exists(Settings.MenuConfigFile))
+                        if (File.Exists(Settings.ConfigInfo.MenuConfigFile))
                         {
-                            File.Delete(Settings.MenuConfigFile);
+                            File.Delete(Settings.ConfigInfo.MenuConfigFile);
                         }
-                        File.Move(oldMenuConfigFile, Settings.MenuConfigFile);
+                        File.Move(oldMenuConfigFile, Settings.ConfigInfo.MenuConfigFile);
                     }
                     catch
                     {

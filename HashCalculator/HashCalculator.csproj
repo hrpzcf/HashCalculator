@@ -110,6 +110,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Others\ColumnProperty.cs" />
+    <Compile Include="Others\ConfigPaths.cs" />
     <Compile Include="Settings\Loading.cs" />
     <Compile Include="Cmders\MarkFilesCmder.cs" />
     <Compile Include="Cmders\MarkFilesCmderCtrl.xaml.cs">

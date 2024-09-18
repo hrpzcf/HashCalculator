@@ -317,7 +317,7 @@
     }
 
     /// <summary>
-    /// 保存文件使用的编码(保存设置时被序列化，不方便使用 UsingEncoding 类)
+    /// 保存文件使用的编码(保存设置时被序列化，不方便使用 Encoding 类)
     /// </summary>
     public enum EncodingEnum
     {
@@ -359,6 +359,11 @@
         Unset,
 
         /// <summary>
+        /// 表示应该搜索配置文件的几个固定保存位置，根据搜索结果作决定
+        /// </summary>
+        Test,
+
+        /// <summary>
         /// 保存到程序可执行文件所在位置
         /// </summary>
         ExecDir,
@@ -367,6 +372,16 @@
         /// 保存到用户目录下的 AppData\Local\HashCalculator 目录
         /// </summary>
         UserDir,
+
+        /// <summary>
+        /// 保存到公用用户目录下的 HashCalculator 目录
+        /// </summary>
+        PublicUser,
+
+        /// <summary>
+        /// 保存到程序目录下的 HashCalculator 目录 (ProgramData\HashCalculator)
+        /// </summary>
+        ProgramData,
     }
 
     /// <summary>

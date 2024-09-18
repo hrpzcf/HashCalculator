@@ -988,7 +988,7 @@ namespace HashCalculator
                 MessageBox.Show(SettingsPanel.Current, $"安装外壳扩展成功！", "提示", MessageBoxButton.OK,
                     MessageBoxImage.Information);
             }
-            if (!File.Exists(Settings.MenuConfigFile))
+            if (!File.Exists(Settings.ConfigInfo.MenuConfigFile))
             {
                 string exception = new ShellMenuEditorModel(SettingsPanel.Current).SaveMenuListToJsonFile();
                 if (!string.IsNullOrEmpty(exception))

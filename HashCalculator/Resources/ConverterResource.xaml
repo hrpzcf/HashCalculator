@@ -21,12 +21,20 @@
         Min="0" />
     <local:ConfigurationLoadedLocationCvt
         x:Key="ConfigurationLoadedFromExecCvt"
-        Display="程序目录"
-        Location="{x:Static local:Settings.ConfigDirExec}" />
+        Display="当前目录"
+        Location="{x:Static local:ConfigPaths.ConfigDirExec}" />
     <local:ConfigurationLoadedLocationCvt
         x:Key="ConfigurationLoadedFromUserCvt"
         Display="用户目录"
-        Location="{x:Static local:Settings.ConfigDirUser}" />
+        Location="{x:Static local:ConfigPaths.ConfigDirUser}" />
+    <local:ConfigurationLoadedLocationCvt
+        x:Key="ConfigurationLoadedFromPublicUserCvt"
+        Display="公用用户目录"
+        Location="{x:Static local:ConfigPaths.ConfigDirPublicUser}" />
+    <local:ConfigurationLoadedLocationCvt
+        x:Key="ConfigurationLoadedFromProgramDataCvt"
+        Display="程序数据目录"
+        Location="{x:Static local:ConfigPaths.ConfigDirProgramData}" />
     <local:BetweenConfigLocationAndBooleanCvt
         x:Key="ConfigLocationExecToTrueCvt"
         Boolean="True"
@@ -35,6 +43,14 @@
         x:Key="ConfigLocationUserToTrueCvt"
         Boolean="True"
         Loccation="UserDir" />
+    <local:BetweenConfigLocationAndBooleanCvt
+        x:Key="ConfigLocationPublicUserToTrueCvt"
+        Boolean="True"
+        Loccation="PublicUser" />
+    <local:BetweenConfigLocationAndBooleanCvt
+        x:Key="ConfigLocationProgramDataToTrueCvt"
+        Boolean="True"
+        Loccation="ProgramData" />
     <local:AssociatedMainAndFilterWndPositionCvt
         x:Key="MainWndTopCvt"
         ForLeft="False"
