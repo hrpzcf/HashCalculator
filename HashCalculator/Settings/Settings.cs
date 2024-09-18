@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
-using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using Newtonsoft.Json;
@@ -10,11 +9,7 @@ namespace HashCalculator
 {
     internal static class Settings
     {
-        private const string appConfigFileName = "settings.json";
-        private const string menuConfigFileName = "menus_unicode.json";
         private const string hashAlgoDllResPrefix = "HashCalculator.Algorithm.AlgoDlls";
-        private const string libraryDirName = "Library";
-        private const string hashCalculatorDirName = "HashCalculator";
 
         /// <summary>
         /// 算法的实现库名称 (外置的动态链接库)
@@ -26,25 +21,7 @@ namespace HashCalculator
 
         public static string[] StartupArgs { get; internal set; }
 
-        public static string ConfigDirExec { get; private set; }
-
-        public static string ConfigDirUser { get; private set; }
-
-        public static string LibraryDirExec { get; private set; }
-
-        public static string LibraryDirUser { get; private set; }
-
-        public static string MenuConfigFile { get; private set; }
-
-        public static string ShellExtensionDir { get; private set; }
-
-        public static string ShellExtensionFile { get; private set; }
-
-        public static string ActiveConfigDir { get; private set; }
-
-        public static string ActiveLibraryDir { get; private set; }
-
-        public static string ActiveConfigFile { get; private set; }
+        public static ConfigPaths ConfigInfo { get; private set; }
 
         public static SettingsViewModel Current { get; private set; }
             = new SettingsViewModel();
@@ -53,87 +30,43 @@ namespace HashCalculator
 
         static Settings()
         {
-            // 配置文件目录 1：位于程序目录
-            ConfigDirExec = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            // 哈希算法库目录 1：位于配置文件目录 1
-            LibraryDirExec = ConfigDirExec;
-            // 程序目录下的配置文件完整路径
-            string configFileExec = Path.Combine(ConfigDirExec, appConfigFileName);
-
-            // 配置文件目录 2：位于用户目录下的 HashCalculator 目录
-            ConfigDirUser = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                hashCalculatorDirName);
-            // 哈希算法库目录 2：位于配置文件目录 2 下的 Library 目录
-            LibraryDirUser = Path.Combine(ConfigDirUser, libraryDirName);
-            // 用户目录下的配置文件完整路径
-            string configFileUser = Path.Combine(ConfigDirUser, appConfigFileName);
-
-            // 决定读取程序目录下（优先）还是用户目录下的配置文件
-            if (File.Exists(configFileExec))
-            {
-                ActiveConfigDir = ConfigDirExec;
-                ActiveLibraryDir = LibraryDirExec;
-            }
-            else if (File.Exists(configFileUser))
-            {
-                ActiveConfigDir = ConfigDirUser;
-                ActiveLibraryDir = LibraryDirUser;
-            }
-            else
-            {
-                ActiveConfigDir = ConfigDirExec;
-                ActiveLibraryDir = LibraryDirExec;
-            }
-            // 系统右键菜单的菜单项配置文件
-            UpdateShellMenuConfigFilePath(shellExtFile: null, update: false);
-            // 当前使用的配置文件的完整路径
-            ActiveConfigFile = Path.Combine(ActiveConfigDir, appConfigFileName);
+            ConfigInfo = new ConfigPaths(ConfigLocation.Test, null);
         }
 
         public static void UpdateConfigurationPaths(ConfigLocation location)
         {
             try
             {
-                if (location == ConfigLocation.Unset)
+                ConfigPaths newInfo = new ConfigPaths(location, null);
+                if (newInfo.ActiveConfigDir.Equals(ConfigInfo.ActiveConfigDir))
                 {
                     return;
                 }
-                string switchToDir = location == ConfigLocation.UserDir ?
-                    ConfigDirUser : ConfigDirExec;
-                if (switchToDir.Equals(ActiveConfigDir))
+                ConfigPaths oldInfo = ConfigInfo;
+                ConfigInfo = newInfo;
+                if (!Directory.Exists(newInfo.ActiveConfigDir))
                 {
-                    return;
+                    Directory.CreateDirectory(newInfo.ActiveConfigDir);
                 }
-                string oldConfigFilePath = ActiveConfigFile;
-                ActiveConfigDir = switchToDir;
-                ActiveConfigFile = Path.Combine(switchToDir, appConfigFileName);
-                if (!Directory.Exists(switchToDir))
+                if (File.Exists(oldInfo.ActiveConfigFile))
                 {
-                    Directory.CreateDirectory(switchToDir);
-                }
-                if (File.Exists(oldConfigFilePath))
-                {
-                    if (File.Exists(ActiveConfigFile))
+                    if (File.Exists(newInfo.ActiveConfigFile))
                     {
-                        File.Delete(ActiveConfigFile);
+                        File.Delete(newInfo.ActiveConfigFile);
                     }
-                    File.Move(oldConfigFilePath, ActiveConfigFile);
+                    File.Move(oldInfo.ActiveConfigFile, newInfo.ActiveConfigFile);
                 }
-                // 外壳扩展路径为 null 说明扩展未安装，可以移动右键菜单配置文件
+                // 外壳扩展未安装，可以移动右键菜单配置文件
                 // 否则并不能移动右键菜单配置文件，需要在外壳扩展被卸载后触发移动
-                if (ShellExtHelper.GetShellExtensionPath() == null)
+                if (newInfo.ShellExtensionExists == false)
                 {
-                    string oldMenuConfigFile = MenuConfigFile;
-                    MenuConfigFile = Path.Combine(ActiveConfigDir, menuConfigFileName);
-                    ShellExtensionDir = ActiveConfigDir;
-                    ShellExtensionFile = Path.Combine(ActiveConfigDir, ShellExtensionName);
-                    if (File.Exists(oldMenuConfigFile))
+                    if (File.Exists(oldInfo.MenuConfigFile))
                     {
-                        if (File.Exists(MenuConfigFile))
+                        if (File.Exists(newInfo.MenuConfigFile))
                         {
-                            File.Delete(MenuConfigFile);
+                            File.Delete(newInfo.MenuConfigFile);
                         }
-                        File.Move(oldMenuConfigFile, MenuConfigFile);
+                        File.Move(oldInfo.MenuConfigFile, newInfo.MenuConfigFile);
                     }
                 }
             }
@@ -143,30 +76,9 @@ namespace HashCalculator
             UpdateDisplayingInformation();
         }
 
-        /// <summary>
-        /// shellExtFile 为 null：重新从注册表查询；<br/>
-        /// shellExtFile 路径不存在文件：根据活动配置文件目录设置属性；<br/>
-        /// shellExtFile 路径存在文件：根据此文件路径设置属性。
-        /// </summary>
         public static void UpdateShellMenuConfigFilePath(string shellExtFile, bool update = true)
         {
-            if (shellExtFile == null)
-            {
-                shellExtFile = ShellExtHelper.GetShellExtensionPath();
-            }
-            if (File.Exists(shellExtFile))
-            {
-                string shellExtDir = Path.GetDirectoryName(shellExtFile);
-                ShellExtensionDir = shellExtDir;
-                ShellExtensionFile = shellExtFile;
-                MenuConfigFile = Path.Combine(shellExtDir, menuConfigFileName);
-            }
-            else
-            {
-                ShellExtensionDir = ActiveConfigDir;
-                ShellExtensionFile = Path.Combine(ActiveConfigDir, ShellExtensionName);
-                MenuConfigFile = Path.Combine(ActiveConfigDir, menuConfigFileName);
-            }
+            ConfigInfo.UpdateShellMenuConfigFilePath(shellExtFile);
             if (update)
             {
                 UpdateDisplayingInformation();
@@ -175,8 +87,8 @@ namespace HashCalculator
 
         public static void UpdateDisplayingInformation(RegBranch branch = RegBranch.UNKNOWN)
         {
-            Current.DisplayingActiveConfigDir = ActiveConfigDir;
-            Current.DisplayingShellExtensionDir = ShellExtensionDir;
+            Current.DisplayingActiveConfigDir = ConfigInfo.ActiveConfigDir;
+            Current.DisplayingShellExtensionDir = ConfigInfo.ShellExtensionDir;
             if (branch == RegBranch.UNKNOWN)
             {
                 branch = ShellExtHelper.GetShellExtLocation();
@@ -226,11 +138,11 @@ namespace HashCalculator
         {
             try
             {
-                if (!Directory.Exists(ActiveConfigDir))
+                if (!Directory.Exists(ConfigInfo.ActiveConfigDir))
                 {
-                    Directory.CreateDirectory(ActiveConfigDir);
+                    Directory.CreateDirectory(ConfigInfo.ActiveConfigDir);
                 }
-                using (StreamWriter sw = new StreamWriter(ActiveConfigFile))
+                using (StreamWriter sw = new StreamWriter(ConfigInfo.ActiveConfigFile))
                 using (JsonTextWriter jsonTextWriter = new JsonTextWriter(sw))
                 {
                     JsonSerializerSettings settings = new JsonSerializerSettings()
@@ -254,33 +166,11 @@ namespace HashCalculator
             return false;
         }
 
-        /// <summary>
-        /// 只有在窗口加载前调用才有效，因为部分窗口 xaml 内静态绑定 Settings.Current
-        /// </summary>
-        public static bool LoadSettings()
+        private static void DeleteAlgoDllsExceptThatWithinActiveDir()
         {
-            bool settingsViewModelLoaded = false;
-            if (ActiveConfigDir.Equals(ConfigDirExec))
+            if (!ConfigInfo.ActiveConfigDir.Equals(ConfigPaths.ConfigDirExec))
             {
-                string unusedDll = Path.Combine(LibraryDirUser, HashAlgs);
-                try
-                {
-                    if (File.Exists(unusedDll))
-                    {
-                        File.Delete(unusedDll);
-                    }
-                    if (Directory.Exists(LibraryDirUser))
-                    {
-                        Directory.Delete(LibraryDirUser);
-                    }
-                }
-                catch
-                {
-                }
-            }
-            else if (ActiveConfigDir.Equals(ConfigDirUser))
-            {
-                string unusedDll = Path.Combine(LibraryDirExec, HashAlgs);
+                string unusedDll = Path.Combine(ConfigPaths.ConfigDirExec, HashAlgs);
                 if (File.Exists(unusedDll))
                 {
                     try
@@ -292,14 +182,81 @@ namespace HashCalculator
                     }
                 }
             }
+            if (!ConfigInfo.ActiveConfigDir.Equals(ConfigPaths.ConfigDirUser))
+            {
+                string unusedDll = Path.Combine(ConfigPaths.ConfigDirUser, HashAlgs);
+                if (File.Exists(unusedDll))
+                {
+                    try
+                    {
+                        File.Delete(unusedDll);
+                    }
+                    catch
+                    {
+                    }
+                }
+            }
+            if (!ConfigInfo.ActiveConfigDir.Equals(ConfigPaths.ConfigDirPublicUser))
+            {
+                string unusedDll = Path.Combine(ConfigPaths.ConfigDirPublicUser, HashAlgs);
+                if (File.Exists(unusedDll))
+                {
+                    try
+                    {
+                        File.Delete(unusedDll);
+                    }
+                    catch
+                    {
+                    }
+                }
+            }
+            if (!ConfigInfo.ActiveConfigDir.Equals(ConfigPaths.ConfigDirProgramData))
+            {
+                string unusedDll = Path.Combine(ConfigPaths.ConfigDirProgramData, HashAlgs);
+                if (File.Exists(unusedDll))
+                {
+                    try
+                    {
+                        File.Delete(unusedDll);
+                    }
+                    catch
+                    {
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 只有在窗口加载前调用才有效，因为部分窗口 xaml 内静态绑定 Settings.Current
+        /// </summary>
+        public static bool LoadSettings()
+        {
+            bool settingsViewModelLoaded = false;
+            DeleteAlgoDllsExceptThatWithinActiveDir();
+            // 删除已弃用的、放置在单独目录的算法动态库
+            string oldAlgDll = Path.Combine(ConfigPaths.LibraryDirUser, HashAlgs);
             try
             {
-                if (File.Exists(ActiveConfigFile))
+                if (File.Exists(oldAlgDll))
+                {
+                    File.Delete(oldAlgDll);
+                }
+                if (Directory.Exists(ConfigPaths.LibraryDirUser))
+                {
+                    Directory.Delete(ConfigPaths.LibraryDirUser);
+                }
+            }
+            catch
+            {
+            }
+            try
+            {
+                if (File.Exists(ConfigInfo.ActiveConfigFile))
                 {
                     // 读取所有字符串的原因是尽早关闭文件以免影响反序列化导致
                     // SettingsViewModel.LocationForSavingConfigFiles 属性变化
                     // 触发的移动配置文件位置的操作（无法移动还没有关闭的文件）
-                    string jContent = File.ReadAllText(ActiveConfigFile);
+                    string jContent = File.ReadAllText(ConfigInfo.ActiveConfigFile);
                     using (StringReader sr = new StringReader(jContent))
                     using (JsonTextReader jsonTextReader = new JsonTextReader(sr))
                     {
@@ -332,19 +289,19 @@ namespace HashCalculator
 
         public static void SetProcessEnvVar()
         {
-            Environment.SetEnvironmentVariable("PATH", ActiveLibraryDir);
+            Environment.SetEnvironmentVariable("PATH", ConfigInfo.ActiveConfigDir);
         }
 
         public static string ExtractEmbeddedAlgoDll(bool force)
         {
-            string newFileFullPath = Path.Combine(ActiveLibraryDir, HashAlgs);
+            string newFileFullPath = Path.Combine(ConfigInfo.ActiveConfigDir, HashAlgs);
             if (force || Current.PreviousVer != Info.Ver || !File.Exists(newFileFullPath))
             {
                 try
                 {
-                    if (!Directory.Exists(ActiveLibraryDir))
+                    if (!Directory.Exists(ConfigInfo.ActiveConfigDir))
                     {
-                        Directory.CreateDirectory(ActiveLibraryDir);
+                        Directory.CreateDirectory(ConfigInfo.ActiveConfigDir);
                     }
                     string resourcePath = string.Format("{0}.{1}{2}.dll",
                         hashAlgoDllResPrefix,

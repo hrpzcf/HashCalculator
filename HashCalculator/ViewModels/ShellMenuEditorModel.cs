@@ -266,14 +266,14 @@ namespace HashCalculator
 
         private string LoadMenuListFromJsonFile()
         {
-            if (File.Exists(Settings.MenuConfigFile))
+            if (File.Exists(Settings.ConfigInfo.MenuConfigFile))
             {
                 try
                 {
                     JsonSerializer jsonSerializer = new JsonSerializer();
                     jsonSerializer.NullValueHandling = NullValueHandling.Ignore;
                     jsonSerializer.DefaultValueHandling = DefaultValueHandling.Populate;
-                    using (StreamReader sr = new StreamReader(Settings.MenuConfigFile, menuEncoding))
+                    using (StreamReader sr = new StreamReader(Settings.ConfigInfo.MenuConfigFile, menuEncoding))
                     using (JsonTextReader jsonTextReader = new JsonTextReader(sr))
                     {
                         this.MenuList = jsonSerializer.Deserialize<ObservableCollection<HcCtxMenuModel>>(jsonTextReader);
@@ -326,9 +326,9 @@ namespace HashCalculator
         {
             try
             {
-                if (!Directory.Exists(Settings.ActiveConfigDir))
+                if (!Directory.Exists(Settings.ConfigInfo.ActiveConfigDir))
                 {
-                    Directory.CreateDirectory(Settings.ActiveConfigDir);
+                    Directory.CreateDirectory(Settings.ConfigInfo.ActiveConfigDir);
                 }
                 if (this.CheckIfMenuListAllValid() is string checkMenuResult)
                 {
@@ -337,7 +337,7 @@ namespace HashCalculator
                 JsonSerializer jsonSerializer = new JsonSerializer();
                 jsonSerializer.NullValueHandling = NullValueHandling.Ignore;
                 jsonSerializer.DefaultValueHandling = DefaultValueHandling.Ignore;
-                using (StreamWriter sw = new StreamWriter(Settings.MenuConfigFile, false, menuEncoding))
+                using (StreamWriter sw = new StreamWriter(Settings.ConfigInfo.MenuConfigFile, false, menuEncoding))
                 using (JsonTextWriter jsonTextWriter = new JsonTextWriter(sw))
                 {
                     jsonSerializer.Serialize(jsonTextWriter, this.MenuList, typeof(ObservableCollection<HcCtxMenuModel>));

@@ -63,7 +63,7 @@ namespace HashCalculator
                         }
                         else
                         {
-                            if (!File.Exists(Settings.MenuConfigFile))
+                            if (!File.Exists(Settings.ConfigInfo.MenuConfigFile))
                             {
                                 string message = new ShellMenuEditorModel(null).SaveMenuListToJsonFile();
                                 if (!string.IsNullOrEmpty(message) && !option.InstallSilently)

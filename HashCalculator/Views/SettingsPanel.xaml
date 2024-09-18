@@ -1609,14 +1609,26 @@
                 <StackPanel>
                     <RadioButton
                         Padding="4,0,0,0"
-                        Content="{Binding Source={x:Static local:Settings.ActiveConfigDir}, Converter={StaticResource ConfigurationLoadedFromExecCvt}}"
+                        Content="{Binding Source={x:Static local:Settings.ConfigInfo}, Path=ActiveConfigDir, Converter={StaticResource ConfigurationLoadedFromExecCvt}}"
                         IsChecked="{Binding LocationForSavingConfigFiles, Converter={StaticResource ConfigLocationExecToTrueCvt}}"
                         IsEnabled="{Binding ProcessingShellExtension, Converter={StaticResource ReverseBooleanValueCvt}}" />
                     <RadioButton
                         Margin="0,4,0,0"
                         Padding="4,0,0,0"
-                        Content="{Binding Source={x:Static local:Settings.ActiveConfigDir}, Converter={StaticResource ConfigurationLoadedFromUserCvt}}"
+                        Content="{Binding Source={x:Static local:Settings.ConfigInfo}, Path=ActiveConfigDir, Converter={StaticResource ConfigurationLoadedFromUserCvt}}"
                         IsChecked="{Binding LocationForSavingConfigFiles, Converter={StaticResource ConfigLocationUserToTrueCvt}}"
+                        IsEnabled="{Binding ProcessingShellExtension, Converter={StaticResource ReverseBooleanValueCvt}}" />
+                    <RadioButton
+                        Margin="0,4,0,0"
+                        Padding="4,0,0,0"
+                        Content="{Binding Source={x:Static local:Settings.ConfigInfo}, Path=ActiveConfigDir, Converter={StaticResource ConfigurationLoadedFromPublicUserCvt}}"
+                        IsChecked="{Binding LocationForSavingConfigFiles, Converter={StaticResource ConfigLocationPublicUserToTrueCvt}}"
+                        IsEnabled="{Binding ProcessingShellExtension, Converter={StaticResource ReverseBooleanValueCvt}}" />
+                    <RadioButton
+                        Margin="0,4,0,0"
+                        Padding="4,0,0,0"
+                        Content="{Binding Source={x:Static local:Settings.ConfigInfo}, Path=ActiveConfigDir, Converter={StaticResource ConfigurationLoadedFromProgramDataCvt}}"
+                        IsChecked="{Binding LocationForSavingConfigFiles, Converter={StaticResource ConfigLocationProgramDataToTrueCvt}}"
                         IsEnabled="{Binding ProcessingShellExtension, Converter={StaticResource ReverseBooleanValueCvt}}" />
                     <StackPanel Margin="0,4,0,0" Orientation="Horizontal">
                         <TextBlock Foreground="Black" Text="实际保存位置：" />
@@ -1629,7 +1641,7 @@
                         Margin="0,16,0,0"
                         FontSize="8pt"
                         Style="{StaticResource DescTextBlockStyle}"
-                        Text="软件启动时优先从程序目录查找配置文件并加载，如果找不到则到用户目录查找。" />
+                        Text="软件启动时按以上位置从上到下查找配置文件，找到则停止，否则默认当前目录。" />
                     <TextBlock
                         Margin="0,4,0,0"
                         FontSize="8pt"

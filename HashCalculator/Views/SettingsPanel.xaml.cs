@@ -79,7 +79,7 @@ namespace HashCalculator
                 }
                 else if (textBlock.Text == SettingsViewModel.ShellExtDir)
                 {
-                    CommonUtils.OpenFolderAndSelectItem(Settings.ShellExtensionDir);
+                    CommonUtils.OpenFolderAndSelectItem(Settings.ConfigInfo.ShellExtensionDir);
                 }
                 else if (textBlock.Text == SettingsViewModel.UpdateExePath)
                 {
@@ -95,7 +95,7 @@ namespace HashCalculator
                 }
                 else if (textBlock.Text == SettingsViewModel.AlgosDllDir)
                 {
-                    CommonUtils.OpenFolderAndSelectItem(Settings.ActiveLibraryDir);
+                    CommonUtils.OpenFolderAndSelectItem(Settings.ConfigInfo.ActiveConfigDir);
                 }
             }
         }
