@@ -874,7 +874,9 @@ namespace HashCalculator
                         int modelsCount = this.AlgoInOutModels.Length;
                         using (Barrier barrier = new Barrier(modelsCount, i =>
                             {
+                                stopwatch.Stop();
                                 this.manualPauseController.WaitOne();
+                                stopwatch.Start();
                                 actualReadCount = fs.Read(buffer, 0, buffer.Length);
                                 synchronization.BeginInvoke(updateProgress, actualReadCount);
                             }))
@@ -909,7 +911,9 @@ namespace HashCalculator
                     {
                         while (true)
                         {
+                            stopwatch.Stop();
                             this.manualPauseController.WaitOne();
+                            stopwatch.Start();
                             if (this.cancellation.IsCancellationRequested)
                             {
                                 goto ReturnRentedBufferMemory;
