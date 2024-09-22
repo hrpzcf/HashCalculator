@@ -448,6 +448,7 @@
             PreviewKeyDown="DataGridHashingFilesPrevKeyDown"
             RowStyle="{StaticResource MainTableRowStyle}"
             ScrollViewer.CanContentScroll="True"
+            SelectedItem="{Binding SelectedHashVieModel}"
             SelectionMode="Extended"
             VerticalGridLinesBrush="#FF969696"
             VirtualizingPanel.IsContainerVirtualizable="True"

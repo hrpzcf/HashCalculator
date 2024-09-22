@@ -162,6 +162,11 @@
                     <CheckBox
                         Margin="0,8,0,0"
                         Padding="4,0,0,0"
+                        Content="所有计算任务完成后清除所有行的被选中状态"
+                        IsChecked="{Binding ClearSelectedItemsAfterCompletion, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <CheckBox
+                        Margin="0,8,0,0"
+                        Padding="4,0,0,0"
                         Content="右键选择删除文件时直接永久删除而不是移动到回收站"
                         IsChecked="{Binding PermanentlyDeleteFiles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <CheckBox

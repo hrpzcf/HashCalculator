@@ -30,6 +30,7 @@ namespace HashCalculator
         private volatile int serial = 0;
         private int computedModelsCount = 0;
         private int tobeComputedModelsCount = 0;
+        private object selectedHashVieModel = -1;
         private List<HashViewModel> displayedModels = new List<HashViewModel>();
         private CancellationTokenSource _cancellation = new CancellationTokenSource();
         private CancellationTokenSource searchCancellation = new CancellationTokenSource();
@@ -144,6 +145,13 @@ namespace HashCalculator
             set => this.SetPropNotify(ref this.hashCheckReport, value);
         }
 
+        public object SelectedHashVieModel
+        {
+            get => this.selectedHashVieModel;
+            set => this.SetPropNotify(ref this.selectedHashVieModel, value);
+        }
+
+        // TODO: 清理代码
         public IList SelectedHashViewModels
         {
             get => this.selectedHashViewModels;
@@ -337,6 +345,10 @@ namespace HashCalculator
 
         public void GenerateFileHashCheckReport()
         {
+            if (Settings.Current.ClearSelectedItemsAfterCompletion)
+            {
+                this.SelectedHashVieModel = null;
+            }
             int noresult, unrelated, matched, mismatch,
                 uncertain, succeeded, canceled, hasFailed, totalHash;
             noresult = unrelated = matched = mismatch =

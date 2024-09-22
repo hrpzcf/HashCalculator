@@ -74,6 +74,7 @@ namespace HashCalculator
         private bool markTheSameHashValues = false;
         private bool automaticallyStartTaskAfterFileAdded = true;
         private bool clearTableBeforeAddingFilesByCmdLine = false;
+        private bool clearSelectedItemsAfterCompletion = false;
 
         // 主窗口顶部各按钮的显示与否
         private bool showOpenSelectAlgoWndButton = true;
@@ -480,6 +481,12 @@ namespace HashCalculator
         {
             get => this.automaticallyStartTaskAfterFileAdded;
             set => this.SetPropNotify(ref this.automaticallyStartTaskAfterFileAdded, value);
+        }
+
+        public bool ClearSelectedItemsAfterCompletion
+        {
+            get => this.clearSelectedItemsAfterCompletion;
+            set => this.SetPropNotify(ref this.clearSelectedItemsAfterCompletion, value);
         }
 
         public bool ClearTableBeforeAddingFilesByCmdLine
