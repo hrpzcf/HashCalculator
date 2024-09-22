@@ -574,6 +574,7 @@
             </DataGrid.ContextMenu>
             <DataGrid.Columns>
                 <DataGridTemplateColumn
+                    CanUserSort="True"
                     Header="序号"
                     SortMemberPath="SerialNumber"
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoSerialNumColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
@@ -592,6 +593,7 @@
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn
                     MinWidth="100"
+                    CanUserSort="True"
                     Header="文件名"
                     SortMemberPath="FileName">
                     <DataGridTemplateColumn.CellTemplate>
@@ -629,8 +631,9 @@
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn
                     MinWidth="100"
-                    CanUserSort="False"
+                    CanUserSort="True"
                     Header="完整路径"
+                    SortMemberPath="Information"
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoFullPathColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -650,6 +653,7 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn
+                    CanUserSort="True"
                     Header="文件大小"
                     SortMemberPath="FileLength"
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoFileSizeColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
@@ -698,7 +702,11 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="操作目标" Visibility="{Binding Source={x:Static local:Settings.Current}, Path=IsMainRowSelectedByCheckBox, Converter={StaticResource TrueToVisibilityVisibleCvt}, Mode=OneWay}">
+                <DataGridTemplateColumn
+                    CanUserSort="True"
+                    Header="操作目标"
+                    SortMemberPath="IsExecutionTarget"
+                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=IsMainRowSelectedByCheckBox, Converter={StaticResource TrueToVisibilityVisibleCvt}, Mode=OneWay}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid>
@@ -725,6 +733,7 @@
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn
                     MinWidth="210"
+                    CanUserSort="True"
                     Header="哈希值"
                     SortMemberPath="CurrentHashString">
                     <DataGridTemplateColumn.CellTemplate>
@@ -921,7 +930,9 @@
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn
                     MinWidth="80"
+                    CanUserSort="True"
                     Header="任务耗时 (秒)"
+                    SortMemberPath="DurationofTask"
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoDurationColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
