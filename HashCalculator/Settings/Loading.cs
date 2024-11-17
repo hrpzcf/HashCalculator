@@ -17,6 +17,7 @@ namespace HashCalculator
             "System.Numerics.Vectors",
             "System.Runtime.CompilerServices.Unsafe",
             "CommandLine",
+            "HandyControl",
             "Microsoft.Bcl.HashCode",
             "Microsoft.WindowsAPICodePack",
             "Microsoft.WindowsAPICodePack.Shell",
@@ -30,11 +31,13 @@ namespace HashCalculator
         {
             Settings.StartupArgs = args;
             Settings.SetProcessEnvVar();
-            Loading app = new Loading();
-            app.Exit += ApplicationExit;
-            app.Startup += ApplicationStartup;
+            Loading application = new Loading();
+            application.Exit += ApplicationExit;
+            application.Startup += ApplicationStartup;
+            application.DispatcherUnhandledException += application.ExceptionHandler;
             AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
-            app.RunApplication();
+            application.StartupUri = new Uri("Views/MainWindow.xaml", UriKind.Relative);
+            application.Run();
         }
 
         private static void ApplicationExit(object sender, ExitEventArgs e)
@@ -119,16 +122,9 @@ namespace HashCalculator
             return null;
         }
 
-        private void RunApplication()
+        private void ExceptionHandler(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            this.DispatcherUnhandledException += this.UnhandledException;
-            this.StartupUri = new Uri("Views/MainWindow.xaml", UriKind.Relative);
-            this.Run();
-        }
-
-        private void UnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
-        {
-            MessageBox.Show($"未知错误，可打开关于页面的反馈链接向开发者反馈：\n{e.Exception.Message}", "错误");
+            MessageBox.Show($"遇到异常即将退出：\n{e.Exception.Message}\n\n问题反馈：软件设置 - 关于软件 - 问题反馈。", "错误");
             Environment.Exit(3);
         }
     }

@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:gif="https://github.com/XamlAnimatedGif/XamlAnimatedGif"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Width="{Binding Source={x:Static local:Settings.Current}, Path=MainWndWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -27,15 +28,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Resources/ApplicationIcons.xaml" />
-                <ResourceDictionary Source="/Resources/AlgosButtonStyles.xaml" />
-                <ResourceDictionary Source="/Resources/ComboBoxStyle1.xaml" />
-                <ResourceDictionary Source="/Resources/ComboBoxStyle2.xaml" />
-                <ResourceDictionary Source="/Resources/ImageButtonStyles.xaml" />
-                <ResourceDictionary Source="/Resources/ImgButtonTextStyles.xaml" />
-                <ResourceDictionary Source="/Resources/ConverterResource.xaml" />
-                <ResourceDictionary Source="/Resources/DataGridCellStyles.xaml" />
-                <ResourceDictionary Source="/Resources/DataGridRowStyles.xaml" />
+                <ResourceDictionary Source="/Resources/MainDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -659,7 +652,7 @@
                     SortMemberPath="FileLength"
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoFileSizeColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
                     <DataGridTemplateColumn.HeaderStyle>
-                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                        <Style BasedOn="{StaticResource DataGridColumnHeaderStyle}" TargetType="{x:Type DataGridColumnHeader}">
                             <Setter Property="HorizontalContentAlignment" Value="Center" />
                         </Style>
                     </DataGridTemplateColumn.HeaderStyle>
@@ -687,7 +680,7 @@
                     Header="算法"
                     SortMemberPath="CurrentInOutModel.AlgoType">
                     <DataGridTemplateColumn.HeaderStyle>
-                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                        <Style BasedOn="{StaticResource DataGridColumnHeaderStyle}" TargetType="{x:Type DataGridColumnHeader}">
                             <Setter Property="HorizontalContentAlignment" Value="Center" />
                         </Style>
                     </DataGridTemplateColumn.HeaderStyle>
@@ -788,9 +781,7 @@
                                 <ProgressBar
                                     Grid.Column="0"
                                     Width="{Binding ElementName=hashStringTextBlock, Path=ActualWidth}"
-                                    Height="6"
                                     HorizontalAlignment="Left"
-                                    Foreground="#8000B4E7"
                                     Maximum="{Binding MaxProgress}"
                                     Visibility="{Binding State, Converter={StaticResource StateRunningToVisiblityCvt}}"
                                     Value="{Binding Progress, Mode=OneWay}" />
@@ -911,7 +902,7 @@
                     SortMemberPath="SelectedOutputType"
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoOutputTypeColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
                     <DataGridTemplateColumn.HeaderStyle>
-                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                        <Style BasedOn="{StaticResource DataGridColumnHeaderStyle}" TargetType="{x:Type DataGridColumnHeader}">
                             <Setter Property="HorizontalContentAlignment" Value="Center" />
                         </Style>
                     </DataGridTemplateColumn.HeaderStyle>
