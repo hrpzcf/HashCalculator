@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:gif="https://github.com/XamlAnimatedGif/XamlAnimatedGif"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     x:Name="cmdPanel"
@@ -17,14 +18,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Resources/CmderButtonStyles.xaml" />
-                <ResourceDictionary Source="/Resources/ConverterResource.xaml" />
-                <ResourceDictionary Source="/Resources/DataGridCellStyles.xaml" />
-                <ResourceDictionary Source="/Resources/DataGridRowStyles.xaml" />
-                <ResourceDictionary Source="/Resources/DescTextBlockStyles.xaml" />
-                <ResourceDictionary Source="/Resources/TabControlStyles.xaml" />
-                <ResourceDictionary Source="/Resources/TabControlItemStyles.xaml" />
-                <ResourceDictionary Source="/Resources/ImageButtonStyles.xaml" />
+                <ResourceDictionary Source="/Resources/MainDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
