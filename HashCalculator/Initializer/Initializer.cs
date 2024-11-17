@@ -11,24 +11,15 @@ namespace HashCalculator
         {
             try
             {
-                Synchronizer =
-                    new ProcSynchronizer(Info.AppGuid, false, out newSync);
+                Synchronizer = new ProcSynchronizer(Info.AppGuid, false, out newSync);
                 PIdSynchronizer = new ProcSynchronizer(Info.ProcIdGuid, false);
-                if (newSync)
-                {
-                    MappedFile = MemoryMappedFile.CreateNew(
-                        Info.MappedGuid, MappedBytes.MaxLength, MemoryMappedFileAccess.ReadWrite);
-                }
-                else
-                {
-                    MappedFile = MemoryMappedFile.OpenExisting(
-                        Info.MappedGuid, MemoryMappedFileRights.ReadWrite);
-                }
+                MappedFile = MemoryMappedFile.CreateOrOpen(
+                    Info.MappedGuid, MappedBytes.MaxLength, MemoryMappedFileAccess.ReadWrite);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(
-                    $"初始化失败，程序将退出：\n{ex.Message}", "错误",
+                    $"内存映射文件初始化失败，即将退出：\n{ex.Message}", "错误",
                     MessageBoxButton.OK, MessageBoxImage.Error,
                     MessageBoxResult.OK, MessageBoxOptions.ServiceNotification);
                 Environment.Exit(2);
