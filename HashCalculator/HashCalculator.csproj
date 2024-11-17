@@ -95,10 +95,6 @@
       <Private>False</Private>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
-    <Reference Include="XamlAnimatedGif">
-      <HintPath>Assembly\XamlAnimatedGif.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -458,8 +454,6 @@
     <None Include="Assembly\Microsoft.WindowsAPICodePack.txt" />
     <EmbeddedResource Include="Assembly\Microsoft.WindowsAPICodePack.dll" />
     <EmbeddedResource Include="Assembly\Microsoft.WindowsAPICodePack.Shell.dll" />
-    <None Include="Assembly\XamlAnimatedGif.txt" />
-    <EmbeddedResource Include="Assembly\XamlAnimatedGif.dll" />
     <None Include="Assembly\Microsoft.Bcl.HashCode.txt" />
     <EmbeddedResource Include="Assembly\Microsoft.Bcl.HashCode.dll" />
   </ItemGroup>
@@ -482,6 +476,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Assembly\HandyControl.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assembly\HandyControl.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

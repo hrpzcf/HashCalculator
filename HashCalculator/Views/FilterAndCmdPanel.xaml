@@ -3,7 +3,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:gif="https://github.com/XamlAnimatedGif/XamlAnimatedGif"
     xmlns:hc="https://handyorg.github.io/handycontrol"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -75,14 +74,13 @@
                 Content="使本窗口跟随主窗口移动"
                 IsChecked="{Binding Source={x:Static local:Settings.Current}, Path=FilterAndCmderWndFollowsMainWnd, UpdateSourceTrigger=PropertyChanged}" />
             <!--  动图正在加载  -->
-            <Image
+            <hc:GifImage
                 Grid.Row="0"
                 Grid.Column="1"
                 Width="16"
                 Height="16"
                 Margin="8,0,0,0"
-                gif:AnimationBehavior.RepeatBehavior="Forever"
-                gif:AnimationBehavior.SourceUri="/Images/loading.gif"
+                Uri="/HashCalculator;component/Images/loading.gif"
                 Visibility="{Binding Source={x:Static local:Settings.Current}, Path=FilterAndCmderEnabled, Converter={StaticResource TrueToVisibilityCollapsedCvt}}" />
         </Grid>
         <TabControl
