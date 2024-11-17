@@ -121,18 +121,15 @@ namespace HashCalculator
 
         private void RunApplication()
         {
-            //this.DispatcherUnhandledException += this.UnhandledException;
+            this.DispatcherUnhandledException += this.UnhandledException;
             this.StartupUri = new Uri("Views/MainWindow.xaml", UriKind.Relative);
             this.Run();
         }
 
         private void UnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            // 剪贴板无法打开(CLIPBRD_E_CANT_OPEN)错误代码：0x800401D0
-            string excContent = (uint)e.Exception.HResult == 0x800401D0 ?
-                "复制哈希结果失败" : "未知异常，可打开关于页面打开反馈链接向开发者反馈";
-            e.Handled = true;
-            MessageBox.Show($"{excContent}：\n{e.Exception.Message}", "错误");
+            MessageBox.Show($"未知错误，可打开关于页面的反馈链接向开发者反馈：\n{e.Exception.Message}", "错误");
+            Environment.Exit(3);
         }
     }
 }
