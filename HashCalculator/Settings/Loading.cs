@@ -22,7 +22,6 @@ namespace HashCalculator
             "Microsoft.WindowsAPICodePack",
             "Microsoft.WindowsAPICodePack.Shell",
             "Newtonsoft.Json",
-            "XamlAnimatedGif",
         };
         internal static readonly Assembly Executing = Assembly.GetExecutingAssembly();
 

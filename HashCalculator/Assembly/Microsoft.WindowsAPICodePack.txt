@@ -1,4 +1,4 @@
-﻿License: Custom License
+License: Custom License
 MICROSOFT SOFTWARE LICENSE TERMS
 MICROSOFT WINDOWS API CODE PACK FOR MICROSOFT .NET FRAMEWORK
 ___________________________________________________

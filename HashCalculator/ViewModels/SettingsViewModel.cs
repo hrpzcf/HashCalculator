@@ -1795,10 +1795,6 @@ namespace HashCalculator
                 "WindowsAPICodePack",
                 "https://github.com/aybe/Windows-API-Code-Pack-1.1",
                 "用于调用系统接口打开文件/文件夹选择对话框"),
-            new GenericItemModel(
-                "XamlAnimatedGif",
-                "https://github.com/XamlAnimatedGif/XamlAnimatedGif",
-                "用于在图形用户界面上显示动态图片"),
         };
     }
 }
