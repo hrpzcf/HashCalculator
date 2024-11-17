@@ -38,7 +38,6 @@
         <TextBox
             Grid.Row="0"
             Grid.Column="1"
-            Padding="0,2"
             VerticalAlignment="Center"
             Text="{Binding MinFileSize, Converter={StaticResource StringToDoubleDefaultZeroCvt}}" />
         <ComboBox
@@ -60,7 +59,6 @@
             Grid.Row="1"
             Grid.Column="1"
             Margin="0,4,0,0"
-            Padding="0,2"
             VerticalAlignment="Center"
             Text="{Binding MaxFileSize, Converter={StaticResource StringToDoubleDefaultZeroCvt}}" />
         <ComboBox

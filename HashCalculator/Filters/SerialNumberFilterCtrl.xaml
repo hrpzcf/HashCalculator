@@ -20,17 +20,11 @@
     <StackPanel>
         <StackPanel Orientation="Horizontal">
             <TextBlock VerticalAlignment="Center" Text="开始序号：" />
-            <TextBox
-                MinWidth="100"
-                Padding="0,2"
-                Text="{Binding SerialLeft, Converter={StaticResource StringToIntDefaultZeroCvt}}" />
+            <TextBox MinWidth="100" Text="{Binding SerialLeft, Converter={StaticResource StringToIntDefaultZeroCvt}}" />
         </StackPanel>
         <StackPanel Margin="0,4,0,0" Orientation="Horizontal">
             <TextBlock VerticalAlignment="Center" Text="结束序号：" />
-            <TextBox
-                MinWidth="100"
-                Padding="0,2"
-                Text="{Binding SerialRight, Converter={StaticResource StringToIntDefaultZeroCvt}}" />
+            <TextBox MinWidth="100" Text="{Binding SerialRight, Converter={StaticResource StringToIntDefaultZeroCvt}}" />
         </StackPanel>
         <TextBlock
             Margin="0,4,0,0"

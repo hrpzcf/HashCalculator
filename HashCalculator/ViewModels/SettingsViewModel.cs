@@ -1780,11 +1780,15 @@ namespace HashCalculator
                 "https://github.com/commandlineparser/commandline",
                 "用于解析命令行参数"),
             new GenericItemModel(
+                "HandyControl",
+                "https://github.com/HandyOrg/HandyControl",
+                "给 HashCalculator 提供好看的控件和样式"),
+            new GenericItemModel(
                 "Newtonsoft.Json",
                 "https://www.newtonsoft.com/json",
                 "用于读取和保存本软件的相关配置文件"),
             new GenericItemModel(
-                "tiny-json",
+                "Tiny-json",
                 "https://github.com/rafagafe/tiny-json",
                 "用于读取和保存外壳扩展的相关配置文件"),
             new GenericItemModel(

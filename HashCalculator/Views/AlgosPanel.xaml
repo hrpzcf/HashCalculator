@@ -23,122 +23,115 @@
     </Window.Resources>
     <Grid Margin="8">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <GroupBox
-            Grid.Row="0"
-            Grid.ColumnSpan="2"
-            Padding="0,4,0,0"
-            Foreground="#FF006FD6"
-            Header="对每个文件使用以下已勾选算法计算其哈希值：">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <ListBox
-                    Grid.Column="0"
-                    Grid.IsSharedSizeScope="True"
-                    ItemsSource="{Binding Path=(local:AlgosPanelModel.AlgoGroups)}"
-                    SelectedItem="{Binding SelectedAlgoGroup}">
-                    <ListBox.ItemContainerStyle>
-                        <Style TargetType="ListBoxItem">
-                            <Setter Property="Margin" Value="1" />
-                        </Style>
-                    </ListBox.ItemContainerStyle>
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Margin="2">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" SharedSizeGroup="algGroupCol" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <TextBlock
-                                    Grid.Column="0"
-                                    Margin="0,0,24,0"
-                                    Text="{Binding GroupName}" />
-                                <TextBlock
-                                    Grid.Column="1"
-                                    Foreground="Gray"
-                                    Text="{Binding SelectedAlgoCount, StringFormat=已选：{0}}" />
-                            </Grid>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-                <ScrollViewer
-                    Grid.Column="1"
-                    Margin="4,0,0,0"
-                    HorizontalScrollBarVisibility="Auto"
-                    VerticalScrollBarVisibility="Disabled">
-                    <ItemsControl ItemsSource="{Binding SelectedAlgoGroup.Items}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel Orientation="Vertical" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <CheckBox
-                                    Margin="16,4"
-                                    VerticalContentAlignment="Center"
-                                    CommandParameter="{Binding}"
-                                    Content="{Binding AlgoName}"
-                                    IsChecked="{Binding Selected, Mode=TwoWay}" />
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ScrollViewer>
-            </Grid>
-        </GroupBox>
         <TextBlock
+            Grid.Row="0"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            Foreground="#FF006FD6"
+            Text="对每个文件使用以下已勾选算法计算其哈希值：" />
+        <Grid
             Grid.Row="1"
             Grid.ColumnSpan="2"
-            Margin="0,4,0,0"
-            Padding="1"
-            HorizontalAlignment="Center"
-            FontSize="8pt"
-            Style="{StaticResource DescTextBlockStyle}"
-            Text="如果没有选择任何算法，则默认使用第一个算法" />
-        <TextBlock
-            Grid.Row="2"
-            Grid.ColumnSpan="2"
-            Margin="0,0,0,4"
-            Padding="1"
-            HorizontalAlignment="Center"
-            FontSize="8pt"
-            Foreground="Red"
-            Style="{StaticResource DescTextBlockStyle}"
-            Text="不建议选择太多算法，否则对程序做任何操作都极易造成程序无响应" />
+            Margin="0,4,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <ListBox
+                Grid.Row="0"
+                Grid.RowSpan="2"
+                Grid.Column="0"
+                Grid.IsSharedSizeScope="True"
+                ItemsSource="{Binding Path=(local:AlgosPanelModel.AlgoGroups)}"
+                SelectedItem="{Binding SelectedAlgoGroup}"
+                Style="{StaticResource ListBox.Small}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" SharedSizeGroup="algGroupCol" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Margin="0,0,24,0"
+                                Text="{Binding GroupName}" />
+                            <TextBlock Grid.Column="1" Text="{Binding SelectedAlgoCount, StringFormat=已选：{0}}">
+                                <TextBlock.Foreground>
+                                    <MultiBinding Converter="{StaticResource ListBoxIsSelectedForegroundCvt}">
+                                        <Binding Path="IsSelected" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}" />
+                                        <Binding Path="Foreground" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}" />
+                                    </MultiBinding>
+                                </TextBlock.Foreground>
+                            </TextBlock>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <ScrollViewer
+                Grid.Row="0"
+                Grid.Column="1"
+                Margin="4,0,0,0"
+                HorizontalScrollBarVisibility="Auto"
+                VerticalScrollBarVisibility="Disabled">
+                <ItemsControl ItemsSource="{Binding SelectedAlgoGroup.Items}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Vertical" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox
+                                Margin="16,4"
+                                VerticalContentAlignment="Center"
+                                CommandParameter="{Binding}"
+                                Content="{Binding AlgoName}"
+                                IsChecked="{Binding Selected, Mode=TwoWay}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+            <TextBlock
+                Grid.Row="1"
+                Grid.Column="1"
+                Margin="4,4,0,0"
+                FontSize="8pt"
+                Foreground="Red"
+                Style="{StaticResource DescTextBlockStyle}"
+                Text="不建议选择太多算法，否则计算时极易造成程序无响应" />
+        </Grid>
         <Button
-            Grid.Row="3"
+            Grid.Row="2"
             Grid.Column="0"
-            Margin="0,0,0,4"
+            Margin="0,8,0,4"
             Padding="20,4,20,4"
             HorizontalAlignment="Left"
-            Background="{x:Null}"
-            BorderBrush="#FFFFA941"
-            BorderThickness="2"
             Command="{Binding ClearAllSelectedCmd}"
             Content="清除"
-            Style="{StaticResource FixedBdColorButtonStyle1}" />
+            Style="{StaticResource ButtonWarning}" />
         <Button
-            Grid.Row="3"
+            Grid.Row="2"
             Grid.Column="1"
-            Margin="0,0,0,4"
+            Margin="0,8,0,4"
             Padding="20,4,20,4"
             HorizontalAlignment="Right"
-            Background="{x:Null}"
-            BorderBrush="#FF0084FF"
             BorderThickness="2"
             Click="OnButtonCloseWindowClick"
             Content="关闭"
-            Style="{StaticResource FixedBdColorButtonStyle1}" />
+            Style="{StaticResource ButtonPrimary}" />
     </Grid>
 </Window>
