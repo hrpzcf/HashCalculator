@@ -575,7 +575,7 @@ namespace HashCalculator
             }
             else
             {
-                return new SolidColorBrush(Colors.Transparent);
+                return new SolidColorBrush(Colors.White);
             }
         }
 
@@ -1056,6 +1056,26 @@ namespace HashCalculator
             {
                 return Binding.DoNothing;
             }
+        }
+    }
+
+    internal class BooleanAndSolidBrushToSolidBrushMultiCvt : IMultiValueConverter
+    {
+        public Color Default { get; set; } = Colors.Gray;
+
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            Debug.Assert(values?.Length == 2);
+            if (values[0] is bool isSelected && isSelected && values[1] is Brush foreground)
+            {
+                return foreground;
+            }
+            return new SolidColorBrush(this.Default);
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
         }
     }
 }

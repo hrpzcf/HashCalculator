@@ -81,14 +81,14 @@
             <RadioButton
                 Grid.Row="2"
                 Margin="16,2,0,0"
-                Padding="4,0,0,0"
+                HorizontalAlignment="Left"
                 VerticalContentAlignment="Center"
                 Content="直接在目标文件上剔除哈希标记"
                 IsChecked="{Binding RestoreFilesOption, Converter={StaticResource EditOriginalFileToTrueCvt}}" />
             <RadioButton
                 Grid.Row="3"
                 Margin="16,2,0,0"
-                Padding="4,0,0,0"
+                HorizontalAlignment="Left"
                 VerticalContentAlignment="Center"
                 Content="在目标文件所在目录创建副本并剔除标记"
                 IsChecked="{Binding RestoreFilesOption, Converter={StaticResource EditNewInSameLocationToTrueCvt}}" />
@@ -96,7 +96,7 @@
                 Grid.Row="4"
                 Grid.Column="0"
                 Margin="16,2,0,0"
-                Padding="4,0,0,0"
+                HorizontalAlignment="Left"
                 VerticalContentAlignment="Center"
                 Content="在以下目录创建目标副本并剔除标记"
                 IsChecked="{Binding RestoreFilesOption, Converter={StaticResource EditNewInNewLocationToTrueCvt}}" />
@@ -114,7 +114,6 @@
                     Grid.Column="1"
                     Margin="4,0,0,0"
                     Padding="4,2"
-                    Background="{x:Null}"
                     Command="{Binding SelectFolderCmd}"
                     Content="..."
                     IsEnabled="{Binding RestoreFilesOption, Converter={StaticResource EditNewInNewLocationToTrueCvt}}" />
@@ -124,7 +123,6 @@
                 Grid.Column="0"
                 Grid.ColumnSpan="4"
                 Margin="0,4,0,0"
-                Padding="4,0,0,0"
                 VerticalAlignment="Center"
                 Content="检查是否应用了【有效的文件】筛选器"
                 IsChecked="{Binding CheckIfUsingDistinctFilesFilter}"

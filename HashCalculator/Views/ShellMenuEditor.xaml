@@ -47,7 +47,7 @@
                             <DataTemplate>
                                 <TextBox
                                     Margin="2"
-                                    Padding="2"
+                                    Padding="4,2"
                                     Text="{Binding Title, UpdateSourceTrigger=LostFocus}" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -102,21 +102,18 @@
                 Margin="8,0,0,0">
                 <Button
                     Grid.Column="2"
-                    Padding="8,4"
-                    Background="{x:Null}"
-                    BorderBrush="Blue"
+                    Padding="8,0"
                     Command="{Binding SaveMenuListCmd}"
-                    Content="保存配置" />
+                    Content="保存配置"
+                    Style="{StaticResource ButtonPrimary}" />
                 <Button
                     Margin="0,8,0,0"
-                    Padding="8,4"
-                    Background="{x:Null}"
+                    Padding="8,0"
                     Command="{Binding AddMenuListCmd}"
                     Content="新建菜单" />
                 <Button
                     Margin="0,8,0,0"
-                    Padding="8,4"
-                    Background="{x:Null}"
+                    Padding="8,0"
                     Command="{Binding EditMenuPropCmd}"
                     Content="编辑子菜单">
                     <Button.IsEnabled>
@@ -128,31 +125,27 @@
                 </Button>
                 <Button
                     Margin="0,8,0,0"
-                    Padding="8,4"
-                    Background="{x:Null}"
+                    Padding="8,0"
                     Command="{Binding MoveMenuUpCmd}"
                     Content="上移所选" />
                 <Button
                     Margin="0,8,0,0"
-                    Padding="8,4"
-                    Background="{x:Null}"
+                    Padding="8,0"
                     Command="{Binding MoveMenuDownCmd}"
                     Content="下移所选" />
                 <Button
                     Margin="0,8,0,0"
-                    Padding="8,4"
-                    Background="{x:Null}"
-                    BorderBrush="Red"
+                    Padding="8,0"
                     Command="{Binding DeleteMenuCmd}"
-                    Content="移除所选" />
+                    Content="移除所选"
+                    Style="{StaticResource ButtonDanger}" />
                 <Button
                     Grid.Column="1"
                     Margin="0,32,0,0"
-                    Padding="8,4"
-                    Background="{x:Null}"
-                    BorderBrush="Red"
+                    Padding="8,0"
                     Command="{Binding ResetMenuListCmd}"
-                    Content="恢复默认" />
+                    Content="恢复默认"
+                    Style="{StaticResource ButtonDanger}" />
             </StackPanel>
             <TextBlock
                 Grid.Row="1"

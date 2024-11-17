@@ -56,6 +56,7 @@
                                         <CheckBox
                                             VerticalAlignment="Center"
                                             Content="{Binding Display}"
+                                            Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ComboBoxItem}, Path=Foreground}"
                                             IsChecked="{Binding Selected}" />
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
@@ -68,30 +69,25 @@
         </DataGrid>
         <StackPanel Grid.Column="1" Margin="8,0,0,0">
             <Button
-                Margin="0,8,0,0"
-                Padding="16,4"
-                Background="{x:Null}"
+                Padding="16,0"
                 Command="{Binding AddSubmenuCmd}"
                 Content="新建" />
             <Button
                 Margin="0,8,0,0"
-                Padding="16,4"
-                Background="{x:Null}"
+                Padding="16,0"
                 Command="{Binding MoveSubmenuUpCmd}"
                 Content="上移" />
             <Button
                 Margin="0,8,0,0"
-                Padding="16,4"
-                Background="{x:Null}"
+                Padding="16,0"
                 Command="{Binding MoveSubmenuDownCmd}"
                 Content="下移" />
             <Button
                 Margin="0,24,0,0"
-                Padding="16,4"
-                Background="{x:Null}"
-                BorderBrush="Red"
+                Padding="16,0"
                 Command="{Binding DeleteSubmenuCmd}"
-                Content="移除" />
+                Content="移除"
+                Style="{StaticResource ButtonDanger}" />
         </StackPanel>
     </Grid>
 </Window>

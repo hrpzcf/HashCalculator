@@ -34,16 +34,19 @@
         <GroupBox
             Grid.Row="0"
             Grid.Column="0"
-            Padding="4,8,4,0"
+            Padding="4"
             Foreground="#FF006FD6"
-            Header="导出计算结果时导出哪些算法的结果">
+            Header="导出计算结果时导出哪些算法的结果"
+            Style="{StaticResource GroupBoxTab}">
             <StackPanel>
                 <RadioButton
+                    HorizontalAlignment="Left"
                     VerticalContentAlignment="Center"
                     Content="仅导出每行当前显示的算法的结果"
                     IsChecked="{Binding HowToExportHashValues, Converter={StaticResource RadioExportCurrentAlgoCvt}}" />
                 <RadioButton
                     Margin="0,8,0,0"
+                    HorizontalAlignment="Left"
                     VerticalContentAlignment="Center"
                     Content="导出每行所有已计算的算法的结果"
                     IsChecked="{Binding HowToExportHashValues, Converter={StaticResource RadioExportAllCalculatedAlgosCvt}}" />
@@ -52,14 +55,10 @@
         <CheckBox
             Grid.Row="1"
             Margin="0,8,0,0"
-            Padding="4,0,0,0"
             Content="导出计算结果时使用默认输出方式输出哈希值而不是各行的输出方式"
             IsChecked="{Binding UseDefaultOutputTypeWhenExporting}" />
         <StackPanel Grid.Row="2" Margin="0,8,0,0">
-            <CheckBox
-                Padding="4,0,0,0"
-                Content="导出计算结果时使用 Unix 换行符，取消勾选则使用 Windows 换行符"
-                IsChecked="{Binding UseUnixStyleLineBreaks, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <CheckBox Content="导出计算结果时使用 Unix 换行符，取消勾选则使用 Windows 换行符" IsChecked="{Binding UseUnixStyleLineBreaks, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             <TextBlock
                 Margin="18,2,0,0"
                 FontSize="8pt"
@@ -71,10 +70,7 @@
             Grid.Column="0"
             Grid.ColumnSpan="2"
             Margin="0,8,0,0">
-            <CheckBox
-                Padding="4,0,0,0"
-                Content="把每种算法的结果分别导出到以算法名为扩展名的不同文件中"
-                IsChecked="{Binding EachAlgoExportedToSeparateFile}" />
+            <CheckBox Content="把每种算法的结果分别导出到以算法名为扩展名的不同文件中" IsChecked="{Binding EachAlgoExportedToSeparateFile}" />
             <TextBlock
                 Margin="18,2,0,0"
                 FontSize="8pt"
@@ -95,18 +91,17 @@
             Grid.Row="4"
             Grid.Column="0"
             Margin="0,8,0,0"
-            Padding="4,0,0,0"
             Content="每次导出结果时都打开导出参数小窗口以设置本次的导出参数"
             IsChecked="{Binding AskUserHowToExportResultsEveryTime}" />
         <Button
             Grid.Row="5"
             Grid.Column="0"
             Margin="0,8,0,0"
-            Padding="24,8"
+            Padding="24,0"
             HorizontalAlignment="Right"
-            Background="{x:Null}"
             Click="ButtonConfirmClick"
             Content="确定"
-            IsDefault="True" />
+            IsDefault="True"
+            Style="{StaticResource ButtonPrimary}" />
     </Grid>
 </Window>

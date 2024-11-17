@@ -12,9 +12,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Resources/CmderButtonStyles.xaml" />
-                <ResourceDictionary Source="/Resources/ConverterResource.xaml" />
-                <ResourceDictionary Source="/Resources/DescTextBlockStyles.xaml" />
+                <ResourceDictionary Source="/Resources/MainDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -47,7 +45,7 @@
                 Grid.Column="0"
                 Grid.ColumnSpan="3"
                 Margin="16,2,0,0"
-                Padding="4,0,0,0"
+                HorizontalAlignment="Left"
                 Content="直接把哈希标记添加到目标文件上"
                 IsChecked="{Binding MarkFilesOption, Converter={StaticResource EditOriginalFileToTrueCvt}}" />
             <RadioButton
@@ -55,7 +53,7 @@
                 Grid.Column="0"
                 Grid.ColumnSpan="3"
                 Margin="16,2,0,0"
-                Padding="4,0,0,0"
+                HorizontalAlignment="Left"
                 Content="在目标文件所在目录创建副本并添加标记"
                 IsChecked="{Binding MarkFilesOption, Converter={StaticResource EditNewInSameLocationToTrueCvt}}" />
             <RadioButton
@@ -63,7 +61,7 @@
                 Grid.Column="0"
                 Grid.ColumnSpan="3"
                 Margin="16,2,0,0"
-                Padding="4,0,0,0"
+                HorizontalAlignment="Left"
                 Content="在以下目录创建目标副本并添加标记"
                 IsChecked="{Binding MarkFilesOption, Converter={StaticResource EditNewInNewLocationToTrueCvt}}" />
             <TextBox
@@ -80,7 +78,6 @@
                 Grid.Column="2"
                 Margin="4,2,0,0"
                 Padding="4,2"
-                Background="{x:Null}"
                 Command="{Binding SelectFolderCmd}"
                 Content="..."
                 IsEnabled="{Binding MarkFilesOption, Converter={StaticResource EditNewInNewLocationToTrueCvt}}" />
@@ -103,7 +100,6 @@
                 Grid.Column="1"
                 Grid.ColumnSpan="2"
                 Margin="4,4,0,0"
-                Padding="4,0,0,0"
                 VerticalAlignment="Center"
                 Content="检查是否应用了【有效的文件】筛选器"
                 IsChecked="{Binding CheckIfUsingDistinctFilesFilter}"

@@ -153,6 +153,7 @@
         x:Key="RenameMethodReplaceAllToTrueCvt"
         Boolean="True"
         Method="ReplaceAll" />
+    <local:BooleanAndSolidBrushToSolidBrushMultiCvt x:Key="ListBoxIsSelectedForegroundCvt" Default="Gray" />
     <local:CanExecuteCmdOnTargetsCvt x:Key="CanExecuteCmdOnTargetsCvt" />
     <local:InvalidFileNameForegroundCvt x:Key="InvalidFileNameForegroundCvt" />
     <local:CmpResForegroundCvt x:Key="CmpResForegroundCvt" />

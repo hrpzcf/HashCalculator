@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DataContext="{d:DesignInstance Type=local:EqualHashByteFilter}"
@@ -12,23 +13,24 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Resources/ConverterResource.xaml" />
-                <ResourceDictionary Source="/Resources/DescTextBlockStyles.xaml" />
+                <ResourceDictionary Source="/Resources/MainDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
     <StackPanel>
         <RadioButton
-            Padding="4,0,0,0"
+            HorizontalAlignment="Left"
             Content="在表格显示的所有行的指定算法的计算结果中查找相同项"
             IsChecked="{Binding CheckEmbeddedHashValue, Converter={StaticResource ReverseBooleanValueCvt}}" />
         <StackPanel Margin="18,4,0,0" IsEnabled="{Binding CheckEmbeddedHashValue, Converter={StaticResource ReverseBooleanValueCvt}}">
-            <RadioButton Content="指定算法为第一行当前显示的算法" IsChecked="{Binding AutomaticallyFocusAlgorithm}" />
+            <RadioButton
+                HorizontalAlignment="Left"
+                Content="指定算法为第一行当前显示的算法"
+                IsChecked="{Binding AutomaticallyFocusAlgorithm}" />
             <StackPanel Margin="0,2,0,0" Orientation="Horizontal">
                 <RadioButton
                     Grid.Row="0"
                     Grid.Column="0"
-                    Padding="4,0,0,0"
                     VerticalAlignment="Center"
                     Content="指定算法为："
                     IsChecked="{Binding AutomaticallyFocusAlgorithm, Converter={StaticResource ReverseBooleanValueCvt}}" />
@@ -44,7 +46,7 @@
         </StackPanel>
         <RadioButton
             Margin="0,8,0,0"
-            Padding="4,0,0,0"
+            HorizontalAlignment="Left"
             Content="在表格显示的所有行的内嵌哈希值中查找相同项(忽略算法)"
             IsChecked="{Binding CheckEmbeddedHashValue}" />
         <TextBlock
