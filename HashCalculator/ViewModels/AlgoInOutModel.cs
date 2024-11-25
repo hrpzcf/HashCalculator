@@ -206,6 +206,7 @@ namespace HashCalculator
                     formatBuilder.Replace("$path$", parent.Arguments.Deprecated ?
                         parent.Information.Name : parent.Information.FullName);
                     formatBuilder.Replace("$relpath$", parent.RelativePath);
+                    formatBuilder.Replace("$filesize$", parent.FileLength.ToString());
                     return formatBuilder.ToString();
                 }
             }
