@@ -9,6 +9,7 @@
         <ResourceDictionary Source="/Resources/DataGridCellStyles.xaml" />
         <ResourceDictionary Source="/Resources/DataGridRowStyles.xaml" />
         <ResourceDictionary Source="/Resources/DescTextBlockStyles.xaml" />
+        <ResourceDictionary Source="/Resources/IconFont.xaml" />
         <ResourceDictionary Source="/Resources/ImageButtonStyles.xaml" />
         <ResourceDictionary Source="/Resources/ImgButtonTextStyles.xaml" />
         <ResourceDictionary Source="/Resources/TabControlItemStyles.xaml" />

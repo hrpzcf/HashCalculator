@@ -151,13 +151,12 @@
                                     Padding="4"
                                     Command="{Binding CopyHashResultCmd}"
                                     CommandParameter="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+                                    Content="&#xe718;"
+                                    FontFamily="{StaticResource IconFont}"
+                                    FontSize="14pt"
+                                    Foreground="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=Foreground}"
                                     Style="{StaticResource ImageButtonStyle1}"
-                                    ToolTip="按模板复制...">
-                                    <Image
-                                        Width="16"
-                                        Height="16"
-                                        Source="{StaticResource copy_oneDrawingImage}" />
-                                </Button>
+                                    ToolTip="按模板复制..." />
                             </Grid>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>

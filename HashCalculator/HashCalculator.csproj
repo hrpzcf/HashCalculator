@@ -337,6 +337,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Resources\IconFont.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Resources\MainDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -456,6 +460,8 @@
     <EmbeddedResource Include="Assembly\Microsoft.WindowsAPICodePack.Shell.dll" />
     <None Include="Assembly\Microsoft.Bcl.HashCode.txt" />
     <EmbeddedResource Include="Assembly\Microsoft.Bcl.HashCode.dll" />
+    <None Include="IconFont\iconfont.json" />
+    <Resource Include="IconFont\iconfont.ttf" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assembly\System.txt" />
@@ -479,6 +485,14 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assembly\HandyControl.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="IconFont\demo.css" />
+    <None Include="IconFont\demo_index.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="IconFont\iconfont.css" />
+    <None Include="IconFont\iconfont.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

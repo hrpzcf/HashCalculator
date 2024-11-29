@@ -59,13 +59,5 @@
         BasedOn="{StaticResource DataGridRowStyle}"
         TargetType="{x:Type DataGridRow}">
         <Setter Property="Background" Value="{Binding TableRowColor, Converter={StaticResource CmpColorToSolidColorBrushCvt}}" />
-        <Style.Triggers>
-            <Trigger Property="IsSelected" Value="True">
-                <Setter Property="Background" Value="#A8D5FF" />
-            </Trigger>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="#D4EAFF" />
-            </Trigger>
-        </Style.Triggers>
     </Style>
 </ResourceDictionary>

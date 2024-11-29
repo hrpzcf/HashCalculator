@@ -143,13 +143,14 @@
                             Grid.Column="1"
                             Margin="4,0,0,0"
                             Padding="4"
+                            Background="Transparent"
                             FontSize="9pt"
                             FontWeight="Normal"
                             Foreground="Black"
                             Style="{StaticResource GroupBoxTab}">
                             <GroupBox.Header>
                                 <TextBlock
-                                    VerticalAlignment="Top"
+                                    VerticalAlignment="Center"
                                     Foreground="#FF006FD6"
                                     Text="{Binding SelectedFilter.Display, StringFormat=[ {0} ] 筛选器参数}" />
                             </GroupBox.Header>
@@ -262,6 +263,7 @@
                             Grid.ColumnSpan="2"
                             Padding="4"
                             d:DataContext="{d:DesignInstance Type=local:SelectTargetsCmder}"
+                            Background="Transparent"
                             DataContext="{Binding SelectTableLinesCmder}"
                             FontSize="9pt"
                             FontWeight="Normal"
@@ -303,6 +305,7 @@
                             Grid.Column="1"
                             Margin="4,4,0,0"
                             Padding="4"
+                            Background="Transparent"
                             FontSize="9pt"
                             FontWeight="Normal"
                             Foreground="Black"

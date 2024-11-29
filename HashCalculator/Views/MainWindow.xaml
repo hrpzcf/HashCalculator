@@ -430,7 +430,6 @@
             AllowDrop="True"
             AutoGenerateColumns="False"
             CanUserReorderColumns="True"
-            CellStyle="{StaticResource CellStyleNormal1}"
             Drop="DataGridHashingFilesDrop"
             Grid.IsSharedSizeScope="True"
             HeadersVisibility="Column"
@@ -604,11 +603,21 @@
                                     Margin="1"
                                     Padding="4"
                                     VerticalAlignment="Center"
-                                    Background="{Binding FdGroupId, Converter={StaticResource CmpColorToSolidColorBrushCvt}}"
-                                    Foreground="{Binding InvalidFileName, Converter={StaticResource InvalidFileNameForegroundCvt}}"
                                     Text="{Binding FileName}"
                                     TextTrimming="CharacterEllipsis"
                                     ToolTip="{Binding Information}">
+                                    <TextBlock.Foreground>
+                                        <MultiBinding Converter="{StaticResource InvalidFileNameForegroundCvt}">
+                                            <Binding Path="InvalidFileName" />
+                                            <Binding Path="Foreground" RelativeSource="{RelativeSource AncestorType=DataGridRow}" />
+                                        </MultiBinding>
+                                    </TextBlock.Foreground>
+                                    <TextBlock.Background>
+                                        <MultiBinding Converter="{StaticResource MultiCmpColorToSolidColorBrushCvt}">
+                                            <Binding Path="FdGroupId" />
+                                            <Binding Path="Background" RelativeSource="{RelativeSource AncestorType=DataGridRow}" />
+                                        </MultiBinding>
+                                    </TextBlock.Background>
                                     <TextBlock.InputBindings>
                                         <MouseBinding
                                             Command="{Binding TableColumnDoubleClickCmd}"
@@ -743,10 +752,15 @@
                                     Margin="0,0,4,0"
                                     Padding="4"
                                     VerticalAlignment="Center"
-                                    Background="{Binding GroupId, Converter={StaticResource CmpColorToSolidColorBrushCvt}}"
                                     Text="{Binding CurrentHashString}"
                                     TextTrimming="CharacterEllipsis"
                                     ToolTip="{Binding ModelDetails}">
+                                    <TextBlock.Background>
+                                        <MultiBinding Converter="{StaticResource MultiCmpColorToSolidColorBrushCvt}">
+                                            <Binding Path="GroupId" />
+                                            <Binding Path="Background" RelativeSource="{RelativeSource AncestorType=DataGridRow}" />
+                                        </MultiBinding>
+                                    </TextBlock.Background>
                                     <TextBlock.Visibility>
                                         <MultiBinding Converter="{StaticResource StateFinishedResultSucceededToVisibilityCvt}">
                                             <Binding Path="State" />
@@ -828,6 +842,7 @@
                                     d:DataContext="{d:DesignInstance local:HashViewModel}"
                                     Command="{Binding ShowHashDetailsWindowCmd}"
                                     Content="{Binding AlgoInOutModels, Converter={StaticResource AlgoInOutModelsToNumberCvt}}"
+                                    Foreground="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=Foreground}"
                                     Style="{StaticResource GrayRoundTipButton1}"
                                     ToolTip="详情...">
                                     <Button.Visibility>
@@ -841,6 +856,10 @@
                                     Grid.Column="2"
                                     Padding="4"
                                     Command="{Binding CopyThisModelCurHashCmd}"
+                                    Content="&#xe718;"
+                                    FontFamily="{StaticResource IconFont}"
+                                    FontSize="14pt"
+                                    Foreground="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=Foreground}"
                                     Style="{StaticResource ImageButtonStyle1}"
                                     ToolTip="按模板复制该行当前结果...">
                                     <Button.Visibility>
@@ -849,15 +868,15 @@
                                             <Binding Path="Result" />
                                         </MultiBinding>
                                     </Button.Visibility>
-                                    <Image
-                                        Width="16"
-                                        Height="16"
-                                        Source="{StaticResource copy_oneDrawingImage}" />
                                 </Button>
                                 <Button
                                     Grid.Column="3"
                                     Padding="4"
                                     Command="{Binding CopyThisModelAllHashesCmd}"
+                                    Content="&#xe751;"
+                                    FontFamily="{StaticResource IconFont}"
+                                    FontSize="14pt"
+                                    Foreground="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=Foreground}"
                                     Style="{StaticResource ImageButtonStyle1}"
                                     ToolTip="按模板复制该行所有结果...">
                                     <Button.Visibility>
@@ -866,10 +885,6 @@
                                             <Binding Path="Result" />
                                         </MultiBinding>
                                     </Button.Visibility>
-                                    <Image
-                                        Width="16"
-                                        Height="16"
-                                        Source="{StaticResource copy_multiDrawingImage}" />
                                 </Button>
                                 <!--  未成功  -->
                                 <Button

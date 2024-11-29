@@ -77,7 +77,7 @@ namespace HashCalculator
                 {
                     if (Settings.Current.ShowFileIcon)
                     {
-                        this.FileIcon = CommonUtils.GetFileIcon(arg.FilePath);
+                        this.FileIcon = CommonUtils.GetFileIcon(arg.FilePath, true);
                     }
                     this.FileLength = this.Information.Length;
                 }

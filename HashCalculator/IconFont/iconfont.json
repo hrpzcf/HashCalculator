@@ -1,0 +1,23 @@
+{
+  "id": "4757706",
+  "name": "HashCalculator",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "6517480",
+      "name": "文件-文件-2",
+      "font_class": "wj-wj-2",
+      "unicode": "e718",
+      "unicode_decimal": 59160
+    },
+    {
+      "icon_id": "6773140",
+      "name": "文件-文件类别",
+      "font_class": "wj-wjlb",
+      "unicode": "e751",
+      "unicode_decimal": 59217
+    }
+  ]
+}

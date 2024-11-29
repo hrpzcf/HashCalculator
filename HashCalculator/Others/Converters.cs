@@ -9,13 +9,18 @@ using System.Windows.Media;
 
 namespace HashCalculator
 {
-    internal class InvalidFileNameForegroundCvt : IValueConverter
+    internal class InvalidFileNameForegroundCvt : IMultiValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is bool invalidFileName && invalidFileName)
+            Debug.Assert(values?.Length == 2);
+            if (values[0] is bool invalid && invalid)
             {
-                return "#FF0000";
+                return new SolidColorBrush(Colors.Red);
+            }
+            else if (values[1] is SolidColorBrush solidBrush)
+            {
+                return solidBrush;
             }
             else
             {
@@ -23,7 +28,7 @@ namespace HashCalculator
             }
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }
