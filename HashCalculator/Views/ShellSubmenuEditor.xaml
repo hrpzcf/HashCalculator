@@ -28,14 +28,10 @@
         <DataGrid
             Grid.Row="0"
             AutoGenerateColumns="False"
-            CellStyle="{StaticResource CellStyleNormal1}"
             HeadersVisibility="Column"
-            HorizontalGridLinesBrush="#FF969696"
             IsReadOnly="True"
             ItemsSource="{Binding Submenus}"
-            RowStyle="{StaticResource RowStyleNormal}"
-            SelectedItem="{Binding SelectedSubmenu}"
-            VerticalGridLinesBrush="#FF969696">
+            SelectedItem="{Binding SelectedSubmenu}">
             <DataGrid.Columns>
                 <DataGridTemplateColumn Header="子菜单标题">
                     <DataGridTemplateColumn.CellTemplate>

@@ -99,16 +99,12 @@
             Grid.Row="2"
             Margin="0,8,0,0"
             AutoGenerateColumns="False"
-            CellStyle="{StaticResource CellStyleNormal1}"
             Grid.IsSharedSizeScope="True"
             HeadersVisibility="Column"
-            HorizontalGridLinesBrush="#FF969696"
             IsReadOnly="True"
             ItemsSource="{Binding AlgoInOutModels}"
             LostFocus="OnHashResultDataGridLostFocus"
-            RowStyle="{StaticResource RowStyleNormal}"
-            SelectionMode="Single"
-            VerticalGridLinesBrush="#FF969696">
+            SelectionMode="Single">
             <DataGrid.Columns>
                 <DataGridTemplateColumn Header="算法">
                     <DataGridTemplateColumn.CellTemplate>
@@ -116,7 +112,6 @@
                             <TextBlock
                                 Padding="4,0"
                                 VerticalAlignment="Center"
-                                Foreground="Black"
                                 Text="{Binding AlgoName}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>

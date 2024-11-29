@@ -33,14 +33,10 @@
                 Grid.Row="0"
                 Grid.Column="0"
                 AutoGenerateColumns="False"
-                CellStyle="{StaticResource CellStyleNormal1}"
                 HeadersVisibility="Column"
-                HorizontalGridLinesBrush="#FF969696"
                 IsReadOnly="True"
                 ItemsSource="{Binding MenuList}"
-                RowStyle="{StaticResource RowStyleNormal}"
-                SelectedItem="{Binding SelectedMenu}"
-                VerticalGridLinesBrush="#FF969696">
+                SelectedItem="{Binding SelectedMenu}">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn Header="菜单标题">
                         <DataGridTemplateColumn.CellTemplate>
@@ -86,6 +82,7 @@
                                             <CheckBox
                                                 VerticalAlignment="Center"
                                                 Content="{Binding Display}"
+                                                Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ComboBoxItem}, Path=Foreground}"
                                                 IsChecked="{Binding Selected}" />
                                         </DataTemplate>
                                     </ComboBox.ItemTemplate>
