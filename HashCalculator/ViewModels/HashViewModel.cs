@@ -12,6 +12,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using Handy = HandyControl;
 
 namespace HashCalculator
 {
@@ -399,8 +400,8 @@ namespace HashCalculator
                         }
                         else
                         {
-                            MessageBox.Show(MainWindow.Current, "没有完成哈希值计算！", "提示",
-                                MessageBoxButton.OK, MessageBoxImage.Warning);
+                            Handy.Controls.Growl.Warning("没有完成哈希值计算！",
+                                MessageToken.MainWndMsgToken);
                         }
                         break;
                     case SettingsViewModel.CmdStrOpenFile:
@@ -461,8 +462,8 @@ namespace HashCalculator
                         }
                         else
                         {
-                            MessageBox.Show(MainWindow.Current, "文件不存在，未复制完整路径！", "提示",
-                                MessageBoxButton.OK, MessageBoxImage.Warning);
+                            Handy.Controls.Growl.Error("文件不存在，未复制完整路径！",
+                                MessageToken.MainWndMsgToken);
                         }
                         break;
                 }

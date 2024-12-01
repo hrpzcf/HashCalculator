@@ -1036,6 +1036,15 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
+        <ScrollViewer
+            Grid.Row="1"
+            HorizontalAlignment="Right"
+            VerticalScrollBarVisibility="Hidden">
+            <StackPanel
+                Margin="0,4,0,4"
+                VerticalAlignment="Top"
+                hc:Growl.Token="{x:Static local:MessageToken.MainWndMsgToken}" />
+        </ScrollViewer>
         <Grid Grid.Row="2" Margin="0,8,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />

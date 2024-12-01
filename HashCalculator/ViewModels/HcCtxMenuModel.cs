@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using Newtonsoft.Json;
+using Handy = HandyControl;
 
 namespace HashCalculator
 {
@@ -141,8 +142,8 @@ namespace HashCalculator
                 }
                 else
                 {
-                    MessageBox.Show(ShellSubmenuEditor.Current, "没有选择任何菜单项！", "提示", MessageBoxButton.OK,
-                        MessageBoxImage.Information);
+                    Handy.Controls.MessageBox.Show(ShellSubmenuEditor.Current, "没有选择任何菜单项！",
+                        "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
         }

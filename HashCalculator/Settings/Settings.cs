@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using Newtonsoft.Json;
+using Handy = HandyControl;
 
 namespace HashCalculator
 {
@@ -158,8 +159,8 @@ namespace HashCalculator
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"无法把配置文件保存到程序目录：{ex.Message}", "错误",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                Handy.Controls.MessageBox.Show($"无法把配置文件保存到程序目录：{ex.Message}",
+                    "错误", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             return false;
         }
@@ -274,7 +275,8 @@ namespace HashCalculator
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"设置加载失败：{ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Warning);
+                Handy.Controls.MessageBox.Show($"设置加载失败：{ex.Message}", "错误",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
             UpdateDisplayingInformation();
             if (!settingsViewModelLoaded)

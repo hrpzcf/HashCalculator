@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
 using CommandLine;
+using Handy = HandyControl;
 
 namespace HashCalculator
 {
@@ -227,8 +228,8 @@ namespace HashCalculator
                         {
                             Application.Current.Dispatcher.Invoke(() =>
                             {
-                                MessageBox.Show(this, newChecklist.ReasonForFailure, "错误",
-                                    MessageBoxButton.OK, MessageBoxImage.Error);
+                                Handy.Controls.MessageBox.Show(this, newChecklist.ReasonForFailure,
+                                    "错误", MessageBoxButton.OK, MessageBoxImage.Error);
                             });
                         }
                         else

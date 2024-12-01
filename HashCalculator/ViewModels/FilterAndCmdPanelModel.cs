@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using Handy = HandyControl;
 
 namespace HashCalculator
 {
@@ -184,7 +185,7 @@ namespace HashCalculator
                             {
                                 Application.Current.Dispatcher.Invoke(() =>
                                 {
-                                    MessageBox.Show(MainWindow.Current,
+                                    Handy.Controls.MessageBox.Show(MainWindow.Current,
                                         $"筛选器名：{filter.Display}\n错误详情：{ex.Message}", "筛选出错",
                                         MessageBoxButton.OK, MessageBoxImage.Error);
                                 });
