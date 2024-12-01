@@ -14,13 +14,6 @@
     SnapsToDevicePixels="True"
     WindowStartupLocation="CenterOwner"
     mc:Ignorable="d">
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Resources/MainDictionary.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Window.Resources>
     <Grid Margin="16,8,16,16">
         <Border
             Padding="8"

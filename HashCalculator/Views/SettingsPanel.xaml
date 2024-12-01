@@ -16,13 +16,6 @@
     UseLayoutRounding="True"
     WindowStartupLocation="CenterOwner"
     mc:Ignorable="d">
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Resources/MainDictionary.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Window.Resources>
     <TabControl
         Margin="8"
         Style="{StaticResource TabControlSlidingForSettingsPanel}"

@@ -44,7 +44,7 @@
     <ApplicationIcon>Images\icon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>HashCalculator.Loading</StartupObject>
+    <StartupObject>HashCalculator.App</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CommandLine, Version=2.9.1.0, Culture=neutral, PublicKeyToken=5a870481e358d379, processorArchitecture=MSIL">
@@ -97,9 +97,11 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Others\ColumnProperty.cs" />
     <Compile Include="Others\ConfigPaths.cs" />
-    <Compile Include="Settings\Loading.cs" />
     <Compile Include="Cmders\MarkFilesCmder.cs" />
     <Compile Include="Cmders\MarkFilesCmderCtrl.xaml.cs">
       <DependentUpon>MarkFilesCmderCtrl.xaml</DependentUpon>
@@ -260,6 +262,10 @@
     <Compile Include="Views\ShellSubmenuEditor.xaml.cs">
       <DependentUpon>ShellSubmenuEditor.xaml</DependentUpon>
     </Compile>
+    <ApplicationDefinition Include="App.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </ApplicationDefinition>
     <Page Include="Cmders\MarkFilesCmderCtrl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -325,10 +331,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\IconFont.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\MainDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

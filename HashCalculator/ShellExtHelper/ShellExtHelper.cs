@@ -235,7 +235,7 @@ namespace HashCalculator
                 {
                     exception = exception1;
                 }
-                if (Loading.Executing.GetManifestResourceStream(embeddedShellExtPath) is Stream manifest)
+                if (App.Executing.GetManifestResourceStream(embeddedShellExtPath) is Stream manifest)
                 {
                     using (manifest)
                     {

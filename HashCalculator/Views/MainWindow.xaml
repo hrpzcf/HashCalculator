@@ -24,13 +24,6 @@
             <Binding Source="{x:Static local:Info.Published}" />
         </MultiBinding>
     </Window.Title>
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Resources/MainDictionary.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Window.Resources>
     <Window.Top>
         <MultiBinding Converter="{StaticResource MainWndTopCvt}" Mode="TwoWay">
             <Binding

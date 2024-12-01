@@ -9,14 +9,6 @@
     d:DesignHeight="160"
     d:DesignWidth="350"
     mc:Ignorable="d">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Resources/ConverterResource.xaml" />
-                <ResourceDictionary Source="/Resources/DescTextBlockStyles.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.IO.MemoryMappedFiles;
 using System.Windows;
+using CommandLine;
 
 namespace HashCalculator
 {
@@ -123,6 +125,52 @@ namespace HashCalculator
                     writer.WriteRunMulti(value);
                 }
             }
+        }
+
+        public static void ParseArgsForShell(string[] args)
+        {
+            Parser.Default.ParseArguments<VerifyHash, ComputeHash, ShellInstallation>(args)
+                .WithParsed<ShellInstallation>(option =>
+                {
+                    if (option.Install)
+                    {
+                        Exception exception = ShellExtHelper.InstallShellExtension();
+                        if (exception != null)
+                        {
+                            if (!option.InstallSilently)
+                            {
+                                MessageBox.Show(exception.Message, "错误",
+                                    MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK,
+                                    MessageBoxOptions.ServiceNotification);
+                            }
+                        }
+                        else
+                        {
+                            if (!File.Exists(Settings.ConfigInfo.MenuConfigFile))
+                            {
+                                string message = new ShellMenuEditorModel(null).SaveMenuListToJsonFile();
+                                if (!string.IsNullOrEmpty(message) && !option.InstallSilently)
+                                {
+                                    MessageBox.Show($"扩展模块配置文件创建失败，快捷菜单将不显示，原因：{message}",
+                                        "错误", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK,
+                                        MessageBoxOptions.ServiceNotification);
+                                }
+                            }
+                        }
+                        Environment.Exit(0);
+                    }
+                    else if (option.Uninstall)
+                    {
+                        Exception exception = ShellExtHelper.UninstallShellExtension();
+                        if (exception != null && !option.InstallSilently)
+                        {
+                            MessageBox.Show(exception.Message, "错误",
+                                MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK,
+                                MessageBoxOptions.ServiceNotification);
+                        }
+                        Environment.Exit(0);
+                    }
+                });
         }
 
         private static readonly bool newSync = false;

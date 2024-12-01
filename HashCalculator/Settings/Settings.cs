@@ -19,8 +19,6 @@ namespace HashCalculator
         public static string ShellExtensionName { get; } = Environment.Is64BitOperatingSystem ?
             "HashCalculator.dll" : "HashCalculator32.dll";
 
-        public static string[] StartupArgs { get; internal set; }
-
         public static ConfigPaths ConfigInfo { get; private set; }
 
         public static SettingsViewModel Current { get; private set; }
@@ -307,7 +305,7 @@ namespace HashCalculator
                         hashAlgoDllResPrefix,
                         Path.GetFileNameWithoutExtension(HashAlgs),
                         Environment.Is64BitProcess ? "64" : "32");
-                    using (Stream stream = Loading.Executing.GetManifestResourceStream(resourcePath))
+                    using (Stream stream = App.Executing.GetManifestResourceStream(resourcePath))
                     {
                         if (stream != null)
                         {

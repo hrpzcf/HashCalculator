@@ -3,32 +3,13 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:hc="clr-namespace:HandyControl.Controls;assembly=HandyControl"
     xmlns:system="clr-namespace:System;assembly=mscorlib">
-    <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/SkinDefault.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/Theme.xaml" />
-    </ResourceDictionary.MergedDictionaries>
-
-    <Style x:Key="FocusVisual">
-        <Setter Property="Control.Template">
-            <Setter.Value>
-                <ControlTemplate>
-                    <Rectangle
-                        Margin="2"
-                        SnapsToDevicePixels="true"
-                        Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
-                        StrokeDashArray="1 2"
-                        StrokeThickness="1" />
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
 
     <SolidColorBrush x:Key="TabItem.Disabled.Border" Color="#D9D9D9" />
     <SolidColorBrush x:Key="TabItem.Disabled.Background" Color="#F0F0F0" />
 
     <!--  FilterAndCmderTabItemStyle  -->
     <Style x:Key="FilterAndCmderTabItemStyle" TargetType="{x:Type TabItem}">
-        <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="Foreground" Value="Black" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderBrush" Value="#E0E0E0" />
@@ -80,6 +61,7 @@
         </Setter>
     </Style>
 
+    <!--  TabItemSlidingForSettingsPanel  -->
     <Style
         x:Key="TabItemSlidingForSettingsPanel"
         BasedOn="{StaticResource TabItemSliding}"

@@ -10,13 +10,6 @@
     d:DesignHeight="200"
     d:DesignWidth="400"
     mc:Ignorable="d">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Resources/MainDictionary.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </UserControl.Resources>
     <StackPanel>
         <RadioButton
             HorizontalAlignment="Left"

@@ -12,13 +12,6 @@
     d:DataContext="{d:DesignInstance Type=local:ShellMenuEditorModel}"
     WindowStartupLocation="CenterOwner"
     mc:Ignorable="d">
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Resources/MainDictionary.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Window.Resources>
     <ScrollViewer Padding="2" VerticalScrollBarVisibility="Auto">
         <Grid Margin="8">
             <Grid.RowDefinitions>

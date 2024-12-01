@@ -85,7 +85,7 @@ namespace HashCalculator
                     return "Black";
                 case CmpRes.NoResult:
                 default:
-                    return "Transparent";
+                    return "#FFFFFFFF";
             }
         }
 
