@@ -510,6 +510,8 @@ namespace HashCalculator
                 {
                     stringBuilder.Remove(stringBuilder.Length - 1, 1);
                     CommonUtils.ClipboardSetText(stringBuilder.ToString());
+                    Handy.Controls.Growl.Success($"已按模板复制所选行的当前结果或全部结果",
+                        MessageToken.MainWndMsgToken);
                 }
             }
         }
@@ -609,6 +611,8 @@ namespace HashCalculator
                 if (stringBuilder.Length != 0)
                 {
                     CommonUtils.ClipboardSetText(stringBuilder.ToString());
+                    Handy.Controls.Growl.Success("已复制文件名或文件路径到剪贴板",
+                        MessageToken.MainWndMsgToken);
                 }
                 if (!copyName && !fullPathCopied)
                 {
@@ -669,6 +673,8 @@ namespace HashCalculator
                 {
                     stringBuilder.Remove(stringBuilder.Length - 1, 1);
                     CommonUtils.ClipboardSetText(stringBuilder.ToString());
+                    Handy.Controls.Growl.Success("已复制所选行的当前哈希值或全部哈希值",
+                        MessageToken.MainWndMsgToken);
                 }
             }
         }
@@ -1350,6 +1356,8 @@ namespace HashCalculator
                 if (string.IsNullOrEmpty(this.HashStringOrChecklistPath))
                 {
                     this.GenerateOriginFileHashCheckReport();
+                    Handy.Controls.Growl.Warning("校验依据输入框没有输入任何内容！",
+                        MessageToken.MainWndMsgToken);
                     return false;
                 }
                 // HashStringOrChecklistPath 不是一个文件
