@@ -10,19 +10,6 @@ namespace HashCalculator
 {
     public class Loading : Application
     {
-        private static readonly string[] assemblyNames = new string[]
-        {
-            "System.Buffers",
-            "System.Memory",
-            "System.Numerics.Vectors",
-            "System.Runtime.CompilerServices.Unsafe",
-            "CommandLine",
-            "HandyControl",
-            "Microsoft.Bcl.HashCode",
-            "Microsoft.WindowsAPICodePack",
-            "Microsoft.WindowsAPICodePack.Shell",
-            "Newtonsoft.Json",
-        };
         internal static readonly Assembly Executing = Assembly.GetExecutingAssembly();
 
         [STAThread()]
@@ -34,7 +21,6 @@ namespace HashCalculator
             application.Exit += ApplicationExit;
             application.Startup += ApplicationStartup;
             application.DispatcherUnhandledException += application.ExceptionHandler;
-            AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
             application.StartupUri = new Uri("Views/MainWindow.xaml", UriKind.Relative);
             application.Run();
         }
@@ -92,33 +78,6 @@ namespace HashCalculator
                 });
             Settings.ExtractEmbeddedAlgoDll(false);
             Initializer.PushArgs(Settings.StartupArgs);
-        }
-
-        private static Assembly AssemblyResolve(object sender, ResolveEventArgs arg)
-        {
-            try
-            {
-                string assemblyName = new AssemblyName(arg.Name).Name;
-                if (assemblyNames.Contains(assemblyName))
-                {
-                    using (Stream stream = Executing.GetManifestResourceStream(
-                        string.Format("HashCalculator.Assembly.{0}.dll", assemblyName)))
-                    {
-                        if (stream != null)
-                        {
-                            byte[] assemblyBytes = new byte[stream.Length];
-                            if (stream.Read(assemblyBytes, 0, assemblyBytes.Length) == assemblyBytes.Length)
-                            {
-                                return Assembly.Load(assemblyBytes);
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception)
-            {
-            }
-            return null;
         }
 
         private void ExceptionHandler(object sender, DispatcherUnhandledExceptionEventArgs e)
