@@ -76,7 +76,7 @@
                         CornerRadius="{Binding (hc:BorderElement.CornerRadius), RelativeSource={RelativeSource Mode=TemplatedParent}}">
                         <ContentPresenter
                             x:Name="contentPresenter"
-                            Margin="8"
+                            Margin="4,6"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
                             ContentSource="Header"

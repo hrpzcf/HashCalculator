@@ -20,7 +20,20 @@
         Margin="8"
         Style="{StaticResource TabControlSlidingForSettingsPanel}"
         TabStripPlacement="Left">
-        <TabItem FontSize="10pt" Header="常规设置">
+        <TabItem FontSize="10pt">
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontFamily="{StaticResource IconFont}"
+                        FontSize="19pt"
+                        Text="&#xe707;" />
+                    <TextBlock
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center"
+                        Text="常规设置" />
+                </StackPanel>
+            </TabItem.Header>
             <ScrollViewer
                 Padding="10"
                 FontSize="9pt"
@@ -171,7 +184,20 @@
                 </StackPanel>
             </ScrollViewer>
         </TabItem>
-        <TabItem FontSize="10pt" Header="界面设置">
+        <TabItem FontSize="10pt">
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontFamily="{StaticResource IconFont}"
+                        FontSize="19pt"
+                        Text="&#xe601;" />
+                    <TextBlock
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center"
+                        Text="界面设置" />
+                </StackPanel>
+            </TabItem.Header>
             <ScrollViewer
                 Padding="10"
                 FontSize="9pt"
@@ -473,7 +499,20 @@
                 </StackPanel>
             </ScrollViewer>
         </TabItem>
-        <TabItem FontSize="10pt" Header="任务设置">
+        <TabItem FontSize="10pt">
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontFamily="{StaticResource IconFont}"
+                        FontSize="19pt"
+                        Text="&#xe6aa;" />
+                    <TextBlock
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center"
+                        Text="任务设置" />
+                </StackPanel>
+            </TabItem.Header>
             <ScrollViewer
                 Padding="10"
                 FontSize="9pt"
@@ -528,7 +567,20 @@
                 </StackPanel>
             </ScrollViewer>
         </TabItem>
-        <TabItem FontSize="10pt" Header="快捷菜单与文件关联">
+        <TabItem FontSize="10pt">
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontFamily="{StaticResource IconFont}"
+                        FontSize="19pt"
+                        Text="&#xe7ae;" />
+                    <TextBlock
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center"
+                        Text="右键菜单与文件关联" />
+                </StackPanel>
+            </TabItem.Header>
             <ScrollViewer
                 Padding="10"
                 FontSize="9pt"
@@ -675,7 +727,20 @@
                 </StackPanel>
             </ScrollViewer>
         </TabItem>
-        <TabItem FontSize="10pt" Header="算法别名设置">
+        <TabItem FontSize="10pt">
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontFamily="{StaticResource IconFont}"
+                        FontSize="19pt"
+                        Text="&#xe76e;" />
+                    <TextBlock
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center"
+                        Text="算法别名设置" />
+                </StackPanel>
+            </TabItem.Header>
             <ScrollViewer
                 Padding="10"
                 FontSize="9pt"
@@ -732,7 +797,20 @@
                 </StackPanel>
             </ScrollViewer>
         </TabItem>
-        <TabItem FontSize="10pt" Header="复制行为设置">
+        <TabItem FontSize="10pt">
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontFamily="{StaticResource IconFont}"
+                        FontSize="19pt"
+                        Text="&#xec7a;" />
+                    <TextBlock
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center"
+                        Text="复制行为设置" />
+                </StackPanel>
+            </TabItem.Header>
             <ScrollViewer
                 Padding="10"
                 FontSize="9pt"
@@ -889,7 +967,20 @@
                 </StackPanel>
             </ScrollViewer>
         </TabItem>
-        <TabItem FontSize="10pt" Header="导出计算结果设置">
+        <TabItem FontSize="10pt">
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontFamily="{StaticResource IconFont}"
+                        FontSize="19pt"
+                        Text="&#xe736;" />
+                    <TextBlock
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center"
+                        Text="导出计算结果设置" />
+                </StackPanel>
+            </TabItem.Header>
             <ScrollViewer
                 Padding="10"
                 FontSize="9pt"
@@ -1220,7 +1311,20 @@
                 </Grid>
             </ScrollViewer>
         </TabItem>
-        <TabItem FontSize="10pt" Header="校验依据解析方案">
+        <TabItem FontSize="10pt">
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontFamily="{StaticResource IconFont}"
+                        FontSize="19pt"
+                        Text="&#xe603;" />
+                    <TextBlock
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center"
+                        Text="校验依据解析方案" />
+                </StackPanel>
+            </TabItem.Header>
             <ScrollViewer
                 Padding="10"
                 FontSize="9pt"
@@ -1421,7 +1525,20 @@
                 </Grid>
             </ScrollViewer>
         </TabItem>
-        <TabItem FontSize="10pt" Header="快捷操作设置">
+        <TabItem FontSize="10pt">
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontFamily="{StaticResource IconFont}"
+                        FontSize="19pt"
+                        Text="&#xe600;" />
+                    <TextBlock
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center"
+                        Text="快捷操作设置" />
+                </StackPanel>
+            </TabItem.Header>
             <ScrollViewer
                 Padding="10"
                 FontSize="9pt"
@@ -1556,7 +1673,20 @@
                 </GroupBox>
             </ScrollViewer>
         </TabItem>
-        <TabItem FontSize="10pt" Header="配置文件保存位置">
+        <TabItem FontSize="10pt">
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontFamily="{StaticResource IconFont}"
+                        FontSize="19pt"
+                        Text="&#xe6b7;" />
+                    <TextBlock
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center"
+                        Text="配置文件保存位置" />
+                </StackPanel>
+            </TabItem.Header>
             <ScrollViewer
                 Padding="10"
                 FontSize="9pt"
@@ -1615,7 +1745,20 @@
                 </GroupBox>
             </ScrollViewer>
         </TabItem>
-        <TabItem FontSize="10pt" Header="常见问题修复向导">
+        <TabItem FontSize="10pt">
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontFamily="{StaticResource IconFont}"
+                        FontSize="19pt"
+                        Text="&#xe645;" />
+                    <TextBlock
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center"
+                        Text="常见问题修复向导" />
+                </StackPanel>
+            </TabItem.Header>
             <ScrollViewer
                 Padding="10"
                 FontSize="9pt"
@@ -1649,7 +1792,20 @@
                 </StackPanel>
             </ScrollViewer>
         </TabItem>
-        <TabItem FontSize="10pt" Header="关于软件">
+        <TabItem FontSize="10pt">
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontFamily="{StaticResource IconFont}"
+                        FontSize="19pt"
+                        Text="&#xe646;" />
+                    <TextBlock
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center"
+                        Text="关于软件" />
+                </StackPanel>
+            </TabItem.Header>
             <ScrollViewer
                 Padding="10"
                 FontSize="9pt"
