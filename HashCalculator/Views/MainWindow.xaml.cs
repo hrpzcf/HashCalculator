@@ -96,11 +96,7 @@ namespace HashCalculator
             this.MainWindowTable.Columns.ReorderDataGridColumns(Settings.Current.ColumnsOrder);
             if (Settings.Current.PreviousVer != Info.Ver && Settings.NotificationShouldBeDisplayedOnce)
             {
-                NotificationWindow window = new NotificationWindow()
-                {
-                    Owner = this
-                };
-                window.ShowDialog();
+                Handy.Controls.Growl.Error(Info.ShellExtNotification, MessageToken.MainWndMsgToken);
             }
             Settings.Current.PreviousVer = Info.Ver;
         }
