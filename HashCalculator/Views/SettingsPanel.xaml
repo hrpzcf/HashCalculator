@@ -1675,7 +1675,7 @@
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Foreground="Gray">
                                     <TextBlock.Text>
-                                        <MultiBinding StringFormat="version {0} by {1} @ ">
+                                        <MultiBinding StringFormat="Ver. {0} by {1} @ ">
                                             <Binding Path="Ver" />
                                             <Binding Path="Author" />
                                         </MultiBinding>
