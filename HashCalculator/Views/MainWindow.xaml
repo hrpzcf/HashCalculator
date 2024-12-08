@@ -793,39 +793,36 @@
                                     Grid.Column="2"
                                     Padding="4"
                                     Command="{Binding ShutdownModelSelfCmd}"
+                                    Content="&#xe61f;"
+                                    FontFamily="{StaticResource IconFont}"
+                                    FontSize="15pt"
+                                    Foreground="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=Foreground}"
                                     Style="{StaticResource ImageButtonStyle1}"
                                     ToolTip="停止..."
-                                    Visibility="{Binding State, Converter={StaticResource StateRunningToVisiblityCvt}}">
-                                    <Image
-                                        Width="16"
-                                        Height="16"
-                                        Source="{StaticResource stop_oneDrawingImage}" />
-                                </Button>
+                                    Visibility="{Binding State, Converter={StaticResource StateRunningToVisiblityCvt}}" />
                                 <Button
                                     Grid.Column="3"
                                     Padding="4"
                                     Command="{Binding PauseOrContinueModelSelfCmd}"
+                                    Content="{Binding State, Converter={StaticResource SubBtnPauseOrContinueTextCvt}}"
+                                    FontFamily="{StaticResource IconFont}"
+                                    FontSize="15pt"
+                                    Foreground="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=Foreground}"
                                     Style="{StaticResource ImageButtonStyle1}"
                                     ToolTip="{Binding State, Converter={StaticResource SubBtnPauseToolTipCvt}}"
-                                    Visibility="{Binding State, Converter={StaticResource StateRunningToVisiblityCvt}}">
-                                    <Image
-                                        Width="16"
-                                        Height="16"
-                                        Source="{Binding State, Converter={StaticResource SubBtnPauseImageSrcCvt}}" />
-                                </Button>
+                                    Visibility="{Binding State, Converter={StaticResource StateRunningToVisiblityCvt}}" />
                                 <!--  正排队  -->
                                 <Button
                                     Grid.Column="3"
                                     Padding="4"
                                     Command="{Binding ShutdownModelSelfCmd}"
+                                    Content="&#xe620;"
+                                    FontFamily="{StaticResource IconFont}"
+                                    FontSize="15pt"
+                                    Foreground="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=Foreground}"
                                     Style="{StaticResource ImageButtonStyle1}"
                                     ToolTip="取消..."
-                                    Visibility="{Binding State, Converter={StaticResource StateWaitingToVisiblityCvt}}">
-                                    <Image
-                                        Width="16"
-                                        Height="16"
-                                        Source="{StaticResource cancel_oneDrawingImage}" />
-                                </Button>
+                                    Visibility="{Binding State, Converter={StaticResource StateWaitingToVisiblityCvt}}" />
                                 <!--  已成功  -->
                                 <Button
                                     Grid.Column="1"
@@ -884,6 +881,10 @@
                                     Grid.Column="3"
                                     Padding="4"
                                     Command="{Binding RestartModelSelfCmd}"
+                                    Content="&#xe621;"
+                                    FontFamily="{StaticResource IconFont}"
+                                    FontSize="14pt"
+                                    Foreground="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=Foreground}"
                                     Style="{StaticResource ImageButtonStyle1}"
                                     ToolTip="开始...">
                                     <Button.Visibility>
@@ -892,10 +893,6 @@
                                             <Binding Path="Result" />
                                         </MultiBinding>
                                     </Button.Visibility>
-                                    <Image
-                                        Width="16"
-                                        Height="16"
-                                        Source="{StaticResource start_oneDrawingImage}" />
                                 </Button>
                             </Grid>
                         </DataTemplate>

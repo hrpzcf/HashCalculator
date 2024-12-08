@@ -136,10 +136,10 @@
         OtherResource="refresh_filters_gray"
         Resource="refresh_filters"
         State="True" />
-    <local:HashStateToIconResourceCvt
-        x:Key="SubBtnPauseImageSrcCvt"
-        OtherResource="start_one"
-        Resource="pause_one"
+    <local:HashStateToButtonTextCvt
+        x:Key="SubBtnPauseOrContinueTextCvt"
+        Matched="&#xe662;"
+        Mismatched="&#xe621;"
         State="Running" />
     <local:RenameFileMethodToBooleanCvt
         x:Key="RenameMethodAddToEndToTrueCvt"
