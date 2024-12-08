@@ -417,19 +417,20 @@
             </Grid>
         </ScrollViewer>
         <DataGrid
-            x:Name="MainWindowTable"
+            x:Name="MainWindowDataGrid"
             Grid.Row="1"
             Margin="0,4,0,0"
             AllowDrop="True"
             AutoGenerateColumns="False"
             CanUserReorderColumns="True"
+            CellStyle="{StaticResource MainDataGridCellStyle}"
             Drop="DataGridHashingFilesDrop"
             Grid.IsSharedSizeScope="True"
             HeadersVisibility="Column"
             IsReadOnly="True"
             ItemsSource="{Binding Source={x:Static local:MainWndViewModel.HashViewModelsViewSrc}, IsAsync=True}"
             PreviewKeyDown="DataGridHashingFilesPrevKeyDown"
-            RowStyle="{StaticResource MainTableRowStyle}"
+            RowStyle="{StaticResource MainDataGridRowStyle}"
             ScrollViewer.CanContentScroll="True"
             SelectedItem="{Binding SelectedHashVieModel}"
             SelectionMode="Extended"

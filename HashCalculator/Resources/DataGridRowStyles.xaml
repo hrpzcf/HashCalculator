@@ -48,11 +48,31 @@
         </Style.Triggers>
     </Style>
 
+    <Color x:Key="CustomDarkDefaultColor">#DADADA</Color>
+    <SolidColorBrush x:Key="CustomDarkDefaultBrush" Color="{DynamicResource CustomDarkDefaultColor}" />
+
     <!--  主窗口表格的样式  -->
     <Style
-        x:Key="MainTableRowStyle"
+        x:Key="MainDataGridRowStyle"
         BasedOn="{StaticResource DataGridRowStyle}"
         TargetType="{x:Type DataGridRow}">
+        <Style.Triggers>
+            <Trigger Property="UIElement.IsMouseOver" Value="true">
+                <Setter Property="Background" Value="{DynamicResource CustomDarkDefaultBrush}" />
+            </Trigger>
+            <Trigger Property="DataGridRow.IsSelected" Value="True">
+                <Setter Property="Background" Value="{DynamicResource PrimaryBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource TextIconBrush}" />
+            </Trigger>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="DataGridRow.IsSelected" Value="true" />
+                    <Condition Property="Selector.IsSelectionActive" Value="false" />
+                </MultiTrigger.Conditions>
+                <Setter Property="Background" Value="{DynamicResource CustomDarkDefaultBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}" />
+            </MultiTrigger>
+        </Style.Triggers>
         <Setter Property="Background" Value="{Binding TableRowColor, Converter={StaticResource CmpColorToSolidColorBrushCvt}}" />
     </Style>
 </ResourceDictionary>
