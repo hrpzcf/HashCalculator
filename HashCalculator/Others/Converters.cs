@@ -9,13 +9,18 @@ using System.Windows.Media;
 
 namespace HashCalculator
 {
-    internal class InvalidFileNameForegroundCvt : IValueConverter
+    internal class InvalidFileNameForegroundCvt : IMultiValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is bool invalidFileName && invalidFileName)
+            Debug.Assert(values?.Length == 2);
+            if (values[0] is bool invalid && invalid)
             {
-                return "#FF0000";
+                return new SolidColorBrush(Colors.Red);
+            }
+            else if (values[1] is SolidColorBrush solidBrush)
+            {
+                return solidBrush;
             }
             else
             {
@@ -23,7 +28,7 @@ namespace HashCalculator
             }
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }
@@ -80,7 +85,7 @@ namespace HashCalculator
                     return "Black";
                 case CmpRes.NoResult:
                 default:
-                    return "Transparent";
+                    return "#FFFFFFFF";
             }
         }
 
@@ -179,7 +184,7 @@ namespace HashCalculator
 
     internal class BooleanToIconResourceCvt : IValueConverter
     {
-        public static ResourceDictionary ResourceDict = null;
+        private readonly ResourceDictionary resourceDict = null;
 
         public bool State { get; set; }
 
@@ -189,20 +194,22 @@ namespace HashCalculator
 
         public BooleanToIconResourceCvt()
         {
-            if (ResourceDict == null)
+            if (this.resourceDict == null)
             {
-                ResourceDict = new ResourceDictionary();
-                ResourceDict.Source = new Uri("/Resources/ApplicationIcons.xaml", UriKind.Relative);
+                this.resourceDict = new ResourceDictionary();
+                this.resourceDict.Source = new Uri(
+                    "/HashCalculator;component/Resources/ApplicationIcons.xaml",
+                    UriKind.Relative);
             }
         }
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (ResourceDict != null)
+            if (this.resourceDict != null)
             {
                 return value is bool state && this.State == state ?
-                    ResourceDict[$"{this.Resource}DrawingImage"] :
-                        ResourceDict[$"{this.OtherResource}DrawingImage"];
+                    this.resourceDict[$"{this.Resource}DrawingImage"] :
+                        this.resourceDict[$"{this.OtherResource}DrawingImage"];
             }
             return null;
         }
@@ -213,33 +220,17 @@ namespace HashCalculator
         }
     }
 
-    internal class HashStateToIconResourceCvt : IValueConverter
+    internal class HashStateToButtonTextCvt : IValueConverter
     {
         public HashState State { get; set; }
 
-        public string Resource { get; set; }
+        public string Matched { get; set; }
 
-        public string OtherResource { get; set; }
-
-        public HashStateToIconResourceCvt()
-        {
-            if (BooleanToIconResourceCvt.ResourceDict == null)
-            {
-                BooleanToIconResourceCvt.ResourceDict = new ResourceDictionary();
-                BooleanToIconResourceCvt.ResourceDict.Source =
-                    new Uri("/Resources/ApplicationIcons.xaml", UriKind.Relative);
-            }
-        }
+        public string Mismatched { get; set; }
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (BooleanToIconResourceCvt.ResourceDict != null)
-            {
-                return value is HashState state && this.State == state ?
-                    BooleanToIconResourceCvt.ResourceDict[$"{this.Resource}DrawingImage"] :
-                        BooleanToIconResourceCvt.ResourceDict[$"{this.OtherResource}DrawingImage"];
-            }
-            return null;
+            return value is HashState state && state == this.State ? this.Matched : this.Mismatched;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -480,26 +471,6 @@ namespace HashCalculator
         }
     }
 
-    internal class PlaceHolderTextVisibilityCvt : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (!string.IsNullOrEmpty(value as string))
-            {
-                return Visibility.Hidden;
-            }
-            else
-            {
-                return Visibility.Visible;
-            }
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
     internal class RadioExportCurrentAlgoCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -575,7 +546,7 @@ namespace HashCalculator
             }
             else
             {
-                return new SolidColorBrush(Colors.Transparent);
+                return new SolidColorBrush(Colors.White);
             }
         }
 
@@ -997,22 +968,6 @@ namespace HashCalculator
         }
     }
 
-    internal class CanExecuteCmdOnTargetsCvt : IMultiValueConverter
-    {
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
-        {
-            Debug.Assert(values?.Length == 2);
-            return values[0] is bool canExecuteCmdOnTargets &&
-                values[1] is bool showExecutionTargetColumn && (
-                canExecuteCmdOnTargets || showExecutionTargetColumn);
-        }
-
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
     internal class StateAndSelectionWayToMonitoring : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
@@ -1056,6 +1011,26 @@ namespace HashCalculator
             {
                 return Binding.DoNothing;
             }
+        }
+    }
+
+    internal class BooleanAndSolidBrushToSolidBrushMultiCvt : IMultiValueConverter
+    {
+        public Color Default { get; set; } = Colors.Gray;
+
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            Debug.Assert(values?.Length == 2);
+            if (values[0] is bool isSelected && isSelected && values[1] is Brush foreground)
+            {
+                return foreground;
+            }
+            return new SolidColorBrush(this.Default);
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
         }
     }
 }

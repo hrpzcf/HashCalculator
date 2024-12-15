@@ -8,6 +8,7 @@ using System.Resources;
 using System.Security;
 using System.Windows;
 using Microsoft.Win32;
+using Handy = HandyControl;
 
 namespace HashCalculator
 {
@@ -235,7 +236,7 @@ namespace HashCalculator
                 {
                     exception = exception1;
                 }
-                if (Loading.Executing.GetManifestResourceStream(embeddedShellExtPath) is Stream manifest)
+                if (App.Executing.GetManifestResourceStream(embeddedShellExtPath) is Stream manifest)
                 {
                     using (manifest)
                     {
@@ -308,7 +309,7 @@ namespace HashCalculator
             {
                 Func<MessageBoxResult> callback = () =>
                 {
-                    return MessageBox.Show(
+                    return Handy.Controls.MessageBox.Show(
                         SettingsPanel.Current,
                         "已安装右键菜单但未找到或无法访问外壳扩展模块，" +
                         "无法通过对模块进行反注册来清理右键菜单注册信息，是否直接删除这些信息？",

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Input;
+using Handy = HandyControl;
 
 namespace HashCalculator
 {
@@ -134,6 +135,8 @@ namespace HashCalculator
                     Settings.Current.CaseOfCopiedAlgNameFollowsOutputType) is string text)
                 {
                     CommonUtils.ClipboardSetText(text);
+                    Handy.Controls.Growl.Success($"已按模板复制当前哈希值：{text}",
+                        MessageToken.MainWndMsgToken);
                 }
             }
         }

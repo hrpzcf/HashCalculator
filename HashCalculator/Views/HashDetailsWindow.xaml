@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="详情"
@@ -16,17 +17,6 @@
     UseLayoutRounding="True"
     WindowStartupLocation="CenterOwner"
     mc:Ignorable="d">
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Resources/ApplicationIcons.xaml" />
-                <ResourceDictionary Source="/Resources/ConverterResource.xaml" />
-                <ResourceDictionary Source="/Resources/DataGridCellStyles.xaml" />
-                <ResourceDictionary Source="/Resources/DataGridRowStyles.xaml" />
-                <ResourceDictionary Source="/Resources/ImageButtonStyles.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Window.Resources>
     <Grid Margin="8">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -102,16 +92,12 @@
             Grid.Row="2"
             Margin="0,8,0,0"
             AutoGenerateColumns="False"
-            CellStyle="{StaticResource CellStyleNormal1}"
             Grid.IsSharedSizeScope="True"
             HeadersVisibility="Column"
-            HorizontalGridLinesBrush="#FF969696"
             IsReadOnly="True"
             ItemsSource="{Binding AlgoInOutModels}"
             LostFocus="OnHashResultDataGridLostFocus"
-            RowStyle="{StaticResource RowStyleNormal}"
-            SelectionMode="Single"
-            VerticalGridLinesBrush="#FF969696">
+            SelectionMode="Single">
             <DataGrid.Columns>
                 <DataGridTemplateColumn Header="算法">
                     <DataGridTemplateColumn.CellTemplate>
@@ -119,7 +105,6 @@
                             <TextBlock
                                 Padding="4,0"
                                 VerticalAlignment="Center"
-                                Foreground="Black"
                                 Text="{Binding AlgoName}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -154,13 +139,12 @@
                                     Padding="4"
                                     Command="{Binding CopyHashResultCmd}"
                                     CommandParameter="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+                                    Content="&#xe718;"
+                                    FontFamily="{StaticResource IconFont}"
+                                    FontSize="14pt"
+                                    Foreground="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=Foreground}"
                                     Style="{StaticResource ImageButtonStyle1}"
-                                    ToolTip="按模板复制...">
-                                    <Image
-                                        Width="16"
-                                        Height="16"
-                                        Source="{StaticResource copy_oneDrawingImage}" />
-                                </Button>
+                                    ToolTip="按模板复制..." />
                             </Grid>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>

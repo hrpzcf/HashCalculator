@@ -9,13 +9,6 @@
     d:DesignHeight="160"
     d:DesignWidth="300"
     mc:Ignorable="d">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Resources/DescTextBlockStyles.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </UserControl.Resources>
     <StackPanel>
         <TextBlock
             Margin="0,2,0,0"

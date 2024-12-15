@@ -12,6 +12,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using Handy = HandyControl;
 
 namespace HashCalculator
 {
@@ -77,7 +78,7 @@ namespace HashCalculator
                 {
                     if (Settings.Current.ShowFileIcon)
                     {
-                        this.FileIcon = CommonUtils.GetFileIcon(arg.FilePath);
+                        this.FileIcon = CommonUtils.GetFileIcon(arg.FilePath, true);
                     }
                     this.FileLength = this.Information.Length;
                 }
@@ -279,6 +280,8 @@ namespace HashCalculator
                 Settings.Current.CaseOfCopiedAlgNameFollowsOutputType) is string text)
             {
                 CommonUtils.ClipboardSetText(text);
+                Handy.Controls.Growl.Success($"已按模板复制当前哈希值：\n{text}",
+                    MessageToken.MainWndMsgToken);
             }
         }
 
@@ -303,6 +306,8 @@ namespace HashCalculator
                 Settings.Current.CaseOfCopiedAlgNameFollowsOutputType) is string text)
             {
                 CommonUtils.ClipboardSetText(text);
+                Handy.Controls.Growl.Success($"已按模板复制所有哈希值：\n{text}",
+                    MessageToken.MainWndMsgToken);
             }
         }
 
@@ -399,8 +404,8 @@ namespace HashCalculator
                         }
                         else
                         {
-                            MessageBox.Show(MainWindow.Current, "没有完成哈希值计算！", "提示",
-                                MessageBoxButton.OK, MessageBoxImage.Warning);
+                            Handy.Controls.Growl.Warning("没有完成哈希值计算！",
+                                MessageToken.MainWndMsgToken);
                         }
                         break;
                     case SettingsViewModel.CmdStrOpenFile:
@@ -461,8 +466,8 @@ namespace HashCalculator
                         }
                         else
                         {
-                            MessageBox.Show(MainWindow.Current, "文件不存在，未复制完整路径！", "提示",
-                                MessageBoxButton.OK, MessageBoxImage.Warning);
+                            Handy.Controls.Growl.Error("文件不存在，未复制完整路径！",
+                                MessageToken.MainWndMsgToken);
                         }
                         break;
                 }

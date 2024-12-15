@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="快捷菜单配置文件编辑器"
@@ -11,17 +12,6 @@
     d:DataContext="{d:DesignInstance Type=local:ShellMenuEditorModel}"
     WindowStartupLocation="CenterOwner"
     mc:Ignorable="d">
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Resources/ConverterResource.xaml" />
-                <ResourceDictionary Source="/Resources/DataGridCellStyles.xaml" />
-                <ResourceDictionary Source="/Resources/DataGridRowStyles.xaml" />
-                <!--<ResourceDictionary Source="/Resources/ImageButtonStyles.xaml" />-->
-                <!--<ResourceDictionary Source="/Resources/FixedBorderColorButtonStyles.xaml" />-->
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Window.Resources>
     <ScrollViewer Padding="2" VerticalScrollBarVisibility="Auto">
         <Grid Margin="8">
             <Grid.RowDefinitions>
@@ -36,21 +26,17 @@
                 Grid.Row="0"
                 Grid.Column="0"
                 AutoGenerateColumns="False"
-                CellStyle="{StaticResource CellStyleNormal1}"
                 HeadersVisibility="Column"
-                HorizontalGridLinesBrush="#FF969696"
                 IsReadOnly="True"
                 ItemsSource="{Binding MenuList}"
-                RowStyle="{StaticResource RowStyleNormal}"
-                SelectedItem="{Binding SelectedMenu}"
-                VerticalGridLinesBrush="#FF969696">
+                SelectedItem="{Binding SelectedMenu}">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn Header="菜单标题">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBox
                                     Margin="2"
-                                    Padding="2"
+                                    Padding="4,2"
                                     Text="{Binding Title, UpdateSourceTrigger=LostFocus}" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -89,6 +75,7 @@
                                             <CheckBox
                                                 VerticalAlignment="Center"
                                                 Content="{Binding Display}"
+                                                Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ComboBoxItem}, Path=Foreground}"
                                                 IsChecked="{Binding Selected}" />
                                         </DataTemplate>
                                     </ComboBox.ItemTemplate>
@@ -105,21 +92,18 @@
                 Margin="8,0,0,0">
                 <Button
                     Grid.Column="2"
-                    Padding="8,4"
-                    Background="{x:Null}"
-                    BorderBrush="Blue"
+                    Padding="8,0"
                     Command="{Binding SaveMenuListCmd}"
-                    Content="保存配置" />
+                    Content="保存配置"
+                    Style="{StaticResource ButtonPrimary}" />
                 <Button
                     Margin="0,8,0,0"
-                    Padding="8,4"
-                    Background="{x:Null}"
+                    Padding="8,0"
                     Command="{Binding AddMenuListCmd}"
                     Content="新建菜单" />
                 <Button
                     Margin="0,8,0,0"
-                    Padding="8,4"
-                    Background="{x:Null}"
+                    Padding="8,0"
                     Command="{Binding EditMenuPropCmd}"
                     Content="编辑子菜单">
                     <Button.IsEnabled>
@@ -131,31 +115,27 @@
                 </Button>
                 <Button
                     Margin="0,8,0,0"
-                    Padding="8,4"
-                    Background="{x:Null}"
+                    Padding="8,0"
                     Command="{Binding MoveMenuUpCmd}"
                     Content="上移所选" />
                 <Button
                     Margin="0,8,0,0"
-                    Padding="8,4"
-                    Background="{x:Null}"
+                    Padding="8,0"
                     Command="{Binding MoveMenuDownCmd}"
                     Content="下移所选" />
                 <Button
                     Margin="0,8,0,0"
-                    Padding="8,4"
-                    Background="{x:Null}"
-                    BorderBrush="Red"
+                    Padding="8,0"
                     Command="{Binding DeleteMenuCmd}"
-                    Content="移除所选" />
+                    Content="移除所选"
+                    Style="{StaticResource ButtonDanger}" />
                 <Button
                     Grid.Column="1"
                     Margin="0,32,0,0"
-                    Padding="8,4"
-                    Background="{x:Null}"
-                    BorderBrush="Red"
+                    Padding="8,0"
                     Command="{Binding ResetMenuListCmd}"
-                    Content="恢复默认" />
+                    Content="恢复默认"
+                    Style="{StaticResource ButtonDanger}" />
             </StackPanel>
             <TextBlock
                 Grid.Row="1"

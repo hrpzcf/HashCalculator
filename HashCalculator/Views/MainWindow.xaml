@@ -3,7 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:gif="https://github.com/XamlAnimatedGif/XamlAnimatedGif"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Width="{Binding Source={x:Static local:Settings.Current}, Path=MainWndWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -24,21 +24,6 @@
             <Binding Source="{x:Static local:Info.Published}" />
         </MultiBinding>
     </Window.Title>
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Resources/ApplicationIcons.xaml" />
-                <ResourceDictionary Source="/Resources/AlgosButtonStyles.xaml" />
-                <ResourceDictionary Source="/Resources/ComboBoxStyle1.xaml" />
-                <ResourceDictionary Source="/Resources/ComboBoxStyle2.xaml" />
-                <ResourceDictionary Source="/Resources/ImageButtonStyles.xaml" />
-                <ResourceDictionary Source="/Resources/ImgButtonTextStyles.xaml" />
-                <ResourceDictionary Source="/Resources/ConverterResource.xaml" />
-                <ResourceDictionary Source="/Resources/DataGridCellStyles.xaml" />
-                <ResourceDictionary Source="/Resources/DataGridRowStyles.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Window.Resources>
     <Window.Top>
         <MultiBinding Converter="{StaticResource MainWndTopCvt}" Mode="TwoWay">
             <Binding
@@ -432,25 +417,23 @@
             </Grid>
         </ScrollViewer>
         <DataGrid
-            x:Name="MainWindowTable"
+            x:Name="MainWindowDataGrid"
             Grid.Row="1"
             Margin="0,4,0,0"
             AllowDrop="True"
             AutoGenerateColumns="False"
-            Background="Transparent"
-            CellStyle="{StaticResource CellStyleNormal1}"
+            CanUserReorderColumns="True"
+            CellStyle="{StaticResource MainDataGridCellStyle}"
             Drop="DataGridHashingFilesDrop"
             Grid.IsSharedSizeScope="True"
             HeadersVisibility="Column"
-            HorizontalGridLinesBrush="#FF969696"
             IsReadOnly="True"
             ItemsSource="{Binding Source={x:Static local:MainWndViewModel.HashViewModelsViewSrc}, IsAsync=True}"
             PreviewKeyDown="DataGridHashingFilesPrevKeyDown"
-            RowStyle="{StaticResource MainTableRowStyle}"
+            RowStyle="{StaticResource MainDataGridRowStyle}"
             ScrollViewer.CanContentScroll="True"
             SelectedItem="{Binding SelectedHashVieModel}"
             SelectionMode="Extended"
-            VerticalGridLinesBrush="#FF969696"
             VirtualizingPanel.IsContainerVirtualizable="True"
             VirtualizingPanel.IsVirtualizing="True"
             VirtualizingPanel.IsVirtualizingWhenGrouping="True"
@@ -614,11 +597,21 @@
                                     Margin="1"
                                     Padding="4"
                                     VerticalAlignment="Center"
-                                    Background="{Binding FdGroupId, Converter={StaticResource CmpColorToSolidColorBrushCvt}}"
-                                    Foreground="{Binding InvalidFileName, Converter={StaticResource InvalidFileNameForegroundCvt}}"
                                     Text="{Binding FileName}"
                                     TextTrimming="CharacterEllipsis"
                                     ToolTip="{Binding Information}">
+                                    <TextBlock.Foreground>
+                                        <MultiBinding Converter="{StaticResource InvalidFileNameForegroundCvt}">
+                                            <Binding Path="InvalidFileName" />
+                                            <Binding Path="Foreground" RelativeSource="{RelativeSource AncestorType=DataGridRow}" />
+                                        </MultiBinding>
+                                    </TextBlock.Foreground>
+                                    <TextBlock.Background>
+                                        <MultiBinding Converter="{StaticResource MultiCmpColorToSolidColorBrushCvt}">
+                                            <Binding Path="FdGroupId" />
+                                            <Binding Path="Background" RelativeSource="{RelativeSource AncestorType=DataGridRow}" />
+                                        </MultiBinding>
+                                    </TextBlock.Background>
                                     <TextBlock.InputBindings>
                                         <MouseBinding
                                             Command="{Binding TableColumnDoubleClickCmd}"
@@ -659,7 +652,7 @@
                     SortMemberPath="FileLength"
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoFileSizeColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
                     <DataGridTemplateColumn.HeaderStyle>
-                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                        <Style BasedOn="{StaticResource DataGridColumnHeaderStyle}" TargetType="{x:Type DataGridColumnHeader}">
                             <Setter Property="HorizontalContentAlignment" Value="Center" />
                         </Style>
                     </DataGridTemplateColumn.HeaderStyle>
@@ -687,7 +680,7 @@
                     Header="算法"
                     SortMemberPath="CurrentInOutModel.AlgoType">
                     <DataGridTemplateColumn.HeaderStyle>
-                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                        <Style BasedOn="{StaticResource DataGridColumnHeaderStyle}" TargetType="{x:Type DataGridColumnHeader}">
                             <Setter Property="HorizontalContentAlignment" Value="Center" />
                         </Style>
                     </DataGridTemplateColumn.HeaderStyle>
@@ -753,10 +746,15 @@
                                     Margin="0,0,4,0"
                                     Padding="4"
                                     VerticalAlignment="Center"
-                                    Background="{Binding GroupId, Converter={StaticResource CmpColorToSolidColorBrushCvt}}"
                                     Text="{Binding CurrentHashString}"
                                     TextTrimming="CharacterEllipsis"
                                     ToolTip="{Binding ModelDetails}">
+                                    <TextBlock.Background>
+                                        <MultiBinding Converter="{StaticResource MultiCmpColorToSolidColorBrushCvt}">
+                                            <Binding Path="GroupId" />
+                                            <Binding Path="Background" RelativeSource="{RelativeSource AncestorType=DataGridRow}" />
+                                        </MultiBinding>
+                                    </TextBlock.Background>
                                     <TextBlock.Visibility>
                                         <MultiBinding Converter="{StaticResource StateFinishedResultSucceededToVisibilityCvt}">
                                             <Binding Path="State" />
@@ -788,9 +786,7 @@
                                 <ProgressBar
                                     Grid.Column="0"
                                     Width="{Binding ElementName=hashStringTextBlock, Path=ActualWidth}"
-                                    Height="6"
                                     HorizontalAlignment="Left"
-                                    Foreground="#8000B4E7"
                                     Maximum="{Binding MaxProgress}"
                                     Visibility="{Binding State, Converter={StaticResource StateRunningToVisiblityCvt}}"
                                     Value="{Binding Progress, Mode=OneWay}" />
@@ -798,39 +794,36 @@
                                     Grid.Column="2"
                                     Padding="4"
                                     Command="{Binding ShutdownModelSelfCmd}"
+                                    Content="&#xe61f;"
+                                    FontFamily="{StaticResource IconFont}"
+                                    FontSize="15pt"
+                                    Foreground="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=Foreground}"
                                     Style="{StaticResource ImageButtonStyle1}"
                                     ToolTip="停止..."
-                                    Visibility="{Binding State, Converter={StaticResource StateRunningToVisiblityCvt}}">
-                                    <Image
-                                        Width="16"
-                                        Height="16"
-                                        Source="{StaticResource stop_oneDrawingImage}" />
-                                </Button>
+                                    Visibility="{Binding State, Converter={StaticResource StateRunningToVisiblityCvt}}" />
                                 <Button
                                     Grid.Column="3"
                                     Padding="4"
                                     Command="{Binding PauseOrContinueModelSelfCmd}"
+                                    Content="{Binding State, Converter={StaticResource SubBtnPauseOrContinueTextCvt}}"
+                                    FontFamily="{StaticResource IconFont}"
+                                    FontSize="15pt"
+                                    Foreground="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=Foreground}"
                                     Style="{StaticResource ImageButtonStyle1}"
                                     ToolTip="{Binding State, Converter={StaticResource SubBtnPauseToolTipCvt}}"
-                                    Visibility="{Binding State, Converter={StaticResource StateRunningToVisiblityCvt}}">
-                                    <Image
-                                        Width="16"
-                                        Height="16"
-                                        Source="{Binding State, Converter={StaticResource SubBtnPauseImageSrcCvt}}" />
-                                </Button>
+                                    Visibility="{Binding State, Converter={StaticResource StateRunningToVisiblityCvt}}" />
                                 <!--  正排队  -->
                                 <Button
                                     Grid.Column="3"
                                     Padding="4"
                                     Command="{Binding ShutdownModelSelfCmd}"
+                                    Content="&#xe620;"
+                                    FontFamily="{StaticResource IconFont}"
+                                    FontSize="15pt"
+                                    Foreground="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=Foreground}"
                                     Style="{StaticResource ImageButtonStyle1}"
                                     ToolTip="取消..."
-                                    Visibility="{Binding State, Converter={StaticResource StateWaitingToVisiblityCvt}}">
-                                    <Image
-                                        Width="16"
-                                        Height="16"
-                                        Source="{StaticResource cancel_oneDrawingImage}" />
-                                </Button>
+                                    Visibility="{Binding State, Converter={StaticResource StateWaitingToVisiblityCvt}}" />
                                 <!--  已成功  -->
                                 <Button
                                     Grid.Column="1"
@@ -840,6 +833,7 @@
                                     d:DataContext="{d:DesignInstance local:HashViewModel}"
                                     Command="{Binding ShowHashDetailsWindowCmd}"
                                     Content="{Binding AlgoInOutModels, Converter={StaticResource AlgoInOutModelsToNumberCvt}}"
+                                    Foreground="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=Foreground}"
                                     Style="{StaticResource GrayRoundTipButton1}"
                                     ToolTip="详情...">
                                     <Button.Visibility>
@@ -853,6 +847,10 @@
                                     Grid.Column="2"
                                     Padding="4"
                                     Command="{Binding CopyThisModelCurHashCmd}"
+                                    Content="&#xe718;"
+                                    FontFamily="{StaticResource IconFont}"
+                                    FontSize="14pt"
+                                    Foreground="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=Foreground}"
                                     Style="{StaticResource ImageButtonStyle1}"
                                     ToolTip="按模板复制该行当前结果...">
                                     <Button.Visibility>
@@ -861,15 +859,15 @@
                                             <Binding Path="Result" />
                                         </MultiBinding>
                                     </Button.Visibility>
-                                    <Image
-                                        Width="16"
-                                        Height="16"
-                                        Source="{StaticResource copy_oneDrawingImage}" />
                                 </Button>
                                 <Button
                                     Grid.Column="3"
                                     Padding="4"
                                     Command="{Binding CopyThisModelAllHashesCmd}"
+                                    Content="&#xe751;"
+                                    FontFamily="{StaticResource IconFont}"
+                                    FontSize="14pt"
+                                    Foreground="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=Foreground}"
                                     Style="{StaticResource ImageButtonStyle1}"
                                     ToolTip="按模板复制该行所有结果...">
                                     <Button.Visibility>
@@ -878,16 +876,16 @@
                                             <Binding Path="Result" />
                                         </MultiBinding>
                                     </Button.Visibility>
-                                    <Image
-                                        Width="16"
-                                        Height="16"
-                                        Source="{StaticResource copy_multiDrawingImage}" />
                                 </Button>
                                 <!--  未成功  -->
                                 <Button
                                     Grid.Column="3"
                                     Padding="4"
                                     Command="{Binding RestartModelSelfCmd}"
+                                    Content="&#xe621;"
+                                    FontFamily="{StaticResource IconFont}"
+                                    FontSize="14pt"
+                                    Foreground="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=Foreground}"
                                     Style="{StaticResource ImageButtonStyle1}"
                                     ToolTip="开始...">
                                     <Button.Visibility>
@@ -896,10 +894,6 @@
                                             <Binding Path="Result" />
                                         </MultiBinding>
                                     </Button.Visibility>
-                                    <Image
-                                        Width="16"
-                                        Height="16"
-                                        Source="{StaticResource start_oneDrawingImage}" />
                                 </Button>
                             </Grid>
                         </DataTemplate>
@@ -911,7 +905,7 @@
                     SortMemberPath="SelectedOutputType"
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoOutputTypeColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
                     <DataGridTemplateColumn.HeaderStyle>
-                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                        <Style BasedOn="{StaticResource DataGridColumnHeaderStyle}" TargetType="{x:Type DataGridColumnHeader}">
                             <Setter Property="HorizontalContentAlignment" Value="Center" />
                         </Style>
                     </DataGridTemplateColumn.HeaderStyle>
@@ -1040,6 +1034,15 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
+        <ScrollViewer
+            Grid.Row="1"
+            HorizontalAlignment="Right"
+            VerticalScrollBarVisibility="Hidden">
+            <StackPanel
+                Margin="0,4,0,4"
+                VerticalAlignment="Top"
+                hc:Growl.Token="{x:Static local:MessageToken.MainWndMsgToken}" />
+        </ScrollViewer>
         <Grid Grid.Row="2" Margin="0,8,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -1048,12 +1051,11 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" Orientation="Horizontal">
-                <Image
-                    Width="21"
-                    Height="21"
+                <hc:GifImage
+                    Width="20"
+                    Height="20"
                     Margin="0,0,12,0"
-                    gif:AnimationBehavior.RepeatBehavior="Forever"
-                    gif:AnimationBehavior.SourceUri="/Images/loading.gif"
+                    Uri="/HashCalculator;component/Images/loading.gif"
                     Visibility="{Binding State, Converter={StaticResource LoadingImageVisiblityCvt}}" />
                 <Image
                     Width="16"
@@ -1079,25 +1081,18 @@
                     Text="{Binding TobeComputedModelsCount}"
                     ToolTip="待计算行数..." />
             </StackPanel>
-            <Grid Grid.Column="1" Margin="8,0,0,0">
-                <TextBlock
-                    Padding="4,0"
-                    VerticalAlignment="Center"
-                    Panel.ZIndex="0"
-                    Foreground="#A0808080"
-                    Text="哈希值校验依据：可在此输入单个或多个哈希值(每行一个)、使用后面的 [...] 按钮选择 [哈希值清单] 文件、粘贴 [哈希值清单] 的单行或多行内容"
-                    Visibility="{Binding HashStringOrChecklistPath, Converter={StaticResource PlaceHolderTextVisibilityCvt}}" />
-                <TextBox
-                    Padding="0,3"
-                    Panel.ZIndex="1"
-                    AcceptsReturn="True"
-                    Background="Transparent"
-                    MaxLines="3"
-                    PreviewDragOver="TextBoxHashStringOrChecklistPathPreviewDragOver"
-                    PreviewDrop="TextBoxHashOrFilePathPreviewDrop"
-                    Text="{Binding HashStringOrChecklistPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                    VerticalScrollBarVisibility="Auto" />
-            </Grid>
+            <TextBox
+                Grid.Column="1"
+                Margin="8,0,0,0"
+                Padding="4,2"
+                hc:InfoElement.Placeholder="哈希值校验依据：可在此输入单个或多个哈希值(每行一个)、使用后面的 [...] 按钮选择 [哈希值清单] 文件、粘贴 [哈希值清单] 的单行或多行内容"
+                AcceptsReturn="True"
+                MaxLines="3"
+                PreviewDragOver="TextBoxHashStringOrChecklistPathPreviewDragOver"
+                PreviewDrop="TextBoxHashOrFilePathPreviewDrop"
+                Style="{StaticResource TextBoxExtend}"
+                Text="{Binding HashStringOrChecklistPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                VerticalScrollBarVisibility="Auto" />
             <Button
                 Grid.Column="2"
                 Margin="8,0,0,0"
@@ -1114,6 +1109,7 @@
                 Command="{Binding StartCheckHashResultsCmd}"
                 Content="校验"
                 IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBooleanCvt}}"
+                Style="{StaticResource ButtonPrimary}"
                 ToolTip="解析输入框的内容并检查哪些行的哈希值与输入框内的哈希值匹配并在【校验结果】列显示结果。&#10;如果检查时表格为空且校验依据是通用格式的【哈希值清单】文件路径，则：&#10;1. 点击【校验】后程序会自动解析文件并在相同目录下寻找要计算哈希值的文件完成计算并显示校验结果。&#10;2. 通用格式的【文件哈希值清单】文件请参考程序【导出结果】功能导出的文件的内容排布格式。" />
         </Grid>
     </Grid>

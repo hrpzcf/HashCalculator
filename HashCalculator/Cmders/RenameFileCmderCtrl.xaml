@@ -9,15 +9,6 @@
     d:DesignHeight="200"
     d:DesignWidth="350"
     mc:Ignorable="d">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Resources/ConverterResource.xaml" />
-                <ResourceDictionary Source="/Resources/CmderButtonStyles.xaml" />
-                <ResourceDictionary Source="/Resources/DescTextBlockStyles.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -38,6 +29,7 @@
             Grid.Row="0"
             Grid.Column="0"
             Grid.ColumnSpan="2"
+            HorizontalAlignment="Left"
             Content="指定关注的算法为第一行当前显示的算法"
             IsChecked="{Binding AutomaticallyFocusAlgorithm}" />
         <Grid
@@ -50,7 +42,7 @@
             </Grid.ColumnDefinitions>
             <RadioButton
                 Grid.Column="0"
-                Padding="4,0,0,0"
+                HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 Content="指定关注的算法为："
                 IsChecked="{Binding AutomaticallyFocusAlgorithm, Converter={StaticResource ReverseBooleanValueCvt}}"
@@ -68,7 +60,7 @@
         <Grid
             Grid.Row="2"
             Grid.Column="0"
-            Margin="0,4,0,0">
+            Margin="0,2,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition />
@@ -118,21 +110,21 @@
             <RadioButton
                 Grid.Row="0"
                 Grid.Column="0"
-                Padding="4,0,0,0"
+                HorizontalAlignment="Left"
                 Content="添加到原文件名的后面"
                 IsChecked="{Binding MethodForRenameFile, Converter={StaticResource RenameMethodAddToEndToTrueCvt}}" />
             <RadioButton
                 Grid.Row="0"
                 Grid.Column="1"
-                Padding="4,0,0,0"
+                HorizontalAlignment="Left"
                 Content="添加到原文件名的前面"
                 IsChecked="{Binding MethodForRenameFile, Converter={StaticResource RenameMethodAddToFrontToTrueCvt}}" />
             <RadioButton
                 Grid.Row="1"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
-                Margin="0,2,0,0"
-                Padding="4,0,0,0"
+                Margin="0,4,0,0"
+                HorizontalAlignment="Left"
                 Content="使用哈希值代替原文件名"
                 IsChecked="{Binding MethodForRenameFile, Converter={StaticResource RenameMethodReplaceAllToTrueCvt}}" />
         </Grid>
@@ -140,7 +132,7 @@
             Grid.Row="4"
             Grid.Column="0"
             Grid.ColumnSpan="2"
-            Margin="0,4,0,0">
+            Margin="0,2,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition />
@@ -160,7 +152,6 @@
             Grid.Row="5"
             Grid.ColumnSpan="3"
             Margin="0,4,0,0"
-            Padding="4,0,0,0"
             VerticalContentAlignment="Center"
             Content="检查是否应用了【有效的文件】筛选器"
             IsChecked="{Binding CheckIfUsingDistinctFilesFilter}"

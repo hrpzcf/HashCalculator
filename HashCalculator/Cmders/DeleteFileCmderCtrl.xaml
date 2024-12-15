@@ -9,15 +9,6 @@
     d:DesignHeight="100"
     d:DesignWidth="300"
     mc:Ignorable="d">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Resources/ConverterResource.xaml" />
-                <ResourceDictionary Source="/Resources/CmderButtonStyles.xaml" />
-                <ResourceDictionary Source="/Resources/DescTextBlockStyles.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -59,7 +50,6 @@
             Grid.Row="1"
             Grid.ColumnSpan="3"
             Margin="0,4,0,0"
-            Padding="4,0,0,0"
             VerticalContentAlignment="Center"
             Content="检查是否应用了【有效的文件】筛选器"
             IsChecked="{Binding CheckIfUsingDistinctFilesFilter}"

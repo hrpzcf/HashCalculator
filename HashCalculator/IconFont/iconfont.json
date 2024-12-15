@@ -1,0 +1,135 @@
+{
+  "id": "4757706",
+  "name": "HashCalculator",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "6536730",
+      "name": "暂停",
+      "font_class": "zanting",
+      "unicode": "e662",
+      "unicode_decimal": 58978
+    },
+    {
+      "icon_id": "26771436",
+      "name": "停止",
+      "font_class": "tingzhi",
+      "unicode": "e61f",
+      "unicode_decimal": 58911
+    },
+    {
+      "icon_id": "26771439",
+      "name": "取消",
+      "font_class": "quxiao",
+      "unicode": "e620",
+      "unicode_decimal": 58912
+    },
+    {
+      "icon_id": "26771440",
+      "name": "开始",
+      "font_class": "kaishi",
+      "unicode": "e621",
+      "unicode_decimal": 58913
+    },
+    {
+      "icon_id": "36314300",
+      "name": "右键菜单与关联",
+      "font_class": "shubiaoyoujian",
+      "unicode": "e7ae",
+      "unicode_decimal": 59310
+    },
+    {
+      "icon_id": "17606335",
+      "name": "任务设置",
+      "font_class": "renwu",
+      "unicode": "e6aa",
+      "unicode_decimal": 59050
+    },
+    {
+      "icon_id": "35472944",
+      "name": "界面设置",
+      "font_class": "shezhi-jiemianshezhi",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "9974431",
+      "name": "常规设置",
+      "font_class": "shezhi2",
+      "unicode": "e707",
+      "unicode_decimal": 59143
+    },
+    {
+      "icon_id": "4059930",
+      "name": "方案",
+      "font_class": "plan",
+      "unicode": "e603",
+      "unicode_decimal": 58883
+    },
+    {
+      "icon_id": "34243205",
+      "name": "导出结果设置",
+      "font_class": "daochu",
+      "unicode": "e736",
+      "unicode_decimal": 59190
+    },
+    {
+      "icon_id": "9033837",
+      "name": "快捷操作设置",
+      "font_class": "kuaijie1",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "9780892",
+      "name": "配置文件保存位置",
+      "font_class": "wendangshezhi-peizhiwenjian_tiandi",
+      "unicode": "e6b7",
+      "unicode_decimal": 59063
+    },
+    {
+      "icon_id": "15726943",
+      "name": "常见问题修复",
+      "font_class": "wentijieda1",
+      "unicode": "e645",
+      "unicode_decimal": 58949
+    },
+    {
+      "icon_id": "17542187",
+      "name": "关于软件",
+      "font_class": "wode-guanyuwomen",
+      "unicode": "e646",
+      "unicode_decimal": 58950
+    },
+    {
+      "icon_id": "16931038",
+      "name": "算法别名设置",
+      "font_class": "suanfa2",
+      "unicode": "e76e",
+      "unicode_decimal": 59246
+    },
+    {
+      "icon_id": "6517480",
+      "name": "复制当前",
+      "font_class": "wj-wj-2",
+      "unicode": "e718",
+      "unicode_decimal": 59160
+    },
+    {
+      "icon_id": "6773140",
+      "name": "复制全部",
+      "font_class": "wj-wjlb",
+      "unicode": "e751",
+      "unicode_decimal": 59217
+    },
+    {
+      "icon_id": "5993150",
+      "name": "复制行为设置",
+      "font_class": "fuzhi1",
+      "unicode": "ec7a",
+      "unicode_decimal": 60538
+    }
+  ]
+}

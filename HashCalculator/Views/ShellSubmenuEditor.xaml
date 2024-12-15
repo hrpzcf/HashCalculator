@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="{Binding Title, StringFormat=【{0}】的子菜单}"
@@ -12,17 +13,6 @@
     ShowInTaskbar="False"
     WindowStartupLocation="CenterOwner"
     mc:Ignorable="d">
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <!--<ResourceDictionary Source="/Resources/ConverterResource.xaml" />-->
-                <ResourceDictionary Source="/Resources/DataGridCellStyles.xaml" />
-                <ResourceDictionary Source="/Resources/DataGridRowStyles.xaml" />
-                <!--<ResourceDictionary Source="/Resources/ImageButtonStyles.xaml" />-->
-                <!--<ResourceDictionary Source="/Resources/FixedBorderColorButtonStyles.xaml" />-->
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Window.Resources>
     <Grid Margin="8">
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -31,14 +21,10 @@
         <DataGrid
             Grid.Row="0"
             AutoGenerateColumns="False"
-            CellStyle="{StaticResource CellStyleNormal1}"
             HeadersVisibility="Column"
-            HorizontalGridLinesBrush="#FF969696"
             IsReadOnly="True"
             ItemsSource="{Binding Submenus}"
-            RowStyle="{StaticResource RowStyleNormal}"
-            SelectedItem="{Binding SelectedSubmenu}"
-            VerticalGridLinesBrush="#FF969696">
+            SelectedItem="{Binding SelectedSubmenu}">
             <DataGrid.Columns>
                 <DataGridTemplateColumn Header="子菜单标题">
                     <DataGridTemplateColumn.CellTemplate>
@@ -59,6 +45,7 @@
                                         <CheckBox
                                             VerticalAlignment="Center"
                                             Content="{Binding Display}"
+                                            Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ComboBoxItem}, Path=Foreground}"
                                             IsChecked="{Binding Selected}" />
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
@@ -71,30 +58,25 @@
         </DataGrid>
         <StackPanel Grid.Column="1" Margin="8,0,0,0">
             <Button
-                Margin="0,8,0,0"
-                Padding="16,4"
-                Background="{x:Null}"
+                Padding="16,0"
                 Command="{Binding AddSubmenuCmd}"
                 Content="新建" />
             <Button
                 Margin="0,8,0,0"
-                Padding="16,4"
-                Background="{x:Null}"
+                Padding="16,0"
                 Command="{Binding MoveSubmenuUpCmd}"
                 Content="上移" />
             <Button
                 Margin="0,8,0,0"
-                Padding="16,4"
-                Background="{x:Null}"
+                Padding="16,0"
                 Command="{Binding MoveSubmenuDownCmd}"
                 Content="下移" />
             <Button
                 Margin="0,24,0,0"
-                Padding="16,4"
-                Background="{x:Null}"
-                BorderBrush="Red"
+                Padding="16,0"
                 Command="{Binding DeleteSubmenuCmd}"
-                Content="移除" />
+                Content="移除"
+                Style="{StaticResource ButtonDanger}" />
         </StackPanel>
     </Grid>
 </Window>

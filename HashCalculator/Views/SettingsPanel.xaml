@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="设置"
@@ -15,31 +16,38 @@
     UseLayoutRounding="True"
     WindowStartupLocation="CenterOwner"
     mc:Ignorable="d">
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Resources/ConverterResource.xaml" />
-                <ResourceDictionary Source="/Resources/DataGridCellStyles.xaml" />
-                <ResourceDictionary Source="/Resources/DataGridRowStyles.xaml" />
-                <ResourceDictionary Source="/Resources/TabControlItemStyles.xaml" />
-                <ResourceDictionary Source="/Resources/TabControlStyles.xaml" />
-                <ResourceDictionary Source="/Resources/DescTextBlockStyles.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Window.Resources>
     <TabControl
         Margin="8"
-        Style="{DynamicResource TabControlStyle1}"
+        Style="{StaticResource TabControlSlidingForSettingsPanel}"
         TabStripPlacement="Left">
-        <TabItem
-            Padding="8"
-            Header="常规设置"
-            Style="{StaticResource TabItemStyle1}">
-            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-                <StackPanel Margin="8">
-                    <GroupBox Foreground="#FF006FD6" Header="文件搜索策略">
+        <TabItem FontSize="10pt">
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontFamily="{StaticResource IconFont}"
+                        FontSize="19pt"
+                        Text="&#xe707;" />
+                    <TextBlock
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center"
+                        Text="常规设置" />
+                </StackPanel>
+            </TabItem.Header>
+            <ScrollViewer
+                Padding="10"
+                FontSize="9pt"
+                HorizontalScrollBarVisibility="Auto"
+                VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <GroupBox
+                        Padding="4"
+                        Background="Transparent"
+                        Foreground="#FF006FD6"
+                        Header="文件搜索策略"
+                        Style="{StaticResource GroupBoxTab}">
                         <StackPanel>
-                            <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
+                            <StackPanel Orientation="Horizontal">
                                 <TextBlock
                                     VerticalAlignment="Center"
                                     Foreground="Black"
@@ -50,7 +58,7 @@
                                     SelectedValue="{Binding SelectedSearchMethodForDragDrop, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                     SelectedValuePath="ItemValue" />
                             </StackPanel>
-                            <StackPanel Margin="0,8,0,4" Orientation="Horizontal">
+                            <StackPanel Margin="0,2,0,0" Orientation="Horizontal">
                                 <TextBlock
                                     VerticalAlignment="Center"
                                     Foreground="Black"
@@ -66,21 +74,23 @@
                     </GroupBox>
                     <GroupBox
                         Margin="0,8,0,0"
+                        Padding="4"
+                        Background="Transparent"
                         Foreground="#FF006FD6"
-                        Header="当需要查找校验依据内列出的文件进行计算并校验时">
+                        Header="当需要查找校验依据内列出的文件进行计算并校验时"
+                        Style="{StaticResource GroupBoxTab}">
                         <StackPanel>
                             <RadioButton
-                                Margin="0,8,0,0"
-                                Padding="4,0,0,0"
+                                HorizontalAlignment="Left"
                                 Content="使用【默认算法】中被勾选的算法"
                                 IsChecked="{Binding PreferChecklistAlgs, Converter={StaticResource ReverseBooleanValueCvt}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             <RadioButton
                                 x:Name="checkBoxPreferChecklistAlgs"
-                                Margin="0,8,0,0"
-                                Padding="4,0,0,0"
+                                Margin="0,4,0,0"
+                                HorizontalAlignment="Left"
                                 Content="首选校验依据文件内容指定算法，次选校验依据文件扩展名指定算法"
                                 IsChecked="{Binding PreferChecklistAlgs, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                            <StackPanel Margin="20,4,0,4" Orientation="Horizontal">
+                            <StackPanel Margin="20,2,0,0" Orientation="Horizontal">
                                 <TextBlock
                                     VerticalAlignment="Center"
                                     Foreground="Black"
@@ -96,23 +106,18 @@
                     </GroupBox>
                     <GroupBox
                         Margin="0,8,0,0"
+                        Padding="4"
+                        Background="Transparent"
                         Foreground="#FF006FD6"
-                        Header="监控剪贴板中新复制的哈希信息用于校验">
+                        Header="监控剪贴板中新复制的哈希信息用于校验"
+                        Style="{StaticResource GroupBoxTab}">
                         <StackPanel>
                             <CheckBox
                                 x:Name="checkBoxVerifyWhenClipbaordNewHash"
-                                Margin="0,8,0,0"
-                                Padding="4,0,0,0"
-                                Content="有新复制的哈希信息时自动填充校验依据文本框并校验"
+                                Content="剪贴板有新复制的哈希信息时自动填充校验依据文本框并校验"
                                 IsChecked="{Binding MonitorNewHashStringInClipboard, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                            <CheckBox
-                                Margin="20,4,0,0"
-                                Padding="4,0,0,0"
-                                Content="完成哈希值校验后把主窗口带到前台 (管理员模式下可能不生效)"
-                                IsChecked="{Binding SwitchMainWndFgWhenNewHashCopied, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                IsEnabled="{Binding ElementName=checkBoxVerifyWhenClipbaordNewHash, Path=IsChecked}" />
                             <StackPanel
-                                Margin="20,4,0,4"
+                                Margin="0,2,0,0"
                                 IsEnabled="{Binding ElementName=checkBoxVerifyWhenClipbaordNewHash, Path=IsChecked}"
                                 Orientation="Horizontal">
                                 <TextBlock
@@ -121,7 +126,6 @@
                                     Text="复制的字符数在此范围内时才触发 (默认8~512)：" />
                                 <TextBox
                                     MinWidth="50"
-                                    Padding="0,2"
                                     VerticalAlignment="Center"
                                     Text="{Binding MinCopiedCharsToTriggerHashCheck, Converter={StaticResource StringToIntDefaultEightCvt}, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
                                 <TextBlock
@@ -130,10 +134,14 @@
                                     Text=" ~ " />
                                 <TextBox
                                     MinWidth="50"
-                                    Padding="0,2"
                                     VerticalAlignment="Center"
                                     Text="{Binding MaxCopiedCharsToTriggerHashCheck, Converter={StaticResource StringToIntDefaultFiveTwelveCvt}, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
                             </StackPanel>
+                            <CheckBox
+                                Margin="0,2,0,0"
+                                Content="完成哈希值校验后把主窗口带到前台 (管理员模式下可能不生效)"
+                                IsChecked="{Binding SwitchMainWndFgWhenNewHashCopied, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                IsEnabled="{Binding ElementName=checkBoxVerifyWhenClipbaordNewHash, Path=IsChecked}" />
                         </StackPanel>
                     </GroupBox>
                     <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
@@ -146,12 +154,10 @@
                     </StackPanel>
                     <CheckBox
                         Margin="0,8,0,0"
-                        Padding="4,0,0,0"
                         Content="不计算空文件的哈希值以避免造成【文件内容相同】的误导"
                         IsChecked="{Binding DoNotHashForEmptyFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <CheckBox
                         Margin="0,8,0,0"
-                        Padding="4,0,0,0"
                         Content="所有任务完成计算后使用颜色来标记哈希值相同的行"
                         IsChecked="{Binding MarkTheSameHashValues, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <TextBlock
@@ -161,184 +167,165 @@
                         Text="此项功能是筛选与操作面板的【相同哈希值】筛选器的简化便捷版，只关注当前算法" />
                     <CheckBox
                         Margin="0,8,0,0"
-                        Padding="4,0,0,0"
                         Content="所有计算任务完成后清除所有行的被选中状态"
                         IsChecked="{Binding ClearSelectedItemsAfterCompletion, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <CheckBox
                         Margin="0,8,0,0"
-                        Padding="4,0,0,0"
                         Content="右键选择删除文件时直接永久删除而不是移动到回收站"
                         IsChecked="{Binding PermanentlyDeleteFiles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <CheckBox
                         Margin="0,8,0,0"
-                        Padding="4,0,0,0"
                         Content="通过命令行、系统右键菜单、关联的文件启动计算前先将表格现有的内容清空"
                         IsChecked="{Binding ClearTableBeforeAddingFilesByCmdLine, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <CheckBox
                         Margin="0,8,0,0"
-                        Padding="4,0,0,0"
                         Content="允许运行多个应用程序实例，包括被系统右键菜单或关联的文件启动"
                         IsChecked="{Binding RunInMultiInstMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
             </ScrollViewer>
         </TabItem>
-        <TabItem
-            Padding="8"
-            Header="界面设置"
-            Style="{StaticResource TabItemStyle1}">
-            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-                <StackPanel Margin="8">
-                    <CheckBox
-                        Padding="4,0,0,0"
-                        Content="不显示【序号】列"
-                        IsChecked="{Binding NoSerialNumColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        <TabItem FontSize="10pt">
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontFamily="{StaticResource IconFont}"
+                        FontSize="19pt"
+                        Text="&#xe601;" />
+                    <TextBlock
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center"
+                        Text="界面设置" />
+                </StackPanel>
+            </TabItem.Header>
+            <ScrollViewer
+                Padding="10"
+                FontSize="9pt"
+                HorizontalScrollBarVisibility="Auto"
+                VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <CheckBox Content="不显示【序号】列" IsChecked="{Binding NoSerialNumColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <CheckBox
                         Margin="0,4,0,0"
-                        Padding="4,0,0,0"
                         Content="不显示【完整路径】列"
                         IsChecked="{Binding NoFullPathColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <CheckBox
                         Margin="0,4,0,0"
-                        Padding="4,0,0,0"
                         Content="不显示【文件大小】列"
                         IsChecked="{Binding NoFileSizeColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <CheckBox
                         Margin="0,4,0,0"
-                        Padding="4,0,0,0"
                         Content="不显示【输出方式】列"
                         IsChecked="{Binding NoOutputTypeColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <CheckBox
                         Margin="0,4,0,0"
-                        Padding="4,0,0,0"
                         Content="不显示【任务耗时】列"
                         IsChecked="{Binding NoDurationColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <CheckBox
                         Margin="0,4,0,0"
-                        Padding="4,0,0,0"
                         Content="不显示【导出】列"
                         IsChecked="{Binding NoExportColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <CheckBox
                         Margin="0,4,0,0"
-                        Padding="4,0,0,0"
                         Content="不显示【校验结果】列"
                         IsChecked="{Binding NoCmpResultColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <CheckBox
                         Margin="0,4,0,0"
-                        Padding="4,0,0,0"
                         Content="在校验结果的色块中显示描述文字"
                         IsChecked="{Binding ShowResultText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <CheckBox
                         Margin="0,4,0,0"
-                        Padding="4,0,0,0"
                         Content="使【筛选与操作】窗口跟随主窗口移动"
                         IsChecked="{Binding FilterAndCmderWndFollowsMainWnd, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <StackPanel Margin="0,4,0,0">
-                        <CheckBox
-                            Padding="4,0,0,0"
-                            Content="显示主窗口所有工具按钮"
-                            IsChecked="{Binding DisplayMainWindowButtons, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <CheckBox Content="显示主窗口所有工具按钮" IsChecked="{Binding DisplayMainWindowButtons, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         <TextBlock
                             Margin="16,2,0,0"
                             Style="{StaticResource DescTextBlockStyle}"
                             Text="取消勾选并关闭设置窗口后可通过点击右键菜单“显示工具按钮”重新显示" />
                         <Expander
-                            Margin="-4,4,0,0"
+                            Margin="0,8,0,0"
                             Foreground="#FF006FD6"
                             Header="分别设置要显示的工具按钮">
-                            <StackPanel>
+                            <StackPanel Margin="4">
                                 <CheckBox
                                     Margin="16,0,0,0"
-                                    Padding="4,0,0,0"
                                     Content="显示【默认算法】按钮"
                                     IsChecked="{Binding ShowOpenSelectAlgoWndButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 <CheckBox
                                     Margin="16,4,0,0"
-                                    Padding="4,0,0,0"
                                     Content="显示【默认输出方式】按钮"
                                     IsChecked="{Binding ShowSelectedOutputTypeButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 <CheckBox
                                     Margin="16,4,0,0"
-                                    Padding="4,0,0,0"
                                     Content="显示【筛选与操作】按钮"
                                     IsChecked="{Binding ShowOpenCommandPanelButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 <CheckBox
                                     Margin="16,4,0,0"
-                                    Padding="4,0,0,0"
                                     Content="显示【选择文件】按钮"
                                     IsChecked="{Binding ShowSelectFilesToHashButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 <CheckBox
                                     Margin="16,4,0,0"
-                                    Padding="4,0,0,0"
                                     Content="显示【选择目录】按钮"
                                     IsChecked="{Binding ShowSelectFoldersToHashButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 <CheckBox
                                     Margin="16,4,0,0"
-                                    Padding="4,0,0,0"
                                     Content="显示【停止搜索】按钮"
                                     IsChecked="{Binding ShowStopEnumeratingPackageButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 <CheckBox
                                     Margin="16,4,0,0"
-                                    Padding="4,0,0,0"
                                     Content="显示【导出结果】按钮"
                                     IsChecked="{Binding ShowExportHashResultsButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 <CheckBox
                                     Margin="16,4,0,0"
-                                    Padding="4,0,0,0"
                                     Content="显示【新行重算】按钮"
                                     IsChecked="{Binding ShowCopyAndRestartModelsButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 <CheckBox
                                     Margin="16,4,0,0"
-                                    Padding="4,0,0,0"
                                     Content="显示【计算缺值项】按钮"
                                     IsChecked="{Binding ShowRefreshOriginalModelsButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 <CheckBox
                                     Margin="16,4,0,0"
-                                    Padding="4,0,0,0"
                                     Content="显示【重新计算】按钮"
                                     IsChecked="{Binding ShowForceRefreshOriginalModelsButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 <CheckBox
                                     Margin="16,4,0,0"
-                                    Padding="4,0,0,0"
                                     Content="显示【清空表格】按钮"
                                     IsChecked="{Binding ShowClearAllTableLinesButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 <CheckBox
                                     Margin="16,4,0,0"
-                                    Padding="4,0,0,0"
                                     Content="显示【全部开始】按钮"
                                     IsChecked="{Binding ShowContinueDisplayedModelsButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 <CheckBox
                                     Margin="16,4,0,0"
-                                    Padding="4,0,0,0"
                                     Content="显示【全部暂停】按钮"
                                     IsChecked="{Binding ShowPauseDisplayedModelsButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 <CheckBox
                                     Margin="16,4,0,0"
-                                    Padding="4,0,0,0"
                                     Content="显示【全部取消】按钮"
                                     IsChecked="{Binding ShowCancelDisplayedModelsButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 <CheckBox
                                     Margin="16,4,0,0"
-                                    Padding="4,0,0,0"
                                     Content="显示【置顶窗口】按钮"
                                     IsChecked="{Binding ShowMainWindowTopmostButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             </StackPanel>
                         </Expander>
                     </StackPanel>
                     <CheckBox
-                        Margin="0,4,0,0"
-                        Padding="4,0,0,0"
+                        Margin="0,8,0,0"
                         Content="显示主窗口工具按钮的名称"
                         IsChecked="{Binding DisplayMainWndButtonText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <CheckBox
-                        Margin="0,4,0,0"
-                        Padding="4,0,0,0"
+                        Margin="0,8,0,0"
                         Content="显示新添加到表格的文件的图标"
                         IsChecked="{Binding ShowFileIcon, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <GroupBox
                         Margin="0,8,0,0"
-                        Padding="0,2,0,0"
+                        Padding="4"
+                        Background="Transparent"
                         Foreground="#FF006FD6"
-                        Header="用颜色来标记哈希值相同的行时的颜色参数">
+                        Header="用颜色来标记哈希值相同的行时的颜色参数"
+                        Style="{StaticResource GroupBoxTab}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -386,10 +373,12 @@
                         </Grid>
                     </GroupBox>
                     <GroupBox
-                        Margin="0,4,0,0"
-                        Padding="0,2,0,0"
+                        Margin="0,8,0,0"
+                        Padding="4"
+                        Background="Transparent"
                         Foreground="#FF006FD6"
-                        Header="相同哈希值筛选器给哈希值列上色时的颜色参数">
+                        Header="相同哈希值筛选器给哈希值列上色时的颜色参数"
+                        Style="{StaticResource GroupBoxTab}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -437,10 +426,12 @@
                         </Grid>
                     </GroupBox>
                     <GroupBox
-                        Margin="0,4,0,0"
-                        Padding="0,2,0,0"
+                        Margin="0,8,0,0"
+                        Padding="4"
+                        Background="Transparent"
                         Foreground="#FF006FD6"
-                        Header="相同文件夹筛选器给文件名列上色时的颜色参数">
+                        Header="相同文件夹筛选器给文件名列上色时的颜色参数"
+                        Style="{StaticResource GroupBoxTab}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -488,450 +479,515 @@
                         </Grid>
                     </GroupBox>
                     <Button
-                        Margin="0,4,0,0"
+                        Margin="0,8,0,0"
                         Padding="8,2"
                         HorizontalAlignment="Left"
-                        Background="{x:Null}"
                         Command="{Binding ResetLuminanceAndSaturationValuesCmd}"
                         Content="重置所有颜色亮度和饱和度值" />
                     <Button
                         Margin="0,8,0,0"
                         Padding="8,2"
                         HorizontalAlignment="Left"
-                        Background="{x:Null}"
                         Click="ResetMainWindowDataGridColumnsIndex"
                         Content="重置主窗口表格所有列的顺序" />
                     <Button
                         Margin="0,8,0,0"
                         Padding="8,2"
                         HorizontalAlignment="Left"
-                        Background="{x:Null}"
                         Click="ResetMainWindowDataGridColumnsWidth"
                         Content="重置主窗口表格所有列的宽度" />
                 </StackPanel>
             </ScrollViewer>
         </TabItem>
-        <TabItem
-            Padding="8"
-            Header="任务设置"
-            Style="{StaticResource TabItemStyle1}">
-            <StackPanel Margin="8">
+        <TabItem FontSize="10pt">
+            <TabItem.Header>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock
                         VerticalAlignment="Center"
-                        Foreground="Black"
-                        Text="同时进行的任务数上限：" />
-                    <ComboBox
-                        DisplayMemberPath="Display"
-                        ItemsSource="{Binding AvailableTaskNumLimits}"
-                        SelectedValue="{Binding SelectedTaskNumberLimit, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        SelectedValuePath="ItemValue" />
+                        FontFamily="{StaticResource IconFont}"
+                        FontSize="19pt"
+                        Text="&#xe6aa;" />
+                    <TextBlock
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center"
+                        Text="任务设置" />
                 </StackPanel>
-                <TextBlock
-                    Margin="18,2,0,0"
-                    FontSize="8pt"
-                    Style="{StaticResource DescTextBlockStyle}"
-                    Text="任务数上限选项中除了 1，其他选项都与下一个设置互斥，无法同时开启；" />
-                <TextBlock
-                    Margin="18,0,0,0"
-                    FontSize="8pt"
-                    Style="{StaticResource DescTextBlockStyle}"
-                    Text="盲目选择高任务上限不一定能加快文件哈希值的计算速度" />
-                <CheckBox
-                    Margin="0,8,0,0"
-                    Padding="4,0,0,0"
-                    Content="任务包含多个算法时多个算法之间并行计算"
-                    IsChecked="{Binding ParallelBetweenAlgos, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <CheckBox
-                    Margin="0,8,0,0"
-                    Padding="4,0,0,0"
-                    Content="延迟启动被添加到表格中的哈希值计算任务"
-                    IsChecked="{Binding DelayTheStartOfCalculationTasks, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <StackPanel Margin="18,2,0,0" Orientation="Horizontal">
-                    <TextBlock VerticalAlignment="Center" Text="延迟启动的毫秒数：" />
-                    <TextBox
-                        MinWidth="100"
-                        Padding="0,1"
-                        MaxLines="1"
-                        Text="{Binding MillisecondsOfDelayedStartup, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
-                </StackPanel>
-                <TextBlock
-                    Margin="18,2,0,0"
-                    FontSize="8pt"
-                    Style="{StaticResource DescTextBlockStyle}"
-                    Text="此项设置可一定程度缓解“添加任务”和“启动任务”同时进行导致的表格显示卡顿" />
-                <CheckBox
-                    Margin="0,8,0,0"
-                    Padding="4,0,0,0"
-                    Content="文件被添加后自动启动对该文件的计算任务"
-                    IsChecked="{Binding AutomaticallyStartTaskAfterFileAdded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-            </StackPanel>
-        </TabItem>
-        <TabItem
-            Padding="8"
-            Header="快捷菜单与文件关联"
-            Style="{StaticResource TabItemStyle1}">
-            <StackPanel>
-                <GroupBox
-                    Margin="4"
-                    Padding="4,8,4,4"
-                    Foreground="#FF006FD6"
-                    Header="扩展系统右键菜单和关联 .hcb 文件">
-                    <StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <Button
-                                Padding="32,8"
-                                Background="{x:Null}"
-                                Command="{Binding InstallShellExtCmd}"
-                                Content="安装右键菜单并关联文件"
-                                IsEnabled="{Binding ProcessingShellExtension, Converter={StaticResource ReverseBooleanValueCvt}}" />
-                            <Button
-                                Margin="32,0,0,0"
-                                Padding="32,8"
-                                Background="{x:Null}"
-                                Command="{Binding UnInstallShellExtCmd}"
-                                Content="卸载右键菜单并取消关联"
-                                IsEnabled="{Binding ProcessingShellExtension, Converter={StaticResource ReverseBooleanValueCvt}}" />
-                        </StackPanel>
-                        <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
-                            <TextBlock Foreground="Black" Text="安装状态：" />
-                            <TextBlock Style="{StaticResource DescTextBlockStyle}" Text="{Binding DisplayingShellInstallationState}" />
-                        </StackPanel>
-                        <StackPanel Margin="0,2,0,0" Orientation="Horizontal">
-                            <TextBlock Foreground="Black" Text="安装位置：" />
-                            <TextBlock Style="{StaticResource DescTextBlockStyle}" Text="{Binding DisplayingShellExtensionDir}" />
-                        </StackPanel>
-                        <StackPanel Margin="0,2,0,0" Orientation="Horizontal">
-                            <TextBlock Foreground="Black" Text="生效范围：" />
-                            <TextBlock Style="{StaticResource DescTextBlockStyle}" Text="{Binding DisplayingShellInstallationScope}" />
-                        </StackPanel>
-                        <StackPanel Margin="0,16,0,0">
-                            <TextBlock
-                                FontSize="8pt"
-                                Style="{StaticResource DescTextBlockStyle}"
-                                Text="1. 状态为未安装时【安装位置】跟随配置文件的保存位置，已安装则表示实际安装位置" />
-                            <TextBlock
-                                Margin="0,4,0,0"
-                                FontSize="8pt"
-                                Style="{StaticResource DescTextBlockStyle}"
-                                Text="2. 状态为未安装时【生效范围】是指如果安装后将会生效的范围，已安装则表示实际生效范围" />
-                            <TextBlock
-                                Margin="0,4,0,0"
-                                FontSize="8pt"
-                                Style="{StaticResource DescTextBlockStyle}"
-                                Text="3. 以管理员身份启动 HashCalculator 后安装则【生效范围】是当前系统，否则是当前用户" />
-                            <StackPanel Margin="0,4,0,0" Orientation="Horizontal">
-                                <TextBlock
-                                    FontSize="8pt"
-                                    Style="{StaticResource DescTextBlockStyle}"
-                                    Text="4. 安装右键菜单后，程序会在 " />
-                                <TextBlock
-                                    Cursor="Hand"
-                                    Foreground="Blue"
-                                    MouseLeftButtonDown="OnTextBlockMouseLeftButtonDown"
-                                    Text="{Binding Source={x:Static local:SettingsViewModel.ShellExtDir}}" />
-                                <TextBlock
-                                    FontSize="8pt"
-                                    Style="{StaticResource DescTextBlockStyle}"
-                                    Text=" 下释放外壳扩展模块 (HashCalculator[32].dll 文件)" />
-                            </StackPanel>
-                            <TextBlock
-                                Margin="0,4,0,0"
-                                FontSize="8pt"
-                                Style="{StaticResource DescTextBlockStyle}"
-                                Text="5. 不可强制移动、删除、重命名 HashCalculator[32].dll 文件，否则右键菜单将失效" />
-                            <StackPanel Margin="0,4,0,0" Orientation="Horizontal">
-                                <TextBlock
-                                    FontSize="8pt"
-                                    Style="{StaticResource DescTextBlockStyle}"
-                                    Text="6. 移动或重命名 HashCalculator.exe 文件后，需 " />
-                                <TextBlock
-                                    Cursor="Hand"
-                                    Foreground="Red"
-                                    MouseLeftButtonDown="OnTextBlockMouseLeftButtonDown"
-                                    Text="{Binding Source={x:Static local:SettingsViewModel.UpdateExePath}}" />
-                                <TextBlock
-                                    FontSize="8pt"
-                                    Style="{StaticResource DescTextBlockStyle}"
-                                    Text="，否则将无法被右键菜单唤起" />
-                            </StackPanel>
-                            <TextBlock
-                                Margin="0,4,0,0"
-                                FontSize="8pt"
-                                Style="{StaticResource DescTextBlockStyle}"
-                                Text="7. 删除 HashCalculator.exe 前先卸载右键菜单，程序会清理注册表并删除菜单扩展模块" />
-                            <TextBlock
-                                Margin="0,4,0,0"
-                                FontSize="8pt"
-                                Foreground="Red"
-                                Style="{StaticResource DescTextBlockStyle}"
-                                Text="8. 下载新版本后先在旧版本上卸载右键菜单再打开新版本安装右键菜单以避免出现兼容问题" />
-                            <TextBlock
-                                Margin="0,4,0,0"
-                                FontSize="8pt"
-                                Foreground="Red"
-                                Style="{StaticResource DescTextBlockStyle}"
-                                Text="9. 如果安装位置是用户目录，即使生效范围是【当前系统】，其他用户也可能无法访问菜单" />
-                            <TextBlock
-                                Margin="0,4,0,0"
-                                FontSize="8pt"
-                                Style="{StaticResource DescTextBlockStyle}"
-                                Text="10. 关联 .hcb 文件后，使用 HashCalculator 导出的 .hcb 文件可通过双击进行快速校验" />
-                            <TextBlock
-                                Margin="0,4,0,0"
-                                FontSize="8pt"
-                                Style="{StaticResource DescTextBlockStyle}"
-                                Text="11. 通过双击打开 .hcb 文件进行快速校验要求待计算哈希值的文件与 .hcb 文件在同一目录下" />
-                        </StackPanel>
-                    </StackPanel>
-                </GroupBox>
-                <GroupBox
-                    Margin="4"
-                    Padding="4,8,4,4"
-                    Foreground="#FF006FD6"
-                    Header="自定义要集成到系统右键菜单的菜单项">
-                    <StackPanel>
-                        <Button
-                            Padding="8"
-                            HorizontalAlignment="Left"
-                            Background="{x:Null}"
-                            Command="{Binding OpenEditContextMenuCmd}"
-                            Content="打开右键菜单集成配置编辑器" />
+            </TabItem.Header>
+            <ScrollViewer
+                Padding="10"
+                FontSize="9pt"
+                HorizontalScrollBarVisibility="Auto"
+                VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
                         <TextBlock
-                            Margin="0,4,0,0"
-                            Style="{StaticResource DescTextBlockStyle}"
-                            Text="通过编辑配置实现自定义要集成到系统右键菜单上的 HashCalculator 菜单项，提高操作效率" />
-                    </StackPanel>
-                </GroupBox>
-            </StackPanel>
-        </TabItem>
-        <TabItem
-            Padding="8"
-            Header="算法别名设置"
-            Style="{StaticResource TabItemStyle1}">
-            <StackPanel Margin="4">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock VerticalAlignment="Center" Text="要设置别名的本地算法：" />
-                    <ComboBox
-                        MinWidth="115"
-                        VerticalContentAlignment="Center"
-                        DisplayMemberPath="AlgoName"
-                        ItemsSource="{Binding Source={x:Static local:AlgosPanelModel.ProvidedAlgos}}"
-                        SelectedItem="{Binding SelectedInOutModelForAlias}" />
-                    <Button
-                        Margin="16,0,0,0"
-                        Padding="16,4"
-                        Background="{x:Null}"
-                        Command="{Binding ResetAlgorithmAliasCmd}"
-                        Content="全部恢复默认" />
-                </StackPanel>
-                <TextBlock Margin="0,8,0,0" Text="要使用的别名：" />
-                <TextBox
-                    Padding="2"
-                    AcceptsReturn="True"
-                    MinLines="3"
-                    Text="{Binding SelectedInOutModelForAlias.AlgorithmAlias, UpdateSourceTrigger=LostFocus}"
-                    TextWrapping="Wrap" />
-                <TextBlock
-                    Margin="0,8,0,0"
-                    FontSize="8pt"
-                    Style="{StaticResource DescTextBlockStyle}"
-                    Text="1. 别名的作用是帮助 HashCalculator 识别那些“不认识”的算法名，例如， -" />
-                <TextBlock
-                    Margin="0,4,0,0"
-                    FontSize="8pt"
-                    Style="{StaticResource DescTextBlockStyle}"
-                    Text="当 HashCalculator 解析校验依据时遇到一个算法名“XXH364”，因为本地并没有叫 -" />
-                <TextBlock
-                    Margin="0,4,0,0"
-                    FontSize="8pt"
-                    Style="{StaticResource DescTextBlockStyle}"
-                    Text="这个名字的算法所以无法识别。这时你可以给本地“XXH3-64”算法增加一个叫“XXH364”的别名， -" />
-                <TextBlock
-                    Margin="0,4,0,0"
-                    FontSize="8pt"
-                    Style="{StaticResource DescTextBlockStyle}"
-                    Text="这样当 HashCalculator 遇到“XXH364”时就知道它实际上就是本地的“XXH3-64”算法。" />
-                <TextBlock
-                    Margin="0,4,0,0"
-                    FontSize="8pt"
-                    Style="{StaticResource DescTextBlockStyle}"
-                    Text="2. 别名不区分大小写，可以通过英文逗号、换行来分隔多个不同的别名。" />
-            </StackPanel>
-        </TabItem>
-        <TabItem
-            Padding="8"
-            Header="复制行为设置"
-            Style="{StaticResource TabItemStyle1}">
-            <StackPanel Margin="8">
-                <GroupBox
-                    Padding="0,8,0,0"
-                    Foreground="#FF006FD6"
-                    Header="当点击含有【按模板复制】字样的按钮或菜单时">
-                    <StackPanel>
-                        <RadioButton
-                            Padding="4,0,0,0"
-                            Content="不使用复制模板，仅复制哈希值"
-                            IsChecked="{Binding GenerateTextInFormat, Converter={StaticResource ReverseBooleanValueCvt}}" />
-                        <RadioButton
-                            Margin="0,4,0,0"
                             VerticalAlignment="Center"
-                            Content="使用以下模版来定制想要复制出来的内容"
-                            IsChecked="{Binding GenerateTextInFormat}" />
-                        <TextBox
-                            Margin="0,4,0,0"
-                            Padding="0,2"
-                            IsEnabled="{Binding GenerateTextInFormat}"
-                            MaxLines="1"
-                            Text="{Binding FormatForGenerateText, UpdateSourceTrigger=LostFocus}" />
-                        <TextBlock
-                            Margin="0,4,0,0"
-                            Style="{StaticResource DescTextBlockStyle}"
-                            Text="可以在输入框中任意使用以下占位符来指定实际要复制的内容：" />
-                        <Grid Margin="0,4,0,0">
-                            <Grid.RowDefinitions>
-                                <RowDefinition />
-                                <RowDefinition />
-                                <RowDefinition />
-                                <RowDefinition />
-                                <RowDefinition />
-                                <RowDefinition />
-                                <RowDefinition />
-                                <RowDefinition />
-                                <RowDefinition />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock
-                                Grid.Row="0"
-                                Grid.Column="0"
-                                Foreground="Black"
-                                Text="$algo$" />
-                            <TextBlock
-                                Grid.Row="0"
-                                Grid.Column="1"
-                                Margin="16,0,0,0"
-                                FontSize="8pt"
-                                Style="{StaticResource DescTextBlockStyle}"
-                                Text="在复制时此占位符将被替换为实际算法名。" />
-                            <TextBlock
-                                Grid.Row="1"
-                                Grid.Column="0"
-                                Foreground="Black"
-                                Text="$hash$" />
-                            <TextBlock
-                                Grid.Row="1"
-                                Grid.Column="1"
-                                Margin="16,0,0,0"
-                                FontSize="8pt"
-                                Style="{StaticResource DescTextBlockStyle}"
-                                Text="在复制时此占位符将被替换为实际哈希值。" />
-                            <TextBlock
-                                Grid.Row="2"
-                                Grid.Column="0"
-                                Foreground="Black"
-                                Text="$path$" />
-                            <TextBlock
-                                Grid.Row="2"
-                                Grid.Column="1"
-                                Margin="16,0,0,0"
-                                FontSize="8pt"
-                                Style="{StaticResource DescTextBlockStyle}"
-                                Text="在复制时此占位符将被替换为实际文件完整路径。" />
-                            <TextBlock
-                                Grid.Row="3"
-                                Grid.Column="0"
-                                Foreground="Black"
-                                Text="$relpath$" />
-                            <TextBlock
-                                Grid.Row="3"
-                                Grid.Column="1"
-                                Margin="16,0,0,0"
-                                FontSize="8pt"
-                                Style="{StaticResource DescTextBlockStyle}"
-                                Text="此占位符将被替换为实际文件相对路径，起点是被添加的对象所在目录。" />
-                            <TextBlock
-                                Grid.Row="4"
-                                Grid.Column="0"
-                                Foreground="Black"
-                                Text="$name$" />
-                            <TextBlock
-                                Grid.Row="4"
-                                Grid.Column="1"
-                                Margin="16,0,0,0"
-                                FontSize="8pt"
-                                Style="{StaticResource DescTextBlockStyle}"
-                                Text="在复制时此占位符将被替换为实际文件名。" />
-                            <TextBlock
-                                Grid.Row="5"
-                                Grid.Column="0"
-                                Foreground="Black"
-                                Text="$newline$" />
-                            <TextBlock
-                                Grid.Row="5"
-                                Grid.Column="1"
-                                Margin="16,0,0,0"
-                                FontSize="8pt"
-                                Style="{StaticResource DescTextBlockStyle}"
-                                Text="在复制时此占位符将被替换为 Windows 换行符。" />
-                            <TextBlock
-                                Grid.Row="6"
-                                Grid.Column="0"
-                                Foreground="Black"
-                                Text="$horztab$" />
-                            <TextBlock
-                                Grid.Row="6"
-                                Grid.Column="1"
-                                Margin="16,0,0,0"
-                                FontSize="8pt"
-                                Style="{StaticResource DescTextBlockStyle}"
-                                Text="在复制时此占位符将被替换为横向制表符（ &quot;\t&quot; ）。" />
-                            <TextBlock
-                                Grid.Row="7"
-                                Grid.Column="0"
-                                Foreground="Black"
-                                Text="$filesize$" />
-                            <TextBlock
-                                Grid.Row="7"
-                                Grid.Column="1"
-                                Margin="16,0,0,0"
-                                FontSize="8pt"
-                                Style="{StaticResource DescTextBlockStyle}"
-                                Text="在复制时此占位符将被替换为以“字节”为单位的文件大小值。" />
-                        </Grid>
-                        <TextBlock
-                            Margin="0,8,0,0"
-                            FontSize="8pt"
-                            Style="{StaticResource DescTextBlockStyle}"
-                            Text="此设置影响所有含有【按模板复制】字样的按钮或菜单的复制效果。" />
-                        <TextBlock
-                            Margin="0,2,0,0"
-                            FontSize="8pt"
-                            Style="{StaticResource DescTextBlockStyle}"
-                            Text="模版输入框留空效果与选择【使用与复制结果相关按钮或菜单时只复制哈希值】相同。" />
-                        <TextBlock
-                            Margin="0,2,0,0"
-                            FontSize="8pt"
-                            Style="{StaticResource DescTextBlockStyle}"
-                            Text="此模板对于那些会复制出多行内容的按钮或菜单来说是每一行的模版。" />
+                            Foreground="Black"
+                            Text="同时进行的任务数上限：" />
+                        <ComboBox
+                            DisplayMemberPath="Display"
+                            ItemsSource="{Binding AvailableTaskNumLimits}"
+                            SelectedValue="{Binding SelectedTaskNumberLimit, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            SelectedValuePath="ItemValue" />
                     </StackPanel>
-                </GroupBox>
-                <CheckBox
-                    Margin="0,8,0,0"
-                    Padding="4,0,0,0"
-                    Content="复制的内容含算法名时算法名的大小写跟随十六进制输出方式"
-                    IsChecked="{Binding CaseOfCopiedAlgNameFollowsOutputType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-            </StackPanel>
+                    <TextBlock
+                        Margin="18,2,0,0"
+                        FontSize="8pt"
+                        Style="{StaticResource DescTextBlockStyle}"
+                        Text="任务数上限选项中除了 1，其他选项都与下一个设置互斥，无法同时开启；" />
+                    <TextBlock
+                        Margin="18,0,0,0"
+                        FontSize="8pt"
+                        Style="{StaticResource DescTextBlockStyle}"
+                        Text="盲目选择高任务上限不一定能加快文件哈希值的计算速度" />
+                    <CheckBox
+                        Margin="0,8,0,0"
+                        Content="任务包含多个算法时多个算法之间并行计算"
+                        IsChecked="{Binding ParallelBetweenAlgos, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <CheckBox
+                        Margin="0,8,0,0"
+                        Content="延迟启动被添加到表格中的哈希值计算任务"
+                        IsChecked="{Binding DelayTheStartOfCalculationTasks, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <StackPanel Margin="18,2,0,0" Orientation="Horizontal">
+                        <TextBlock VerticalAlignment="Center" Text="延迟启动的毫秒数：" />
+                        <TextBox
+                            MinWidth="100"
+                            MaxLines="1"
+                            Text="{Binding MillisecondsOfDelayedStartup, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                    </StackPanel>
+                    <TextBlock
+                        Margin="18,2,0,0"
+                        FontSize="8pt"
+                        Style="{StaticResource DescTextBlockStyle}"
+                        Text="此项设置可一定程度缓解“添加任务”和“启动任务”同时进行导致的表格显示卡顿" />
+                    <CheckBox
+                        Margin="0,8,0,0"
+                        Content="文件被添加后自动启动对该文件的计算任务"
+                        IsChecked="{Binding AutomaticallyStartTaskAfterFileAdded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+            </ScrollViewer>
         </TabItem>
-        <TabItem
-            Padding="8"
-            Header="导出计算结果设置"
-            Style="{StaticResource TabItemStyle1}">
-            <ScrollViewer VerticalScrollBarVisibility="Auto">
-                <Grid Margin="4">
+        <TabItem FontSize="10pt">
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontFamily="{StaticResource IconFont}"
+                        FontSize="19pt"
+                        Text="&#xe7ae;" />
+                    <TextBlock
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center"
+                        Text="右键菜单与文件关联" />
+                </StackPanel>
+            </TabItem.Header>
+            <ScrollViewer
+                Padding="10"
+                FontSize="9pt"
+                HorizontalScrollBarVisibility="Auto"
+                VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <GroupBox
+                        Padding="4"
+                        Background="Transparent"
+                        Foreground="#FF006FD6"
+                        Header="扩展系统右键菜单和关联 .hcb 文件"
+                        Style="{StaticResource GroupBoxTab}">
+                        <StackPanel>
+                            <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+                                <Button
+                                    MinHeight="36"
+                                    Padding="32,0"
+                                    Command="{Binding InstallShellExtCmd}"
+                                    Content="安装右键菜单并关联文件"
+                                    IsEnabled="{Binding ProcessingShellExtension, Converter={StaticResource ReverseBooleanValueCvt}}"
+                                    Style="{StaticResource ButtonPrimary}" />
+                                <Button
+                                    MinHeight="36"
+                                    Margin="16,0,0,0"
+                                    Padding="32,0"
+                                    Command="{Binding UnInstallShellExtCmd}"
+                                    Content="卸载右键菜单并取消关联"
+                                    IsEnabled="{Binding ProcessingShellExtension, Converter={StaticResource ReverseBooleanValueCvt}}"
+                                    Style="{StaticResource ButtonDanger}" />
+                            </StackPanel>
+                            <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
+                                <TextBlock Foreground="Black" Text="安装状态：" />
+                                <TextBlock Style="{StaticResource DescTextBlockStyle}" Text="{Binding DisplayingShellInstallationState}" />
+                            </StackPanel>
+                            <StackPanel Margin="0,2,0,0" Orientation="Horizontal">
+                                <TextBlock Foreground="Black" Text="安装位置：" />
+                                <TextBlock Style="{StaticResource DescTextBlockStyle}" Text="{Binding DisplayingShellExtensionDir}" />
+                            </StackPanel>
+                            <StackPanel Margin="0,2,0,0" Orientation="Horizontal">
+                                <TextBlock Foreground="Black" Text="生效范围：" />
+                                <TextBlock Style="{StaticResource DescTextBlockStyle}" Text="{Binding DisplayingShellInstallationScope}" />
+                            </StackPanel>
+                            <StackPanel Margin="0,16,0,0">
+                                <TextBlock
+                                    FontSize="8pt"
+                                    Style="{StaticResource DescTextBlockStyle}"
+                                    Text="1. 状态为未安装时【安装位置】跟随配置文件的保存位置，已安装则表示实际安装位置" />
+                                <TextBlock
+                                    Margin="0,4,0,0"
+                                    FontSize="8pt"
+                                    Style="{StaticResource DescTextBlockStyle}"
+                                    Text="2. 状态为未安装时【生效范围】是指如果安装后将会生效的范围，已安装则表示实际生效范围" />
+                                <TextBlock
+                                    Margin="0,4,0,0"
+                                    FontSize="8pt"
+                                    Style="{StaticResource DescTextBlockStyle}"
+                                    Text="3. 以管理员身份启动 HashCalculator 后安装则【生效范围】是当前系统，否则是当前用户" />
+                                <StackPanel Margin="0,4,0,0" Orientation="Horizontal">
+                                    <TextBlock
+                                        FontSize="8pt"
+                                        Style="{StaticResource DescTextBlockStyle}"
+                                        Text="4. 安装右键菜单后，程序会在 " />
+                                    <TextBlock
+                                        Cursor="Hand"
+                                        Foreground="Blue"
+                                        MouseLeftButtonDown="OnTextBlockMouseLeftButtonDown"
+                                        Text="{Binding Source={x:Static local:SettingsViewModel.ShellExtDir}}" />
+                                    <TextBlock
+                                        FontSize="8pt"
+                                        Style="{StaticResource DescTextBlockStyle}"
+                                        Text=" 下释放外壳扩展模块 (HashCalculator[32].dll 文件)" />
+                                </StackPanel>
+                                <TextBlock
+                                    Margin="0,4,0,0"
+                                    FontSize="8pt"
+                                    Style="{StaticResource DescTextBlockStyle}"
+                                    Text="5. 不可强制移动、删除、重命名 HashCalculator[32].dll 文件，否则右键菜单将失效" />
+                                <StackPanel Margin="0,4,0,0" Orientation="Horizontal">
+                                    <TextBlock
+                                        FontSize="8pt"
+                                        Style="{StaticResource DescTextBlockStyle}"
+                                        Text="6. 移动或重命名 HashCalculator.exe 文件后，需 " />
+                                    <TextBlock
+                                        Cursor="Hand"
+                                        Foreground="Red"
+                                        MouseLeftButtonDown="OnTextBlockMouseLeftButtonDown"
+                                        Text="{Binding Source={x:Static local:SettingsViewModel.UpdateExePath}}" />
+                                    <TextBlock
+                                        FontSize="8pt"
+                                        Style="{StaticResource DescTextBlockStyle}"
+                                        Text="，否则将无法被右键菜单唤起" />
+                                </StackPanel>
+                                <TextBlock
+                                    Margin="0,4,0,0"
+                                    FontSize="8pt"
+                                    Style="{StaticResource DescTextBlockStyle}"
+                                    Text="7. 删除 HashCalculator.exe 前先卸载右键菜单，程序会清理注册表并删除菜单扩展模块" />
+                                <TextBlock
+                                    Margin="0,4,0,0"
+                                    FontSize="8pt"
+                                    Foreground="Red"
+                                    Style="{StaticResource DescTextBlockStyle}"
+                                    Text="8. 下载新版本后先在旧版本上卸载右键菜单再打开新版本安装右键菜单以避免出现兼容问题" />
+                                <TextBlock
+                                    Margin="0,4,0,0"
+                                    FontSize="8pt"
+                                    Foreground="Red"
+                                    Style="{StaticResource DescTextBlockStyle}"
+                                    Text="9. 如果安装位置是用户目录，即使生效范围是【当前系统】，其他用户也可能无法访问菜单" />
+                                <TextBlock
+                                    Margin="0,4,0,0"
+                                    FontSize="8pt"
+                                    Style="{StaticResource DescTextBlockStyle}"
+                                    Text="10. 关联 .hcb 文件后，使用 HashCalculator 导出的 .hcb 文件可通过双击进行快速校验" />
+                                <TextBlock
+                                    Margin="0,4,0,0"
+                                    FontSize="8pt"
+                                    Style="{StaticResource DescTextBlockStyle}"
+                                    Text="11. 通过双击打开 .hcb 文件进行快速校验要求待计算哈希值的文件与 .hcb 文件在同一目录下" />
+                            </StackPanel>
+                        </StackPanel>
+                    </GroupBox>
+                    <GroupBox
+                        Margin="0,8,0,0"
+                        Padding="4"
+                        Background="Transparent"
+                        Foreground="#FF006FD6"
+                        Header="自定义要集成到系统右键菜单的菜单项"
+                        Style="{StaticResource GroupBoxTab}">
+                        <StackPanel>
+                            <Button
+                                MinHeight="36"
+                                Padding="20,0"
+                                HorizontalAlignment="Left"
+                                Command="{Binding OpenEditContextMenuCmd}"
+                                Content="打开右键菜单集成配置编辑器"
+                                Style="{StaticResource ButtonPrimary}" />
+                            <TextBlock
+                                Margin="0,4,0,0"
+                                Style="{StaticResource DescTextBlockStyle}"
+                                Text="通过编辑配置实现自定义要集成到系统右键菜单上的 HashCalculator 菜单项，提高操作效率" />
+                        </StackPanel>
+                    </GroupBox>
+                </StackPanel>
+            </ScrollViewer>
+        </TabItem>
+        <TabItem FontSize="10pt">
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontFamily="{StaticResource IconFont}"
+                        FontSize="19pt"
+                        Text="&#xe76e;" />
+                    <TextBlock
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center"
+                        Text="算法别名设置" />
+                </StackPanel>
+            </TabItem.Header>
+            <ScrollViewer
+                Padding="10"
+                FontSize="9pt"
+                HorizontalScrollBarVisibility="Auto"
+                VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock VerticalAlignment="Center" Text="要设置别名的本地算法：" />
+                        <ComboBox
+                            MinWidth="115"
+                            VerticalContentAlignment="Center"
+                            DisplayMemberPath="AlgoName"
+                            ItemsSource="{Binding Source={x:Static local:AlgosPanelModel.ProvidedAlgos}}"
+                            SelectedItem="{Binding SelectedInOutModelForAlias}" />
+                        <Button
+                            Margin="16,0,0,0"
+                            Command="{Binding ResetAlgorithmAliasCmd}"
+                            Content="全部恢复默认"
+                            Style="{StaticResource ButtonDanger}" />
+                    </StackPanel>
+                    <TextBlock Margin="0,8,0,0" Text="要使用的别名：" />
+                    <TextBox
+                        Padding="4"
+                        VerticalContentAlignment="Top"
+                        AcceptsReturn="True"
+                        MinLines="3"
+                        Text="{Binding SelectedInOutModelForAlias.AlgorithmAlias, UpdateSourceTrigger=LostFocus}"
+                        TextWrapping="Wrap" />
+                    <TextBlock
+                        Margin="0,8,0,0"
+                        FontSize="8pt"
+                        Style="{StaticResource DescTextBlockStyle}"
+                        Text="1. 别名的作用是帮助 HashCalculator 识别那些“不认识”的算法名，例如， -" />
+                    <TextBlock
+                        Margin="0,4,0,0"
+                        FontSize="8pt"
+                        Style="{StaticResource DescTextBlockStyle}"
+                        Text="当 HashCalculator 解析校验依据时遇到一个算法名“XXH364”，因为本地并没有叫 -" />
+                    <TextBlock
+                        Margin="0,4,0,0"
+                        FontSize="8pt"
+                        Style="{StaticResource DescTextBlockStyle}"
+                        Text="这个名字的算法所以无法识别。这时你可以给本地“XXH3-64”算法增加一个叫“XXH364”的别名， -" />
+                    <TextBlock
+                        Margin="0,4,0,0"
+                        FontSize="8pt"
+                        Style="{StaticResource DescTextBlockStyle}"
+                        Text="这样当 HashCalculator 遇到“XXH364”时就知道它实际上就是本地的“XXH3-64”算法。" />
+                    <TextBlock
+                        Margin="0,4,0,0"
+                        FontSize="8pt"
+                        Style="{StaticResource DescTextBlockStyle}"
+                        Text="2. 别名不区分大小写，可以通过英文逗号、换行来分隔多个不同的别名。" />
+                </StackPanel>
+            </ScrollViewer>
+        </TabItem>
+        <TabItem FontSize="10pt">
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontFamily="{StaticResource IconFont}"
+                        FontSize="19pt"
+                        Text="&#xec7a;" />
+                    <TextBlock
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center"
+                        Text="复制行为设置" />
+                </StackPanel>
+            </TabItem.Header>
+            <ScrollViewer
+                Padding="10"
+                FontSize="9pt"
+                HorizontalScrollBarVisibility="Auto"
+                VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <GroupBox
+                        Padding="4"
+                        Background="Transparent"
+                        Foreground="#FF006FD6"
+                        Header="当点击含有【按模板复制】字样的按钮或菜单时"
+                        Style="{StaticResource GroupBoxTab}">
+                        <StackPanel>
+                            <RadioButton
+                                HorizontalAlignment="Left"
+                                Content="不使用复制模板，仅复制哈希值"
+                                IsChecked="{Binding GenerateTextInFormat, Converter={StaticResource ReverseBooleanValueCvt}}" />
+                            <RadioButton
+                                Margin="0,4,0,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Content="使用以下模版来定制想要复制出来的内容"
+                                IsChecked="{Binding GenerateTextInFormat}" />
+                            <TextBox
+                                Margin="0,4,0,0"
+                                IsEnabled="{Binding GenerateTextInFormat}"
+                                MaxLines="1"
+                                Text="{Binding FormatForGenerateText, UpdateSourceTrigger=LostFocus}" />
+                            <TextBlock
+                                Margin="0,4,0,0"
+                                Style="{StaticResource DescTextBlockStyle}"
+                                Text="可以在输入框中任意使用以下占位符来指定实际要复制的内容：" />
+                            <Grid Margin="0,4,0,0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    Foreground="Black"
+                                    Text="$algo$" />
+                                <TextBlock
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    Margin="16,0,0,0"
+                                    FontSize="8pt"
+                                    Style="{StaticResource DescTextBlockStyle}"
+                                    Text="在复制时此占位符将被替换为实际算法名。" />
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    Foreground="Black"
+                                    Text="$hash$" />
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    Margin="16,0,0,0"
+                                    FontSize="8pt"
+                                    Style="{StaticResource DescTextBlockStyle}"
+                                    Text="在复制时此占位符将被替换为实际哈希值。" />
+                                <TextBlock
+                                    Grid.Row="2"
+                                    Grid.Column="0"
+                                    Foreground="Black"
+                                    Text="$path$" />
+                                <TextBlock
+                                    Grid.Row="2"
+                                    Grid.Column="1"
+                                    Margin="16,0,0,0"
+                                    FontSize="8pt"
+                                    Style="{StaticResource DescTextBlockStyle}"
+                                    Text="在复制时此占位符将被替换为实际文件完整路径。" />
+                                <TextBlock
+                                    Grid.Row="3"
+                                    Grid.Column="0"
+                                    Foreground="Black"
+                                    Text="$relpath$" />
+                                <TextBlock
+                                    Grid.Row="3"
+                                    Grid.Column="1"
+                                    Margin="16,0,0,0"
+                                    FontSize="8pt"
+                                    Style="{StaticResource DescTextBlockStyle}"
+                                    Text="此占位符将被替换为实际文件相对路径，起点是被添加的对象所在目录。" />
+                                <TextBlock
+                                    Grid.Row="4"
+                                    Grid.Column="0"
+                                    Foreground="Black"
+                                    Text="$name$" />
+                                <TextBlock
+                                    Grid.Row="4"
+                                    Grid.Column="1"
+                                    Margin="16,0,0,0"
+                                    FontSize="8pt"
+                                    Style="{StaticResource DescTextBlockStyle}"
+                                    Text="在复制时此占位符将被替换为实际文件名。" />
+                                <TextBlock
+                                    Grid.Row="5"
+                                    Grid.Column="0"
+                                    Foreground="Black"
+                                    Text="$newline$" />
+                                <TextBlock
+                                    Grid.Row="5"
+                                    Grid.Column="1"
+                                    Margin="16,0,0,0"
+                                    FontSize="8pt"
+                                    Style="{StaticResource DescTextBlockStyle}"
+                                    Text="在复制时此占位符将被替换为 Windows 换行符。" />
+                                <TextBlock
+                                    Grid.Row="6"
+                                    Grid.Column="0"
+                                    Foreground="Black"
+                                    Text="$horztab$" />
+                                <TextBlock
+                                    Grid.Row="6"
+                                    Grid.Column="1"
+                                    Margin="16,0,0,0"
+                                    FontSize="8pt"
+                                    Style="{StaticResource DescTextBlockStyle}"
+                                    Text="在复制时此占位符将被替换为横向制表符（ &quot;\t&quot; ）。" />
+                            </Grid>
+                            <TextBlock
+                                Margin="0,8,0,0"
+                                FontSize="8pt"
+                                Style="{StaticResource DescTextBlockStyle}"
+                                Text="此设置影响所有含有【按模板复制】字样的按钮或菜单的复制效果。" />
+                            <TextBlock
+                                Margin="0,2,0,0"
+                                FontSize="8pt"
+                                Style="{StaticResource DescTextBlockStyle}"
+                                Text="模版输入框留空效果与选择【使用与复制结果相关按钮或菜单时只复制哈希值】相同。" />
+                            <TextBlock
+                                Margin="0,2,0,0"
+                                FontSize="8pt"
+                                Style="{StaticResource DescTextBlockStyle}"
+                                Text="此模板对于那些会复制出多行内容的按钮或菜单来说是每一行的模版。" />
+                        </StackPanel>
+                    </GroupBox>
+                    <CheckBox
+                        Margin="0,8,0,0"
+                        Content="复制的内容含算法名时算法名的大小写跟随十六进制输出方式"
+                        IsChecked="{Binding CaseOfCopiedAlgNameFollowsOutputType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+            </ScrollViewer>
+        </TabItem>
+        <TabItem FontSize="10pt">
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontFamily="{StaticResource IconFont}"
+                        FontSize="19pt"
+                        Text="&#xe736;" />
+                    <TextBlock
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center"
+                        Text="导出计算结果设置" />
+                </StackPanel>
+            </TabItem.Header>
+            <ScrollViewer
+                Padding="10"
+                FontSize="9pt"
+                VerticalScrollBarVisibility="Auto">
+                <Grid>
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
@@ -942,17 +998,19 @@
                     </Grid.RowDefinitions>
                     <GroupBox
                         Grid.Row="0"
-                        Padding="4,8,4,4"
+                        Padding="4"
+                        Background="Transparent"
                         Foreground="#FF006FD6"
-                        Header="导出计算结果时导出哪些算法的结果">
+                        Header="导出计算结果时导出哪些算法的结果"
+                        Style="{StaticResource GroupBoxTab}">
                         <StackPanel>
                             <RadioButton
-                                VerticalContentAlignment="Center"
+                                HorizontalAlignment="Left"
                                 Content="仅导出每行当前显示的算法的结果"
                                 IsChecked="{Binding HowToExportHashValues, Converter={StaticResource RadioExportCurrentAlgoCvt}}" />
                             <RadioButton
-                                Margin="0,8,0,0"
-                                VerticalContentAlignment="Center"
+                                Margin="0,4,0,0"
+                                HorizontalAlignment="Left"
                                 Content="导出每行所有已计算的算法的结果"
                                 IsChecked="{Binding HowToExportHashValues, Converter={StaticResource RadioExportAllCalculatedAlgosCvt}}" />
                         </StackPanel>
@@ -960,20 +1018,15 @@
                     <CheckBox
                         Grid.Row="1"
                         Margin="0,8,0,0"
-                        Padding="4,0,0,0"
                         Content="导出计算结果时使用默认输出方式输出哈希值而不是各行的输出方式"
                         IsChecked="{Binding UseDefaultOutputTypeWhenExporting}" />
                     <CheckBox
                         Grid.Row="2"
                         Margin="0,4,0,0"
-                        Padding="4,0,0,0"
                         Content="使主窗口的【导出】复选框控制该行所有子算法的【导出】而非当前算法"
                         IsChecked="{Binding ExportInMainControlsChildExports}" />
                     <StackPanel Grid.Row="3" Margin="0,4,0,0">
-                        <CheckBox
-                            Padding="4,0,0,0"
-                            Content="导出计算结果时使用 Unix 换行符，取消勾选则使用 Windows 换行符"
-                            IsChecked="{Binding UseUnixStyleLineBreaks, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <CheckBox Content="导出计算结果时使用 Unix 换行符，取消勾选则使用 Windows 换行符" IsChecked="{Binding UseUnixStyleLineBreaks, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         <TextBlock
                             Margin="18,2,0,0"
                             FontSize="8pt"
@@ -985,10 +1038,7 @@
                         Grid.Column="0"
                         Grid.ColumnSpan="2"
                         Margin="0,4,0,0">
-                        <CheckBox
-                            Padding="4,0,0,0"
-                            Content="把每种算法的结果分别导出到以算法名为扩展名的不同文件中"
-                            IsChecked="{Binding EachAlgoExportedToSeparateFile}" />
+                        <CheckBox Content="把每种算法的结果分别导出到以算法名为扩展名的不同文件中" IsChecked="{Binding EachAlgoExportedToSeparateFile}" />
                         <TextBlock
                             Margin="18,0,0,0"
                             FontSize="8pt"
@@ -1008,283 +1058,14 @@
                     <CheckBox
                         Grid.Row="5"
                         Margin="0,4,0,0"
-                        Padding="4,0,0,0"
                         Content="每次导出结果时都打开导出参数小窗口以设置本次的导出参数"
                         IsChecked="{Binding AskUserHowToExportResultsEveryTime}" />
-                    <GroupBox
+                    <TextBlock
                         Grid.Row="6"
                         Margin="0,8,0,0"
-                        Padding="0,8,0,0"
                         Foreground="#FF006FD6"
-                        Header="导出计算结果时【另存为】对话框的【保存类型】列表内的可选方案">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <DataGrid
-                                Grid.Row="0"
-                                Grid.Column="0"
-                                AutoGenerateColumns="False"
-                                CellStyle="{StaticResource CellStyleNormal1}"
-                                HeadersVisibility="Column"
-                                HorizontalGridLinesBrush="#FF969696"
-                                HorizontalScrollBarVisibility="Disabled"
-                                IsReadOnly="True"
-                                ItemsSource="{Binding Source={x:Static local:Settings.Current}, Path=TemplatesForExport}"
-                                KeyDown="SettingsPanelKeyDown"
-                                RowStyle="{StaticResource RowStyleNormal}"
-                                SelectedItem="{Binding Source={x:Static local:Settings.Current}, Path=SelectedTemplateForExport}"
-                                SelectionMode="Single"
-                                VerticalGridLinesBrush="#FF969696">
-                                <DataGrid.Columns>
-                                    <DataGridTemplateColumn Header="方案名称">
-                                        <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <TextBox
-                                                    Margin="2"
-                                                    Padding="2"
-                                                    Text="{Binding Name, UpdateSourceTrigger=LostFocus}" />
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                    </DataGridTemplateColumn>
-                                    <DataGridTemplateColumn Header="文件扩展名">
-                                        <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <TextBox
-                                                    Margin="2"
-                                                    Padding="2"
-                                                    LostFocus="OnTextBoxExtensionLostFocus"
-                                                    Text="{Binding Extension, UpdateSourceTrigger=LostFocus}" />
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                    </DataGridTemplateColumn>
-                                    <DataGridTemplateColumn Header="文件内容模版">
-                                        <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <TextBox
-                                                    Margin="2"
-                                                    Padding="2"
-                                                    FontFamily="Consolas"
-                                                    Text="{Binding Template, UpdateSourceTrigger=LostFocus}"
-                                                    TextWrapping="WrapWithOverflow" />
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                    </DataGridTemplateColumn>
-                                    <DataGridTemplateColumn MinWidth="70" Header="文件编码">
-                                        <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <ComboBox
-                                                    Margin="2"
-                                                    VerticalAlignment="Center"
-                                                    DisplayMemberPath="Display"
-                                                    ItemsSource="{Binding Path=(local:TemplateForExportModel.AvailableEncodings)}"
-                                                    SelectedValue="{Binding UsingEncoding, UpdateSourceTrigger=PropertyChanged}"
-                                                    SelectedValuePath="ItemValue" />
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                    </DataGridTemplateColumn>
-                                    <DataGridTextColumn Width="*" />
-                                </DataGrid.Columns>
-                            </DataGrid>
-                            <StackPanel
-                                Grid.Row="0"
-                                Grid.Column="1"
-                                Margin="4,0,0,0">
-                                <Button
-                                    Padding="8,2"
-                                    Background="{x:Null}"
-                                    Command="{Binding AddExportTemplateCmd}"
-                                    Content="添加" />
-                                <Button
-                                    Margin="0,8,0,0"
-                                    Padding="8,2"
-                                    Background="{x:Null}"
-                                    Command="{Binding CopyExportTemplateCmd}"
-                                    Content="复制" />
-                                <Button
-                                    Margin="0,8,0,0"
-                                    Padding="8,2"
-                                    Background="{x:Null}"
-                                    Command="{Binding MoveExportTemplateUpCmd}"
-                                    Content="上移" />
-                                <Button
-                                    Margin="0,8,0,0"
-                                    Padding="8,2"
-                                    Background="{x:Null}"
-                                    Command="{Binding MoveExportTemplateDownCmd}"
-                                    Content="下移" />
-                                <Button
-                                    Margin="0,8,0,0"
-                                    Padding="8,2"
-                                    Background="{x:Null}"
-                                    BorderBrush="Red"
-                                    Command="{Binding RemoveExportTemplateCmd}"
-                                    Content="移除" />
-                                <Button
-                                    Margin="0,8,0,0"
-                                    Padding="8,2"
-                                    Background="{x:Null}"
-                                    BorderBrush="Red"
-                                    Command="{Binding ResetExportTemplateCmd}"
-                                    Content="重置" />
-                            </StackPanel>
-                            <StackPanel
-                                Grid.Row="1"
-                                Grid.Column="0"
-                                Grid.ColumnSpan="2"
-                                Margin="0,4,0,0">
-                                <TextBlock
-                                    Margin="0,4,0,0"
-                                    Style="{StaticResource DescTextBlockStyle}"
-                                    Text="导出计算结果时保存的文件的每一行内容都将按照“文件内容模版”生成。" />
-                                <TextBlock
-                                    Margin="0,4,0,0"
-                                    Style="{StaticResource DescTextBlockStyle}"
-                                    Text="可以在“文件内容模版”输入框中任意使用以下占位符：" />
-                                <Grid Margin="0,4,0,0">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition />
-                                        <RowDefinition />
-                                        <RowDefinition />
-                                        <RowDefinition />
-                                        <RowDefinition />
-                                        <RowDefinition />
-                                        <RowDefinition />
-                                        <RowDefinition />
-                                        <RowDefinition />
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock
-                                        Grid.Row="0"
-                                        Grid.Column="0"
-                                        Foreground="Black"
-                                        Text="$algo$" />
-                                    <TextBlock
-                                        Grid.Row="0"
-                                        Grid.Column="1"
-                                        Margin="16,0,0,0"
-                                        FontSize="8pt"
-                                        Style="{StaticResource DescTextBlockStyle}"
-                                        Text="导出计算结果时此占位符将被替换为实际算法名。" />
-                                    <TextBlock
-                                        Grid.Row="1"
-                                        Grid.Column="0"
-                                        Foreground="Black"
-                                        Text="$hash$" />
-                                    <TextBlock
-                                        Grid.Row="1"
-                                        Grid.Column="1"
-                                        Margin="16,0,0,0"
-                                        FontSize="8pt"
-                                        Style="{StaticResource DescTextBlockStyle}"
-                                        Text="导出计算结果时此占位符将被替换为实际哈希值。" />
-                                    <TextBlock
-                                        Grid.Row="2"
-                                        Grid.Column="0"
-                                        Foreground="Black"
-                                        Text="$path$" />
-                                    <TextBlock
-                                        Grid.Row="2"
-                                        Grid.Column="1"
-                                        Margin="16,0,0,0"
-                                        FontSize="8pt"
-                                        Style="{StaticResource DescTextBlockStyle}"
-                                        Text="导出计算结果时此占位符将被替换为实际文件完整路径。" />
-                                    <TextBlock
-                                        Grid.Row="3"
-                                        Grid.Column="0"
-                                        Foreground="Black"
-                                        Text="$relpath$" />
-                                    <TextBlock
-                                        Grid.Row="3"
-                                        Grid.Column="1"
-                                        Margin="16,0,0,0"
-                                        FontSize="8pt"
-                                        Style="{StaticResource DescTextBlockStyle}"
-                                        Text="此占位符将被替换为实际文件相对路径，起点是被添加的对象所在目录。" />
-                                    <TextBlock
-                                        Grid.Row="4"
-                                        Grid.Column="0"
-                                        Foreground="Black"
-                                        Text="$name$" />
-                                    <TextBlock
-                                        Grid.Row="4"
-                                        Grid.Column="1"
-                                        Margin="16,0,0,0"
-                                        FontSize="8pt"
-                                        Style="{StaticResource DescTextBlockStyle}"
-                                        Text="导出计算结果时此占位符将被替换为实际文件名。" />
-                                    <TextBlock
-                                        Grid.Row="5"
-                                        Grid.Column="0"
-                                        Foreground="Black"
-                                        Text="$newline$" />
-                                    <TextBlock
-                                        Grid.Row="5"
-                                        Grid.Column="1"
-                                        Margin="16,0,0,0"
-                                        FontSize="8pt"
-                                        Style="{StaticResource DescTextBlockStyle}"
-                                        Text="导出计算结果时此占位符将被替换为 Unix 或 Windows 换行符。" />
-                                    <TextBlock
-                                        Grid.Row="6"
-                                        Grid.Column="0"
-                                        Foreground="Black"
-                                        Text="$horztab$" />
-                                    <TextBlock
-                                        Grid.Row="6"
-                                        Grid.Column="1"
-                                        Margin="16,0,0,0"
-                                        FontSize="8pt"
-                                        Style="{StaticResource DescTextBlockStyle}"
-                                        Text="导出计算结果时此占位符将被替换为横向制表符（ &quot;\t&quot; ）。" />
-                                    <TextBlock
-                                        Grid.Row="7"
-                                        Grid.Column="0"
-                                        Foreground="Black"
-                                        Text="$filesize$" />
-                                    <TextBlock
-                                        Grid.Row="7"
-                                        Grid.Column="1"
-                                        Margin="16,0,0,0"
-                                        FontSize="8pt"
-                                        Style="{StaticResource DescTextBlockStyle}"
-                                        Text="导出计算结果时此占位符将被替换为以“字节”为单位的文件大小值。" />
-                                </Grid>
-                                <TextBlock
-                                    Margin="0,8,0,0"
-                                    Foreground="Black"
-                                    Text="如何使用以上设置好的方案来导出计算结果？" />
-                                <TextBlock
-                                    Margin="0,2,0,0"
-                                    FontSize="8pt"
-                                    Style="{StaticResource DescTextBlockStyle}"
-                                    Text="点击【导出结果】按钮打开【另存为】对话框后，在【保存类型】下拉列表内选择方案。" />
-                            </StackPanel>
-                        </Grid>
-                    </GroupBox>
-                </Grid>
-            </ScrollViewer>
-        </TabItem>
-        <TabItem
-            Padding="8"
-            Header="校验依据解析方案"
-            Style="{StaticResource TabItemStyle1}">
-            <ScrollViewer VerticalScrollBarVisibility="Auto">
-                <GroupBox
-                    Margin="4"
-                    Padding="4,8,4,4"
-                    Foreground="#FF006FD6"
-                    Header="从校验依据(文件/字符串)解析哈希信息时使用的解析方案">
-                    <Grid>
+                        Text="导出计算结果时【另存为】对话框的【保存类型】列表内的可选方案：" />
+                    <Grid Grid.Row="7" Margin="0,4,0,0">
                         <Grid.RowDefinitions>
                             <RowDefinition />
                             <RowDefinition Height="Auto" />
@@ -1297,48 +1078,57 @@
                             Grid.Row="0"
                             Grid.Column="0"
                             AutoGenerateColumns="False"
-                            CellStyle="{StaticResource CellStyleNormal2}"
                             HeadersVisibility="Column"
-                            HorizontalGridLinesBrush="#FF969696"
                             HorizontalScrollBarVisibility="Disabled"
                             IsReadOnly="True"
-                            ItemsSource="{Binding Source={x:Static local:Settings.Current}, Path=TemplatesForChecklist}"
+                            ItemsSource="{Binding Source={x:Static local:Settings.Current}, Path=TemplatesForExport}"
                             KeyDown="SettingsPanelKeyDown"
-                            RowStyle="{StaticResource RowStyleNormal}"
-                            SelectedItem="{Binding Source={x:Static local:Settings.Current}, Path=SelectedTemplateForChecklist}"
-                            SelectionMode="Single"
-                            VerticalGridLinesBrush="#FF969696">
+                            SelectedItem="{Binding Source={x:Static local:Settings.Current}, Path=SelectedTemplateForExport}"
+                            SelectionMode="Single">
                             <DataGrid.Columns>
                                 <DataGridTemplateColumn Header="方案名称">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBox
                                                 Margin="2"
-                                                Padding="2"
+                                                Padding="4,2"
                                                 Text="{Binding Name, UpdateSourceTrigger=LostFocus}" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTemplateColumn Header="用于类型">
+                                <DataGridTemplateColumn Header="文件扩展名">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBox
                                                 Margin="2"
-                                                Padding="2"
-                                                AcceptsReturn="True"
+                                                Padding="4,2"
+                                                LostFocus="OnTextBoxExtensionLostFocus"
                                                 Text="{Binding Extension, UpdateSourceTrigger=LostFocus}" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTemplateColumn Header="解析方式表达式">
+                                <DataGridTemplateColumn Header="文件内容模版">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBox
                                                 Margin="2"
-                                                Padding="2"
+                                                Padding="4,2"
                                                 FontFamily="Consolas"
                                                 Text="{Binding Template, UpdateSourceTrigger=LostFocus}"
                                                 TextWrapping="WrapWithOverflow" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn MinWidth="70" Header="文件编码">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <ComboBox
+                                                Margin="2"
+                                                VerticalAlignment="Center"
+                                                DisplayMemberPath="Display"
+                                                ItemsSource="{Binding Path=(local:TemplateForExportModel.AvailableEncodings)}"
+                                                SelectedValue="{Binding UsingEncoding, UpdateSourceTrigger=PropertyChanged}"
+                                                SelectedValuePath="ItemValue" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
@@ -1351,88 +1141,57 @@
                             Margin="4,0,0,0">
                             <Button
                                 Padding="8,2"
-                                Background="{x:Null}"
-                                Command="{Binding AddChecklistTemplateCmd}"
+                                Command="{Binding AddExportTemplateCmd}"
                                 Content="添加" />
                             <Button
                                 Margin="0,8,0,0"
                                 Padding="8,2"
-                                Background="{x:Null}"
-                                Command="{Binding CopyChecklistTemplateCmd}"
+                                Command="{Binding CopyExportTemplateCmd}"
                                 Content="复制" />
                             <Button
                                 Margin="0,8,0,0"
                                 Padding="8,2"
-                                Background="{x:Null}"
-                                Command="{Binding MoveChecklistTemplateUpCmd}"
+                                Command="{Binding MoveExportTemplateUpCmd}"
                                 Content="上移" />
                             <Button
                                 Margin="0,8,0,0"
                                 Padding="8,2"
-                                Background="{x:Null}"
-                                Command="{Binding MoveChecklistTemplateDownCmd}"
+                                Command="{Binding MoveExportTemplateDownCmd}"
                                 Content="下移" />
                             <Button
                                 Margin="0,8,0,0"
                                 Padding="8,2"
-                                Background="{x:Null}"
-                                BorderBrush="Red"
-                                Command="{Binding RemoveChecklistTemplateCmd}"
-                                Content="移除" />
+                                Command="{Binding RemoveExportTemplateCmd}"
+                                Content="移除"
+                                Style="{StaticResource ButtonDanger}" />
                             <Button
                                 Margin="0,8,0,0"
                                 Padding="8,2"
-                                Background="{x:Null}"
-                                BorderBrush="Red"
-                                Command="{Binding ResetChecklistTemplateCmd}"
-                                Content="重置" />
+                                Command="{Binding ResetExportTemplateCmd}"
+                                Content="重置"
+                                Style="{StaticResource ButtonDanger}" />
                         </StackPanel>
                         <StackPanel
                             Grid.Row="1"
+                            Grid.Column="0"
                             Grid.ColumnSpan="2"
                             Margin="0,4,0,0">
                             <TextBlock
                                 Margin="0,4,0,0"
-                                Foreground="Black"
-                                Text="对于输入【校验依据】输入框的字符串：" />
-                            <TextBlock
-                                Margin="24,0,0,0"
-                                FontSize="8pt"
                                 Style="{StaticResource DescTextBlockStyle}"
-                                Text="程序会按顺序使用【用于类型】为空的方案，直到成功或全部失败；" />
+                                Text="导出计算结果时保存的文件的每一行内容都将按照“文件内容模版”生成。" />
                             <TextBlock
                                 Margin="0,4,0,0"
-                                Foreground="Black"
-                                Text="作为校验依据打开的文件或输入【校验依据】输入框的文件：" />
-                            <TextBlock
-                                Margin="24,0,0,0"
-                                FontSize="8pt"
                                 Style="{StaticResource DescTextBlockStyle}"
-                                Text="程序会按顺序使用【用于类型】与文件扩展名匹配的方案，直到成功或全部失败；" />
-                            <TextBlock
-                                Margin="24,0,0,0"
-                                FontSize="8pt"
-                                Style="{StaticResource DescTextBlockStyle}"
-                                Text="如果仍然没有成功，则按顺序使用【用于类型】为空的方案，直到成功或全部失败；" />
-                            <TextBlock
-                                Margin="24,0,0,0"
-                                FontSize="8pt"
-                                Style="{StaticResource DescTextBlockStyle}"
-                                Text="如果文件没有扩展名，则按顺序使用【用于类型】为空的方案，直到成功或全部失败；" />
-                            <TextBlock
-                                Margin="0,8,0,0"
-                                Foreground="Black"
-                                Text="表格中的【用于类型】支持输入多个扩展名，每行一个；" />
-                            <TextBlock
-                                Margin="0,2,0,0"
-                                Foreground="Black"
-                                Text="而【解析方式表达式】实际上是正则表达式的 C# 版本，其中被两个“$”号 -" />
-                            <TextBlock
-                                Margin="0,2,0,0"
-                                Foreground="Black"
-                                Text="包围起来的字符串是本软件预定义的正则表达式命名组：" />
+                                Text="可以在“文件内容模版”输入框中任意使用以下占位符：" />
                             <Grid Margin="0,4,0,0">
                                 <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
                                     <RowDefinition />
                                     <RowDefinition />
                                     <RowDefinition />
@@ -1450,8 +1209,9 @@
                                     Grid.Row="0"
                                     Grid.Column="1"
                                     Margin="16,0,0,0"
+                                    FontSize="8pt"
                                     Style="{StaticResource DescTextBlockStyle}"
-                                    Text="等同 (?&lt;algo&gt;[A-Za-z0-9-]+)，此位置的匹配结果作为算法名。" />
+                                    Text="导出计算结果时此占位符将被替换为实际算法名。" />
                                 <TextBlock
                                     Grid.Row="1"
                                     Grid.Column="0"
@@ -1461,49 +1221,334 @@
                                     Grid.Row="1"
                                     Grid.Column="1"
                                     Margin="16,0,0,0"
+                                    FontSize="8pt"
                                     Style="{StaticResource DescTextBlockStyle}"
-                                    Text="等同 (?&lt;hash&gt;[A-Za-z0-9+/=]+)，此位置的匹配结果作为哈希值。" />
+                                    Text="导出计算结果时此占位符将被替换为实际哈希值。" />
                                 <TextBlock
                                     Grid.Row="2"
                                     Grid.Column="0"
                                     Foreground="Black"
-                                    Text="$name$" />
+                                    Text="$path$" />
                                 <TextBlock
                                     Grid.Row="2"
                                     Grid.Column="1"
                                     Margin="16,0,0,0"
+                                    FontSize="8pt"
                                     Style="{StaticResource DescTextBlockStyle}"
-                                    Text="等同 (?&lt;name&gt;[^:*?\&quot;&lt;&gt;|\t\v\f\r\n]+)，此位置的匹配结果作为文件名。" />
+                                    Text="导出计算结果时此占位符将被替换为实际文件完整路径。" />
+                                <TextBlock
+                                    Grid.Row="3"
+                                    Grid.Column="0"
+                                    Foreground="Black"
+                                    Text="$relpath$" />
+                                <TextBlock
+                                    Grid.Row="3"
+                                    Grid.Column="1"
+                                    Margin="16,0,0,0"
+                                    FontSize="8pt"
+                                    Style="{StaticResource DescTextBlockStyle}"
+                                    Text="此占位符将被替换为实际文件相对路径，起点是被添加的对象所在目录。" />
+                                <TextBlock
+                                    Grid.Row="4"
+                                    Grid.Column="0"
+                                    Foreground="Black"
+                                    Text="$name$" />
+                                <TextBlock
+                                    Grid.Row="4"
+                                    Grid.Column="1"
+                                    Margin="16,0,0,0"
+                                    FontSize="8pt"
+                                    Style="{StaticResource DescTextBlockStyle}"
+                                    Text="导出计算结果时此占位符将被替换为实际文件名。" />
+                                <TextBlock
+                                    Grid.Row="5"
+                                    Grid.Column="0"
+                                    Foreground="Black"
+                                    Text="$newline$" />
+                                <TextBlock
+                                    Grid.Row="5"
+                                    Grid.Column="1"
+                                    Margin="16,0,0,0"
+                                    FontSize="8pt"
+                                    Style="{StaticResource DescTextBlockStyle}"
+                                    Text="导出计算结果时此占位符将被替换为 Unix 或 Windows 换行符。" />
+                                <TextBlock
+                                    Grid.Row="6"
+                                    Grid.Column="0"
+                                    Foreground="Black"
+                                    Text="$horztab$" />
+                                <TextBlock
+                                    Grid.Row="6"
+                                    Grid.Column="1"
+                                    Margin="16,0,0,0"
+                                    FontSize="8pt"
+                                    Style="{StaticResource DescTextBlockStyle}"
+                                    Text="导出计算结果时此占位符将被替换为横向制表符（ &quot;\t&quot; ）。" />
+                                <TextBlock
+                                    Grid.Row="7"
+                                    Grid.Column="0"
+                                    Foreground="Black"
+                                    Text="$filesize$" />
+                                <TextBlock
+                                    Grid.Row="7"
+                                    Grid.Column="1"
+                                    Margin="16,0,0,0"
+                                    FontSize="8pt"
+                                    Style="{StaticResource DescTextBlockStyle}"
+                                    Text="导出计算结果时此占位符将被替换为以“字节”为单位的文件大小值。" />
                             </Grid>
-                            <TextBlock
-                                Margin="0,4,0,0"
-                                FontSize="8pt"
-                                Style="{StaticResource DescTextBlockStyle}"
-                                Text="你也可以自定义正则表达式命名组，可用的组名： algo 和 hash 和 name。" />
                             <TextBlock
                                 Margin="0,8,0,0"
                                 Foreground="Black"
-                                Text="如何使用以上设置好的方案来解析校验依据？" />
+                                Text="如何使用以上设置好的方案来导出计算结果？" />
                             <TextBlock
                                 Margin="0,2,0,0"
                                 FontSize="8pt"
                                 Style="{StaticResource DescTextBlockStyle}"
-                                Text="程序会在校验时自动选择方案，具体的选择方式见紧接在表格下方的说明。" />
+                                Text="点击【导出结果】按钮打开【另存为】对话框后，在【保存类型】下拉列表内选择方案。" />
                         </StackPanel>
                     </Grid>
-                </GroupBox>
+                </Grid>
             </ScrollViewer>
         </TabItem>
-        <TabItem
-            Padding="8"
-            Header="快捷操作设置"
-            Style="{StaticResource TabItemStyle1}">
-            <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <TabItem FontSize="10pt">
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontFamily="{StaticResource IconFont}"
+                        FontSize="19pt"
+                        Text="&#xe603;" />
+                    <TextBlock
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center"
+                        Text="校验依据解析方案" />
+                </StackPanel>
+            </TabItem.Header>
+            <ScrollViewer
+                Padding="10"
+                FontSize="9pt"
+                VerticalScrollBarVisibility="Auto">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock
+                        Margin="0,0,0,4"
+                        Foreground="#FF006FD6"
+                        Text="从校验依据(文件/字符串)解析哈希信息时使用的解析方案：" />
+                    <DataGrid
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        AutoGenerateColumns="False"
+                        HeadersVisibility="Column"
+                        HorizontalScrollBarVisibility="Disabled"
+                        IsReadOnly="True"
+                        ItemsSource="{Binding Source={x:Static local:Settings.Current}, Path=TemplatesForChecklist}"
+                        KeyDown="SettingsPanelKeyDown"
+                        SelectedItem="{Binding Source={x:Static local:Settings.Current}, Path=SelectedTemplateForChecklist}"
+                        SelectionMode="Single">
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="方案名称">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBox
+                                            Margin="2"
+                                            Padding="4,2"
+                                            Text="{Binding Name, UpdateSourceTrigger=LostFocus}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="用于类型">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBox
+                                            Margin="2"
+                                            Padding="4,2"
+                                            AcceptsReturn="True"
+                                            Text="{Binding Extension, UpdateSourceTrigger=LostFocus}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="解析方式表达式">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBox
+                                            Margin="2"
+                                            Padding="4,2"
+                                            FontFamily="Consolas"
+                                            Text="{Binding Template, UpdateSourceTrigger=LostFocus}"
+                                            TextWrapping="WrapWithOverflow" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Width="*" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <StackPanel
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Margin="4,0,0,0">
+                        <Button Command="{Binding AddChecklistTemplateCmd}" Content="添加" />
+                        <Button
+                            Margin="0,8,0,0"
+                            Command="{Binding CopyChecklistTemplateCmd}"
+                            Content="复制" />
+                        <Button
+                            Margin="0,8,0,0"
+                            Command="{Binding MoveChecklistTemplateUpCmd}"
+                            Content="上移" />
+                        <Button
+                            Margin="0,8,0,0"
+                            Command="{Binding MoveChecklistTemplateDownCmd}"
+                            Content="下移" />
+                        <Button
+                            Margin="0,8,0,0"
+                            Command="{Binding RemoveChecklistTemplateCmd}"
+                            Content="移除"
+                            Style="{StaticResource ButtonDanger}" />
+                        <Button
+                            Margin="0,8,0,0"
+                            Command="{Binding ResetChecklistTemplateCmd}"
+                            Content="重置"
+                            Style="{StaticResource ButtonDanger}" />
+                    </StackPanel>
+                    <StackPanel
+                        Grid.Row="2"
+                        Grid.ColumnSpan="2"
+                        Margin="0,4,0,0">
+                        <TextBlock
+                            Margin="0,4,0,0"
+                            Foreground="Black"
+                            Text="对于输入【校验依据】输入框的字符串：" />
+                        <TextBlock
+                            Margin="24,0,0,0"
+                            FontSize="8pt"
+                            Style="{StaticResource DescTextBlockStyle}"
+                            Text="程序会按顺序使用【用于类型】为空的方案，直到成功或全部失败；" />
+                        <TextBlock
+                            Margin="0,4,0,0"
+                            Foreground="Black"
+                            Text="作为校验依据打开的文件或输入【校验依据】输入框的文件：" />
+                        <TextBlock
+                            Margin="24,0,0,0"
+                            FontSize="8pt"
+                            Style="{StaticResource DescTextBlockStyle}"
+                            Text="程序会按顺序使用【用于类型】与文件扩展名匹配的方案，直到成功或全部失败；" />
+                        <TextBlock
+                            Margin="24,0,0,0"
+                            FontSize="8pt"
+                            Style="{StaticResource DescTextBlockStyle}"
+                            Text="如果仍然没有成功，则按顺序使用【用于类型】为空的方案，直到成功或全部失败；" />
+                        <TextBlock
+                            Margin="24,0,0,0"
+                            FontSize="8pt"
+                            Style="{StaticResource DescTextBlockStyle}"
+                            Text="如果文件没有扩展名，则按顺序使用【用于类型】为空的方案，直到成功或全部失败；" />
+                        <TextBlock
+                            Margin="0,8,0,0"
+                            Foreground="Black"
+                            Text="表格中的【用于类型】支持输入多个扩展名，每行一个；" />
+                        <TextBlock
+                            Margin="0,2,0,0"
+                            Foreground="Black"
+                            Text="而【解析方式表达式】实际上是正则表达式的 C# 版本，其中被两个“$”号 -" />
+                        <TextBlock
+                            Margin="0,2,0,0"
+                            Foreground="Black"
+                            Text="包围起来的字符串是本软件预定义的正则表达式命名组：" />
+                        <Grid Margin="0,4,0,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Foreground="Black"
+                                Text="$algo$" />
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Margin="16,0,0,0"
+                                Style="{StaticResource DescTextBlockStyle}"
+                                Text="等同 (?&lt;algo&gt;[A-Za-z0-9-]+)，此位置的匹配结果作为算法名。" />
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Foreground="Black"
+                                Text="$hash$" />
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Margin="16,0,0,0"
+                                Style="{StaticResource DescTextBlockStyle}"
+                                Text="等同 (?&lt;hash&gt;[A-Za-z0-9+/=]+)，此位置的匹配结果作为哈希值。" />
+                            <TextBlock
+                                Grid.Row="2"
+                                Grid.Column="0"
+                                Foreground="Black"
+                                Text="$name$" />
+                            <TextBlock
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                Margin="16,0,0,0"
+                                Style="{StaticResource DescTextBlockStyle}"
+                                Text="等同 (?&lt;name&gt;[^:*?\&quot;&lt;&gt;|\t\v\f\r\n]+)，此位置的匹配结果作为文件名。" />
+                        </Grid>
+                        <TextBlock
+                            Margin="0,4,0,0"
+                            FontSize="8pt"
+                            Style="{StaticResource DescTextBlockStyle}"
+                            Text="你也可以自定义正则表达式命名组，可用的组名： algo 和 hash 和 name。" />
+                        <TextBlock
+                            Margin="0,8,0,0"
+                            Foreground="Black"
+                            Text="如何使用以上设置好的方案来解析校验依据？" />
+                        <TextBlock
+                            Margin="0,2,0,0"
+                            FontSize="8pt"
+                            Style="{StaticResource DescTextBlockStyle}"
+                            Text="程序会在校验时自动选择方案，具体的选择方式见紧接在表格下方的说明。" />
+                    </StackPanel>
+                </Grid>
+            </ScrollViewer>
+        </TabItem>
+        <TabItem FontSize="10pt">
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontFamily="{StaticResource IconFont}"
+                        FontSize="19pt"
+                        Text="&#xe600;" />
+                    <TextBlock
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center"
+                        Text="快捷操作设置" />
+                </StackPanel>
+            </TabItem.Header>
+            <ScrollViewer
+                Padding="10"
+                FontSize="9pt"
+                VerticalScrollBarVisibility="Auto">
                 <GroupBox
-                    Margin="4"
-                    Padding="4,8,4,4"
+                    Padding="4"
+                    Background="Transparent"
                     Foreground="#FF006FD6"
-                    Header="部分列的鼠标左键双击行为">
+                    Header="部分列的鼠标左键双击行为"
+                    Style="{StaticResource GroupBoxTab}">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -1628,127 +1673,165 @@
                 </GroupBox>
             </ScrollViewer>
         </TabItem>
-        <TabItem
-            Padding="8"
-            Header="配置文件保存位置"
-            Style="{StaticResource TabItemStyle1}">
-            <GroupBox
-                Margin="4"
-                Padding="4,8,4,4"
-                Foreground="#FF006FD6"
-                Header="软件配置文件的保存位置">
-                <StackPanel>
-                    <RadioButton
-                        Padding="4,0,0,0"
-                        Content="{Binding Source={x:Static local:Settings.ConfigInfo}, Path=ActiveConfigDir, Converter={StaticResource ConfigurationLoadedFromExecCvt}}"
-                        IsChecked="{Binding LocationForSavingConfigFiles, Converter={StaticResource ConfigLocationExecToTrueCvt}}"
-                        IsEnabled="{Binding ProcessingShellExtension, Converter={StaticResource ReverseBooleanValueCvt}}" />
-                    <RadioButton
-                        Margin="0,4,0,0"
-                        Padding="4,0,0,0"
-                        Content="{Binding Source={x:Static local:Settings.ConfigInfo}, Path=ActiveConfigDir, Converter={StaticResource ConfigurationLoadedFromUserCvt}}"
-                        IsChecked="{Binding LocationForSavingConfigFiles, Converter={StaticResource ConfigLocationUserToTrueCvt}}"
-                        IsEnabled="{Binding ProcessingShellExtension, Converter={StaticResource ReverseBooleanValueCvt}}" />
-                    <RadioButton
-                        Margin="0,4,0,0"
-                        Padding="4,0,0,0"
-                        Content="{Binding Source={x:Static local:Settings.ConfigInfo}, Path=ActiveConfigDir, Converter={StaticResource ConfigurationLoadedFromPublicUserCvt}}"
-                        IsChecked="{Binding LocationForSavingConfigFiles, Converter={StaticResource ConfigLocationPublicUserToTrueCvt}}"
-                        IsEnabled="{Binding ProcessingShellExtension, Converter={StaticResource ReverseBooleanValueCvt}}" />
-                    <RadioButton
-                        Margin="0,4,0,0"
-                        Padding="4,0,0,0"
-                        Content="{Binding Source={x:Static local:Settings.ConfigInfo}, Path=ActiveConfigDir, Converter={StaticResource ConfigurationLoadedFromProgramDataCvt}}"
-                        IsChecked="{Binding LocationForSavingConfigFiles, Converter={StaticResource ConfigLocationProgramDataToTrueCvt}}"
-                        IsEnabled="{Binding ProcessingShellExtension, Converter={StaticResource ReverseBooleanValueCvt}}" />
-                    <StackPanel Margin="0,4,0,0" Orientation="Horizontal">
-                        <TextBlock Foreground="Black" Text="实际保存位置：" />
-                        <TextBlock
-                            Margin="0,0,0,0"
-                            Style="{StaticResource DescTextBlockStyle}"
-                            Text="{Binding DisplayingActiveConfigDir}" />
-                    </StackPanel>
+        <TabItem FontSize="10pt">
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal">
                     <TextBlock
-                        Margin="0,16,0,0"
-                        FontSize="8pt"
-                        Style="{StaticResource DescTextBlockStyle}"
-                        Text="软件启动时按以上位置从上到下查找配置文件，找到则停止，否则默认当前目录。" />
+                        VerticalAlignment="Center"
+                        FontFamily="{StaticResource IconFont}"
+                        FontSize="19pt"
+                        Text="&#xe6b7;" />
                     <TextBlock
-                        Margin="0,4,0,0"
-                        FontSize="8pt"
-                        Style="{StaticResource DescTextBlockStyle}"
-                        Text="软件只会在启动时从配置文件加载一次配置，在正常退出时在所选位置保存配置文件。" />
-                    <TextBlock
-                        Margin="0,4,0,0"
-                        FontSize="8pt"
-                        Style="{StaticResource DescTextBlockStyle}"
-                        Text="如果想把软件复制到其他位置使用，则只需要复制 exe 文件和 json 配置文件即可。" />
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center"
+                        Text="配置文件保存位置" />
                 </StackPanel>
-            </GroupBox>
-        </TabItem>
-        <TabItem
-            Padding="8"
-            Header="常见问题修复向导"
-            Style="{StaticResource TabItemStyle1}">
-            <StackPanel Margin="4">
-                <StackPanel>
-                    <TextBlock Style="{StaticResource DescTextBlockStyle}" Text="某个 (系列) 算法总是计算失败？" />
-                    <TextBlock
-                        Margin="0,4,0,0"
-                        Cursor="Hand"
-                        Foreground="Blue"
-                        MouseLeftButtonDown="OnTextBlockMouseLeftButtonDown"
-                        Text="{Binding Source={x:Static local:SettingsViewModel.FixAlgoDlls}}" />
-                    <StackPanel Margin="0,4,0,0" Orientation="Horizontal">
+            </TabItem.Header>
+            <ScrollViewer
+                Padding="10"
+                FontSize="9pt"
+                HorizontalScrollBarVisibility="Auto"
+                VerticalScrollBarVisibility="Auto">
+                <GroupBox
+                    Padding="4"
+                    Background="Transparent"
+                    Foreground="#FF006FD6"
+                    Header="软件配置文件的保存位置"
+                    Style="{StaticResource GroupBoxTab}">
+                    <StackPanel>
+                        <RadioButton
+                            HorizontalAlignment="Left"
+                            Content="{Binding Source={x:Static local:Settings.ConfigInfo}, Path=ActiveConfigDir, Converter={StaticResource ConfigurationLoadedFromExecCvt}}"
+                            IsChecked="{Binding LocationForSavingConfigFiles, Converter={StaticResource ConfigLocationExecToTrueCvt}}"
+                            IsEnabled="{Binding ProcessingShellExtension, Converter={StaticResource ReverseBooleanValueCvt}}" />
+                        <RadioButton
+                            Margin="0,4,0,0"
+                            HorizontalAlignment="Left"
+                            Content="{Binding Source={x:Static local:Settings.ConfigInfo}, Path=ActiveConfigDir, Converter={StaticResource ConfigurationLoadedFromUserCvt}}"
+                            IsChecked="{Binding LocationForSavingConfigFiles, Converter={StaticResource ConfigLocationUserToTrueCvt}}"
+                            IsEnabled="{Binding ProcessingShellExtension, Converter={StaticResource ReverseBooleanValueCvt}}" />
+                        <RadioButton
+                            Margin="0,4,0,0"
+                            HorizontalAlignment="Left"
+                            Content="{Binding Source={x:Static local:Settings.ConfigInfo}, Path=ActiveConfigDir, Converter={StaticResource ConfigurationLoadedFromPublicUserCvt}}"
+                            IsChecked="{Binding LocationForSavingConfigFiles, Converter={StaticResource ConfigLocationPublicUserToTrueCvt}}"
+                            IsEnabled="{Binding ProcessingShellExtension, Converter={StaticResource ReverseBooleanValueCvt}}" />
+                        <RadioButton
+                            Margin="0,4,0,0"
+                            HorizontalAlignment="Left"
+                            Content="{Binding Source={x:Static local:Settings.ConfigInfo}, Path=ActiveConfigDir, Converter={StaticResource ConfigurationLoadedFromProgramDataCvt}}"
+                            IsChecked="{Binding LocationForSavingConfigFiles, Converter={StaticResource ConfigLocationProgramDataToTrueCvt}}"
+                            IsEnabled="{Binding ProcessingShellExtension, Converter={StaticResource ReverseBooleanValueCvt}}" />
+                        <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
+                            <TextBlock Foreground="Black" Text="实际保存位置：" />
+                            <TextBlock Style="{StaticResource DescTextBlockStyle}" Text="{Binding DisplayingActiveConfigDir}" />
+                        </StackPanel>
                         <TextBlock
+                            Margin="0,16,0,0"
                             FontSize="8pt"
                             Style="{StaticResource DescTextBlockStyle}"
-                            Text="原理：使用相关内嵌资源覆盖 " />
+                            Text="软件启动时按以上位置从上到下查找配置文件，找到则停止，否则默认当前目录。" />
                         <TextBlock
+                            Margin="0,4,0,0"
+                            FontSize="8pt"
+                            Style="{StaticResource DescTextBlockStyle}"
+                            Text="软件只会在启动时从配置文件加载一次配置，在正常退出时在所选位置保存配置文件。" />
+                        <TextBlock
+                            Margin="0,4,0,0"
+                            FontSize="8pt"
+                            Style="{StaticResource DescTextBlockStyle}"
+                            Text="如果想把软件复制到其他位置使用，则只需要复制 exe 文件和 json 配置文件即可。" />
+                    </StackPanel>
+                </GroupBox>
+            </ScrollViewer>
+        </TabItem>
+        <TabItem FontSize="10pt">
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontFamily="{StaticResource IconFont}"
+                        FontSize="19pt"
+                        Text="&#xe645;" />
+                    <TextBlock
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center"
+                        Text="常见问题修复向导" />
+                </StackPanel>
+            </TabItem.Header>
+            <ScrollViewer
+                Padding="10"
+                FontSize="9pt"
+                HorizontalScrollBarVisibility="Auto"
+                VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource DescTextBlockStyle}" Text="某个 (系列) 算法总是计算失败？" />
+                        <TextBlock
+                            Margin="0,4,0,0"
                             Cursor="Hand"
-                            FontSize="8pt"
+                            Foreground="Blue"
                             MouseLeftButtonDown="OnTextBlockMouseLeftButtonDown"
-                            Text="{Binding Source={x:Static local:SettingsViewModel.AlgosDllDir}}" />
-                        <TextBlock
-                            FontSize="8pt"
-                            Style="{StaticResource DescTextBlockStyle}"
-                            Text=" 中的同名文件" />
+                            Text="{Binding Source={x:Static local:SettingsViewModel.FixAlgoDlls}}" />
+                        <StackPanel Margin="0,4,0,0" Orientation="Horizontal">
+                            <TextBlock
+                                FontSize="8pt"
+                                Style="{StaticResource DescTextBlockStyle}"
+                                Text="原理：使用相关内嵌资源覆盖 " />
+                            <TextBlock
+                                Cursor="Hand"
+                                FontSize="8pt"
+                                MouseLeftButtonDown="OnTextBlockMouseLeftButtonDown"
+                                Text="{Binding Source={x:Static local:SettingsViewModel.AlgosDllDir}}" />
+                            <TextBlock
+                                FontSize="8pt"
+                                Style="{StaticResource DescTextBlockStyle}"
+                                Text=" 中的同名文件" />
+                        </StackPanel>
                     </StackPanel>
                 </StackPanel>
-            </StackPanel>
+            </ScrollViewer>
         </TabItem>
-        <TabItem
-            Padding="8"
-            Header="关于软件"
-            Style="{StaticResource TabItemStyle1}">
-            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-                <Grid Margin="4,8,4,4">
+        <TabItem FontSize="10pt">
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontFamily="{StaticResource IconFont}"
+                        FontSize="19pt"
+                        Text="&#xe646;" />
+                    <TextBlock
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center"
+                        Text="关于软件" />
+                </StackPanel>
+            </TabItem.Header>
+            <ScrollViewer
+                Padding="10"
+                FontSize="9pt"
+                HorizontalScrollBarVisibility="Auto"
+                VerticalScrollBarVisibility="Auto">
+                <Grid>
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition />
                     </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
                     <StackPanel
                         Grid.Row="0"
-                        Grid.Column="0"
+                        HorizontalAlignment="Center"
                         Orientation="Horizontal">
                         <Image
                             Width="64"
                             Height="64"
                             Source="/Images/icon.ico" />
                         <StackPanel Margin="8,0,0,0" VerticalAlignment="Center">
-                            <TextBlock
-                                FontSize="16"
-                                Foreground="Gray"
-                                Text="{Binding Title}" />
+                            <TextBlock FontSize="17pt" Text="{Binding Title}" />
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Foreground="Gray">
                                     <TextBlock.Text>
-                                        <MultiBinding StringFormat="{}{0} by {1} @ ">
+                                        <MultiBinding StringFormat="Ver. {0} by {1} @ ">
                                             <Binding Path="Ver" />
                                             <Binding Path="Author" />
                                         </MultiBinding>
@@ -1765,150 +1848,95 @@
                             </StackPanel>
                         </StackPanel>
                     </StackPanel>
-                    <Grid
-                        Grid.Row="0"
-                        Grid.Column="1"
-                        Margin="40,0,0,0"
-                        HorizontalAlignment="Left">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock
-                            Grid.Row="0"
-                            Grid.Column="0"
-                            Text="项目地址：" />
-                        <TextBlock Grid.Row="0" Grid.Column="1">
+                    <StackPanel
+                        Grid.Row="1"
+                        Margin="0,8,0,0"
+                        HorizontalAlignment="Center"
+                        Orientation="Horizontal">
+                        <TextBlock>
                             <Hyperlink
                                 Command="{Binding OpenBrowserNavigateToWebsiteCmd}"
                                 CommandParameter="{Binding SrcGitHub}"
                                 TextDecorations="None">
-                                GitHub
+                                项目地址
                             </Hyperlink>
                         </TextBlock>
-                        <TextBlock
-                            Grid.Row="0"
-                            Grid.Column="2"
-                            Margin="16,0,0,0">
+                        <TextBlock Margin="4,0,0,0">
                             <Hyperlink
                                 Command="{Binding OpenBrowserNavigateToWebsiteCmd}"
                                 CommandParameter="{Binding SrcGitee}"
                                 TextDecorations="None">
-                                Gitee
+                                (Gitee)
                             </Hyperlink>
                         </TextBlock>
-                        <TextBlock
-                            Grid.Row="1"
-                            Grid.Column="0"
-                            Margin="0,10,0,0"
-                            Text="问题反馈：" />
-                        <TextBlock
-                            Grid.Row="1"
-                            Grid.Column="1"
-                            Margin="0,10,0,0">
+                        <TextBlock Margin="16,0,0,0">
                             <Hyperlink
                                 Command="{Binding OpenBrowserNavigateToWebsiteCmd}"
                                 CommandParameter="{Binding IssueGitHub}"
                                 TextDecorations="None">
-                                GitHub Issues
+                                问题反馈
                             </Hyperlink>
                         </TextBlock>
-                        <TextBlock
-                            Grid.Row="1"
-                            Grid.Column="2"
-                            Margin="16,10,0,0">
+                        <TextBlock Margin="4,0,0,0">
                             <Hyperlink
                                 Command="{Binding OpenBrowserNavigateToWebsiteCmd}"
                                 CommandParameter="{Binding IssueGitee}"
                                 TextDecorations="None">
-                                Gitee Issues
+                                (Gitee)
                             </Hyperlink>
                         </TextBlock>
-                        <TextBlock
-                            Grid.Row="2"
-                            Grid.Column="0"
-                            Margin="0,10,0,0"
-                            Text="使用帮助：" />
-                        <TextBlock
-                            Grid.Row="2"
-                            Grid.Column="1"
-                            Margin="0,10,0,0">
+                        <TextBlock Margin="16,0,0,0">
                             <Hyperlink
                                 Command="{Binding OpenBrowserNavigateToWebsiteCmd}"
                                 CommandParameter="{Binding WikiGitHub}"
                                 TextDecorations="None">
-                                GitHub Wiki
+                                使用帮助
                             </Hyperlink>
                         </TextBlock>
-                        <TextBlock
-                            Grid.Row="2"
-                            Grid.Column="2"
-                            Margin="16,10,0,0">
+                        <TextBlock Margin="4,0,0,0">
                             <Hyperlink
                                 Command="{Binding OpenBrowserNavigateToWebsiteCmd}"
                                 CommandParameter="{Binding WikiGitee}"
                                 TextDecorations="None">
-                                Gitee Wiki
+                                (Gitee)
                             </Hyperlink>
                         </TextBlock>
-                        <TextBlock
-                            Grid.Row="3"
-                            Grid.Column="0"
-                            Margin="0,10,0,0"
-                            Text="更新日志：" />
-                        <TextBlock
-                            Grid.Row="3"
-                            Grid.Column="1"
-                            Margin="0,10,0,0">
+                        <TextBlock Margin="16,0,0,0">
                             <Hyperlink
                                 Command="{Binding OpenBrowserNavigateToWebsiteCmd}"
                                 CommandParameter="{Binding ChangeLogGitHub}"
                                 TextDecorations="None">
-                                GitHub Log
+                                更新日志
                             </Hyperlink>
                         </TextBlock>
-                        <TextBlock
-                            Grid.Row="3"
-                            Grid.Column="2"
-                            Margin="16,10,0,0">
+                        <TextBlock Margin="4,0,0,0">
                             <Hyperlink
                                 Command="{Binding OpenBrowserNavigateToWebsiteCmd}"
                                 CommandParameter="{Binding ChangeLogGitee}"
                                 TextDecorations="None">
-                                Gitee Log
+                                (Gitee)
                             </Hyperlink>
                         </TextBlock>
-                    </Grid>
+                    </StackPanel>
                     <TextBlock
-                        Grid.Row="1"
-                        Grid.Column="0"
-                        Grid.ColumnSpan="2"
-                        Margin="0,16,0,0"
-                        Text="本软件使用的开源项目：" />
-                    <ListBox
                         Grid.Row="2"
-                        Grid.Column="0"
-                        Grid.ColumnSpan="2"
-                        Margin="0,2,0,0"
+                        Margin="0,16,0,0"
+                        FontSize="12pt"
+                        Text="HashCalculator 使用的开源项目：" />
+                    <ItemsControl
+                        Grid.Row="3"
+                        Margin="0,4,0,0"
                         d:ItemsSource="{d:SampleData ItemCount=10}"
                         Grid.IsSharedSizeScope="True"
                         ItemsSource="{Binding OpenSourceProjects}">
-                        <ListBox.ItemTemplate>
+                        <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Grid Margin="1">
+                                <Grid Margin="0,8,0,0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" SharedSizeGroup="projGroupCol" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Margin="8,0,0,0">
+                                    <TextBlock Grid.Column="0" Margin="16,0,0,0">
                                         <Hyperlink
                                             Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window, AncestorLevel=1}, Path=DataContext.OpenBrowserNavigateToWebsiteCmd}"
                                             CommandParameter="{Binding Param}"
@@ -1918,13 +1946,13 @@
                                     </TextBlock>
                                     <TextBlock
                                         Grid.Column="1"
-                                        Margin="8,0,8,0"
+                                        Margin="16,0,8,0"
                                         Foreground="Gray"
                                         Text="{Binding ItemValue}" />
                                 </Grid>
                             </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </Grid>
             </ScrollViewer>
         </TabItem>

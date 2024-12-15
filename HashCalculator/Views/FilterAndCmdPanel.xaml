@@ -3,7 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:gif="https://github.com/XamlAnimatedGif/XamlAnimatedGif"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     x:Name="cmdPanel"
@@ -14,20 +14,6 @@
     KeyDown="CommandPanelKeyDown"
     UseLayoutRounding="True"
     mc:Ignorable="d">
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Resources/CmderButtonStyles.xaml" />
-                <ResourceDictionary Source="/Resources/ConverterResource.xaml" />
-                <ResourceDictionary Source="/Resources/DataGridCellStyles.xaml" />
-                <ResourceDictionary Source="/Resources/DataGridRowStyles.xaml" />
-                <ResourceDictionary Source="/Resources/DescTextBlockStyles.xaml" />
-                <ResourceDictionary Source="/Resources/TabControlStyles.xaml" />
-                <ResourceDictionary Source="/Resources/TabControlItemStyles.xaml" />
-                <ResourceDictionary Source="/Resources/ImageButtonStyles.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Window.Resources>
     <Window.Top>
         <MultiBinding Converter="{StaticResource FilterWndTopCvt}" Mode="TwoWay">
             <Binding
@@ -78,18 +64,16 @@
                 Grid.Row="0"
                 Grid.Column="0"
                 Margin="0,2,0,0"
-                Padding="4,0,0,0"
                 Content="使本窗口跟随主窗口移动"
                 IsChecked="{Binding Source={x:Static local:Settings.Current}, Path=FilterAndCmderWndFollowsMainWnd, UpdateSourceTrigger=PropertyChanged}" />
             <!--  动图正在加载  -->
-            <Image
+            <hc:GifImage
                 Grid.Row="0"
                 Grid.Column="1"
                 Width="16"
                 Height="16"
                 Margin="8,0,0,0"
-                gif:AnimationBehavior.RepeatBehavior="Forever"
-                gif:AnimationBehavior.SourceUri="/Images/loading.gif"
+                Uri="/HashCalculator;component/Images/loading.gif"
                 Visibility="{Binding Source={x:Static local:Settings.Current}, Path=FilterAndCmderEnabled, Converter={StaticResource TrueToVisibilityCollapsedCvt}}" />
         </Grid>
         <TabControl
@@ -97,12 +81,12 @@
             Grid.RowSpan="2"
             Grid.Column="0"
             Grid.ColumnSpan="2"
-            Style="{StaticResource TabControlStyle2}">
+            Style="{StaticResource FilterAndCmderTabControlStyle}">
             <TabItem
                 Padding="16,0,16,6"
                 FontSize="11pt"
                 Header="筛选器和设置"
-                Style="{StaticResource TabItemStyle2}">
+                Style="{StaticResource FilterAndCmderTabItemStyle}">
                 <Border Padding="4" BorderThickness="0">
                     <Border.IsEnabled>
                         <MultiBinding Converter="{StaticResource CmdPanelCriticalControlsEnabledCvt}">
@@ -131,11 +115,6 @@
                             SelectedIndex="0"
                             SelectedItem="{Binding SelectedFilter}"
                             SelectionMode="Single">
-                            <ListBox.ItemContainerStyle>
-                                <Style TargetType="ListBoxItem">
-                                    <Setter Property="Margin" Value="1" />
-                                </Style>
-                            </ListBox.ItemContainerStyle>
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
@@ -156,15 +135,17 @@
                             Grid.Row="0"
                             Grid.Column="1"
                             Margin="4,0,0,0"
-                            Padding="4,6,4,0"
+                            Padding="4"
+                            Background="Transparent"
                             FontSize="9pt"
                             FontWeight="Normal"
-                            Foreground="Black">
+                            Foreground="Black"
+                            Style="{StaticResource GroupBoxTab}">
                             <GroupBox.Header>
                                 <TextBlock
-                                    VerticalAlignment="Top"
+                                    VerticalAlignment="Center"
                                     Foreground="#FF006FD6"
-                                    Text="{Binding SelectedFilter.Display, StringFormat=[ {0} ] 筛选器参数：}" />
+                                    Text="{Binding SelectedFilter.Display, StringFormat=[ {0} ] 筛选器参数}" />
                             </GroupBox.Header>
                             <Grid>
                                 <Grid.RowDefinitions>
@@ -252,7 +233,7 @@
                 Padding="16,0,16,6"
                 FontSize="11pt"
                 Header="操作器和设置"
-                Style="{StaticResource TabItemStyle2}">
+                Style="{StaticResource FilterAndCmderTabItemStyle}">
                 <Border Padding="4" BorderThickness="0">
                     <Border.IsEnabled>
                         <MultiBinding Converter="{StaticResource CmdPanelCriticalControlsEnabledCvt}">
@@ -273,17 +254,19 @@
                         <GroupBox
                             Grid.Row="0"
                             Grid.ColumnSpan="2"
-                            Padding="0,2,0,0"
+                            Padding="4"
                             d:DataContext="{d:DesignInstance Type=local:SelectTargetsCmder}"
-                            BorderBrush="Violet"
+                            Background="Transparent"
                             DataContext="{Binding SelectTableLinesCmder}"
                             FontSize="9pt"
                             FontWeight="Normal"
-                            Foreground="Black">
+                            Foreground="Black"
+                            Style="{StaticResource GroupBoxTab}">
                             <GroupBox.Header>
                                 <TextBlock
                                     Margin="3,0,0,0"
                                     VerticalAlignment="Center"
+                                    Foreground="#FF006FD6"
                                     Text="{Binding Display}"
                                     ToolTip="{Binding Description}" />
                             </GroupBox.Header>
@@ -301,11 +284,6 @@
                             SelectedIndex="0"
                             SelectedItem="{Binding SelectedCmder}"
                             SelectionMode="Single">
-                            <ListBox.ItemContainerStyle>
-                                <Style TargetType="ListBoxItem">
-                                    <Setter Property="Margin" Value="1" />
-                                </Style>
-                            </ListBox.ItemContainerStyle>
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <TextBlock
@@ -319,15 +297,17 @@
                             Grid.Row="1"
                             Grid.Column="1"
                             Margin="4,4,0,0"
-                            Padding="4,6,4,0"
+                            Padding="4"
+                            Background="Transparent"
                             FontSize="9pt"
                             FontWeight="Normal"
-                            Foreground="Black">
+                            Foreground="Black"
+                            Style="{StaticResource GroupBoxTab}">
                             <GroupBox.Header>
                                 <TextBlock
                                     VerticalAlignment="Top"
                                     Foreground="#FF006FD6"
-                                    Text="{Binding SelectedCmder.Display, StringFormat=[ {0} ] 的功能面板：}" />
+                                    Text="{Binding SelectedCmder.Display, StringFormat=[ {0} ] 的功能面板}" />
                             </GroupBox.Header>
                             <ContentControl Grid.Row="0" Content="{Binding SelectedCmder.UserInterface}" />
                         </GroupBox>

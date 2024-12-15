@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
 using CommandLine;
+using Handy = HandyControl;
 
 namespace HashCalculator
 {
@@ -60,7 +61,7 @@ namespace HashCalculator
             // 如果是其他进程实例内的 ProcessIdMonitorProc 方法内的 PIdSynchronizer.Wait 抢到了锁，
             // 则直接进入步骤 3，本进程实例 ProcessIdMonitorProc 方法内的 PIdSynchronizer.Wait 抢不到锁不会往下执行。
             Initializer.PIdSynchronizer.Set();
-            foreach (DataGridColumn column in this.MainWindowTable.Columns)
+            foreach (DataGridColumn column in this.MainWindowDataGrid.Columns)
             {
                 if (column.Header is string header)
                 {
@@ -92,14 +93,10 @@ namespace HashCalculator
             Thread thread = new Thread(this.ProcessIdMonitorProc);
             thread.IsBackground = true;
             thread.Start();
-            this.MainWindowTable.Columns.ReorderDataGridColumns(Settings.Current.ColumnsOrder);
+            this.MainWindowDataGrid.Columns.ReorderDataGridColumns(Settings.Current.ColumnsOrder);
             if (Settings.Current.PreviousVer != Info.Ver && Settings.NotificationShouldBeDisplayedOnce)
             {
-                NotificationWindow window = new NotificationWindow()
-                {
-                    Owner = this
-                };
-                window.ShowDialog();
+                Handy.Controls.Growl.Error(Info.ShellExtNotification, MessageToken.MainWndMsgToken);
             }
             Settings.Current.PreviousVer = Info.Ver;
         }
@@ -227,8 +224,8 @@ namespace HashCalculator
                         {
                             Application.Current.Dispatcher.Invoke(() =>
                             {
-                                MessageBox.Show(this, newChecklist.ReasonForFailure, "错误",
-                                    MessageBoxButton.OK, MessageBoxImage.Error);
+                                Handy.Controls.MessageBox.Show(this, newChecklist.ReasonForFailure,
+                                    "错误", MessageBoxButton.OK, MessageBoxImage.Error);
                             });
                         }
                         else

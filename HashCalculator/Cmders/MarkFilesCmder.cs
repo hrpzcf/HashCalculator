@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using Handy = HandyControl;
 
 namespace HashCalculator
 {
@@ -174,7 +175,8 @@ namespace HashCalculator
                     if (string.IsNullOrEmpty(this.DirectoryUsedToSaveFiles) ||
                         !Path.IsPathRooted(this.DirectoryUsedToSaveFiles))
                     {
-                        MessageBox.Show(MainWindow.Current, "请输入生成的新文件的保存目录的完整路径！", "提示",
+                        Handy.Controls.MessageBox.Show(MainWindow.Current,
+                            "请输入生成的新文件的保存目录的完整路径！", "提示",
                             MessageBoxButton.OK, MessageBoxImage.Warning);
                         goto FinishingTouches;
                     }
@@ -186,7 +188,8 @@ namespace HashCalculator
                         }
                         catch (Exception)
                         {
-                            MessageBox.Show(MainWindow.Current, "用于保存生成的新文件的目录不存在且创建失败！", "错误",
+                            Handy.Controls.MessageBox.Show(MainWindow.Current,
+                                "用于保存生成的新文件的目录不存在且创建失败！", "错误",
                                 MessageBoxButton.OK, MessageBoxImage.Error);
                             goto FinishingTouches;
                         }
@@ -195,7 +198,8 @@ namespace HashCalculator
                 if (this.CheckIfUsingDistinctFilesFilter && !hashViewModels.Where(
                     i => i.Matched).All(i => i.FileIndex != null))
                 {
-                    if (MessageBox.Show(MainWindow.Current, "没有应用【有效的文件】筛选器，要继续操作吗？", "提示",
+                    if (Handy.Controls.MessageBox.Show(MainWindow.Current,
+                        "没有应用【有效的文件】筛选器，要继续操作吗？", "提示",
                         MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
                     {
                         goto FinishingTouches;
@@ -214,14 +218,16 @@ namespace HashCalculator
                     string exceptionMessage = await genMarkedFilesTask;
                     if (!string.IsNullOrEmpty(exceptionMessage))
                     {
-                        MessageBox.Show(MainWindow.Current, $"出现异常导致过程中断：{exceptionMessage}", "错误",
+                        Handy.Controls.MessageBox.Show(MainWindow.Current,
+                            $"出现异常导致过程中断：{exceptionMessage}", "错误",
                             MessageBoxButton.OK, MessageBoxImage.Error);
                         goto FinishingTouches;
                     }
                 }
                 else
                 {
-                    MessageBox.Show(MainWindow.Current, "没有找到任何操作目标，请刷新筛选或手动勾选操作目标！", "提示",
+                    Handy.Controls.MessageBox.Show(MainWindow.Current,
+                        "没有找到任何操作目标，请刷新筛选或手动勾选操作目标！", "提示",
                         MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             FinishingTouches:
