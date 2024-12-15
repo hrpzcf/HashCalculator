@@ -471,26 +471,6 @@ namespace HashCalculator
         }
     }
 
-    internal class PlaceHolderTextVisibilityCvt : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (!string.IsNullOrEmpty(value as string))
-            {
-                return Visibility.Hidden;
-            }
-            else
-            {
-                return Visibility.Visible;
-            }
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
     internal class RadioExportCurrentAlgoCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -985,22 +965,6 @@ namespace HashCalculator
                 }
             }
             return new object[] { Binding.DoNothing, Binding.DoNothing };
-        }
-    }
-
-    internal class CanExecuteCmdOnTargetsCvt : IMultiValueConverter
-    {
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
-        {
-            Debug.Assert(values?.Length == 2);
-            return values[0] is bool canExecuteCmdOnTargets &&
-                values[1] is bool showExecutionTargetColumn && (
-                canExecuteCmdOnTargets || showExecutionTargetColumn);
-        }
-
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
         }
     }
 

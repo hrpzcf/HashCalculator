@@ -154,7 +154,6 @@
         Boolean="True"
         Method="ReplaceAll" />
     <local:BooleanAndSolidBrushToSolidBrushMultiCvt x:Key="ListBoxIsSelectedForegroundCvt" Default="Gray" />
-    <local:CanExecuteCmdOnTargetsCvt x:Key="CanExecuteCmdOnTargetsCvt" />
     <local:InvalidFileNameForegroundCvt x:Key="InvalidFileNameForegroundCvt" />
     <local:CmpResForegroundCvt x:Key="CmpResForegroundCvt" />
     <local:CmpResBackgroundCvt x:Key="CmpResBackgroundCvt" />
@@ -172,7 +171,6 @@
     <local:LoadingImageVisiblityCvt x:Key="LoadingImageVisiblityCvt" />
     <local:BytesToStrByOutputTypeCvt x:Key="BytesToStrByOutputTypeCvt" />
     <local:CopyModelsHashMenuEnabledCvt x:Key="CopyModelsHashMenuEnabledCvt" />
-    <local:PlaceHolderTextVisibilityCvt x:Key="PlaceHolderTextVisibilityCvt" />
     <local:RadioExportCurrentAlgoCvt x:Key="RadioExportCurrentAlgoCvt" />
     <local:RadioExportAllCalculatedAlgosCvt x:Key="RadioExportAllCalculatedAlgosCvt" />
     <local:BytesToIntuitiveFileSizeCvt x:Key="BytesToIntuitiveFileSizeCvt" />

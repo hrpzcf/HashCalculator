@@ -324,10 +324,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Resources\AlgosButtonStyles.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Resources\IconFont.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

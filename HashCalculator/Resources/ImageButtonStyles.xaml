@@ -39,6 +39,7 @@
             </Setter.Value>
         </Setter>
     </Style>
+
     <Style x:Key="ImageButtonStyle2" TargetType="{x:Type Button}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="Background" Value="Transparent" />
@@ -94,6 +95,7 @@
             </Setter.Value>
         </Setter>
     </Style>
+
     <Style x:Key="GrayRoundTipButton1" TargetType="{x:Type Button}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="Background" Value="#64BABABA" />
