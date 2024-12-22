@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Reflection;
 
 namespace HashCalculator
 {
@@ -18,8 +17,6 @@ namespace HashCalculator
 
         // 实现算法的动态链接库目录（已弃用，改为与配置文件保存位置相同）
         private static string libraryDirUser = null;
-
-        private static readonly Assembly curAssembly = Assembly.GetExecutingAssembly();
 
         public ConfigPaths(ConfigLocation location, string shellExtFile)
         {
@@ -59,7 +56,7 @@ namespace HashCalculator
             {
                 if (string.IsNullOrEmpty(configDirExec))
                 {
-                    configDirExec = Path.GetDirectoryName(curAssembly.Location);
+                    configDirExec = Path.GetDirectoryName(App.Executing.Location);
                 }
                 return configDirExec;
             }
@@ -159,7 +156,7 @@ namespace HashCalculator
             }
             if (string.IsNullOrEmpty(this.ActiveConfigDir))
             {
-                this.ActiveConfigDir = Path.GetDirectoryName(curAssembly.Location);
+                this.ActiveConfigDir = Path.GetDirectoryName(App.Executing.Location);
                 this.Location = ConfigLocation.ExecDir;
             }
             this.ActiveConfigFile = Path.Combine(this.ActiveConfigDir, configFileName);
