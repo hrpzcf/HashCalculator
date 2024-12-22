@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Resources;
 using System.Security;
 using System.Windows;
@@ -545,7 +544,7 @@ namespace HashCalculator
         private static readonly string registryInprocServer32 = $"CLSID\\{Info.RegGuidComputeHash}\\InprocServer32";
 
         private static readonly RegNode nodeHashCalculatorPath;
-        private static readonly string executablePath = Assembly.GetExecutingAssembly().Location;
+        private static readonly string executablePath = App.Executing.Location;
         private static readonly string executableDir = Path.GetDirectoryName(executablePath);
         private static readonly string embeddedShellExtPath = $"HashCalculator.ShellExt.{Settings.ShellExtensionName}";
     }

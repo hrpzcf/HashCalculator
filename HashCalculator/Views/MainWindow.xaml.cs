@@ -79,7 +79,7 @@ namespace HashCalculator
             }
         }
 
-        private void MainWindowLoaded(object sender, RoutedEventArgs e)
+        private async void MainWindowLoaded(object sender, RoutedEventArgs e)
         {
             if (ShellExtHelper.RunningAsAdmin)
             {
@@ -94,9 +94,9 @@ namespace HashCalculator
             thread.IsBackground = true;
             thread.Start();
             this.MainWindowDataGrid.Columns.ReorderDataGridColumns(Settings.Current.ColumnsOrder);
-            if (Settings.Current.PreviousVer != Info.Ver && Settings.NotificationShouldBeDisplayedOnce)
+            if (await Settings.TestCompatibilityOfShellExt() is string notification)
             {
-                Handy.Controls.Growl.Error(Info.ShellExtNotification, MessageToken.MainWndMsgToken);
+                Handy.Controls.Growl.Error(notification, MessageToken.MainWndMsgToken);
             }
             Settings.Current.PreviousVer = Info.Ver;
         }
