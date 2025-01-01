@@ -78,7 +78,7 @@ namespace HashCalculator
             }
         }
 
-        private void MainWindowLoaded(object sender, RoutedEventArgs e)
+        private async void MainWindowLoaded(object sender, RoutedEventArgs e)
         {
             if (ShellExtHelper.RunningAsAdmin)
             {
@@ -93,13 +93,9 @@ namespace HashCalculator
             thread.IsBackground = true;
             thread.Start();
             this.MainWindowTable.Columns.ReorderDataGridColumns(Settings.Current.ColumnsOrder);
-            if (Settings.Current.PreviousVer != Info.Ver && Settings.NotificationShouldBeDisplayedOnce)
+            if (await Settings.TestCompatibilityOfShellExt() is string notification)
             {
-                NotificationWindow window = new NotificationWindow()
-                {
-                    Owner = this
-                };
-                window.ShowDialog();
+                MessageBox.Show(this, notification, "错误", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             Settings.Current.PreviousVer = Info.Ver;
         }

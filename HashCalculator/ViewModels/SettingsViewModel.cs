@@ -1730,7 +1730,7 @@ namespace HashCalculator
         public string Ver => Info.Ver;
 
         [JsonIgnore, XmlIgnore]
-        public string Published => Info.Published;
+        public string Website => Info.Website;
 
         [JsonIgnore, XmlIgnore]
         public GenericItemModel[] OpenSourceProjects { get; } = new GenericItemModel[]

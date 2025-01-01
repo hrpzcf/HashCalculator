@@ -21,7 +21,7 @@
         <MultiBinding StringFormat="{}{0} by {1} @ {2}">
             <Binding Source="{x:Static local:Info.Title}" />
             <Binding Source="{x:Static local:Info.Author}" />
-            <Binding Source="{x:Static local:Info.Published}" />
+            <Binding Source="{x:Static local:Info.Website}" />
         </MultiBinding>
     </Window.Title>
     <Window.Top>

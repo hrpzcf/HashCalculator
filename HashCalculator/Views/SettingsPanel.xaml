@@ -1745,9 +1745,9 @@
                                 <TextBlock>
                                     <Hyperlink
                                         Command="{Binding OpenBrowserNavigateToWebsiteCmd}"
-                                        CommandParameter="{Binding Published}"
+                                        CommandParameter="{Binding Website}"
                                         TextDecorations="None">
-                                        <TextBlock Text="{Binding Published}" />
+                                        <TextBlock Text="{Binding Website}" />
                                     </Hyperlink>
                                 </TextBlock>
                             </StackPanel>

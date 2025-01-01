@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
@@ -25,8 +26,6 @@ namespace HashCalculator
 
         public static SettingsViewModel Current { get; private set; }
             = new SettingsViewModel();
-
-        public static bool NotificationShouldBeDisplayedOnce { get; } = true;
 
         static Settings()
         {
@@ -322,6 +321,33 @@ namespace HashCalculator
                 catch (Exception exception) { return exception.Message; }
             }
             return null;
+        }
+
+        public static async Task<string> TestCompatibilityOfShellExt()
+        {
+            return await Task.Run(() =>
+            {
+                try
+                {
+                    string shellExtPath = ShellExtHelper.GetShellExtensionPath();
+                    if (!File.Exists(shellExtPath))
+                    {
+                        return null;
+                    }
+                    FileVersionInfo verInfo = FileVersionInfo.GetVersionInfo(shellExtPath);
+                    Version shellExtVersion = new Version(verInfo.FileVersion);
+                    if (shellExtVersion >= Info.MinVerOfCompatibleShellExt && shellExtVersion <= Info.V)
+                    {
+                        return null;
+                    }
+                    return $"{Info.Name} {Info.Ver} 与右键菜单扩展模块 {shellExtVersion} 不兼容，为保证右键" +
+                        $"菜单与此版本的 {Info.Name} 正确配合，请使用旧版卸载右键菜单，再使用此版本重新安装右键菜单！";
+                }
+                catch (Exception e)
+                {
+                    return $"测试 {Info.Name} 右键菜单扩展模块兼容性失败，异常信息：{e.Message}";
+                }
+            });
         }
     }
 }
