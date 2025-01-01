@@ -990,7 +990,7 @@
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn Header="哈希标记" Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowHashInTagColumn, Converter={StaticResource TrueToVisibilityVisibleCvt}}">
                     <DataGridTemplateColumn.HeaderStyle>
-                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                        <Style BasedOn="{StaticResource DataGridColumnHeaderStyle}" TargetType="{x:Type DataGridColumnHeader}">
                             <Setter Property="HorizontalContentAlignment" Value="Center" />
                         </Style>
                     </DataGridTemplateColumn.HeaderStyle>
