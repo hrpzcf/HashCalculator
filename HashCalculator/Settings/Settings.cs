@@ -307,7 +307,7 @@ namespace HashCalculator
                         hashAlgoDllResPrefix,
                         Path.GetFileNameWithoutExtension(HashAlgs),
                         Environment.Is64BitProcess ? "64" : "32");
-                    using (Stream stream = Loading.Executing.GetManifestResourceStream(resourcePath))
+                    using (Stream stream = App.Executing.GetManifestResourceStream(resourcePath))
                     {
                         if (stream != null)
                         {

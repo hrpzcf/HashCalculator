@@ -14,20 +14,6 @@
     KeyDown="CommandPanelKeyDown"
     UseLayoutRounding="True"
     mc:Ignorable="d">
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Resources/CmderButtonStyles.xaml" />
-                <ResourceDictionary Source="/Resources/ConverterResource.xaml" />
-                <ResourceDictionary Source="/Resources/DataGridCellStyles.xaml" />
-                <ResourceDictionary Source="/Resources/DataGridRowStyles.xaml" />
-                <ResourceDictionary Source="/Resources/DescTextBlockStyles.xaml" />
-                <ResourceDictionary Source="/Resources/TabControlStyles.xaml" />
-                <ResourceDictionary Source="/Resources/TabControlItemStyles.xaml" />
-                <ResourceDictionary Source="/Resources/ImageButtonStyles.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Window.Resources>
     <Window.Top>
         <MultiBinding Converter="{StaticResource FilterWndTopCvt}" Mode="TwoWay">
             <Binding

@@ -11,17 +11,6 @@
     d:DataContext="{d:DesignInstance Type=local:ShellMenuEditorModel}"
     WindowStartupLocation="CenterOwner"
     mc:Ignorable="d">
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Resources/ConverterResource.xaml" />
-                <ResourceDictionary Source="/Resources/DataGridCellStyles.xaml" />
-                <ResourceDictionary Source="/Resources/DataGridRowStyles.xaml" />
-                <!--<ResourceDictionary Source="/Resources/ImageButtonStyles.xaml" />-->
-                <!--<ResourceDictionary Source="/Resources/FixedBorderColorButtonStyles.xaml" />-->
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Window.Resources>
     <ScrollViewer Padding="2" VerticalScrollBarVisibility="Auto">
         <Grid Margin="8">
             <Grid.RowDefinitions>

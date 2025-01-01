@@ -12,9 +12,6 @@
     SnapsToDevicePixels="True"
     WindowStartupLocation="CenterOwner"
     mc:Ignorable="d">
-    <Window.Resources>
-        <ResourceDictionary Source="/Resources/ConverterResource.xaml" />
-    </Window.Resources>
     <Grid Margin="32,8">
         <Grid.RowDefinitions>
             <RowDefinition Height="2*" />

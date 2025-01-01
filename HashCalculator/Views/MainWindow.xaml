@@ -24,21 +24,6 @@
             <Binding Source="{x:Static local:Info.Published}" />
         </MultiBinding>
     </Window.Title>
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Resources/ApplicationIcons.xaml" />
-                <ResourceDictionary Source="/Resources/AlgosButtonStyles.xaml" />
-                <ResourceDictionary Source="/Resources/ComboBoxStyle1.xaml" />
-                <ResourceDictionary Source="/Resources/ComboBoxStyle2.xaml" />
-                <ResourceDictionary Source="/Resources/ImageButtonStyles.xaml" />
-                <ResourceDictionary Source="/Resources/ImgButtonTextStyles.xaml" />
-                <ResourceDictionary Source="/Resources/ConverterResource.xaml" />
-                <ResourceDictionary Source="/Resources/DataGridCellStyles.xaml" />
-                <ResourceDictionary Source="/Resources/DataGridRowStyles.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Window.Resources>
     <Window.Top>
         <MultiBinding Converter="{StaticResource MainWndTopCvt}" Mode="TwoWay">
             <Binding
