@@ -3,9 +3,9 @@
     <Color x:Key="CustomDarkDefaultColor">#DADADA</Color>
     <SolidColorBrush x:Key="CustomDarkDefaultBrush" Color="{DynamicResource CustomDarkDefaultColor}" />
 
-    <!--  主窗口表格的样式  -->
+    <!--  通用的表格的样式  -->
     <Style
-        x:Key="MainDataGridRowStyle"
+        x:Key="DataGridRowStyleNormal"
         BasedOn="{StaticResource DataGridRowStyle}"
         TargetType="{x:Type DataGridRow}">
         <Style.Triggers>
@@ -27,6 +27,13 @@
                 <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}" />
             </MultiTrigger>
         </Style.Triggers>
+    </Style>
+
+    <!--  主窗口表格的样式  -->
+    <Style
+        x:Key="MainDataGridRowStyle"
+        BasedOn="{StaticResource DataGridRowStyleNormal}"
+        TargetType="{x:Type DataGridRow}">
         <Setter Property="Background" Value="{Binding TableRowColor, Converter={StaticResource CmpColorToSolidColorBrushCvt}}" />
     </Style>
 </ResourceDictionary>

@@ -423,7 +423,7 @@
             AllowDrop="True"
             AutoGenerateColumns="False"
             CanUserReorderColumns="True"
-            CellStyle="{StaticResource MainDataGridCellStyle}"
+            CellStyle="{StaticResource DataGridCellStyleNormal}"
             Drop="DataGridHashingFilesDrop"
             Grid.IsSharedSizeScope="True"
             HeadersVisibility="Column"

@@ -4,7 +4,7 @@
     xmlns:hc="clr-namespace:HandyControl.Controls;assembly=HandyControl">
 
     <Style
-        x:Key="MainDataGridCellStyle"
+        x:Key="DataGridCellStyleNormal"
         BasedOn="{StaticResource DataGridCellStyle}"
         TargetType="{x:Type DataGridCell}">
         <Style.Triggers>

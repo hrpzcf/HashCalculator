@@ -29,7 +29,8 @@
                 HeadersVisibility="Column"
                 IsReadOnly="True"
                 ItemsSource="{Binding MenuList}"
-                SelectedItem="{Binding SelectedMenu}">
+                SelectedItem="{Binding SelectedMenu}"
+                Style="{StaticResource DataGridStyleNormal}">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn Header="菜单标题">
                         <DataGridTemplateColumn.CellTemplate>

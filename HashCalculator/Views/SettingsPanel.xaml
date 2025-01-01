@@ -1074,7 +1074,8 @@
                             ItemsSource="{Binding Source={x:Static local:Settings.Current}, Path=TemplatesForExport}"
                             KeyDown="SettingsPanelKeyDown"
                             SelectedItem="{Binding Source={x:Static local:Settings.Current}, Path=SelectedTemplateForExport}"
-                            SelectionMode="Single">
+                            SelectionMode="Single"
+                            Style="{StaticResource DataGridStyleNormal}">
                             <DataGrid.Columns>
                                 <DataGridTemplateColumn Header="方案名称">
                                     <DataGridTemplateColumn.CellTemplate>
@@ -1343,7 +1344,8 @@
                         ItemsSource="{Binding Source={x:Static local:Settings.Current}, Path=TemplatesForChecklist}"
                         KeyDown="SettingsPanelKeyDown"
                         SelectedItem="{Binding Source={x:Static local:Settings.Current}, Path=SelectedTemplateForChecklist}"
-                        SelectionMode="Single">
+                        SelectionMode="Single"
+                        Style="{StaticResource DataGridStyleNormal}">
                         <DataGrid.Columns>
                             <DataGridTemplateColumn Header="方案名称">
                                 <DataGridTemplateColumn.CellTemplate>

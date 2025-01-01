@@ -97,7 +97,8 @@
             IsReadOnly="True"
             ItemsSource="{Binding AlgoInOutModels}"
             LostFocus="OnHashResultDataGridLostFocus"
-            SelectionMode="Single">
+            SelectionMode="Single"
+            Style="{StaticResource DataGridStyleNormal}">
             <DataGrid.Columns>
                 <DataGridTemplateColumn Header="算法">
                     <DataGridTemplateColumn.CellTemplate>
