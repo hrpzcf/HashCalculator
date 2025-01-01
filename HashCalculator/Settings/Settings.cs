@@ -335,13 +335,12 @@ namespace HashCalculator
                         return null;
                     }
                     FileVersionInfo verInfo = FileVersionInfo.GetVersionInfo(shellExtPath);
-                    Version shellExtVersion = new Version(verInfo.FileVersion);
+                    Version shellExtVersion = new Version(verInfo.FileVersion ?? "0.0.0");
                     if (shellExtVersion >= Info.MinVerOfCompatibleShellExt && shellExtVersion <= Info.V)
                     {
                         return null;
                     }
-                    return $"{Info.Name} {Info.Ver} 与右键菜单扩展模块 {shellExtVersion} 不兼容，为保证右键" +
-                        $"菜单与此版本的 {Info.Name} 正确配合，请使用旧版卸载右键菜单，再使用此版本重新安装右键菜单！";
+                    return $"{Info.Name} {Info.Ver} 可能与右键菜单扩展模块 {shellExtVersion} 不兼容，请重新安装右键菜单！";
                 }
                 catch (Exception e)
                 {
