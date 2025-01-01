@@ -30,7 +30,7 @@
             Padding="4"
             Foreground="#FF006FD6"
             Header="导出计算结果时导出哪些算法的结果"
-            Style="{StaticResource GroupBoxTab}">
+            Style="{StaticResource GroupBoxTabContentLeft}">
             <StackPanel>
                 <RadioButton
                     HorizontalAlignment="Left"

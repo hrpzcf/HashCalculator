@@ -136,11 +136,10 @@
                             Grid.Column="1"
                             Margin="4,0,0,0"
                             Padding="4"
-                            Background="Transparent"
                             FontSize="9pt"
                             FontWeight="Normal"
                             Foreground="Black"
-                            Style="{StaticResource GroupBoxTab}">
+                            Style="{StaticResource GroupBoxTabContentLeft}">
                             <GroupBox.Header>
                                 <TextBlock
                                     VerticalAlignment="Center"
@@ -256,12 +255,11 @@
                             Grid.ColumnSpan="2"
                             Padding="4"
                             d:DataContext="{d:DesignInstance Type=local:SelectTargetsCmder}"
-                            Background="Transparent"
                             DataContext="{Binding SelectTableLinesCmder}"
                             FontSize="9pt"
                             FontWeight="Normal"
                             Foreground="Black"
-                            Style="{StaticResource GroupBoxTab}">
+                            Style="{StaticResource GroupBoxTabContentLeft}">
                             <GroupBox.Header>
                                 <TextBlock
                                     Margin="3,0,0,0"
@@ -298,11 +296,10 @@
                             Grid.Column="1"
                             Margin="4,4,0,0"
                             Padding="4"
-                            Background="Transparent"
                             FontSize="9pt"
                             FontWeight="Normal"
                             Foreground="Black"
-                            Style="{StaticResource GroupBoxTab}">
+                            Style="{StaticResource GroupBoxTabContentLeft}">
                             <GroupBox.Header>
                                 <TextBlock
                                     VerticalAlignment="Top"

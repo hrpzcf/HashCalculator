@@ -42,10 +42,9 @@
                 <StackPanel>
                     <GroupBox
                         Padding="4"
-                        Background="Transparent"
                         Foreground="#FF006FD6"
                         Header="文件搜索策略"
-                        Style="{StaticResource GroupBoxTab}">
+                        Style="{StaticResource GroupBoxTabContentLeft}">
                         <StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock
@@ -75,10 +74,9 @@
                     <GroupBox
                         Margin="0,8,0,0"
                         Padding="4"
-                        Background="Transparent"
                         Foreground="#FF006FD6"
                         Header="当需要查找校验依据内列出的文件进行计算并校验时"
-                        Style="{StaticResource GroupBoxTab}">
+                        Style="{StaticResource GroupBoxTabContentLeft}">
                         <StackPanel>
                             <RadioButton
                                 HorizontalAlignment="Left"
@@ -107,10 +105,9 @@
                     <GroupBox
                         Margin="0,8,0,0"
                         Padding="4"
-                        Background="Transparent"
                         Foreground="#FF006FD6"
                         Header="监控剪贴板中新复制的哈希信息用于校验"
-                        Style="{StaticResource GroupBoxTab}">
+                        Style="{StaticResource GroupBoxTabContentLeft}">
                         <StackPanel>
                             <CheckBox
                                 x:Name="checkBoxVerifyWhenClipbaordNewHash"
@@ -322,10 +319,9 @@
                     <GroupBox
                         Margin="0,8,0,0"
                         Padding="4"
-                        Background="Transparent"
                         Foreground="#FF006FD6"
                         Header="用颜色来标记哈希值相同的行时的颜色参数"
-                        Style="{StaticResource GroupBoxTab}">
+                        Style="{StaticResource GroupBoxTabContentLeft}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -375,10 +371,9 @@
                     <GroupBox
                         Margin="0,8,0,0"
                         Padding="4"
-                        Background="Transparent"
                         Foreground="#FF006FD6"
                         Header="相同哈希值筛选器给哈希值列上色时的颜色参数"
-                        Style="{StaticResource GroupBoxTab}">
+                        Style="{StaticResource GroupBoxTabContentLeft}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -428,10 +423,9 @@
                     <GroupBox
                         Margin="0,8,0,0"
                         Padding="4"
-                        Background="Transparent"
                         Foreground="#FF006FD6"
                         Header="相同文件夹筛选器给文件名列上色时的颜色参数"
-                        Style="{StaticResource GroupBoxTab}">
+                        Style="{StaticResource GroupBoxTabContentLeft}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -589,10 +583,9 @@
                 <StackPanel>
                     <GroupBox
                         Padding="4"
-                        Background="Transparent"
                         Foreground="#FF006FD6"
                         Header="扩展系统右键菜单和关联 .hcb 文件"
-                        Style="{StaticResource GroupBoxTab}">
+                        Style="{StaticResource GroupBoxTabContentLeft}">
                         <StackPanel>
                             <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
                                 <Button
@@ -706,10 +699,9 @@
                     <GroupBox
                         Margin="0,8,0,0"
                         Padding="4"
-                        Background="Transparent"
                         Foreground="#FF006FD6"
                         Header="自定义要集成到系统右键菜单的菜单项"
-                        Style="{StaticResource GroupBoxTab}">
+                        Style="{StaticResource GroupBoxTabContentLeft}">
                         <StackPanel>
                             <Button
                                 MinHeight="36"
@@ -819,10 +811,9 @@
                 <StackPanel>
                     <GroupBox
                         Padding="4"
-                        Background="Transparent"
                         Foreground="#FF006FD6"
                         Header="当点击含有【按模板复制】字样的按钮或菜单时"
-                        Style="{StaticResource GroupBoxTab}">
+                        Style="{StaticResource GroupBoxTabContentLeft}">
                         <StackPanel>
                             <RadioButton
                                 HorizontalAlignment="Left"
@@ -999,10 +990,9 @@
                     <GroupBox
                         Grid.Row="0"
                         Padding="4"
-                        Background="Transparent"
                         Foreground="#FF006FD6"
                         Header="导出计算结果时导出哪些算法的结果"
-                        Style="{StaticResource GroupBoxTab}">
+                        Style="{StaticResource GroupBoxTabContentLeft}">
                         <StackPanel>
                             <RadioButton
                                 HorizontalAlignment="Left"
@@ -1545,10 +1535,9 @@
                 VerticalScrollBarVisibility="Auto">
                 <GroupBox
                     Padding="4"
-                    Background="Transparent"
                     Foreground="#FF006FD6"
                     Header="部分列的鼠标左键双击行为"
-                    Style="{StaticResource GroupBoxTab}">
+                    Style="{StaticResource GroupBoxTabContentLeft}">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -1694,10 +1683,9 @@
                 VerticalScrollBarVisibility="Auto">
                 <GroupBox
                     Padding="4"
-                    Background="Transparent"
                     Foreground="#FF006FD6"
                     Header="软件配置文件的保存位置"
-                    Style="{StaticResource GroupBoxTab}">
+                    Style="{StaticResource GroupBoxTabContentLeft}">
                     <StackPanel>
                         <RadioButton
                             HorizontalAlignment="Left"
