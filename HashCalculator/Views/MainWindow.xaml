@@ -6,6 +6,7 @@
     xmlns:hc="https://handyorg.github.io/handycontrol"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="{x:Static local:Info.Title}"
     Width="{Binding Source={x:Static local:Settings.Current}, Path=MainWndWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     Height="{Binding Source={x:Static local:Settings.Current}, Path=MainWndHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     d:DataContext="{d:DesignInstance Type=local:MainWndViewModel}"
@@ -17,13 +18,6 @@
     UseLayoutRounding="True"
     WindowState="{Binding Source={x:Static local:Settings.Current}, Path=MainWindowState, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     mc:Ignorable="d">
-    <Window.Title>
-        <MultiBinding StringFormat="{}{0} by {1} @ {2}">
-            <Binding Source="{x:Static local:Info.Title}" />
-            <Binding Source="{x:Static local:Info.Author}" />
-            <Binding Source="{x:Static local:Info.Website}" />
-        </MultiBinding>
-    </Window.Title>
     <Window.Top>
         <MultiBinding Converter="{StaticResource MainWndTopCvt}" Mode="TwoWay">
             <Binding
