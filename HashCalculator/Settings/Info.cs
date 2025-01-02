@@ -23,5 +23,6 @@ namespace HashCalculator
         public const string Source = "https://github.com/hrpzcf/HashCalculator";
 
         public static readonly Version MinVerOfCompatibleShellExt = new Version("5.24.0");
+        public static readonly Version MaxVerOfCompatibleShellExt = new Version("6.1.0.0");
     }
 }
