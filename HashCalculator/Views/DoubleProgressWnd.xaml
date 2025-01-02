@@ -26,7 +26,6 @@
             Grid.Row="1"
             Grid.Column="1"
             Grid.ColumnSpan="2"
-            Height="8"
             Maximum="1.0"
             Visibility="{Binding SubProgressVisibility}"
             Value="{Binding CurrentValue}" />
@@ -39,7 +38,6 @@
             Visibility="{Binding SubProgressVisibility}" />
         <ProgressBar
             Grid.Row="3"
-            Height="8"
             Margin="0,16,0,0"
             Maximum="{Binding TotalCount}"
             Visibility="{Binding TotalProgressVisibility}"
