@@ -18,13 +18,13 @@ namespace HashCalculator
             {
                 return new SolidColorBrush(Colors.Red);
             }
-            else if (values[1] is SolidColorBrush solidBrush)
+            else if (values[1] is Brush brush)
             {
-                return solidBrush;
+                return brush;
             }
             else
             {
-                return Binding.DoNothing;
+                return new SolidColorBrush(Colors.Black);
             }
         }
 
@@ -556,7 +556,7 @@ namespace HashCalculator
         }
     }
 
-    internal class MultiCmpColorToSolidColorBrushCvt : IMultiValueConverter
+    internal class MultiCmpColorToColorBrushCvt : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
@@ -568,6 +568,31 @@ namespace HashCalculator
             else if (values[1] is ComparableColor color2 && color2.Color != default(Color))
             {
                 return new SolidColorBrush(color2.Color);
+            }
+            else
+            {
+                return new SolidColorBrush(Colors.Transparent);
+            }
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class CmpColorOrBrushToColorBrushCvt : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            Debug.Assert(values != null && values.Length == 2);
+            if (values[0] is ComparableColor color1 && color1.Color != default(Color))
+            {
+                return new SolidColorBrush(color1.Color);
+            }
+            else if (values[1] is Brush brush)
+            {
+                return brush;
             }
             else
             {

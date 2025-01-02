@@ -607,7 +607,7 @@
                                         </MultiBinding>
                                     </TextBlock.Foreground>
                                     <TextBlock.Background>
-                                        <MultiBinding Converter="{StaticResource MultiCmpColorToSolidColorBrushCvt}">
+                                        <MultiBinding Converter="{StaticResource CmpColorOrBrushToColorBrushCvt}">
                                             <Binding Path="FdGroupId" />
                                             <Binding Path="Background" RelativeSource="{RelativeSource AncestorType=DataGridRow}" />
                                         </MultiBinding>
@@ -709,7 +709,7 @@
                                     Margin="1,0"
                                     Padding="0,4">
                                     <TextBlock.Background>
-                                        <MultiBinding Converter="{StaticResource MultiCmpColorToSolidColorBrushCvt}">
+                                        <MultiBinding Converter="{StaticResource MultiCmpColorToColorBrushCvt}">
                                             <Binding Path="GroupId" />
                                             <Binding Path="FdGroupId" />
                                         </MultiBinding>
@@ -750,7 +750,7 @@
                                     TextTrimming="CharacterEllipsis"
                                     ToolTip="{Binding ModelDetails}">
                                     <TextBlock.Background>
-                                        <MultiBinding Converter="{StaticResource MultiCmpColorToSolidColorBrushCvt}">
+                                        <MultiBinding Converter="{StaticResource CmpColorOrBrushToColorBrushCvt}">
                                             <Binding Path="GroupId" />
                                             <Binding Path="Background" RelativeSource="{RelativeSource AncestorType=DataGridRow}" />
                                         </MultiBinding>
@@ -1012,14 +1012,19 @@
                                     Grid.Column="0"
                                     Padding="4"
                                     VerticalAlignment="Center"
-                                    Background="{Binding EhGroupId, Converter={StaticResource CmpColorToSolidColorBrushCvt}}"
-                                    Text="{Binding HcmDataFromFile, Converter={StaticResource DisplayHcmDataHashNameCvt}}" />
+                                    Text="{Binding HcmDataFromFile, Converter={StaticResource DisplayHcmDataHashNameCvt}}">
+                                    <TextBlock.Background>
+                                        <MultiBinding Converter="{StaticResource CmpColorOrBrushToColorBrushCvt}">
+                                            <Binding Path="EhGroupId" />
+                                            <Binding Path="Background" RelativeSource="{RelativeSource AncestorType=DataGridRow}" />
+                                        </MultiBinding>
+                                    </TextBlock.Background>
+                                </TextBlock>
                                 <TextBlock
                                     Grid.Column="1"
                                     Margin="4,0,0,0"
                                     Padding="4"
                                     VerticalAlignment="Center"
-                                    Background="{Binding EhGroupId, Converter={StaticResource CmpColorToSolidColorBrushCvt}}"
                                     TextTrimming="CharacterEllipsis">
                                     <TextBlock.Text>
                                         <MultiBinding Converter="{StaticResource DisplayHcmDataHashValueCvt}">
@@ -1027,6 +1032,12 @@
                                             <Binding Path="SelectedOutputType" />
                                         </MultiBinding>
                                     </TextBlock.Text>
+                                    <TextBlock.Background>
+                                        <MultiBinding Converter="{StaticResource CmpColorOrBrushToColorBrushCvt}">
+                                            <Binding Path="EhGroupId" />
+                                            <Binding Path="Background" RelativeSource="{RelativeSource AncestorType=DataGridRow}" />
+                                        </MultiBinding>
+                                    </TextBlock.Background>
                                 </TextBlock>
                             </Grid>
                         </DataTemplate>
