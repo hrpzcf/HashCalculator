@@ -334,18 +334,19 @@ namespace HashCalculator
                     {
                         return null;
                     }
-                    FileVersionInfo verInfo = FileVersionInfo.GetVersionInfo(shellExtPath);
-                    Version shellExtVersion = new Version(verInfo.FileVersion ?? "0.0.0");
-                    if (shellExtVersion >= Info.MinVerOfCompatibleShellExt && shellExtVersion <= Info.V)
+                    FileVersionInfo fileVer = FileVersionInfo.GetVersionInfo(shellExtPath);
+                    Version shellExtVer = new Version(fileVer.FileVersion ?? "0.0.0");
+                    if (shellExtVer < Info.MinVerOfCompatibleShellExt || shellExtVer > Info.MaxVerOfCompatibleShellExt)
                     {
-                        return null;
+                        return $"{Info.Title} v{Info.Ver} 可能与它的右键菜单扩展模块 " +
+                            $"v{shellExtVer} 不兼容，为保证右键菜单正常工作，请重新安装右键菜单！";
                     }
-                    return $"{Info.Name} {Info.Ver} 可能与右键菜单扩展模块 {shellExtVersion} 不兼容，请重新安装右键菜单！";
                 }
                 catch (Exception e)
                 {
-                    return $"测试 {Info.Name} 右键菜单扩展模块兼容性失败，异常信息：{e.Message}";
+                    return $"检查 {Info.Title} 右键菜单扩展模块兼容性失败，异常信息：{e.Message}";
                 }
+                return null;
             });
         }
     }
