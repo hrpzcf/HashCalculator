@@ -47,7 +47,7 @@ namespace HashCalculator
         private void ResetMainWindowDataGridColumnsIndex(object sender, RoutedEventArgs e)
         {
             int index = 0;
-            foreach (DataGridColumn column in MainWindow.Current.MainWindowTable.Columns)
+            foreach (DataGridColumn column in MainWindow.Current.MainWindowDataGrid.Columns)
             {
                 column.DisplayIndex = index++;
             }
@@ -55,7 +55,7 @@ namespace HashCalculator
 
         private void ResetMainWindowDataGridColumnsWidth(object sender, RoutedEventArgs e)
         {
-            foreach (DataGridColumn column in MainWindow.Current.MainWindowTable.Columns)
+            foreach (DataGridColumn column in MainWindow.Current.MainWindowDataGrid.Columns)
             {
                 column.Width = DataGridLength.Auto;
             }
