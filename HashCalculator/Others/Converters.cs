@@ -192,7 +192,7 @@ namespace HashCalculator
             if (ResourceDict == null)
             {
                 ResourceDict = new ResourceDictionary();
-                ResourceDict.Source = new Uri("/Resources/ApplicationIcons.xaml", UriKind.Relative);
+                ResourceDict.Source = new Uri("/Resources/ButtonIcons.xaml", UriKind.Relative);
             }
         }
 

@@ -11,7 +11,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/HashCalculator;component/Resources/AlgosButtonStyles.xaml" />
-                <ResourceDictionary Source="/HashCalculator;component/Resources/ApplicationIcons.xaml" />
+                <ResourceDictionary Source="/HashCalculator;component/Resources/ButtonIcons.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/CmderButtonStyles.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/ComboBoxStyle1.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/ComboBoxStyle2.xaml" />
