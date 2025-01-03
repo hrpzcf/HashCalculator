@@ -1609,16 +1609,10 @@ namespace HashCalculator
         public bool ClipboardUpdatedByMe { get; set; }
 
         [JsonIgnore, XmlIgnore]
-        public static string FixAlgoDlls { get; } = "更新动态链接库";
-
-        [JsonIgnore, XmlIgnore]
         public static string ShellExtDir { get; } = "安装位置";
 
         [JsonIgnore, XmlIgnore]
         public static string UpdateExePath { get; } = "更新程序路径";
-
-        [JsonIgnore, XmlIgnore]
-        public static string AlgosDllDir { get; } = "动态链接库目录";
 
         [JsonIgnore, XmlIgnore]
         public static GenericItemModel[] AvailableOutputTypes { get; } =

@@ -65,19 +65,7 @@ namespace HashCalculator
         {
             if (sender is TextBlock textBlock)
             {
-                if (textBlock.Text == SettingsViewModel.FixAlgoDlls)
-                {
-                    string message = Settings.ExtractEmbeddedAlgoDll(force: true);
-                    if (!string.IsNullOrEmpty(message))
-                    {
-                        MessageBox.Show(this, $"修复失败：\n{message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                    else
-                    {
-                        MessageBox.Show(this, $"已经成功更新相关文件", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
-                    }
-                }
-                else if (textBlock.Text == SettingsViewModel.ShellExtDir)
+                if (textBlock.Text == SettingsViewModel.ShellExtDir)
                 {
                     CommonUtils.OpenFolderAndSelectItem(Settings.ConfigInfo.ShellExtensionDir);
                 }
@@ -92,10 +80,6 @@ namespace HashCalculator
                     {
                         MessageBox.Show(this, $"更新失败：{exception.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
-                }
-                else if (textBlock.Text == SettingsViewModel.AlgosDllDir)
-                {
-                    CommonUtils.OpenFolderAndSelectItem(Settings.ConfigInfo.ActiveConfigDir);
                 }
             }
         }

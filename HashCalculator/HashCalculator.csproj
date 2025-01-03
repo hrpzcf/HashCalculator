@@ -434,8 +434,8 @@
     <EmbeddedResource Include="ShellExt\HashCalculator32.dll" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Algorithm\AlgoDlls\hashalgs64.dll" />
-    <EmbeddedResource Include="Algorithm\AlgoDlls\hashalgs32.dll" />
+    <EmbeddedResource Include="Costura-win-x64\hashalgs.dll" />
+    <EmbeddedResource Include="Costura-win-x86\hashalgs.dll" />
   </ItemGroup>
   <ItemGroup>
     <None Include="FodyWeavers.xsd">
