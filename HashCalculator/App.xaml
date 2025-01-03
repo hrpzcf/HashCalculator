@@ -12,7 +12,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/Theme.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/SkinDefault.xaml" />
-                <ResourceDictionary Source="/HashCalculator;component/Resources/ApplicationIcons.xaml" />
+                <ResourceDictionary Source="/HashCalculator;component/Resources/ButtonIcons.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/CmderButtonStyles.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/ComboBoxStyle1.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/ComboBoxStyle2.xaml" />

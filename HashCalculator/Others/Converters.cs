@@ -198,7 +198,7 @@ namespace HashCalculator
             {
                 this.resourceDict = new ResourceDictionary();
                 this.resourceDict.Source = new Uri(
-                    "/HashCalculator;component/Resources/ApplicationIcons.xaml",
+                    "/HashCalculator;component/Resources/ButtonIcons.xaml",
                     UriKind.Relative);
             }
         }
