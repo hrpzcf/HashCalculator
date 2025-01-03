@@ -1,3 +1,6 @@
 [submodule "ShellExtensions/TinyJson"]
 	path = ShellExtensions/TinyJson
 	url = git@github.com:rafagafe/tiny-json.git
+[submodule "OpenHashLibs"]
+	path = OpenHashLibs
+	url = git@github.com:hrpzcf/OpenHashLibs.git
