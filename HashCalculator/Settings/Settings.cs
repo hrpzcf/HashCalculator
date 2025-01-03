@@ -11,8 +11,6 @@ namespace HashCalculator
 {
     internal static class Settings
     {
-        private const string hashAlgoDllResPrefix = "HashCalculator.Algorithm.AlgoDlls";
-
         /// <summary>
         /// 算法的实现库名称 (外置的动态链接库)
         /// </summary>
@@ -284,43 +282,6 @@ namespace HashCalculator
                 Current.ResetTemplatesForChecklist();
             }
             return settingsViewModelLoaded;
-        }
-
-        public static void SetProcessEnvVar()
-        {
-            Environment.SetEnvironmentVariable("PATH", ConfigInfo.ActiveConfigDir);
-        }
-
-        public static string ExtractEmbeddedAlgoDll(bool force)
-        {
-            string newFileFullPath = Path.Combine(ConfigInfo.ActiveConfigDir, HashAlgs);
-            if (force || Current.PreviousVer != Info.Ver || !File.Exists(newFileFullPath))
-            {
-                try
-                {
-                    if (!Directory.Exists(ConfigInfo.ActiveConfigDir))
-                    {
-                        Directory.CreateDirectory(ConfigInfo.ActiveConfigDir);
-                    }
-                    string resourcePath = string.Format("{0}.{1}{2}.dll",
-                        hashAlgoDllResPrefix,
-                        Path.GetFileNameWithoutExtension(HashAlgs),
-                        Environment.Is64BitProcess ? "64" : "32");
-                    using (Stream stream = App.Executing.GetManifestResourceStream(resourcePath))
-                    {
-                        if (stream != null)
-                        {
-                            stream.ToNewFile(newFileFullPath);
-                        }
-                        else
-                        {
-                            return $"内嵌资源不存在： {resourcePath}";
-                        }
-                    }
-                }
-                catch (Exception exception) { return exception.Message; }
-            }
-            return null;
         }
 
         public static async Task<string> TestCompatibilityOfShellExt()

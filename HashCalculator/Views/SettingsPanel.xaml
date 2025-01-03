@@ -1742,53 +1742,6 @@
                         VerticalAlignment="Center"
                         FontFamily="{StaticResource IconFont}"
                         FontSize="19pt"
-                        Text="&#xe645;" />
-                    <TextBlock
-                        Margin="8,0,0,0"
-                        VerticalAlignment="Center"
-                        Text="常见问题修复向导" />
-                </StackPanel>
-            </TabItem.Header>
-            <ScrollViewer
-                Padding="10"
-                FontSize="9pt"
-                HorizontalScrollBarVisibility="Auto"
-                VerticalScrollBarVisibility="Auto">
-                <StackPanel>
-                    <StackPanel>
-                        <TextBlock Style="{StaticResource DescTextBlockStyle}" Text="某个 (系列) 算法总是计算失败？" />
-                        <TextBlock
-                            Margin="0,4,0,0"
-                            Cursor="Hand"
-                            Foreground="Blue"
-                            MouseLeftButtonDown="OnTextBlockMouseLeftButtonDown"
-                            Text="{Binding Source={x:Static local:SettingsViewModel.FixAlgoDlls}}" />
-                        <StackPanel Margin="0,4,0,0" Orientation="Horizontal">
-                            <TextBlock
-                                FontSize="8pt"
-                                Style="{StaticResource DescTextBlockStyle}"
-                                Text="原理：使用相关内嵌资源覆盖 " />
-                            <TextBlock
-                                Cursor="Hand"
-                                FontSize="8pt"
-                                MouseLeftButtonDown="OnTextBlockMouseLeftButtonDown"
-                                Text="{Binding Source={x:Static local:SettingsViewModel.AlgosDllDir}}" />
-                            <TextBlock
-                                FontSize="8pt"
-                                Style="{StaticResource DescTextBlockStyle}"
-                                Text=" 中的同名文件" />
-                        </StackPanel>
-                    </StackPanel>
-                </StackPanel>
-            </ScrollViewer>
-        </TabItem>
-        <TabItem FontSize="10pt">
-            <TabItem.Header>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock
-                        VerticalAlignment="Center"
-                        FontFamily="{StaticResource IconFont}"
-                        FontSize="19pt"
                         Text="&#xe646;" />
                     <TextBlock
                         Margin="8,0,0,0"

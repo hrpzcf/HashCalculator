@@ -11,10 +11,8 @@ namespace HashCalculator
 
         private void StartupHandler(object sender, StartupEventArgs e)
         {
-            Settings.SetProcessEnvVar();
             Settings.LoadSettings();
             Initializer.ParseArgsForShell(e.Args);
-            Settings.ExtractEmbeddedAlgoDll(false);
             Initializer.PushArgs(e.Args);
         }
 
