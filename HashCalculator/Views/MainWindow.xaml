@@ -607,7 +607,8 @@
                                     Margin="0,0,4,0"
                                     VerticalAlignment="Center"
                                     Source="{Binding FileIcon}"
-                                    Stretch="None" />
+                                    Stretch="None"
+                                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowFileIcon, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
                                 <Border
                                     Grid.Row="0"
                                     Grid.Column="2"
@@ -761,7 +762,7 @@
                                 <Border
                                     Grid.Column="0"
                                     Width="7"
-                                    Margin="0,0,4,0"
+                                    Margin="0,0,2,0"
                                     BorderBrush="White"
                                     BorderThickness="1"
                                     Visibility="{Binding GroupId, Converter={StaticResource CmpColorToVisibilityCvt}}">
