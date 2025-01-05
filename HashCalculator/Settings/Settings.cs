@@ -163,63 +163,38 @@ namespace HashCalculator
             return false;
         }
 
-        private static void DeleteAlgoDllsExceptThatWithinActiveDir()
+        /// <summary>
+        /// 当前 hashalgs.dll 的释放与加载由 Costura.Fody 在临时文件目录完成，<br/>
+        /// 之前版本的 HashCalculator 释放到配置文件目录或 Library 目录的 hashalgs.dll 可全部删除。
+        /// </summary>
+        private static void DeleteTheAlgDllsThatAreNoLongerInUse()
         {
-            if (!ConfigInfo.ActiveConfigDir.Equals(ConfigPaths.ConfigDirExec))
+            foreach (string configPath in ConfigPaths.ConfigDirectoryPaths)
             {
-                string unusedDll = Path.Combine(ConfigPaths.ConfigDirExec, HashAlgs);
-                if (File.Exists(unusedDll))
+                string unusedAlgDllPath = Path.Combine(configPath, HashAlgs);
+                if (File.Exists(unusedAlgDllPath))
                 {
                     try
                     {
-                        File.Delete(unusedDll);
+                        File.Delete(unusedAlgDllPath);
                     }
                     catch
                     {
                     }
                 }
             }
-            if (!ConfigInfo.ActiveConfigDir.Equals(ConfigPaths.ConfigDirUser))
+            // 删除已弃用的、放置在单独目录的算法动态库
+            string oldAlgDll = Path.Combine(ConfigPaths.LibraryDirUser, HashAlgs);
+            try
             {
-                string unusedDll = Path.Combine(ConfigPaths.ConfigDirUser, HashAlgs);
-                if (File.Exists(unusedDll))
+                if (File.Exists(oldAlgDll))
                 {
-                    try
-                    {
-                        File.Delete(unusedDll);
-                    }
-                    catch
-                    {
-                    }
+                    File.Delete(oldAlgDll);
+                    Directory.Delete(ConfigPaths.LibraryDirUser);
                 }
             }
-            if (!ConfigInfo.ActiveConfigDir.Equals(ConfigPaths.ConfigDirPublicUser))
+            catch
             {
-                string unusedDll = Path.Combine(ConfigPaths.ConfigDirPublicUser, HashAlgs);
-                if (File.Exists(unusedDll))
-                {
-                    try
-                    {
-                        File.Delete(unusedDll);
-                    }
-                    catch
-                    {
-                    }
-                }
-            }
-            if (!ConfigInfo.ActiveConfigDir.Equals(ConfigPaths.ConfigDirProgramData))
-            {
-                string unusedDll = Path.Combine(ConfigPaths.ConfigDirProgramData, HashAlgs);
-                if (File.Exists(unusedDll))
-                {
-                    try
-                    {
-                        File.Delete(unusedDll);
-                    }
-                    catch
-                    {
-                    }
-                }
             }
         }
 
@@ -229,46 +204,30 @@ namespace HashCalculator
         public static bool LoadSettings()
         {
             bool settingsViewModelLoaded = false;
-            DeleteAlgoDllsExceptThatWithinActiveDir();
-            // 删除已弃用的、放置在单独目录的算法动态库
-            string oldAlgDll = Path.Combine(ConfigPaths.LibraryDirUser, HashAlgs);
             try
             {
-                if (File.Exists(oldAlgDll))
+                if (!File.Exists(ConfigInfo.ActiveConfigFile))
                 {
-                    File.Delete(oldAlgDll);
+                    throw new FileNotFoundException("活动配置文件不存在！");
                 }
-                if (Directory.Exists(ConfigPaths.LibraryDirUser))
+                // 读取所有字符串的原因是尽早关闭文件以免影响反序列化导致
+                // SettingsViewModel.LocationForSavingConfigFiles 属性变化
+                // 触发的移动配置文件位置的操作（无法移动还没有关闭的文件）
+                string jContent = File.ReadAllText(ConfigInfo.ActiveConfigFile);
+                using (StringReader sr = new StringReader(jContent))
+                using (JsonTextReader jsonTextReader = new JsonTextReader(sr))
                 {
-                    Directory.Delete(ConfigPaths.LibraryDirUser);
-                }
-            }
-            catch
-            {
-            }
-            try
-            {
-                if (File.Exists(ConfigInfo.ActiveConfigFile))
-                {
-                    // 读取所有字符串的原因是尽早关闭文件以免影响反序列化导致
-                    // SettingsViewModel.LocationForSavingConfigFiles 属性变化
-                    // 触发的移动配置文件位置的操作（无法移动还没有关闭的文件）
-                    string jContent = File.ReadAllText(ConfigInfo.ActiveConfigFile);
-                    using (StringReader sr = new StringReader(jContent))
-                    using (JsonTextReader jsonTextReader = new JsonTextReader(sr))
+                    JsonSerializerSettings settings = new JsonSerializerSettings()
                     {
-                        JsonSerializerSettings settings = new JsonSerializerSettings()
+                        NullValueHandling = NullValueHandling.Ignore,
+                        Error = (s, e) =>
                         {
-                            NullValueHandling = NullValueHandling.Ignore,
-                            Error = (s, e) =>
-                            {
-                                e.ErrorContext.Handled = true;
-                            },
-                        };
-                        JsonSerializer jsonSerializer = JsonSerializer.Create(settings);
-                        jsonSerializer.Populate(jsonTextReader, Current);
-                        settingsViewModelLoaded = true;
-                    }
+                            e.ErrorContext.Handled = true;
+                        },
+                    };
+                    JsonSerializer jsonSerializer = JsonSerializer.Create(settings);
+                    jsonSerializer.Populate(jsonTextReader, Current);
+                    settingsViewModelLoaded = true;
                 }
             }
             catch (Exception ex)
@@ -281,6 +240,7 @@ namespace HashCalculator
                 Current.ResetTemplatesForExport();
                 Current.ResetTemplatesForChecklist();
             }
+            DeleteTheAlgDllsThatAreNoLongerInUse();
             return settingsViewModelLoaded;
         }
 
