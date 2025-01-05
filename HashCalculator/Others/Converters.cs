@@ -536,7 +536,27 @@ namespace HashCalculator
         }
     }
 
-    internal class CmpColorToSolidColorBrushCvt : IValueConverter
+    internal class CmpColorToVisibilityCvt : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is ComparableColor color && color.Color != default(Color))
+            {
+                return Visibility.Visible;
+            }
+            else
+            {
+                return Visibility.Collapsed;
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class CmpColorToColorBrushCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

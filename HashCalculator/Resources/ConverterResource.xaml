@@ -175,7 +175,8 @@
     <local:RadioExportAllCalculatedAlgosCvt x:Key="RadioExportAllCalculatedAlgosCvt" />
     <local:BytesToIntuitiveFileSizeCvt x:Key="BytesToIntuitiveFileSizeCvt" />
     <local:MultiLineTextToStrArrayCvt x:Key="MultiLineTextToStrArrayCvt" />
-    <local:CmpColorToSolidColorBrushCvt x:Key="CmpColorToSolidColorBrushCvt" />
+    <local:CmpColorToVisibilityCvt x:Key="CmpColorToVisibilityCvt" />
+    <local:CmpColorToColorBrushCvt x:Key="CmpColorToColorBrushCvt" />
     <local:MultiCmpColorToColorBrushCvt x:Key="MultiCmpColorToColorBrushCvt" />
     <local:CmpColorOrBrushToColorBrushCvt x:Key="CmpColorOrBrushToColorBrushCvt" />
     <local:CloneParameterArrayCvt x:Key="CloneParameterArrayCvt" />

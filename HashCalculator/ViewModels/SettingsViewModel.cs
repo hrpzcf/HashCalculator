@@ -124,8 +124,8 @@ namespace HashCalculator
         private int minCopiedCharsToTriggerHashCheck = 8;
         private int maxCopiedCharsToTriggerHashCheck = 512;
         private int millisecondsOfDelayedStartup = 360;
-        private int luminanceOfTableRowsWithSameHash = 220;
-        private int saturationOfTableRowsWithSameHash = 200;
+        private int luminanceOfTableRowsWithSameHash = 100;
+        private int saturationOfTableRowsWithSameHash = 240;
         private int luminanceOfTableCellsWithSameDirectory = 190;
         private int saturationOfTableCellsWithSameDirectory = 240;
         private int luminanceOfTableCellsWithSameHash = 190;
@@ -1506,8 +1506,8 @@ namespace HashCalculator
 
         private void ResetLuminanceAndSaturationValuesAction(object param)
         {
-            this.LuminanceOfTableRowsWithSameHash = 220;
-            this.SaturationOfTableRowsWithSameHash = 200;
+            this.LuminanceOfTableRowsWithSameHash = 100;
+            this.SaturationOfTableRowsWithSameHash = 240;
 
             this.LuminanceOfTableCellsWithSameHash = 190;
             this.SaturationOfTableCellsWithSameHash = 240;

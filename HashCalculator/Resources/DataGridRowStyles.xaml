@@ -34,6 +34,52 @@
         x:Key="MainDataGridRowStyle"
         BasedOn="{StaticResource DataGridRowStyleNormal}"
         TargetType="{x:Type DataGridRow}">
-        <Setter Property="Background" Value="{Binding TableRowColor, Converter={StaticResource CmpColorToSolidColorBrushCvt}}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type DataGridRow}">
+                    <StackPanel Orientation="Vertical">
+                        <SelectiveScrollingGrid>
+                            <SelectiveScrollingGrid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </SelectiveScrollingGrid.ColumnDefinitions>
+                            <SelectiveScrollingGrid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </SelectiveScrollingGrid.RowDefinitions>
+                            <Border
+                                Name="DGR_Border"
+                                Grid.ColumnSpan="2"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4"
+                                SnapsToDevicePixels="True" />
+                            <DataGridCellsPresenter
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                MinHeight="{TemplateBinding MinHeight}"
+                                VerticalContentAlignment="Center"
+                                ItemsPanel="{TemplateBinding ItemsPanel}"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                            <DataGridDetailsPresenter
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Visibility="{TemplateBinding DetailsVisibility}" />
+                            <DataGridRowHeader
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Visibility="{Binding HeadersVisibility, ConverterParameter={x:Static DataGridHeadersVisibility.Row}, Converter={x:Static DataGrid.HeadersVisibilityConverter}, RelativeSource={RelativeSource AncestorType=DataGrid}}" />
+                        </SelectiveScrollingGrid>
+                        <!--  表格行的下划线  -->
+                        <Border
+                            Height="3"
+                            Margin="0,1,0,0"
+                            Background="{Binding TableRowColor, Converter={StaticResource CmpColorToColorBrushCvt}}"
+                            Visibility="{Binding TableRowColor, Converter={StaticResource CmpColorToVisibilityCvt}}" />
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 </ResourceDictionary>
