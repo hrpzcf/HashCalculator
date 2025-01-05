@@ -7,6 +7,7 @@
         x:Key="DataGridCellStyleNormal"
         BasedOn="{StaticResource DataGridCellStyle}"
         TargetType="{x:Type DataGridCell}">
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
         <Style.Triggers>
             <MultiDataTrigger>
                 <MultiDataTrigger.Conditions>

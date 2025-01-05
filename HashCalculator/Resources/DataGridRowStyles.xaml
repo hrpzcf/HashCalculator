@@ -73,7 +73,7 @@
                         </SelectiveScrollingGrid>
                         <!--  表格行的下划线  -->
                         <Border
-                            Height="3"
+                            Height="2"
                             Margin="0,1,0,0"
                             Background="{Binding TableRowColor, Converter={StaticResource CmpColorToColorBrushCvt}}"
                             Visibility="{Binding TableRowColor, Converter={StaticResource CmpColorToVisibilityCvt}}" />

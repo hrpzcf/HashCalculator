@@ -558,14 +558,18 @@
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoSerialNumColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Padding="2" Text="{Binding SerialNumber}">
-                                <TextBlock.InputBindings>
+                            <Border Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}, Path=Background}">
+                                <TextBlock
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Text="{Binding SerialNumber}" />
+                                <Border.InputBindings>
                                     <MouseBinding
                                         Command="{Binding TableColumnDoubleClickCmd}"
                                         CommandParameter="{Binding Source={x:Static local:Settings.Current}, Path=SerialColumnLeftDoubleClick}"
                                         MouseAction="LeftDoubleClick" />
-                                </TextBlock.InputBindings>
-                            </TextBlock>
+                                </Border.InputBindings>
+                            </Border>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -585,7 +589,8 @@
                                 <Border
                                     Grid.Row="0"
                                     Grid.Column="0"
-                                    Width="5"
+                                    Width="7"
+                                    Margin="0,0,2,0"
                                     BorderBrush="White"
                                     BorderThickness="1"
                                     Visibility="{Binding FdGroupId, Converter={StaticResource CmpColorToVisibilityCvt}}">
@@ -599,31 +604,34 @@
                                 <Image
                                     Grid.Row="0"
                                     Grid.Column="1"
-                                    Margin="1"
+                                    Margin="0,0,4,0"
                                     VerticalAlignment="Center"
-                                    Source="{Binding FileIcon}" />
-                                <TextBlock
+                                    Source="{Binding FileIcon}"
+                                    Stretch="None" />
+                                <Border
                                     Grid.Row="0"
                                     Grid.Column="2"
-                                    Margin="1"
-                                    Padding="4"
-                                    VerticalAlignment="Center"
-                                    Text="{Binding FileName}"
-                                    TextTrimming="CharacterEllipsis"
-                                    ToolTip="{Binding Information}">
-                                    <TextBlock.Foreground>
-                                        <MultiBinding Converter="{StaticResource InvalidFileNameForegroundCvt}">
-                                            <Binding Path="InvalidFileName" />
-                                            <Binding Path="Foreground" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}" />
-                                        </MultiBinding>
-                                    </TextBlock.Foreground>
-                                    <TextBlock.InputBindings>
+                                    Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}, Path=Background}">
+                                    <Border.InputBindings>
                                         <MouseBinding
                                             Command="{Binding TableColumnDoubleClickCmd}"
                                             CommandParameter="{Binding Source={x:Static local:Settings.Current}, Path=FileNameColumnLeftDoubleClick}"
                                             MouseAction="LeftDoubleClick" />
-                                    </TextBlock.InputBindings>
-                                </TextBlock>
+                                    </Border.InputBindings>
+                                    <TextBlock
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Text="{Binding FileName}"
+                                        TextTrimming="CharacterEllipsis"
+                                        ToolTip="{Binding Information}">
+                                        <TextBlock.Foreground>
+                                            <MultiBinding Converter="{StaticResource InvalidFileNameForegroundCvt}">
+                                                <Binding Path="InvalidFileName" />
+                                                <Binding Path="Foreground" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}" />
+                                            </MultiBinding>
+                                        </TextBlock.Foreground>
+                                    </TextBlock>
+                                </Border>
                             </Grid>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -636,18 +644,20 @@
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoFullPathColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock
-                                Padding="2,0"
-                                Text="{Binding Information}"
-                                TextTrimming="CharacterEllipsis"
-                                ToolTip="{Binding Information}">
-                                <TextBlock.InputBindings>
+                            <Border Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}, Path=Background}">
+                                <Border.InputBindings>
                                     <MouseBinding
                                         Command="{Binding TableColumnDoubleClickCmd}"
                                         CommandParameter="{Binding Source={x:Static local:Settings.Current}, Path=FullPathColumnLeftDoubleClick}"
                                         MouseAction="LeftDoubleClick" />
-                                </TextBlock.InputBindings>
-                            </TextBlock>
+                                </Border.InputBindings>
+                                <TextBlock
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Text="{Binding Information}"
+                                    TextTrimming="CharacterEllipsis"
+                                    ToolTip="{Binding Information}" />
+                            </Border>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -663,20 +673,23 @@
                     </DataGridTemplateColumn.HeaderStyle>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock
-                                Padding="8,0"
-                                HorizontalAlignment="Right"
-                                Text="{Binding FileLength, Converter={StaticResource BytesToIntuitiveFileSizeCvt}}">
-                                <TextBlock.ToolTip>
-                                    <ToolTip Content="{Binding FileLength, Mode=OneWay}" ContentStringFormat="{}{0} 字节" />
-                                </TextBlock.ToolTip>
-                                <TextBlock.InputBindings>
+                            <Border Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}, Path=Background}">
+                                <Border.InputBindings>
                                     <MouseBinding
                                         Command="{Binding TableColumnDoubleClickCmd}"
                                         CommandParameter="{Binding Source={x:Static local:Settings.Current}, Path=FileSizeColumnLeftDoubleClick}"
                                         MouseAction="LeftDoubleClick" />
-                                </TextBlock.InputBindings>
-                            </TextBlock>
+                                </Border.InputBindings>
+                                <TextBlock
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
+                                    Text="{Binding FileLength, Converter={StaticResource BytesToIntuitiveFileSizeCvt}}">
+                                    <TextBlock.ToolTip>
+                                        <ToolTip Content="{Binding FileLength, Mode=OneWay}" ContentStringFormat="{}{0} 字节" />
+                                    </TextBlock.ToolTip>
+
+                                </TextBlock>
+                            </Border>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -737,44 +750,54 @@
                     SortMemberPath="CurrentHashString">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Grid Margin="1,0">
+                            <Grid>
                                 <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="groupId" />
                                     <ColumnDefinition />
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <!--  不在计算状态  -->
-                                <TextBlock
-                                    x:Name="hashStringTextBlock"
+                                <Border
                                     Grid.Column="0"
+                                    Width="7"
                                     Margin="0,0,4,0"
-                                    Padding="4"
-                                    VerticalAlignment="Center"
-                                    Text="{Binding CurrentHashString}"
-                                    TextTrimming="CharacterEllipsis"
-                                    ToolTip="{Binding ModelDetails}">
-                                    <TextBlock.Background>
+                                    BorderBrush="White"
+                                    BorderThickness="1"
+                                    Visibility="{Binding GroupId, Converter={StaticResource CmpColorToVisibilityCvt}}">
+                                    <Border.Background>
                                         <MultiBinding Converter="{StaticResource CmpColorOrBrushToColorBrushCvt}">
                                             <Binding Path="GroupId" />
                                             <Binding Path="Background" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}" />
                                         </MultiBinding>
-                                    </TextBlock.Background>
-                                    <TextBlock.Visibility>
+                                    </Border.Background>
+                                </Border>
+                                <!--  不在计算状态  -->
+                                <Border
+                                    Grid.Column="1"
+                                    Margin="0,0,4,0"
+                                    Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}, Path=Background}">
+                                    <Border.Visibility>
                                         <MultiBinding Converter="{StaticResource StateFinishedResultSucceededToVisibilityCvt}">
                                             <Binding Path="State" />
                                             <Binding Path="Result" />
                                         </MultiBinding>
-                                    </TextBlock.Visibility>
-                                    <TextBlock.InputBindings>
+                                    </Border.Visibility>
+                                    <Border.InputBindings>
                                         <MouseBinding
                                             Command="{Binding TableColumnDoubleClickCmd}"
                                             CommandParameter="{Binding Source={x:Static local:Settings.Current}, Path=HashValueColumnLeftDoubleClick}"
                                             MouseAction="LeftDoubleClick" />
-                                    </TextBlock.InputBindings>
-                                </TextBlock>
+                                    </Border.InputBindings>
+                                    <TextBlock
+                                        x:Name="hashStringTextBlock"
+                                        VerticalAlignment="Center"
+                                        Text="{Binding CurrentHashString}"
+                                        TextTrimming="CharacterEllipsis"
+                                        ToolTip="{Binding ModelDetails}" />
+                                </Border>
                                 <TextBlock
-                                    Grid.Column="0"
+                                    Grid.Column="1"
                                     Padding="4"
                                     VerticalAlignment="Center"
                                     Text="{Binding ErrorDetails}"
@@ -789,14 +812,14 @@
                                 <!--  正在计算状态  -->
                                 <!--  ProgressBar的Value绑定需是OneWay，因为默认TwoWay和private set的Progress无法成功绑定  -->
                                 <ProgressBar
-                                    Grid.Column="0"
+                                    Grid.Column="1"
                                     Width="{Binding ElementName=hashStringTextBlock, Path=ActualWidth}"
                                     HorizontalAlignment="Left"
                                     Maximum="{Binding MaxProgress}"
                                     Visibility="{Binding State, Converter={StaticResource StateRunningToVisiblityCvt}}"
                                     Value="{Binding Progress, Mode=OneWay}" />
                                 <Button
-                                    Grid.Column="2"
+                                    Grid.Column="3"
                                     Padding="4"
                                     Command="{Binding ShutdownModelSelfCmd}"
                                     Content="&#xe61f;"
@@ -807,7 +830,7 @@
                                     ToolTip="停止..."
                                     Visibility="{Binding State, Converter={StaticResource StateRunningToVisiblityCvt}}" />
                                 <Button
-                                    Grid.Column="3"
+                                    Grid.Column="4"
                                     Padding="4"
                                     Command="{Binding PauseOrContinueModelSelfCmd}"
                                     Content="{Binding State, Converter={StaticResource SubBtnPauseOrContinueTextCvt}}"
@@ -819,7 +842,7 @@
                                     Visibility="{Binding State, Converter={StaticResource StateRunningToVisiblityCvt}}" />
                                 <!--  正排队  -->
                                 <Button
-                                    Grid.Column="3"
+                                    Grid.Column="4"
                                     Padding="4"
                                     Command="{Binding ShutdownModelSelfCmd}"
                                     Content="&#xe620;"
@@ -831,8 +854,8 @@
                                     Visibility="{Binding State, Converter={StaticResource StateWaitingToVisiblityCvt}}" />
                                 <!--  已成功  -->
                                 <Button
-                                    Grid.Column="1"
-                                    Width="20"
+                                    Grid.Column="2"
+                                    Width="21"
                                     Height="21"
                                     Margin="0,0,4,0"
                                     d:DataContext="{d:DesignInstance local:HashViewModel}"
@@ -849,7 +872,7 @@
                                     </Button.Visibility>
                                 </Button>
                                 <Button
-                                    Grid.Column="2"
+                                    Grid.Column="3"
                                     Padding="4"
                                     Command="{Binding CopyThisModelCurHashCmd}"
                                     Content="&#xe718;"
@@ -866,7 +889,7 @@
                                     </Button.Visibility>
                                 </Button>
                                 <Button
-                                    Grid.Column="3"
+                                    Grid.Column="4"
                                     Padding="4"
                                     Command="{Binding CopyThisModelAllHashesCmd}"
                                     Content="&#xe751;"
@@ -884,7 +907,7 @@
                                 </Button>
                                 <!--  未成功  -->
                                 <Button
-                                    Grid.Column="3"
+                                    Grid.Column="4"
                                     Padding="4"
                                     Command="{Binding RestartModelSelfCmd}"
                                     Content="&#xe621;"
@@ -936,14 +959,18 @@
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoDurationColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Padding="2" Text="{Binding DurationofTask, StringFormat=f2}">
-                                <TextBlock.InputBindings>
+                            <Border Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}, Path=Background}">
+                                <Border.InputBindings>
                                     <MouseBinding
                                         Command="{Binding TableColumnDoubleClickCmd}"
                                         CommandParameter="{Binding Source={x:Static local:Settings.Current}, Path=DurationColumnLeftDoubleClick}"
                                         MouseAction="LeftDoubleClick" />
-                                </TextBlock.InputBindings>
-                            </TextBlock>
+                                </Border.InputBindings>
+                                <TextBlock
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Text="{Binding DurationofTask, StringFormat=f2}" />
+                            </Border>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
