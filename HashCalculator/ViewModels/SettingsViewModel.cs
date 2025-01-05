@@ -126,9 +126,9 @@ namespace HashCalculator
         private int millisecondsOfDelayedStartup = 360;
         private int luminanceOfTableRowsWithSameHash = 100;
         private int saturationOfTableRowsWithSameHash = 240;
-        private int luminanceOfTableCellsWithSameDirectory = 190;
+        private int luminanceOfTableCellsWithSameDirectory = 100;
         private int saturationOfTableCellsWithSameDirectory = 240;
-        private int luminanceOfTableCellsWithSameHash = 190;
+        private int luminanceOfTableCellsWithSameHash = 100;
         private int saturationOfTableCellsWithSameHash = 240;
 
         private RelayCommand installShellExtCmd;
@@ -1509,10 +1509,10 @@ namespace HashCalculator
             this.LuminanceOfTableRowsWithSameHash = 100;
             this.SaturationOfTableRowsWithSameHash = 240;
 
-            this.LuminanceOfTableCellsWithSameHash = 190;
+            this.LuminanceOfTableCellsWithSameHash = 100;
             this.SaturationOfTableCellsWithSameHash = 240;
 
-            this.LuminanceOfTableCellsWithSameDirectory = 190;
+            this.LuminanceOfTableCellsWithSameDirectory = 100;
             this.SaturationOfTableCellsWithSameDirectory = 240;
         }
 
