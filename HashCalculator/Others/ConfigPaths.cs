@@ -101,6 +101,14 @@ namespace HashCalculator
             }
         }
 
+        public static string[] ConfigDirectoryPaths { get; } =
+            new string[] {
+                ConfigDirExec,
+                ConfigDirUser,
+                ConfigDirPublicUser,
+                ConfigDirProgramData,
+            };
+
         private void UpdateConfigurationPaths(ConfigLocation location)
         {
             this.Location = location;

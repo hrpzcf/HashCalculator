@@ -134,7 +134,9 @@ namespace HashCalculator
                     HashViewModel model = this.queue.Take(token);
                     model.ComputeManyHashValue();
                 }
-                catch (OperationCanceledException) { }
+                catch (OperationCanceledException)
+                {
+                }
             }
         }
 
