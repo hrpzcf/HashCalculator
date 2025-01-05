@@ -110,7 +110,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Width="*" Header="哈希值">
+                <DataGridTemplateColumn Header="哈希值">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid>
@@ -122,8 +122,7 @@
                                     Grid.Column="0"
                                     Margin="2"
                                     Padding="2,4"
-                                    Background="Transparent"
-                                    TextWrapping="Wrap">
+                                    Background="Transparent">
                                     <TextBlock.Text>
                                         <MultiBinding Converter="{StaticResource BytesToStrByOutputTypeCvt}">
                                             <Binding Mode="OneWay" Path="HashResult" />
