@@ -751,10 +751,10 @@
                     SortMemberPath="CurrentHashString">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Grid>
+                            <Grid HorizontalAlignment="Left">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" SharedSizeGroup="groupId" />
-                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="*" SharedSizeGroup="hashValueGroup" />
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
@@ -762,7 +762,7 @@
                                 <Border
                                     Grid.Column="0"
                                     Width="7"
-                                    Margin="0,0,2,0"
+                                    Margin="0,0,4,0"
                                     BorderBrush="White"
                                     BorderThickness="1"
                                     Visibility="{Binding GroupId, Converter={StaticResource CmpColorToVisibilityCvt}}">
@@ -776,7 +776,7 @@
                                 <!--  不在计算状态  -->
                                 <Border
                                     Grid.Column="1"
-                                    Margin="0,0,4,0"
+                                    Margin="0,0,8,0"
                                     Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}, Path=Background}">
                                     <Border.Visibility>
                                         <MultiBinding Converter="{StaticResource StateFinishedResultSucceededToVisibilityCvt}">
@@ -791,7 +791,6 @@
                                             MouseAction="LeftDoubleClick" />
                                     </Border.InputBindings>
                                     <TextBlock
-                                        x:Name="hashStringTextBlock"
                                         VerticalAlignment="Center"
                                         Text="{Binding CurrentHashString}"
                                         TextTrimming="CharacterEllipsis"
@@ -814,8 +813,7 @@
                                 <!--  ProgressBar的Value绑定需是OneWay，因为默认TwoWay和private set的Progress无法成功绑定  -->
                                 <ProgressBar
                                     Grid.Column="1"
-                                    Width="{Binding ElementName=hashStringTextBlock, Path=ActualWidth}"
-                                    HorizontalAlignment="Left"
+                                    Margin="0,0,4,0"
                                     Maximum="{Binding MaxProgress}"
                                     Visibility="{Binding State, Converter={StaticResource StateRunningToVisiblityCvt}}"
                                     Value="{Binding Progress, Mode=OneWay}" />
