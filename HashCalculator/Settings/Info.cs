@@ -24,6 +24,6 @@ namespace HashCalculator
 
         // 兼容的 Shell 扩展版本上下限，包含下限，但不包含上限
         public static readonly Version LowerLimitOfShellExtVersion = new Version("5.24.0");
-        public static readonly Version UpperLimitOfShellExtVersion = new Version("6.1.0.0");
+        public static readonly Version UpperLimitOfShellExtVersion = new Version("6.2.0.0");
     }
 }
