@@ -257,7 +257,8 @@ namespace HashCalculator
                     }
                     FileVersionInfo fileVer = FileVersionInfo.GetVersionInfo(shellExtPath);
                     Version shellExtVer = new Version(fileVer.FileVersion ?? "0.0.0");
-                    if (shellExtVer < Info.MinVerOfCompatibleShellExt || shellExtVer > Info.MaxVerOfCompatibleShellExt)
+                    // 兼容的 Shell 扩展版本包含下限但不包含上限
+                    if (shellExtVer < Info.LowerLimitOfShellExtVersion || shellExtVer >= Info.UpperLimitOfShellExtVersion)
                     {
                         return $"{Info.Title} v{Info.Ver} 可能与它的右键菜单扩展模块 " +
                             $"v{shellExtVer} 不兼容，为保证右键菜单正常工作，请重新安装右键菜单！";
