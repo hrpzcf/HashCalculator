@@ -362,3 +362,4 @@ MigrationBackup/
 # Others
 *_i.h
 /HashCalculator/ShellExt
+/.vscode
