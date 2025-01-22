@@ -37,8 +37,19 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type DataGridRow}">
-                    <StackPanel Orientation="Vertical">
-                        <SelectiveScrollingGrid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="vertLine" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <!--  表格行的行前竖线  -->
+                        <Border
+                            Grid.Column="0"
+                            Width="5"
+                            Margin="0,0,2,0"
+                            Background="{Binding TableRowColor, Converter={StaticResource CmpColorToColorBrushCvt}}"
+                            Visibility="{Binding TableRowColor, Converter={StaticResource CmpColorToVisibilityCvt}}" />
+                        <SelectiveScrollingGrid Grid.Column="1">
                             <SelectiveScrollingGrid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
@@ -71,13 +82,7 @@
                                 Grid.Column="0"
                                 Visibility="{Binding HeadersVisibility, ConverterParameter={x:Static DataGridHeadersVisibility.Row}, Converter={x:Static DataGrid.HeadersVisibilityConverter}, RelativeSource={RelativeSource AncestorType=DataGrid}}" />
                         </SelectiveScrollingGrid>
-                        <!--  表格行的下划线  -->
-                        <Border
-                            Height="2"
-                            Margin="0,1,0,0"
-                            Background="{Binding TableRowColor, Converter={StaticResource CmpColorToColorBrushCvt}}"
-                            Visibility="{Binding TableRowColor, Converter={StaticResource CmpColorToVisibilityCvt}}" />
-                    </StackPanel>
+                    </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
