@@ -40,7 +40,6 @@ namespace HashCalculator
             this.DataContext = this.viewModel;
             this.Closed += this.MainWindowClosed;
             this.Loaded += this.MainWindowLoaded;
-            this.ContentRendered += this.MainWindowRendered;
             this.InitializeComponent();
         }
 
@@ -81,11 +80,21 @@ namespace HashCalculator
 
         private async void MainWindowLoaded(object sender, RoutedEventArgs e)
         {
+            WndHandle = new WindowInteropHelper(this).Handle;
+            this.presentationSrc = PresentationSource.FromVisual(this);
+            if (this.presentationSrc is HwndSource hwndSrc)
+            {
+                hwndSrc.AddHook(this.WindowProcedure);
+                if (Settings.Current.MonitorNewHashStringInClipboard)
+                {
+                    this.AddClipboardListener();
+                }
+            }
+            Settings.Current.PropertyChanged += this.SettingsPropertyChanged;
             if (ShellExtHelper.RunningAsAdmin)
             {
                 this.Title += " （管理员）";
             }
-            WndHandle = new WindowInteropHelper(this).Handle;
             if (startupArgs != null)
             {
                 this.ComputeInProcessFiles(startupArgs);
@@ -99,20 +108,6 @@ namespace HashCalculator
                 Handy.Controls.Growl.Error(notification, MessageToken.MainWndMsgToken);
             }
             Settings.Current.PreviousVer = Info.Ver;
-        }
-
-        private void MainWindowRendered(object sender, EventArgs e)
-        {
-            this.presentationSrc = PresentationSource.FromVisual(this);
-            if (this.presentationSrc is HwndSource hwndSrc)
-            {
-                hwndSrc.AddHook(this.WindowProcedure);
-                if (Settings.Current.MonitorNewHashStringInClipboard)
-                {
-                    this.AddClipboardListener();
-                }
-            }
-            Settings.Current.PropertyChanged += this.SettingsPropertyChanged;
         }
 
         private void SettingsPropertyChanged(object sender, PropertyChangedEventArgs e)
