@@ -1,6 +1,6 @@
 @font-face {
   font-family: "iconfont"; /* Project id 4757706 */
-  src: url('iconfont.ttf?t=1733651081610') format('truetype');
+  src: url('iconfont.ttf?t=1737641870819') format('truetype');
 }
 
 .iconfont {
@@ -9,6 +9,22 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-yipipei:before {
+  content: "\e8e4";
+}
+
+.icon-bupipei:before {
+  content: "\e8e7";
+}
+
+.icon-buqueding:before {
+  content: "\e8e9";
+}
+
+.icon-wuguanlian:before {
+  content: "\e8ea";
 }
 
 .icon-zanting:before {

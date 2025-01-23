@@ -122,6 +122,7 @@
                                     Grid.Column="0"
                                     Margin="2"
                                     Padding="2,4"
+                                    VerticalAlignment="Center"
                                     Background="Transparent">
                                     <TextBlock.Text>
                                         <MultiBinding Converter="{StaticResource BytesToStrByOutputTypeCvt}">
@@ -160,27 +161,37 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn Header="校验结果">
+                    <DataGridTemplateColumn.HeaderStyle>
+                        <Style BasedOn="{StaticResource DataGridColumnHeaderStyle}" TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="HorizontalContentAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTemplateColumn.HeaderStyle>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Label
-                                Grid.Column="3"
-                                Margin="4,2"
-                                Padding="4,2"
+                            <Grid
+                                HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
-                                HorizontalContentAlignment="Center"
-                                VerticalContentAlignment="Center"
-                                Background="{Binding HashCmpResult, Converter={StaticResource CmpResBackgroundCvt}}"
-                                BorderBrush="#FF0091FF"
-                                BorderThickness="1"
-                                Content="{Binding HashCmpResult, Converter={StaticResource CmpResTextCvt}}"
-                                ToolTip="{Binding HashCmpResult, Converter={StaticResource CmpResTextCvt}}">
-                                <Label.Foreground>
-                                    <MultiBinding Converter="{StaticResource CmpResForegroundCvt}">
-                                        <Binding Path="ShowResultText" Source="{x:Static local:Settings.Current}" />
-                                        <Binding Path="HashCmpResult" />
-                                    </MultiBinding>
-                                </Label.Foreground>
-                            </Label>
+                                Visibility="{Binding HashCmpResult, Converter={StaticResource ComparisonResultToVisibilityCvt}}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Label
+                                    Grid.Column="0"
+                                    Padding="3"
+                                    Background="White"
+                                    BorderThickness="0"
+                                    Content="{Binding HashCmpResult, Converter={StaticResource ComparisonResultToIconFontTextCvt}}"
+                                    FontFamily="{StaticResource IconFont}"
+                                    FontSize="21px"
+                                    Foreground="{Binding HashCmpResult, Converter={StaticResource ComparisonResultToForegroundCvt}}" />
+                                <TextBlock
+                                    Grid.Column="1"
+                                    Margin="4,0,0,0"
+                                    VerticalAlignment="Center"
+                                    Text="{Binding HashCmpResult, Converter={StaticResource ComparisonResultToTextCvt}}"
+                                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowResultText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
+                            </Grid>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

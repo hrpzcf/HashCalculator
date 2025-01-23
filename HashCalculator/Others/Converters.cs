@@ -34,68 +34,42 @@ namespace HashCalculator
         }
     }
 
-    internal class CmpResForegroundCvt : IMultiValueConverter
+    internal class ComparisonResultToForegroundCvt : IValueConverter
     {
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            Debug.Assert(values != null && values.Length == 2);
-            if (!(bool)values[0])
-            {
-                return new SolidColorBrush(Colors.Transparent);
-            }
-            if (values[1] is CmpRes cmpResult)
+            SolidColorBrush solidColorBrush = new SolidColorBrush(Colors.Transparent);
+            if (value is CmpRes cmpResult)
             {
                 switch (cmpResult)
                 {
                     case CmpRes.Unrelated:
-                        return new SolidColorBrush(Colors.Black);
+                        solidColorBrush.Color = (Color)ColorConverter.ConvertFromString("#B0B0B0");
+                        break;
                     case CmpRes.Matched:
-                        return new SolidColorBrush(Colors.White);
+                        solidColorBrush.Color = (Color)ColorConverter.ConvertFromString("#228B22");
+                        break;
                     case CmpRes.Mismatch:
-                        return new SolidColorBrush(Colors.White);
+                        solidColorBrush.Color = (Color)ColorConverter.ConvertFromString("#FF0000");
+                        break;
                     case CmpRes.Uncertain:
-                        return new SolidColorBrush(Colors.White);
+                        solidColorBrush.Color = (Color)ColorConverter.ConvertFromString("#9C1CD8");
+                        break;
                     case CmpRes.NoResult:
                     default:
-                        return new SolidColorBrush(Colors.Transparent);
+                        break;
                 }
             }
-            return new SolidColorBrush(Colors.Transparent);
+            return solidColorBrush;
         }
 
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }
     }
 
-    internal class CmpResBackgroundCvt : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object param, CultureInfo culture)
-        {
-            switch ((CmpRes)value)
-            {
-                case CmpRes.Unrelated:
-                    return "#64888888";
-                case CmpRes.Matched:
-                    return "ForestGreen";
-                case CmpRes.Mismatch:
-                    return "Red";
-                case CmpRes.Uncertain:
-                    return "Black";
-                case CmpRes.NoResult:
-                default:
-                    return "#FFFFFFFF";
-            }
-        }
-
-        public object ConvertBack(object value, Type targetType, object param, CultureInfo culture)
-        {
-            return CmpRes.Unrelated; // 此处未使用，只返回默认值
-        }
-    }
-
-    internal class CmpResTextCvt : IValueConverter
+    internal class ComparisonResultToTextCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object param, CultureInfo culture)
         {
@@ -111,7 +85,7 @@ namespace HashCalculator
                     return "不确定";
                 case CmpRes.NoResult:
                 default:
-                    return "未校验";
+                    return string.Empty;
             }
         }
 
@@ -121,21 +95,65 @@ namespace HashCalculator
         }
     }
 
-    internal class CmpResBorderBrushCvt : IValueConverter
+    internal class ComparisonResultToIconFontTextCvt : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+
+        public string IconFontMatched { get; set; }
+
+        public string IconFontMismatch { get; set; }
+
+        public string IconFontUnrelated { get; set; }
+
+        public string IconFontUncertain { get; set; }
+
+        public object Convert(object value, Type targetType, object param, CultureInfo culture)
         {
-            if ((CmpRes)value == CmpRes.NoResult)
+            switch ((CmpRes)value)
             {
-                return new SolidColorBrush(Colors.Transparent);
-            }
-            else
-            {
-                return new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF0091FF"));
+                case CmpRes.Unrelated:
+                    return this.IconFontUnrelated;
+                case CmpRes.Matched:
+                    return this.IconFontMatched;
+                case CmpRes.Mismatch:
+                    return this.IconFontMismatch;
+                case CmpRes.Uncertain:
+                    return this.IconFontUncertain;
+                case CmpRes.NoResult:
+                default:
+                    return string.Empty;
             }
         }
 
+        public object ConvertBack(object value, Type targetType, object param, CultureInfo culture)
+        {
+            return CmpRes.NoResult; // 此处未使用，只返回默认值
+        }
+    }
+
+    internal class ComparisonResultToVisibilityCvt : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return value is CmpRes cmpResult && cmpResult != CmpRes.NoResult ?
+                 Visibility.Visible : Visibility.Collapsed;
+        }
+
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class AlgoModelAndCmpResToVisibilityCvt : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            Debug.Assert(values?.Length == 2);
+            return values[0] != null && values[1] is CmpRes cmpResult && cmpResult != CmpRes.NoResult ?
+                Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }

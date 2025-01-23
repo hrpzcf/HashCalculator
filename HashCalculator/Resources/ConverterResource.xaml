@@ -153,12 +153,18 @@
         x:Key="RenameMethodReplaceAllToTrueCvt"
         Boolean="True"
         Method="ReplaceAll" />
+    <local:ComparisonResultToIconFontTextCvt
+        x:Key="ComparisonResultToIconFontTextCvt"
+        IconFontMatched="&#xe8e4;"
+        IconFontMismatch="&#xe8e7;"
+        IconFontUncertain="&#xe8e9;"
+        IconFontUnrelated="&#xe8ea;" />
     <local:BooleanAndSolidBrushToSolidBrushMultiCvt x:Key="ListBoxIsSelectedForegroundCvt" Default="Gray" />
     <local:InvalidFileNameForegroundCvt x:Key="InvalidFileNameForegroundCvt" />
-    <local:CmpResForegroundCvt x:Key="CmpResForegroundCvt" />
-    <local:CmpResBackgroundCvt x:Key="CmpResBackgroundCvt" />
-    <local:CmpResTextCvt x:Key="CmpResTextCvt" />
-    <local:CmpResBorderBrushCvt x:Key="CmpResBorderBrushCvt" />
+    <local:ComparisonResultToTextCvt x:Key="ComparisonResultToTextCvt" />
+    <local:ComparisonResultToForegroundCvt x:Key="ComparisonResultToForegroundCvt" />
+    <local:ComparisonResultToVisibilityCvt x:Key="ComparisonResultToVisibilityCvt" />
+    <local:AlgoModelAndCmpResToVisibilityCvt x:Key="AlgoModelAndCmpResToVisibilityCvt" />
     <local:StateRunningToVisiblityCvt x:Key="StateRunningToVisiblityCvt" />
     <local:StateWaitingToVisiblityCvt x:Key="StateWaitingToVisiblityCvt" />
     <local:StateFinishedResultSucceededToVisibilityCvt x:Key="StateFinishedResultSucceededToVisibilityCvt" />

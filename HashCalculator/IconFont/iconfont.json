@@ -6,6 +6,34 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "1727516",
+      "name": "已匹配",
+      "font_class": "yipipei",
+      "unicode": "e8e4",
+      "unicode_decimal": 59620
+    },
+    {
+      "icon_id": "1727521",
+      "name": "不匹配",
+      "font_class": "bupipei",
+      "unicode": "e8e7",
+      "unicode_decimal": 59623
+    },
+    {
+      "icon_id": "1727529",
+      "name": "不确定",
+      "font_class": "buqueding",
+      "unicode": "e8e9",
+      "unicode_decimal": 59625
+    },
+    {
+      "icon_id": "1727530",
+      "name": "无关联",
+      "font_class": "wuguanlian",
+      "unicode": "e8ea",
+      "unicode_decimal": 59626
+    },
+    {
       "icon_id": "6536730",
       "name": "暂停",
       "font_class": "zanting",

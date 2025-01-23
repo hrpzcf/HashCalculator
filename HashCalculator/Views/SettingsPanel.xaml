@@ -228,7 +228,7 @@
                         IsChecked="{Binding NoCmpResultColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <CheckBox
                         Margin="0,4,0,0"
-                        Content="在校验结果的色块中显示描述文字"
+                        Content="在校验结果的图标旁显示描述文字"
                         IsChecked="{Binding ShowResultText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <CheckBox
                         Margin="0,4,0,0"
