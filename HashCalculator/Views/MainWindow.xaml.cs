@@ -252,7 +252,7 @@ namespace HashCalculator
         }
 
         /// <summary>
-        /// 多进程实例模式启动使用此方法处理不同进程传入的待处理的文件、目录路径
+        /// 多实例模式启动使用此方法处理不同进程传入的待处理的文件、目录路径
         /// </summary>
         private void ComputeInProcessFiles(string[] args)
         {
@@ -260,7 +260,7 @@ namespace HashCalculator
         }
 
         /// <summary>
-        /// 单进程实例模式启动使用此方法处理不同进程传入的待处理的文件、目录路径
+        /// 单实例模式启动使用此方法处理不同进程传入的待处理的文件、目录路径
         /// </summary>
         private void ComputeCrossProcessFilesMonitor()
         {
