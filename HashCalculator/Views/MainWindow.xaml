@@ -1001,15 +1001,13 @@
                     <DataGridTemplateColumn.HeaderStyle>
                         <Style BasedOn="{StaticResource DataGridColumnHeaderStyle}" TargetType="{x:Type DataGridColumnHeader}">
                             <Setter Property="HorizontalContentAlignment" Value="Center" />
+                            <Setter Property="ToolTipService.ShowDuration" Value="60000" />
+                            <Setter Property="ToolTip" Value="{Binding DataContext.Report, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}, AncestorLevel=1}}" />
                         </Style>
                     </DataGridTemplateColumn.HeaderStyle>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Grid
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                ToolTip="{Binding DataContext.Report, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}, AncestorLevel=1}}"
-                                ToolTipService.ShowDuration="60000">
+                            <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
                                 <Grid.Visibility>
                                     <MultiBinding Converter="{StaticResource AlgoModelAndCmpResToVisibilityCvt}">
                                         <Binding Path="CurrentInOutModel" />
