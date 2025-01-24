@@ -214,23 +214,33 @@ namespace HashCalculator
             }
         }
 
-        public void CheckHashUseClipboardText()
+        /// <summary>
+        /// 检查剪贴板字符，在符合要求时把它设置到主窗口的校验依据输入框内
+        /// </summary>
+        public HashChecklist TestClipboardTextGetChecklist()
         {
-            if (HashViewModels.AnyItem() &&
-                CommonUtils.ClipboardGetText(out string clipboardText) &&
-                clipboardText.Length >= Settings.Current.MinCopiedCharsToTriggerHashCheck &&
-                clipboardText.Length <= Settings.Current.MaxCopiedCharsToTriggerHashCheck)
+            if (CommonUtils.ClipboardGetText(out string text) &&
+                text.Length >= Settings.Current.MinCopiedCharsToTriggerHashCheck &&
+                text.Length <= Settings.Current.MaxCopiedCharsToTriggerHashCheck)
             {
-                HashChecklist checklist = File.Exists(clipboardText) ?
-                    HashChecklist.File(clipboardText) : HashChecklist.Text(clipboardText);
+                HashChecklist checklist = File.Exists(text) ? HashChecklist.File(text) : HashChecklist.Text(text);
                 if (checklist.ReasonForFailure == null)
                 {
-                    this.HashStringOrChecklistPath = clipboardText;
-                    if (this.State != RunningState.Started && this.CheckFilesHashBasedOnStringOrChecklist(checklist) &&
-                        Settings.Current.SwitchMainWndFgWhenNewHashCopied)
-                    {
-                        CommonUtils.ShowWindowForeground(MainWindow.ProcessId);
-                    }
+                    this.HashStringOrChecklistPath = text;
+                    return checklist;
+                }
+            }
+            return default(HashChecklist);
+        }
+
+        public void CheckHashUseClipboardText()
+        {
+            if (HashViewModels.AnyItem() && this.TestClipboardTextGetChecklist() is HashChecklist checklist)
+            {
+                if (this.State != RunningState.Started && this.CheckFilesHashBasedOnStringOrChecklist(checklist) &&
+                    Settings.Current.SwitchMainWndFgWhenNewHashCopied)
+                {
+                    CommonUtils.ShowWindowForeground(MainWindow.ProcessId);
                 }
             }
         }
