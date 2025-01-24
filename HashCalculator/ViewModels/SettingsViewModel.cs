@@ -63,6 +63,7 @@ namespace HashCalculator
         private bool displayMainWindowButtons = true;
         private bool displayMainWndButtonText = true;
         private bool useDefaultOutputTypeWhenExporting = true;
+        private bool useExistingClipboardTextForCheck = false;
         private bool monitorNewHashStringInClipboard = true;
         private bool switchMainWndFgWhenNewHashCopied = true;
         private bool filterAndCmderWndFollowsMainWnd = false;
@@ -665,6 +666,12 @@ namespace HashCalculator
                     this.SelectedTaskNumberLimit = 1;
                 }
             }
+        }
+
+        public bool UseExistingClipboardTextForCheck
+        {
+            get => this.useExistingClipboardTextForCheck;
+            set => this.SetPropNotify(ref this.useExistingClipboardTextForCheck, value);
         }
 
         public bool MonitorNewHashStringInClipboard
