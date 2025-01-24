@@ -21,6 +21,8 @@ namespace HashCalculator
 
         public IEnumerable<AlgoType> PresetAlgoTypes { get; set; }
 
+        public bool OnlyFilesThatExistInChecklist { get; set; } = true;
+
         public PathPackage(string parent, string path, SearchMethod method) :
             this(parent, new string[] { path }, checklist: null, method)
         {
@@ -185,11 +187,13 @@ namespace HashCalculator
                                 {
                                     yield break;
                                 }
-                                if (this.hashChecklist.IsNameInChecklist(Path.GetFileName(fileFullPath)))
+                                if (!this.hashChecklist.IsNameInChecklist(Path.GetFileName(fileFullPath)) &&
+                                    this.OnlyFilesThatExistInChecklist)
                                 {
-                                    yield return new HashModelArg(this.parentDir, fileFullPath,
-                                        this.PresetAlgoTypes, this.hashChecklist);
+                                    continue;
                                 }
+                                yield return new HashModelArg(this.parentDir, fileFullPath,
+                                    this.PresetAlgoTypes, this.hashChecklist);
                             }
                             foreach (KeyValuePair<string, HashChecker> pair in this.hashChecklist)
                             {

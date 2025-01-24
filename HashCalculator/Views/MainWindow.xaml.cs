@@ -187,12 +187,17 @@ namespace HashCalculator
                 {
                     if (option.FilePaths != null)
                     {
+                        HashChecklist hashChecklist = null;
                         if (Settings.Current.ClearTableBeforeAddingFilesByCmdLine)
                         {
                             MainWndViewModel.Synchronization.Invoke(() =>
                             {
                                 MainWndViewModel.Current.ClearAllTableLinesAction(null);
                             });
+                        }
+                        if (Settings.Current.UseExistingClipboardTextForCheck)
+                        {
+                            hashChecklist = this.viewModel.TestClipboardTextGetChecklist();
                         }
                         string[] filePaths = option.FilePaths.ToArray();
                         // 此处逻辑针对命令行传来的待计算文件/文件夹路径，一般由右键菜单生成命令
@@ -202,9 +207,10 @@ namespace HashCalculator
                         {
                             // 当 filePaths[i] 是分区根目录时 GetDirectoryName 返回 null
                             string parent = Path.GetDirectoryName(filePaths[i]) ?? filePaths[i];
-                            PathPackage package = new PathPackage(parent, filePaths[i],
+                            PathPackage package = new PathPackage(parent, filePaths[i], hashChecklist,
                                 Settings.Current.SelectedSearchMethodForDragDrop);
                             packages[i] = package;
+                            package.OnlyFilesThatExistInChecklist = false;
                             package.PresetAlgoTypes = this.GetAlgoTypesFromOption(option);
                         }
                         this.viewModel.BeginDisplayModels(packages);

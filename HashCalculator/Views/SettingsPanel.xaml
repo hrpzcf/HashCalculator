@@ -110,7 +110,12 @@
                         Style="{StaticResource GroupBoxTabContentLeft}">
                         <StackPanel>
                             <CheckBox
+                                Margin="0"
+                                Content="通过右键/命令启动计算时使用已经复制的校验依据进行校验"
+                                IsChecked="{Binding UseExistingClipboardTextForCheck, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <CheckBox
                                 x:Name="checkBoxVerifyWhenClipbaordNewHash"
+                                Margin="0,4,0,0"
                                 Content="剪贴板有新复制的哈希信息时自动填充校验依据文本框并校验"
                                 IsChecked="{Binding MonitorNewHashStringInClipboard, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             <StackPanel

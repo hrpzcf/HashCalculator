@@ -215,23 +215,33 @@ namespace HashCalculator
             }
         }
 
-        public void CheckHashUseClipboardText()
+        /// <summary>
+        /// 检查剪贴板字符，在符合要求时把它设置到主窗口的校验依据输入框内
+        /// </summary>
+        public HashChecklist TestClipboardTextGetChecklist()
         {
-            if (HashViewModels.AnyItem() &&
-                CommonUtils.ClipboardGetText(out string clipboardText) &&
-                clipboardText.Length >= Settings.Current.MinCopiedCharsToTriggerHashCheck &&
-                clipboardText.Length <= Settings.Current.MaxCopiedCharsToTriggerHashCheck)
+            if (CommonUtils.ClipboardGetText(out string text) &&
+                text.Length >= Settings.Current.MinCopiedCharsToTriggerHashCheck &&
+                text.Length <= Settings.Current.MaxCopiedCharsToTriggerHashCheck)
             {
-                HashChecklist checklist = File.Exists(clipboardText) ?
-                    HashChecklist.File(clipboardText) : HashChecklist.Text(clipboardText);
+                HashChecklist checklist = File.Exists(text) ? HashChecklist.File(text) : HashChecklist.Text(text);
                 if (checklist.ReasonForFailure == null)
                 {
-                    this.HashStringOrChecklistPath = clipboardText;
-                    if (this.State != RunningState.Started && this.CheckFilesHashBasedOnStringOrChecklist(checklist) &&
-                        Settings.Current.SwitchMainWndFgWhenNewHashCopied)
-                    {
-                        CommonUtils.ShowWindowForeground(MainWindow.ProcessId);
-                    }
+                    this.HashStringOrChecklistPath = text;
+                    return checklist;
+                }
+            }
+            return default(HashChecklist);
+        }
+
+        public void CheckHashUseClipboardText()
+        {
+            if (HashViewModels.AnyItem() && this.TestClipboardTextGetChecklist() is HashChecklist checklist)
+            {
+                if (this.State != RunningState.Started && this.CheckFilesHashBasedOnStringOrChecklist(checklist) &&
+                    Settings.Current.SwitchMainWndFgWhenNewHashCopied)
+                {
+                    CommonUtils.ShowWindowForeground(MainWindow.ProcessId);
                 }
             }
         }
@@ -611,13 +621,11 @@ namespace HashCalculator
                 if (stringBuilder.Length != 0)
                 {
                     CommonUtils.ClipboardSetText(stringBuilder.ToString());
-                    Handy.Controls.Growl.Success("已复制文件名或文件路径到剪贴板",
-                        MessageToken.MainWndMsgToken);
+                    Handy.Controls.Growl.Success("已复制文件名或文件路径到剪贴板", MessageToken.MainWndMsgToken);
                 }
                 if (!copyName && !fullPathCopied)
                 {
-                    Handy.Controls.Growl.Warning("文件不存在所以完整路径没有被复制",
-                        MessageToken.MainWndMsgToken);
+                    Handy.Controls.Growl.Warning("文件不存在所以完整路径没有被复制", MessageToken.MainWndMsgToken);
                 }
             }
         }
@@ -1356,7 +1364,7 @@ namespace HashCalculator
                 if (string.IsNullOrEmpty(this.HashStringOrChecklistPath))
                 {
                     this.GenerateOriginFileHashCheckReport();
-                    Handy.Controls.Growl.Warning("校验依据输入框没有输入任何内容！",
+                    Handy.Controls.Growl.Warning("校验依据输入框没有任何内容！",
                         MessageToken.MainWndMsgToken);
                     return false;
                 }
