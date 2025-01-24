@@ -1115,6 +1115,7 @@
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" Orientation="Horizontal">
                 <hc:GifImage
+                    x:Name="GifImageLoading1"
                     Width="20"
                     Height="20"
                     Margin="0,0,12,0"
