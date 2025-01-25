@@ -751,10 +751,10 @@
                     SortMemberPath="CurrentHashString">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Grid HorizontalAlignment="Left">
+                            <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" SharedSizeGroup="groupId" />
-                                    <ColumnDefinition Width="*" SharedSizeGroup="hashValueGroup" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition />
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
@@ -798,6 +798,7 @@
                                 </Border>
                                 <TextBlock
                                     Grid.Column="1"
+                                    Margin="0,0,8,0"
                                     VerticalAlignment="Center"
                                     Text="{Binding ErrorDetails}"
                                     TextTrimming="CharacterEllipsis">
@@ -812,7 +813,7 @@
                                 <!--  ProgressBar的Value绑定需是OneWay，因为默认TwoWay和private set的Progress无法成功绑定  -->
                                 <ProgressBar
                                     Grid.Column="1"
-                                    Margin="0,0,4,0"
+                                    Margin="0,0,8,0"
                                     Maximum="{Binding MaxProgress}"
                                     Visibility="{Binding State, Converter={StaticResource StateRunningToVisiblityCvt}}"
                                     Value="{Binding Progress, Mode=OneWay}" />
