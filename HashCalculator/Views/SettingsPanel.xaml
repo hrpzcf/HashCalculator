@@ -136,6 +136,14 @@
                             SelectedValue="{Binding AlgoToSwitchToAfterHashChecked}"
                             SelectedValuePath="ItemValue" />
                     </StackPanel>
+                    <StackPanel Margin="0,4,0,0" Orientation="Horizontal">
+                        <TextBlock VerticalAlignment="Center" Text="拖动文件到软件可执行文件上/启动命令没有子命令时：" />
+                        <ComboBox
+                            DisplayMemberPath="Display"
+                            ItemsSource="{Binding AvailableChoicesWhenNoVerb}"
+                            SelectedValue="{Binding SelectionWhenNoVerbIsSpecified}"
+                            SelectedValuePath="ItemValue" />
+                    </StackPanel>
                     <CheckBox
                         Margin="0,8,0,0"
                         Padding="4,0,0,0"
