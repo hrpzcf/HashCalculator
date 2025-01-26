@@ -13,6 +13,9 @@ namespace HashCalculator
     [Verb("verify")]
     internal class VerifyHash : IOptions
     {
+        public const string Verb = "verify";
+        public const string Checklist = "--list";
+
         public string Algos { get; set; }
 
         [Option('l', "list", Required = true)]
@@ -22,6 +25,8 @@ namespace HashCalculator
     [Verb("compute")]
     internal class ComputeHash : IOptions
     {
+        public const string Verb = "compute";
+
         public string Algos { get; set; }
 
         [Value(0, Min = 1, Required = true)]

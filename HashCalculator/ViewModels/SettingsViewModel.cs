@@ -96,6 +96,7 @@ namespace HashCalculator
         private bool showMainWindowTopmostButton = true;
 
         private CmpRes algoToSwitchToAfterHashChecked = CmpRes.Matched;
+        private MenuType selectionWhenNoVerbIsSpecified = MenuType.Compute;
         private ExportAlgo howToExportHashValues = ExportAlgo.AllCalculated;
         private FetchAlgoOption fetchAlgorithmOption = FetchAlgoOption.TATSAMSHDL;
         private OutputType selectedOutputType = OutputType.BinaryUpper;
@@ -744,6 +745,12 @@ namespace HashCalculator
         {
             get => this.algoToSwitchToAfterHashChecked;
             set => this.SetPropNotify(ref this.algoToSwitchToAfterHashChecked, value);
+        }
+
+        public MenuType SelectionWhenNoVerbIsSpecified
+        {
+            get => this.selectionWhenNoVerbIsSpecified;
+            set => this.SetPropNotify(ref this.selectionWhenNoVerbIsSpecified, value);
         }
 
         public bool GenerateTextInFormat
@@ -1647,6 +1654,12 @@ namespace HashCalculator
             new GenericItemModel("8", 8),
             new GenericItemModel("16", 16),
             new GenericItemModel("32", 32),
+        };
+
+        public static GenericItemModel[] AvailableChoicesWhenNoVerb { get; } =
+        {
+            new GenericItemModel("计算输入文件的哈希值", MenuType.Compute),
+            new GenericItemModel("把输入文件作为校验依据", MenuType.CheckHash),
         };
 
         [JsonIgnore, XmlIgnore]
