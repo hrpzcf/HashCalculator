@@ -10,7 +10,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("HashCalculator")]
 [assembly: AssemblyProduct("HashCalculator")]
-[assembly: AssemblyCopyright("Copyright © 2022~2024 hrpzcf")]
+[assembly: AssemblyCopyright("Copyright (C) 2022~2025 hrpzcf")]
 [assembly: AssemblyTrademark("HashCalculator")]
 [assembly: AssemblyCulture("")]
 
@@ -49,5 +49,5 @@ using System.Windows;
 //可以指定所有这些值，也可以使用“生成号”和“修订号”的默认值
 //通过使用 "*"，如下所示:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("5.28.0.0")]
-[assembly: AssemblyFileVersion("5.28.0.0")]
+[assembly: AssemblyVersion("5.29.0.0")]
+[assembly: AssemblyFileVersion("5.29.0.0")]
