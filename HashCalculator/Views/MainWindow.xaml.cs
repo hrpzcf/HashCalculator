@@ -180,76 +180,136 @@ namespace HashCalculator
             return default(IEnumerable<AlgoType>);
         }
 
-        private void InternalParseArguments(string[] args)
+        private void ParsedComputeHashHandler(ComputeHash option, ref bool parsed)
         {
-            Parser.Default.ParseArguments<ComputeHash, VerifyHash>(args)
-                .WithParsed<ComputeHash>(option =>
+            if (option.FilePaths != null)
+            {
+                HashChecklist hashChecklist = null;
+                if (Settings.Current.ClearTableBeforeAddingFilesByCmdLine)
                 {
-                    if (option.FilePaths != null)
+                    MainWndViewModel.Synchronization.Invoke(() =>
                     {
-                        HashChecklist hashChecklist = null;
-                        if (Settings.Current.ClearTableBeforeAddingFilesByCmdLine)
-                        {
-                            MainWndViewModel.Synchronization.Invoke(() =>
-                            {
-                                MainWndViewModel.Current.ClearAllTableLinesAction(null);
-                            });
-                        }
-                        if (Settings.Current.UseExistingClipboardTextForCheck)
-                        {
-                            hashChecklist = this.viewModel.TestClipboardTextGetChecklist();
-                        }
-                        string[] filePaths = option.FilePaths.ToArray();
-                        // 此处逻辑针对命令行传来的待计算文件/文件夹路径，一般由右键菜单生成命令
-                        // 如果是用户手动输入命令，则这些路径有可能分属不同的父目录，所以逐个处理
-                        PathPackage[] packages = new PathPackage[filePaths.Length];
-                        for (int i = 0; i < filePaths.Length; ++i)
-                        {
-                            // 当 filePaths[i] 是分区根目录时 GetDirectoryName 返回 null
-                            string parent = Path.GetDirectoryName(filePaths[i]) ?? filePaths[i];
-                            PathPackage package = new PathPackage(parent, filePaths[i], hashChecklist,
-                                Settings.Current.SelectedSearchMethodForDragDrop);
-                            packages[i] = package;
-                            package.OnlyFilesThatExistInChecklist = false;
-                            package.PresetAlgoTypes = this.GetAlgoTypesFromOption(option);
-                        }
-                        this.viewModel.BeginDisplayModels(packages);
-                    }
-                })
-                .WithParsed<VerifyHash>(option =>
+                        MainWndViewModel.Current.ClearAllTableLinesAction(null);
+                    });
+                }
+                if (Settings.Current.UseExistingClipboardTextForCheck)
                 {
-                    if (File.Exists(option.ChecklistPath))
+                    hashChecklist = this.viewModel.TestClipboardTextGetChecklist();
+                }
+                string[] filePaths = option.FilePaths.Where(i => File.Exists(i) || Directory.Exists(i)).ToArray();
+                // 此处逻辑针对命令行传来的待计算文件/文件夹路径，一般由右键菜单生成命令
+                // 如果是用户手动输入命令，则这些路径有可能分属不同的父目录，所以逐个处理
+                PathPackage[] packages = new PathPackage[filePaths.Length];
+                for (int i = 0; i < filePaths.Length; ++i)
+                {
+                    // 当 filePaths[i] 是分区根目录时 GetDirectoryName 返回 null
+                    string parent = Path.GetDirectoryName(filePaths[i]) ?? filePaths[i];
+                    PathPackage package = new PathPackage(parent, filePaths[i], hashChecklist,
+                        Settings.Current.SelectedSearchMethodForDragDrop);
+                    packages[i] = package;
+                    package.OnlyFilesThatExistInChecklist = false;
+                    package.PresetAlgoTypes = this.GetAlgoTypesFromOption(option);
+                }
+                this.viewModel.BeginDisplayModels(packages);
+            }
+            parsed = true;
+        }
+
+        private void ParsedVerifyHashHandler(VerifyHash option, ref bool parsed)
+        {
+            if (File.Exists(option.ChecklistPath))
+            {
+                IEnumerable<AlgoType> types = this.GetAlgoTypesFromOption(option);
+                HashChecklist newChecklist = HashChecklist.File(option.ChecklistPath,
+                    types);
+                if (newChecklist.ReasonForFailure != null)
+                {
+                    Application.Current.Dispatcher.Invoke(() =>
                     {
-                        IEnumerable<AlgoType> types = this.GetAlgoTypesFromOption(option);
-                        HashChecklist newChecklist = HashChecklist.File(option.ChecklistPath,
-                            types);
-                        if (newChecklist.ReasonForFailure != null)
+                        Handy.Controls.MessageBox.Show(this, newChecklist.ReasonForFailure,
+                            "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                    });
+                }
+                else
+                {
+                    if (Settings.Current.ClearTableBeforeAddingFilesByCmdLine)
+                    {
+                        MainWndViewModel.Synchronization.Invoke(() =>
                         {
-                            Application.Current.Dispatcher.Invoke(() =>
-                            {
-                                Handy.Controls.MessageBox.Show(this, newChecklist.ReasonForFailure,
-                                    "错误", MessageBoxButton.OK, MessageBoxImage.Error);
-                            });
-                        }
-                        else
-                        {
-                            if (Settings.Current.ClearTableBeforeAddingFilesByCmdLine)
-                            {
-                                MainWndViewModel.Synchronization.Invoke(() =>
-                                {
-                                    MainWndViewModel.Current.ClearAllTableLinesAction(null);
-                                });
-                            }
-                            // 这里添加要计算哈希值的文件时，看作以多选文件的方式添，所以
-                            // PathPackage 的 parent 参数应是 option.ChecklistPath 所在目录
-                            string filesDir = Path.GetDirectoryName(option.ChecklistPath);
-                            PathPackage package = new PathPackage(filesDir, filesDir, newChecklist,
-                                Settings.Current.SelectedSearchMethodForChecklist);
-                            package.PresetAlgoTypes = types;
-                            this.viewModel.BeginDisplayModels(package);
-                        }
+                            MainWndViewModel.Current.ClearAllTableLinesAction(null);
+                        });
                     }
-                });
+                    // 这里添加要计算哈希值的文件时，看作以多选文件的方式添，所以
+                    // PathPackage 的 parent 参数应是 option.ChecklistPath 所在目录
+                    string filesDir = Path.GetDirectoryName(option.ChecklistPath);
+                    PathPackage package = new PathPackage(filesDir, filesDir, newChecklist,
+                        Settings.Current.SelectedSearchMethodForChecklist);
+                    package.PresetAlgoTypes = types;
+                    this.viewModel.BeginDisplayModels(package);
+                }
+            }
+            parsed = true;
+        }
+
+        private void NotParsedArgumentsHandler(byte degree, IEnumerable<Error> errors, string[] args)
+        {
+            using (var enumerator = errors.GetEnumerator())
+            {
+                // 判断集合元素数量为空或者 1 个以上元素直接返回
+                if (!enumerator.MoveNext())
+                {
+                    return;
+                }
+                Error error = enumerator.Current;
+                if (enumerator.MoveNext())
+                {
+                    return;
+                }
+                // 有命令但没有指定谓词出现 BadVerbSelectedError
+                if (error?.Tag != ErrorType.BadVerbSelectedError)
+                {
+                    return;
+                }
+            }
+            bool commandGood = false;
+            List<string> argList = args.ToList();
+            if (Settings.Current.SelectionWhenNoVerbIsSpecified == MenuType.CheckHash)
+            {
+                for (int i = 0; i < args.Length; ++i)
+                {
+                    if (File.Exists(args[i]))
+                    {
+                        argList.Insert(i, VerifyHash.Checklist);
+                        commandGood = true;
+                        break;
+                    }
+                }
+                argList.Insert(0, VerifyHash.Verb);
+            }
+            else
+            {
+                argList.Insert(0, ComputeHash.Verb);
+                commandGood = true;
+            }
+            if (commandGood)
+            {
+                this.InternalParseArguments(argList.ToArray(), ++degree);
+            }
+        }
+
+        private void InternalParseArguments(string[] args, byte degree = 1)
+        {
+            bool parsed = false;
+            ParserResult<object> result = Parser.Default.ParseArguments<ComputeHash, VerifyHash>(args)
+                .WithParsed<ComputeHash>(option => this.ParsedComputeHashHandler(option, ref parsed));
+            if (!parsed)
+            {
+                result.WithParsed<VerifyHash>(option => this.ParsedVerifyHashHandler(option, ref parsed));
+            }
+            if (!parsed && degree < 2)
+            {
+                result.WithNotParsed(errorList => this.NotParsedArgumentsHandler(degree, errorList, args));
+            }
         }
 
         public static void PushStartupArgs(string[] args)
