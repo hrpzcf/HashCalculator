@@ -15,12 +15,11 @@
 
 # 简介
 
-- HashCalculator 是一个文件哈希值计算工具，为批量计算、批量校验文件的哈希值而生，期望能减少批量计算、校验、统计、查找、筛选方面的麻烦。
-- HashCalculator 是一个开源软件，源代码在 [GitHub](https://github.com/hrpzcf/HashCalculator) 和 [Gitee](https://gitee.com/hrpzcf/HashCalculator) 上。 
+- HashCalculator 是一个文件哈希值计算工具，主要功能是批量计算文件哈希值，批量校验文件哈希值正确性，统计、查找、筛选计算结果和校验结果等。它是一个开源软件，源代码托管在 [GitHub](https://github.com/hrpzcf/HashCalculator) 和 [Gitee](https://gitee.com/hrpzcf/HashCalculator) 上。 
 
 <br/>
 
-# 功能
+# 特点
 
 - 支持多种哈希算法：
     - SHA1
@@ -45,7 +44,7 @@
     - Has160
     - RipeMD160
 - 单文件运行，无需安装。
-- 支持将 HashCalculator 的快捷菜单集成到系统右键菜单，支持自定义快捷菜单。
+- 支持将 HashCalculator 的快捷菜单集成到系统右键菜单，支持自定义右键菜单项。
 - 内建多种筛选器，支持对大批量的哈希结果进行筛选、查找、处理。
 - 计算所得哈希值的输出方式可选择 Base64 或十六进制大/小写字母。
 - 支持同时运行多个计算文件哈希值的任务 (1 ~ 32 个)。
@@ -81,30 +80,23 @@
 
 # 截图
 
-![主窗口1](./Screenshots/主窗口1.png)
+![window1](./Screenshots/window1.png)
 
-![主窗口2](./Screenshots/主窗口2.png)
+![window2](./Screenshots/window2.png)
 
-![默认算法](./Screenshots/默认算法.png)
+![algorithms](./Screenshots/algorithms.png)
 
-![筛选操作](./Screenshots/筛选与操作.png)
+![filters](./Screenshots/filters.png)
 
-![设置面板1](./Screenshots/设置面板1.png)
+![settings1](./Screenshots/settings1.png)
 
-![设置面板2](./Screenshots/设置面板2.png)
+![settings2](./Screenshots/settings2.png)
 
-![设置面板3](./Screenshots/设置面板3.png)
+![settings3](./Screenshots/settings3.png)
 
-![设置面板4](./Screenshots/设置面板4.png)
+![settings4](./Screenshots/settings4.png)
 
-![关于窗口](./Screenshots/关于窗口.png)
-
-<br/>
-
-# 使用帮助（未更新）
-
-- [Wiki](https://github.com/hrpzcf/HashCalculator/wiki)
-- [Wiki (Gitee)](https://gitee.com/hrpzcf/HashCalculator/wikis/Home)
+![about](./Screenshots/about.png)
 
 <br />
 
