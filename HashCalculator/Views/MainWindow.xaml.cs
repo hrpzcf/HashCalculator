@@ -76,8 +76,6 @@ namespace HashCalculator
                     }
                 }
             }
-            this.GifImageLoading1?.Dispose();
-            FilterAndCmdPanel.Current?.GifImageLoading2?.Dispose();
         }
 
         private async void MainWindowLoaded(object sender, RoutedEventArgs e)
