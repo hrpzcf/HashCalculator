@@ -1112,12 +1112,12 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" Orientation="Horizontal">
-                <hc:GifImage
-                    x:Name="GifImageLoading1"
+                <hc:CircleProgressBar
                     Width="20"
                     Height="20"
                     Margin="0,0,12,0"
-                    Uri="/HashCalculator;component/Images/loading.gif"
+                    ArcThickness="2"
+                    IsIndeterminate="True"
                     Visibility="{Binding State, Converter={StaticResource LoadingImageVisiblityCvt}}" />
                 <Image
                     Width="16"
