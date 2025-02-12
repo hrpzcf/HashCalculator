@@ -872,6 +872,11 @@ namespace HashCalculator
                     if (Settings.Current.ParallelBetweenAlgos)
                     {
                         int modelsCount = this.AlgoInOutModels.Length;
+                        ThreadPool.GetMinThreads(out int minwt, out int mincpt);
+                        if (minwt < modelsCount)
+                        {
+                            _ = ThreadPool.SetMinThreads(modelsCount, mincpt);
+                        }
                         using (Barrier barrier = new Barrier(modelsCount, i =>
                             {
                                 stopwatch.Stop();
@@ -898,11 +903,6 @@ namespace HashCalculator
                                     }
                                     model.Algo.TransformBlock(buffer, 0, actualReadCount, null, 0);
                                 }
-                            }
-                            ThreadPool.GetMinThreads(out int minwt, out int mincpt);
-                            if (minwt < modelsCount)
-                            {
-                                ThreadPool.SetMinThreads(modelsCount, mincpt);
                             }
                             Parallel.ForEach(this.AlgoInOutModels, DoTransformBlocks);
                         }
