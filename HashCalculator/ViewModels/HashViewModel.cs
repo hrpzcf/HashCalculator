@@ -918,7 +918,8 @@ namespace HashCalculator
                             stopwatch.Start();
                             if (this.cancellation.IsCancellationRequested)
                             {
-                                goto ReturnRentedBufferMemory;
+                                terminateByCancellation = true;
+                                break;
                             }
                             if ((actualReadCount = fs.Read(buffer, 0, buffer.Length)) <= 0)
                             {
@@ -949,8 +950,6 @@ namespace HashCalculator
                             this.Result = HashResult.Succeeded;
                         });
                     }
-                ReturnRentedBufferMemory:
-                    ArrayPool<byte>.Shared.Return(buffer, clearArray: false);
                 }
             }
             catch

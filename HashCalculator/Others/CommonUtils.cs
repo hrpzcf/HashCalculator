@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
+using System.Threading;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
@@ -26,6 +27,8 @@ namespace HashCalculator
         private const double mb = 1048576D;
         private const double gb = 1073741824D;
 
+        private static SpinLock _bufferAllocationLock = new SpinLock();
+
         private static readonly uint shfileinfowSize = (uint)Marshal.SizeOf(typeof(SHFILEINFOW));
 
         private static readonly char[] dirSeparators = new char[] {
@@ -38,19 +41,31 @@ namespace HashCalculator
         /// </summary>
         public static void MakeSureBuffer<T>(ref T[] array, int length)
         {
-            if (array != null && length <= 0)
+            bool lockTaken = false;
+            try
             {
-                ArrayPool<T>.Shared.Return(array);
-                array = null;
+                _bufferAllocationLock.Enter(ref lockTaken);
+                if (array != null && length <= 0)
+                {
+                    ArrayPool<T>.Shared.Return(array, false);
+                    array = null;
+                }
+                else if (array == null && length > 0)
+                {
+                    array = ArrayPool<T>.Shared.Rent(length);
+                }
+                else if (array != null && length > array.Length)
+                {
+                    ArrayPool<T>.Shared.Return(array);
+                    array = ArrayPool<T>.Shared.Rent(length);
+                }
             }
-            else if (array == null && length > 0)
+            finally
             {
-                array = ArrayPool<T>.Shared.Rent(length);
-            }
-            else if (array != null && length > array.Length)
-            {
-                ArrayPool<T>.Shared.Return(array);
-                array = ArrayPool<T>.Shared.Rent(length);
+                if (lockTaken)
+                {
+                    _bufferAllocationLock.Exit();
+                }
             }
         }
 
