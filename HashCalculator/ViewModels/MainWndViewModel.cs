@@ -151,23 +151,6 @@ namespace HashCalculator
             set => this.SetPropNotify(ref this.selectedHashVieModel, value);
         }
 
-        // TODO: 清理代码
-        public IList SelectedHashViewModels
-        {
-            get => this.selectedHashViewModels;
-            set
-            {
-                if (value != null)
-                {
-                    foreach (HashViewModel model in HashViewModels)
-                    {
-                        model.IsExecutionTarget = value.Contains(model);
-                    }
-                }
-                this.SetPropNotify(ref this.selectedHashViewModels, value);
-            }
-        }
-
         public string HashStringOrChecklistPath
         {
             get => this.hashValueStringOrChecklistPath;
