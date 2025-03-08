@@ -363,3 +363,5 @@ MigrationBackup/
 *_i.h
 /HashCalculator/ShellExt
 /.vscode
+/HashCalculator/Costura-win-x64/hashalgs.dll
+/HashCalculator/Costura-win-x86/hashalgs.dll
