@@ -37,7 +37,6 @@ namespace HashCalculator
         private string hashCheckReport = string.Empty;
         private string hashValueStringOrChecklistPath = null;
         private FilterAndCmdPanel commandPanelInst = null;
-        private IList selectedHashViewModels = null;
         private RunningState runningState = RunningState.None;
 
         private RelayCommand openCommandPanelCmd;
