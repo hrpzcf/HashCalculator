@@ -5,6 +5,7 @@
     xmlns:local="clr-namespace:HashCalculator"
     DispatcherUnhandledException="ExceptionHandler"
     Exit="ExitHandler"
+    SessionEnding="ApplicationSessionEnding"
     Startup="StartupHandler"
     StartupUri="Views/MainWindow.xaml">
     <Application.Resources>
