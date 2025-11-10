@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Buffers;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -29,7 +29,7 @@ namespace HashCalculator
         private bool _isExecutionTarget = false;
         private HcmData _hcmDataFromFile = null;
         private AlgoInOutModel _currentInOutModel = null;
-        private AlgoInOutModel[] _algoInOutModels = null;
+        private ObservableCollection<AlgoInOutModel> _algoInOutModels = null;
         private ComparableColor _tableRowColor = null;
         private ComparableColor _hashGroupId = null;
         private ComparableColor _embeddedHashGroupId = null;
@@ -183,7 +183,7 @@ namespace HashCalculator
             set => this.SetPropNotify(ref this._folderGroupId, value);
         }
 
-        public AlgoInOutModel[] AlgoInOutModels
+        public ObservableCollection<AlgoInOutModel> AlgoInOutModels
         {
             get => this._algoInOutModels;
             set => this.SetPropNotify(ref this._algoInOutModels, value);
@@ -505,9 +505,10 @@ namespace HashCalculator
 
         private void MakeSureAlgoModelArrayNotEmpty()
         {
-            if (this.AlgoInOutModels == null || this.AlgoInOutModels.Length == 0)
+            if (this.AlgoInOutModels == null || this.AlgoInOutModels.Count == 0)
             {
-                this.AlgoInOutModels = AlgosPanelModel.GetSelectedAlgos().ToArray();
+                this.AlgoInOutModels = new ObservableCollection<AlgoInOutModel>(
+                    AlgosPanelModel.GetSelectedAlgos());
             }
             this.CurrentInOutModel = this.AlgoInOutModels[0];
             foreach (AlgoInOutModel model in this.AlgoInOutModels)
@@ -873,13 +874,13 @@ namespace HashCalculator
                     bool terminateByCancellation = false;
                     if (Settings.Current.ParallelBetweenAlgos)
                     {
-                        int modelsCount = this.AlgoInOutModels.Length;
+                        int minThreads = this.AlgoInOutModels.Count;
                         ThreadPool.GetMinThreads(out int minwt, out int mincpt);
-                        if (minwt < modelsCount)
+                        if (minwt < minThreads)
                         {
-                            _ = ThreadPool.SetMinThreads(modelsCount, mincpt);
+                            _ = ThreadPool.SetMinThreads(minThreads, mincpt);
                         }
-                        using (Barrier barrier = new Barrier(modelsCount, i =>
+                        using (Barrier barrier = new Barrier(minThreads, i =>
                             {
                                 stopwatch.Stop();
                                 this.manualPauseController.WaitOne();

@@ -859,7 +859,7 @@
                                     Margin="0,0,4,0"
                                     d:DataContext="{d:DesignInstance local:HashViewModel}"
                                     Command="{Binding ShowHashDetailsWindowCmd}"
-                                    Content="{Binding AlgoInOutModels, Converter={StaticResource AlgoInOutModelsToNumberCvt}}"
+                                    Content="{Binding AlgoInOutModels.Count}"
                                     Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}, Path=Foreground}"
                                     Style="{StaticResource GrayRoundTipButton1}"
                                     ToolTip="详情...">

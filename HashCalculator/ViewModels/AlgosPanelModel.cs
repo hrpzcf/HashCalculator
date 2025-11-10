@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 
@@ -164,7 +165,7 @@ namespace HashCalculator
             return selectedAlgos;
         }
 
-        public static AlgoInOutModel[] GetKnownAlgos(IEnumerable<AlgoType> algoTypes)
+        public static ObservableCollection<AlgoInOutModel> GetKnownAlgos(IEnumerable<AlgoType> algoTypes)
         {
             if (algoTypes != null)
             {
@@ -172,10 +173,10 @@ namespace HashCalculator
                     i => algoTypes.Contains(i.IAlgo.AlgoType)).Select(i => i.NewAlgoInOutModel());
                 if (matchingAlgos.Any())
                 {
-                    return matchingAlgos.ToArray();
+                    return new ObservableCollection<AlgoInOutModel>(matchingAlgos);
                 }
             }
-            return default(AlgoInOutModel[]);
+            return default(ObservableCollection<AlgoInOutModel>);
         }
 
         public static List<AlgoInOutModel> NewInOutModelsByNames(AlgoType[] algoTypes)
@@ -229,7 +230,7 @@ namespace HashCalculator
             return default(IEnumerable<AlgoInOutModel>);
         }
 
-        public static AlgoInOutModel[] GetAlgsFromChecklist(HashChecklist checklist, string fileName)
+        public static ObservableCollection<AlgoInOutModel> GetAlgsFromChecklist(HashChecklist checklist, string fileName)
         {
             if (checklist != null)
             {
@@ -255,9 +256,9 @@ namespace HashCalculator
                         }
                     }
                 }
-                return finalInOutModels.ToArray();
+                return new ObservableCollection<AlgoInOutModel>(finalInOutModels);
             }
-            return default(AlgoInOutModel[]);
+            return default(ObservableCollection<AlgoInOutModel>);
         }
 
         public AlgoGroupModel SelectedAlgoGroup

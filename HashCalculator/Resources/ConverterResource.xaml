@@ -195,6 +195,5 @@
     <local:DisplayHcmDataHashNameCvt x:Key="DisplayHcmDataHashNameCvt" />
     <local:DisplayHcmDataHashValueCvt x:Key="DisplayHcmDataHashValueCvt" />
     <local:DisplayHcmDataErrorInfoCvt x:Key="DisplayHcmDataErrorInfoCvt" />
-    <local:AlgoInOutModelsToNumberCvt x:Key="AlgoInOutModelsToNumberCvt" />
     <local:StateAndSelectionWayToMonitoring x:Key="StateAndSelectionWayToMonitoring" />
 </ResourceDictionary>

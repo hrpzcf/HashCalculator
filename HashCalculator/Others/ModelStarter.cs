@@ -30,7 +30,8 @@ namespace HashCalculator
                     this.process(this.tokenSource.Token, this.Refresh);
                 },
                 this.tokenSource.Token,
-                TaskCreationOptions.LongRunning, TaskScheduler.Default);
+                TaskCreationOptions.LongRunning,
+                TaskScheduler.Default);
         }
 
         public void Shutdown()
