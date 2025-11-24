@@ -350,6 +350,7 @@ namespace HashCalculator
                 new Dictionary<byte[], List<HashViewModel>>(BytesComparer.Default);
             foreach (HashViewModel hm in HashViewModels)
             {
+                hm.TableRowColor = null;
                 switch (hm.Result)
                 {
                     case HashResult.Canceled:
