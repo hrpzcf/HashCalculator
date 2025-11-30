@@ -133,7 +133,7 @@
     <Compile Include="Algorithm\LibRHashED2K.cs" />
     <Compile Include="Algorithm\NamazsoQuickXor.cs" />
     <Compile Include="Algorithm\OfficialImplBlake2.cs" />
-    <Compile Include="Others\MessageToken.cs" />
+    <Compile Include="Others\NotificationSender.cs" />
     <Compile Include="Settings\Settings.cs" />
     <Compile Include="Algorithm\LibRHashSHA224.cs" />
     <Compile Include="Algorithm\LibRHashWhirlpool.cs" />
