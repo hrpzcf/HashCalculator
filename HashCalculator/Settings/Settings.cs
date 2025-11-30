@@ -268,7 +268,7 @@ namespace HashCalculator
                 {
                     return $"检查 {Info.Title} 右键菜单扩展模块兼容性失败，异常信息：{e.Message}";
                 }
-                return null;
+                return default(string);
             });
         }
     }

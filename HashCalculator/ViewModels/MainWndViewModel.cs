@@ -503,8 +503,7 @@ namespace HashCalculator
                 {
                     stringBuilder.Remove(stringBuilder.Length - 1, 1);
                     CommonUtils.ClipboardSetText(stringBuilder.ToString());
-                    Handy.Controls.Growl.Success($"已按模板复制所选行的当前结果或全部结果",
-                        MessageToken.MainWndMsgToken);
+                    NotificationSender.GrowlSuccess($"已按模板复制所选行的当前结果或全部结果");
                 }
             }
         }
@@ -604,11 +603,11 @@ namespace HashCalculator
                 if (stringBuilder.Length != 0)
                 {
                     CommonUtils.ClipboardSetText(stringBuilder.ToString());
-                    Handy.Controls.Growl.Success("已复制文件名或文件路径到剪贴板", MessageToken.MainWndMsgToken);
+                    NotificationSender.GrowlSuccess("已复制文件名或文件路径到剪贴板");
                 }
                 if (!copyName && !fullPathCopied)
                 {
-                    Handy.Controls.Growl.Warning("文件不存在所以完整路径没有被复制", MessageToken.MainWndMsgToken);
+                    NotificationSender.GrowlWarning("文件不存在所以完整路径没有被复制");
                 }
             }
         }
@@ -664,8 +663,7 @@ namespace HashCalculator
                 {
                     stringBuilder.Remove(stringBuilder.Length - 1, 1);
                     CommonUtils.ClipboardSetText(stringBuilder.ToString());
-                    Handy.Controls.Growl.Success("已复制所选行的当前哈希值或全部哈希值",
-                        MessageToken.MainWndMsgToken);
+                    NotificationSender.GrowlSuccess("已复制所选行的当前哈希值或全部哈希值");
                 }
             }
         }
@@ -1045,14 +1043,12 @@ namespace HashCalculator
         {
             if (!HashViewModels.Any(i => i.Result == HashResult.Succeeded))
             {
-                Handy.Controls.Growl.Warning("主窗口列表中没有可以导出的结果。",
-                    MessageToken.MainWndMsgToken);
+                NotificationSender.GrowlWarning("主窗口列表中没有可以导出的结果。");
                 return;
             }
             if (Settings.Current.TemplatesForExport?.Any() != true)
             {
-                Handy.Controls.Growl.Warning("没有导出方案可用，请到【导出结果设置】中添加。",
-                    MessageToken.MainWndMsgToken);
+                NotificationSender.GrowlWarning("没有导出方案可用，请到【导出结果设置】中添加。");
                 return;
             }
             if (Settings.Current.AskUserHowToExportResultsEveryTime)
@@ -1084,9 +1080,8 @@ namespace HashCalculator
             }
             if (!usedModels.Any())
             {
-                Handy.Controls.Growl.Warning(
-                    "没有可用方案，可能方案的扩展名中存在不能用作文件名的字符，请到【导出结果设置】中修改。",
-                    MessageToken.MainWndMsgToken);
+                NotificationSender.GrowlWarning(
+                    "没有可用方案，可能方案的扩展名中存在不能用作文件名的字符，请到【导出结果设置】中修改。");
                 return;
             }
             try
@@ -1135,8 +1130,7 @@ namespace HashCalculator
             }
             catch (Exception ex)
             {
-                Handy.Controls.Growl.Error($"导出哈希值失败，异常信息：{ex.Message}",
-                    MessageToken.MainWndMsgToken);
+                NotificationSender.GrowlError($"导出哈希值失败，异常信息：{ex.Message}");
             }
         }
 
@@ -1347,8 +1341,7 @@ namespace HashCalculator
                 if (string.IsNullOrEmpty(this.HashStringOrChecklistPath))
                 {
                     this.GenerateOriginFileHashCheckReport();
-                    Handy.Controls.Growl.Warning("校验依据输入框没有任何内容！",
-                        MessageToken.MainWndMsgToken);
+                    NotificationSender.GrowlWarning("校验依据输入框没有任何内容！");
                     return false;
                 }
                 // HashStringOrChecklistPath 不是一个文件
@@ -1369,8 +1362,7 @@ namespace HashCalculator
                     }
                     catch (Exception)
                     {
-                        Handy.Controls.Growl.Error("无法获取哈希值清单文件所在目录",
-                            MessageToken.MainWndMsgToken);
+                        NotificationSender.GrowlError("无法获取哈希值清单文件所在目录");
                         return false;
                     }
                 }
@@ -1380,8 +1372,7 @@ namespace HashCalculator
                     HashChecklist newChecklist = HashChecklist.File(this.HashStringOrChecklistPath);
                     if (newChecklist.ReasonForFailure != null)
                     {
-                        Handy.Controls.Growl.Error(newChecklist.ReasonForFailure,
-                            MessageToken.MainWndMsgToken);
+                        NotificationSender.GrowlError(newChecklist.ReasonForFailure);
                     }
                     else
                     {
@@ -1409,8 +1400,7 @@ namespace HashCalculator
             else
             {
                 this.GenerateOriginFileHashCheckReport();
-                Handy.Controls.Growl.Error(localChecklist.ReasonForFailure,
-                    MessageToken.MainWndMsgToken);
+                NotificationSender.GrowlError(localChecklist.ReasonForFailure);
             }
             return localChecklist.ReasonForFailure == null;
         }

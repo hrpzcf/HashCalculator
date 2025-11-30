@@ -77,6 +77,7 @@ namespace HashCalculator
         private bool automaticallyStartTaskAfterFileAdded = true;
         private bool clearTableBeforeAddingFilesByCmdLine = false;
         private bool clearSelectedItemsAfterCompletion = false;
+        private bool sendNonGlobalGrowlNotifications = true;
 
         // 主窗口顶部各按钮的显示与否
         private bool showOpenSelectAlgoWndButton = true;
@@ -490,6 +491,12 @@ namespace HashCalculator
         {
             get => this.clearSelectedItemsAfterCompletion;
             set => this.SetPropNotify(ref this.clearSelectedItemsAfterCompletion, value);
+        }
+
+        public bool SendNonGlobalGrowlNotifications
+        {
+            get => this.sendNonGlobalGrowlNotifications;
+            set => this.SetPropNotify(ref this.sendNonGlobalGrowlNotifications, value);
         }
 
         public bool ClearTableBeforeAddingFilesByCmdLine

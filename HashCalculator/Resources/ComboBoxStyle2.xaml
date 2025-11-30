@@ -22,7 +22,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
     <SolidColorBrush x:Key="ComboBox.Static.Background" Color="#FFFFFFFF" />
     <SolidColorBrush x:Key="ComboBox.Static.Border" Color="#FF0091FF" />
     <SolidColorBrush x:Key="ComboBox.Static.Glyph" Color="#FF606060" />
@@ -65,7 +65,7 @@
     <SolidColorBrush x:Key="ComboBox.Disabled.Editable.Button.Border" Color="Transparent" />
     <SolidColorBrush x:Key="Popup.Static.Border" Color="#FFFF0000" />
     <SolidColorBrush x:Key="ComboBox.Static.Dropped.Border" Color="#FFFF0000" />
-    
+
     <Style x:Key="ComboBoxToggleButton" TargetType="{x:Type ToggleButton}">
         <Setter Property="OverridesDefaultStyle" Value="true" />
         <Setter Property="IsTabStop" Value="false" />
@@ -181,7 +181,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
     <ControlTemplate x:Key="ComboBoxEditableTemplate" TargetType="{x:Type ComboBox}">
         <Grid x:Name="templateRoot" SnapsToDevicePixels="true">
             <Grid.ColumnDefinitions>
@@ -268,7 +268,7 @@
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
-    
+
     <ControlTemplate x:Key="ComboBoxTemplate" TargetType="{x:Type ComboBox}">
         <Grid x:Name="templateRoot" SnapsToDevicePixels="true">
             <Grid.ColumnDefinitions>
@@ -354,7 +354,7 @@
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
-    
+
     <Style x:Key="ComboBoxStyle2" TargetType="{x:Type ComboBox}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="Background" Value="{StaticResource ComboBox.Static.Background}" />

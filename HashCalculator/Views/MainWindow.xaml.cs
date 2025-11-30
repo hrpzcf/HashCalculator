@@ -76,6 +76,7 @@ namespace HashCalculator
                     }
                 }
             }
+            Handy.Controls.Growl.ClearGlobal();
         }
 
         private async void MainWindowLoaded(object sender, RoutedEventArgs e)
@@ -105,7 +106,7 @@ namespace HashCalculator
             this.MainWindowDataGrid.Columns.ReorderDataGridColumns(Settings.Current.ColumnsOrder);
             if (await Settings.TestCompatibilityOfShellExt() is string notification)
             {
-                Handy.Controls.Growl.Error(notification, MessageToken.MainWndMsgToken);
+                NotificationSender.GrowlError(notification);
             }
             Settings.Current.PreviousVer = Info.Ver;
         }
