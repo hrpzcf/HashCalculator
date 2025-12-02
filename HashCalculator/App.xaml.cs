@@ -41,8 +41,8 @@ namespace HashCalculator
         private void ExceptionHandler(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             MessageBox.Show(
-                $"遇到异常即将退出：\n{e.Exception.Message}\n\n" +
-                $"问题反馈：软件设置 - 关于软件 - 问题反馈。", "错误");
+                $"程序异常即将退出：{e.Exception.Message}\n如何反馈问题：软件设置 - 关于软件 - 问题反馈。", "错误",
+                MessageBoxButton.OK, MessageBoxImage.Error);
             Environment.Exit(3);
         }
     }
