@@ -244,9 +244,9 @@ namespace HashCalculator
             return settingsViewModelLoaded;
         }
 
-        public static async Task<string> TestCompatibilityOfShellExt()
+        public static Task<string> TestCompatibilityOfShellExt()
         {
-            return await Task.Run(() =>
+            return Task.Run(() =>
             {
                 try
                 {
