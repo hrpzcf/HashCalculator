@@ -196,4 +196,5 @@
     <local:DisplayHcmDataHashValueCvt x:Key="DisplayHcmDataHashValueCvt" />
     <local:DisplayHcmDataErrorInfoCvt x:Key="DisplayHcmDataErrorInfoCvt" />
     <local:StateAndSelectionWayToMonitoring x:Key="StateAndSelectionWayToMonitoring" />
+    <local:NotificationTypeToToDrawingImageCvt x:Key="NotificationTypeToToDrawingImageCvt" />
 </ResourceDictionary>

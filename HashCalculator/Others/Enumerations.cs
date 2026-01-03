@@ -429,4 +429,15 @@
         /// </summary>
         NEITHER,
     }
+
+    /// <summary>
+    /// 桌面通知类型
+    /// </summary>
+    public enum NotificationType
+    {
+        Info,
+        Warning,
+        Error,
+        Success,
+    }
 }
