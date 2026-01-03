@@ -1083,4 +1083,48 @@ namespace HashCalculator
             throw new NotImplementedException();
         }
     }
+
+    internal class NotificationTypeToToDrawingImageCvt : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            DrawingImage drawingImage = default(DrawingImage);
+            if (value is NotificationType type)
+            {
+                object brush = null;
+                object geometry = null;
+                switch (type)
+                {
+                    case NotificationType.Info:
+                        brush = Application.Current.TryFindResource("InfoBrush");
+                        geometry = Application.Current.TryFindResource("InfoGeometry");
+                        break;
+                    case NotificationType.Warning:
+                        brush = Application.Current.TryFindResource("WarningBrush");
+                        geometry = Application.Current.TryFindResource("WarningGeometry");
+                        break;
+                    case NotificationType.Error:
+                        brush = Application.Current.TryFindResource("ErrorBrush");
+                        geometry = Application.Current.TryFindResource("ErrorGeometry");
+                        break;
+                    case NotificationType.Success:
+                        brush = Application.Current.TryFindResource("SuccessBrush");
+                        geometry = Application.Current.TryFindResource("SuccessGeometry");
+                        break;
+                }
+                if (brush is Brush b && geometry is Geometry g)
+                {
+                    DrawingGroup drawingGroup = new DrawingGroup();
+                    drawingGroup.Children.Add(new GeometryDrawing(b, null, g));
+                    drawingImage = new DrawingImage(drawingGroup);
+                }
+            }
+            return drawingImage;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

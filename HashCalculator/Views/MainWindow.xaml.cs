@@ -76,7 +76,7 @@ namespace HashCalculator
                     }
                 }
             }
-            Handy.Controls.Growl.ClearGlobal();
+            NotificationSender.NotificationHandle?.Close();
         }
 
         private async void MainWindowLoaded(object sender, RoutedEventArgs e)

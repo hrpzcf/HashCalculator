@@ -164,10 +164,6 @@
                     </StackPanel>
                     <CheckBox
                         Margin="0,8,0,0"
-                        Content="使用非全局的 Growl 信息通知"
-                        IsChecked="{Binding SendNonGlobalGrowlNotifications, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <CheckBox
-                        Margin="0,8,0,0"
                         Content="不计算空文件的哈希值以避免造成【文件内容相同】的误导"
                         IsChecked="{Binding DoNotHashForEmptyFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <CheckBox
@@ -195,6 +191,10 @@
                         Margin="0,8,0,0"
                         Content="允许运行多个应用程序实例，包括被系统右键菜单或关联的文件启动"
                         IsChecked="{Binding RunInMultiInstMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <CheckBox
+                        Margin="0,8,0,0"
+                        Content="使用应用内信息通知，不勾选此选项则使用桌面信息通知"
+                        IsChecked="{Binding SendNonGlobalGrowlNotifications, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
             </ScrollViewer>
         </TabItem>

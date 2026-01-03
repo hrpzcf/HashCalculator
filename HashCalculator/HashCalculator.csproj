@@ -176,6 +176,7 @@
     <Compile Include="Others\HcmDataHelper.cs" />
     <Compile Include="Others\HcmData.cs" />
     <Compile Include="Property\ExecTargetAttach.cs" />
+    <Compile Include="ViewModels\DesktopNotificationModel.cs" />
     <Compile Include="ViewModels\DoubleProgressModel.cs" />
     <Compile Include="ViewModels\TemplateForChecklistModel.cs" />
     <Compile Include="ViewModels\TemplateForExportModel.cs" />
@@ -203,6 +204,9 @@
     <Compile Include="ViewModels\ShellMenuEditorModel.cs" />
     <Compile Include="Views\AlgosPanel.xaml.cs">
       <DependentUpon>AlgosPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DesktopNotification.xaml.cs">
+      <DependentUpon>DesktopNotification.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DoubleProgressWnd.xaml.cs">
       <DependentUpon>DoubleProgressWnd.xaml</DependentUpon>
@@ -351,6 +355,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\AlgosPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DesktopNotification.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,4 +1,5 @@
 ﻿using HandyControl.Controls;
+using HandyControl.Data;
 
 namespace HashCalculator
 {
@@ -12,7 +13,11 @@ namespace HashCalculator
             }
             else
             {
-                Growl.ErrorGlobal(message);
+                NotificationHandle?.Close();
+                NotificationHandle = Notification.Show(
+                    new DesktopNotification(NotificationType.Error, message),
+                    ShowAnimation.HorizontalMove,
+                    false);
             }
         }
 
@@ -24,7 +29,11 @@ namespace HashCalculator
             }
             else
             {
-                Growl.WarningGlobal(message);
+                NotificationHandle?.Close();
+                NotificationHandle = Notification.Show(
+                    new DesktopNotification(NotificationType.Warning, message),
+                    ShowAnimation.HorizontalMove,
+                    false);
             }
         }
 
@@ -36,8 +45,14 @@ namespace HashCalculator
             }
             else
             {
-                Growl.SuccessGlobal(message);
+                NotificationHandle?.Close();
+                NotificationHandle = Notification.Show(
+                    new DesktopNotification(NotificationType.Success, message),
+                    ShowAnimation.HorizontalMove,
+                    false);
             }
         }
+
+        public static Notification NotificationHandle { get; private set; }
     }
 }
