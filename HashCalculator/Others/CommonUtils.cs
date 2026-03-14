@@ -641,7 +641,7 @@ namespace HashCalculator
             // 以像素为单位的实际横向分辨率
             int actualScreenWidth = GDI32.GetDeviceCaps(desktop, (int)DeviceCap.HORZRES);
             graphics.ReleaseHdc(desktop);
-            // 缩放率变大 SystemParameters.PrimaryScreenWidth 变小，反之同理
+            // 缩放率变大 SystemParameters.PrimaryScreenWidth 变小（几个像素并成一个了），反之同理
             double screenScalingFactor = actualScreenWidth / SystemParameters.PrimaryScreenWidth;
             return screenScalingFactor;
         }
