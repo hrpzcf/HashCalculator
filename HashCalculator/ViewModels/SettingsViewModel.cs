@@ -202,6 +202,10 @@ namespace HashCalculator
             this.PropertyChanged += Settings.MoveConfigFiles;
         }
 
+        public double DpiScaleX => 1.0 / CommonUtils.GetScreenScalingFactor();
+
+        public double DpiScaleY => 1.0 / CommonUtils.GetScreenScalingFactor();
+
         public string PreviousVer { get; set; }
 
         public bool DoNotHashForEmptyFile { get; set; } = true;

@@ -608,7 +608,11 @@
                                     VerticalAlignment="Center"
                                     Source="{Binding FileIcon}"
                                     Stretch="None"
-                                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowFileIcon, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
+                                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowFileIcon, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
+                                    <Image.LayoutTransform>
+                                        <ScaleTransform ScaleX="{Binding Source={x:Static local:Settings.Current}, Path=DpiScaleX}" ScaleY="{Binding Source={x:Static local:Settings.Current}, Path=DpiScaleY}" />
+                                    </Image.LayoutTransform>
+                                </Image>
                                 <Border
                                     Grid.Row="0"
                                     Grid.Column="2"
