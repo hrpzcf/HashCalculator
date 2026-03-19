@@ -205,28 +205,27 @@ namespace HashCalculator
             bool settingsViewModelLoaded = false;
             try
             {
-                if (!File.Exists(ConfigInfo.ActiveConfigFile))
+                if (File.Exists(ConfigInfo.ActiveConfigFile))
                 {
-                    throw new FileNotFoundException("活动配置文件不存在！");
-                }
-                // 读取所有字符串的原因是尽早关闭文件以免影响反序列化导致
-                // SettingsViewModel.LocationForSavingConfigFiles 属性变化
-                // 触发的移动配置文件位置的操作（无法移动还没有关闭的文件）
-                string jContent = File.ReadAllText(ConfigInfo.ActiveConfigFile);
-                using (StringReader sr = new StringReader(jContent))
-                using (JsonTextReader jsonTextReader = new JsonTextReader(sr))
-                {
-                    JsonSerializerSettings settings = new JsonSerializerSettings()
+                    // 读取所有字符串的原因是尽早关闭文件以免影响反序列化导致
+                    // SettingsViewModel.LocationForSavingConfigFiles 属性变化触发的移
+                    // 动配置文件位置的操作（无法移动还没有关闭的文件）
+                    string jContent = File.ReadAllText(ConfigInfo.ActiveConfigFile);
+                    using (StringReader sr = new StringReader(jContent))
+                    using (JsonTextReader jsonTextReader = new JsonTextReader(sr))
                     {
-                        NullValueHandling = NullValueHandling.Ignore,
-                        Error = (s, e) =>
+                        JsonSerializerSettings settings = new JsonSerializerSettings()
                         {
-                            e.ErrorContext.Handled = true;
-                        },
-                    };
-                    JsonSerializer jsonSerializer = JsonSerializer.Create(settings);
-                    jsonSerializer.Populate(jsonTextReader, Current);
-                    settingsViewModelLoaded = true;
+                            NullValueHandling = NullValueHandling.Ignore,
+                            Error = (s, e) =>
+                            {
+                                e.ErrorContext.Handled = true;
+                            },
+                        };
+                        JsonSerializer jsonSerializer = JsonSerializer.Create(settings);
+                        jsonSerializer.Populate(jsonTextReader, Current);
+                        settingsViewModelLoaded = true;
+                    }
                 }
             }
             catch (Exception ex)
