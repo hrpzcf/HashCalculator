@@ -6,9 +6,7 @@
 
 
 VOID COpenAsChecklist::CreateGUIProcessVerifyHash(LPCSTR algo) const {
-    if (nullptr == this->checklistPath) {
-        return;
-    }
+    if (nullptr == this->checklistPath) return;
     DWORD bufferSize = MAX_PATH;
     LPSTR exePathBuffer = new CHAR[bufferSize]();
     if (!GetHashCalculatorPath(&exePathBuffer, &bufferSize) || !PathFileExistsA(exePathBuffer)) {
@@ -46,6 +44,7 @@ VOID COpenAsChecklist::CreateGUIProcessVerifyHash(LPCSTR algo) const {
     delete[] commandlineBuffer;
 }
 
+
 COpenAsChecklist::COpenAsChecklist() {
     this->hModule = _AtlBaseModule.GetModuleInstance();
     this->hBitmapMenu = (HBITMAP)LoadImageA(
@@ -78,17 +77,18 @@ COpenAsChecklist::COpenAsChecklist() {
     delete[] modulePathBuffer;
 }
 
+
 COpenAsChecklist::~COpenAsChecklist() {
     DeleteCmdDictBuffer(this->mCmdDict);
     delete[] this->MenuJsonPath;
     delete[] this->checklistPath;
 }
 
-STDMETHODIMP COpenAsChecklist::Initialize(
-    PCIDLIST_ABSOLUTE pidlFolder, IDataObject* pdtobj, HKEY hkeyProgID) {
-    if (nullptr == pdtobj) {
-        return E_INVALIDARG;
-    }
+
+STDMETHODIMP COpenAsChecklist::Initialize(PCIDLIST_ABSOLUTE pidlFolder, IDataObject* pdtobj,
+    HKEY hkeyProgID) {
+
+    if (nullptr == pdtobj) return E_INVALIDARG;
     delete[] this->checklistPath;
     this->checklistPath = nullptr;
     STGMEDIUM	stg = { TYMED_HGLOBAL };
@@ -130,8 +130,10 @@ STDMETHODIMP COpenAsChecklist::Initialize(
     return S_OK;
 }
 
-STDMETHODIMP COpenAsChecklist::QueryContextMenu(
-    HMENU hMenu, UINT indexMenu, UINT idCmdFirst, UINT idCmdLast, UINT uFlags) {
+
+STDMETHODIMP COpenAsChecklist::QueryContextMenu(HMENU hMenu, UINT indexMenu, UINT idCmdFirst,
+    UINT idCmdLast, UINT uFlags) {
+
     if (uFlags & CMF_DEFAULTONLY) {
         return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, 0);
     }
@@ -142,6 +144,7 @@ STDMETHODIMP COpenAsChecklist::QueryContextMenu(
     }
     return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, idCmdCurrent);
 }
+
 
 STDMETHODIMP COpenAsChecklist::InvokeCommand(CMINVOKECOMMANDINFO* pici) {
     if (0 != HIWORD(pici->lpVerb)) {
@@ -154,6 +157,7 @@ STDMETHODIMP COpenAsChecklist::InvokeCommand(CMINVOKECOMMANDINFO* pici) {
     this->CreateGUIProcessVerifyHash(iter->second);
     return S_OK;
 }
+
 
 STDMETHODIMP COpenAsChecklist::GetCommandString(UINT_PTR idCmd, UINT uType, UINT* pReserved, CHAR* pszName, UINT cchMax) {
     return E_NOTIMPL;
