@@ -11,6 +11,7 @@ using std::pair;
 using std::map;
 using std::string;
 
+
 /// <summary>
 /// 从注册表读取 HashCalculator.exe 的路径，此路径在安装系统快捷菜单扩展时被写入注册表。
 /// </summary>
@@ -45,46 +46,51 @@ FinalizeAndReturn:
     return executionResult;
 }
 
+
 VOID ShowMessageType(HMODULE hModule, UINT titleID, UINT messageID, UINT uType) {
     ResString title = ResString(hModule, titleID);
     ResString message = ResString(hModule, messageID);
     MessageBoxA(nullptr, message.String(), title.String(), uType);
 }
 
-static BOOL json_getPropValueByType(const json_t* parent, const char* propName, jsonType_t jsonType, void* addr) {
-    if (NULL != parent && NULL != propName) {
-        const json_t* propJson = json_getProperty(parent, propName);
-        if (NULL != propJson && jsonType == json_getType(propJson)) {
-            switch (jsonType) {
-            case JSON_BOOLEAN:
-            {
-                bool* boolAddr = (bool*)addr;
-                *boolAddr = json_getBoolean(propJson);
-                break;
-            }
-            case JSON_INTEGER:
-            {
-                int64_t* int64Addr = (int64_t*)addr;
-                *int64Addr = json_getInteger(propJson);
-                break;
-            }
-            case JSON_TEXT:
-            {
-                const char** strAddr = (const char**)addr;
-                *strAddr = json_getValue(propJson);
-                break;
-            }
-            default:
-                return FALSE;
-            }
-            return TRUE;
-        }
+
+static BOOL json_getPropValueByType(const json_t* parent, const char* propName, jsonType_t jsonType,
+    void* addr) {
+
+    if (NULL == parent || NULL == propName) return FALSE;
+    const json_t* propJson = json_getProperty(parent, propName);
+    if (NULL == propJson || jsonType != json_getType(propJson)) {
+        return FALSE;
     }
-    return FALSE;
+    switch (jsonType) {
+    case JSON_BOOLEAN:
+    {
+        bool* boolAddr = (bool*)addr;
+        *boolAddr = json_getBoolean(propJson);
+        break;
+    }
+    case JSON_INTEGER:
+    {
+        int64_t* int64Addr = (int64_t*)addr;
+        *int64Addr = json_getInteger(propJson);
+        break;
+    }
+    case JSON_TEXT:
+    {
+        const char** strAddr = (const char**)addr;
+        *strAddr = json_getValue(propJson);
+        break;
+    }
+    default:
+        return FALSE;
+    }
+    return TRUE;
 }
 
-BOOL InsertMenuFromJsonFile(const CHAR* menuJson, HMENU hMenu, UINT indexMenu, UINT idCmdFirst, UINT idCmdLast,
-    MenuType_t menuType, UINT* pIdCurrent, map<UINT, CHAR*>& mCmdDict, HBITMAP bitMapHandle) {
+
+BOOL InsertMenuFromJsonFile(const CHAR* menuJson, HMENU hMenu, UINT indexMenu, UINT idCmdFirst,
+    UINT idCmdLast, MenuType_t menuType, UINT* pIdCurrent, map<UINT, CHAR*>& mCmdDict, HBITMAP bitMapHandle) {
+
     LPSTR ansiData = NULL;
     LPWSTR unicodeData = NULL;
     UINT initalId = *pIdCurrent;
@@ -212,6 +218,7 @@ FinalizeAndReturn:
     }
     return initalId != *pIdCurrent;
 }
+
 
 VOID DeleteCmdDictBuffer(map<UINT, CHAR*>& mCmdDict) {
     for (pair<const UINT, CHAR*>& keyValuePair : mCmdDict) {

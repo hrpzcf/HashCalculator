@@ -10,9 +10,7 @@
 
 
 VOID CComputeHash::CreateGUIProcessComputeHash(LPCSTR algo) {
-    if (this->vFilepathList.empty()) {
-        return;
-    }
+    if (this->vFilepathList.empty()) return;
     DWORD bufferSize = MAX_PATH;
     LPSTR exePathBuffer = new CHAR[bufferSize]();
     if (!GetHashCalculatorPath(&exePathBuffer, &bufferSize) || !PathFileExistsA(exePathBuffer)) {
@@ -62,6 +60,7 @@ VOID CComputeHash::CreateGUIProcessComputeHash(LPCSTR algo) {
     delete[] commandline_buffer;
 }
 
+
 CComputeHash::CComputeHash() {
     this->hModule = _AtlBaseModule.GetModuleInstance();
     this->hBitmapMenu = (HBITMAP)LoadImageA(
@@ -94,25 +93,54 @@ CComputeHash::CComputeHash() {
     delete[] modulePathBuffer;
 }
 
+
 CComputeHash::~CComputeHash() {
     DeleteCmdDictBuffer(this->mCmdDict);
     delete[] this->MenuJsonPath;
+    if (m_pSite) {
+        m_pSite->Release();
+        m_pSite = nullptr;
+    }
 }
 
-STDMETHODIMP CComputeHash::Initialize(
-    PCIDLIST_ABSOLUTE pidlFolder, IDataObject* pdtobj, HKEY hkeyProgID) {
+
+STDMETHODIMP CComputeHash::SetSite(IUnknown* pUnkSite) {
+    if (m_pSite) {
+        m_pSite->Release();
+        m_pSite = nullptr;
+    }
+    m_pSite = pUnkSite;
+    if (m_pSite) {
+        m_pSite->AddRef();
+    }
+    return S_OK;
+}
+
+
+STDMETHODIMP CComputeHash::GetSite(REFIID riid, void** ppvSite) {
+    if (m_pSite == nullptr) {
+        return E_FAIL;
+    }
+    return m_pSite->QueryInterface(riid, ppvSite);
+}
+
+
+STDMETHODIMP CComputeHash::Initialize(PCIDLIST_ABSOLUTE pidlFolder, IDataObject* pdtobj,
+    HKEY hkeyProgID) {
+
     CHAR filepath_buffer[MAX_PATH];
     this->vFilepathList.clear();
+    this->m_isBackgroundContext = false;
     if (nullptr != pidlFolder) {
+        // Directory\Background 上下文
+        this->m_isBackgroundContext = true;
         if (SHGetPathFromIDListA(pidlFolder, filepath_buffer)) {
             this->vFilepathList.push_back(filepath_buffer);
             return S_OK;
         }
         return E_INVALIDARG;
     }
-    if (nullptr == pdtobj) {
-        return E_INVALIDARG;
-    }
+    if (nullptr == pdtobj) return E_INVALIDARG;
     STGMEDIUM	stg = { TYMED_HGLOBAL };
     FORMATETC	fmt = {
         CF_HDROP,
@@ -144,9 +172,53 @@ STDMETHODIMP CComputeHash::Initialize(
     return S_OK;
 }
 
-STDMETHODIMP CComputeHash::QueryContextMenu(
-    HMENU hMenu, UINT indexMenu, UINT idCmdFirst, UINT idCmdLast, UINT uFlags) {
+
+STDMETHODIMP CComputeHash::QueryContextMenu(HMENU hMenu, UINT indexMenu, UINT idCmdFirst,
+    UINT idCmdLast, UINT uFlags) {
+
     if (uFlags & CMF_DEFAULTONLY) {
+        return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, 0);
+    }
+    // 时会触发两次（Directory 和 Directory\Background），
+    // 那我们选择此时不插入 Directory(即 m_isBackgroundContext==false) 的菜单
+
+    // QueryContextMenu uFlags
+    // #define CMF_NORMAL              0x00000000
+    // #define CMF_DEFAULTONLY         0x00000001
+    // #define CMF_VERBSONLY           0x00000002
+    // #define CMF_EXPLORE             0x00000004
+    // #define CMF_NOVERBS             0x00000008
+    // #define CMF_CANRENAME           0x00000010
+    // #define CMF_NODEFAULT           0x00000020
+    // #if (NTDDI_VERSION < NTDDI_VISTA)
+    // #define CMF_INCLUDESTATIC       0x00000040
+    // #endif
+    // #if (NTDDI_VERSION >= NTDDI_VISTA)
+    // #define CMF_ITEMMENU            0x00000080
+    // #endif
+    // #define CMF_EXTENDEDVERBS       0x00000100
+    // #if (NTDDI_VERSION >= NTDDI_VISTA)
+    // #define CMF_DISABLEDVERBS       0x00000200
+    // #endif
+    // #define CMF_ASYNCVERBSTATE      0x00000400
+    // #define CMF_OPTIMIZEFORINVOKE   0x00000800
+    // #define CMF_SYNCCASCADEMENU     0x00001000
+    // #define CMF_DONOTPICKDEFAULT    0x00002000
+    // #define CMF_RESERVED            0xffff0000
+
+    // 通过检查 uFlags 来判断是否为快速访问右击
+    // 右击快速访问：
+    // uFlags==0x00000414: CMF_EXPLORE|CMF_CANRENAME|CMF_ASYNCVERBSTATE
+    // 右击文件夹背景：
+    // uFlags==0x00020424: CMF_EXPLORE|CMF_NODEFAULT|CMF_ASYNCVERBSTATE|CMF_RESERVED
+    // 右击正常文件夹：
+    // uFlags==0x00020494: CMF_EXPLORE|CMF_CANRENAME|CMF_ITEMMENU|CMF_ASYNCVERBSTATE|CMF_RESERVED
+
+    // 有 3 个判断方法：
+    // m_isBackgroundContext = false 且 uFlags 没有 CMF_ITEMMENU 标识 → 快速访问
+    // m_isBackgroundContext = false 且 uFlags 没有 CMF_RESERVED 标识 → 快速访问
+    // uFlags == 0x00000414 → 快速访问
+    if (!this->m_isBackgroundContext && !(uFlags & CMF_ITEMMENU)) {
         return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, 0);
     }
     UINT idCmdCurrent = 0;
@@ -156,6 +228,7 @@ STDMETHODIMP CComputeHash::QueryContextMenu(
     }
     return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, idCmdCurrent);
 }
+
 
 STDMETHODIMP CComputeHash::InvokeCommand(CMINVOKECOMMANDINFO* pici) {
     if (0 != HIWORD(pici->lpVerb)) {
@@ -168,6 +241,7 @@ STDMETHODIMP CComputeHash::InvokeCommand(CMINVOKECOMMANDINFO* pici) {
     this->CreateGUIProcessComputeHash(iter->second);
     return S_OK;
 }
+
 
 STDMETHODIMP CComputeHash::GetCommandString(UINT_PTR idCmd, UINT uType, UINT* pReserved, CHAR* pszName, UINT cchMax) {
     return E_NOTIMPL;
