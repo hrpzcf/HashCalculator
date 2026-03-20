@@ -70,6 +70,7 @@ ScaffoldingReadMe.txt
 StyleCopReport.xml
 
 # Files built by Visual Studio
+*_i.h
 *_i.c
 *_p.c
 *_h.h
@@ -360,8 +361,7 @@ MigrationBackup/
 .ionide/
 
 # Others
-*_i.h
-/HashCalculator/ShellExt
 /.vscode
-/HashCalculator/Costura-win-x64/hashalgs.dll
-/HashCalculator/Costura-win-x86/hashalgs.dll
+/HashCalculator/Costura-win-x64/
+/HashCalculator/Costura-win-x86/
+/HashCalculator/ShellExt
