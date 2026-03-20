@@ -1,467 +1,68 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{16B60D29-4D81-4360-814C-1A0FFFF5D75B}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
-    <RootNamespace>HashCalculator</RootNamespace>
-    <AssemblyName>HashCalculator</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <WarningLevel>4</WarningLevel>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Deterministic>true</Deterministic>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>none</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationIcon>Images\icon.ico</ApplicationIcon>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject>HashCalculator.App</StartupObject>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System.Drawing" />
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Xaml">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Others\ColumnProperty.cs" />
-    <Compile Include="Others\ConfigPaths.cs" />
-    <Compile Include="Cmders\MarkFilesCmder.cs" />
-    <Compile Include="Cmders\MarkFilesCmderCtrl.xaml.cs">
-      <DependentUpon>MarkFilesCmderCtrl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Cmders\DeleteFileCmder.cs" />
-    <Compile Include="Cmders\AbsHashesCmder.cs" />
-    <Compile Include="Cmders\DeleteFileCmderCtrl.xaml.cs">
-      <DependentUpon>DeleteFileCmderCtrl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Cmders\RenameFileCmderCtrl.xaml.cs">
-      <DependentUpon>RenameFileCmderCtrl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Cmders\RestoreFilesCmder.cs" />
-    <Compile Include="Cmders\RestoreFilesCmderCtrl.xaml.cs">
-      <DependentUpon>RestoreFilesCmderCtrl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Cmders\SelectTargetsCmder.cs" />
-    <Compile Include="Cmders\RenameFileCmder.cs" />
-    <Compile Include="Cmders\SelectTargetsCmderCtrl.xaml.cs">
-      <DependentUpon>SelectTargetsCmderCtrl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Initializer\Initializer.cs" />
-    <Compile Include="Initializer\MappedInfo.cs" />
-    <Compile Include="Algorithm\GmSslSM3.cs" />
-    <Compile Include="Algorithm\Gost34112012Streebog.cs" />
-    <Compile Include="Algorithm\LibRHashMD4.cs" />
-    <Compile Include="Algorithm\LibRHashHas160.cs" />
-    <Compile Include="Algorithm\LibRHashRipeMD160.cs" />
-    <Compile Include="Algorithm\LibRHashED2K.cs" />
-    <Compile Include="Algorithm\NamazsoQuickXor.cs" />
-    <Compile Include="Algorithm\OfficialImplBlake2.cs" />
-    <Compile Include="Others\NotificationSender.cs" />
-    <Compile Include="Settings\Settings.cs" />
-    <Compile Include="Algorithm\LibRHashSHA224.cs" />
-    <Compile Include="Algorithm\LibRHashWhirlpool.cs" />
-    <Compile Include="Algorithm\OfficialImplBlake2b.cs" />
-    <Compile Include="Algorithm\IHashAlgoInfo.cs" />
-    <Compile Include="Algorithm\OfficialImplBlake3.cs" />
-    <Compile Include="Algorithm\FastXxHashXXH3_128.cs" />
-    <Compile Include="Algorithm\FastXxHashXXH3_64.cs" />
-    <Compile Include="Algorithm\FastXxHashXXH32.cs" />
-    <Compile Include="Algorithm\FastXxHashXXH64.cs" />
-    <Compile Include="Algorithm\NetCryptoCngAbs.cs" />
-    <Compile Include="Algorithm\NetCryptoCngMD5.cs" />
-    <Compile Include="Algorithm\NetCryptoCngSHA1.cs" />
-    <Compile Include="Algorithm\NetCryptoCngSHA256.cs" />
-    <Compile Include="Algorithm\NetCryptoCngSHA384.cs" />
-    <Compile Include="Algorithm\NetCryptoCngSHA512.cs" />
-    <Compile Include="Filters\CmpResultFilter.cs" />
-    <Compile Include="Filters\CmpResultFilterCtrl.xaml.cs">
-      <DependentUpon>CmpResultFilterCtrl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Filters\FileIndexFilter.cs" />
-    <Compile Include="Filters\FileIndexFilterCtrl.xaml.cs">
-      <DependentUpon>FileIndexFilterCtrl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Filters\EqualHashByteFilterCtrl.xaml.cs">
-      <DependentUpon>EqualHashByteFilterCtrl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Filters\FileNameFilter.cs" />
-    <Compile Include="Filters\FileNameFilterCtrl.xaml.cs">
-      <DependentUpon>FileNameFilterCtrl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Filters\FileSizeFilter.cs" />
-    <Compile Include="Filters\FileSizeFilterCtrl.xaml.cs">
-      <DependentUpon>FileSizeFilterCtrl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Filters\HashAlgoFilterCtrl.xaml.cs">
-      <DependentUpon>HashAlgoFilterCtrl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Algorithm\OfficialImplBlake2bp.cs" />
-    <Compile Include="Algorithm\OfficialImplBlake2s.cs" />
-    <Compile Include="Algorithm\OfficialImplBlake2sp.cs" />
-    <Compile Include="Algorithm\ExtendedKcpSHA3.cs" />
-    <Compile Include="Algorithm\OpenHashTabCrc64.cs" />
-    <Compile Include="Algorithm\StbrummeRepoCrc32.cs" />
-    <Compile Include="Native\Constants.cs" />
-    <Compile Include="Native\Structures.cs" />
-    <Compile Include="Others\BytesComparer.cs" />
-    <Compile Include="Filters\HashingTaskResultFilter.cs" />
-    <Compile Include="Filters\HashingTaskResultFilterCtrl.xaml.cs">
-      <DependentUpon>HashingTaskResultFilterCtrl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Filters\HashStringFilter.cs" />
-    <Compile Include="Filters\HashAlgoFilter.cs" />
-    <Compile Include="Filters\EqualHashByteFilter.cs" />
-    <Compile Include="Filters\HashStringFilterCtrl.xaml.cs">
-      <DependentUpon>HashStringFilterCtrl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Filters\SameDirFilesFilter.cs" />
-    <Compile Include="Filters\SameDirFilesFilterCtrl.xaml.cs">
-      <DependentUpon>SameDirFilesFilterCtrl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Filters\SerialNumberFilter.cs" />
-    <Compile Include="Filters\SerialNumberFilterCtrl.xaml.cs">
-      <DependentUpon>SerialNumberFilterCtrl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Others\CmdOptions.cs" />
-    <Compile Include="Others\CommonExts.cs" />
-    <Compile Include="Filters\AbsHashViewFilter.cs" />
-    <Compile Include="Others\ComparableColor.cs" />
-    <Compile Include="Others\CmpableFileIndex.cs" />
-    <Compile Include="Initializer\MmvsReader.cs" />
-    <Compile Include="Initializer\MmvsWriter.cs" />
-    <Compile Include="Native\Methods.cs" />
-    <Compile Include="Others\HcmDataHelper.cs" />
-    <Compile Include="Others\HcmData.cs" />
-    <Compile Include="Property\ExecTargetAttach.cs" />
-    <Compile Include="ViewModels\DesktopNotificationModel.cs" />
-    <Compile Include="ViewModels\DoubleProgressModel.cs" />
-    <Compile Include="ViewModels\TemplateForChecklistModel.cs" />
-    <Compile Include="ViewModels\TemplateForExportModel.cs" />
-    <Compile Include="ViewModels\NotifiableModel.cs" />
-    <Compile Include="Others\HashChecklist.cs" />
-    <Compile Include="ViewModels\GenericItemModel.cs" />
-    <Compile Include="Others\ModelStarter.cs" />
-    <Compile Include="Others\PathPackage.cs" />
-    <Compile Include="Others\ProcSynchronizer.cs" />
-    <Compile Include="ShellExtHelper\RegNode.cs" />
-    <Compile Include="ShellExtHelper\RegValue.cs" />
-    <Compile Include="Others\RelayCommand.cs" />
-    <Compile Include="Others\CommonUtils.cs" />
-    <Compile Include="ShellExtHelper\ShellExtHelper.cs" />
-    <Compile Include="ViewModels\AlgoGroupModel.cs" />
-    <Compile Include="ViewModels\AlgosPanelModel.cs" />
-    <Compile Include="ViewModels\AlgoInOutModel.cs" />
-    <Compile Include="ViewModels\HcCtxMenuModel.cs" />
-    <Compile Include="ViewModels\FilterAndCmdPanelModel.cs" />
-    <Compile Include="ViewModels\HashViewModel.cs" />
-    <Compile Include="ViewModels\MainWndViewModel.cs" />
-    <Compile Include="Others\Converters.cs" />
-    <Compile Include="Others\Enumerations.cs" />
-    <Compile Include="ViewModels\SettingsViewModel.cs" />
-    <Compile Include="ViewModels\ShellMenuEditorModel.cs" />
-    <Compile Include="Views\AlgosPanel.xaml.cs">
-      <DependentUpon>AlgosPanel.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\DesktopNotification.xaml.cs">
-      <DependentUpon>DesktopNotification.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\DoubleProgressWnd.xaml.cs">
-      <DependentUpon>DoubleProgressWnd.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\FilterAndCmdPanel.xaml.cs">
-      <DependentUpon>FilterAndCmdPanel.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\HashDetailsWindow.xaml.cs">
-      <DependentUpon>HashDetailsWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\HowToExportResults.xaml.cs">
-      <DependentUpon>HowToExportResults.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\SettingsPanel.xaml.cs">
-      <DependentUpon>SettingsPanel.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Others\HashModelArg.cs" />
-    <Compile Include="Views\ShellMenuEditor.xaml.cs">
-      <DependentUpon>ShellMenuEditor.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ShellSubmenuEditor.xaml.cs">
-      <DependentUpon>ShellSubmenuEditor.xaml</DependentUpon>
-    </Compile>
-    <ApplicationDefinition Include="App.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </ApplicationDefinition>
-    <Page Include="Cmders\MarkFilesCmderCtrl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Cmders\DeleteFileCmderCtrl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Cmders\RenameFileCmderCtrl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Cmders\RestoreFilesCmderCtrl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Cmders\SelectTargetsCmderCtrl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Filters\CmpResultFilterCtrl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Filters\FileIndexFilterCtrl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Filters\EqualHashByteFilterCtrl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Filters\FileNameFilterCtrl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Filters\FileSizeFilterCtrl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Filters\HashAlgoFilterCtrl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Filters\HashingTaskResultFilterCtrl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Filters\HashStringFilterCtrl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Filters\SameDirFilesFilterCtrl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Filters\SerialNumberFilterCtrl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\DataGridStyles.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\GroupBoxStyles.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\IconFont.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\ButtonIcons.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Resources\CmderButtonStyles.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\ComboBoxStyle1.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\ComboBoxStyle2.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\DataGridCellStyles.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\ConverterResource.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\DataGridRowStyles.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\ImageButtonStyles.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Resources\ImgButtonTextStyles.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\TabControlItemStyles.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\TabControlStyles.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\DescTextBlockStyles.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\AlgosPanel.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\DesktopNotification.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\DoubleProgressWnd.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\FilterAndCmdPanel.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\HashDetailsWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\HowToExportResults.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="Settings\Info.cs" />
-    <Compile Include="Views\MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Page Include="Views\SettingsPanel.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\ShellMenuEditor.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\ShellSubmenuEditor.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\icon.ico" />
-    <Resource Include="Images\loading.gif" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="ShellExt\HashCalculator.dll" />
-    <EmbeddedResource Include="ShellExt\HashCalculator32.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="FodyWeavers.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="IconFont\iconfont.json" />
-    <Resource Include="IconFont\iconfont.ttf" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Costura-win-x64\hashalgs.dll" />
-    <EmbeddedResource Include="Costura-win-x86\hashalgs.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="IconFont\demo.css" />
-    <None Include="IconFont\demo_index.html" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="IconFont\iconfont.css" />
-    <None Include="IconFont\iconfont.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="FodyWeavers.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="CommandLineParser">
-      <Version>2.9.1</Version>
-    </PackageReference>
-    <PackageReference Include="Costura.Fody">
-      <Version>6.0.0</Version>
-      <IncludeAssets>runtime; compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="HandyControl">
-      <Version>3.5.1</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Bcl.HashCode">
-      <Version>6.0.0</Version>
-    </PackageReference>
-    <PackageReference Include="Newtonsoft.Json">
-      <Version>13.0.4</Version>
-    </PackageReference>
-    <PackageReference Include="System.Memory">
-      <Version>4.6.3</Version>
-    </PackageReference>
-    <PackageReference Include="WindowsAPICodePack-Core">
-      <Version>1.1.2</Version>
-    </PackageReference>
-    <PackageReference Include="WindowsAPICodePack-Shell">
-      <Version>1.1.1</Version>
-    </PackageReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net462</TargetFramework>
+        <ProjectGuid>{16B60D29-4D81-4360-814C-1A0FFFF5D75B}</ProjectGuid>
+        <RootNamespace>HashCalculator</RootNamespace>
+        <AssemblyName>HashCalculator</AssemblyName>
+        <UseWPF>true</UseWPF>
+        <UseWindowsForms>false</UseWindowsForms>
+        <ApplicationIcon>Images\icon.ico</ApplicationIcon>
+        <StartupObject>HashCalculator.App</StartupObject>
+        <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+        <Deterministic>true</Deterministic>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <PlatformTarget>AnyCPU</PlatformTarget>
+        <BaseOutputPath>..\Bin</BaseOutputPath>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <DebugType>none</DebugType>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Remove="ShellExt\HashCalculator.exp" />
+        <None Remove="ShellExt\HashCalculator.lib" />
+        <None Remove="ShellExt\HashCalculator32.exp" />
+        <None Remove="ShellExt\HashCalculator32.lib" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="CommandLineParser" Version="2.9.1" />
+        <PackageReference Include="Costura.Fody" Version="6.0.0" IncludeAssets="runtime; compile; build; native; contentfiles; analyzers; buildtransitive" PrivateAssets="all" />
+        <PackageReference Include="HandyControl" Version="3.5.1" />
+        <PackageReference Include="Microsoft.Bcl.HashCode" Version="6.0.0" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+        <PackageReference Include="System.Memory" Version="4.6.3" />
+        <PackageReference Include="WindowsAPICodePack-Core" Version="1.1.2" />
+        <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Reference Include="System.Drawing" />
+        <Reference Include="System.Numerics" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Resource Include="Images\icon.ico" />
+        <Resource Include="Images\loading.gif" />
+        <Resource Include="IconFont\iconfont.ttf" />
+        <Resource Include="FodyWeavers.xml" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Include="ShellExt\HashCalculator.dll" />
+        <EmbeddedResource Include="ShellExt\HashCalculator32.dll" />
+        <EmbeddedResource Include="Costura-win-x64\hashalgs.dll" />
+        <EmbeddedResource Include="Costura-win-x86\hashalgs.dll" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="FodyWeavers.xsd" />
+        <None Include="IconFont\demo.css" />
+        <None Include="IconFont\demo_index.html" />
+        <None Include="IconFont\iconfont.css" />
+        <None Include="IconFont\iconfont.js" />
+        <None Include="IconFont\iconfont.json" />
+    </ItemGroup>
 </Project>
