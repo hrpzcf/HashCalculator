@@ -6,8 +6,8 @@ namespace HashCalculator
     {
         public RegNode(string name)
         {
-            this.Name = name ??
-                throw new ArgumentNullException($"Argument can not be null: {nameof(name)}");
+            ArgumentNullException.ThrowIfNull(name);
+            this.Name = name;
         }
 
         public string Name { get; }

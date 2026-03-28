@@ -56,7 +56,7 @@ namespace HashCalculator
             {
                 if (string.IsNullOrEmpty(configDirExec))
                 {
-                    configDirExec = Path.GetDirectoryName(App.Executing.Location);
+                    configDirExec = AppContext.BaseDirectory;
                 }
                 return configDirExec;
             }
@@ -164,7 +164,7 @@ namespace HashCalculator
             }
             if (string.IsNullOrEmpty(this.ActiveConfigDir))
             {
-                this.ActiveConfigDir = Path.GetDirectoryName(App.Executing.Location);
+                this.ActiveConfigDir = AppContext.BaseDirectory;
                 this.Location = ConfigLocation.ExecDir;
             }
             this.ActiveConfigFile = Path.Combine(this.ActiveConfigDir, configFileName);
@@ -177,10 +177,7 @@ namespace HashCalculator
         /// </summary>
         public void UpdateShellMenuConfigFilePath(string shellExtFile)
         {
-            if (shellExtFile == null)
-            {
-                shellExtFile = ShellExtHelper.GetShellExtensionPath();
-            }
+            shellExtFile ??= ShellExtHelper.GetShellExtensionPath();
             if (File.Exists(shellExtFile))
             {
                 string shellExtDir = Path.GetDirectoryName(shellExtFile);

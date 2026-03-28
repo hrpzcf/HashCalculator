@@ -148,7 +148,7 @@ namespace HashCalculator
                 }
                 SHELL32.SHParseDisplayName(
                     fileFullPath, IntPtr.Zero, out IntPtr fileID, 0U, out _);
-                if (fileID != null)
+                if (fileID != IntPtr.Zero)
                 {
                     fileIDList.Add(fileID);
                 }

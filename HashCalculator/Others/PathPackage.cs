@@ -120,8 +120,7 @@ namespace HashCalculator
             {
                 foreach (string path in this.paths ?? Array.Empty<string>())
                 {
-                    if (this.StopSearchingToken != null &&
-                        this.StopSearchingToken.IsCancellationRequested)
+                    if (this.StopSearchingToken.IsCancellationRequested)
                     {
                         yield break;
                     }
@@ -169,8 +168,7 @@ namespace HashCalculator
                 {
                     foreach (string path in this.paths ?? Array.Empty<string>())
                     {
-                        if (this.StopSearchingToken != null &&
-                            this.StopSearchingToken.IsCancellationRequested)
+                        if (this.StopSearchingToken.IsCancellationRequested)
                         {
                             yield break;
                         }

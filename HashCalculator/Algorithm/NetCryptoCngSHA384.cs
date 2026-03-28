@@ -15,7 +15,7 @@ namespace HashCalculator
             return new NetCryptoCngSHA384();
         }
 
-        public NetCryptoCngSHA384() : base(new SHA384Cng())
+        public NetCryptoCngSHA384() : base(SHA384.Create())
         {
         }
     }
