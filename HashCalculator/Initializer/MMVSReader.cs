@@ -12,11 +12,8 @@ namespace HashCalculator
 
         public MmvsReader(Stream stream)
         {
-            if (stream == null)
-            {
-                throw new ArgumentNullException($"Arg [{nameof(stream)}] can not be null");
-            }
-            else if (!stream.CanRead || !stream.CanSeek)
+            ArgumentNullException.ThrowIfNull(stream);
+            if (!stream.CanRead || !stream.CanSeek)
             {
                 throw new ArgumentException($"Stream [{nameof(stream)}] can not read or seek");
             }
@@ -75,7 +72,7 @@ namespace HashCalculator
             {
                 byte[] buffer = new byte[MappedBytes.ProcessId];
                 this._stream.Position = MappedStart.ProcessId;
-                this._stream.Read(buffer, 0, MappedBytes.ProcessId);
+                this._stream.ReadExactly(buffer, 0, MappedBytes.ProcessId);
                 return BitConverter.ToInt32(buffer, 0);
             }
             catch (Exception)
@@ -94,7 +91,7 @@ namespace HashCalculator
             {
                 byte[] buffer = new byte[MappedBytes.RunMulti];
                 this._stream.Position = MappedStart.RunMulti;
-                this._stream.Read(buffer, 0, MappedBytes.RunMulti);
+                this._stream.ReadExactly(buffer, 0, MappedBytes.RunMulti);
                 return BitConverter.ToBoolean(buffer, 0);
             }
             catch (Exception)

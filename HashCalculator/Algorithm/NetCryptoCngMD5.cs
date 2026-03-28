@@ -15,7 +15,7 @@ namespace HashCalculator
             return new NetCryptoCngMD5();
         }
 
-        public NetCryptoCngMD5() : base(new MD5Cng())
+        public NetCryptoCngMD5() : base(MD5.Create())
         {
         }
     }

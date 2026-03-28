@@ -9,8 +9,6 @@ namespace HashCalculator
     {
         private bool _isSessionEndingHandled = false;
 
-        internal static readonly Assembly Executing = Assembly.GetExecutingAssembly();
-
         private void StartupHandler(object sender, StartupEventArgs e)
         {
             Settings.LoadSettings();

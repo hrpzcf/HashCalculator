@@ -10,9 +10,10 @@ namespace HashCalculator
 
         public AlgoGroupModel(string name, AlgoInOutModel[] models)
         {
+            ArgumentNullException.ThrowIfNull(models);
+            this.Items = models;
             this.GroupName = name;
-            this.Items = models ?? throw new ArgumentNullException("models can not be null");
-            foreach (AlgoInOutModel model in models)
+            foreach (AlgoInOutModel model in this.Items)
             {
                 model.PropertyChanged += this.ItemSelectionChanged;
             }

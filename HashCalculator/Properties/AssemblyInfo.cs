@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Windows;
 
 // 有关程序集的一般信息由以下
@@ -51,3 +52,4 @@ using System.Windows;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("6.2.1.0")]
 [assembly: AssemblyFileVersion("6.2.1.0")]
+[assembly: SupportedOSPlatform("windows7.0")]

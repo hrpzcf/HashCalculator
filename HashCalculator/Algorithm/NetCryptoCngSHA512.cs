@@ -15,7 +15,7 @@ namespace HashCalculator
             return new NetCryptoCngSHA512();
         }
 
-        public NetCryptoCngSHA512() : base(new SHA512Cng())
+        public NetCryptoCngSHA512() : base(SHA512.Create())
         {
         }
     }

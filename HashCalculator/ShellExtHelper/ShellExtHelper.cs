@@ -235,7 +235,7 @@ namespace HashCalculator
                 {
                     exception = exception1;
                 }
-                if (App.Executing.GetManifestResourceStream(embeddedShellExtPath) is Stream manifest)
+                if (Info.ExecutingA.GetManifestResourceStream(embeddedShellExtPath) is Stream manifest)
                 {
                     using (manifest)
                     {
@@ -544,7 +544,7 @@ namespace HashCalculator
         private static readonly string registryInprocServer32 = $"CLSID\\{Info.RegGuidComputeHash}\\InprocServer32";
 
         private static readonly RegNode nodeHashCalculatorPath;
-        private static readonly string executablePath = App.Executing.Location;
+        private static readonly string executablePath = Environment.ProcessPath;
         private static readonly string executableDir = Path.GetDirectoryName(executablePath);
         private static readonly string embeddedShellExtPath = $"HashCalculator.ShellExt.{Settings.ShellExtensionName}";
     }

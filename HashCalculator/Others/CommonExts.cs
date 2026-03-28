@@ -22,10 +22,7 @@ namespace HashCalculator
         /// <exception cref="ArgumentNullException"></exception>
         public static bool AnyItem(this IList source)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException($"Argument {nameof(source)} can not be null");
-            }
+            ArgumentNullException.ThrowIfNull(source);
             return source.GetEnumerator().MoveNext();
         }
 
@@ -288,10 +285,7 @@ namespace HashCalculator
         /// </summary>
         public static bool ElementsEqual<T>(this IEnumerable<T> first, IEnumerable<T> second, IEqualityComparer<T> comparer)
         {
-            if (comparer == null)
-            {
-                comparer = EqualityComparer<T>.Default;
-            }
+            comparer ??= EqualityComparer<T>.Default;
             if (second == null)
             {
                 return false;

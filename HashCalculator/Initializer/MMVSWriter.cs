@@ -11,11 +11,8 @@ namespace HashCalculator
 
         public MmvsWriter(Stream stream)
         {
-            if (stream == null)
-            {
-                throw new ArgumentNullException($"Arg [{nameof(stream)}] can not be null");
-            }
-            else if (!stream.CanWrite || !stream.CanSeek)
+            ArgumentNullException.ThrowIfNull(stream);
+            if (!stream.CanWrite || !stream.CanSeek)
             {
                 throw new ArgumentException($"Stream [{nameof(stream)}] can not write or seek");
             }
