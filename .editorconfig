@@ -1,4 +1,4 @@
-# 如果要从更高级别的目录继承 .editorconfig 设置，请删除以下行
+﻿# 如果要从更高级别的目录继承 .editorconfig 设置，请删除以下行
 root = true
 
 # c# 文件
