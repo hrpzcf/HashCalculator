@@ -9,7 +9,6 @@ root = true
 # 缩进和间距
 indent_size = 4
 indent_style = space
-tab_width = 4
 
 # 新行首选项
 end_of_line = crlf
@@ -228,3 +227,27 @@ dotnet_naming_style.begins_with_i.required_prefix = I
 dotnet_naming_style.begins_with_i.required_suffix = 
 dotnet_naming_style.begins_with_i.word_separator = 
 dotnet_naming_style.begins_with_i.capitalization = pascal_case
+
+# IDE0130: 命名空间与文件夹结构不匹配
+dotnet_diagnostic.IDE0130.severity = silent
+
+# IDE0300: 简化集合初始化
+dotnet_diagnostic.IDE0300.severity = silent
+
+# IDE0305: 简化集合初始化
+dotnet_diagnostic.IDE0305.severity = silent
+
+# IDE0290: 使用主构造函数
+dotnet_diagnostic.IDE0290.severity = silent
+
+# IDE0090: 使用 "new(...)"
+dotnet_diagnostic.IDE0090.severity = silent
+
+# IDE0301: 简化集合初始化
+dotnet_diagnostic.IDE0301.severity = silent
+
+# IDE0028: 简化集合初始化
+dotnet_diagnostic.IDE0028.severity = silent
+
+# IDE0306: 简化集合初始化
+dotnet_diagnostic.IDE0306.severity = silent
