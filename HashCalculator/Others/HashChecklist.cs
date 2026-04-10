@@ -100,24 +100,8 @@ namespace HashCalculator
 
     internal class HashChecklist : IEnumerable<KeyValuePair<string, HashChecker>>
     {
-        private static readonly char[] directorySeparators =
-            new char[] { '/', '\\' };
-        private static readonly Encoding[] supportedEncodings = new Encoding[]
-        {
-            Encoding.GetEncoding(Encoding.UTF8.CodePage,
-                new EncoderExceptionFallback(),
-                new DecoderExceptionFallback()),
-            Encoding.GetEncoding(Encoding.Default.CodePage,
-                new EncoderExceptionFallback(),
-                new DecoderExceptionFallback()),
-            Encoding.GetEncoding("gb18030",
-                new EncoderExceptionFallback(),
-                new DecoderExceptionFallback()),
-            Encoding.GetEncoding(Encoding.Unicode.CodePage,
-                new EncoderExceptionFallback(),
-                new DecoderExceptionFallback()),
-        };
-
+        private static Encoding[] _supportedEncodings = null;
+        private static readonly char[] directorySeparators = new char[] { '/', '\\' };
         private Dictionary<string, HashChecker> fileHashCheckerDict = null;
 
         public static HashChecklist Text(string text)
@@ -254,6 +238,26 @@ namespace HashCalculator
             }
         }
 
+        private static void PrepareSupportedEncodings()
+        {
+            // 兼容 .NET Core 及以上版本，避免找不到 GB18030
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            _supportedEncodings = new Encoding[] {
+                Encoding.GetEncoding(Encoding.UTF8.CodePage,
+                        new EncoderExceptionFallback(),
+                        new DecoderExceptionFallback()),
+                Encoding.GetEncoding(Encoding.Default.CodePage,
+                        new EncoderExceptionFallback(),
+                        new DecoderExceptionFallback()),
+                Encoding.GetEncoding(Encoding.Unicode.CodePage,
+                        new EncoderExceptionFallback(),
+                        new DecoderExceptionFallback()),
+                Encoding.GetEncoding("GB18030",
+                        new EncoderExceptionFallback(),
+                        new DecoderExceptionFallback()),
+            };
+        }
+
         public string UpdateWithFile(string filePath)
         {
             this.Initialize();
@@ -266,7 +270,8 @@ namespace HashCalculator
                     this.AlgoTypeFromFileExt = algoType;
                 }
                 bool contentDecoded = false;
-                foreach (Encoding encoding in supportedEncodings)
+                if (_supportedEncodings == null) PrepareSupportedEncodings();
+                foreach (Encoding encoding in _supportedEncodings)
                 {
                     using (StreamReader reader = new StreamReader(filePath, encoding, true))
                     {
@@ -304,7 +309,7 @@ namespace HashCalculator
                 }
                 if (!contentDecoded)
                 {
-                    this.ReasonForFailure = "只支持 UTF8/UTF16/ANSI/GB18030 及其兼容编码的校验依据文件";
+                    this.ReasonForFailure = "只支持 UTF8/ANSI/UNICODE/GB18030 及兼容编码的校验依据文件";
                 }
             }
             catch (Exception ex)
