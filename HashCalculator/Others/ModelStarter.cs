@@ -10,7 +10,7 @@ namespace HashCalculator
 
     internal class HashTask
     {
-        public HashTask(Action<CancellationToken, RefMethod> process)
+        public HashTask(Action<RefMethod, CancellationToken> process)
         {
             this.process = process;
         }
@@ -27,7 +27,7 @@ namespace HashCalculator
             this.tokenSource = new CancellationTokenSource();
             Task.Factory.StartNew(() =>
                 {
-                    this.process(this.tokenSource.Token, this.Refresh);
+                    this.process(this.Refresh, this.tokenSource.Token);
                 },
                 this.tokenSource.Token,
                 TaskCreationOptions.LongRunning,
@@ -45,7 +45,7 @@ namespace HashCalculator
         }
 
         private CancellationTokenSource tokenSource;
-        private readonly Action<CancellationToken, RefMethod> process;
+        private readonly Action<RefMethod, CancellationToken> process;
     }
 
     internal class ModelStarter
@@ -113,7 +113,7 @@ namespace HashCalculator
             }
         }
 
-        private void HashProcess(CancellationToken token, RefMethod refreshCancellationToken)
+        private void HashProcess(RefMethod refreshCancellationToken, CancellationToken token)
         {
             ++this.currentCount;
             while (true)

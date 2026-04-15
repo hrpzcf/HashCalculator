@@ -22,11 +22,11 @@ namespace HashCalculator
 
         public bool IsInvalidName { get; set; }
 
-        public IEnumerable<AlgoType> PresetAlgos { get; set; }
+        public List<AlgoType> PresetAlgos { get; set; }
 
         public HashChecklist HashChecklist { get; }
 
-        public HashModelArg(IEnumerable<AlgoType> algo)
+        public HashModelArg(List<AlgoType> algo)
         {
             this.RootDir = null;
             this.FileName = "无效的文件名";
@@ -39,7 +39,7 @@ namespace HashCalculator
             this.HashChecklist = null;
         }
 
-        public HashModelArg(string path, IEnumerable<AlgoType> algo)
+        public HashModelArg(string path, List<AlgoType> algo)
         {
             this.RootDir = null;
             this.FileName = path;
@@ -52,7 +52,7 @@ namespace HashCalculator
             this.HashChecklist = null;
         }
 
-        public HashModelArg(string root, string path, IEnumerable<AlgoType> algo, HashChecklist checklist)
+        public HashModelArg(string root, string path, List<AlgoType> algo, HashChecklist checklist)
         {
             this.RootDir = root;
             this.FileName = Path.GetFileName(path);

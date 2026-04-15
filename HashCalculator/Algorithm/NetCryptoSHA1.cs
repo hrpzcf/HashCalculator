@@ -2,7 +2,7 @@
 
 namespace HashCalculator
 {
-    internal class NetCryptoCngSHA1 : NetCryptoCngAbs
+    internal class NetCryptoSHA1 : NetCryptoAbs
     {
         public override int DigestLength => 20;
 
@@ -12,10 +12,10 @@ namespace HashCalculator
 
         public override IHashAlgoInfo NewInstance()
         {
-            return new NetCryptoCngSHA1();
+            return new NetCryptoSHA1();
         }
 
-        public NetCryptoCngSHA1() : base(SHA1.Create())
+        public NetCryptoSHA1() : base(SHA1.Create())
         {
         }
     }

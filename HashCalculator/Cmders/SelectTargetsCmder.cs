@@ -64,10 +64,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.selectAllModelsCmd == null)
-                {
-                    this.selectAllModelsCmd = new RelayCommand(this.SelectAllModelsAction);
-                }
+                this.selectAllModelsCmd ??= new RelayCommand(this.SelectAllModelsAction);
                 return this.selectAllModelsCmd;
             }
         }
@@ -88,10 +85,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.deselectAllModelsCmd == null)
-                {
-                    this.deselectAllModelsCmd = new RelayCommand(this.DeselectAllModelsAction);
-                }
+                this.deselectAllModelsCmd ??= new RelayCommand(this.DeselectAllModelsAction);
                 return this.deselectAllModelsCmd;
             }
         }
@@ -112,10 +106,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.reverseSelectModelsCmd == null)
-                {
-                    this.reverseSelectModelsCmd = new RelayCommand(this.ReverseSelectModelsAction);
-                }
+                this.reverseSelectModelsCmd ??= new RelayCommand(this.ReverseSelectModelsAction);
                 return this.reverseSelectModelsCmd;
             }
         }
@@ -145,10 +136,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.selectSameHashGroupCmd == null)
-                {
-                    this.selectSameHashGroupCmd = new RelayCommand(this.SelectSameHashGroupAction);
-                }
+                this.selectSameHashGroupCmd ??= new RelayCommand(this.SelectSameHashGroupAction);
                 return this.selectSameHashGroupCmd;
             }
         }
@@ -178,10 +166,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.selectSameEmbeddedHashGroupCmd == null)
-                {
-                    this.selectSameEmbeddedHashGroupCmd = new RelayCommand(this.SelectSameEmbeddedHashGroupAction);
-                }
+                this.selectSameEmbeddedHashGroupCmd ??= new RelayCommand(this.SelectSameEmbeddedHashGroupAction);
                 return this.selectSameEmbeddedHashGroupCmd;
             }
         }
@@ -211,10 +196,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.selectSameFolderGroupCmd == null)
-                {
-                    this.selectSameFolderGroupCmd = new RelayCommand(this.SelectSameFolderGroupAction);
-                }
+                this.selectSameFolderGroupCmd ??= new RelayCommand(this.SelectSameFolderGroupAction);
                 return this.selectSameFolderGroupCmd;
             }
         }
@@ -257,10 +239,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.selectHybridGroupsCmd == null)
-                {
-                    this.selectHybridGroupsCmd = new RelayCommand(this.SelectHybridGroupsAction);
-                }
+                this.selectHybridGroupsCmd ??= new RelayCommand(this.SelectHybridGroupsAction);
                 return this.selectHybridGroupsCmd;
             }
         }
@@ -269,10 +248,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.cancelSelectionCmd == null)
-                {
-                    this.cancelSelectionCmd = new RelayCommand(@object => { this.Reset(); });
-                }
+                this.cancelSelectionCmd ??= new RelayCommand(@object => { this.Reset(); });
                 return this.cancelSelectionCmd;
             }
         }

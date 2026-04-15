@@ -29,7 +29,7 @@ namespace HashCalculator
 
         private static SpinLock _bufferAllocationLock = new SpinLock();
 
-        private static readonly uint shfileinfowSize = (uint)Marshal.SizeOf(typeof(SHFILEINFOW));
+        private static readonly uint shfileinfowSize = (uint)Marshal.SizeOf<SHFILEINFOW>();
 
         private static readonly char[] dirSeparators = new char[] {
             Path.DirectorySeparatorChar,
@@ -154,7 +154,7 @@ namespace HashCalculator
                 }
             }
             int intResult2 = 0;
-            if (fileIDList.Any())
+            if (fileIDList.Count != 0)
             {
                 intResult2 = SHELL32.SHOpenFolderAndSelectItems(folderID, (uint)fileIDList.Count,
                    fileIDList.ToArray(), 0U);

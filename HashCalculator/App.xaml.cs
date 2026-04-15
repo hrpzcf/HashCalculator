@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Text;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -10,6 +10,11 @@ namespace HashCalculator
 
         private void StartupHandler(object sender, StartupEventArgs e)
         {
+            // 用于兼容 .NET Core 及以上版本，避免找不到 GB18030 等编码。
+            // 注册 CodePagesEncodingProvider.Instance 后，
+            // 在 Windows 上， GetEncoding(0) 返回与系统的活动代码页匹配的编码，
+            // 该代码与 .NET Framework 中的行为相同。
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             Settings.LoadSettings();
             Initializer.ParseArgsForShell(e.Args);
             Initializer.PushArgs(e.Args);

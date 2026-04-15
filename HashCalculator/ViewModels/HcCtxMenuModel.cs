@@ -102,10 +102,7 @@ namespace HashCalculator
         private void AddSubmenuAction(object param)
         {
             HcCtxMenuModel hcCtxMenuModel = new HcCtxMenuModel();
-            if (this.Submenus == null)
-            {
-                this.Submenus = new ObservableCollection<HcCtxMenuModel>();
-            }
+            this.Submenus ??= new ObservableCollection<HcCtxMenuModel>();
             this.Submenus.Add(hcCtxMenuModel);
             this.SelectedSubmenu = hcCtxMenuModel;
         }
@@ -115,10 +112,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this._addSubmenuCmd == null)
-                {
-                    this._addSubmenuCmd = new RelayCommand(this.AddSubmenuAction);
-                }
+                this._addSubmenuCmd ??= new RelayCommand(this.AddSubmenuAction);
                 return this._addSubmenuCmd;
             }
         }
@@ -153,10 +147,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this._deleteSubmenuCmd == null)
-                {
-                    this._deleteSubmenuCmd = new RelayCommand(this.DeleteSubmenuAction);
-                }
+                this._deleteSubmenuCmd ??= new RelayCommand(this.DeleteSubmenuAction);
                 return this._deleteSubmenuCmd;
             }
         }
@@ -182,10 +173,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this._moveSubmenuUpCmd == null)
-                {
-                    this._moveSubmenuUpCmd = new RelayCommand(this.MoveSubmenuUpAction);
-                }
+                this._moveSubmenuUpCmd ??= new RelayCommand(this.MoveSubmenuUpAction);
                 return this._moveSubmenuUpCmd;
             }
         }
@@ -211,10 +199,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this._moveSubmenuDownCmd == null)
-                {
-                    this._moveSubmenuDownCmd = new RelayCommand(this.MoveSubmenuDownAction);
-                }
+                this._moveSubmenuDownCmd ??= new RelayCommand(this.MoveSubmenuDownAction);
                 return this._moveSubmenuDownCmd;
             }
         }
@@ -262,7 +247,7 @@ namespace HashCalculator
                         jsonValueStringBuilder.Append(sep);
                     }
                 }
-                if (jsonValueStringBuilder.Length > 0 && jsonValueStringBuilder[jsonValueStringBuilder.Length - 1] == sep)
+                if (jsonValueStringBuilder.Length > 0 && jsonValueStringBuilder[^1] == sep)
                 {
                     jsonValueStringBuilder.Remove(jsonValueStringBuilder.Length - 1, 1);
                 }

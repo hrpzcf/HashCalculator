@@ -2,7 +2,7 @@
 
 namespace HashCalculator
 {
-    internal class NetCryptoCngMD5 : NetCryptoCngAbs
+    internal class NetCryptoMD5 : NetCryptoAbs
     {
         public override int DigestLength => 16;
 
@@ -12,10 +12,10 @@ namespace HashCalculator
 
         public override IHashAlgoInfo NewInstance()
         {
-            return new NetCryptoCngMD5();
+            return new NetCryptoMD5();
         }
 
-        public NetCryptoCngMD5() : base(MD5.Create())
+        public NetCryptoMD5() : base(MD5.Create())
         {
         }
     }

@@ -38,15 +38,15 @@ namespace HashCalculator
             /// </summary>
             public uint CheckSumValue;
 
-            public static int UnmanagedSize => Marshal.SizeOf(typeof(HcmInfo));
+            public static int UnmanagedSize => Marshal.SizeOf<HcmInfo>();
 
             /// <summary>
             /// 读取到的 HcmInfo 所指示的哈希标记预期长度
             /// </summary>
-            public int DataLength => UnmanagedSize + this.NameLength +
+            public readonly int DataLength => UnmanagedSize + this.NameLength +
                 this.HashLength + this.RandomLength;
 
-            public bool TryGetBytes(out byte[] structureBytes)
+            public readonly bool TryGetBytes(out byte[] structureBytes)
             {
                 IntPtr structurePointer = IntPtr.Zero;
                 try
@@ -95,7 +95,7 @@ namespace HashCalculator
                 return false;
             }
 
-            public bool IsHcmDataMarker()
+            public readonly bool IsHcmDataMarker()
             {
                 return this.HcMarker != null && this.HcMarker.SequenceEqual(MARKER);
             }
@@ -197,10 +197,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.hash == null)
-                {
-                    this.hash = this.hashBytes?.FromBytesWithLargerValue();
-                }
+                this.hash ??= this.hashBytes?.FromBytesWithLargerValue();
                 return this.hash;
             }
         }
@@ -209,10 +206,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.randomData == null)
-                {
-                    this.randomData = this.randomBytes.FromBytesWithLargerValue();
-                }
+                this.randomData ??= this.randomBytes.FromBytesWithLargerValue();
                 return this.randomData;
             }
         }
@@ -305,7 +299,7 @@ namespace HashCalculator
                 {
                     return false;
                 }
-                if (!HcmInfo.TryParse(infoBytes, out object obj) || !(obj is HcmInfo info) ||
+                if (!HcmInfo.TryParse(infoBytes, out object obj) || obj is not HcmInfo info ||
                     !info.IsHcmDataMarker() || stream.Length <= info.DataLength)
                 {
                     return false;

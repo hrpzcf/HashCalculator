@@ -4,63 +4,65 @@ using System.Security.Cryptography;
 
 namespace HashCalculator
 {
-    internal class LibRHashWhirlpool : HashAlgorithm, IHashAlgoInfo
+    internal class XxHashXXH_32 : HashAlgorithm, IHashAlgoInfo
     {
         private IntPtr _state = IntPtr.Zero;
+        private XXHErrorCode _errorCode = XXHErrorCode.XXH_OK;
 
         [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr whirlpool_new();
+        private static extern IntPtr xxh32_new();
 
         [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void whirlpool_delete(IntPtr state);
+        private static extern XXHErrorCode xxh32_init(IntPtr statePtr);
 
         [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void whirlpool_init(IntPtr state);
+        private static extern XXHErrorCode xxh32_update(IntPtr statePtr, byte[] input, ulong length);
 
         [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void whirlpool_update(IntPtr state, byte[] input, ulong inlen);
+        private static extern XXHErrorCode xxh32_update(IntPtr statePtr, ref byte input, ulong length);
 
         [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void whirlpool_update(IntPtr state, ref byte input, ulong inlen);
+        private static extern uint xxh32_final(IntPtr statePtr);
 
         [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void whirlpool_final(IntPtr state, byte[] output);
+        private static extern XXHErrorCode xxh32_delete(IntPtr statePtr);
 
-        public int DigestLength { get; } = 64;
+        public int DigestLength => 4;
 
-        public string AlgoName => "Whirlpool";
+        public string AlgoName => "XXH32";
 
-        public AlgoType AlgoType => AlgoType.WHIRLPOOL;
+        public AlgoType AlgoType => AlgoType.XXH32;
 
-        private void DeleState()
+        private void DeleteState()
         {
             if (this._state != IntPtr.Zero)
             {
-                whirlpool_delete(this._state);
+                xxh32_delete(this._state);
                 this._state = IntPtr.Zero;
             }
         }
 
         protected override void Dispose(bool disposing)
         {
-            this.DeleState();
+            this.DeleteState();
             base.Dispose(disposing);
         }
 
         public override void Initialize()
         {
-            this.DeleState();
-            this._state = whirlpool_new();
+            this._errorCode = XXHErrorCode.XXH_OK;
+            this.DeleteState();
+            this._state = xxh32_new();
             if (this._state == IntPtr.Zero)
             {
                 throw new Exception("Initialization failed");
             }
-            whirlpool_init(this._state);
+            this._errorCode = xxh32_init(this._state);
         }
 
         public IHashAlgoInfo NewInstance()
         {
-            return new LibRHashWhirlpool();
+            return new XxHashXXH_32();
         }
 
         protected override void HashCore(byte[] array, int ibStart, int cbSize)
@@ -69,15 +71,19 @@ namespace HashCalculator
             {
                 throw new InvalidOperationException("Not initialized yet");
             }
+            else if (this._errorCode == XXHErrorCode.XXH_ERROR)
+            {
+                throw new InvalidOperationException("An error has occurred");
+            }
             if (ibStart == 0 && cbSize == array.Length)
             {
-                whirlpool_update(this._state, array, (ulong)cbSize);
+                this._errorCode = xxh32_update(this._state, array, (ulong)cbSize);
             }
             else
             {
                 ReadOnlySpan<byte> span = new ReadOnlySpan<byte>(array, ibStart, cbSize);
                 ref byte input = ref MemoryMarshal.GetReference(span);
-                whirlpool_update(this._state, ref input, (ulong)cbSize);
+                this._errorCode = xxh32_update(this._state, ref input, (ulong)cbSize);
             }
         }
 
@@ -87,8 +93,13 @@ namespace HashCalculator
             {
                 throw new InvalidOperationException("Not initialized yet");
             }
-            byte[] resultBuffer = new byte[this.DigestLength];
-            whirlpool_final(this._state, resultBuffer);
+            else if (this._errorCode == XXHErrorCode.XXH_ERROR)
+            {
+                throw new InvalidOperationException("An error has occurred");
+            }
+            uint hashResult = xxh32_final(this._state);
+            byte[] resultBuffer = BitConverter.GetBytes(hashResult);
+            Array.Reverse(resultBuffer);
             return resultBuffer;
         }
     }

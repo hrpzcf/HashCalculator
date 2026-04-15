@@ -189,10 +189,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.cancelOperationCmd == null)
-                {
-                    this.cancelOperationCmd = new RelayCommand(this.CancelOperationAction);
-                }
+                this.cancelOperationCmd ??= new RelayCommand(this.CancelOperationAction);
                 return this.cancelOperationCmd;
             }
         }

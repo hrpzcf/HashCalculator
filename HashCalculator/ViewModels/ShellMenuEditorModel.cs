@@ -66,10 +66,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this._saveMenuListCmd == null)
-                {
-                    this._saveMenuListCmd = new RelayCommand(this.SaveMenusAction);
-                }
+                this._saveMenuListCmd ??= new RelayCommand(this.SaveMenusAction);
                 return this._saveMenuListCmd;
             }
         }
@@ -85,10 +82,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this._resetMenusCmd == null)
-                {
-                    this._resetMenusCmd = new RelayCommand(this.ResetMenusAction);
-                }
+                this._resetMenusCmd ??= new RelayCommand(this.ResetMenusAction);
                 return this._resetMenusCmd;
             }
         }
@@ -96,10 +90,7 @@ namespace HashCalculator
         private void AddMenuAction(object param)
         {
             HcCtxMenuModel hcCtxMenuModel = new HcCtxMenuModel();
-            if (this.MenuList == null)
-            {
-                this.MenuList = new ObservableCollection<HcCtxMenuModel>();
-            }
+            this.MenuList ??= new ObservableCollection<HcCtxMenuModel>();
             this.MenuList.Add(hcCtxMenuModel);
             this.SelectedMenu = hcCtxMenuModel;
         }
@@ -108,10 +99,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this._addMenuCmd == null)
-                {
-                    this._addMenuCmd = new RelayCommand(this.AddMenuAction);
-                }
+                this._addMenuCmd ??= new RelayCommand(this.AddMenuAction);
                 return this._addMenuCmd;
             }
         }
@@ -145,10 +133,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this._deleteMenuCmd == null)
-                {
-                    this._deleteMenuCmd = new RelayCommand(this.DeleteMenuAction);
-                }
+                this._deleteMenuCmd ??= new RelayCommand(this.DeleteMenuAction);
                 return this._deleteMenuCmd;
             }
         }
@@ -173,10 +158,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this._moveMenuUpCmd == null)
-                {
-                    this._moveMenuUpCmd = new RelayCommand(this.MoveMenuUpAction);
-                }
+                this._moveMenuUpCmd ??= new RelayCommand(this.MoveMenuUpAction);
                 return this._moveMenuUpCmd;
             }
         }
@@ -201,10 +183,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this._moveMenuDownCmd == null)
-                {
-                    this._moveMenuDownCmd = new RelayCommand(this.MoveMenuDownAction);
-                }
+                this._moveMenuDownCmd ??= new RelayCommand(this.MoveMenuDownAction);
                 return this._moveMenuDownCmd;
             }
         }
@@ -228,10 +207,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this._editMenuPropCmd == null)
-                {
-                    this._editMenuPropCmd = new RelayCommand(this.EditMenuPropAction);
-                }
+                this._editMenuPropCmd ??= new RelayCommand(this.EditMenuPropAction);
                 return this._editMenuPropCmd;
             }
         }

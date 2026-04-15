@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 
 namespace HashCalculator
 {
-    internal class LibRHashMD4 : HashAlgorithm, IHashAlgoInfo
+    internal class RHashMD4 : HashAlgorithm, IHashAlgoInfo
     {
         private IntPtr _state = IntPtr.Zero;
 
@@ -60,7 +60,7 @@ namespace HashCalculator
 
         public IHashAlgoInfo NewInstance()
         {
-            return new LibRHashMD4();
+            return new RHashMD4();
         }
 
         protected override void HashCore(byte[] array, int ibStart, int cbSize)

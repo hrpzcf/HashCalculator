@@ -100,10 +100,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.moveToRecycleBinCmd == null)
-                {
-                    this.moveToRecycleBinCmd = new RelayCommand(this.MoveToRecycleBinAction);
-                }
+                this.moveToRecycleBinCmd ??= new RelayCommand(this.MoveToRecycleBinAction);
                 return this.moveToRecycleBinCmd;
             }
         }
@@ -117,10 +114,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.deleteFileDirectlyCmd == null)
-                {
-                    this.deleteFileDirectlyCmd = new RelayCommand(this.DeleteFileDirectlyAction);
-                }
+                this.deleteFileDirectlyCmd ??= new RelayCommand(this.DeleteFileDirectlyAction);
                 return this.deleteFileDirectlyCmd;
             }
         }

@@ -25,9 +25,9 @@ namespace HashCalculator
 
         public void AddCheckerItem(string relpath, AlgoType algo, byte[] hashBytes)
         {
-            if (this.algoHashDict.ContainsKey(algo))
+            if (this.algoHashDict.TryGetValue(algo, out List<byte[]> value))
             {
-                this.algoHashDict[algo].Add(hashBytes);
+                value.Add(hashBytes);
             }
             else
             {
@@ -38,7 +38,7 @@ namespace HashCalculator
 
         public CmpRes GetCheckResult(AlgoType algoType, byte[] hashBytes)
         {
-            if (hashBytes == null || !this.algoHashDict.Any())
+            if (hashBytes == null || this.algoHashDict.Count == 0)
             {
                 return CmpRes.Unrelated;
             }
@@ -171,9 +171,10 @@ namespace HashCalculator
 
         public bool IsNameInChecklist(string fileName)
         {
-            if (!string.IsNullOrEmpty(fileName) && this.fileHashCheckerDict.ContainsKey(fileName))
+            if (!string.IsNullOrEmpty(fileName) &&
+                this.fileHashCheckerDict.TryGetValue(fileName, out HashChecker value))
             {
-                this.fileHashCheckerDict[fileName].IsExistingFile = true;
+                value.IsExistingFile = true;
                 return true;
             }
             return false;
@@ -202,7 +203,7 @@ namespace HashCalculator
                 hashChecker.AddCheckerItem(relpath, algoType, hashBytes);
                 // 如果 algoType 仍然是 UNKNOWN，则假定解析依据所得哈希值对应算法与启动校验时指定的算法相同
                 // 遍历启动校验时用户指定的算法，如该算法的摘要长度与 hashBytes 长度相同则添加到 HashChecker
-                if (algoType == AlgoType.UNKNOWN && this.AlgoTypesFromOption?.Any() == true)
+                if (algoType == AlgoType.UNKNOWN && this.AlgoTypesFromOption?.Length > 0)
                 {
                     foreach (AlgoType fallbackAlgoType in this.AlgoTypesFromOption)
                     {
@@ -217,7 +218,7 @@ namespace HashCalculator
             return false;
         }
 
-        private IEnumerable<TemplateForChecklistModel> GetParsers(string extension)
+        private static IEnumerable<TemplateForChecklistModel> GetParsers(string extension)
         {
             if (!string.IsNullOrEmpty(extension))
             {
@@ -240,20 +241,23 @@ namespace HashCalculator
 
         private static void PrepareSupportedEncodings()
         {
-            // 兼容 .NET Core 及以上版本，避免找不到 GB18030
-            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            // 用于兼容 .NET Core 及以上版本，避免找不到 GB18030 等编码。
+            // 注册 CodePagesEncodingProvider.Instance 后，
+            // 在 Windows 上， GetEncoding(0) 返回与系统的活动代码页匹配的编码，
+            // 该代码与 .NET Framework 中的行为相同。
+            // Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            // 上一句改为在 App.StartupHandler 方法处执行一次即可。
             _supportedEncodings = new Encoding[] {
                 Encoding.GetEncoding(Encoding.UTF8.CodePage,
                         new EncoderExceptionFallback(),
                         new DecoderExceptionFallback()),
-                Encoding.GetEncoding(Encoding.Default.CodePage,
-                        new EncoderExceptionFallback(),
+                // ANSI 兼容编码，返回值依赖于系统的活动代码页，见上注释
+                Encoding.GetEncoding(0, new EncoderExceptionFallback(),
                         new DecoderExceptionFallback()),
                 Encoding.GetEncoding(Encoding.Unicode.CodePage,
                         new EncoderExceptionFallback(),
                         new DecoderExceptionFallback()),
-                Encoding.GetEncoding("GB18030",
-                        new EncoderExceptionFallback(),
+                Encoding.GetEncoding("GB18030", new EncoderExceptionFallback(),
                         new DecoderExceptionFallback()),
             };
         }
@@ -287,7 +291,7 @@ namespace HashCalculator
                         }
                         bool anyPaser = false;
                         bool anyItemAdded = false;
-                        foreach (TemplateForChecklistModel parser in this.GetParsers(fileExt))
+                        foreach (TemplateForChecklistModel parser in GetParsers(fileExt))
                         {
                             anyPaser = true;
                             if (parser.ExtendChecklistWithLines(checklistLines, this))
@@ -325,7 +329,7 @@ namespace HashCalculator
             bool anyPaser = false;
             bool anyItemAdded = false;
             this.Initialize();
-            foreach (TemplateForChecklistModel parser in this.GetParsers(null))
+            foreach (TemplateForChecklistModel parser in GetParsers(null))
             {
                 anyPaser = true;
                 if (parser.ExtendChecklistWithLines(paragraph, this))
@@ -370,9 +374,9 @@ namespace HashCalculator
             return false;
         }
 
-        public bool TryGetFileOrEmptyHashChecker(string mapKey, out HashChecker checker)
+        public bool TryGetFileOrEmptyStrHashChecker(string mapKey, out HashChecker checker)
         {
-            if (mapKey != null && this.fileHashCheckerDict.Any())
+            if (mapKey != null && this.fileHashCheckerDict.Count != 0)
             {
                 if (!this.KeysAreRelativePaths)
                 {
@@ -390,7 +394,7 @@ namespace HashCalculator
         /// </summary>
         public bool AssertRelativeGetFull(string rootDir, out IEnumerable<string> fullPaths)
         {
-            if (!string.IsNullOrWhiteSpace(rootDir) && this.fileHashCheckerDict.Any())
+            if (!string.IsNullOrWhiteSpace(rootDir) && this.fileHashCheckerDict.Count != 0)
             {
                 // 如果所有 Key 都不含 "\" 或 "/" 则进一步判断是否是相对路径
                 if (!this.fileHashCheckerDict.Keys.Any(i => i.IndexOfAny(directorySeparators) != -1))

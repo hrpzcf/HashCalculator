@@ -110,18 +110,13 @@ namespace HashCalculator
 
         public Encoding GetEncoding()
         {
-            switch (this.UsingEncoding)
+            return this.UsingEncoding switch
             {
-                default:
-                case EncodingEnum.UTF_8:
-                    return new UTF8Encoding();
-                case EncodingEnum.UTF_8_BOM:
-                    return new UTF8Encoding(true);
-                case EncodingEnum.ANSI:
-                    return Encoding.Default;
-                case EncodingEnum.UNICODE:
-                    return new UnicodeEncoding();
-            }
+                EncodingEnum.ANSI => Encoding.GetEncoding(0),
+                EncodingEnum.UNICODE => new UnicodeEncoding(),
+                EncodingEnum.UTF_8_BOM => new UTF8Encoding(true),
+                _ => new UTF8Encoding(),
+            };
         }
 
         public static GenericItemModel[] AvailableEncodings { get; } =

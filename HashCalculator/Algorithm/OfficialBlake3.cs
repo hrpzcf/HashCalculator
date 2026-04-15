@@ -4,39 +4,52 @@ using System.Security.Cryptography;
 
 namespace HashCalculator
 {
-    internal class LibRHashSHA224 : HashAlgorithm, IHashAlgoInfo
+    internal class OfficialBlake3 : HashAlgorithm, IHashAlgoInfo
     {
+        private readonly int bitLength;
+        private AlgoType algoType = AlgoType.UNKNOWN;
         private IntPtr _state = IntPtr.Zero;
 
         [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr sha224_new();
+        private static extern IntPtr blake3_new();
 
         [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void sha224_delete(IntPtr state);
+        private static extern void blake3_delete(IntPtr state);
 
         [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void sha224_init(IntPtr state);
+        private static extern void blake3_init(IntPtr state);
 
         [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void sha224_update(IntPtr state, byte[] input, ulong size);
+        private static extern void blake3_update(IntPtr state, byte[] input, ulong size);
 
         [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void sha224_update(IntPtr state, ref byte input, ulong size);
+        private static extern void blake3_update(IntPtr state, ref byte input, ulong size);
 
         [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void sha224_final(IntPtr state, byte[] output);
+        private static extern void blake3_final(IntPtr state, byte[] output, ulong size);
 
-        public int DigestLength { get; } = 28;
+        public int DigestLength { get; }
 
-        public string AlgoName => "SHA-224";
+        public string AlgoName => $"BLAKE3-{this.bitLength}";
 
-        public AlgoType AlgoType => AlgoType.SHA_224;
+        public AlgoType AlgoType
+        {
+            get
+            {
+                if (this.algoType == AlgoType.UNKNOWN &&
+                    Enum.TryParse($"BLAKE3_{this.bitLength}", true, out AlgoType algo))
+                {
+                    this.algoType = algo;
+                }
+                return this.algoType;
+            }
+        }
 
         private void DeleteState()
         {
             if (this._state != IntPtr.Zero)
             {
-                sha224_delete(this._state);
+                blake3_delete(this._state);
                 this._state = IntPtr.Zero;
             }
         }
@@ -47,20 +60,30 @@ namespace HashCalculator
             base.Dispose(disposing);
         }
 
+        public OfficialBlake3(int bitLength)
+        {
+            if (bitLength < 8 || bitLength % 8 != 0)
+            {
+                throw new ArgumentException($"Invalid bit length");
+            }
+            this.bitLength = bitLength;
+            this.DigestLength = bitLength / 8;
+        }
+
         public override void Initialize()
         {
             this.DeleteState();
-            this._state = sha224_new();
+            this._state = blake3_new();
             if (this._state == IntPtr.Zero)
             {
                 throw new Exception("Initialization failed");
             }
-            sha224_init(this._state);
+            blake3_init(this._state);
         }
 
         public IHashAlgoInfo NewInstance()
         {
-            return new LibRHashSHA224();
+            return new OfficialBlake3(this.bitLength);
         }
 
         protected override void HashCore(byte[] array, int ibStart, int cbSize)
@@ -71,13 +94,13 @@ namespace HashCalculator
             }
             if (ibStart == 0 && cbSize == array.Length)
             {
-                sha224_update(this._state, array, (ulong)cbSize);
+                blake3_update(this._state, array, (ulong)cbSize);
             }
             else
             {
                 ReadOnlySpan<byte> sp = new ReadOnlySpan<byte>(array, ibStart, cbSize);
                 ref byte input = ref MemoryMarshal.GetReference(sp);
-                sha224_update(this._state, ref input, (ulong)cbSize);
+                blake3_update(this._state, ref input, (ulong)cbSize);
             }
         }
 
@@ -88,7 +111,7 @@ namespace HashCalculator
                 throw new InvalidOperationException("Not initialized yet");
             }
             byte[] resultBuffer = new byte[this.DigestLength];
-            sha224_final(this._state, resultBuffer);
+            blake3_final(this._state, resultBuffer, (ulong)this.DigestLength);
             return resultBuffer;
         }
     }

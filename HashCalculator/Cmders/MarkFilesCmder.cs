@@ -75,10 +75,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.selectFolderCmd == null)
-                {
-                    this.selectFolderCmd = new RelayCommand(this.SelectFolderAction);
-                }
+                this.selectFolderCmd ??= new RelayCommand(this.SelectFolderAction);
                 return this.selectFolderCmd;
             }
         }
@@ -240,10 +237,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.generateMarkedFilesCmd == null)
-                {
-                    this.generateMarkedFilesCmd = new RelayCommand(this.GenerateMarkedFilesAction);
-                }
+                this.generateMarkedFilesCmd ??= new RelayCommand(this.GenerateMarkedFilesAction);
                 return this.generateMarkedFilesCmd;
             }
         }

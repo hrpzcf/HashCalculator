@@ -364,11 +364,12 @@ namespace HashCalculator
                         if (Settings.Current.MarkTheSameHashValues)
                         {
                             byte[] key = hm.CurrentInOutModel.HashResult;
-                            if (!hashViewModels.ContainsKey(key))
+                            if (!hashViewModels.TryGetValue(key, out List<HashViewModel> value))
                             {
                                 hashViewModels[key] = new List<HashViewModel>();
                             }
-                            hashViewModels[key].Add(hm);
+
+                            value.Add(hm);
                         }
                         break;
                 }
@@ -459,10 +460,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.openCommandPanelCmd == null)
-                {
-                    this.openCommandPanelCmd = new RelayCommand(this.OpenCommandPanelAction);
-                }
+                this.openCommandPanelCmd ??= new RelayCommand(this.OpenCommandPanelAction);
                 return this.openCommandPanelCmd;
             }
         }
@@ -476,10 +474,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.openSelectAlgoWndCmd == null)
-                {
-                    this.openSelectAlgoWndCmd = new RelayCommand(this.OpenSelectAlgoWndAction);
-                }
+                this.openSelectAlgoWndCmd ??= new RelayCommand(this.OpenSelectAlgoWndAction);
                 return this.openSelectAlgoWndCmd;
             }
         }
@@ -527,15 +522,12 @@ namespace HashCalculator
         {
             get
             {
-                if (this.copyModelsHashMenuCmds is null)
-                {
-                    this.copyModelsHashMenuCmds = new GenericItemModel[]
+                this.copyModelsHashMenuCmds ??= new GenericItemModel[]
                     {
                         new GenericItemModel("Base64 格式", new RelayCommand(this.CopyModelsHashBase64Action)),
                         new GenericItemModel("十六进制大写", new RelayCommand(this.CopyModelsHashBinUpperAction)),
                         new GenericItemModel("十六进制小写", new RelayCommand(this.CopyModelsHashBinLowerAction)),
                     };
-                }
                 return this.copyModelsHashMenuCmds;
             }
         }
@@ -559,15 +551,12 @@ namespace HashCalculator
         {
             get
             {
-                if (this.copyModelsAllHashesMenuCmds == null)
-                {
-                    this.copyModelsAllHashesMenuCmds = new GenericItemModel[]
+                this.copyModelsAllHashesMenuCmds ??= new GenericItemModel[]
                     {
                         new GenericItemModel("Base64 格式", new RelayCommand(this.CopyModelsAllBase64HashesAction)),
                         new GenericItemModel("十六进制大写", new RelayCommand(this.CopyModelsAllBinUpperHashesAction)),
                         new GenericItemModel("十六进制小写", new RelayCommand(this.CopyModelsAllBinLowerHashesAction)),
                     };
-                }
                 return this.copyModelsAllHashesMenuCmds;
             }
         }
@@ -621,10 +610,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.copyFilesNameCmd is null)
-                {
-                    this.copyFilesNameCmd = new RelayCommand(this.CopyFilesNameAction);
-                }
+                this.copyFilesNameCmd ??= new RelayCommand(this.CopyFilesNameAction);
                 return this.copyFilesNameCmd;
             }
         }
@@ -638,10 +624,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.copyFilesFullPathCmd is null)
-                {
-                    this.copyFilesFullPathCmd = new RelayCommand(this.CopyFilesPathAction);
-                }
+                this.copyFilesFullPathCmd ??= new RelayCommand(this.CopyFilesPathAction);
                 return this.copyFilesFullPathCmd;
             }
         }
@@ -677,10 +660,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.copyModelsCurHashWithNoFormatCmd == null)
-                {
-                    this.copyModelsCurHashWithNoFormatCmd = new RelayCommand(this.CopyModelsCurHashWithNoFormatAction);
-                }
+                this.copyModelsCurHashWithNoFormatCmd ??= new RelayCommand(this.CopyModelsCurHashWithNoFormatAction);
                 return this.copyModelsCurHashWithNoFormatCmd;
             }
         }
@@ -694,10 +674,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.copyModelsAllHashWithNoFormatCmd == null)
-                {
-                    this.copyModelsAllHashWithNoFormatCmd = new RelayCommand(this.CopyModelsAllHashWithNoFormatAction);
-                }
+                this.copyModelsAllHashWithNoFormatCmd ??= new RelayCommand(this.CopyModelsAllHashWithNoFormatAction);
                 return this.copyModelsAllHashWithNoFormatCmd;
             }
         }
@@ -730,7 +707,7 @@ namespace HashCalculator
                             model.Information.Name };
                     }
                 }
-                if (groupByDir.Any())
+                if (groupByDir.Count != 0)
                 {
                     foreach (string folderFullPath in groupByDir.Keys)
                     {
@@ -745,10 +722,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.openFolderSelectItemsCmd is null)
-                {
-                    this.openFolderSelectItemsCmd = new RelayCommand(this.OpenFolderSelectItemsAction);
-                }
+                this.openFolderSelectItemsCmd ??= new RelayCommand(this.OpenFolderSelectItemsAction);
                 return this.openFolderSelectItemsCmd;
             }
         }
@@ -776,10 +750,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.openModelsFilePathCmd is null)
-                {
-                    this.openModelsFilePathCmd = new RelayCommand(this.OpenModelsFilePathAction);
-                }
+                this.openModelsFilePathCmd ??= new RelayCommand(this.OpenModelsFilePathAction);
                 return this.openModelsFilePathCmd;
             }
         }
@@ -812,10 +783,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.openFilesPropertyCmd is null)
-                {
-                    this.openFilesPropertyCmd = new RelayCommand(this.OpenFilesPropertyAction);
-                }
+                this.openFilesPropertyCmd ??= new RelayCommand(this.OpenFilesPropertyAction);
                 return this.openFilesPropertyCmd;
             }
         }
@@ -829,10 +797,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.displayMainWindowButtonsCmd == null)
-                {
-                    this.displayMainWindowButtonsCmd = new RelayCommand(this.DisplayMainWindowButtonsAction);
-                }
+                this.displayMainWindowButtonsCmd ??= new RelayCommand(this.DisplayMainWindowButtonsAction);
                 return this.displayMainWindowButtonsCmd;
             }
         }
@@ -852,10 +817,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.refreshAllOutputTypeCmd is null)
-                {
-                    this.refreshAllOutputTypeCmd = new RelayCommand(this.RefreshAllOutputTypeAction);
-                }
+                this.refreshAllOutputTypeCmd ??= new RelayCommand(this.RefreshAllOutputTypeAction);
                 return this.refreshAllOutputTypeCmd;
             }
         }
@@ -922,7 +884,7 @@ namespace HashCalculator
                                     fileNameList.Add(model.FileName);
                                 }
                             }
-                            if (fileNameList.Any())
+                            if (fileNameList.Count != 0)
                             {
                                 return "以下文件删除失败：\n" + '\n'.Join(fileNameList);
                             }
@@ -966,10 +928,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.deleteSelectedModelsFileCmd is null)
-                {
-                    this.deleteSelectedModelsFileCmd = new RelayCommand(this.DeleteSelectedModelsFileAction);
-                }
+                this.deleteSelectedModelsFileCmd ??= new RelayCommand(this.DeleteSelectedModelsFileAction);
                 return this.deleteSelectedModelsFileCmd;
             }
         }
@@ -994,10 +953,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.removeSelectedModelsCmd is null)
-                {
-                    this.removeSelectedModelsCmd = new RelayCommand(this.RemoveSelectedModelsAction);
-                }
+                this.removeSelectedModelsCmd ??= new RelayCommand(this.RemoveSelectedModelsAction);
                 return this.removeSelectedModelsCmd;
             }
         }
@@ -1011,10 +967,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.mainWindowTopmostCmd is null)
-                {
-                    this.mainWindowTopmostCmd = new RelayCommand(this.MainWindowTopmostAction);
-                }
+                this.mainWindowTopmostCmd ??= new RelayCommand(this.MainWindowTopmostAction);
                 return this.mainWindowTopmostCmd;
             }
         }
@@ -1031,10 +984,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.clearAllTableLinesCmd is null)
-                {
-                    this.clearAllTableLinesCmd = new RelayCommand(this.ClearAllTableLinesAction);
-                }
+                this.clearAllTableLinesCmd ??= new RelayCommand(this.ClearAllTableLinesAction);
                 return this.clearAllTableLinesCmd;
             }
         }
@@ -1078,7 +1028,7 @@ namespace HashCalculator
             {
                 filterStringBuilder.Remove(filterStringBuilder.Length - 1, 1);
             }
-            if (!usedModels.Any())
+            if (usedModels.Count == 0)
             {
                 NotificationSender.GrowlWarning(
                     "没有可用方案，可能方案的扩展名中存在不能用作文件名的字符，请到【导出结果设置】中修改。");
@@ -1164,7 +1114,7 @@ namespace HashCalculator
                     existedFiles.Add(filePath);
                 }
             }
-            if (existedFiles.Count > 0)
+            if (existedFiles.Count != 0)
             {
                 string paths = '\n'.Join(existedFiles);
                 if (Handy.Controls.MessageBox.Show(this.OwnerWnd,
@@ -1239,10 +1189,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.exportHashResultsCmd is null)
-                {
-                    this.exportHashResultsCmd = new RelayCommand(this.ExporHashResultAction);
-                }
+                this.exportHashResultsCmd ??= new RelayCommand(this.ExporHashResultAction);
                 return this.exportHashResultsCmd;
             }
         }
@@ -1258,7 +1205,7 @@ namespace HashCalculator
             }
             else
             {
-                if (this.displayedModels.Count > 0)
+                if (this.displayedModels.Count != 0)
                 {
                     List<HashViewModel> args = this.displayedModels;
                     this.displayedModels = new List<HashViewModel>();
@@ -1276,10 +1223,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.copyAndRestartModelsCmd is null)
-                {
-                    this.copyAndRestartModelsCmd = new RelayCommand(this.CopyAndRestartModelsAction);
-                }
+                this.copyAndRestartModelsCmd ??= new RelayCommand(this.CopyAndRestartModelsAction);
                 return this.copyAndRestartModelsCmd;
             }
         }
@@ -1293,10 +1237,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.refreshOriginalModelsCmd is null)
-                {
-                    this.refreshOriginalModelsCmd = new RelayCommand(this.RefreshOriginalModelsAction);
-                }
+                this.refreshOriginalModelsCmd ??= new RelayCommand(this.RefreshOriginalModelsAction);
                 return this.refreshOriginalModelsCmd;
             }
         }
@@ -1310,10 +1251,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.forceRefreshOriginalModelsCmd is null)
-                {
-                    this.forceRefreshOriginalModelsCmd = new RelayCommand(this.ForceRefreshOriginalModelsAction);
-                }
+                this.forceRefreshOriginalModelsCmd ??= new RelayCommand(this.ForceRefreshOriginalModelsAction);
                 return this.forceRefreshOriginalModelsCmd;
             }
         }
@@ -1423,10 +1361,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.selectChecklistFileCmd == null)
-                {
-                    this.selectChecklistFileCmd = new RelayCommand(this.SelectChecklistFileAction);
-                }
+                this.selectChecklistFileCmd ??= new RelayCommand(this.SelectChecklistFileAction);
                 return this.selectChecklistFileCmd;
             }
         }
@@ -1440,10 +1375,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.startCheckHashResultsCmd is null)
-                {
-                    this.startCheckHashResultsCmd = new RelayCommand(this.StartCheckHashResultsAction);
-                }
+                this.startCheckHashResultsCmd ??= new RelayCommand(this.StartCheckHashResultsAction);
                 return this.startCheckHashResultsCmd;
             }
         }
@@ -1457,10 +1389,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.openSettingsWindowCmd is null)
-                {
-                    this.openSettingsWindowCmd = new RelayCommand(this.OpenSettingsPanelAction);
-                }
+                this.openSettingsWindowCmd ??= new RelayCommand(this.OpenSettingsPanelAction);
                 return this.openSettingsWindowCmd;
             }
         }
@@ -1488,10 +1417,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.selectFilesToHashCmd is null)
-                {
-                    this.selectFilesToHashCmd = new RelayCommand(this.SelectFilesToHashAction);
-                }
+                this.selectFilesToHashCmd ??= new RelayCommand(this.SelectFilesToHashAction);
                 return this.selectFilesToHashCmd;
             }
         }
@@ -1525,10 +1451,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.selectFoldersToHashCmd is null)
-                {
-                    this.selectFoldersToHashCmd = new RelayCommand(this.SelectFolderToHashAction);
-                }
+                this.selectFoldersToHashCmd ??= new RelayCommand(this.SelectFolderToHashAction);
                 return this.selectFoldersToHashCmd;
             }
         }
@@ -1548,10 +1471,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.cancelDisplayedModelsCmd is null)
-                {
-                    this.cancelDisplayedModelsCmd = new RelayCommand(this.CancelDisplayedModelsAction);
-                }
+                this.cancelDisplayedModelsCmd ??= new RelayCommand(this.CancelDisplayedModelsAction);
                 return this.cancelDisplayedModelsCmd;
             }
         }
@@ -1568,10 +1488,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.pauseDisplayedModelsCmd is null)
-                {
-                    this.pauseDisplayedModelsCmd = new RelayCommand(this.PauseDisplayedModelsAction);
-                }
+                this.pauseDisplayedModelsCmd ??= new RelayCommand(this.PauseDisplayedModelsAction);
                 return this.pauseDisplayedModelsCmd;
             }
         }
@@ -1588,10 +1505,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.continueDisplayedModelsCmd is null)
-                {
-                    this.continueDisplayedModelsCmd = new RelayCommand(this.ContinueDisplayedModelsAction);
-                }
+                this.continueDisplayedModelsCmd ??= new RelayCommand(this.ContinueDisplayedModelsAction);
                 return this.continueDisplayedModelsCmd;
             }
         }
@@ -1663,9 +1577,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.ctrlHashViewModelTaskCmds is null)
-                {
-                    this.ctrlHashViewModelTaskCmds = new GenericItemModel[] {
+                this.ctrlHashViewModelTaskCmds ??= new GenericItemModel[] {
                         new GenericItemModel("暂停任务", new RelayCommand(this.PauseSelectedModelsAction)),
                         new GenericItemModel("继续任务", new RelayCommand(this.ContinueSelectedModelsAction)),
                         new GenericItemModel("取消任务", new RelayCommand(this.CancelSelectedModelsAction)),
@@ -1673,7 +1585,6 @@ namespace HashCalculator
                         new GenericItemModel("计算缺值项", new RelayCommand(this.RestartSelectedUnsucceededModelsAction)),
                         new GenericItemModel("重新计算", new RelayCommand(this.RestartSelectedModelsForceAction)),
                     };
-                }
                 return this.ctrlHashViewModelTaskCmds;
             }
         }
@@ -1689,10 +1600,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.stopEnumeratingPackageCmd is null)
-                {
-                    this.stopEnumeratingPackageCmd = new RelayCommand(this.StopEnumeratingPackageAction);
-                }
+                this.stopEnumeratingPackageCmd ??= new RelayCommand(this.StopEnumeratingPackageAction);
                 return this.stopEnumeratingPackageCmd;
             }
         }
@@ -1706,10 +1614,7 @@ namespace HashCalculator
             {
                 foreach (HashViewModel model in selectedModels)
                 {
-                    if (model.CurrentInOutModel != null)
-                    {
-                        model.CurrentInOutModel.Export = export;
-                    }
+                    model.CurrentInOutModel?.Export = export;
                 }
             }
         }
@@ -1738,9 +1643,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.switchAlgoExportStateCmds == null)
-                {
-                    this.switchAlgoExportStateCmds = new GenericItemModel[]
+                this.switchAlgoExportStateCmds ??= new GenericItemModel[]
                     {
                         new GenericItemModel(
                             "启用所选行当前导出状态",
@@ -1755,7 +1658,6 @@ namespace HashCalculator
                             "取消所选行所有导出状态",
                             new RelayCommand(obj => this.ChangeAllExportState(obj, false))),
                     };
-                }
                 return this.switchAlgoExportStateCmds;
             }
         }
@@ -1822,10 +1724,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.changeAlgosExportStateCmd == null)
-                {
-                    this.changeAlgosExportStateCmd = new RelayCommand(this.ChangeAlgosExportStateAction);
-                }
+                this.changeAlgosExportStateCmd ??= new RelayCommand(this.ChangeAlgosExportStateAction);
                 return this.changeAlgosExportStateCmd;
             }
         }

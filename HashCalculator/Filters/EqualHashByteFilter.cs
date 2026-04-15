@@ -123,9 +123,9 @@ namespace HashCalculator
                             {
                                 if (algo.HashResult != null)
                                 {
-                                    if (groupByHashBytes.ContainsKey(algo.HashResult))
+                                    if (groupByHashBytes.TryGetValue(algo.HashResult, out ModelCurAlgoDict value))
                                     {
-                                        groupByHashBytes[algo.HashResult].Add(model, algo);
+                                        value.Add(model, algo);
                                     }
                                     else
                                     {
@@ -162,7 +162,7 @@ namespace HashCalculator
                         }
                     }
                 }
-                if (!finalHashModels.Any())
+                if (finalHashModels.Count == 0)
                 {
                     return;
                 }
@@ -198,9 +198,9 @@ namespace HashCalculator
                         model.Matched = false;
                         continue;
                     }
-                    if (groupByHashBytes.ContainsKey(model.HcmDataFromFile.Hash))
+                    if (groupByHashBytes.TryGetValue(model.HcmDataFromFile.Hash, out List<HashViewModel> value))
                     {
-                        groupByHashBytes[model.HcmDataFromFile.Hash].Add(model);
+                        value.Add(model);
                     }
                     else
                     {
@@ -223,7 +223,7 @@ namespace HashCalculator
                         finalHashModels.Add(pair.Key, pair.Value);
                     }
                 }
-                if (!finalHashModels.Any())
+                if (finalHashModels.Count == 0)
                 {
                     return;
                 }

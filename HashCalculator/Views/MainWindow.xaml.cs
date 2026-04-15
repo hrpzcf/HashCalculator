@@ -29,7 +29,7 @@ namespace HashCalculator
 
         public static MainWindow Current { get; private set; }
 
-        public static int ProcessId { get; } = Process.GetCurrentProcess().Id;
+        public static int ProcessId { get; } = Environment.ProcessId;
 
         private bool ProcIdMonitorFlag { get; set; } = true;
 
@@ -64,10 +64,10 @@ namespace HashCalculator
             {
                 if (column.Header is string header)
                 {
-                    if (Settings.Current.ColumnsOrder.ContainsKey(header))
+                    if (Settings.Current.ColumnsOrder.TryGetValue(header, out ColumnProperty value))
                     {
-                        Settings.Current.ColumnsOrder[header].Width = column.Width;
-                        Settings.Current.ColumnsOrder[header].Index = column.DisplayIndex;
+                        value.Width = column.Width;
+                        value.Index = column.DisplayIndex;
                     }
                     else
                     {
@@ -158,7 +158,7 @@ namespace HashCalculator
             return IntPtr.Zero;
         }
 
-        private IEnumerable<AlgoType> GetAlgoTypesFromOption(IOptions option)
+        private List<AlgoType> GetAlgoTypesFromOption(IOptions option)
         {
             if (option != null && !string.IsNullOrEmpty(option.Algos))
             {
@@ -171,12 +171,12 @@ namespace HashCalculator
                         resolvedAlgoTypeList.Add(algoType);
                     }
                 }
-                if (resolvedAlgoTypeList.Any())
+                if (resolvedAlgoTypeList.Count != 0)
                 {
                     return resolvedAlgoTypeList;
                 }
             }
-            return default(IEnumerable<AlgoType>);
+            return default(List<AlgoType>);
         }
 
         private void ParsedComputeHashHandler(ComputeHash option, ref bool parsed)
@@ -218,7 +218,7 @@ namespace HashCalculator
         {
             if (File.Exists(option.ChecklistPath))
             {
-                IEnumerable<AlgoType> types = this.GetAlgoTypesFromOption(option);
+                List<AlgoType> types = this.GetAlgoTypesFromOption(option);
                 HashChecklist newChecklist = HashChecklist.File(option.ChecklistPath,
                     types);
                 if (newChecklist.ReasonForFailure != null)
@@ -389,7 +389,7 @@ namespace HashCalculator
         private void TextBoxHashOrFilePathPreviewDrop(object sender, DragEventArgs e)
         {
             if (!e.Data.GetDataPresent(DataFormats.FileDrop) ||
-                !(e.Data.GetData(DataFormats.FileDrop) is string[] data) || !data.Any())
+                e.Data.GetData(DataFormats.FileDrop) is not string[] data || data.Length == 0)
             {
                 return;
             }

@@ -19,7 +19,7 @@ namespace HashCalculator
 
         public CancellationToken StopSearchingToken { get; set; }
 
-        public IEnumerable<AlgoType> PresetAlgoTypes { get; set; }
+        public List<AlgoType> PresetAlgoTypes { get; set; }
 
         public bool OnlyFilesThatExistInChecklist { get; set; } = true;
 
@@ -80,7 +80,7 @@ namespace HashCalculator
                     bool isPartitionRoot = root.EndsWith(":\\");
                     Stack<string> directoryExplorer = new Stack<string>();
                     directoryExplorer.Push(root);
-                    while (directoryExplorer.Count > 0)
+                    while (directoryExplorer.Count != 0)
                     {
                         string currentDirectory = directoryExplorer.Pop();
                         try

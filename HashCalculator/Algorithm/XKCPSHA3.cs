@@ -4,40 +4,69 @@ using System.Security.Cryptography;
 
 namespace HashCalculator
 {
-    internal class FastXxHashXXH64 : HashAlgorithm, IHashAlgoInfo
+    internal class XkcpSHA3 : HashAlgorithm, IHashAlgoInfo
     {
+        private readonly int bitLength;
+        private int _errorCode = 0;
+        private AlgoType algoType = AlgoType.UNKNOWN;
         private IntPtr _state = IntPtr.Zero;
-        private XXHErrorCode _errorCode = XXHErrorCode.XXH_OK;
 
         [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr xxh64_new();
+        private static extern IntPtr sha3_new();
 
         [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern XXHErrorCode xxh64_init(IntPtr state);
+        private static extern void sha3_delete(IntPtr state);
 
         [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern XXHErrorCode xxh64_update(IntPtr state, byte[] input, ulong length);
+        private static extern int sha3_init(IntPtr state, int bitLength);
 
         [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern XXHErrorCode xxh64_update(IntPtr state, ref byte input, ulong length);
+        private static extern int sha3_update(IntPtr state, byte[] input, ulong bitLength);
 
         [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern ulong xxh64_final(IntPtr state);
+        private static extern int sha3_update(IntPtr state, ref byte input, ulong bitLength);
 
         [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern XXHErrorCode xxh64_delete(IntPtr state);
+        private static extern int sha3_final(IntPtr state, byte[] output);
 
-        public int DigestLength => 8;
+        public int DigestLength { get; }
 
-        public string AlgoName => "XXH64";
+        public string AlgoName => $"SHA3-{this.bitLength}";
 
-        public AlgoType AlgoType => AlgoType.XXH64;
+        public AlgoType AlgoType
+        {
+            get
+            {
+                if (this.algoType == AlgoType.UNKNOWN &&
+                    Enum.TryParse($"SHA3_{this.bitLength}", true, out AlgoType algo))
+                {
+                    this.algoType = algo;
+                }
+                return this.algoType;
+            }
+        }
+
+        public XkcpSHA3(int bitLength)
+        {
+            switch (bitLength)
+            {
+                case 224:
+                case 256:
+                case 384:
+                case 512:
+                    break;
+                default:
+                    throw new ArgumentException($"Invalid bit length");
+            }
+            this.bitLength = bitLength;
+            this.DigestLength = bitLength / 8;
+        }
 
         private void DeleteState()
         {
             if (this._state != IntPtr.Zero)
             {
-                xxh64_delete(this._state);
+                sha3_delete(this._state);
                 this._state = IntPtr.Zero;
             }
         }
@@ -50,19 +79,18 @@ namespace HashCalculator
 
         public override void Initialize()
         {
-            this._errorCode = XXHErrorCode.XXH_OK;
             this.DeleteState();
-            this._state = xxh64_new();
-            if (this._state == IntPtr.Zero)
+            this._errorCode = 0;
+            this._state = sha3_new();
+            if (this._state == IntPtr.Zero || sha3_init(this._state, this.bitLength) > 0)
             {
                 throw new Exception("Initialization failed");
             }
-            this._errorCode = xxh64_init(this._state);
         }
 
         public IHashAlgoInfo NewInstance()
         {
-            return new FastXxHashXXH64();
+            return new XkcpSHA3(this.bitLength);
         }
 
         protected override void HashCore(byte[] array, int ibStart, int cbSize)
@@ -71,19 +99,19 @@ namespace HashCalculator
             {
                 throw new InvalidOperationException("Not initialized yet");
             }
-            else if (this._errorCode == XXHErrorCode.XXH_ERROR)
+            else if (this._errorCode > 0)
             {
                 throw new InvalidOperationException("An error has occurred");
             }
             if (ibStart == 0 && cbSize == array.Length)
             {
-                this._errorCode = xxh64_update(this._state, array, (ulong)cbSize);
+                this._errorCode = sha3_update(this._state, array, (ulong)cbSize << 3);
             }
             else
             {
                 ReadOnlySpan<byte> span = new ReadOnlySpan<byte>(array, ibStart, cbSize);
                 ref byte input = ref MemoryMarshal.GetReference(span);
-                this._errorCode = xxh64_update(this._state, ref input, (ulong)cbSize);
+                this._errorCode = sha3_update(this._state, ref input, (ulong)cbSize << 3);
             }
         }
 
@@ -93,13 +121,15 @@ namespace HashCalculator
             {
                 throw new InvalidOperationException("Not initialized yet");
             }
-            else if (this._errorCode == XXHErrorCode.XXH_ERROR)
+            else if (this._errorCode > 0)
             {
                 throw new InvalidOperationException("An error has occurred");
             }
-            ulong hashResult = xxh64_final(this._state);
-            byte[] resultBuffer = BitConverter.GetBytes(hashResult);
-            Array.Reverse(resultBuffer);
+            byte[] resultBuffer = new byte[this.DigestLength];
+            if (sha3_final(this._state, resultBuffer) > 0)
+            {
+                throw new Exception("Finalize hash failed");
+            }
             return resultBuffer;
         }
     }

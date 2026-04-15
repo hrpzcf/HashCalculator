@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 
 namespace HashCalculator
 {
-    internal class StbrummeRepoCrc32 : HashAlgorithm, IHashAlgoInfo
+    internal class StbrummeCrc32 : HashAlgorithm, IHashAlgoInfo
     {
         private uint previousCrc32 = 0u;
 
@@ -27,7 +27,7 @@ namespace HashCalculator
 
         public IHashAlgoInfo NewInstance()
         {
-            return new StbrummeRepoCrc32();
+            return new StbrummeCrc32();
         }
 
         protected override void HashCore(byte[] array, int ibStart, int cbSize)

@@ -95,10 +95,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.moveFilterUpCmd == null)
-                {
-                    this.moveFilterUpCmd = new RelayCommand(this.MoveFilterUpAction);
-                }
+                this.moveFilterUpCmd ??= new RelayCommand(this.MoveFilterUpAction);
                 return this.moveFilterUpCmd;
             }
         }
@@ -120,10 +117,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.moveFilterDownCmd == null)
-                {
-                    this.moveFilterDownCmd = new RelayCommand(this.MoveFilterDownAction);
-                }
+                this.moveFilterDownCmd ??= new RelayCommand(this.MoveFilterDownAction);
                 return this.moveFilterDownCmd;
             }
         }
@@ -140,10 +134,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.clearFilterSelectionCmd == null)
-                {
-                    this.clearFilterSelectionCmd = new RelayCommand(this.ClearFilterSelectionAction);
-                }
+                this.clearFilterSelectionCmd ??= new RelayCommand(this.ClearFilterSelectionAction);
                 return this.clearFilterSelectionCmd;
             }
         }
@@ -160,7 +151,7 @@ namespace HashCalculator
             {
                 cmder.Reset();
             }
-            bool filteringShouldBeApplied = !(param is bool instruction) || instruction;
+            bool filteringShouldBeApplied = param is not bool instruction || instruction;
             await Task.Run(() =>
             {
                 foreach (HashViewModel model in MainWndViewModel.HashViewModels)
@@ -224,10 +215,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.refreshFiltersCmd == null)
-                {
-                    this.refreshFiltersCmd = new RelayCommand(this.RefreshFiltersAction);
-                }
+                this.refreshFiltersCmd ??= new RelayCommand(this.RefreshFiltersAction);
                 return this.refreshFiltersCmd;
             }
         }

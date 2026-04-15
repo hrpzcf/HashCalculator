@@ -251,3 +251,9 @@ dotnet_diagnostic.IDE0028.severity = silent
 
 # IDE0306: 简化集合初始化
 dotnet_diagnostic.IDE0306.severity = silent
+
+# SYSLIB1054: 使用 “LibraryImportAttribute” 而不是 “DllImportAttribute” 在编译时生成 P/Invoke 封送代码
+dotnet_diagnostic.SYSLIB1054.severity = silent
+
+# CA1822: 将成员标记为 static
+dotnet_diagnostic.CA1822.severity = silent

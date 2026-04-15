@@ -32,13 +32,13 @@ namespace HashCalculator
 
         public override void FilterObjects(IEnumerable<HashViewModel> models)
         {
-            if (models == null || !(this.Param is FilterLogic filterLogic))
+            if (models == null || this.Param is not FilterLogic filterLogic)
             {
                 return;
             }
             HashSet<CmpRes> expectedResults = this.expResultModels.Where(i => i.Selected)
                 .Select(i => (CmpRes)i.ItemValue).ToHashSet();
-            if (expectedResults.Any())
+            if (expectedResults.Count != 0)
             {
                 foreach (HashViewModel model in models)
                 {

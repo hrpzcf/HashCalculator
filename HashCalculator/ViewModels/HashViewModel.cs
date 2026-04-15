@@ -12,7 +12,6 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-using Handy = HandyControl;
 
 namespace HashCalculator
 {
@@ -285,10 +284,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.copyThisModelCurHashCmd is null)
-                {
-                    this.copyThisModelCurHashCmd = new RelayCommand(this.CopyThisModelCurHashAction);
-                }
+                this.copyThisModelCurHashCmd ??= new RelayCommand(this.CopyThisModelCurHashAction);
                 return this.copyThisModelCurHashCmd;
             }
         }
@@ -310,10 +306,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.copyThisModelAllHashesCmd is null)
-                {
-                    this.copyThisModelAllHashesCmd = new RelayCommand(this.CopyThisModelAllHashesAction);
-                }
+                this.copyThisModelAllHashesCmd ??= new RelayCommand(this.CopyThisModelAllHashesAction);
                 return this.copyThisModelAllHashesCmd;
             }
         }
@@ -327,10 +320,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.shutdownModelSelfCmd is null)
-                {
-                    this.shutdownModelSelfCmd = new RelayCommand(this.ShutdownModelSelfAction);
-                }
+                this.shutdownModelSelfCmd ??= new RelayCommand(this.ShutdownModelSelfAction);
                 return this.shutdownModelSelfCmd;
             }
         }
@@ -344,10 +334,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.restartModelSelfCmd is null)
-                {
-                    this.restartModelSelfCmd = new RelayCommand(this.RestartModelSelfAction);
-                }
+                this.restartModelSelfCmd ??= new RelayCommand(this.RestartModelSelfAction);
                 return this.restartModelSelfCmd;
             }
         }
@@ -361,10 +348,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.pauseOrContinueModelSelfCmd is null)
-                {
-                    this.pauseOrContinueModelSelfCmd = new RelayCommand(this.PauseOrContinueModelSelfAction);
-                }
+                this.pauseOrContinueModelSelfCmd ??= new RelayCommand(this.PauseOrContinueModelSelfAction);
                 return this.pauseOrContinueModelSelfCmd;
             }
         }
@@ -378,10 +362,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.showHashDetailsWindowCmd == null)
-                {
-                    this.showHashDetailsWindowCmd = new RelayCommand(this.ShowHashDetailsWindowAction);
-                }
+                this.showHashDetailsWindowCmd ??= new RelayCommand(this.ShowHashDetailsWindowAction);
                 return this.showHashDetailsWindowCmd;
             }
         }
@@ -471,10 +452,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.tableColumnDoubleClickCmd == null)
-                {
-                    this.tableColumnDoubleClickCmd = new RelayCommand(this.TableColumnDoubleClickAction);
-                }
+                this.tableColumnDoubleClickCmd ??= new RelayCommand(this.TableColumnDoubleClickAction);
                 return this.tableColumnDoubleClickCmd;
             }
         }
@@ -753,7 +731,7 @@ namespace HashCalculator
                 }
                 else
                 {
-                    if (checklist.TryGetFileOrEmptyHashChecker(this.RelativePath, out HashChecker checker))
+                    if (checklist.TryGetFileOrEmptyStrHashChecker(this.RelativePath, out HashChecker checker))
                     {
                         checker.SetModelCheckResult(this);
                     }
@@ -783,7 +761,7 @@ namespace HashCalculator
         private void SetHashCheckResultForInOutModelAndSetCurModel()
         {
             if (this.AlgoInOutModels != null &&
-                this.Arguments.HashChecklist?.TryGetFileOrEmptyHashChecker(this.RelativePath,
+                this.Arguments.HashChecklist?.TryGetFileOrEmptyStrHashChecker(this.RelativePath,
                     out HashChecker checker) == true)
             {
                 foreach (AlgoInOutModel item in this.AlgoInOutModels)

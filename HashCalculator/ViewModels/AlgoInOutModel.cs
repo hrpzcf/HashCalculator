@@ -5,7 +5,6 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Input;
-using Handy = HandyControl;
 
 namespace HashCalculator
 {
@@ -18,7 +17,7 @@ namespace HashCalculator
         private bool _hashResultHandlerAdded = false;
         private string _algorithmAlias = null;
         private IEnumerable<string> _algoAliasWords = null;
-        private readonly string _presetAlias = null;
+        private readonly string _defaultAlias = null;
         private RelayCommand _copyHashResultCmd;
 
         private static readonly string[] separators = new string[]
@@ -28,20 +27,20 @@ namespace HashCalculator
             "\r\n",
         };
 
-        public AlgoInOutModel(IHashAlgoInfo algoInfo, string preset) :
-            this(algoInfo, preset, alias: null)
+        public AlgoInOutModel(IHashAlgoInfo algoInfo, string defaultAlias) :
+            this(algoInfo, defaultAlias, alias: null)
         {
         }
 
-        public AlgoInOutModel(IHashAlgoInfo algoInfo, string preset, string alias)
+        public AlgoInOutModel(IHashAlgoInfo algoInfo, string defaultAlias, string alias)
         {
             this.IAlgo = algoInfo;
             this.AlgoName = algoInfo.AlgoName;
             this.AlgoType = algoInfo.AlgoType;
             this.Algo = (HashAlgorithm)algoInfo;
-            this._presetAlias = preset;
+            this._defaultAlias = defaultAlias;
             this.PropertyChanged += this.GenerateAliasWords;
-            this.AlgorithmAlias = alias ?? preset;
+            this.AlgorithmAlias = alias ?? defaultAlias;
         }
 
         public string AlgoName { get; }
@@ -93,7 +92,7 @@ namespace HashCalculator
         public AlgoInOutModel NewAlgoInOutModel()
         {
             return new AlgoInOutModel(this.IAlgo.NewInstance(), this.AlgorithmAlias,
-                this._presetAlias);
+                this._defaultAlias);
         }
 
         public bool IsMyAliasWord(string alias, StringComparer comparer)
@@ -103,7 +102,7 @@ namespace HashCalculator
 
         public void ResetAlias()
         {
-            this.AlgorithmAlias = this._presetAlias;
+            this.AlgorithmAlias = this._defaultAlias;
         }
 
         private void GenerateAliasWords(object sender, PropertyChangedEventArgs e)
@@ -144,10 +143,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this._copyHashResultCmd == null)
-                {
-                    this._copyHashResultCmd = new RelayCommand(this.CopyHashResultAction);
-                }
+                this._copyHashResultCmd ??= new RelayCommand(this.CopyHashResultAction);
                 return this._copyHashResultCmd;
             }
         }

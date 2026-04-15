@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace HashCalculator
 {
-    internal class OfficialImplBlake2bp : OfficialImplBlake2
+    internal class OfficialBlake2bp : OfficialBlake2
     {
         [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr blake2bp_new();
@@ -27,13 +27,13 @@ namespace HashCalculator
 
         public override string NamePrefix => "BLAKE2bp";
 
-        public OfficialImplBlake2bp(int bitLength) : base(bitLength)
+        public OfficialBlake2bp(int bitLength) : base(bitLength)
         {
         }
 
         public override IHashAlgoInfo NewInstance()
         {
-            return new OfficialImplBlake2bp(this.bitLength);
+            return new OfficialBlake2bp(this.bitLength);
         }
 
         public override void Blake2DeleteState(IntPtr statePtr)

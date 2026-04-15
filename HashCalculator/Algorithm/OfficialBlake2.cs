@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 
 namespace HashCalculator
 {
-    internal abstract class OfficialImplBlake2 : HashAlgorithm, IHashAlgoInfo
+    internal abstract class OfficialBlake2 : HashAlgorithm, IHashAlgoInfo
     {
         public readonly int bitLength;
         private AlgoType algoType = AlgoType.UNKNOWN;
@@ -61,7 +61,7 @@ namespace HashCalculator
             base.Dispose(disposing);
         }
 
-        public OfficialImplBlake2(int bitLength)
+        public OfficialBlake2(int bitLength)
         {
             int lengthInByte = bitLength / 8;
             if (bitLength < 8 || bitLength % 8 != 0 || lengthInByte > this.MaxOutputLength)

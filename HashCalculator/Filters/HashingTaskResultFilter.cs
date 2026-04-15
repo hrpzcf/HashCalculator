@@ -35,7 +35,7 @@ namespace HashCalculator
                 return;
             }
             HashSet<HashResult> expectedResults = this.expResultModels.Where(i => i.Selected).Select(i => (HashResult)i.ItemValue).ToHashSet();
-            if (expectedResults.Any())
+            if (expectedResults.Count != 0)
             {
                 foreach (HashViewModel model in models)
                 {

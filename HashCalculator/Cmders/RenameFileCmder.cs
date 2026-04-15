@@ -134,10 +134,7 @@ namespace HashCalculator
                         {
                             continue;
                         }
-                        if (this.fileNameSeparator == null)
-                        {
-                            this.fileNameSeparator = defaultSeparator;
-                        }
+                        this.fileNameSeparator ??= defaultSeparator;
                         string nameNoExt, newNameNoExt;
                         switch (this.MethodForRenameFile)
                         {
@@ -189,10 +186,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.renameFilesCmd == null)
-                {
-                    this.renameFilesCmd = new RelayCommand(this.RenameFilesAction);
-                }
+                this.renameFilesCmd ??= new RelayCommand(this.RenameFilesAction);
                 return this.renameFilesCmd;
             }
         }

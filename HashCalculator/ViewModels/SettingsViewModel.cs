@@ -1039,10 +1039,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.installShellExtCmd == null)
-                {
-                    this.installShellExtCmd = new RelayCommand(this.InstallShellExtAction);
-                }
+                this.installShellExtCmd ??= new RelayCommand(this.InstallShellExtAction);
                 return this.installShellExtCmd;
             }
         }
@@ -1075,10 +1072,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.unInstallShellExtCmd == null)
-                {
-                    this.unInstallShellExtCmd = new RelayCommand(this.UnInstallShellExtAction);
-                }
+                this.unInstallShellExtCmd ??= new RelayCommand(this.UnInstallShellExtAction);
                 return this.unInstallShellExtCmd;
             }
         }
@@ -1098,10 +1092,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.openEditContextMenuCmd == null)
-                {
-                    this.openEditContextMenuCmd = new RelayCommand(this.OpenEditContextMenuAction);
-                }
+                this.openEditContextMenuCmd ??= new RelayCommand(this.OpenEditContextMenuAction);
                 return this.openEditContextMenuCmd;
             }
         }
@@ -1130,10 +1121,7 @@ namespace HashCalculator
         private void AddExportTemplateAction(object param)
         {
             TemplateForExportModel model = new TemplateForExportModel();
-            if (this.TemplatesForExport == null)
-            {
-                this.TemplatesForExport = new ObservableCollection<TemplateForExportModel>();
-            }
+            this.TemplatesForExport ??= new ObservableCollection<TemplateForExportModel>();
             this.TemplatesForExport.Add(model);
             this.SelectedTemplateForExport = model;
         }
@@ -1143,10 +1131,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.addExportTemplateCmd == null)
-                {
-                    this.addExportTemplateCmd = new RelayCommand(this.AddExportTemplateAction);
-                }
+                this.addExportTemplateCmd ??= new RelayCommand(this.AddExportTemplateAction);
                 return this.addExportTemplateCmd;
             }
         }
@@ -1174,10 +1159,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.copyExportTemplateCmd == null)
-                {
-                    this.copyExportTemplateCmd = new RelayCommand(this.CopyExportTemplateAction);
-                }
+                this.copyExportTemplateCmd ??= new RelayCommand(this.CopyExportTemplateAction);
                 return this.copyExportTemplateCmd;
             }
         }
@@ -1204,10 +1186,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.moveExportTemplateUpCmd == null)
-                {
-                    this.moveExportTemplateUpCmd = new RelayCommand(this.MoveExportTemplateUpAction);
-                }
+                this.moveExportTemplateUpCmd ??= new RelayCommand(this.MoveExportTemplateUpAction);
                 return this.moveExportTemplateUpCmd;
             }
         }
@@ -1234,10 +1213,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.moveExportTemplateDownCmd == null)
-                {
-                    this.moveExportTemplateDownCmd = new RelayCommand(this.MoveExportTemplateDownAction);
-                }
+                this.moveExportTemplateDownCmd ??= new RelayCommand(this.MoveExportTemplateDownAction);
                 return this.moveExportTemplateDownCmd;
             }
         }
@@ -1272,10 +1248,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.removeExportTemplateCmd == null)
-                {
-                    this.removeExportTemplateCmd = new RelayCommand(this.RemoveExportTemplateAction);
-                }
+                this.removeExportTemplateCmd ??= new RelayCommand(this.RemoveExportTemplateAction);
                 return this.removeExportTemplateCmd;
             }
         }
@@ -1305,10 +1278,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.resetExportTemplateCmd == null)
-                {
-                    this.resetExportTemplateCmd = new RelayCommand(this.ResetExportTemplateAction);
-                }
+                this.resetExportTemplateCmd ??= new RelayCommand(this.ResetExportTemplateAction);
                 return this.resetExportTemplateCmd;
             }
         }
@@ -1316,10 +1286,7 @@ namespace HashCalculator
         private void AddChecklistTemplateAction(object param)
         {
             TemplateForChecklistModel model = new TemplateForChecklistModel();
-            if (this.TemplatesForChecklist == null)
-            {
-                this.TemplatesForChecklist = new ObservableCollection<TemplateForChecklistModel>();
-            }
+            this.TemplatesForChecklist ??= new ObservableCollection<TemplateForChecklistModel>();
             this.TemplatesForChecklist.Add(model);
             this.SelectedTemplateForChecklist = model;
         }
@@ -1329,10 +1296,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.addChecklistTemplateCmd == null)
-                {
-                    this.addChecklistTemplateCmd = new RelayCommand(this.AddChecklistTemplateAction);
-                }
+                this.addChecklistTemplateCmd ??= new RelayCommand(this.AddChecklistTemplateAction);
                 return this.addChecklistTemplateCmd;
             }
         }
@@ -1360,10 +1324,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.copyChecklistTemplateCmd == null)
-                {
-                    this.copyChecklistTemplateCmd = new RelayCommand(this.CopyChecklistTemplateAction);
-                }
+                this.copyChecklistTemplateCmd ??= new RelayCommand(this.CopyChecklistTemplateAction);
                 return this.copyChecklistTemplateCmd;
             }
         }
@@ -1390,10 +1351,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.moveChecklistTemplateUpCmd == null)
-                {
-                    this.moveChecklistTemplateUpCmd = new RelayCommand(this.MoveChecklistTemplateUpAction);
-                }
+                this.moveChecklistTemplateUpCmd ??= new RelayCommand(this.MoveChecklistTemplateUpAction);
                 return this.moveChecklistTemplateUpCmd;
             }
         }
@@ -1420,10 +1378,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.moveChecklistTemplateDownCmd == null)
-                {
-                    this.moveChecklistTemplateDownCmd = new RelayCommand(this.MoveChecklistTemplateDownAction);
-                }
+                this.moveChecklistTemplateDownCmd ??= new RelayCommand(this.MoveChecklistTemplateDownAction);
                 return this.moveChecklistTemplateDownCmd;
             }
         }
@@ -1458,10 +1413,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.removeChecklistTemplateCmd == null)
-                {
-                    this.removeChecklistTemplateCmd = new RelayCommand(this.RemoveChecklistTemplateAction);
-                }
+                this.removeChecklistTemplateCmd ??= new RelayCommand(this.RemoveChecklistTemplateAction);
                 return this.removeChecklistTemplateCmd;
             }
         }
@@ -1498,10 +1450,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.resetChecklistTemplateCmd == null)
-                {
-                    this.resetChecklistTemplateCmd = new RelayCommand(this.ResetChecklistTemplateAction);
-                }
+                this.resetChecklistTemplateCmd ??= new RelayCommand(this.ResetChecklistTemplateAction);
                 return this.resetChecklistTemplateCmd;
             }
         }
@@ -1521,10 +1470,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.resetAlgorithmAliasCmd == null)
-                {
-                    this.resetAlgorithmAliasCmd = new RelayCommand(this.ResetAlgorithmAliasAction);
-                }
+                this.resetAlgorithmAliasCmd ??= new RelayCommand(this.ResetAlgorithmAliasAction);
                 return this.resetAlgorithmAliasCmd;
             }
         }
@@ -1546,10 +1492,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.resetLuminanceAndSaturationValuesCmd == null)
-                {
-                    this.resetLuminanceAndSaturationValuesCmd = new RelayCommand(this.ResetLuminanceAndSaturationValuesAction);
-                }
+                this.resetLuminanceAndSaturationValuesCmd ??= new RelayCommand(this.ResetLuminanceAndSaturationValuesAction);
                 return this.resetLuminanceAndSaturationValuesCmd;
             }
         }
@@ -1567,10 +1510,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.openBrowserNavigateToWebsiteCmd == null)
-                {
-                    this.openBrowserNavigateToWebsiteCmd = new RelayCommand(this.OpenBrowserNavigateToWebsiteAction);
-                }
+                this.openBrowserNavigateToWebsiteCmd ??= new RelayCommand(this.OpenBrowserNavigateToWebsiteAction);
                 return this.openBrowserNavigateToWebsiteCmd;
             }
         }
@@ -1591,7 +1531,7 @@ namespace HashCalculator
             this.AlgorithmAliasList = AlgosPanelModel.ProvidedAlgos.Where(
                 i => !string.IsNullOrWhiteSpace(i.AlgorithmAlias)).ToDictionary(
                 j => j.AlgoType, k => k.AlgorithmAlias);
-            if (!this.AlgorithmAliasList.Any())
+            if (this.AlgorithmAliasList.Count == 0)
             {
                 // 内容为空，统一设置为 null
                 this.AlgorithmAliasList = null;

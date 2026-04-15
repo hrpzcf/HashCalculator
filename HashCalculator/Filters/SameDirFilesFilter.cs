@@ -43,16 +43,16 @@ namespace HashCalculator
                         continue;
                     }
                     string dirPath = model.Information.DirectoryName;
-                    if (groupByDirPath.ContainsKey(dirPath))
+                    if (groupByDirPath.TryGetValue(dirPath, out List<HashViewModel> value))
                     {
-                        groupByDirPath[dirPath].Add(model);
+                        value.Add(model);
                     }
                     else
                     {
                         groupByDirPath[dirPath] = new List<HashViewModel> { model };
                     }
                 }
-                if (groupByDirPath.Any())
+                if (groupByDirPath.Count != 0)
                 {
                     IEnumerable<ComparableColor> colors =
                         CommonUtils.ColorGenerator(

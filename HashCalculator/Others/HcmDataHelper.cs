@@ -96,10 +96,7 @@ namespace HashCalculator
 
         private bool WriteHcmData(Stream stream, AlgoInOutModel model)
         {
-            if (stream == null)
-            {
-                stream = this._stream;
-            }
+            stream ??= this._stream;
             if (StreamWritable(stream))
             {
                 HcmData hcmData = new HcmData(stream.Length, marker: true);

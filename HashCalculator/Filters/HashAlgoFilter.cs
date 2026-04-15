@@ -37,13 +37,13 @@ namespace HashCalculator
 
         public override void FilterObjects(IEnumerable<HashViewModel> models)
         {
-            if (models == null || !(this.Param is FilterLogic filterLogic))
+            if (models == null || this.Param is not FilterLogic filterLogic)
             {
                 return;
             }
             HashSet<AlgoType> expectedAlgos = this._algos.Where(i => i.Selected)
                 .Select(i => i.AlgoType).ToHashSet();
-            if (expectedAlgos.Any())
+            if (expectedAlgos.Count != 0)
             {
                 foreach (HashViewModel model in models)
                 {

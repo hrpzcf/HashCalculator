@@ -82,10 +82,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.selectFolderCmd == null)
-                {
-                    this.selectFolderCmd = new RelayCommand(this.SelectFolderAction);
-                }
+                this.selectFolderCmd ??= new RelayCommand(this.SelectFolderAction);
                 return this.selectFolderCmd;
             }
         }
@@ -245,10 +242,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.restoreMarkedFilesCmd == null)
-                {
-                    this.restoreMarkedFilesCmd = new RelayCommand(this.RestoreMarkedFilesAction);
-                }
+                this.restoreMarkedFilesCmd ??= new RelayCommand(this.RestoreMarkedFilesAction);
                 return this.restoreMarkedFilesCmd;
             }
         }
@@ -337,10 +331,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.showFilesHcmDataCmd == null)
-                {
-                    this.showFilesHcmDataCmd = new RelayCommand(this.ShowFilesHcmDataAction);
-                }
+                this.showFilesHcmDataCmd ??= new RelayCommand(this.ShowFilesHcmDataAction);
                 return this.showFilesHcmDataCmd;
             }
         }
@@ -361,10 +352,7 @@ namespace HashCalculator
         {
             get
             {
-                if (this.hideFilesHcmDataCmd == null)
-                {
-                    this.hideFilesHcmDataCmd = new RelayCommand(this.HideFilesHcmDataAction);
-                }
+                this.hideFilesHcmDataCmd ??= new RelayCommand(this.HideFilesHcmDataAction);
                 return this.hideFilesHcmDataCmd;
             }
         }

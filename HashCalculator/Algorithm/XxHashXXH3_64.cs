@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 
 namespace HashCalculator
 {
-    internal class FastXxHashXXH3_64 : HashAlgorithm, IHashAlgoInfo
+    internal class XxHashXXH3_64 : HashAlgorithm, IHashAlgoInfo
     {
         private IntPtr _state = IntPtr.Zero;
         private XXHErrorCode _errorCode = XXHErrorCode.XXH_OK;
@@ -62,7 +62,7 @@ namespace HashCalculator
 
         public IHashAlgoInfo NewInstance()
         {
-            return new FastXxHashXXH3_64();
+            return new XxHashXXH3_64();
         }
 
         protected override void HashCore(byte[] array, int ibStart, int cbSize)

@@ -23,14 +23,14 @@ namespace HashCalculator
 
         public override void FilterObjects(IEnumerable<HashViewModel> models)
         {
-            if (models == null || !(this.Param is FilterLogic filterLogic) ||
-                !(this.Items is string[] hashStrings))
+            if (models == null || this.Param is not FilterLogic filterLogic ||
+                this.Items is not string[] hashStrings)
             {
                 return;
             }
             HashSet<byte[]> expectedHashs = hashStrings.Select(i => CommonUtils.HashBytesFromString(i)).Where(
                 i => i != null).ToHashSet<byte[]>(BytesComparer.Default);
-            if (!expectedHashs.Any())
+            if (expectedHashs.Count == 0)
             {
                 foreach (HashViewModel model in models)
                 {

@@ -73,20 +73,14 @@ namespace HashCalculator
     {
         public object Convert(object value, Type targetType, object param, CultureInfo culture)
         {
-            switch ((CmpRes)value)
+            return (CmpRes)value switch
             {
-                case CmpRes.Unrelated:
-                    return "无关联";
-                case CmpRes.Matched:
-                    return "已匹配";
-                case CmpRes.Mismatch:
-                    return "不匹配";
-                case CmpRes.Uncertain:
-                    return "不确定";
-                case CmpRes.NoResult:
-                default:
-                    return string.Empty;
-            }
+                CmpRes.Unrelated => "无关联",
+                CmpRes.Matched => "已匹配",
+                CmpRes.Mismatch => "不匹配",
+                CmpRes.Uncertain => "不确定",
+                _ => string.Empty,
+            };
         }
 
         public object ConvertBack(object value, Type targetType, object param, CultureInfo culture)
@@ -108,20 +102,14 @@ namespace HashCalculator
 
         public object Convert(object value, Type targetType, object param, CultureInfo culture)
         {
-            switch ((CmpRes)value)
+            return (CmpRes)value switch
             {
-                case CmpRes.Unrelated:
-                    return this.IconFontUnrelated;
-                case CmpRes.Matched:
-                    return this.IconFontMatched;
-                case CmpRes.Mismatch:
-                    return this.IconFontMismatch;
-                case CmpRes.Uncertain:
-                    return this.IconFontUncertain;
-                case CmpRes.NoResult:
-                default:
-                    return string.Empty;
-            }
+                CmpRes.Unrelated => this.IconFontUnrelated,
+                CmpRes.Matched => this.IconFontMatched,
+                CmpRes.Mismatch => this.IconFontMismatch,
+                CmpRes.Uncertain => this.IconFontUncertain,
+                _ => string.Empty,
+            };
         }
 
         public object ConvertBack(object value, Type targetType, object param, CultureInfo culture)
@@ -262,8 +250,8 @@ namespace HashCalculator
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             Debug.Assert(values != null && values.Length == 2);
-            if (!(values[0] is HashState hashState) || hashState != HashState.Finished ||
-                !(values[1] is HashResult hashResult) || hashResult != HashResult.Succeeded)
+            if (values[0] is not HashState hashState || hashState != HashState.Finished ||
+                values[1] is not HashResult hashResult || hashResult != HashResult.Succeeded)
             {
                 return Visibility.Hidden;
             }
@@ -284,12 +272,12 @@ namespace HashCalculator
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             Debug.Assert(values != null && values.Length == 2);
-            if (!(values[0] is HashState hashState) ||
+            if (values[0] is not HashState hashState ||
                 (hashState != HashState.NoState && hashState != HashState.Finished))
             {
                 return Visibility.Hidden;
             }
-            if (!(values[1] is HashResult hashResult) || hashResult == HashResult.Succeeded)
+            if (values[1] is not HashResult hashResult || hashResult == HashResult.Succeeded)
             {
                 return Visibility.Hidden;
             }
@@ -330,7 +318,7 @@ namespace HashCalculator
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             Debug.Assert(values != null && values.Length == 2);
-            if (!(values[0] is HashState hashState) || hashState == HashState.Running ||
+            if (values[0] is not HashState hashState || hashState == HashState.Running ||
                 hashState == HashState.Paused ||
                 (values[1] is HashResult hashResult && hashResult == HashResult.Succeeded))
             {
@@ -438,18 +426,14 @@ namespace HashCalculator
 
         internal static string Convert(object bytes, object output)
         {
-            if (bytes is byte[] hashBytes && hashBytes.Any() && output is OutputType outputType)
+            if (bytes is byte[] hashBytes && hashBytes.Length != 0 && output is OutputType outputType)
             {
-                switch (outputType)
+                return outputType switch
                 {
-                    case OutputType.BASE64:
-                        return CommonUtils.ToBase64String(hashBytes);
-                    default:
-                    case OutputType.BinaryUpper:
-                        return CommonUtils.ToHexStringUpper(hashBytes);
-                    case OutputType.BinaryLower:
-                        return CommonUtils.ToHexStringLower(hashBytes);
-                }
+                    OutputType.BASE64 => CommonUtils.ToBase64String(hashBytes),
+                    OutputType.BinaryLower => CommonUtils.ToHexStringLower(hashBytes),
+                    _ => CommonUtils.ToHexStringUpper(hashBytes),
+                };
             }
             // 返回值可能被放置到剪贴板，所以不返回 null
             return string.Empty;
@@ -547,7 +531,7 @@ namespace HashCalculator
         {
             if (value is string multiLineText)
             {
-                return multiLineText.Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries)
+                return multiLineText.Split(['\n', '\r'], StringSplitOptions.RemoveEmptyEntries)
                     .Select(i => i.Trim()).ToArray();
             }
             return default(string[]);

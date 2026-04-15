@@ -4,41 +4,40 @@ using System.Security.Cryptography;
 
 namespace HashCalculator
 {
-    internal class ExtendedKcpSHA3 : HashAlgorithm, IHashAlgoInfo
+    internal class Gost34_11_2012 : HashAlgorithm, IHashAlgoInfo
     {
         private readonly int bitLength;
-        private int _errorCode = 0;
         private AlgoType algoType = AlgoType.UNKNOWN;
         private IntPtr _state = IntPtr.Zero;
 
         [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr sha3_new();
+        private static extern IntPtr streebog_new();
 
         [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void sha3_delete(IntPtr state);
+        private static extern void streebog_delete(IntPtr state);
 
         [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern int sha3_init(IntPtr state, int bitLength);
+        private static extern void streebog_init(IntPtr state, uint bitLength);
 
         [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern int sha3_update(IntPtr state, byte[] input, ulong bitLength);
+        private static extern void streebog_update(IntPtr state, byte[] input, ulong size);
 
         [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern int sha3_update(IntPtr state, ref byte input, ulong bitLength);
+        private static extern void streebog_update(IntPtr state, ref byte input, ulong size);
 
         [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern int sha3_final(IntPtr state, byte[] output);
+        private static extern void streebog_final(IntPtr state, byte[] output);
 
         public int DigestLength { get; }
 
-        public string AlgoName => $"SHA3-{this.bitLength}";
+        public string AlgoName => $"Streebog-{this.bitLength}";
 
         public AlgoType AlgoType
         {
             get
             {
                 if (this.algoType == AlgoType.UNKNOWN &&
-                    Enum.TryParse($"SHA3_{this.bitLength}", true, out AlgoType algo))
+                    Enum.TryParse($"STREEBOG_{this.bitLength}", true, out AlgoType algo))
                 {
                     this.algoType = algo;
                 }
@@ -46,17 +45,11 @@ namespace HashCalculator
             }
         }
 
-        public ExtendedKcpSHA3(int bitLength)
+        public Gost34_11_2012(int bitLength)
         {
-            switch (bitLength)
+            if (bitLength != 256 && bitLength != 512)
             {
-                case 224:
-                case 256:
-                case 384:
-                case 512:
-                    break;
-                default:
-                    throw new ArgumentException($"Invalid bit length");
+                throw new ArgumentException($"Invalid bit length");
             }
             this.bitLength = bitLength;
             this.DigestLength = bitLength / 8;
@@ -66,7 +59,7 @@ namespace HashCalculator
         {
             if (this._state != IntPtr.Zero)
             {
-                sha3_delete(this._state);
+                streebog_delete(this._state);
                 this._state = IntPtr.Zero;
             }
         }
@@ -80,17 +73,17 @@ namespace HashCalculator
         public override void Initialize()
         {
             this.DeleteState();
-            this._errorCode = 0;
-            this._state = sha3_new();
-            if (this._state == IntPtr.Zero || sha3_init(this._state, this.bitLength) > 0)
+            this._state = streebog_new();
+            if (this._state == IntPtr.Zero)
             {
                 throw new Exception("Initialization failed");
             }
+            streebog_init(this._state, (uint)this.bitLength);
         }
 
         public IHashAlgoInfo NewInstance()
         {
-            return new ExtendedKcpSHA3(this.bitLength);
+            return new Gost34_11_2012(this.bitLength);
         }
 
         protected override void HashCore(byte[] array, int ibStart, int cbSize)
@@ -99,19 +92,15 @@ namespace HashCalculator
             {
                 throw new InvalidOperationException("Not initialized yet");
             }
-            else if (this._errorCode > 0)
-            {
-                throw new InvalidOperationException("An error has occurred");
-            }
             if (ibStart == 0 && cbSize == array.Length)
             {
-                this._errorCode = sha3_update(this._state, array, (ulong)cbSize << 3);
+                streebog_update(this._state, array, (ulong)cbSize);
             }
             else
             {
                 ReadOnlySpan<byte> span = new ReadOnlySpan<byte>(array, ibStart, cbSize);
                 ref byte input = ref MemoryMarshal.GetReference(span);
-                this._errorCode = sha3_update(this._state, ref input, (ulong)cbSize << 3);
+                streebog_update(this._state, ref input, (ulong)cbSize);
             }
         }
 
@@ -121,15 +110,8 @@ namespace HashCalculator
             {
                 throw new InvalidOperationException("Not initialized yet");
             }
-            else if (this._errorCode > 0)
-            {
-                throw new InvalidOperationException("An error has occurred");
-            }
             byte[] resultBuffer = new byte[this.DigestLength];
-            if (sha3_final(this._state, resultBuffer) > 0)
-            {
-                throw new Exception("Finalize hash failed");
-            }
+            streebog_final(this._state, resultBuffer);
             return resultBuffer;
         }
     }
