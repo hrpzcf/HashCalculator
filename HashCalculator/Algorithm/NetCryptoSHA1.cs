@@ -2,7 +2,7 @@
 
 namespace HashCalculator
 {
-    internal class NetCryptoSHA1 : NetCryptoAbs
+    internal class NetCryptoSHA1 : NetCryptoAbstract
     {
         public override int DigestLength => 20;
 

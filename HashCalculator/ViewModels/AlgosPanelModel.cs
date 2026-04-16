@@ -109,9 +109,14 @@ namespace HashCalculator
         private readonly static AlgoGroupModel _groupAllAlgos = new AlgoGroupModel(
             "总览视图",
             _groupOthers.CombineItems(
-                _groupSHA2, _groupSHA3, _groupBLAKE2b,
-                _groupBLAKE2bp, _groupBLAKE2s, _groupBLAKE2sp,
-                _groupBLAKE3, _groupStreebog
+                _groupSHA2,
+                _groupSHA3,
+                _groupBLAKE2b,
+                _groupBLAKE2bp,
+                _groupBLAKE2s,
+                _groupBLAKE2sp,
+                _groupBLAKE3,
+                _groupStreebog
             ).ToArray());
         private AlgoGroupModel _selectedAlgoGroup = _groupOthers;
 
