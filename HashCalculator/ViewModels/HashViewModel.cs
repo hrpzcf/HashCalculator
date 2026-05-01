@@ -369,7 +369,7 @@ namespace HashCalculator
 
         private void TableColumnDoubleClickAction(object param)
         {
-            if (param is string commandString)
+            if (param is string commandString && !string.IsNullOrEmpty(commandString))
             {
                 switch (commandString)
                 {

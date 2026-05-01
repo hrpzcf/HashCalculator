@@ -1543,14 +1543,6 @@ namespace HashCalculator
         [OnDeserialized]
         internal void OnSettingsViewModelDeserialized(StreamingContext context)
         {
-            // 兼容旧配置：将 null 转为 string.Empty，确保 ComboBox 的 SelectedValue
-            // 能匹配 AvailableColLeftDoubleClickCmds 中 "未指定" 项（其 ItemValue = string.Empty）
-            this.serialColumnLeftDoubleClick ??= string.Empty;
-            this.fileNameColumnLeftDoubleClick ??= string.Empty;
-            this.fullPathColumnLeftDoubleClick ??= string.Empty;
-            this.fileSizeColumnLeftDoubleClick ??= string.Empty;
-            this.hashValueColumnLeftDoubleClick ??= string.Empty;
-            this.durationColumnLeftDoubleClick ??= string.Empty;
             if (this.TemplatesForExport == null || !this.TemplatesForExport.Any())
             {
                 this.ResetTemplatesForExport();
