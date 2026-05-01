@@ -110,12 +110,12 @@ namespace HashCalculator
         private string displayingShellInstallationScope = null;
         private string displayingShellInstallationState = null;
         private string formatForGenerateText = "#$algo$ *$hash$ *$name$";
-        private string serialColumnLeftDoubleClick = null;
-        private string fileNameColumnLeftDoubleClick = null;
-        private string fullPathColumnLeftDoubleClick = null;
-        private string fileSizeColumnLeftDoubleClick = null;
+        private string serialColumnLeftDoubleClick = string.Empty;
+        private string fileNameColumnLeftDoubleClick = string.Empty;
+        private string fullPathColumnLeftDoubleClick = string.Empty;
+        private string fileSizeColumnLeftDoubleClick = string.Empty;
         private string hashValueColumnLeftDoubleClick = CmdStrShowDetails;
-        private string durationColumnLeftDoubleClick = null;
+        private string durationColumnLeftDoubleClick = string.Empty;
 
         private AlgoInOutModel selectedAlgoInOutModel = AlgosPanelModel.ProvidedAlgos[0];
         private TemplateForExportModel selectedExportTemplate;
@@ -1543,6 +1543,14 @@ namespace HashCalculator
         [OnDeserialized]
         internal void OnSettingsViewModelDeserialized(StreamingContext context)
         {
+            // 兼容旧配置：将 null 转为 string.Empty，确保 ComboBox 的 SelectedValue
+            // 能匹配 AvailableColLeftDoubleClickCmds 中 "未指定" 项（其 ItemValue = string.Empty）
+            this.serialColumnLeftDoubleClick ??= string.Empty;
+            this.fileNameColumnLeftDoubleClick ??= string.Empty;
+            this.fullPathColumnLeftDoubleClick ??= string.Empty;
+            this.fileSizeColumnLeftDoubleClick ??= string.Empty;
+            this.hashValueColumnLeftDoubleClick ??= string.Empty;
+            this.durationColumnLeftDoubleClick ??= string.Empty;
             if (this.TemplatesForExport == null || !this.TemplatesForExport.Any())
             {
                 this.ResetTemplatesForExport();
@@ -1616,7 +1624,7 @@ namespace HashCalculator
         [JsonIgnore, XmlIgnore]
         public GenericItemModel[] AvailableColLeftDoubleClickCmds { get; } =
         {
-            new GenericItemModel("未指定", null),
+            new GenericItemModel("未指定", string.Empty),
             new GenericItemModel("打开详情窗口", CmdStrShowDetails),
             new GenericItemModel("打开文件", CmdStrOpenFile),
             new GenericItemModel("打开文件位置", CmdStrExploreFile),
