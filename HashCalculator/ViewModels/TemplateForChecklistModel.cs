@@ -93,13 +93,21 @@ namespace HashCalculator
             {
                 Name = "通用五",
                 Extension = null,
-                Template = "^$hash$\\|$name$\\r?$"
+                Template = "^$algo$:$hash$\\r?$"
             };
 
         public static readonly TemplateForChecklistModel AnyFile6 =
             new TemplateForChecklistModel()
             {
                 Name = "通用六",
+                Extension = null,
+                Template = "^$hash$\\|$name$\\r?$"
+            };
+
+        public static readonly TemplateForChecklistModel AnyFile7 =
+            new TemplateForChecklistModel()
+            {
+                Name = "通用七",
                 Extension = null,
                 Template = "^$hash$\\|\\d+\\|$name$\\r?$"
             };

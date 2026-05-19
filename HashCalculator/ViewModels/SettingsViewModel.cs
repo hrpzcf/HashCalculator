@@ -1435,6 +1435,7 @@ namespace HashCalculator
                 TemplateForChecklistModel.AnyFile4.Copy(null),
                 TemplateForChecklistModel.AnyFile5.Copy(null),
                 TemplateForChecklistModel.AnyFile6.Copy(null),
+                TemplateForChecklistModel.AnyFile7.Copy(null),
             };
         }
 
