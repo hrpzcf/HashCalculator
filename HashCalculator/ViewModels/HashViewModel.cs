@@ -24,7 +24,7 @@ namespace HashCalculator
         private long _fileLength = 0L;
         private long _progress = 0L;
         private long _maxProgress = 0L;
-        private double _durationofTask = 0.0;
+        private double _durationofTask = double.NaN;
         private bool _isExecutionTarget = false;
         private HcmData _hcmDataFromFile = null;
         private AlgoInOutModel _currentInOutModel = null;
@@ -513,7 +513,7 @@ namespace HashCalculator
 
         public void ResetHashViewModel()
         {
-            this.DurationofTask = 0.0;
+            this.DurationofTask = double.NaN;
             this.GroupId = null;
             this.Progress = 0;
             this.MaxProgress = 0;

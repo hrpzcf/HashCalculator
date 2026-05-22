@@ -957,7 +957,7 @@
                 <DataGridTemplateColumn
                     MinWidth="80"
                     CanUserSort="True"
-                    Header="任务耗时 (秒)"
+                    Header="任务耗时"
                     SortMemberPath="DurationofTask"
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoDurationColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
                     <DataGridTemplateColumn.HeaderStyle>
@@ -977,7 +977,7 @@
                                 <TextBlock
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
-                                    Text="{Binding DurationofTask, StringFormat=f2}" />
+                                    Text="{Binding DurationofTask, Converter={StaticResource DoubleToTwoDecimalPlacesWithUnitsCvt}, Mode=OneWay}" />
                             </Border>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>

@@ -1111,4 +1111,21 @@ namespace HashCalculator
             throw new NotImplementedException();
         }
     }
+
+    internal class DoubleToTwoDecimalPlacesWithUnitsCvt : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is double seconds && !double.IsNaN(seconds))
+            {
+                return $"{seconds:F2} 秒";
+            }
+            return default(object);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }
