@@ -41,6 +41,8 @@ namespace HashCalculator
         private double markFilesProgressHeight = 200.0;
         private double restoreFilesProgressWidth = 400.0;
         private double restoreFilesProgressHeight = 200.0;
+        private double exceptionWindowWidth = 800.0;
+        private double exceptionWindowHeight = 600.0;
 
         private bool mainWndTopmost = false;
         private bool showFileIcon = true;
@@ -392,6 +394,18 @@ namespace HashCalculator
         {
             get => this.restoreFilesProgressHeight;
             set => this.SetPropNotify(ref this.restoreFilesProgressHeight, value);
+        }
+
+        public double ExceptionWindowWidth
+        {
+            get => this.exceptionWindowWidth;
+            set => this.SetPropNotify(ref this.exceptionWindowWidth, value);
+        }
+
+        public double ExceptionWindowHeight
+        {
+            get => this.exceptionWindowHeight;
+            set => this.SetPropNotify(ref this.exceptionWindowHeight, value);
         }
 
         public Dictionary<string, ColumnProperty> ColumnsOrder { get; } =
