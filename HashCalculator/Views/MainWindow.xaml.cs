@@ -41,6 +41,8 @@ namespace HashCalculator
             this.Closed += this.MainWindowClosed;
             this.Loaded += this.MainWindowLoaded;
             this.InitializeComponent();
+            NotificationSender.SnackbarServiceInst.SetSnackbarPresenter(
+                this.SnackbarPresenter);
         }
 
         private void MainWindowClosed(object sender, EventArgs e)
@@ -76,7 +78,6 @@ namespace HashCalculator
                     }
                 }
             }
-            NotificationSender.NotificationHandle?.Close();
         }
 
         private async void MainWindowLoaded(object sender, RoutedEventArgs e)
@@ -106,7 +107,7 @@ namespace HashCalculator
             this.MainWindowDataGrid.Columns.ReorderDataGridColumns(Settings.Current.ColumnsOrder);
             if (await Settings.TestCompatibilityOfShellExt() is string notification)
             {
-                NotificationSender.GrowlError(notification);
+                NotificationSender.Error(notification);
             }
             Settings.Current.PreviousVer = Info.Ver;
         }

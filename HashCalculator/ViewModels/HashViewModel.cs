@@ -276,7 +276,7 @@ namespace HashCalculator
                 Settings.Current.CaseOfCopiedAlgNameFollowsOutputType) is string text)
             {
                 CommonUtils.ClipboardSetText(text);
-                NotificationSender.GrowlSuccess($"已按模板复制当前哈希值：\n{text}");
+                NotificationSender.Success($"已按模板复制当前哈希值：\n{text}");
             }
         }
 
@@ -298,7 +298,7 @@ namespace HashCalculator
                 Settings.Current.CaseOfCopiedAlgNameFollowsOutputType) is string text)
             {
                 CommonUtils.ClipboardSetText(text);
-                NotificationSender.GrowlSuccess($"已按模板复制所有哈希值：\n{text}");
+                NotificationSender.Success($"已按模板复制所有哈希值：\n{text}");
             }
         }
 
@@ -380,7 +380,7 @@ namespace HashCalculator
                         }
                         else
                         {
-                            NotificationSender.GrowlWarning("没有完成哈希值计算！");
+                            NotificationSender.Warning("没有完成哈希值计算！");
                         }
                         break;
                     case SettingsViewModel.CmdStrOpenFile:
@@ -441,7 +441,7 @@ namespace HashCalculator
                         }
                         else
                         {
-                            NotificationSender.GrowlError("文件不存在，未复制完整路径！");
+                            NotificationSender.Error("文件不存在，未复制完整路径！");
                         }
                         break;
                 }

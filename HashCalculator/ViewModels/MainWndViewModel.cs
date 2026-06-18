@@ -498,7 +498,7 @@ namespace HashCalculator
                 {
                     stringBuilder.Remove(stringBuilder.Length - 1, 1);
                     CommonUtils.ClipboardSetText(stringBuilder.ToString());
-                    NotificationSender.GrowlSuccess($"已按模板复制所选行的当前结果或全部结果");
+                    NotificationSender.Success($"已按模板复制所选行的当前结果或全部结果");
                 }
             }
         }
@@ -592,11 +592,11 @@ namespace HashCalculator
                 if (stringBuilder.Length != 0)
                 {
                     CommonUtils.ClipboardSetText(stringBuilder.ToString());
-                    NotificationSender.GrowlSuccess("已复制文件名或文件路径到剪贴板");
+                    NotificationSender.Success("已复制文件名或文件路径到剪贴板");
                 }
                 if (!copyName && !fullPathCopied)
                 {
-                    NotificationSender.GrowlWarning("文件不存在所以完整路径没有被复制");
+                    NotificationSender.Warning("文件不存在所以完整路径没有被复制");
                 }
             }
         }
@@ -646,7 +646,7 @@ namespace HashCalculator
                 {
                     stringBuilder.Remove(stringBuilder.Length - 1, 1);
                     CommonUtils.ClipboardSetText(stringBuilder.ToString());
-                    NotificationSender.GrowlSuccess("已复制所选行的当前哈希值或全部哈希值");
+                    NotificationSender.Success("已复制所选行的当前哈希值或全部哈希值");
                 }
             }
         }
@@ -993,12 +993,12 @@ namespace HashCalculator
         {
             if (!HashViewModels.Any(i => i.Result == HashResult.Succeeded))
             {
-                NotificationSender.GrowlWarning("主窗口列表中没有可以导出的结果。");
+                NotificationSender.Warning("主窗口列表中没有可以导出的结果。");
                 return;
             }
             if (Settings.Current.TemplatesForExport?.Any() != true)
             {
-                NotificationSender.GrowlWarning("没有导出方案可用，请到【导出结果设置】中添加。");
+                NotificationSender.Warning("没有导出方案可用，请到【导出结果设置】中添加。");
                 return;
             }
             if (Settings.Current.AskUserHowToExportResultsEveryTime)
@@ -1030,7 +1030,7 @@ namespace HashCalculator
             }
             if (usedModels.Count == 0)
             {
-                NotificationSender.GrowlWarning(
+                NotificationSender.Warning(
                     "没有可用方案，可能方案的扩展名中存在不能用作文件名的字符，请到【导出结果设置】中修改。");
                 return;
             }
@@ -1080,7 +1080,7 @@ namespace HashCalculator
             }
             catch (Exception ex)
             {
-                NotificationSender.GrowlError($"导出哈希值失败，异常信息：{ex.Message}");
+                NotificationSender.Error($"导出哈希值失败，异常信息：{ex.Message}");
             }
         }
 
@@ -1279,7 +1279,7 @@ namespace HashCalculator
                 if (string.IsNullOrEmpty(this.HashStringOrChecklistPath))
                 {
                     this.GenerateOriginFileHashCheckReport();
-                    NotificationSender.GrowlWarning("校验依据输入框没有任何内容！");
+                    NotificationSender.Warning("校验依据输入框没有任何内容！");
                     return false;
                 }
                 // HashStringOrChecklistPath 不是一个文件
@@ -1300,7 +1300,7 @@ namespace HashCalculator
                     }
                     catch (Exception)
                     {
-                        NotificationSender.GrowlError("无法获取哈希值清单文件所在目录");
+                        NotificationSender.Error("无法获取哈希值清单文件所在目录");
                         return false;
                     }
                 }
@@ -1310,7 +1310,7 @@ namespace HashCalculator
                     HashChecklist newChecklist = HashChecklist.File(this.HashStringOrChecklistPath);
                     if (newChecklist.ReasonForFailure != null)
                     {
-                        NotificationSender.GrowlError(newChecklist.ReasonForFailure);
+                        NotificationSender.Error(newChecklist.ReasonForFailure);
                     }
                     else
                     {
@@ -1338,7 +1338,7 @@ namespace HashCalculator
             else
             {
                 this.GenerateOriginFileHashCheckReport();
-                NotificationSender.GrowlError(localChecklist.ReasonForFailure);
+                NotificationSender.Error(localChecklist.ReasonForFailure);
             }
             return localChecklist.ReasonForFailure == null;
         }

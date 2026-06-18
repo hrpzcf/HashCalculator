@@ -1,58 +1,49 @@
-﻿using HandyControl.Controls;
-using HandyControl.Data;
+﻿using System;
+using Wpf.Ui;
+using Wpf.Ui.Controls;
 
 namespace HashCalculator
 {
     internal static class NotificationSender
     {
-        public static void GrowlError(string message)
+        static NotificationSender()
         {
-            if (Settings.Current.SendNonGlobalGrowlNotifications)
-            {
-                Growl.Error(message);
-            }
-            else
-            {
-                NotificationHandle?.Close();
-                NotificationHandle = Notification.Show(
-                    new DesktopNotification(NotificationType.Error, message),
-                    ShowAnimation.HorizontalMove,
-                    false);
-            }
+            SnackbarServiceInst ??= new SnackbarService();
         }
 
-        public static void GrowlWarning(string message)
+        public static void Error(string message)
         {
-            if (Settings.Current.SendNonGlobalGrowlNotifications)
-            {
-                Growl.Warning(message);
-            }
-            else
-            {
-                NotificationHandle?.Close();
-                NotificationHandle = Notification.Show(
-                    new DesktopNotification(NotificationType.Warning, message),
-                    ShowAnimation.HorizontalMove,
-                    false);
-            }
+            SnackbarServiceInst.Show(
+                "错误",
+                message,
+                ControlAppearance.Danger,
+                new SymbolIcon(SymbolRegular.ErrorCircle20),
+                TimeSpan.FromSeconds(3)
+                );
         }
 
-        public static void GrowlSuccess(string message)
+        public static void Warning(string message)
         {
-            if (Settings.Current.SendNonGlobalGrowlNotifications)
-            {
-                Growl.Success(message);
-            }
-            else
-            {
-                NotificationHandle?.Close();
-                NotificationHandle = Notification.Show(
-                    new DesktopNotification(NotificationType.Success, message),
-                    ShowAnimation.HorizontalMove,
-                    false);
-            }
+            SnackbarServiceInst.Show(
+                "警告",
+                message,
+                ControlAppearance.Caution,
+                new SymbolIcon(SymbolRegular.Warning20),
+                TimeSpan.FromSeconds(3)
+                );
         }
 
-        public static Notification NotificationHandle { get; private set; }
+        public static void Success(string message)
+        {
+            SnackbarServiceInst.Show(
+                "成功",
+                message,
+                ControlAppearance.Primary,
+                new SymbolIcon(SymbolRegular.CheckmarkCircle20),
+                TimeSpan.FromSeconds(3)
+                );
+        }
+
+        public static SnackbarService SnackbarServiceInst { get; }
     }
 }
