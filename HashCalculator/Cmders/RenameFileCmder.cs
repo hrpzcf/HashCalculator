@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Handy = HandyControl;
+using WpfuiCtrls = Wpf.Ui.Controls;
 
 namespace HashCalculator
 {
@@ -76,23 +75,28 @@ namespace HashCalculator
                 Settings.Current.FilterAndCmderEnabled = false;
                 if (!models.Any(i => i.IsExecutionTarget && i.AlgoInOutModels != null))
                 {
-                    Handy.Controls.MessageBox.Show(MainWindow.Current,
-                        "没有任何可重命名的目标文件", "提示",
-                        MessageBoxButton.OK, MessageBoxImage.Information);
+                    NotificationSender.ShowMessageBox(
+                        MainWindow.Current, "提示", "没有任何可重命名的目标文件");
                     goto FinishingTouches;
                 }
-                else if (Handy.Controls.MessageBox.Show(MainWindow.Current,
-                    "用哈希值作为文件名重命名操作目标所指的文件吗？", "确认",
-                    MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+                else if (NotificationSender.ShowMessageBox(
+                    MainWindow.Current,
+                    "提示",
+                    "用哈希值作为文件名重命名操作目标所指的文件吗？",
+                    closeButtonText: "否",
+                    primaryButtonText: "是") != WpfuiCtrls.MessageBoxResult.Primary)
                 {
                     goto FinishingTouches;
                 }
                 if (this.CheckIfUsingDistinctFilesFilter && !models.Where(i => i.Matched).All(
                     i => i.FileIndex != null))
                 {
-                    if (Handy.Controls.MessageBox.Show(MainWindow.Current,
-                        "没有应用【有效的文件】筛选器，要继续操作吗？", "提示",
-                        MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+                    if (NotificationSender.ShowMessageBox(
+                        MainWindow.Current,
+                        "提示",
+                        "没有应用【有效的文件】筛选器，要继续操作吗？",
+                        closeButtonText: "否",
+                        primaryButtonText: "是") != WpfuiCtrls.MessageBoxResult.Primary)
                     {
                         goto FinishingTouches;
                     }

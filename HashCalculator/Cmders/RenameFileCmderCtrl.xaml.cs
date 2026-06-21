@@ -1,8 +1,6 @@
 ﻿using System.IO;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Handy = HandyControl;
 
 namespace HashCalculator
 {
@@ -22,9 +20,8 @@ namespace HashCalculator
             if (e.Text.IndexOfAny(invalidFileNameChars) != -1)
             {
                 e.Handled = true;
-                Handy.Controls.MessageBox.Show(
-                    FilterAndCmdPanel.Current, $"这个字符(串)不能作为文件名：{e.Text}", "提示",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                NotificationSender.ShowMessageBox(
+                    FilterAndCmdPanel.Current, "提示", $"这个字符(串)不能作为文件名：{e.Text}");
             }
         }
     }

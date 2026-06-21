@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -10,7 +9,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
 using CommandLine;
-using Handy = HandyControl;
 
 namespace HashCalculator
 {
@@ -41,7 +39,7 @@ namespace HashCalculator
             this.Closed += this.MainWindowClosed;
             this.Loaded += this.MainWindowLoaded;
             this.InitializeComponent();
-            NotificationSender.SnackbarServiceInst.SetSnackbarPresenter(
+            NotificationSender.SnackbarService.SetSnackbarPresenter(
                 this.SnackbarPresenter);
         }
 
@@ -107,7 +105,7 @@ namespace HashCalculator
             this.MainWindowDataGrid.Columns.ReorderDataGridColumns(Settings.Current.ColumnsOrder);
             if (await Settings.TestCompatibilityOfShellExt() is string notification)
             {
-                NotificationSender.Error(notification);
+                NotificationSender.SnackbarError(notification);
             }
             Settings.Current.PreviousVer = Info.Ver;
         }
@@ -180,7 +178,7 @@ namespace HashCalculator
             return default(List<AlgoType>);
         }
 
-        private void ParsedComputeHashHandler(ComputeHash option, ref bool parsed)
+        private void ParsedComputeHashHandler(ComputeHash option)
         {
             if (option.FilePaths != null)
             {
@@ -212,10 +210,9 @@ namespace HashCalculator
                 }
                 this.viewModel.BeginDisplayModels(packages);
             }
-            parsed = true;
         }
 
-        private void ParsedVerifyHashHandler(VerifyHash option, ref bool parsed)
+        private void ParsedVerifyHashHandler(VerifyHash option)
         {
             if (File.Exists(option.ChecklistPath))
             {
@@ -226,8 +223,7 @@ namespace HashCalculator
                 {
                     Application.Current.Dispatcher.Invoke(() =>
                     {
-                        Handy.Controls.MessageBox.Show(this, newChecklist.ReasonForFailure,
-                            "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                        NotificationSender.ShowMessageBox(this, "错误", newChecklist.ReasonForFailure);
                     });
                 }
                 else
@@ -248,12 +244,11 @@ namespace HashCalculator
                     this.viewModel.BeginDisplayModels(package);
                 }
             }
-            parsed = true;
         }
 
         private void NotParsedArgumentsHandler(byte degree, IEnumerable<Error> errors, string[] args)
         {
-            using (var enumerator = errors.GetEnumerator())
+            using (IEnumerator<Error> enumerator = errors.GetEnumerator())
             {
                 // 判断集合元素数量为空或者 1 个以上元素直接返回
                 if (!enumerator.MoveNext())
@@ -299,14 +294,16 @@ namespace HashCalculator
 
         private void InternalParseArguments(string[] args, byte degree = 1)
         {
-            bool parsed = false;
-            ParserResult<object> result = Parser.Default.ParseArguments<ComputeHash, VerifyHash>(args)
-                .WithParsed<ComputeHash>(option => this.ParsedComputeHashHandler(option, ref parsed));
-            if (!parsed)
+            ParserResult<object> result = Parser.Default.ParseArguments<ComputeHash, VerifyHash>(args);
+            if (result.Value is ComputeHash computeHashOption)
             {
-                result.WithParsed<VerifyHash>(option => this.ParsedVerifyHashHandler(option, ref parsed));
+                this.ParsedComputeHashHandler(computeHashOption);
             }
-            if (!parsed && degree < 2)
+            else if (result.Value is VerifyHash verifyHashOption)
+            {
+                this.ParsedVerifyHashHandler(verifyHashOption);
+            }
+            else if (result.Value is null && degree < 2)
             {
                 result.WithNotParsed(errorList => this.NotParsedArgumentsHandler(degree, errorList, args));
             }

@@ -302,18 +302,18 @@ namespace HashCalculator
                         }
                         if (!anyPaser)
                         {
-                            this.ReasonForFailure = "没有可用的校验依据解析方案";
+                            this.ReasonForFailure = "没有可用的校验依据解析方案。";
                         }
                         else if (!anyItemAdded)
                         {
-                            this.ReasonForFailure = "没有搜集到依据，请检查校验依据文件内容";
+                            this.ReasonForFailure = "没有搜集到依据，请检查校验依据文件内容。";
                         }
                         break;
                     }
                 }
                 if (!contentDecoded)
                 {
-                    this.ReasonForFailure = "只支持 UTF8/ANSI/UNICODE/GB18030 及兼容编码的校验依据文件";
+                    this.ReasonForFailure = "只支持 UTF8/ANSI/UNICODE/GB18030 及兼容编码的校验依据文件。";
                 }
             }
             catch (Exception ex)
@@ -340,11 +340,11 @@ namespace HashCalculator
             }
             if (!anyPaser)
             {
-                this.ReasonForFailure = "没有可用的校验依据解析方案";
+                this.ReasonForFailure = "没有可用的校验依据解析方案。";
             }
             else if (!anyItemAdded)
             {
-                this.ReasonForFailure = "没有搜集到依据，请检查输入的文本内容";
+                this.ReasonForFailure = "没有搜集到依据，请检查输入的文本内容。";
             }
             return this.ReasonForFailure;
         }

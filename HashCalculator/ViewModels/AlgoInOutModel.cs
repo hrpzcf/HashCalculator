@@ -134,7 +134,7 @@ namespace HashCalculator
                     Settings.Current.CaseOfCopiedAlgNameFollowsOutputType) is string text)
                 {
                     CommonUtils.ClipboardSetText(text);
-                    NotificationSender.Success($"已按模板复制当前哈希值：{text}");
+                    NotificationSender.SnackbarSuccess($"已按模板复制当前哈希值：{text}");
                 }
             }
         }

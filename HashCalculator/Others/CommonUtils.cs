@@ -14,7 +14,6 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Drawing = System.Drawing;
-using Handy = HandyControl;
 
 namespace HashCalculator
 {
@@ -505,8 +504,7 @@ namespace HashCalculator
             }
             if (!string.IsNullOrEmpty(reasonForFailure))
             {
-                Handy.Controls.MessageBox.Show(owner ?? MainWindow.Current, reasonForFailure,
-                    "复制失败", MessageBoxButton.OK, MessageBoxImage.Error);
+                NotificationSender.ShowMessageBox(owner, "复制失败", reasonForFailure);
             }
             return reasonForFailure == null;
         }
@@ -534,8 +532,7 @@ namespace HashCalculator
                 }
                 catch (Exception e)
                 {
-                    Handy.Controls.MessageBox.Show(owner ?? MainWindow.Current, $"错误详情：{e.Message}",
-                        "读取剪贴板失败", MessageBoxButton.OK, MessageBoxImage.Error);
+                    NotificationSender.ShowMessageBox(owner, "读取剪贴板失败", $"错误详情：{e.Message}");
                 }
                 finally
                 {

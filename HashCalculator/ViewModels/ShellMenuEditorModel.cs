@@ -6,7 +6,6 @@ using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using Newtonsoft.Json;
-using Handy = HandyControl;
 
 namespace HashCalculator
 {
@@ -28,8 +27,8 @@ namespace HashCalculator
             this.Parent = parent;
             if (this.LoadMenuListFromJsonFile() is string reason)
             {
-                Handy.Controls.MessageBox.Show(parent, $"载入快捷菜单配置文件失败：{reason}",
-                    "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
+                NotificationSender.ShowMessageBox(
+                    this.Parent, "警告", $"载入快捷菜单配置文件失败：{reason}");
             }
         }
 
@@ -52,13 +51,13 @@ namespace HashCalculator
             string reasonForFailure = this.SaveMenuListToJsonFile();
             if (string.IsNullOrEmpty(reasonForFailure))
             {
-                Handy.Controls.MessageBox.Show(this.Parent, "快捷菜单配置文件已保存！",
-                    "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                NotificationSender.ShowMessageBox(
+                    this.Parent, "提示", "快捷菜单配置文件已保存！");
             }
             else
             {
-                Handy.Controls.MessageBox.Show(this.Parent, $"配置文件未保存：\n{reasonForFailure}",
-                    "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
+                NotificationSender.ShowMessageBox(
+                    this.Parent, "警告", $"配置文件未保存：\n{reasonForFailure}");
             }
         }
 
@@ -74,8 +73,7 @@ namespace HashCalculator
         private void ResetMenusAction(object param)
         {
             this.ManuallyResetMenuList();
-            Handy.Controls.MessageBox.Show(this.Parent, "快捷菜单编辑列表已重置！", "提示",
-                MessageBoxButton.OK, MessageBoxImage.Information);
+            NotificationSender.ShowMessageBox(this.Parent, "提示", "快捷菜单编辑列表已重置！");
         }
 
         public ICommand ResetMenuListCmd
@@ -123,8 +121,7 @@ namespace HashCalculator
                 }
                 else
                 {
-                    Handy.Controls.MessageBox.Show(this.Parent, "没有选择任何主菜单！", "提示",
-                        MessageBoxButton.OK, MessageBoxImage.Information);
+                    NotificationSender.ShowMessageBox(this.Parent, "提示", "没有选择任何主菜单！");
                 }
             }
         }
@@ -198,8 +195,7 @@ namespace HashCalculator
             }
             else
             {
-                Handy.Controls.MessageBox.Show(this.Parent, "没有选择任何主菜单！", "提示",
-                    MessageBoxButton.OK, MessageBoxImage.Information);
+                NotificationSender.ShowMessageBox(this.Parent, "提示", "没有选择任何主菜单！");
             }
         }
 

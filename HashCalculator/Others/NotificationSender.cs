@@ -1,6 +1,7 @@
 ﻿using System;
-using Wpf.Ui;
-using Wpf.Ui.Controls;
+using System.Windows;
+using Wpfui = Wpf.Ui;
+using WpfuiCtrls = Wpf.Ui.Controls;
 
 namespace HashCalculator
 {
@@ -8,42 +9,97 @@ namespace HashCalculator
     {
         static NotificationSender()
         {
-            SnackbarServiceInst ??= new SnackbarService();
+            SnackbarService ??= new Wpfui.SnackbarService();
         }
 
-        public static void Error(string message)
+        public static void SnackbarError(string message)
         {
-            SnackbarServiceInst.Show(
+            SnackbarService.Show(
                 "错误",
                 message,
-                ControlAppearance.Danger,
-                new SymbolIcon(SymbolRegular.ErrorCircle20),
+                WpfuiCtrls.ControlAppearance.Danger,
+                new WpfuiCtrls.SymbolIcon(WpfuiCtrls.SymbolRegular.ErrorCircle20),
                 TimeSpan.FromSeconds(3)
                 );
         }
 
-        public static void Warning(string message)
+        public static void SnackbarWarning(string message)
         {
-            SnackbarServiceInst.Show(
+            SnackbarService.Show(
                 "警告",
                 message,
-                ControlAppearance.Caution,
-                new SymbolIcon(SymbolRegular.Warning20),
+                WpfuiCtrls.ControlAppearance.Caution,
+                new WpfuiCtrls.SymbolIcon(WpfuiCtrls.SymbolRegular.Warning20),
                 TimeSpan.FromSeconds(3)
                 );
         }
 
-        public static void Success(string message)
+        public static void SnackbarSuccess(string message)
         {
-            SnackbarServiceInst.Show(
+            SnackbarService.Show(
                 "成功",
                 message,
-                ControlAppearance.Primary,
-                new SymbolIcon(SymbolRegular.CheckmarkCircle20),
+                WpfuiCtrls.ControlAppearance.Primary,
+                new WpfuiCtrls.SymbolIcon(WpfuiCtrls.SymbolRegular.CheckmarkCircle20),
                 TimeSpan.FromSeconds(3)
                 );
         }
 
-        public static SnackbarService SnackbarServiceInst { get; }
+        public static void SnackbarInformation(string message)
+        {
+            SnackbarService.Show(
+                "提示",
+                message,
+                WpfuiCtrls.ControlAppearance.Secondary,
+                new WpfuiCtrls.SymbolIcon(WpfuiCtrls.SymbolRegular.Info20),
+                TimeSpan.FromSeconds(3)
+                );
+        }
+
+        public static WpfuiCtrls.MessageBoxResult ShowMessageBox(
+            Window owner,
+            string title,
+            string content,
+            string closeButtonText = null,
+            string primaryButtonText = null,
+            string secondaryButtonText = null)
+        {
+            owner ??= MainWindow.Current;
+            bool isCloseButtonEnabled = !string.IsNullOrEmpty(closeButtonText);
+            bool isPrimaryButtonEnabled = !string.IsNullOrEmpty(primaryButtonText);
+            bool isSecondaryButtonEnabled = !string.IsNullOrEmpty(secondaryButtonText);
+            if (!isPrimaryButtonEnabled && !isSecondaryButtonEnabled)
+            {
+                isCloseButtonEnabled = true;
+                if (string.IsNullOrEmpty(closeButtonText))
+                {
+                    closeButtonText = "确定";
+                }
+            }
+            return new WpfuiCtrls.MessageBox()
+            {
+                Owner = owner,
+                Title = title,
+                Content = content,
+                IsCloseButtonEnabled = isCloseButtonEnabled,
+                CloseButtonText = closeButtonText,
+                IsPrimaryButtonEnabled = isPrimaryButtonEnabled,
+                PrimaryButtonText = primaryButtonText,
+                IsSecondaryButtonEnabled = isSecondaryButtonEnabled,
+                SecondaryButtonText = secondaryButtonText,
+            }.ShowDialogAsync().GetAwaiter().GetResult();
+        }
+
+        public static WpfuiCtrls.MessageBoxResult ShowMessageBox(
+            string title,
+            string content,
+            string closeButtonText = null,
+            string primaryButtonText = null,
+            string secondaryButtonText = null)
+        {
+            return ShowMessageBox(null, title, content, closeButtonText, primaryButtonText, secondaryButtonText);
+        }
+
+        public static Wpfui.SnackbarService SnackbarService { get; }
     }
 }

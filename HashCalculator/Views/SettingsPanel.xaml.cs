@@ -3,7 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using Handy = HandyControl;
+using System.Windows.Input;
 
 namespace HashCalculator
 {
@@ -62,7 +62,7 @@ namespace HashCalculator
             }
         }
 
-        private void OnTextBlockMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void OnTextBlockMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (sender is TextBlock textBlock)
             {
@@ -75,13 +75,11 @@ namespace HashCalculator
                     Exception exception = ShellExtHelper.RegUpdateAppPath();
                     if (exception == null)
                     {
-                        Handy.Controls.MessageBox.Show(this, $"更新成功！", "提示",
-                            MessageBoxButton.OK, MessageBoxImage.Information);
+                        NotificationSender.ShowMessageBox(this, "提示", "程序路径更新成功！");
                     }
                     else
                     {
-                        Handy.Controls.MessageBox.Show(this, $"更新失败：{exception.Message}", "错误",
-                            MessageBoxButton.OK, MessageBoxImage.Error);
+                        NotificationSender.ShowMessageBox(this, "错误", $"更新失败：{exception.Message}");
                     }
                 }
             }
@@ -92,9 +90,8 @@ namespace HashCalculator
             int index;
             if (sender is TextBox textBox && (index = textBox.Text.IndexOfAny(invalidChars)) != -1)
             {
-                Handy.Controls.MessageBox.Show(this,
-                    $"文件扩展名不能包含 <{textBox.Text[index]}> 字符，此方案将不起作用！", "警告",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                NotificationSender.ShowMessageBox(this, "警告", 
+                    $"文件扩展名不能包含 <{textBox.Text[index]}> 字符，此方案将不起作用！");
                 await Task.Delay(200);
                 this.viewModel.SelectedTemplateForExport = textBox.DataContext as TemplateForExportModel;
                 textBox.Focus();

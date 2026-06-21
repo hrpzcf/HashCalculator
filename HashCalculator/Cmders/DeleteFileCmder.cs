@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Handy = HandyControl;
+using WpfuiCtrls = Wpf.Ui.Controls;
 
 namespace HashCalculator
 {
@@ -40,17 +39,24 @@ namespace HashCalculator
                 Settings.Current.FilterAndCmderEnabled = false;
                 if (hashViewModels.Any(i => i.IsExecutionTarget))
                 {
-                    string promptInfo = toRecyclebin ? "确定把操作目标所指的文件移动到回收站吗？" :
-                        "确定直接删除操作目标所指的文件吗？";
-                    if (Handy.Controls.MessageBox.Show(MainWindow.Current, promptInfo, "警告",
-                        MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
+                    string promptInfo = toRecyclebin ?
+                        "确定把操作目标所指的文件移动到回收站吗？" : "确定直接删除操作目标所指的文件吗？";
+                    if (NotificationSender.ShowMessageBox(
+                        MainWindow.Current,
+                        "警告",
+                        promptInfo,
+                        closeButtonText: "取消",
+                        primaryButtonText: "确定") == WpfuiCtrls.MessageBoxResult.Primary)
                     {
                         if (this.CheckIfUsingDistinctFilesFilter &&
                             !hashViewModels.Where(i => i.Matched).All(i => i.FileIndex != null))
                         {
-                            if (Handy.Controls.MessageBox.Show(MainWindow.Current,
-                                "没有应用【有效的文件】筛选器，要继续操作吗？", "提示",
-                                MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+                            if (NotificationSender.ShowMessageBox(
+                                MainWindow.Current,
+                                "提示",
+                                "没有应用【有效的文件】筛选器，要继续操作吗？",
+                                closeButtonText: "否",
+                                primaryButtonText: "是") != WpfuiCtrls.MessageBoxResult.Primary)
                             {
                                 goto FinishingTouches;
                             }
@@ -81,9 +87,8 @@ namespace HashCalculator
                 }
                 else
                 {
-                    Handy.Controls.MessageBox.Show(MainWindow.Current,
-                        "没有找到任何操作目标，请刷新筛选或手动勾选要删除的对象", "提示",
-                        MessageBoxButton.OK, MessageBoxImage.Information);
+                    NotificationSender.ShowMessageBox(
+                        MainWindow.Current, "提示", "没有找到任何操作目标，请刷新筛选或手动勾选要删除的对象");
                 }
             FinishingTouches:
                 Settings.Current.FilterAndCmderEnabled = true;

@@ -3,10 +3,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Windows;
 using System.Windows.Input;
 using Newtonsoft.Json;
-using Handy = HandyControl;
 
 namespace HashCalculator
 {
@@ -136,8 +134,8 @@ namespace HashCalculator
                 }
                 else
                 {
-                    Handy.Controls.MessageBox.Show(ShellSubmenuEditor.Current, "没有选择任何菜单项！",
-                        "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    NotificationSender.ShowMessageBox(
+                        ShellSubmenuEditor.Current, "提示", "没有选择任何菜单项！");
                 }
             }
         }

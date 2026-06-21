@@ -15,7 +15,7 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
-using Handy = HandyControl;
+using WpfuiCtrls = Wpf.Ui.Controls;
 
 namespace HashCalculator
 {
@@ -498,7 +498,7 @@ namespace HashCalculator
                 {
                     stringBuilder.Remove(stringBuilder.Length - 1, 1);
                     CommonUtils.ClipboardSetText(stringBuilder.ToString());
-                    NotificationSender.Success($"已按模板复制所选行的当前结果或全部结果");
+                    NotificationSender.SnackbarSuccess($"已按模板复制所选行的当前结果或全部结果");
                 }
             }
         }
@@ -592,11 +592,11 @@ namespace HashCalculator
                 if (stringBuilder.Length != 0)
                 {
                     CommonUtils.ClipboardSetText(stringBuilder.ToString());
-                    NotificationSender.Success("已复制文件名或文件路径到剪贴板");
+                    NotificationSender.SnackbarSuccess("已复制文件名或文件路径到剪贴板");
                 }
                 if (!copyName && !fullPathCopied)
                 {
-                    NotificationSender.Warning("文件不存在所以完整路径没有被复制");
+                    NotificationSender.SnackbarWarning("文件不存在所以完整路径没有被复制");
                 }
             }
         }
@@ -646,7 +646,7 @@ namespace HashCalculator
                 {
                     stringBuilder.Remove(stringBuilder.Length - 1, 1);
                     CommonUtils.ClipboardSetText(stringBuilder.ToString());
-                    NotificationSender.Success("已复制所选行的当前哈希值或全部哈希值");
+                    NotificationSender.SnackbarSuccess("已复制所选行的当前哈希值或全部哈希值");
                 }
             }
         }
@@ -840,11 +840,12 @@ namespace HashCalculator
                 {
                     deleteFileTip = $"确定把选中的 {count} 个文件移动到回收站吗？";
                 }
-                if (Handy.Controls.MessageBox.Show(
-                    this.OwnerWnd, deleteFileTip, "提示",
-                    MessageBoxButton.OKCancel,
-                    MessageBoxImage.Exclamation,
-                    MessageBoxResult.Cancel) != MessageBoxResult.OK)
+                if (NotificationSender.ShowMessageBox(
+                    this.OwnerWnd,
+                    "提示",
+                    deleteFileTip,
+                    closeButtonText: "否",
+                    primaryButtonText: "是") != WpfuiCtrls.MessageBoxResult.Primary)
                 {
                     return;
                 }
@@ -917,8 +918,7 @@ namespace HashCalculator
                 string exceptionMessage = await deleteFileTask;
                 if (!string.IsNullOrEmpty(exceptionMessage))
                 {
-                    Handy.Controls.MessageBox.Show(this.OwnerWnd, $"{exceptionMessage}", "错误",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    NotificationSender.ShowMessageBox(this.OwnerWnd, "错误", exceptionMessage);
                 }
                 this.GenerateFileHashCheckReport();
             }
@@ -993,12 +993,12 @@ namespace HashCalculator
         {
             if (!HashViewModels.Any(i => i.Result == HashResult.Succeeded))
             {
-                NotificationSender.Warning("主窗口列表中没有可以导出的结果。");
+                NotificationSender.SnackbarWarning("主窗口列表中没有可以导出的结果。");
                 return;
             }
             if (Settings.Current.TemplatesForExport?.Any() != true)
             {
-                NotificationSender.Warning("没有导出方案可用，请到【导出结果设置】中添加。");
+                NotificationSender.SnackbarWarning("没有导出方案可用，请到【导出结果设置】中添加。");
                 return;
             }
             if (Settings.Current.AskUserHowToExportResultsEveryTime)
@@ -1030,7 +1030,7 @@ namespace HashCalculator
             }
             if (usedModels.Count == 0)
             {
-                NotificationSender.Warning(
+                NotificationSender.SnackbarWarning(
                     "没有可用方案，可能方案的扩展名中存在不能用作文件名的字符，请到【导出结果设置】中修改。");
                 return;
             }
@@ -1080,7 +1080,7 @@ namespace HashCalculator
             }
             catch (Exception ex)
             {
-                NotificationSender.Error($"导出哈希值失败，异常信息：{ex.Message}");
+                NotificationSender.SnackbarError($"导出哈希值失败，异常信息：{ex.Message}");
             }
         }
 
@@ -1117,9 +1117,12 @@ namespace HashCalculator
             if (existedFiles.Count != 0)
             {
                 string paths = '\n'.Join(existedFiles);
-                if (Handy.Controls.MessageBox.Show(this.OwnerWnd,
-                    $"已存在以下文件，继续导出将会覆盖原文件，仍然要导出吗？\n{paths}", "警告",
-                    MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes)
+                if (NotificationSender.ShowMessageBox(
+                    this.OwnerWnd,
+                    "警告",
+                    $"已存在以下文件，继续导出将会覆盖原文件，仍然要导出吗？\n{paths}",
+                    closeButtonText: "否",
+                    primaryButtonText: "是") != WpfuiCtrls.MessageBoxResult.Primary)
                 {
                     return;
                 }
@@ -1131,10 +1134,13 @@ namespace HashCalculator
                     i => i.AlgoType).ToHashSet();
                 if (!algoTypesSet.SetEquals(typesSet))
                 {
-                    if (Handy.Controls.MessageBox.Show(this.OwnerWnd,
-                        "并非所有行包含的算法都一样，如果仍要导出结果，则导出的每个清单里包含的" +
-                        "文件数量不一样，仍然要导出吗？", "警告",
-                        MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                    if (NotificationSender.ShowMessageBox(
+                        this.OwnerWnd,
+                        "警告",
+                        "并非所有行包含的算法都一样，如果仍要导出结果，则导出的每个清单里包含的文件数量不一样，" +
+                            "仍然要导出吗？",
+                        closeButtonText: "否",
+                        primaryButtonText: "是") == WpfuiCtrls.MessageBoxResult.Primary)
                     {
                         break;
                     }
@@ -1279,7 +1285,7 @@ namespace HashCalculator
                 if (string.IsNullOrEmpty(this.HashStringOrChecklistPath))
                 {
                     this.GenerateOriginFileHashCheckReport();
-                    NotificationSender.Warning("校验依据输入框没有任何内容！");
+                    NotificationSender.SnackbarWarning("校验依据输入框没有任何内容！");
                     return false;
                 }
                 // HashStringOrChecklistPath 不是一个文件
@@ -1300,7 +1306,7 @@ namespace HashCalculator
                     }
                     catch (Exception)
                     {
-                        NotificationSender.Error("无法获取哈希值清单文件所在目录");
+                        NotificationSender.SnackbarError("无法获取哈希值清单文件所在目录");
                         return false;
                     }
                 }
@@ -1310,7 +1316,7 @@ namespace HashCalculator
                     HashChecklist newChecklist = HashChecklist.File(this.HashStringOrChecklistPath);
                     if (newChecklist.ReasonForFailure != null)
                     {
-                        NotificationSender.Error(newChecklist.ReasonForFailure);
+                        NotificationSender.SnackbarError(newChecklist.ReasonForFailure);
                     }
                     else
                     {
@@ -1338,7 +1344,7 @@ namespace HashCalculator
             else
             {
                 this.GenerateOriginFileHashCheckReport();
-                NotificationSender.Error(localChecklist.ReasonForFailure);
+                NotificationSender.SnackbarError(localChecklist.ReasonForFailure);
             }
             return localChecklist.ReasonForFailure == null;
         }

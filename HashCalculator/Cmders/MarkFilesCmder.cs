@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.WindowsAPICodePack.Dialogs;
-using Handy = HandyControl;
+using WpfuiCtrls = Wpf.Ui.Controls;
 
 namespace HashCalculator
 {
@@ -172,9 +171,8 @@ namespace HashCalculator
                     if (string.IsNullOrEmpty(this.DirectoryUsedToSaveFiles) ||
                         !Path.IsPathRooted(this.DirectoryUsedToSaveFiles))
                     {
-                        Handy.Controls.MessageBox.Show(MainWindow.Current,
-                            "请输入生成的新文件的保存目录的完整路径！", "提示",
-                            MessageBoxButton.OK, MessageBoxImage.Warning);
+                        NotificationSender.ShowMessageBox(
+                            MainWindow.Current, "提示", "请输入生成的新文件的保存目录的完整路径！");
                         goto FinishingTouches;
                     }
                     if (!Directory.Exists(this.DirectoryUsedToSaveFiles))
@@ -185,9 +183,8 @@ namespace HashCalculator
                         }
                         catch (Exception)
                         {
-                            Handy.Controls.MessageBox.Show(MainWindow.Current,
-                                "用于保存生成的新文件的目录不存在且创建失败！", "错误",
-                                MessageBoxButton.OK, MessageBoxImage.Error);
+                            NotificationSender.ShowMessageBox(
+                                MainWindow.Current, "错误", "用于保存生成的新文件的目录不存在且创建失败！");
                             goto FinishingTouches;
                         }
                     }
@@ -195,9 +192,12 @@ namespace HashCalculator
                 if (this.CheckIfUsingDistinctFilesFilter && !hashViewModels.Where(
                     i => i.Matched).All(i => i.FileIndex != null))
                 {
-                    if (Handy.Controls.MessageBox.Show(MainWindow.Current,
-                        "没有应用【有效的文件】筛选器，要继续操作吗？", "提示",
-                        MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+                    if (NotificationSender.ShowMessageBox(
+                        MainWindow.Current,
+                        "提示",
+                        "没有应用【有效的文件】筛选器，要继续操作吗？",
+                        closeButtonText: "否",
+                        primaryButtonText: "是") != WpfuiCtrls.MessageBoxResult.Primary)
                     {
                         goto FinishingTouches;
                     }
@@ -215,17 +215,15 @@ namespace HashCalculator
                     string exceptionMessage = await genMarkedFilesTask;
                     if (!string.IsNullOrEmpty(exceptionMessage))
                     {
-                        Handy.Controls.MessageBox.Show(MainWindow.Current,
-                            $"出现异常导致过程中断：{exceptionMessage}", "错误",
-                            MessageBoxButton.OK, MessageBoxImage.Error);
+                        NotificationSender.ShowMessageBox(
+                            MainWindow.Current, "错误", $"出现异常导致过程中断：{exceptionMessage}");
                         goto FinishingTouches;
                     }
                 }
                 else
                 {
-                    Handy.Controls.MessageBox.Show(MainWindow.Current,
-                        "没有找到任何操作目标，请刷新筛选或手动勾选操作目标！", "提示",
-                        MessageBoxButton.OK, MessageBoxImage.Information);
+                    NotificationSender.ShowMessageBox(
+                        MainWindow.Current, "提示", "没有找到任何操作目标，请刷新筛选或手动勾选操作目标！");
                 }
             FinishingTouches:
                 Settings.Current.FilterAndCmderEnabled = true;

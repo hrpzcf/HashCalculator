@@ -9,7 +9,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
-using Handy = HandyControl;
+using WpfuiCtrls = Wpf.Ui.Controls;
 
 namespace HashCalculator
 {
@@ -424,10 +424,7 @@ namespace HashCalculator
 
         public int SelectedTaskNumberLimit
         {
-            get
-            {
-                return this.selectedTaskNumberLimit;
-            }
+            get => this.selectedTaskNumberLimit;
             set
             {
                 this.SetPropNotify(ref this.selectedTaskNumberLimit, value);
@@ -659,10 +656,8 @@ namespace HashCalculator
                 }
                 return this.lastUsedPath;
             }
-            set
-            {
-                this.lastUsedPath = value;
-            }
+
+            set => this.lastUsedPath = value;
         }
 
         public bool PreferChecklistAlgs
@@ -673,10 +668,7 @@ namespace HashCalculator
 
         public bool ParallelBetweenAlgos
         {
-            get
-            {
-                return this.parallelBetweenAlgos;
-            }
+            get => this.parallelBetweenAlgos;
             set
             {
                 this.SetPropNotify(ref this.parallelBetweenAlgos, value);
@@ -725,10 +717,7 @@ namespace HashCalculator
 
         public int MinCopiedCharsToTriggerHashCheck
         {
-            get
-            {
-                return this.minCopiedCharsToTriggerHashCheck;
-            }
+            get => this.minCopiedCharsToTriggerHashCheck;
             set
             {
                 if (value > this.MaxCopiedCharsToTriggerHashCheck)
@@ -743,10 +732,7 @@ namespace HashCalculator
 
         public int MaxCopiedCharsToTriggerHashCheck
         {
-            get
-            {
-                return this.maxCopiedCharsToTriggerHashCheck;
-            }
+            get => this.maxCopiedCharsToTriggerHashCheck;
             set
             {
                 if (value < this.MinCopiedCharsToTriggerHashCheck)
@@ -1010,32 +996,33 @@ namespace HashCalculator
 
         private async void InstallShellExtAction(object param)
         {
-            if (Handy.Controls.MessageBox.Show(SettingsPanel.Current,
-                "安装外壳扩展可能需要重启资源管理器，确定现在安装吗？", "询问",
-                MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No)
-                == MessageBoxResult.No)
+            if (NotificationSender.ShowMessageBox(
+                SettingsPanel.Current,
+                "询问",
+                "安装外壳扩展可能需要重启资源管理器，确定现在安装吗？",
+                closeButtonText: "否",
+                primaryButtonText: "是") != WpfuiCtrls.MessageBoxResult.Primary)
             {
                 return;
             }
             this.ProcessingShellExtension = true;
             if (await Task.Run(ShellExtHelper.InstallShellExtension) is Exception exception1)
             {
-                Handy.Controls.MessageBox.Show(SettingsPanel.Current, exception1.Message,
-                    "安装失败", MessageBoxButton.OK, MessageBoxImage.Warning);
+                NotificationSender.ShowMessageBox(
+                    SettingsPanel.Current, "安装失败", exception1.Message);
             }
             else
             {
-                Handy.Controls.MessageBox.Show(SettingsPanel.Current, $"安装外壳扩展成功！",
-                    "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                NotificationSender.ShowMessageBox(
+                    SettingsPanel.Current, "安装成功", $"安装外壳扩展成功！");
             }
             if (!File.Exists(Settings.ConfigInfo.MenuConfigFile))
             {
                 string exception = new ShellMenuEditorModel(SettingsPanel.Current).SaveMenuListToJsonFile();
                 if (!string.IsNullOrEmpty(exception))
                 {
-                    Handy.Controls.MessageBox.Show(SettingsPanel.Current,
-                        $"外壳扩展模块配置文件创建失败，快捷菜单将不显示，原因：{exception}", "警告",
-                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                    NotificationSender.ShowMessageBox(SettingsPanel.Current, "警告",
+                        $"外壳扩展模块配置文件创建失败，快捷菜单将不显示，原因：{exception}");
                 }
             }
             this.ProcessingShellExtension = false;
@@ -1053,23 +1040,25 @@ namespace HashCalculator
 
         private async void UnInstallShellExtAction(object param)
         {
-            if (Handy.Controls.MessageBox.Show(SettingsPanel.Current,
-                "卸载外壳扩展可能需要重启资源管理器，确定现在卸载吗？", "询问",
-                MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No)
-                == MessageBoxResult.No)
+            if (NotificationSender.ShowMessageBox(
+                SettingsPanel.Current,
+                "询问",
+                "卸载外壳扩展可能需要重启资源管理器，确定现在卸载吗？",
+                closeButtonText: "否",
+                primaryButtonText: "是") != WpfuiCtrls.MessageBoxResult.Primary)
             {
                 return;
             }
             this.ProcessingShellExtension = true;
             if (await Task.Run(ShellExtHelper.UninstallShellExtension) is Exception exception)
             {
-                Handy.Controls.MessageBox.Show(SettingsPanel.Current, exception.Message,
-                    "卸载失败", MessageBoxButton.OK, MessageBoxImage.Warning);
+                NotificationSender.ShowMessageBox(
+                    SettingsPanel.Current, "卸载失败", exception.Message);
             }
             else
             {
-                Handy.Controls.MessageBox.Show(SettingsPanel.Current, $"卸载外壳扩展成功！",
-                    "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                NotificationSender.ShowMessageBox(
+                    SettingsPanel.Current, "卸载成功", $"卸载外壳扩展成功！");
             }
             this.ProcessingShellExtension = false;
         }
@@ -1155,8 +1144,7 @@ namespace HashCalculator
                 }
                 else
                 {
-                    Handy.Controls.MessageBox.Show(SettingsPanel.Current, "没有选择任何方案！", "提示",
-                        MessageBoxButton.OK, MessageBoxImage.Information);
+                    NotificationSender.ShowMessageBox(SettingsPanel.Current, "提示", "没有选择任何方案！");
                 }
             }
         }
@@ -1244,8 +1232,7 @@ namespace HashCalculator
                 }
                 else
                 {
-                    Handy.Controls.MessageBox.Show(SettingsPanel.Current, "没有选择任何方案！", "提示",
-                        MessageBoxButton.OK, MessageBoxImage.Information);
+                    NotificationSender.ShowMessageBox(SettingsPanel.Current, "提示", "没有选择任何方案！");
                 }
             }
         }
@@ -1276,8 +1263,7 @@ namespace HashCalculator
         private void ResetExportTemplateAction(object param)
         {
             this.ResetTemplatesForExport();
-            Handy.Controls.MessageBox.Show(SettingsPanel.Current, "已重置导出结果方案列表。",
-                "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+            NotificationSender.ShowMessageBox(SettingsPanel.Current, "提示", "已重置导出结果方案列表。");
         }
 
         [JsonIgnore, XmlIgnore]
@@ -1320,8 +1306,7 @@ namespace HashCalculator
                 }
                 else
                 {
-                    Handy.Controls.MessageBox.Show(SettingsPanel.Current, "没有选择任何方案！", "提示",
-                        MessageBoxButton.OK, MessageBoxImage.Information);
+                    NotificationSender.ShowMessageBox(SettingsPanel.Current, "提示", "没有选择任何方案！");
                 }
             }
         }
@@ -1409,8 +1394,7 @@ namespace HashCalculator
                 }
                 else
                 {
-                    Handy.Controls.MessageBox.Show(SettingsPanel.Current, "没有选择任何方案！", "提示",
-                        MessageBoxButton.OK, MessageBoxImage.Information);
+                    NotificationSender.ShowMessageBox(SettingsPanel.Current, "提示", "没有选择任何方案！");
                 }
             }
         }
@@ -1449,8 +1433,8 @@ namespace HashCalculator
         private void ResetChecklistTemplateAction(object param)
         {
             this.ResetTemplatesForChecklist();
-            Handy.Controls.MessageBox.Show(SettingsPanel.Current, "已重置解析检验依据方案列表。",
-                "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+            NotificationSender.ShowMessageBox(
+                SettingsPanel.Current, "提示", "已重置解析检验依据方案列表。");
         }
 
         [JsonIgnore, XmlIgnore]
@@ -1469,8 +1453,8 @@ namespace HashCalculator
             {
                 model.ResetAlias();
             }
-            Handy.Controls.MessageBox.Show(SettingsPanel.Current, "已将所有算法的别名恢复到默认状态！",
-                "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+            NotificationSender.ShowMessageBox(
+                SettingsPanel.Current, "提示", "已将所有算法的别名恢复到默认状态！");
         }
 
         [JsonIgnore, XmlIgnore]
@@ -1561,7 +1545,7 @@ namespace HashCalculator
             }
             if (this.AlgorithmAliasList != null)
             {
-                foreach (var keyValuePair in this.AlgorithmAliasList)
+                foreach (KeyValuePair<AlgoType, string> keyValuePair in this.AlgorithmAliasList)
                 {
                     foreach (AlgoInOutModel inOut in AlgosPanelModel.ProvidedAlgos)
                     {
