@@ -3,9 +3,9 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:hc="https://handyorg.github.io/handycontrol"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="{x:Static local:Info.Title}"
     Width="{Binding Source={x:Static local:Settings.Current}, Path=MainWndWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -1100,13 +1100,6 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-        <ScrollViewer
-            Grid.Row="1"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Top"
-            VerticalScrollBarVisibility="Hidden">
-            <StackPanel Margin="0,4,0,4" hc:Growl.GrowlParent="True" />
-        </ScrollViewer>
         <Grid Grid.Row="2" Margin="0,8,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -1115,11 +1108,10 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" Orientation="Horizontal">
-                <hc:CircleProgressBar
+                <ui:ProgressRing
                     Width="20"
                     Height="20"
                     Margin="0,0,12,0"
-                    ArcThickness="2"
                     IsIndeterminate="True"
                     Visibility="{Binding State, Converter={StaticResource LoadingImageVisiblityCvt}}" />
                 <Image
@@ -1146,16 +1138,15 @@
                     Text="{Binding TobeComputedModelsCount}"
                     ToolTip="待计算行数..." />
             </StackPanel>
-            <TextBox
+            <ui:TextBox
                 Grid.Column="1"
                 Margin="8,0,0,0"
                 Padding="4,2"
-                hc:InfoElement.Placeholder="哈希值校验依据：可在此输入单个或多个哈希值(每行一个)、使用后面的 [...] 按钮选择 [哈希值清单] 文件、粘贴 [哈希值清单] 的单行或多行内容"
                 AcceptsReturn="True"
                 MaxLines="3"
+                PlaceholderText="哈希值校验依据：可在此输入单个或多个哈希值(每行一个)、使用后面的 [...] 按钮选择 [哈希值清单] 文件、粘贴 [哈希值清单] 的单行或多行内容"
                 PreviewDragOver="TextBoxHashStringOrChecklistPathPreviewDragOver"
                 PreviewDrop="TextBoxHashOrFilePathPreviewDrop"
-                Style="{StaticResource TextBoxExtend}"
                 Text="{Binding HashStringOrChecklistPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 VerticalScrollBarVisibility="Auto" />
             <Button
