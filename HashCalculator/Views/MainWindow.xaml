@@ -420,7 +420,6 @@
             CanUserReorderColumns="True"
             Drop="DataGridHashingFilesDrop"
             Grid.IsSharedSizeScope="True"
-            HeadersVisibility="Column"
             IsReadOnly="True"
             ItemsSource="{Binding Source={x:Static local:MainWndViewModel.HashViewModelsViewSrc}, IsAsync=True}"
             PreviewKeyDown="DataGridHashingFilesPrevKeyDown"

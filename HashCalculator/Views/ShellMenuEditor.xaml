@@ -26,7 +26,6 @@
                 Grid.Row="0"
                 Grid.Column="0"
                 AutoGenerateColumns="False"
-                HeadersVisibility="Column"
                 IsReadOnly="True"
                 ItemsSource="{Binding MenuList}"
                 SelectedItem="{Binding SelectedMenu}">

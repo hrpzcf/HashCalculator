@@ -92,7 +92,6 @@
             Margin="0,8,0,0"
             AutoGenerateColumns="False"
             Grid.IsSharedSizeScope="True"
-            HeadersVisibility="Column"
             IsReadOnly="True"
             ItemsSource="{Binding AlgoInOutModels}"
             LostFocus="OnHashResultDataGridLostFocus"

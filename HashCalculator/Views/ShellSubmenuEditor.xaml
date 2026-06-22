@@ -21,7 +21,6 @@
         <DataGrid
             Grid.Row="0"
             AutoGenerateColumns="False"
-            HeadersVisibility="Column"
             IsReadOnly="True"
             ItemsSource="{Binding Submenus}"
             SelectedItem="{Binding SelectedSubmenu}">
