@@ -14,23 +14,15 @@
             <ResourceDictionary.MergedDictionaries>
                 <wpfui:ThemesDictionary Theme="Light" />
                 <wpfui:ControlsDictionary />
-                <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/Theme.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/SkinDefault.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/ButtonIcons.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/CmderButtonStyles.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/ComboBoxStyle1.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/ComboBoxStyle2.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/ConverterResource.xaml" />
-                <ResourceDictionary Source="/HashCalculator;component/Resources/DataGridCellStyles.xaml" />
-                <ResourceDictionary Source="/HashCalculator;component/Resources/DataGridRowStyles.xaml" />
-                <ResourceDictionary Source="/HashCalculator;component/Resources/DataGridStyles.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/DescTextBlockStyles.xaml" />
-                <ResourceDictionary Source="/HashCalculator;component/Resources/GroupBoxStyles.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/IconFont.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/ImageButtonStyles.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/ImgButtonTextStyles.xaml" />
-                <ResourceDictionary Source="/HashCalculator;component/Resources/TabControlItemStyles.xaml" />
-                <ResourceDictionary Source="/HashCalculator;component/Resources/TabControlStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

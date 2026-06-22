@@ -53,15 +53,11 @@
             Panel.ZIndex="1"
             Content="使本窗口跟随主窗口移动"
             IsChecked="{Binding Source={x:Static local:Settings.Current}, Path=FilterAndCmderWndFollowsMainWnd, UpdateSourceTrigger=PropertyChanged}" />
-        <TabControl
-            Grid.Row="0"
-            Grid.RowSpan="2"
-            Style="{StaticResource FilterAndCmderTabControlStyle}">
+        <TabControl Grid.Row="0" Grid.RowSpan="2">
             <TabItem
                 Padding="16,0,16,6"
                 FontSize="11pt"
-                Header="筛选器和设置"
-                Style="{StaticResource FilterAndCmderTabItemStyle}">
+                Header="筛选器和设置">
                 <Border Padding="4" BorderThickness="0">
                     <Border.IsEnabled>
                         <MultiBinding Converter="{StaticResource CmdPanelCriticalControlsEnabledCvt}">
@@ -113,8 +109,7 @@
                             Padding="4"
                             FontSize="9pt"
                             FontWeight="Normal"
-                            Foreground="Black"
-                            Style="{StaticResource GroupBoxTabContentLeft}">
+                            Foreground="Black">
                             <GroupBox.Header>
                                 <TextBlock
                                     VerticalAlignment="Center"
@@ -206,8 +201,7 @@
             <TabItem
                 Padding="16,0,16,6"
                 FontSize="11pt"
-                Header="操作器和设置"
-                Style="{StaticResource FilterAndCmderTabItemStyle}">
+                Header="操作器和设置">
                 <Border Padding="4" BorderThickness="0">
                     <Border.IsEnabled>
                         <MultiBinding Converter="{StaticResource CmdPanelCriticalControlsEnabledCvt}">
@@ -233,8 +227,7 @@
                             DataContext="{Binding SelectTableLinesCmder}"
                             FontSize="9pt"
                             FontWeight="Normal"
-                            Foreground="Black"
-                            Style="{StaticResource GroupBoxTabContentLeft}">
+                            Foreground="Black">
                             <GroupBox.Header>
                                 <TextBlock
                                     Margin="3,0,0,0"
@@ -273,8 +266,7 @@
                             Padding="4"
                             FontSize="9pt"
                             FontWeight="Normal"
-                            Foreground="Black"
-                            Style="{StaticResource GroupBoxTabContentLeft}">
+                            Foreground="Black">
                             <GroupBox.Header>
                                 <TextBlock
                                     VerticalAlignment="Top"

@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="设置"
     Width="{Binding SettingsWndWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     Height="{Binding SettingsWndHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -15,10 +16,7 @@
     UseLayoutRounding="True"
     WindowStartupLocation="CenterOwner"
     mc:Ignorable="d">
-    <TabControl
-        Margin="8"
-        Style="{StaticResource TabControlSlidingForSettingsPanel}"
-        TabStripPlacement="Left">
+    <TabControl Margin="8">
         <TabItem FontSize="10pt">
             <TabItem.Header>
                 <StackPanel Orientation="Horizontal">
@@ -42,8 +40,7 @@
                     <GroupBox
                         Padding="4"
                         Foreground="#FF006FD6"
-                        Header="文件搜索策略"
-                        Style="{StaticResource GroupBoxTabContentLeft}">
+                        Header="文件搜索策略">
                         <StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock
@@ -74,8 +71,7 @@
                         Margin="0,8,0,0"
                         Padding="4"
                         Foreground="#FF006FD6"
-                        Header="当需要查找校验依据内列出的文件进行计算并校验时"
-                        Style="{StaticResource GroupBoxTabContentLeft}">
+                        Header="当需要查找校验依据内列出的文件进行计算并校验时">
                         <StackPanel>
                             <RadioButton
                                 HorizontalAlignment="Left"
@@ -105,8 +101,7 @@
                         Margin="0,8,0,0"
                         Padding="4"
                         Foreground="#FF006FD6"
-                        Header="监控剪贴板中新复制的哈希信息用于校验"
-                        Style="{StaticResource GroupBoxTabContentLeft}">
+                        Header="监控剪贴板中新复制的哈希信息用于校验">
                         <StackPanel>
                             <CheckBox
                                 Margin="0"
@@ -333,8 +328,7 @@
                         Margin="0,8,0,0"
                         Padding="4"
                         Foreground="#FF006FD6"
-                        Header="用颜色来标记哈希值相同的行时的颜色参数"
-                        Style="{StaticResource GroupBoxTabContentLeft}">
+                        Header="用颜色来标记哈希值相同的行时的颜色参数">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -385,8 +379,7 @@
                         Margin="0,8,0,0"
                         Padding="4"
                         Foreground="#FF006FD6"
-                        Header="相同哈希值筛选器给哈希值列上色时的颜色参数"
-                        Style="{StaticResource GroupBoxTabContentLeft}">
+                        Header="相同哈希值筛选器给哈希值列上色时的颜色参数">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -437,8 +430,7 @@
                         Margin="0,8,0,0"
                         Padding="4"
                         Foreground="#FF006FD6"
-                        Header="相同文件夹筛选器给文件名列上色时的颜色参数"
-                        Style="{StaticResource GroupBoxTabContentLeft}">
+                        Header="相同文件夹筛选器给文件名列上色时的颜色参数">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -597,25 +589,24 @@
                     <GroupBox
                         Padding="4"
                         Foreground="#FF006FD6"
-                        Header="扩展系统右键菜单和关联 .hcb 文件"
-                        Style="{StaticResource GroupBoxTabContentLeft}">
+                        Header="扩展系统右键菜单和关联 .hcb 文件">
                         <StackPanel>
                             <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
-                                <Button
+                                <ui:Button
                                     MinHeight="36"
                                     Padding="32,0"
+                                    Appearance="Primary"
                                     Command="{Binding InstallShellExtCmd}"
                                     Content="安装右键菜单并关联文件"
-                                    IsEnabled="{Binding ProcessingShellExtension, Converter={StaticResource ReverseBooleanValueCvt}}"
-                                    Style="{StaticResource ButtonPrimary}" />
-                                <Button
+                                    IsEnabled="{Binding ProcessingShellExtension, Converter={StaticResource ReverseBooleanValueCvt}}" />
+                                <ui:Button
                                     MinHeight="36"
                                     Margin="16,0,0,0"
                                     Padding="32,0"
+                                    Appearance="Danger"
                                     Command="{Binding UnInstallShellExtCmd}"
                                     Content="卸载右键菜单并取消关联"
-                                    IsEnabled="{Binding ProcessingShellExtension, Converter={StaticResource ReverseBooleanValueCvt}}"
-                                    Style="{StaticResource ButtonDanger}" />
+                                    IsEnabled="{Binding ProcessingShellExtension, Converter={StaticResource ReverseBooleanValueCvt}}" />
                             </StackPanel>
                             <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
                                 <TextBlock Foreground="Black" Text="安装状态：" />
@@ -713,16 +704,14 @@
                         Margin="0,8,0,0"
                         Padding="4"
                         Foreground="#FF006FD6"
-                        Header="自定义要集成到系统右键菜单的菜单项"
-                        Style="{StaticResource GroupBoxTabContentLeft}">
+                        Header="自定义要集成到系统右键菜单的菜单项">
                         <StackPanel>
-                            <Button
+                            <ui:Button
                                 MinHeight="36"
                                 Padding="20,0"
                                 HorizontalAlignment="Left"
-                                Command="{Binding OpenEditContextMenuCmd}"
-                                Content="打开右键菜单集成配置编辑器"
-                                Style="{StaticResource ButtonPrimary}" />
+                                Appearance="Primary"
+                                Command="{Binding OpenEditContextMenuCmd}" />
                             <TextBlock
                                 Margin="0,4,0,0"
                                 Style="{StaticResource DescTextBlockStyle}"
@@ -760,11 +749,11 @@
                             DisplayMemberPath="AlgoName"
                             ItemsSource="{Binding Source={x:Static local:AlgosPanelModel.ProvidedAlgos}}"
                             SelectedItem="{Binding SelectedInOutModelForAlias}" />
-                        <Button
+                        <ui:Button
                             Margin="16,0,0,0"
+                            Appearance="Danger"
                             Command="{Binding ResetAlgorithmAliasCmd}"
-                            Content="全部恢复默认"
-                            Style="{StaticResource ButtonDanger}" />
+                            Content="全部恢复默认" />
                     </StackPanel>
                     <TextBlock Margin="0,8,0,0" Text="要使用的别名：" />
                     <TextBox
@@ -825,8 +814,7 @@
                     <GroupBox
                         Padding="4"
                         Foreground="#FF006FD6"
-                        Header="当点击含有【按模板复制】字样的按钮或菜单时"
-                        Style="{StaticResource GroupBoxTabContentLeft}">
+                        Header="当点击含有【按模板复制】字样的按钮或菜单时">
                         <StackPanel>
                             <RadioButton
                                 HorizontalAlignment="Left"
@@ -1004,8 +992,7 @@
                         Grid.Row="0"
                         Padding="4"
                         Foreground="#FF006FD6"
-                        Header="导出计算结果时导出哪些算法的结果"
-                        Style="{StaticResource GroupBoxTabContentLeft}">
+                        Header="导出计算结果时导出哪些算法的结果">
                         <StackPanel>
                             <RadioButton
                                 HorizontalAlignment="Left"
@@ -1087,8 +1074,7 @@
                             ItemsSource="{Binding Source={x:Static local:Settings.Current}, Path=TemplatesForExport}"
                             KeyDown="SettingsPanelKeyDown"
                             SelectedItem="{Binding Source={x:Static local:Settings.Current}, Path=SelectedTemplateForExport}"
-                            SelectionMode="Single"
-                            Style="{StaticResource DataGridStyleNormal}">
+                            SelectionMode="Single">
                             <DataGrid.Columns>
                                 <DataGridTemplateColumn Header="方案名称">
                                     <DataGridTemplateColumn.CellTemplate>
@@ -1162,18 +1148,18 @@
                                 Padding="8,2"
                                 Command="{Binding MoveExportTemplateDownCmd}"
                                 Content="下移" />
-                            <Button
+                            <ui:Button
                                 Margin="0,8,0,0"
                                 Padding="8,2"
+                                Appearance="Danger"
                                 Command="{Binding RemoveExportTemplateCmd}"
-                                Content="移除"
-                                Style="{StaticResource ButtonDanger}" />
-                            <Button
+                                Content="移除" />
+                            <ui:Button
                                 Margin="0,8,0,0"
                                 Padding="8,2"
+                                Appearance="Danger"
                                 Command="{Binding ResetExportTemplateCmd}"
-                                Content="重置"
-                                Style="{StaticResource ButtonDanger}" />
+                                Content="重置" />
                         </StackPanel>
                         <StackPanel
                             Grid.Row="1"
@@ -1357,8 +1343,7 @@
                         ItemsSource="{Binding Source={x:Static local:Settings.Current}, Path=TemplatesForChecklist}"
                         KeyDown="SettingsPanelKeyDown"
                         SelectedItem="{Binding Source={x:Static local:Settings.Current}, Path=SelectedTemplateForChecklist}"
-                        SelectionMode="Single"
-                        Style="{StaticResource DataGridStyleNormal}">
+                        SelectionMode="Single">
                         <DataGrid.Columns>
                             <DataGridTemplateColumn Header="方案名称">
                                 <DataGridTemplateColumn.CellTemplate>
@@ -1413,16 +1398,16 @@
                             Margin="0,8,0,0"
                             Command="{Binding MoveChecklistTemplateDownCmd}"
                             Content="下移" />
-                        <Button
+                        <ui:Button
                             Margin="0,8,0,0"
+                            Appearance="Danger"
                             Command="{Binding RemoveChecklistTemplateCmd}"
-                            Content="移除"
-                            Style="{StaticResource ButtonDanger}" />
-                        <Button
+                            Content="移除" />
+                        <ui:Button
                             Margin="0,8,0,0"
+                            Appearance="Danger"
                             Command="{Binding ResetChecklistTemplateCmd}"
-                            Content="重置"
-                            Style="{StaticResource ButtonDanger}" />
+                            Content="重置" />
                     </StackPanel>
                     <StackPanel
                         Grid.Row="2"
@@ -1551,8 +1536,7 @@
                 <GroupBox
                     Padding="4"
                     Foreground="#FF006FD6"
-                    Header="部分列的鼠标左键双击行为"
-                    Style="{StaticResource GroupBoxTabContentLeft}">
+                    Header="部分列的鼠标左键双击行为">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -1699,8 +1683,7 @@
                 <GroupBox
                     Padding="4"
                     Foreground="#FF006FD6"
-                    Header="软件配置文件的保存位置"
-                    Style="{StaticResource GroupBoxTabContentLeft}">
+                    Header="软件配置文件的保存位置">
                     <StackPanel>
                         <RadioButton
                             HorizontalAlignment="Left"

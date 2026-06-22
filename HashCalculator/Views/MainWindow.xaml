@@ -1,4 +1,4 @@
-﻿<Window
+﻿<ui:FluentWindow
     x:Class="HashCalculator.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -19,7 +19,7 @@
     UseLayoutRounding="True"
     WindowState="{Binding Source={x:Static local:Settings.Current}, Path=MainWindowState, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     mc:Ignorable="d">
-    <Window.Top>
+    <ui:FluentWindow.Top>
         <MultiBinding Converter="{StaticResource MainWndTopCvt}" Mode="TwoWay">
             <Binding
                 Mode="TwoWay"
@@ -32,8 +32,8 @@
                 Source="{x:Static local:Settings.Current}"
                 UpdateSourceTrigger="PropertyChanged" />
         </MultiBinding>
-    </Window.Top>
-    <Window.Left>
+    </ui:FluentWindow.Top>
+    <ui:FluentWindow.Left>
         <MultiBinding Converter="{StaticResource MainWndLeftCvt}" Mode="TwoWay">
             <Binding
                 Mode="TwoWay"
@@ -46,7 +46,7 @@
                 Source="{x:Static local:Settings.Current}"
                 UpdateSourceTrigger="PropertyChanged" />
         </MultiBinding>
-    </Window.Left>
+    </ui:FluentWindow.Left>
     <Grid Margin="8,0,8,8">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -418,14 +418,12 @@
             AllowDrop="True"
             AutoGenerateColumns="False"
             CanUserReorderColumns="True"
-            CellStyle="{StaticResource DataGridCellStyleNormal}"
             Drop="DataGridHashingFilesDrop"
             Grid.IsSharedSizeScope="True"
             HeadersVisibility="Column"
             IsReadOnly="True"
             ItemsSource="{Binding Source={x:Static local:MainWndViewModel.HashViewModelsViewSrc}, IsAsync=True}"
             PreviewKeyDown="DataGridHashingFilesPrevKeyDown"
-            RowStyle="{StaticResource MainDataGridRowStyle}"
             ScrollViewer.CanContentScroll="True"
             SelectedItem="{Binding SelectedHashVieModel}"
             SelectionMode="Extended"
@@ -673,7 +671,7 @@
                     SortMemberPath="FileLength"
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoFileSizeColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
                     <DataGridTemplateColumn.HeaderStyle>
-                        <Style BasedOn="{StaticResource DataGridColumnHeaderStyle}" TargetType="{x:Type DataGridColumnHeader}">
+                        <Style BasedOn="{StaticResource DefaultDataGridColumnHeaderStyle}" TargetType="{x:Type DataGridColumnHeader}">
                             <Setter Property="HorizontalContentAlignment" Value="Right" />
                         </Style>
                     </DataGridTemplateColumn.HeaderStyle>
@@ -704,7 +702,7 @@
                     Header="算法"
                     SortMemberPath="CurrentInOutModel.AlgoType">
                     <DataGridTemplateColumn.HeaderStyle>
-                        <Style BasedOn="{StaticResource DataGridColumnHeaderStyle}" TargetType="{x:Type DataGridColumnHeader}">
+                        <Style BasedOn="{StaticResource DefaultDataGridColumnHeaderStyle}" TargetType="{x:Type DataGridColumnHeader}">
                             <Setter Property="HorizontalContentAlignment" Value="Center" />
                         </Style>
                     </DataGridTemplateColumn.HeaderStyle>
@@ -937,7 +935,7 @@
                     SortMemberPath="SelectedOutputType"
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoOutputTypeColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
                     <DataGridTemplateColumn.HeaderStyle>
-                        <Style BasedOn="{StaticResource DataGridColumnHeaderStyle}" TargetType="{x:Type DataGridColumnHeader}">
+                        <Style BasedOn="{StaticResource DefaultDataGridColumnHeaderStyle}" TargetType="{x:Type DataGridColumnHeader}">
                             <Setter Property="HorizontalContentAlignment" Value="Center" />
                         </Style>
                     </DataGridTemplateColumn.HeaderStyle>
@@ -962,7 +960,7 @@
                     SortMemberPath="DurationofTask"
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoDurationColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
                     <DataGridTemplateColumn.HeaderStyle>
-                        <Style BasedOn="{StaticResource DataGridColumnHeaderStyle}" TargetType="{x:Type DataGridColumnHeader}">
+                        <Style BasedOn="{StaticResource DefaultDataGridColumnHeaderStyle}" TargetType="{x:Type DataGridColumnHeader}">
                             <Setter Property="HorizontalContentAlignment" Value="Center" />
                         </Style>
                     </DataGridTemplateColumn.HeaderStyle>
@@ -1005,7 +1003,7 @@
                     SortMemberPath="CurrentInOutModel.HashCmpResult"
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoCmpResultColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
                     <DataGridTemplateColumn.HeaderStyle>
-                        <Style BasedOn="{StaticResource DataGridColumnHeaderStyle}" TargetType="{x:Type DataGridColumnHeader}">
+                        <Style BasedOn="{StaticResource DefaultDataGridColumnHeaderStyle}" TargetType="{x:Type DataGridColumnHeader}">
                             <Setter Property="HorizontalContentAlignment" Value="Center" />
                             <Setter Property="ToolTipService.ShowDuration" Value="60000" />
                             <Setter Property="ToolTip" Value="{Binding DataContext.Report, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}, AncestorLevel=1}}" />
@@ -1045,7 +1043,7 @@
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn Header="哈希标记" Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowHashInTagColumn, Converter={StaticResource TrueToVisibilityVisibleCvt}}">
                     <DataGridTemplateColumn.HeaderStyle>
-                        <Style BasedOn="{StaticResource DataGridColumnHeaderStyle}" TargetType="{x:Type DataGridColumnHeader}">
+                        <Style BasedOn="{StaticResource DefaultDataGridColumnHeaderStyle}" TargetType="{x:Type DataGridColumnHeader}">
                             <Setter Property="HorizontalContentAlignment" Value="Center" />
                         </Style>
                     </DataGridTemplateColumn.HeaderStyle>
@@ -1157,17 +1155,17 @@
                 Command="{Binding SelectChecklistFileCmd}"
                 Content="..."
                 ToolTip="打开【选择文件】对话框选择【哈希值清单】文件，将选择的文件路径填充到【哈希值校验依据】输入框中" />
-            <Button
+            <ui:Button
                 Grid.Column="3"
                 Margin="8,0,0,0"
                 Padding="16,4"
                 VerticalAlignment="Center"
+                Appearance="Primary"
                 Command="{Binding StartCheckHashResultsCmd}"
                 Content="校验"
                 IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBooleanCvt}}"
-                Style="{StaticResource ButtonPrimary}"
                 ToolTip="解析输入框的内容并检查哪些行的哈希值与输入框内的哈希值匹配并在【校验结果】列显示结果。&#10;如果检查时表格为空且校验依据是通用格式的【哈希值清单】文件路径，则：&#10;1. 点击【校验】后程序会自动解析文件并在相同目录下寻找要计算哈希值的文件完成计算并显示校验结果。&#10;2. 通用格式的【文件哈希值清单】文件请参考程序【导出结果】功能导出的文件的内容排布格式。" />
         </Grid>
         <wpfui:SnackbarPresenter x:Name="SnackbarPresenter" Grid.Row="1" />
     </Grid>
-</Window>
+</ui:FluentWindow>

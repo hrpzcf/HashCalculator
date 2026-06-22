@@ -12,7 +12,7 @@ using CommandLine;
 
 namespace HashCalculator
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
         private bool listenerAdded = false;
         private DateTime lastClipboardUpdateDateTime = DateTime.Now;

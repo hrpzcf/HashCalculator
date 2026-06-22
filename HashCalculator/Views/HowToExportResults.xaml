@@ -28,8 +28,7 @@
             Grid.Column="0"
             Padding="4"
             Foreground="#FF006FD6"
-            Header="导出计算结果时导出哪些算法的结果"
-            Style="{StaticResource GroupBoxTabContentLeft}">
+            Header="导出计算结果时导出哪些算法的结果">
             <StackPanel>
                 <RadioButton
                     HorizontalAlignment="Left"

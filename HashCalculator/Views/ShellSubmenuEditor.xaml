@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="{Binding Title, StringFormat=【{0}】的子菜单}"
     Width="{Binding Source={x:Static local:Settings.Current}, Path=ShellSubmenuEditorWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     Height="{Binding Source={x:Static local:Settings.Current}, Path=ShellSubmenuEditorHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -23,8 +24,7 @@
             HeadersVisibility="Column"
             IsReadOnly="True"
             ItemsSource="{Binding Submenus}"
-            SelectedItem="{Binding SelectedSubmenu}"
-            Style="{StaticResource DataGridStyleNormal}">
+            SelectedItem="{Binding SelectedSubmenu}">
             <DataGrid.Columns>
                 <DataGridTemplateColumn Header="子菜单标题">
                     <DataGridTemplateColumn.CellTemplate>
@@ -71,12 +71,12 @@
                 Padding="16,0"
                 Command="{Binding MoveSubmenuDownCmd}"
                 Content="下移" />
-            <Button
+            <ui:Button
                 Margin="0,24,0,0"
                 Padding="16,0"
+                Appearance="Danger"
                 Command="{Binding DeleteSubmenuCmd}"
-                Content="移除"
-                Style="{StaticResource ButtonDanger}" />
+                Content="移除" />
         </StackPanel>
     </Grid>
 </Window>
