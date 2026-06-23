@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using HashCalculator.Others;
 
 namespace HashCalculator
 {
@@ -48,7 +49,7 @@ namespace HashCalculator
                     this._message.AppendLine(message);
                     string stackTrace = this._messageAndStackTraceQueue.Take();
                     this._message.AppendLine(stackTrace);
-                    MainWndViewModel.Synchronization.Invoke(() =>
+                    Synchronization.UI.Invoke(() =>
                     {
                         this.NotifyPropertyChanged(nameof(this.StackTraceMessage));
                     });

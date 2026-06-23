@@ -1005,16 +1005,16 @@
                     <DataGridTemplateColumn
                         MinWidth="60"
                         CanUserSort="True"
-                        Header="校验结果"
                         SortMemberPath="CurrentInOutModel.HashCmpResult"
                         Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoCmpResultColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
-                        <DataGridTemplateColumn.HeaderStyle>
-                            <Style BasedOn="{StaticResource DefaultDataGridColumnHeaderStyle}" TargetType="{x:Type DataGridColumnHeader}">
-                                <Setter Property="HorizontalContentAlignment" Value="Center" />
-                                <Setter Property="ToolTipService.ShowDuration" Value="60000" />
-                                <Setter Property="ToolTip" Value="{Binding DataContext.Report, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}, AncestorLevel=1}}" />
-                            </Style>
-                        </DataGridTemplateColumn.HeaderStyle>
+                        <DataGridTemplateColumn.Header>
+                            <TextBlock
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Text="校验结果"
+                                ToolTip="{Binding DataContext.Report, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGrid}}}"
+                                ToolTipService.ShowDuration="60000" />
+                        </DataGridTemplateColumn.Header>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid HorizontalAlignment="Center" VerticalAlignment="Center">

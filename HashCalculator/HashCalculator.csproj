@@ -58,9 +58,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="ViewModels\Pages\" />
       <Folder Include="ViewModels\Windows\" />
-      <Folder Include="Views\Pages\" />
       <Folder Include="Views\Windows\" />
     </ItemGroup>
 </Project>

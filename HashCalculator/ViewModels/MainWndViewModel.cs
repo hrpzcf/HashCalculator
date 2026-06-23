@@ -13,6 +13,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
+using HashCalculator.Others;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using WpfuiCtrls = Wpf.Ui.Controls;
@@ -92,7 +93,6 @@ namespace HashCalculator
             HashViewModelsView = HashViewModelsViewSrc.View;
             Settings.Current.PropertyChanged += this.SettingsPropChangedAction;
             this.OwnerWnd = window;
-            Synchronization = window.Dispatcher;
             this.addModelAction = new Action<HashModelArg>(this.AddModelAction);
             this.checkStateTimer = new Timer(this.CheckStateAction);
         }
@@ -123,8 +123,6 @@ namespace HashCalculator
             get;
             private set;
         }
-
-        public static Dispatcher Synchronization { get; private set; }
 
         public static ObservableCollection<HashViewModel> HashViewModels { get; }
             = new ObservableCollection<HashViewModel>();
@@ -236,7 +234,7 @@ namespace HashCalculator
                 this.computedModelsCount = 0;
                 if (this.TobeComputedModelsCount == 0)
                 {
-                    Synchronization.Invoke(() => { this.State = RunningState.Stopped; });
+                    Synchronization.UI.Invoke(() => { this.State = RunningState.Stopped; });
                     this.checkStateTimer.Change(-1, -1);
                 }
             }
@@ -252,13 +250,13 @@ namespace HashCalculator
 
         private void ModelCapturedAction(HashViewModel model)
         {
-            // 在最外层套上 Synchronization.Invoke 在主线程执行逻辑虽然也能达到锁效果，
+            // 在最外层套上 Synchronization.UiDispatch.Invoke 在主线程执行逻辑虽然也能达到锁效果，
             // 但每次更改 TobeComputedModelsCount 的值都要 Invoke 占用主线程资源，没有必要
             lock (this.changeRunningStateLock)
             {
                 if (++this.TobeComputedModelsCount == 1)
                 {
-                    Synchronization.Invoke(() => { this.State = RunningState.Started; });
+                    Synchronization.UI.Invoke(() => { this.State = RunningState.Started; });
                     this.checkStateTimer.Change(interval, interval);
                 }
             }
@@ -302,7 +300,7 @@ namespace HashCalculator
                         {
                             arg.PresetAlgos = null;
                         }
-                        Synchronization.Invoke(this.addModelAction, DispatcherPriority.Background, arg);
+                        Synchronization.UI.Invoke(this.addModelAction, DispatcherPriority.Background, arg);
                     }
                 }
             }, token);
@@ -329,7 +327,7 @@ namespace HashCalculator
                             {
                                 break;
                             }
-                            Synchronization.Invoke(this.addModelAction, DispatcherPriority.Background, arg);
+                            Synchronization.UI.Invoke(this.addModelAction, DispatcherPriority.Background, arg);
                         }
                     }
                 }
@@ -908,10 +906,7 @@ namespace HashCalculator
                     finally
                     {
                         progress.AutoClose = true;
-                        Synchronization.Invoke(() =>
-                        {
-                            progressWindow.DialogResult = false;
-                        });
+                        Synchronization.UI.Invoke(() => { progressWindow.DialogResult = false; });
                     }
                 });
                 progressWindow.ShowDialog();

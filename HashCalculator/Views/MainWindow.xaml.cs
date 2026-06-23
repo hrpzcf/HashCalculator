@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
 using CommandLine;
+using HashCalculator.Others;
 
 namespace HashCalculator
 {
@@ -185,7 +186,7 @@ namespace HashCalculator
                 HashChecklist hashChecklist = null;
                 if (Settings.Current.ClearTableBeforeAddingFilesByCmdLine)
                 {
-                    MainWndViewModel.Synchronization.Invoke(() =>
+                    Synchronization.UI.Invoke(() =>
                     {
                         MainWndViewModel.Current.ClearAllTableLinesAction(null);
                     });
@@ -230,7 +231,7 @@ namespace HashCalculator
                 {
                     if (Settings.Current.ClearTableBeforeAddingFilesByCmdLine)
                     {
-                        MainWndViewModel.Synchronization.Invoke(() =>
+                        Synchronization.UI.Invoke(() =>
                         {
                             MainWndViewModel.Current.ClearAllTableLinesAction(null);
                         });

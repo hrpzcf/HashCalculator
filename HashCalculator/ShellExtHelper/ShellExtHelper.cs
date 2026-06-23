@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Resources;
 using System.Security;
+using HashCalculator.Others;
 using Microsoft.Win32;
 using WpfuiCtrls = Wpf.Ui.Controls;
 
@@ -315,8 +316,7 @@ namespace HashCalculator
                         closeButtonText: "否",
                         primaryButtonText: "是");
                 };
-                if (MainWndViewModel.Synchronization.Invoke(callback) ==
-                    WpfuiCtrls.MessageBoxResult.Primary)
+                if (Synchronization.UI.Invoke(callback) == WpfuiCtrls.MessageBoxResult.Primary)
                 {
                     exception = ForceCleanRegistryKeysManually();
                 }
