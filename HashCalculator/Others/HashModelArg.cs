@@ -6,7 +6,7 @@ namespace HashCalculator
     /// <summary>
     /// HashViewModel 的构造函数的参数，用于打包零散参数
     /// </summary>
-    internal class HashModelArg
+    public class HashModelArg
     {
         public string RootDir { get; }
 

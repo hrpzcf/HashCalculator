@@ -3,7 +3,7 @@ using System.Windows.Media;
 
 namespace HashCalculator
 {
-    internal class ComparableColor : IComparable
+    public class ComparableColor : IComparable
     {
         private readonly uint colorNumber;
 

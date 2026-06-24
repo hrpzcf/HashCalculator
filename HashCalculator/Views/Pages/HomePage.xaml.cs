@@ -11,9 +11,9 @@ public partial class HomePage : Page
 {
     private readonly HomeViewModel viewModel = null;
 
-    public HomePage()
+    public HomePage(HomeViewModel viewModel)
     {
-        this.viewModel = new HomeViewModel();
+        this.viewModel = viewModel;
         this.DataContext = this.viewModel;
         this.InitializeComponent();
     }

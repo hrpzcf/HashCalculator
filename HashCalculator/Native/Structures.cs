@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace HashCalculator
 {
     [StructLayout(LayoutKind.Sequential)]
-    internal struct POINT
+    public struct POINT
     {
         public int x;
         public int y;
@@ -17,7 +17,7 @@ namespace HashCalculator
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    internal struct RECT
+    public struct RECT
     {
         public int left;
         public int top;
@@ -29,7 +29,7 @@ namespace HashCalculator
     /// https://learn.microsoft.com/zh-cn/windows/win32/api/shellapi/ns-shellapi-shfileinfow
     /// </summary>
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    internal struct SHFILEINFOW
+    public struct SHFILEINFOW
     {
         public IntPtr hIcon;
         public int iIcon;
@@ -41,7 +41,7 @@ namespace HashCalculator
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    internal struct SHFILEOPSTRUCTW64
+    public struct SHFILEOPSTRUCTW64
     {
         public IntPtr hwnd;
         public uint wFunc;
@@ -57,7 +57,7 @@ namespace HashCalculator
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode, Pack = 1)]
-    internal struct SHFILEOPSTRUCTW32
+    public struct SHFILEOPSTRUCTW32
     {
         public IntPtr hwnd;
         public uint wFunc;
@@ -76,7 +76,7 @@ namespace HashCalculator
     /// https://learn.microsoft.com/en-us/windows/win32/api/shellapi/ns-shellapi-shellexecuteinfow
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-    internal struct SHELLEXECUTEINFOW
+    public struct SHELLEXECUTEINFOW
     {
         public int cbSize;
         public SEMaskFlags fMask;
@@ -104,7 +104,7 @@ namespace HashCalculator
     ///// https://learn.microsoft.com/en-us/windows/win32/api/fileapi/ns-fileapi-by_handle_file_information
     ///// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    internal struct BY_HANDLE_FILE_INFORMATION
+    public struct BY_HANDLE_FILE_INFORMATION
     {
         public uint dwFileAttributes;
         public System.Runtime.InteropServices.ComTypes.FILETIME ftCreationTime;

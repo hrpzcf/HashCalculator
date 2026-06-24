@@ -5,7 +5,7 @@ namespace HashCalculator
     /// <summary>
     /// https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getdevicecaps
     /// </summary>
-    internal enum DeviceCap
+    public enum DeviceCap
     {
         /// <summary>
         /// Horizontal width in pixels
@@ -28,7 +28,7 @@ namespace HashCalculator
         DESKTOPHORZRES = 118,
     }
 
-    internal enum FileFuncFlags : uint
+    public enum FileFuncFlags : uint
     {
         FO_MOVE = 0x1,
         FO_COPY = 0x2,
@@ -37,7 +37,7 @@ namespace HashCalculator
     }
 
     [Flags]
-    internal enum FILEOP_FLAGS : ushort
+    public enum FILEOP_FLAGS : ushort
     {
         FOF_MULTIDESTFILES = 0x1,
         FOF_CONFIRMMOUSE = 0x2,
@@ -95,7 +95,7 @@ namespace HashCalculator
         FOF_NORECURSEREPARSE = 0x8000
     }
 
-    internal enum ShowCmd : int
+    public enum ShowCmd : int
     {
         SW_HIDE = 0,
         SW_SHOWNORMAL = 1,
@@ -114,7 +114,7 @@ namespace HashCalculator
     }
 
     [Flags]
-    internal enum SEMaskFlags : uint
+    public enum SEMaskFlags : uint
     {
         SEE_MASK_DEFAULT = 0x00000000,
         SEE_MASK_CLASSNAME = 0x00000001,
@@ -141,7 +141,7 @@ namespace HashCalculator
     /// <summary>
     /// https://learn.microsoft.com/en-us/windows/win32/dataxchg/standard-clipboard-formats
     /// </summary>
-    internal enum CF : uint
+    public enum CF : uint
     {
         CF_TEXT = 1,
         CF_BITMAP = 2,
@@ -171,7 +171,7 @@ namespace HashCalculator
         CF_GDIOBJLAST = 0x03FF,
     }
 
-    internal static class WM
+    public static class WM
     {
         /// <summary>
         /// https://learn.microsoft.com/en-us/windows/win32/dataxchg/wm-clear
@@ -299,7 +299,7 @@ namespace HashCalculator
     /// <i>dwItem2</i> is not used and should be <see langword="null"/>.</para>
     /// </remarks>
     [Flags]
-    internal enum HChangeNotifyEventID
+    public enum HChangeNotifyEventID
     {
         /// <summary>
         /// Cover events have occurred.
@@ -485,7 +485,7 @@ namespace HashCalculator
     /// The uFlags parameter must be one of the following values.
     /// </summary>
     [Flags]
-    internal enum HChangeNotifyFlags
+    public enum HChangeNotifyFlags
     {
         /// <summary>
         /// The <i>dwItem1</i> and <i>dwItem2</i> parameters are DWORD values.
@@ -537,7 +537,7 @@ namespace HashCalculator
     /// https://learn.microsoft.com/zh-cn/windows/win32/api/shellapi/nf-shellapi-shgetfileinfow
     /// </summary>
     [Flags]
-    internal enum SHGFI : uint
+    public enum SHGFI : uint
     {
         /// <summary>
         /// 版本 5.0。 将相应的覆盖应用于文件的图标。 还必须设置 SHGFI_ICON 标志。

@@ -15,7 +15,7 @@ using System.Windows.Threading;
 
 namespace HashCalculator
 {
-    internal class HashViewModel : NotifiableModel
+    public class HashViewModel : NotifiableModel
     {
         private string _fileName = string.Empty;
         private string _currentHashString = null;

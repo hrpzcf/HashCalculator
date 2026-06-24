@@ -1,14 +1,35 @@
-﻿using System.Text;
+using System.Text;
 using System.Windows;
 using System.Windows.Threading;
+using HashCalculator.Services;
+using HashCalculator.ViewModels.Pages;
+using HashCalculator.Views.Pages;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace HashCalculator;
 
 public partial class App : Application
 {
-    private bool _isSessionEndingHandled = false;
     private bool _exceptionWindowShowed = false;
+    private bool _isSessionEndingHandled = false;
     private ExceptionWindow _exceptionMessageBox = null;
+
+    private static readonly IHost _host = Host.CreateDefaultBuilder()
+        .ConfigureServices((context, services) =>
+        {
+            _ = services.AddSingleton<MainWindow>();
+            _ = services.AddSingleton<MainWndViewModel>();
+            _ = services.AddSingleton<HomePage>();
+            _ = services.AddSingleton<HomeViewModel>();
+            // 应用生命周期
+            _ = services.AddHostedService<ApplicationHostService>();
+        }).Build();
+
+    public static T GetRequiredService<T>() where T : class
+    {
+        return _host.Services.GetRequiredService<T>();
+    }
 
     private void StartupHandler(object sender, StartupEventArgs e)
     {
@@ -20,6 +41,7 @@ public partial class App : Application
         Settings.LoadSettings();
         Initializer.ParseArgsForShell(e.Args);
         Initializer.PushArgs(e.Args);
+        _host.Start();
     }
 
     private void ApplicationFinalization()
@@ -34,6 +56,8 @@ public partial class App : Application
         {
             this.ApplicationFinalization();
         }
+        _host.StopAsync().Wait();
+        _host.Dispose();
     }
 
     private void ApplicationSessionEnding(object sender, SessionEndingCancelEventArgs e)

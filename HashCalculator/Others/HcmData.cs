@@ -6,7 +6,7 @@ using System.Text;
 
 namespace HashCalculator
 {
-    internal class HcmData
+    public class HcmData
     {
         #region HcmInfo
         [StructLayout(LayoutKind.Sequential, Pack = 1)]

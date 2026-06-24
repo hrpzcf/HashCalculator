@@ -2,7 +2,7 @@
 
 namespace HashCalculator
 {
-    internal class CmpableFileIndex : IComparable
+    public class CmpableFileIndex : IComparable
     {
         private readonly uint FileIndexHigh;
         private readonly uint FileIndexLow;

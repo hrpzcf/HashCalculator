@@ -32,10 +32,10 @@ namespace HashCalculator
 
         private bool ProcIdMonitorFlag { get; set; } = true;
 
-        public MainWindow()
+        public MainWindow(MainWndViewModel viewModel)
         {
             Current = this;
-            this.viewModel = new MainWndViewModel(this);
+            this.viewModel = viewModel;
             this.DataContext = this.viewModel;
             this.Closed += this.MainWindowClosed;
             this.Loaded += this.MainWindowLoaded;

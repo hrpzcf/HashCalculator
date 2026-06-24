@@ -7,8 +7,7 @@
     DispatcherUnhandledException="ExceptionHandler"
     Exit="ExitHandler"
     SessionEnding="ApplicationSessionEnding"
-    Startup="StartupHandler"
-    StartupUri="Views/MainWindow.xaml">
+    Startup="StartupHandler">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

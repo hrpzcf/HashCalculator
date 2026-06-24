@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace HashCalculator
 {
-    internal class PathPackage : IEnumerable<HashModelArg>
+    public class PathPackage : IEnumerable<HashModelArg>
     {
         private static readonly string recyclebin = "$Recycle.Bin";
         private static readonly char[] invalidFnameChars = Path.GetInvalidFileNameChars();

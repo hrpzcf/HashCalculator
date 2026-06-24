@@ -7,7 +7,7 @@ using System.Text;
 
 namespace HashCalculator
 {
-    internal class HashChecker
+    public class HashChecker
     {
         private bool fileIndependent;
 
@@ -98,7 +98,7 @@ namespace HashCalculator
         }
     }
 
-    internal class HashChecklist : IEnumerable<KeyValuePair<string, HashChecker>>
+    public class HashChecklist : IEnumerable<KeyValuePair<string, HashChecker>>
     {
         private static Encoding[] _supportedEncodings = null;
         private static readonly char[] directorySeparators = new char[] { '/', '\\' };

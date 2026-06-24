@@ -3,7 +3,7 @@
     /// <summary>
     /// 哈希计算任务模型的运行状态
     /// </summary>
-    internal enum HashState
+    public enum HashState
     {
         /// <summary>
         /// HashViewModel 初始状态
@@ -34,7 +34,7 @@
     /// <summary>
     /// 哈希计算任务模型的结果状态
     /// </summary>
-    internal enum HashResult
+    public enum HashResult
     {
         NoResult,
         Canceled,
@@ -45,7 +45,7 @@
     /// <summary>
     /// HashViewModel 的 PauseOrContinueModel 方法参数
     /// </summary>
-    internal enum PauseMode
+    public enum PauseMode
     {
         /// <summary>
         /// 暂停任务
@@ -224,7 +224,7 @@
     /// 约定的 MemoryMappedFile 内容排布方案版本
     /// 默认约定：MemoryMappedFile 内的前 4 个字节总是代表内容排布方案版本，转为 int 值后强转为此枚举
     /// </summary>
-    internal enum MappedVer
+    public enum MappedVer
     {
         /// <summary>
         /// 未知版本，不读取 MemoryMappedFile 的内容
@@ -245,7 +245,7 @@
     /// <summary>
     /// 筛选器的筛选逻辑
     /// </summary>
-    internal enum FilterLogic
+    public enum FilterLogic
     {
         /// <summary>
         /// 对象的目标属性(数组)里的任意一项符合筛选器多个要求里任意一个要求
@@ -268,7 +268,7 @@
         Cover,
     }
 
-    internal enum XXHErrorCode
+    public enum XXHErrorCode
     {
         XXH_OK,
         XXH_ERROR
@@ -406,7 +406,7 @@
     /// <summary>
     /// 一般用来指示某个注册表项在注册表的 HKCU 或 HKLM 分支中
     /// </summary>
-    internal enum RegBranch
+    public enum RegBranch
     {
         /// <summary>
         /// 由于异常或其它原因未知指定的某个注册表项是否存在

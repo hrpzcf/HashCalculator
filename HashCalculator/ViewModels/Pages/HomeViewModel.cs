@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -20,7 +20,7 @@ using WpfuiCtrls = Wpf.Ui.Controls;
 
 namespace HashCalculator.ViewModels.Pages;
 
-internal class HomeViewModel : NotifiableModel
+public class HomeViewModel : NotifiableModel
 {
     private const int interval = 600;
     private readonly Timer checkStateTimer = null;
@@ -101,8 +101,6 @@ internal class HomeViewModel : NotifiableModel
         get;
         private set;
     }
-
-    public MainWindow OwnerWnd { get; }
 
     /// <summary>
     /// 使用此属性相当于 HashViewModelsViewSrc.View 的简写
@@ -838,7 +836,7 @@ internal class HomeViewModel : NotifiableModel
                 deleteFileTip = $"确定把选中的 {count} 个文件移动到回收站吗？";
             }
             if (NotificationSender.ShowMessageBox(
-                this.OwnerWnd,
+                MainWindow.Current,
                 "提示",
                 deleteFileTip,
                 closeButtonText: "否",
@@ -856,7 +854,7 @@ internal class HomeViewModel : NotifiableModel
             };
             DoubleProgressWindow progressWindow = new DoubleProgressWindow(progress)
             {
-                Owner = this.OwnerWnd,
+                Owner = MainWindow.Current,
             };
             HashViewModel[] targets = selectedModels.Cast<HashViewModel>().ToArray();
             foreach (HashViewModel model in targets)
@@ -912,7 +910,7 @@ internal class HomeViewModel : NotifiableModel
             string exceptionMessage = await deleteFileTask;
             if (!string.IsNullOrEmpty(exceptionMessage))
             {
-                NotificationSender.ShowMessageBox(this.OwnerWnd, "错误", exceptionMessage);
+                NotificationSender.ShowMessageBox(MainWindow.Current, "错误", exceptionMessage);
             }
             this.GenerateFileHashCheckReport();
         }
@@ -999,7 +997,7 @@ internal class HomeViewModel : NotifiableModel
         {
             HowToExportResults howToExportResults = new HowToExportResults()
             {
-                Owner = this.OwnerWnd,
+                Owner = MainWindow.Current,
             };
             if (howToExportResults.ShowDialog() != true)
             {
@@ -1112,7 +1110,7 @@ internal class HomeViewModel : NotifiableModel
         {
             string paths = '\n'.Join(existedFiles);
             if (NotificationSender.ShowMessageBox(
-                this.OwnerWnd,
+                MainWindow.Current,
                 "警告",
                 $"已存在以下文件，继续导出将会覆盖原文件，仍然要导出吗？\n{paths}",
                 closeButtonText: "否",
@@ -1129,7 +1127,7 @@ internal class HomeViewModel : NotifiableModel
             if (!algoTypesSet.SetEquals(typesSet))
             {
                 if (NotificationSender.ShowMessageBox(
-                    this.OwnerWnd,
+                    MainWindow.Current,
                     "警告",
                     "并非所有行包含的算法都一样，如果仍要导出结果，则导出的每个清单里包含的文件数量不一样，" +
                         "仍然要导出吗？",
@@ -1382,7 +1380,7 @@ internal class HomeViewModel : NotifiableModel
 
     private void OpenSettingsPanelAction(object param)
     {
-        new SettingsPanel() { Owner = this.OwnerWnd }.ShowDialog();
+        new SettingsPanel() { Owner = MainWindow.Current }.ShowDialog();
     }
 
     public ICommand OpenSettingsWindowCmd
