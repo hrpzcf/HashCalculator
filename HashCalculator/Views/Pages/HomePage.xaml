@@ -387,7 +387,7 @@
             Drop="DataGridHashingFilesDrop"
             Grid.IsSharedSizeScope="True"
             IsReadOnly="True"
-            ItemsSource="{Binding Source={x:Static hc:MainWndViewModel.HashViewModelsViewSrc}, IsAsync=True}"
+            ItemsSource="{Binding Source={x:Static hc:MainViewModel.HashViewModelsViewSrc}, IsAsync=True}"
             PreviewKeyDown="DataGridHashingFilesPrevKeyDown"
             ScrollViewer.CanContentScroll="True"
             SelectedItem="{Binding SelectedHashVieModel}"
@@ -1060,7 +1060,7 @@
                     Padding="4,0"
                     VerticalAlignment="Center"
                     Foreground="Gray"
-                    Text="{Binding Source={x:Static hc:MainWndViewModel.HashViewModels}, Path=Count}"
+                    Text="{Binding Source={x:Static hc:MainViewModel.HashViewModels}, Path=Count}"
                     ToolTip="表格总行数..." />
                 <Image
                     Width="16"

@@ -20,7 +20,7 @@ using WpfuiCtrls = Wpf.Ui.Controls;
 
 namespace HashCalculator
 {
-    public class MainWndViewModel : NotifiableModel
+    public class MainViewModel : NotifiableModel
     {
         private const int interval = 600;
         private readonly Timer checkStateTimer = null;
@@ -85,7 +85,7 @@ namespace HashCalculator
             SetWindowHeight = height => Settings.Current.MainWndDelFileProgressHeight = height,
         };
 
-        public MainWndViewModel()
+        public MainViewModel()
         {
             Current = this;
             HashViewModelsViewSrc = new CollectionViewSource();
@@ -96,7 +96,7 @@ namespace HashCalculator
             this.checkStateTimer = new Timer(this.CheckStateAction);
         }
 
-        public static MainWndViewModel Current
+        public static MainViewModel Current
         {
             get;
             private set;
@@ -729,7 +729,7 @@ namespace HashCalculator
                 int count = selectedModels.Count;
                 for (int i = 0; i < count; ++i)
                 {
-                    var model = (HashViewModel)selectedModels[i];
+                    HashViewModel model = (HashViewModel)selectedModels[i];
                     if (!File.Exists(model.Information.FullName))
                     {
                         continue;
@@ -760,7 +760,7 @@ namespace HashCalculator
                     HashViewModel model = (HashViewModel)selectedModels[i];
                     if (File.Exists(model.Information.FullName))
                     {
-                        var shellExecuteInfo = new SHELLEXECUTEINFOW();
+                        SHELLEXECUTEINFOW shellExecuteInfo = new SHELLEXECUTEINFOW();
                         shellExecuteInfo.cbSize = Marshal.SizeOf(shellExecuteInfo);
                         shellExecuteInfo.fMask = SEMaskFlags.SEE_MASK_INVOKEIDLIST;
                         shellExecuteInfo.hwnd = MainWindow.WndHandle;
@@ -1004,7 +1004,7 @@ namespace HashCalculator
                     return;
                 }
             }
-            var usedModels = new List<TemplateForExportModel>();
+            List<TemplateForExportModel> usedModels = new List<TemplateForExportModel>();
             StringBuilder filterStringBuilder = new StringBuilder();
             foreach (TemplateForExportModel model in Settings.Current.TemplatesForExport)
             {
@@ -1079,7 +1079,7 @@ namespace HashCalculator
         private void EachAlgoExportedToSeparateFile(string file, Encoding encoding, string format,
             OutputType output)
         {
-            var algoTypes = new Dictionary<AlgoType, string>();
+            Dictionary<AlgoType, string> algoTypes = new Dictionary<AlgoType, string>();
             List<HashViewModel> validHashViews = new List<HashViewModel>();
             foreach (HashViewModel hashView in HashViewModels)
             {

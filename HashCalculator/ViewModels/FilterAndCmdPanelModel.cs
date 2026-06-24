@@ -63,7 +63,7 @@ namespace HashCalculator
             };
         }
 
-        public FilterAndCmdPanelModel() : this(MainWndViewModel.HashViewModelsView)
+        public FilterAndCmdPanelModel() : this(MainViewModel.HashViewModelsView)
         {
         }
 
@@ -153,7 +153,7 @@ namespace HashCalculator
             bool filteringShouldBeApplied = param is not bool instruction || instruction;
             await Task.Run(() =>
             {
-                foreach (HashViewModel model in MainWndViewModel.HashViewModels)
+                foreach (HashViewModel model in MainViewModel.HashViewModels)
                 {
                     model.Matched = true;
                     model.FileIndex = null;
@@ -169,7 +169,7 @@ namespace HashCalculator
                         {
                             try
                             {
-                                filter.FilterObjects(MainWndViewModel.HashViewModels);
+                                filter.FilterObjects(MainViewModel.HashViewModels);
                             }
                             catch (Exception ex)
                             {

@@ -22,7 +22,7 @@ namespace HashCalculator
 
         public bool CheckIfUsingDistinctFilesFilter { get; set; } = true;
 
-        public DeleteFileCmder() : this(MainWndViewModel.HashViewModels)
+        public DeleteFileCmder() : this(MainViewModel.HashViewModels)
         {
         }
 
@@ -82,7 +82,7 @@ namespace HashCalculator
                                 CommonUtils.SendToRecycleBin(MainWindow.WndHandle, pathsInOneString);
                             }
                         });
-                        MainWndViewModel.Current.GenerateFileHashCheckReport();
+                        MainViewModel.Current.GenerateFileHashCheckReport();
                     }
                 }
                 else

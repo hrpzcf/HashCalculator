@@ -10,7 +10,7 @@
     Title="{x:Static local:Info.Title}"
     Width="{Binding Source={x:Static local:Settings.Current}, Path=MainWndWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     Height="{Binding Source={x:Static local:Settings.Current}, Path=MainWndHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-    d:DataContext="{d:DesignInstance Type=local:MainWndViewModel}"
+    d:DataContext="{d:DesignInstance Type=local:MainViewModel}"
     d:Height="300"
     d:Width="1100"
     ExtendsContentIntoTitleBar="True"
@@ -428,7 +428,7 @@
                 Drop="DataGridHashingFilesDrop"
                 Grid.IsSharedSizeScope="True"
                 IsReadOnly="True"
-                ItemsSource="{Binding Source={x:Static local:MainWndViewModel.HashViewModelsViewSrc}, IsAsync=True}"
+                ItemsSource="{Binding Source={x:Static local:MainViewModel.HashViewModelsViewSrc}, IsAsync=True}"
                 PreviewKeyDown="DataGridHashingFilesPrevKeyDown"
                 ScrollViewer.CanContentScroll="True"
                 SelectedItem="{Binding SelectedHashVieModel}"
@@ -1127,7 +1127,7 @@
                         Padding="4,0"
                         VerticalAlignment="Center"
                         Foreground="Gray"
-                        Text="{Binding Source={x:Static local:MainWndViewModel.HashViewModels}, Path=Count}"
+                        Text="{Binding Source={x:Static local:MainViewModel.HashViewModels}, Path=Count}"
                         ToolTip="表格总行数..." />
                     <Image
                         Width="16"

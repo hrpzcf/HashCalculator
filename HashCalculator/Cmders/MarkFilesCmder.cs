@@ -46,7 +46,7 @@ namespace HashCalculator
 
         public bool CheckIfUsingDistinctFilesFilter { get; set; } = true;
 
-        public MarkFilesCmder() : this(MainWndViewModel.HashViewModels)
+        public MarkFilesCmder() : this(MainViewModel.HashViewModels)
         {
         }
 

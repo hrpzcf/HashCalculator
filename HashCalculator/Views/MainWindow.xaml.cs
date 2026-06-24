@@ -18,7 +18,7 @@ namespace HashCalculator
         private bool listenerAdded = false;
         private DateTime lastClipboardUpdateDateTime = DateTime.Now;
         private PresentationSource presentationSrc = null;
-        private readonly MainWndViewModel viewModel = null;
+        private readonly MainViewModel viewModel = null;
 
         private static string[] startupArgs = null;
         private static readonly TimeSpan clipboardTriggerMinInterval =
@@ -32,7 +32,7 @@ namespace HashCalculator
 
         private bool ProcIdMonitorFlag { get; set; } = true;
 
-        public MainWindow(MainWndViewModel viewModel)
+        public MainWindow(MainViewModel viewModel)
         {
             Current = this;
             this.viewModel = viewModel;
@@ -188,7 +188,7 @@ namespace HashCalculator
                 {
                     Synchronization.UI.Invoke(() =>
                     {
-                        MainWndViewModel.Current.ClearAllTableLinesAction(null);
+                        MainViewModel.Current.ClearAllTableLinesAction(null);
                     });
                 }
                 if (Settings.Current.UseExistingClipboardTextForCheck)
@@ -233,7 +233,7 @@ namespace HashCalculator
                     {
                         Synchronization.UI.Invoke(() =>
                         {
-                            MainWndViewModel.Current.ClearAllTableLinesAction(null);
+                            MainViewModel.Current.ClearAllTableLinesAction(null);
                         });
                     }
                     // 这里添加要计算哈希值的文件时，看作以多选文件的方式添，所以

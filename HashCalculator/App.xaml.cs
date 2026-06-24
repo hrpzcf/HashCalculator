@@ -18,12 +18,12 @@ public partial class App : Application
     private static readonly IHost _host = Host.CreateDefaultBuilder()
         .ConfigureServices((context, services) =>
         {
-            _ = services.AddSingleton<MainWindow>();
-            _ = services.AddSingleton<MainWndViewModel>();
-            _ = services.AddSingleton<HomePage>();
-            _ = services.AddSingleton<HomeViewModel>();
+            services.AddSingleton<HomeViewModel>();
+            services.AddSingleton<HomePage>();
+            services.AddSingleton<MainViewModel>();
+            services.AddSingleton<MainWindow>();
             // 应用生命周期
-            _ = services.AddHostedService<ApplicationHostService>();
+            services.AddHostedService<ApplicationHostService>();
         }).Build();
 
     public static T GetRequiredService<T>() where T : class
@@ -41,6 +41,7 @@ public partial class App : Application
         Settings.LoadSettings();
         Initializer.ParseArgsForShell(e.Args);
         Initializer.PushArgs(e.Args);
+        // 必须要在 Settings.LoadSettings 后执行，否则它们依赖的 Settings 未就绪
         _host.Start();
     }
 

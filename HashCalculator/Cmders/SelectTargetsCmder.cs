@@ -32,7 +32,7 @@ namespace HashCalculator
             this.UserInterface = new SelectTargetsCmderCtrl(this);
         }
 
-        public SelectTargetsCmder() : this(MainWndViewModel.HashViewModels, MainWndViewModel.HashViewModelsView)
+        public SelectTargetsCmder() : this(MainViewModel.HashViewModels, MainViewModel.HashViewModelsView)
         {
         }
 
