@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 namespace HashCalculator
 {
-    internal class FilterAndCmdPanelModel : NotifiableModel
+    internal class FilterAndCmdPanelModel : BaseViewModel
     {
         private AbsHashesCmder selectedCmder;
         private AbsHashViewFilter selectedFilter;

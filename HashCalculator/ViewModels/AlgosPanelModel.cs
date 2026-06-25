@@ -6,7 +6,7 @@ using System.Windows.Input;
 
 namespace HashCalculator
 {
-    internal class AlgosPanelModel : NotifiableModel
+    internal class AlgosPanelModel : BaseViewModel
     {
         private RelayCommand clearAllSelectedCmd;
 

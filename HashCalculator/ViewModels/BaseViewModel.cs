@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace HashCalculator
 {
-    public abstract class NotifiableModel : INotifyPropertyChanged
+    public abstract class BaseViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 

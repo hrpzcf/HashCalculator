@@ -7,7 +7,7 @@
     xmlns:local="clr-namespace:HashCalculator.Views.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="clr-namespace:HashCalculator.ViewModels.Pages"
-    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="HomePage"
     d:DataContext="{d:DesignInstance Type=models:HomeViewModel}"
     d:DesignHeight="450"
@@ -1045,7 +1045,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" Orientation="Horizontal">
-                <ui:ProgressRing
+                <wpfui:ProgressRing
                     Width="20"
                     Height="20"
                     Margin="0,0,12,0"
@@ -1075,7 +1075,7 @@
                     Text="{Binding TobeComputedModelsCount}"
                     ToolTip="待计算行数..." />
             </StackPanel>
-            <ui:TextBox
+            <wpfui:TextBox
                 Grid.Column="1"
                 Margin="8,0,0,0"
                 Padding="4,2"
@@ -1094,7 +1094,7 @@
                 Command="{Binding SelectChecklistFileCmd}"
                 Content="..."
                 ToolTip="打开【选择文件】对话框选择【哈希值清单】文件，将选择的文件路径填充到【哈希值校验依据】输入框中" />
-            <ui:Button
+            <wpfui:Button
                 Grid.Column="3"
                 Margin="8,0,0,0"
                 Padding="16,4"

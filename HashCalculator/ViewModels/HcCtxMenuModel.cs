@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace HashCalculator
 {
-    public class HcCtxMenuModel : NotifiableModel
+    public class HcCtxMenuModel : BaseViewModel
     {
         private const char sep = ',';
         private string _title;

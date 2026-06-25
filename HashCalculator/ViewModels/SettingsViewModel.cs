@@ -15,7 +15,7 @@ namespace HashCalculator
 {
 #pragma warning disable IDE0180 // 使用元组交换值
 
-    public class SettingsViewModel : NotifiableModel
+    public class SettingsViewModel : BaseViewModel
     {
         private double mainWndWidth = 1100.0;
         private double mainWndHeight = 760.0;

@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 
 namespace HashCalculator
 {
-    internal class ShellMenuEditorModel : NotifiableModel
+    internal class ShellMenuEditorModel : BaseViewModel
     {
         private HcCtxMenuModel _selectedMenu;
         private ObservableCollection<HcCtxMenuModel> _menuList;

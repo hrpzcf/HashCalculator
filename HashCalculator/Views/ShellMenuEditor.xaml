@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="快捷菜单配置文件编辑器"
     Width="{Binding Source={x:Static local:Settings.Current}, Path=ShellMenuEditorWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     Height="{Binding Source={x:Static local:Settings.Current}, Path=ShellMenuEditorHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -89,7 +89,7 @@
                 Grid.Row="0"
                 Grid.Column="1"
                 Margin="8,0,0,0">
-                <ui:Button
+                <wpfui:Button
                     Grid.Column="2"
                     Padding="8,0"
                     Appearance="Primary"
@@ -122,13 +122,13 @@
                     Padding="8,0"
                     Command="{Binding MoveMenuDownCmd}"
                     Content="下移所选" />
-                <ui:Button
+                <wpfui:Button
                     Margin="0,8,0,0"
                     Padding="8,0"
                     Appearance="Danger"
                     Command="{Binding DeleteMenuCmd}"
                     Content="移除所选" />
-                <ui:Button
+                <wpfui:Button
                     Grid.Column="1"
                     Margin="0,32,0,0"
                     Padding="8,0"

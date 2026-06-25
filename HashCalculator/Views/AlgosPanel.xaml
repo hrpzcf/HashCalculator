@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="默认算法"
     Width="{Binding Source={x:Static local:Settings.Current}, Path=AlgosPanelWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     Height="{Binding Source={x:Static local:Settings.Current}, Path=AlgosPanelHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -95,7 +95,7 @@
                 Style="{StaticResource DescTextBlockStyle}"
                 Text="不建议选择太多算法，否则计算时极易造成程序无响应" />
         </Grid>
-        <ui:Button
+        <wpfui:Button
             Grid.Row="1"
             Grid.Column="0"
             Margin="0,8,0,4"
@@ -104,7 +104,7 @@
             Appearance="Caution"
             Command="{Binding ClearAllSelectedCmd}"
             Content="清除" />
-        <ui:Button
+        <wpfui:Button
             Grid.Row="1"
             Grid.Column="1"
             Margin="0,8,0,4"

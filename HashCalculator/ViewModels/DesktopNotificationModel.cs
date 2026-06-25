@@ -2,7 +2,7 @@
 
 namespace HashCalculator
 {
-    internal class DesktopNotificationModel : NotifiableModel
+    internal class DesktopNotificationModel : BaseViewModel
     {
         private string _notificationMessage;
         private NotificationType _notificationType;

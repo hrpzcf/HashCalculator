@@ -8,7 +8,7 @@ using HashCalculator.Others;
 
 namespace HashCalculator
 {
-    internal class ExceptionWindowModel : NotifiableModel
+    internal class ExceptionWindowModel : BaseViewModel
     {
         private RelayCommand feedbackCmd;
         private int _handledExceptionCount = 0;

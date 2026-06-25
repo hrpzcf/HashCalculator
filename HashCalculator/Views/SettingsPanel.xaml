@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="设置"
     Width="{Binding SettingsWndWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     Height="{Binding SettingsWndHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -592,14 +592,14 @@
                         Header="扩展系统右键菜单和关联 .hcb 文件">
                         <StackPanel>
                             <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
-                                <ui:Button
+                                <wpfui:Button
                                     MinHeight="36"
                                     Padding="32,0"
                                     Appearance="Primary"
                                     Command="{Binding InstallShellExtCmd}"
                                     Content="安装右键菜单并关联文件"
                                     IsEnabled="{Binding ProcessingShellExtension, Converter={StaticResource ReverseBooleanValueCvt}}" />
-                                <ui:Button
+                                <wpfui:Button
                                     MinHeight="36"
                                     Margin="16,0,0,0"
                                     Padding="32,0"
@@ -706,7 +706,7 @@
                         Foreground="#FF006FD6"
                         Header="自定义要集成到系统右键菜单的菜单项">
                         <StackPanel>
-                            <ui:Button
+                            <wpfui:Button
                                 MinHeight="36"
                                 Padding="20,0"
                                 HorizontalAlignment="Left"
@@ -749,7 +749,7 @@
                             DisplayMemberPath="AlgoName"
                             ItemsSource="{Binding Source={x:Static local:AlgosPanelModel.ProvidedAlgos}}"
                             SelectedItem="{Binding SelectedInOutModelForAlias}" />
-                        <ui:Button
+                        <wpfui:Button
                             Margin="16,0,0,0"
                             Appearance="Danger"
                             Command="{Binding ResetAlgorithmAliasCmd}"
@@ -1147,13 +1147,13 @@
                                 Padding="8,2"
                                 Command="{Binding MoveExportTemplateDownCmd}"
                                 Content="下移" />
-                            <ui:Button
+                            <wpfui:Button
                                 Margin="0,8,0,0"
                                 Padding="8,2"
                                 Appearance="Danger"
                                 Command="{Binding RemoveExportTemplateCmd}"
                                 Content="移除" />
-                            <ui:Button
+                            <wpfui:Button
                                 Margin="0,8,0,0"
                                 Padding="8,2"
                                 Appearance="Danger"
@@ -1396,12 +1396,12 @@
                             Margin="0,8,0,0"
                             Command="{Binding MoveChecklistTemplateDownCmd}"
                             Content="下移" />
-                        <ui:Button
+                        <wpfui:Button
                             Margin="0,8,0,0"
                             Appearance="Danger"
                             Command="{Binding RemoveChecklistTemplateCmd}"
                             Content="移除" />
-                        <ui:Button
+                        <wpfui:Button
                             Margin="0,8,0,0"
                             Appearance="Danger"
                             Command="{Binding ResetChecklistTemplateCmd}"

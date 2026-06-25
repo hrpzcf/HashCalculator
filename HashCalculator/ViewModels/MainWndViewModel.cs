@@ -20,7 +20,7 @@ using WpfuiCtrls = Wpf.Ui.Controls;
 
 namespace HashCalculator
 {
-    public class MainViewModel : NotifiableModel
+    public class MainViewModel : BaseViewModel
     {
         private const int interval = 600;
         private readonly Timer checkStateTimer = null;

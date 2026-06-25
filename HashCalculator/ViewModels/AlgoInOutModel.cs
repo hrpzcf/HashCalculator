@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace HashCalculator
 {
-    public class AlgoInOutModel : NotifiableModel
+    public class AlgoInOutModel : BaseViewModel
     {
         private CmpRes _hashCmpResult;
         private byte[] _hashResult;

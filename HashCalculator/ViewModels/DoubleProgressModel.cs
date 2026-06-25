@@ -29,7 +29,7 @@ namespace HashCalculator
         public SetWndSize SetWindowHeight { get; set; }
     }
 
-    internal class DoubleProgressModel : NotifiableModel
+    internal class DoubleProgressModel : BaseViewModel
     {
         private bool isCancelled = false;
         private string windowTitle = string.Empty;

@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace HashCalculator
 {
-    internal class AlgoGroupModel : NotifiableModel
+    internal class AlgoGroupModel : BaseViewModel
     {
         private int _selectedAlgoCount = 0;
 
