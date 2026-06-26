@@ -13,6 +13,7 @@ using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using HashCalculator.Views.Windows;
 using Drawing = System.Drawing;
 
 namespace HashCalculator
@@ -73,7 +74,7 @@ namespace HashCalculator
         /// </summary>
         public static void Suggest<T>(ref T[] array, long fileSize)
         {
-            int multiple = Math.Min(maxMultiple, (int)(fileSize / pageSize + 1));
+            int multiple = Math.Min(maxMultiple, (int)((fileSize / pageSize) + 1));
             MakeSureBuffer(ref array, pageSize * multiple);
         }
 

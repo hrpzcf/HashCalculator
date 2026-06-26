@@ -1,19 +1,23 @@
 ﻿<wpfui:FluentWindow
-    x:Class="HashCalculator.MainWindow"
+    x:Class="HashCalculator.Views.Windows.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:winmodels="clr-namespace:HashCalculator.ViewModels.Windows"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="{x:Static local:Info.Title}"
     Width="{Binding Source={x:Static local:Settings.Current}, Path=MainWndWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     Height="{Binding Source={x:Static local:Settings.Current}, Path=MainWndHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-    d:DataContext="{d:DesignInstance Type=local:MainViewModel}"
+    d:DataContext="{d:DesignInstance Type=winmodels:MainViewModel}"
     d:Height="300"
     d:Width="1100"
+    Closed="MainWindowClosed"
+    Closing="MainWindowClosing"
     ExtendsContentIntoTitleBar="True"
     Icon="/Images/icon.ico"
+    Loaded="MainWindowLoaded"
     SnapsToDevicePixels="True"
     Topmost="{Binding Source={x:Static local:Settings.Current}, Path=MainWndTopmost}"
     UseLayoutRounding="True"
@@ -50,25 +54,26 @@
     </wpfui:FluentWindow.Left>
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition />
-        </Grid.RowDefinitions>
+        <wpfui:NavigationView
+            x:Name="NavigationView"
+            Padding="24"
+            FooterMenuItemsSource="{Binding FooterItems, Mode=OneWay}"
+            MenuItemsSource="{Binding MenuItems, Mode=OneWay}"
+            OpenPaneLength="160"
+            PaneDisplayMode="Left"
+            TitleBar="{Binding ElementName=TitleBar, Mode=OneWay}">
+            <wpfui:NavigationView.ContentOverlay>
+                <wpfui:SnackbarPresenter x:Name="SnackbarPresenter" />
+            </wpfui:NavigationView.ContentOverlay>
+        </wpfui:NavigationView>
 
         <wpfui:TitleBar
             x:Name="TitleBar"
             Title="{x:Static local:Info.Title}"
-            Grid.Row="0"
             CloseWindowByDoubleClickOnIcon="True">
             <wpfui:TitleBar.Icon>
                 <wpfui:ImageIcon Source="/Images/icon.ico" />
             </wpfui:TitleBar.Icon>
         </wpfui:TitleBar>
-
-        <wpfui:NavigationView Padding="24" OpenPaneLength="240" PaneDisplayMode="Left" Grid.Row="1">
-            
-        </wpfui:NavigationView>
-
-        <wpfui:SnackbarPresenter x:Name="SnackbarPresenter" Grid.Row="1" />
     </Grid>
 </wpfui:FluentWindow>

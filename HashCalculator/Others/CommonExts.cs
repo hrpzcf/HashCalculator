@@ -431,7 +431,7 @@ namespace HashCalculator
             yield break;
         }
 
-        public static void ReorderDataGridColumns(this ObservableCollection<DataGridColumn> columns,
+        public static void ReorderGridColumns(this ObservableCollection<DataGridColumn> columns,
             Dictionary<string, ColumnProperty> order)
         {
             if (columns != null && order != null)

@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.MemoryMappedFiles;
 using System.Windows;
 using CommandLine;
+using HashCalculator.Views.Windows;
 
 namespace HashCalculator
 {

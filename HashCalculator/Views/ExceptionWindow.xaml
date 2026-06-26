@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="异常中断"
     Width="{Binding ExceptionWindowWidth, Source={x:Static local:Settings.Current}, Mode=TwoWay}"
     Height="{Binding ExceptionWindowHeight, Source={x:Static local:Settings.Current}, Mode=TwoWay}"
@@ -18,22 +19,22 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0">
-            <TextBlock
+            <wpfui:TextBlock
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                Style="{StaticResource TextBlockTitle}"
+                FontTypography="Title"
                 Text="以下为前 10 条未捕获的异常，程序即将退出..." />
-            <TextBlock
+            <wpfui:TextBlock
                 Margin="0,4,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                Style="{StaticResource TextBlockDefaultSecLight}"
+                FontTypography="Body"
                 Text="问题反馈：点击底部任意按钮复制异常内容，在打开的浏览器页面登录后新建 Issue 并粘贴发布。" />
-            <TextBlock
+            <wpfui:TextBlock
                 Margin="0,4,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                Style="{StaticResource TextBlockDefaultSecLight}"
+                FontTypography="Body"
                 Text="如果复制失败请手动全选以下信息并复制，打开“设置→关于软件→问题反馈”手动打开问题反馈页面。" />
         </StackPanel>
         <TextBox
@@ -41,9 +42,7 @@
             Margin="0,4,0,0"
             Padding="8"
             VerticalContentAlignment="Top"
-            BorderBrush="{StaticResource BorderBrush}"
             BorderThickness="4"
-            Foreground="{StaticResource SecondaryTextBrush}"
             HorizontalScrollBarVisibility="Auto"
             IsReadOnly="True"
             Text="{Binding StackTraceMessage, Mode=OneWay}"
@@ -53,23 +52,23 @@
             Margin="0,8,0,0"
             HorizontalAlignment="Right"
             Orientation="Horizontal">
-            <Button
+            <wpfui:Button
                 Grid.Column="0"
-                Padding="16,0"
+                Padding="16,8"
                 HorizontalAlignment="Right"
+                Appearance="Primary"
                 Command="{Binding FeedbackCommand}"
                 CommandParameter="{Binding Content, RelativeSource={RelativeSource Mode=Self}}"
-                Content="复制并到 GitHub 反馈"
-                Style="{StaticResource ButtonPrimary}" />
-            <Button
+                Content="复制并到 GitHub 反馈" />
+            <wpfui:Button
                 Grid.Column="1"
                 Margin="8,0,0,0"
-                Padding="16,0"
+                Padding="16,8"
                 HorizontalAlignment="Left"
+                Appearance="Primary"
                 Command="{Binding FeedbackCommand}"
                 CommandParameter="{Binding Content, RelativeSource={RelativeSource Mode=Self}}"
-                Content="复制并到 Gitee 反馈"
-                Style="{StaticResource ButtonPrimary}" />
+                Content="复制并到 Gitee 反馈" />
         </StackPanel>
     </Grid>
 </Window>

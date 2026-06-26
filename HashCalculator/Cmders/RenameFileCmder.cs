@@ -4,6 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
+using HashCalculator.ViewModels.Pages;
+using HashCalculator.ViewModels.Windows;
+using HashCalculator.Views.Windows;
 using WpfuiCtrls = Wpf.Ui.Controls;
 
 namespace HashCalculator
@@ -56,7 +59,7 @@ namespace HashCalculator
 
         public bool CheckIfUsingDistinctFilesFilter { get; set; } = true;
 
-        public RenameFileCmder() : this(MainViewModel.HashViewModels)
+        public RenameFileCmder() : this(HomeViewModel.HashViewModels)
         {
         }
 

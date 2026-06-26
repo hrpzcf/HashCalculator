@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using HashCalculator.Views.Windows;
 using Wpfui = Wpf.Ui;
 using WpfuiCtrls = Wpf.Ui.Controls;
 

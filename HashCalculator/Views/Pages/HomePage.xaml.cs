@@ -4,38 +4,66 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using HashCalculator.ViewModels.Pages;
+using Wpf.Ui.Abstractions.Controls;
 
 namespace HashCalculator.Views.Pages;
 
-public partial class HomePage : Page
+public partial class HomePage : Page, INavigableView<HomeViewModel>
 {
-    private readonly HomeViewModel viewModel = null;
+    public HomeViewModel ViewModel { get; }
+
+    public static HomePage Current { get; private set; }
 
     public HomePage(HomeViewModel viewModel)
     {
-        this.viewModel = viewModel;
-        this.DataContext = this.viewModel;
+        this.ViewModel = viewModel;
+        Current = this;
+        this.DataContext = this.ViewModel;
+        this.Loaded += this.OnHomePageLoaded;
         this.InitializeComponent();
+    }
+
+    private void OnColumnDisplayIndexChanged(object sender, DataGridColumnEventArgs e)
+    {
+        if (e.Column?.Header is string header)
+        {
+            if (Settings.Current.ColumnsOrder.TryGetValue(header, out ColumnProperty value))
+            {
+                value.Width = e.Column.Width;
+                value.Index = e.Column.DisplayIndex;
+            }
+            else
+            {
+                Settings.Current.ColumnsOrder[header] = new ColumnProperty(
+                    e.Column.DisplayIndex, e.Column.Width);
+            }
+        }
+    }
+
+    private async void OnHomePageLoaded(object sender, RoutedEventArgs e)
+    {
+        this.MainDataGrid.Columns.ReorderGridColumns(Settings.Current.ColumnsOrder);
+        this.MainDataGrid.ColumnDisplayIndexChanged += this.OnColumnDisplayIndexChanged;
     }
 
     private void DataGridHashingFilesDrop(object sender, DragEventArgs e)
     {
         if (e.Data.GetDataPresent(DataFormats.FileDrop) &&
-                e.Data.GetData(DataFormats.FileDrop) is string[] data && data.Length != 0)
+            e.Data.GetData(DataFormats.FileDrop) is string[] data && data.Length != 0)
         {
             // 当用户把本地磁盘分区图标拖入程序窗口
             if (data[0].EndsWith(":\\"))
             {
                 // 只要确定第一个是分区根目录，那其他项也都是分区根目录
                 // 因为 Windows 不支持把不同区域的内容同时拖入程序窗口
-                this.viewModel.BeginDisplayModels(data.Select(
+                this.ViewModel.BeginDisplayModels(data.Select(
                     partition => new PathPackage(partition, partition,
                     Settings.Current.SelectedSearchMethodForDragDrop)).ToArray());
             }
             else
             {
                 string parentDir = Path.GetDirectoryName(data[0]);
-                this.viewModel.BeginDisplayModels(new PathPackage(parentDir, data,
+                this.ViewModel.BeginDisplayModels(new PathPackage(parentDir, data,
                     Settings.Current.SelectedSearchMethodForDragDrop));
             }
         }
@@ -43,24 +71,24 @@ public partial class HomePage : Page
 
     private void DataGridHashingFilesPrevKeyDown(object sender, KeyEventArgs e)
     {
-        if (e.Key == Key.Escape && sender is DataGrid dataGrid)
+        if (e.Key == Key.Escape && sender is System.Windows.Controls.DataGrid dataGrid)
         {
             dataGrid.SelectedItem = null;
         }
     }
 
-    private void TextBoxHashStringOrChecklistPathPreviewDragOver(object sender, DragEventArgs e)
-    {
-        e.Handled = true;
-    }
-
     private void TextBoxHashOrFilePathPreviewDrop(object sender, DragEventArgs e)
     {
         if (!e.Data.GetDataPresent(DataFormats.FileDrop) ||
-                e.Data.GetData(DataFormats.FileDrop) is not string[] data || data.Length == 0)
+            e.Data.GetData(DataFormats.FileDrop) is not string[] data || data.Length == 0)
         {
             return;
         }
-        this.viewModel.HashStringOrChecklistPath = data[0];
+        this.ViewModel.HashStringOrChecklistPath = data[0];
+    }
+
+    private void TextBoxHashStringOrChecklistPathPreviewDragOver(object sender, DragEventArgs e)
+    {
+        e.Handled = true;
     }
 }

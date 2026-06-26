@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
+using HashCalculator.ViewModels.Pages;
 
 namespace HashCalculator
 {

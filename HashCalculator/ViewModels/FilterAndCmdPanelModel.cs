@@ -4,6 +4,8 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using HashCalculator.ViewModels.Pages;
+using HashCalculator.Views.Windows;
 
 namespace HashCalculator
 {
@@ -63,7 +65,7 @@ namespace HashCalculator
             };
         }
 
-        public FilterAndCmdPanelModel() : this(MainViewModel.HashViewModelsView)
+        public FilterAndCmdPanelModel() : this(HomeViewModel.HashViewModelsView)
         {
         }
 
@@ -153,7 +155,7 @@ namespace HashCalculator
             bool filteringShouldBeApplied = param is not bool instruction || instruction;
             await Task.Run(() =>
             {
-                foreach (HashViewModel model in MainViewModel.HashViewModels)
+                foreach (HashViewModel model in HomeViewModel.HashViewModels)
                 {
                     model.Matched = true;
                     model.FileIndex = null;
@@ -169,7 +171,7 @@ namespace HashCalculator
                         {
                             try
                             {
-                                filter.FilterObjects(MainViewModel.HashViewModels);
+                                filter.FilterObjects(HomeViewModel.HashViewModels);
                             }
                             catch (Exception ex)
                             {

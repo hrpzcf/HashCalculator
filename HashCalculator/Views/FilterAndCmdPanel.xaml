@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pagemodels="clr-namespace:HashCalculator.ViewModels.Pages"
     x:Name="cmdPanel"
     Title="筛选与操作"
     Width="{Binding Source={x:Static local:Settings.Current}, Path=FilterAndCmderWndWidth, Mode=TwoWay}"
@@ -61,7 +62,7 @@
                 <Border Padding="4" BorderThickness="0">
                     <Border.IsEnabled>
                         <MultiBinding Converter="{StaticResource CmdPanelCriticalControlsEnabledCvt}">
-                            <Binding Path="State" Source="{x:Static local:MainViewModel.Current}" />
+                            <Binding Path="State" Source="{x:Static pagemodels:HomeViewModel.Current}" />
                             <Binding Path="FilterAndCmderEnabled" Source="{x:Static local:Settings.Current}" />
                         </MultiBinding>
                     </Border.IsEnabled>
@@ -205,7 +206,7 @@
                 <Border Padding="4" BorderThickness="0">
                     <Border.IsEnabled>
                         <MultiBinding Converter="{StaticResource CmdPanelCriticalControlsEnabledCvt}">
-                            <Binding Path="State" Source="{x:Static local:MainViewModel.Current}" />
+                            <Binding Path="State" Source="{x:Static pagemodels:HomeViewModel.Current}" />
                             <Binding Path="FilterAndCmderEnabled" Source="{x:Static local:Settings.Current}" />
                         </MultiBinding>
                     </Border.IsEnabled>

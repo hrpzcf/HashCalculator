@@ -3,6 +3,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using HashCalculator.Views.Pages;
+using HashCalculator.Views.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -14,7 +16,16 @@ public class ApplicationHostService : IHostedService
 
     public ApplicationHostService(IServiceProvider serviceProvider)
     {
-        _serviceProvider = serviceProvider;
+        this._serviceProvider = serviceProvider;
+    }
+
+    private void OnMainWindowLoaded(object sender, RoutedEventArgs e)
+    {
+        if (sender is not MainWindow mainWindow)
+        {
+            return;
+        }
+        mainWindow.NavigationView.Navigate(typeof(HomePage));
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
@@ -23,7 +34,8 @@ public class ApplicationHostService : IHostedService
         {
             return Task.CompletedTask;
         }
-        MainWindow mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
+        MainWindow mainWindow = this._serviceProvider.GetRequiredService<MainWindow>();
+        mainWindow.Loaded += this.OnMainWindowLoaded;
         mainWindow.Show();
         return Task.CompletedTask;
     }

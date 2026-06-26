@@ -14,6 +14,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
 using HashCalculator.Others;
+using HashCalculator.Views.Windows;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using WpfuiCtrls = Wpf.Ui.Controls;
@@ -27,8 +28,8 @@ public class HomeViewModel : BaseViewModel
     private readonly ModelStarter starter = new ModelStarter(
         Settings.Current.SelectedTaskNumberLimit, 32);
     private readonly Action<HashModelArg> addModelAction;
-    private readonly object displayingModelLock = new object();
-    private readonly object changeRunningStateLock = new object();
+    private readonly Lock displayingModelLock = new Lock();
+    private readonly Lock changeRunningStateLock = new Lock();
     private volatile int serial = 0;
     private int computedModelsCount = 0;
     private int tobeComputedModelsCount = 0;
@@ -51,7 +52,6 @@ public class HomeViewModel : BaseViewModel
     private RelayCommand forceRefreshOriginalModelsCmd;
     private RelayCommand selectChecklistFileCmd;
     private RelayCommand startCheckHashResultsCmd;
-    private RelayCommand openSettingsWindowCmd;
     private RelayCommand selectFilesToHashCmd;
     private RelayCommand selectFoldersToHashCmd;
     private RelayCommand cancelDisplayedModelsCmd;
@@ -729,7 +729,7 @@ public class HomeViewModel : BaseViewModel
             int count = selectedModels.Count;
             for (int i = 0; i < count; ++i)
             {
-                var model = (HashViewModel)selectedModels[i];
+                HashViewModel model = (HashViewModel)selectedModels[i];
                 if (!File.Exists(model.Information.FullName))
                 {
                     continue;
@@ -760,7 +760,7 @@ public class HomeViewModel : BaseViewModel
                 HashViewModel model = (HashViewModel)selectedModels[i];
                 if (File.Exists(model.Information.FullName))
                 {
-                    var shellExecuteInfo = new SHELLEXECUTEINFOW();
+                    SHELLEXECUTEINFOW shellExecuteInfo = new SHELLEXECUTEINFOW();
                     shellExecuteInfo.cbSize = Marshal.SizeOf(shellExecuteInfo);
                     shellExecuteInfo.fMask = SEMaskFlags.SEE_MASK_INVOKEIDLIST;
                     shellExecuteInfo.hwnd = MainWindow.WndHandle;
@@ -1004,7 +1004,7 @@ public class HomeViewModel : BaseViewModel
                 return;
             }
         }
-        var usedModels = new List<TemplateForExportModel>();
+        List<TemplateForExportModel> usedModels = new List<TemplateForExportModel>();
         StringBuilder filterStringBuilder = new StringBuilder();
         foreach (TemplateForExportModel model in Settings.Current.TemplatesForExport)
         {
@@ -1079,7 +1079,7 @@ public class HomeViewModel : BaseViewModel
     private void EachAlgoExportedToSeparateFile(string file, Encoding encoding, string format,
         OutputType output)
     {
-        var algoTypes = new Dictionary<AlgoType, string>();
+        Dictionary<AlgoType, string> algoTypes = new Dictionary<AlgoType, string>();
         List<HashViewModel> validHashViews = new List<HashViewModel>();
         foreach (HashViewModel hashView in HashViewModels)
         {
@@ -1375,20 +1375,6 @@ public class HomeViewModel : BaseViewModel
         {
             this.startCheckHashResultsCmd ??= new RelayCommand(this.StartCheckHashResultsAction);
             return this.startCheckHashResultsCmd;
-        }
-    }
-
-    private void OpenSettingsPanelAction(object param)
-    {
-        new SettingsPanel() { Owner = MainWindow.Current }.ShowDialog();
-    }
-
-    public ICommand OpenSettingsWindowCmd
-    {
-        get
-        {
-            this.openSettingsWindowCmd ??= new RelayCommand(this.OpenSettingsPanelAction);
-            return this.openSettingsWindowCmd;
         }
     }
 

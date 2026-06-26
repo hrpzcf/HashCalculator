@@ -5,7 +5,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    d:DataContext="{d:DesignInstance local:SettingsViewModel}"
+    xmlns:pagemodels="clr-namespace:HashCalculator.ViewModels.Pages"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
+    d:DataContext="{d:DesignInstance pagemodels:SettingsViewModel}"
     KeyDown="WindowKeyDown"
     ResizeMode="NoResize"
     ShowInTaskbar="False"
@@ -84,15 +86,15 @@
             Margin="0,8,0,0"
             Content="每次导出结果时都打开导出参数小窗口以设置本次的导出参数"
             IsChecked="{Binding AskUserHowToExportResultsEveryTime}" />
-        <Button
+        <wpfui:Button
             Grid.Row="5"
             Grid.Column="0"
             Margin="0,8,0,0"
             Padding="24,0"
             HorizontalAlignment="Right"
+            Appearance="Primary"
             Click="ButtonConfirmClick"
             Content="确定"
-            IsDefault="True"
-            Style="{StaticResource ButtonPrimary}" />
+            IsDefault="True" />
     </Grid>
 </Window>

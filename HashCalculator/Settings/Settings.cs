@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
+using HashCalculator.ViewModels.Pages;
 using Newtonsoft.Json;
 
 namespace HashCalculator

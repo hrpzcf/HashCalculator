@@ -10,8 +10,13 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using CommandLine;
 using HashCalculator.Others;
+using HashCalculator.ViewModels.Pages;
+using HashCalculator.ViewModels.Windows;
+using HashCalculator.Views.Pages;
+using Wpf.Ui;
+using Wpf.Ui.Abstractions;
 
-namespace HashCalculator
+namespace HashCalculator.Views.Windows
 {
     public partial class MainWindow
     {
@@ -32,16 +37,20 @@ namespace HashCalculator
 
         private bool ProcIdMonitorFlag { get; set; } = true;
 
-        public MainWindow(MainViewModel viewModel)
+        public MainWindow(MainViewModel viewModel, INavigationService navigationService)
         {
             Current = this;
             this.viewModel = viewModel;
             this.DataContext = this.viewModel;
-            this.Closed += this.MainWindowClosed;
-            this.Loaded += this.MainWindowLoaded;
             this.InitializeComponent();
+            navigationService.SetNavigationControl(NavigationView);
             NotificationSender.SnackbarService.SetSnackbarPresenter(
                 this.SnackbarPresenter);
+        }
+
+        private void MainWindowClosing(object sender, CancelEventArgs e)
+        {
+            e.Cancel = SettingsPanel.Current.ViewModel.ProcessingShellExtension;
         }
 
         private void MainWindowClosed(object sender, EventArgs e)
@@ -61,22 +70,6 @@ namespace HashCalculator
             // 如果是其他进程实例内的 ProcessIdMonitorProc 方法内的 PIdSynchronizer.Wait 抢到了锁，
             // 则直接进入步骤 3，本进程实例 ProcessIdMonitorProc 方法内的 PIdSynchronizer.Wait 抢不到锁不会往下执行。
             Initializer.PIdSynchronizer.Set();
-            foreach (DataGridColumn column in this.MainWindowDataGrid.Columns)
-            {
-                if (column.Header is string header)
-                {
-                    if (Settings.Current.ColumnsOrder.TryGetValue(header, out ColumnProperty value))
-                    {
-                        value.Width = column.Width;
-                        value.Index = column.DisplayIndex;
-                    }
-                    else
-                    {
-                        Settings.Current.ColumnsOrder[header] = new ColumnProperty(
-                            column.DisplayIndex, column.Width);
-                    }
-                }
-            }
         }
 
         private async void MainWindowLoaded(object sender, RoutedEventArgs e)
@@ -103,7 +96,6 @@ namespace HashCalculator
             Thread thread = new Thread(this.ProcessIdMonitorProc);
             thread.IsBackground = true;
             thread.Start();
-            this.MainWindowDataGrid.Columns.ReorderDataGridColumns(Settings.Current.ColumnsOrder);
             if (await Settings.TestCompatibilityOfShellExt() is string notification)
             {
                 NotificationSender.SnackbarError(notification);
@@ -150,7 +142,7 @@ namespace HashCalculator
                 if (!Settings.Current.ClipboardUpdatedByMe &&
                     DateTime.Now - this.lastClipboardUpdateDateTime > clipboardTriggerMinInterval)
                 {
-                    this.viewModel.CheckHashUseClipboardText();
+                    HomeViewModel.Current.CheckHashUseClipboardText();
                 }
                 Settings.Current.ClipboardUpdatedByMe = false;
                 this.lastClipboardUpdateDateTime = DateTime.Now;
@@ -188,12 +180,12 @@ namespace HashCalculator
                 {
                     Synchronization.UI.Invoke(() =>
                     {
-                        MainViewModel.Current.ClearAllTableLinesAction(null);
+                        HomeViewModel.Current.ClearAllTableLinesAction(null);
                     });
                 }
                 if (Settings.Current.UseExistingClipboardTextForCheck)
                 {
-                    hashChecklist = this.viewModel.TestClipboardTextGetChecklist();
+                    hashChecklist = HomeViewModel.Current.TestClipboardTextGetChecklist();
                 }
                 string[] filePaths = option.FilePaths.Where(i => File.Exists(i) || Directory.Exists(i)).ToArray();
                 // 此处逻辑针对命令行传来的待计算文件/文件夹路径，一般由右键菜单生成命令
@@ -209,7 +201,7 @@ namespace HashCalculator
                     package.OnlyFilesThatExistInChecklist = false;
                     package.PresetAlgoTypes = this.GetAlgoTypesFromOption(option);
                 }
-                this.viewModel.BeginDisplayModels(packages);
+                HomeViewModel.Current.BeginDisplayModels(packages);
             }
         }
 
@@ -233,7 +225,7 @@ namespace HashCalculator
                     {
                         Synchronization.UI.Invoke(() =>
                         {
-                            MainViewModel.Current.ClearAllTableLinesAction(null);
+                            HomeViewModel.Current.ClearAllTableLinesAction(null);
                         });
                     }
                     // 这里添加要计算哈希值的文件时，看作以多选文件的方式添，所以
@@ -242,7 +234,7 @@ namespace HashCalculator
                     PathPackage package = new PathPackage(filesDir, filesDir, newChecklist,
                         Settings.Current.SelectedSearchMethodForChecklist);
                     package.PresetAlgoTypes = types;
-                    this.viewModel.BeginDisplayModels(package);
+                    HomeViewModel.Current.BeginDisplayModels(package);
                 }
             }
         }
@@ -364,14 +356,14 @@ namespace HashCalculator
                 {
                     // 只要确定第一个是分区根目录，那其他项也都是分区根目录
                     // 因为 Windows 不支持把不同区域的内容同时拖入程序窗口
-                    this.viewModel.BeginDisplayModels(data.Select(
+                    HomeViewModel.Current.BeginDisplayModels(data.Select(
                         partition => new PathPackage(partition, partition,
                         Settings.Current.SelectedSearchMethodForDragDrop)).ToArray());
                 }
                 else
                 {
                     string parentDir = Path.GetDirectoryName(data[0]);
-                    this.viewModel.BeginDisplayModels(new PathPackage(parentDir, data,
+                    HomeViewModel.Current.BeginDisplayModels(new PathPackage(parentDir, data,
                         Settings.Current.SelectedSearchMethodForDragDrop));
                 }
             }
@@ -392,7 +384,7 @@ namespace HashCalculator
             {
                 return;
             }
-            this.viewModel.HashStringOrChecklistPath = data[0];
+            HomeViewModel.Current.HashStringOrChecklistPath = data[0];
         }
 
         private void TextBoxHashStringOrChecklistPathPreviewDragOver(object sender, DragEventArgs e)

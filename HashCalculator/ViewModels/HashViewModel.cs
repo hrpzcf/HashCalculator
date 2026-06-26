@@ -12,6 +12,8 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using HashCalculator.ViewModels.Pages;
+using HashCalculator.Views.Windows;
 
 namespace HashCalculator
 {
@@ -190,10 +192,7 @@ namespace HashCalculator
 
         public HashState State
         {
-            get
-            {
-                return this._currentState;
-            }
+            get => this._currentState;
             private set
             {
                 this.SetPropNotify(ref this._currentState, value);
@@ -210,10 +209,7 @@ namespace HashCalculator
 
         public HashResult Result
         {
-            get
-            {
-                return this._currentResult;
-            }
+            get => this._currentResult;
             private set
             {
                 this.SetPropNotify(ref this._currentResult, value);
@@ -400,7 +396,7 @@ namespace HashCalculator
                     case SettingsViewModel.CmdStrShowFileProperties:
                         if (File.Exists(this.Information.FullName))
                         {
-                            var shellExecuteInformation = new SHELLEXECUTEINFOW();
+                            SHELLEXECUTEINFOW shellExecuteInformation = new SHELLEXECUTEINFOW();
                             shellExecuteInformation.cbSize = Marshal.SizeOf(shellExecuteInformation);
                             shellExecuteInformation.fMask = SEMaskFlags.SEE_MASK_INVOKEIDLIST;
                             shellExecuteInformation.hwnd = MainWindow.WndHandle;

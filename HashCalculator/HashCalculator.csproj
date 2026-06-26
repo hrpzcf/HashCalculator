@@ -27,12 +27,12 @@
     <ItemGroup>
         <PackageReference Include="CommandLineParser" Version="2.9.1" />
         <PackageReference Include="Costura.Fody" Version="6.2.0" IncludeAssets="runtime; compile; build; native; contentfiles; analyzers; buildtransitive" PrivateAssets="all" />
-        <PackageReference Include="HandyControl" Version="3.5.1" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.9" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
         <PackageReference Include="WindowsAPICodePack-Core" Version="1.1.2" NoWarn="NU1701" />
         <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" NoWarn="NU1701" />
         <PackageReference Include="WPF-UI" Version="4.3.0" />
+        <PackageReference Include="WPF-UI.DependencyInjection" Version="4.3.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -56,10 +56,5 @@
         <None Include="IconFont\iconfont.css" />
         <None Include="IconFont\iconfont.js" />
         <None Include="IconFont\iconfont.json" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="ViewModels\Windows\" />
-      <Folder Include="Views\Windows\" />
     </ItemGroup>
 </Project>

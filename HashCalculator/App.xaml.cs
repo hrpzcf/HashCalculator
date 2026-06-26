@@ -3,9 +3,13 @@ using System.Windows;
 using System.Windows.Threading;
 using HashCalculator.Services;
 using HashCalculator.ViewModels.Pages;
+using HashCalculator.ViewModels.Windows;
 using HashCalculator.Views.Pages;
+using HashCalculator.Views.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Wpf.Ui;
+using Wpf.Ui.DependencyInjection;
 
 namespace HashCalculator;
 
@@ -18,11 +22,13 @@ public partial class App : Application
     private static readonly IHost _host = Host.CreateDefaultBuilder()
         .ConfigureServices((context, services) =>
         {
+            services.AddNavigationViewPageProvider();
+            services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<HomeViewModel>();
             services.AddSingleton<HomePage>();
             services.AddSingleton<MainViewModel>();
             services.AddSingleton<MainWindow>();
-            // 应用生命周期
+            services.AddSingleton<SettingsPanel>();
             services.AddHostedService<ApplicationHostService>();
         }).Build();
 
@@ -72,7 +78,7 @@ public partial class App : Application
         e.Handled = true;
         this._exceptionMessageBox ??= new ExceptionWindow()
         {
-            Owner = HashCalculator.MainWindow.Current
+            Owner = Views.Windows.MainWindow.Current
         };
         this._exceptionMessageBox.Model.AddMessage(e.Exception.Message, e.Exception.StackTrace);
         if (!this._exceptionWindowShowed)

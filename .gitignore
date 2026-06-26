@@ -362,6 +362,7 @@ MigrationBackup/
 
 # Others
 /.vscode
+/HashCalculator/ShellExt
 /HashCalculator/Costura-win-x64/
 /HashCalculator/Costura-win-x86/
-/HashCalculator/ShellExt
+/.codebuddy/

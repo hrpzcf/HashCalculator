@@ -4,6 +4,8 @@ using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using HashCalculator.ViewModels.Pages;
+using HashCalculator.ViewModels.Windows;
 
 namespace HashCalculator
 {
@@ -32,7 +34,7 @@ namespace HashCalculator
             this.UserInterface = new SelectTargetsCmderCtrl(this);
         }
 
-        public SelectTargetsCmder() : this(MainViewModel.HashViewModels, MainViewModel.HashViewModelsView)
+        public SelectTargetsCmder() : this(HomeViewModel.HashViewModels, HomeViewModel.HashViewModelsView)
         {
         }
 

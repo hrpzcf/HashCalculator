@@ -5,6 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
+using HashCalculator.ViewModels.Pages;
+using HashCalculator.ViewModels.Windows;
+using HashCalculator.Views.Windows;
 using WpfuiCtrls = Wpf.Ui.Controls;
 
 namespace HashCalculator
@@ -22,7 +25,7 @@ namespace HashCalculator
 
         public bool CheckIfUsingDistinctFilesFilter { get; set; } = true;
 
-        public DeleteFileCmder() : this(MainViewModel.HashViewModels)
+        public DeleteFileCmder() : this(HomeViewModel.HashViewModels)
         {
         }
 
@@ -82,7 +85,7 @@ namespace HashCalculator
                                 CommonUtils.SendToRecycleBin(MainWindow.WndHandle, pathsInOneString);
                             }
                         });
-                        MainViewModel.Current.GenerateFileHashCheckReport();
+                        HomeViewModel.Current.GenerateFileHashCheckReport();
                     }
                 }
                 else

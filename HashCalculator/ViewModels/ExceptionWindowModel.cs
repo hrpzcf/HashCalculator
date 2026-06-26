@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using HashCalculator.Others;
+using HashCalculator.Views.Windows;
 
 namespace HashCalculator
 {

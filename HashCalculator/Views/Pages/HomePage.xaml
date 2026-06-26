@@ -3,15 +3,13 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:hc="clr-namespace:HashCalculator"
-    xmlns:local="clr-namespace:HashCalculator.Views.Pages"
+    xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:models="clr-namespace:HashCalculator.ViewModels.Pages"
+    xmlns:pagemodels="clr-namespace:HashCalculator.ViewModels.Pages"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
-    Title="HomePage"
-    d:DataContext="{d:DesignInstance Type=models:HomeViewModel}"
+    d:DataContext="{d:DesignInstance Type=pagemodels:HomeViewModel}"
     d:DesignHeight="450"
-    d:DesignWidth="800"
+    d:DesignWidth="1200"
     mc:Ignorable="d">
     <Grid Grid.Row="1" Margin="8,0,8,8">
         <Grid.RowDefinitions>
@@ -23,7 +21,7 @@
             Grid.Row="0"
             HorizontalScrollBarVisibility="Auto"
             VerticalScrollBarVisibility="Disabled"
-            Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=DisplayMainWindowButtons, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
+            Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWindowButtons, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
             <Grid Margin="0,4,0,2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -42,12 +40,11 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <StackPanel
                     Grid.Column="0"
                     Margin="0,0,16,0"
-                    Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=ShowOpenSelectAlgoWndButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
+                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowOpenSelectAlgoWndButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
                     <Button
                         Command="{Binding OpenSelectAlgoWndCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
@@ -62,17 +59,17 @@
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="默认算法"
-                        Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
-                <StackPanel Grid.Column="1" Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=ShowSelectedOutputTypeButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
+                <StackPanel Grid.Column="1" Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowSelectedOutputTypeButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
                     <StackPanel Orientation="Horizontal">
                         <ComboBox
                             Width="110"
                             Margin="0,2,0,0"
                             VerticalAlignment="Center"
                             DisplayMemberPath="Display"
-                            ItemsSource="{Binding Path=(hc:SettingsViewModel.AvailableOutputTypesLong)}"
-                            SelectedValue="{Binding Source={x:Static hc:Settings.Current}, Path=SelectedOutputType}"
+                            ItemsSource="{Binding Path=(pagemodels:SettingsViewModel.AvailableOutputTypesLong)}"
+                            SelectedValue="{Binding Source={x:Static local:Settings.Current}, Path=SelectedOutputType}"
                             SelectedValuePath="ItemValue"
                             Style="{StaticResource ComboBoxStyle1}"
                             ToolTip="此设置影响变更后才开始计算的行和【刷新输出】按钮、【导出结果】按钮的行为，其中十六进制大/小写是常用的输出方式" />
@@ -92,12 +89,12 @@
                         HorizontalAlignment="Left"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="默认输出方式"
-                        Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
                 <StackPanel
                     Grid.Column="3"
                     Margin="16,0,0,0"
-                    Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=ShowOpenCommandPanelButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
+                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowOpenCommandPanelButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
                     <Button
                         Command="{Binding OpenCommandPanelCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
@@ -112,12 +109,12 @@
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="筛选与操作"
-                        Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
                 <StackPanel
                     Grid.Column="4"
                     Margin="8,0,0,0"
-                    Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=ShowSelectFilesToHashButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
+                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowSelectFilesToHashButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
                     <Button
                         Command="{Binding SelectFilesToHashCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
@@ -132,12 +129,12 @@
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="选择文件"
-                        Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
                 <StackPanel
                     Grid.Column="5"
                     Margin="8,0,0,0"
-                    Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=ShowSelectFoldersToHashButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
+                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowSelectFoldersToHashButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
                     <Button
                         Command="{Binding SelectFoldersToHashCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
@@ -152,12 +149,12 @@
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="选择目录"
-                        Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
                 <StackPanel
                     Grid.Column="6"
                     Margin="8,0,0,0"
-                    Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=ShowStopEnumeratingPackageButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
+                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowStopEnumeratingPackageButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
                     <Button
                         Command="{Binding StopEnumeratingPackageCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
@@ -172,12 +169,12 @@
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="停止搜索"
-                        Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
                 <StackPanel
                     Grid.Column="7"
                     Margin="8,0,0,0"
-                    Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=ShowExportHashResultsButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
+                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowExportHashResultsButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
                     <Button
                         Command="{Binding ExportHashResultsCmd}"
                         IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBooleanCvt}}"
@@ -193,12 +190,12 @@
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="导出结果"
-                        Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
                 <StackPanel
                     Grid.Column="8"
                     Margin="8,0,0,0"
-                    Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=ShowCopyAndRestartModelsButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
+                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowCopyAndRestartModelsButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
                     <Button
                         Command="{Binding CopyAndRestartModelsCmd}"
                         IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBooleanCvt}}"
@@ -214,12 +211,12 @@
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="新行重算"
-                        Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
                 <StackPanel
                     Grid.Column="9"
                     Margin="8,0,0,0"
-                    Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=ShowRefreshOriginalModelsButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
+                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowRefreshOriginalModelsButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
                     <Button
                         Command="{Binding RefreshOriginalModelsCmd}"
                         IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBooleanCvt}}"
@@ -235,12 +232,12 @@
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="计算缺值项"
-                        Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
                 <StackPanel
                     Grid.Column="10"
                     Margin="8,0,0,0"
-                    Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=ShowForceRefreshOriginalModelsButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
+                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowForceRefreshOriginalModelsButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
                     <Button
                         Command="{Binding ForceRefreshOriginalModelsCmd}"
                         IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBooleanCvt}}"
@@ -256,12 +253,12 @@
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="重新计算"
-                        Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
                 <StackPanel
                     Grid.Column="11"
                     Margin="8,0,0,0"
-                    Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=ShowClearAllTableLinesButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
+                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowClearAllTableLinesButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
                     <Button
                         Command="{Binding ClearAllTableLinesCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
@@ -276,12 +273,12 @@
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="清空表格"
-                        Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
                 <StackPanel
                     Grid.Column="12"
                     Margin="8,0,0,0"
-                    Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=ShowContinueDisplayedModelsButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
+                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowContinueDisplayedModelsButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
                     <Button
                         Command="{Binding ContinueDisplayedModelsCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
@@ -296,12 +293,12 @@
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="全部开始"
-                        Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
                 <StackPanel
                     Grid.Column="13"
                     Margin="8,0,0,0"
-                    Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=ShowPauseDisplayedModelsButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
+                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowPauseDisplayedModelsButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
                     <Button
                         Command="{Binding PauseDisplayedModelsCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
@@ -316,12 +313,12 @@
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="全部暂停"
-                        Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
                 <StackPanel
                     Grid.Column="14"
                     Margin="8,0,0,0"
-                    Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=ShowCancelDisplayedModelsButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
+                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowCancelDisplayedModelsButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
                     <Button
                         Command="{Binding CancelDisplayedModelsCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
@@ -336,12 +333,12 @@
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="全部取消"
-                        Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
                 <StackPanel
                     Grid.Column="15"
                     Margin="8,0,0,0"
-                    Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=ShowMainWindowTopmostButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
+                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowMainWindowTopmostButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
                     <Button
                         Command="{Binding MainWindowTopmostCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
@@ -349,36 +346,19 @@
                         <Image
                             Width="32"
                             Height="32"
-                            Source="{Binding Source={x:Static hc:Settings.Current}, Path=MainWndTopmost, Converter={StaticResource BtnTopmostEnabledImgSrcCvt}}" />
+                            Source="{Binding Source={x:Static local:Settings.Current}, Path=MainWndTopmost, Converter={StaticResource BtnTopmostEnabledImgSrcCvt}}" />
                     </Button>
                     <TextBlock
                         Margin="0,2"
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="置顶窗口"
-                        Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
-                </StackPanel>
-                <StackPanel Grid.Column="16" Margin="8,0,0,0">
-                    <Button
-                        Command="{Binding OpenSettingsWindowCmd}"
-                        Style="{StaticResource ImageButtonStyle2}"
-                        ToolTip="打开软件的设置窗口">
-                        <Image
-                            Width="32"
-                            Height="32"
-                            Source="{StaticResource settingsDrawingImage}" />
-                    </Button>
-                    <TextBlock
-                        Margin="0,2"
-                        HorizontalAlignment="Center"
-                        Style="{StaticResource ImgButtonTextStyle1}"
-                        Text="软件设置"
-                        Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
             </Grid>
         </ScrollViewer>
         <DataGrid
-            x:Name="MainWindowDataGrid"
+            x:Name="MainDataGrid"
             Grid.Row="1"
             Margin="0,4,0,0"
             AllowDrop="True"
@@ -387,7 +367,7 @@
             Drop="DataGridHashingFilesDrop"
             Grid.IsSharedSizeScope="True"
             IsReadOnly="True"
-            ItemsSource="{Binding Source={x:Static hc:MainViewModel.HashViewModelsViewSrc}, IsAsync=True}"
+            ItemsSource="{Binding Source={x:Static pagemodels:HomeViewModel.HashViewModelsViewSrc}, IsAsync=True}"
             PreviewKeyDown="DataGridHashingFilesPrevKeyDown"
             ScrollViewer.CanContentScroll="True"
             SelectedItem="{Binding SelectedHashVieModel}"
@@ -396,15 +376,15 @@
             VirtualizingPanel.IsVirtualizing="True"
             VirtualizingPanel.IsVirtualizingWhenGrouping="True"
             VirtualizingPanel.VirtualizationMode="Recycling">
-            <hc:ExecTargetAttach.Monitoring>
+            <local:ExecTargetAttach.Monitoring>
                 <MultiBinding Converter="{StaticResource StateAndSelectionWayToMonitoring}" Mode="OneWay">
                     <Binding Mode="OneWay" Path="State" />
                     <Binding
                         Mode="OneWay"
                         Path="IsMainRowSelectedByCheckBox"
-                        Source="{x:Static hc:Settings.Current}" />
+                        Source="{x:Static local:Settings.Current}" />
                 </MultiBinding>
-            </hc:ExecTargetAttach.Monitoring>
+            </local:ExecTargetAttach.Monitoring>
             <DataGrid.ContextMenu>
                 <ContextMenu>
                     <MenuItem
@@ -507,11 +487,11 @@
                         Command="{Binding OpenFilesPropertyCmd}"
                         CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
                         Header="文件属性" />
-                    <Separator Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=DisplayMainWindowButtons, Converter={StaticResource TrueToVisibilityCollapsedCvt}}" />
+                    <Separator Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWindowButtons, Converter={StaticResource TrueToVisibilityCollapsedCvt}}" />
                     <MenuItem
                         Command="{Binding DisplayMainWindowButtonsCmd}"
                         Header="显示工具按钮"
-                        Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=DisplayMainWindowButtons, Converter={StaticResource TrueToVisibilityCollapsedCvt}}" />
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWindowButtons, Converter={StaticResource TrueToVisibilityCollapsedCvt}}" />
                 </ContextMenu>
             </DataGrid.ContextMenu>
             <DataGrid.Columns>
@@ -519,7 +499,7 @@
                     CanUserSort="True"
                     Header="序号"
                     SortMemberPath="SerialNumber"
-                    Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=NoSerialNumColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
+                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoSerialNumColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Border Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}, Path=Background}">
@@ -530,7 +510,7 @@
                                 <Border.InputBindings>
                                     <MouseBinding
                                         Command="{Binding TableColumnDoubleClickCmd}"
-                                        CommandParameter="{Binding Source={x:Static hc:Settings.Current}, Path=SerialColumnLeftDoubleClick}"
+                                        CommandParameter="{Binding Source={x:Static local:Settings.Current}, Path=SerialColumnLeftDoubleClick}"
                                         MouseAction="LeftDoubleClick" />
                                 </Border.InputBindings>
                             </Border>
@@ -572,9 +552,9 @@
                                     VerticalAlignment="Center"
                                     Source="{Binding FileIcon}"
                                     Stretch="None"
-                                    Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=ShowFileIcon, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
+                                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowFileIcon, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
                                     <Image.LayoutTransform>
-                                        <ScaleTransform ScaleX="{Binding Source={x:Static hc:Settings.Current}, Path=DpiScaleX}" ScaleY="{Binding Source={x:Static hc:Settings.Current}, Path=DpiScaleY}" />
+                                        <ScaleTransform ScaleX="{Binding Source={x:Static local:Settings.Current}, Path=DpiScaleX}" ScaleY="{Binding Source={x:Static local:Settings.Current}, Path=DpiScaleY}" />
                                     </Image.LayoutTransform>
                                 </Image>
                                 <Border
@@ -584,7 +564,7 @@
                                     <Border.InputBindings>
                                         <MouseBinding
                                             Command="{Binding TableColumnDoubleClickCmd}"
-                                            CommandParameter="{Binding Source={x:Static hc:Settings.Current}, Path=FileNameColumnLeftDoubleClick}"
+                                            CommandParameter="{Binding Source={x:Static local:Settings.Current}, Path=FileNameColumnLeftDoubleClick}"
                                             MouseAction="LeftDoubleClick" />
                                     </Border.InputBindings>
                                     <TextBlock
@@ -610,14 +590,14 @@
                     CanUserSort="True"
                     Header="完整路径"
                     SortMemberPath="Information"
-                    Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=NoFullPathColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
+                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoFullPathColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Border Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}, Path=Background}">
                                 <Border.InputBindings>
                                     <MouseBinding
                                         Command="{Binding TableColumnDoubleClickCmd}"
-                                        CommandParameter="{Binding Source={x:Static hc:Settings.Current}, Path=FullPathColumnLeftDoubleClick}"
+                                        CommandParameter="{Binding Source={x:Static local:Settings.Current}, Path=FullPathColumnLeftDoubleClick}"
                                         MouseAction="LeftDoubleClick" />
                                 </Border.InputBindings>
                                 <TextBlock
@@ -634,14 +614,14 @@
                     CanUserSort="True"
                     Header="文件大小"
                     SortMemberPath="FileLength"
-                    Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=NoFileSizeColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
+                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoFileSizeColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Border Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}, Path=Background}">
                                 <Border.InputBindings>
                                     <MouseBinding
                                         Command="{Binding TableColumnDoubleClickCmd}"
-                                        CommandParameter="{Binding Source={x:Static hc:Settings.Current}, Path=FileSizeColumnLeftDoubleClick}"
+                                        CommandParameter="{Binding Source={x:Static local:Settings.Current}, Path=FileSizeColumnLeftDoubleClick}"
                                         MouseAction="LeftDoubleClick" />
                                 </Border.InputBindings>
                                 <TextBlock
@@ -677,7 +657,7 @@
                     CanUserSort="True"
                     Header="操作目标"
                     SortMemberPath="IsExecutionTarget"
-                    Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=IsMainRowSelectedByCheckBox, Converter={StaticResource TrueToVisibilityVisibleCvt}, Mode=OneWay}">
+                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=IsMainRowSelectedByCheckBox, Converter={StaticResource TrueToVisibilityVisibleCvt}, Mode=OneWay}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid>
@@ -745,7 +725,7 @@
                                     <Border.InputBindings>
                                         <MouseBinding
                                             Command="{Binding TableColumnDoubleClickCmd}"
-                                            CommandParameter="{Binding Source={x:Static hc:Settings.Current}, Path=HashValueColumnLeftDoubleClick}"
+                                            CommandParameter="{Binding Source={x:Static local:Settings.Current}, Path=HashValueColumnLeftDoubleClick}"
                                             MouseAction="LeftDoubleClick" />
                                     </Border.InputBindings>
                                     <TextBlock
@@ -815,7 +795,7 @@
                                     Width="21"
                                     Height="21"
                                     Margin="0,0,4,0"
-                                    d:DataContext="{d:DesignInstance hc:HashViewModel}"
+                                    d:DataContext="{d:DesignInstance local:HashViewModel}"
                                     Command="{Binding ShowHashDetailsWindowCmd}"
                                     Content="{Binding AlgoInOutModels.Count}"
                                     Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}, Path=Foreground}"
@@ -888,14 +868,14 @@
                     CanUserSort="True"
                     Header="输出方式"
                     SortMemberPath="SelectedOutputType"
-                    Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=NoOutputTypeColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
+                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoOutputTypeColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <ComboBox
                                 Margin="2"
                                 VerticalAlignment="Center"
                                 DisplayMemberPath="Display"
-                                ItemsSource="{Binding Path=(hc:SettingsViewModel.AvailableOutputTypes)}"
+                                ItemsSource="{Binding Path=(pagemodels:SettingsViewModel.AvailableOutputTypes)}"
                                 SelectedValue="{Binding SelectedOutputType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 SelectedValuePath="ItemValue"
                                 Style="{StaticResource ComboBoxStyle2}"
@@ -908,14 +888,14 @@
                     CanUserSort="True"
                     Header="任务耗时"
                     SortMemberPath="DurationofTask"
-                    Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=NoDurationColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
+                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoDurationColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Border Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}, Path=Background}">
                                 <Border.InputBindings>
                                     <MouseBinding
                                         Command="{Binding TableColumnDoubleClickCmd}"
-                                        CommandParameter="{Binding Source={x:Static hc:Settings.Current}, Path=DurationColumnLeftDoubleClick}"
+                                        CommandParameter="{Binding Source={x:Static local:Settings.Current}, Path=DurationColumnLeftDoubleClick}"
                                         MouseAction="LeftDoubleClick" />
                                 </Border.InputBindings>
                                 <TextBlock
@@ -930,12 +910,12 @@
                     CanUserSort="True"
                     Header="导出"
                     SortMemberPath="CurrentInOutModel.Export"
-                    Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=NoExportColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
+                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoExportColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <CheckBox
                                 HorizontalAlignment="Center"
-                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}, AncestorLevel=1}, Path=DataContext.ChangeAlgosExportStateCmd}"
+                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Page}, AncestorLevel=1}, Path=DataContext.ChangeAlgosExportStateCmd}"
                                 CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}, Path=DataContext}"
                                 IsChecked="{Binding CurrentInOutModel.Export, Mode=OneWay}" />
                         </DataTemplate>
@@ -945,7 +925,7 @@
                     MinWidth="60"
                     CanUserSort="True"
                     SortMemberPath="CurrentInOutModel.HashCmpResult"
-                    Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=NoCmpResultColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
+                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoCmpResultColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
                     <DataGridTemplateColumn.Header>
                         <TextBlock
                             HorizontalAlignment="Center"
@@ -980,12 +960,12 @@
                                     Margin="4,0,0,0"
                                     VerticalAlignment="Center"
                                     Text="{Binding CurrentInOutModel.HashCmpResult, Converter={StaticResource ComparisonResultToTextCvt}}"
-                                    Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=ShowResultText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
+                                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowResultText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
                             </Grid>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="哈希标记" Visibility="{Binding Source={x:Static hc:Settings.Current}, Path=ShowHashInTagColumn, Converter={StaticResource TrueToVisibilityVisibleCvt}}">
+                <DataGridTemplateColumn Header="哈希标记" Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowHashInTagColumn, Converter={StaticResource TrueToVisibilityVisibleCvt}}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid>
@@ -1060,7 +1040,7 @@
                     Padding="4,0"
                     VerticalAlignment="Center"
                     Foreground="Gray"
-                    Text="{Binding Source={x:Static hc:MainViewModel.HashViewModels}, Path=Count}"
+                    Text="{Binding Source={x:Static pagemodels:HomeViewModel.HashViewModels}, Path=Count}"
                     ToolTip="表格总行数..." />
                 <Image
                     Width="16"

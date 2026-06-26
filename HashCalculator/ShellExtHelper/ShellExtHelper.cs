@@ -6,6 +6,7 @@ using System.Linq;
 using System.Resources;
 using System.Security;
 using HashCalculator.Others;
+using HashCalculator.Views.Windows;
 using Microsoft.Win32;
 using WpfuiCtrls = Wpf.Ui.Controls;
 
@@ -309,7 +310,7 @@ namespace HashCalculator
                 Func<WpfuiCtrls.MessageBoxResult> callback = () =>
                 {
                     return NotificationSender.ShowMessageBox(
-                        SettingsPanel.Current,
+                        MainWindow.Current,
                         "提示",
                         "已安装右键菜单但未找到或无法访问外壳扩展模块，" +
                             "无法通过对模块进行反注册来清理右键菜单注册信息，是否直接删除这些信息？",
