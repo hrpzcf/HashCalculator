@@ -52,14 +52,12 @@
                 UpdateSourceTrigger="PropertyChanged" />
         </MultiBinding>
     </wpfui:FluentWindow.Left>
-
     <Grid>
         <wpfui:NavigationView
             x:Name="NavigationView"
-            Padding="24"
             FooterMenuItemsSource="{Binding FooterItems, Mode=OneWay}"
             MenuItemsSource="{Binding MenuItems, Mode=OneWay}"
-            OpenPaneLength="160"
+            OpenPaneLength="200"
             PaneDisplayMode="Left"
             TitleBar="{Binding ElementName=TitleBar, Mode=OneWay}">
             <wpfui:NavigationView.ContentOverlay>

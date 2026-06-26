@@ -36,7 +36,7 @@ public class MainViewModel : BaseViewModel
         Settings.Current.PropertyChanged += this.OnSettingsPropChanged;
     }
 
-    public ObservableCollection<NavigationViewItem> MenuItems { get; } = 
+    public ObservableCollection<NavigationViewItem> MenuItems { get; } =
         [
             new NavigationViewItem("计算哈希值", SymbolRegular.Home24, typeof(HomePage)),
         ];
