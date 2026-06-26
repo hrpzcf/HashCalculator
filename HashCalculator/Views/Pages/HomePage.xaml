@@ -10,6 +10,7 @@
     d:DataContext="{d:DesignInstance Type=pagemodels:HomeViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="1200"
+    ScrollViewer.CanContentScroll="False"
     mc:Ignorable="d">
     <Grid Grid.Row="1" Margin="8,0,8,8">
         <Grid.RowDefinitions>

@@ -9,6 +9,7 @@
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     d:DataContext="{d:DesignInstance Type=pagemodels:SettingsViewModel}"
     KeyDown="SettingsPanelKeyDown"
+    ScrollViewer.CanContentScroll="False"
     UseLayoutRounding="True"
     mc:Ignorable="d">
     <TabControl Margin="8">
