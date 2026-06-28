@@ -15,7 +15,7 @@
     UseLayoutRounding="True"
     mc:Ignorable="d">
     <ScrollViewer Padding="8" VerticalScrollBarVisibility="Auto">
-        <controls:CardItemsControl Margin="8" ItemsSource="{Binding SettingsNavigationItem.MenuItemsSource}">
+        <controls:CardItemsControl Margin="8" ItemsSource="{Binding SettingsNavigationItemsSource}">
             <controls:CardItemsControl.ItemTemplate>
                 <DataTemplate>
                     <wpfui:CardAction
@@ -32,7 +32,7 @@
                                 TextWrapping="WrapWithOverflow" />
                             <wpfui:TextBlock
                                 Appearance="Secondary"
-                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                Foreground="{DynamicResource TextFillColorTertiaryBrush}"
                                 Text="{Binding TargetPageTag}"
                                 TextWrapping="WrapWithOverflow" />
                         </StackPanel>
