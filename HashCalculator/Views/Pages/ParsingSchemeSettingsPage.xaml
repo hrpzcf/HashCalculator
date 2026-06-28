@@ -15,10 +15,7 @@
     <Page.InputBindings>
         <KeyBinding Key="Esc" Command="{Binding SettingsPagesInputBindingsCmd}" />
     </Page.InputBindings>
-    <ScrollViewer
-        Padding="10"
-        FontSize="9pt"
-        VerticalScrollBarVisibility="Auto">
+    <ScrollViewer Padding="8" VerticalScrollBarVisibility="Auto">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />

@@ -12,9 +12,8 @@ using CommandLine;
 using HashCalculator.Others;
 using HashCalculator.ViewModels.Pages;
 using HashCalculator.ViewModels.Windows;
-using HashCalculator.Views.Pages;
 using Wpf.Ui;
-using Wpfuictrls = Wpf.Ui.Controls;
+using Wpfctrls = Wpf.Ui.Controls;
 
 namespace HashCalculator.Views.Windows
 {
@@ -49,22 +48,22 @@ namespace HashCalculator.Views.Windows
                 this.SnackbarPresenter);
         }
 
-        private void SelectionChanged(Wpfuictrls.NavigationView sender, RoutedEventArgs args)
+        private void SelectionChanged(Wpfctrls.NavigationView sender, RoutedEventArgs args)
         {
-            if (sender.SelectedItem is Wpfuictrls.INavigationViewItem item)
+            if (sender.SelectedItem is Wpfctrls.INavigationViewItem item)
             {
-                if (item == this.viewModel.SettingsNavigationViewItem ||
-                    item.NavigationViewItemParent == this.viewModel.SettingsNavigationViewItem)
+                if (item == this.viewModel.SettingsNavigationItem ||
+                    item.NavigationViewItemParent == this.viewModel.SettingsNavigationItem)
                 {
                     return;
                 }
-                this.viewModel.SettingsNavigationViewItem.IsExpanded = false;
+                this.viewModel.SettingsNavigationItem.IsExpanded = false;
             }
         }
 
         private void MainWindowClosing(object sender, CancelEventArgs e)
         {
-            e.Cancel = SettingsPanel.Current.ViewModel.ProcessingShellExtension;
+            e.Cancel = Settings.Current.ProcessingShellExtension;
         }
 
         private void MainWindowClosed(object sender, EventArgs e)

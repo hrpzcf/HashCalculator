@@ -1,0 +1,44 @@
+﻿<Page
+    x:Class="HashCalculator.Views.Pages.SettingsPanelPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:HashCalculator.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:HashCalculator"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pagemodels="clr-namespace:HashCalculator.ViewModels.Pages"
+    xmlns:pageviews="clr-namespace:HashCalculator.Views.Pages"
+    xmlns:winmodels="clr-namespace:HashCalculator.ViewModels.Windows"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
+    d:DataContext="{d:DesignInstance Type=winmodels:MainViewModel}"
+    ScrollViewer.CanContentScroll="False"
+    UseLayoutRounding="True"
+    mc:Ignorable="d">
+    <ScrollViewer Padding="8" VerticalScrollBarVisibility="Auto">
+        <controls:CardItemsControl Margin="8" ItemsSource="{Binding SettingsNavigationItem.MenuItemsSource}">
+            <controls:CardItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <wpfui:CardAction
+                        Margin="0,4,0,0"
+                        d:DataContext="{d:DesignInstance Type=wpfui:NavigationViewItem}"
+                        Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Page}, Path=DataContext.NavigatenFromSettingsPanelCmd}"
+                        CommandParameter="{Binding TargetPageType}"
+                        Icon="{Binding Icon}">
+                        <StackPanel>
+                            <wpfui:TextBlock
+                                FontTypography="BodyStrong"
+                                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                Text="{Binding Content}"
+                                TextWrapping="WrapWithOverflow" />
+                            <wpfui:TextBlock
+                                Appearance="Secondary"
+                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                Text="{Binding TargetPageTag}"
+                                TextWrapping="WrapWithOverflow" />
+                        </StackPanel>
+                    </wpfui:CardAction>
+                </DataTemplate>
+            </controls:CardItemsControl.ItemTemplate>
+        </controls:CardItemsControl>
+    </ScrollViewer>
+</Page>

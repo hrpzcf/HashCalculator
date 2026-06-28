@@ -11,7 +11,7 @@ using System.Windows.Input;
 using System.Xml.Serialization;
 using HashCalculator.Views.Windows;
 using Newtonsoft.Json;
-using Wpfuictrls = Wpf.Ui.Controls;
+using Wpfctrls = Wpf.Ui.Controls;
 
 namespace HashCalculator.ViewModels.Pages;
 
@@ -999,7 +999,7 @@ public class SettingsViewModel : BaseViewModel
             "询问",
             "安装外壳扩展可能需要重启资源管理器，确定现在安装吗？",
             closeButtonText: "否",
-            primaryButtonText: "是") != Wpfuictrls.MessageBoxResult.Primary)
+            primaryButtonText: "是") != Wpfctrls.MessageBoxResult.Primary)
         {
             return;
         }
@@ -1043,7 +1043,7 @@ public class SettingsViewModel : BaseViewModel
             "询问",
             "卸载外壳扩展可能需要重启资源管理器，确定现在卸载吗？",
             closeButtonText: "否",
-            primaryButtonText: "是") != Wpfuictrls.MessageBoxResult.Primary)
+            primaryButtonText: "是") != Wpfctrls.MessageBoxResult.Primary)
         {
             return;
         }

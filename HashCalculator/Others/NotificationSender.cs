@@ -2,7 +2,7 @@
 using System.Windows;
 using HashCalculator.Views.Windows;
 using Wpfui = Wpf.Ui;
-using Wpfuictrls = Wpf.Ui.Controls;
+using Wpfctrls = Wpf.Ui.Controls;
 
 namespace HashCalculator
 {
@@ -18,8 +18,8 @@ namespace HashCalculator
             SnackbarService.Show(
                 "错误",
                 message,
-                Wpfuictrls.ControlAppearance.Danger,
-                new Wpfuictrls.SymbolIcon(Wpfuictrls.SymbolRegular.ErrorCircle20),
+                Wpfctrls.ControlAppearance.Danger,
+                new Wpfctrls.SymbolIcon(Wpfctrls.SymbolRegular.ErrorCircle20),
                 TimeSpan.FromSeconds(3)
                 );
         }
@@ -29,8 +29,8 @@ namespace HashCalculator
             SnackbarService.Show(
                 "警告",
                 message,
-                Wpfuictrls.ControlAppearance.Caution,
-                new Wpfuictrls.SymbolIcon(Wpfuictrls.SymbolRegular.Warning20),
+                Wpfctrls.ControlAppearance.Caution,
+                new Wpfctrls.SymbolIcon(Wpfctrls.SymbolRegular.Warning20),
                 TimeSpan.FromSeconds(3)
                 );
         }
@@ -40,8 +40,8 @@ namespace HashCalculator
             SnackbarService.Show(
                 "成功",
                 message,
-                Wpfuictrls.ControlAppearance.Primary,
-                new Wpfuictrls.SymbolIcon(Wpfuictrls.SymbolRegular.CheckmarkCircle20),
+                Wpfctrls.ControlAppearance.Primary,
+                new Wpfctrls.SymbolIcon(Wpfctrls.SymbolRegular.CheckmarkCircle20),
                 TimeSpan.FromSeconds(3)
                 );
         }
@@ -51,13 +51,13 @@ namespace HashCalculator
             SnackbarService.Show(
                 "提示",
                 message,
-                Wpfuictrls.ControlAppearance.Secondary,
-                new Wpfuictrls.SymbolIcon(Wpfuictrls.SymbolRegular.Info20),
+                Wpfctrls.ControlAppearance.Secondary,
+                new Wpfctrls.SymbolIcon(Wpfctrls.SymbolRegular.Info20),
                 TimeSpan.FromSeconds(3)
                 );
         }
 
-        public static Wpfuictrls.MessageBoxResult ShowMessageBox(
+        public static Wpfctrls.MessageBoxResult ShowMessageBox(
             Window owner,
             string title,
             string content,
@@ -77,7 +77,7 @@ namespace HashCalculator
                     closeButtonText = "确定";
                 }
             }
-            return new Wpfuictrls.MessageBox()
+            return new Wpfctrls.MessageBox()
             {
                 Owner = owner,
                 Title = title,
@@ -91,7 +91,7 @@ namespace HashCalculator
             }.ShowDialogAsync().GetAwaiter().GetResult();
         }
 
-        public static Wpfuictrls.MessageBoxResult ShowMessageBox(
+        public static Wpfctrls.MessageBoxResult ShowMessageBox(
             string title,
             string content,
             string closeButtonText = null,

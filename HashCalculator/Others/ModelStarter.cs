@@ -48,7 +48,7 @@ namespace HashCalculator
         private readonly Action<RefMethod, CancellationToken> process;
     }
 
-    internal class ModelStarter
+    public class ModelStarter
     {
         public ModelStarter(int initCount, int maxCount)
         {

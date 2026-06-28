@@ -9,7 +9,7 @@ using HashCalculator.ViewModels.Pages;
 using HashCalculator.ViewModels.Windows;
 using HashCalculator.Views.Windows;
 using Microsoft.WindowsAPICodePack.Dialogs;
-using Wpfuictrls = Wpf.Ui.Controls;
+using Wpfctrls = Wpf.Ui.Controls;
 
 namespace HashCalculator
 {
@@ -206,7 +206,7 @@ namespace HashCalculator
                         "提示",
                         "没有应用【有效的文件】筛选器，要继续操作吗？",
                         closeButtonText: "否",
-                        primaryButtonText: "是") != Wpfuictrls.MessageBoxResult.Primary)
+                        primaryButtonText: "是") != Wpfctrls.MessageBoxResult.Primary)
                     {
                         goto FinishingTouches;
                     }

@@ -17,7 +17,7 @@ using HashCalculator.Others;
 using HashCalculator.Views.Windows;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
-using Wpfuictrls = Wpf.Ui.Controls;
+using Wpfctrls = Wpf.Ui.Controls;
 
 namespace HashCalculator.ViewModels.Pages;
 
@@ -25,8 +25,6 @@ public class HomeViewModel : BaseViewModel
 {
     private const int interval = 600;
     private readonly Timer checkStateTimer = null;
-    private readonly ModelStarter starter = new ModelStarter(
-        Settings.Current.SelectedTaskNumberLimit, 32);
     private readonly Action<HashModelArg> addModelAction;
     private readonly Lock displayingModelLock = new Lock();
     private readonly Lock changeRunningStateLock = new Lock();
@@ -91,7 +89,6 @@ public class HomeViewModel : BaseViewModel
         HashViewModelsViewSrc = new CollectionViewSource();
         HashViewModelsViewSrc.Source = HashViewModels;
         HashViewModelsView = HashViewModelsViewSrc.View;
-        Settings.Current.PropertyChanged += this.SettingsPropChangedAction;
         this.addModelAction = new Action<HashModelArg>(this.AddModelAction);
         this.checkStateTimer = new Timer(this.CheckStateAction);
     }
@@ -123,6 +120,9 @@ public class HomeViewModel : BaseViewModel
 
     public static ObservableCollection<HashViewModel> HashViewModels { get; }
         = new ObservableCollection<HashViewModel>();
+
+    public ModelStarter Starter { get; } =
+        new ModelStarter(Settings.Current.SelectedTaskNumberLimit, 32);
 
     public string Report
     {
@@ -264,7 +264,7 @@ public class HomeViewModel : BaseViewModel
         HashViewModel model = new HashViewModel(++this.serial, arg);
         this.displayedModels.Add(model);
         model.ModelCapturedEvent += this.ModelCapturedAction;
-        model.ModelCapturedEvent += this.starter.PendingModel;
+        model.ModelCapturedEvent += this.Starter.PendingModel;
         model.ModelReleasedEvent += this.ModelReleasedAction;
         HashViewModels.Add(model);
         if (Settings.Current.AutomaticallyStartTaskAfterFileAdded)
@@ -416,21 +416,6 @@ public class HomeViewModel : BaseViewModel
                     hashViewModel.TableRowColor = tuple.Item2;
                 }
             }
-        }
-    }
-
-    /// <summary>
-    /// 需要立即响应的设置变更
-    /// </summary>
-    private void SettingsPropChangedAction(object sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName == nameof(Settings.Current.RunInMultiInstMode))
-        {
-            Initializer.RunMultiMode = Settings.Current.RunInMultiInstMode;
-        }
-        else if (e.PropertyName == nameof(Settings.Current.SelectedTaskNumberLimit))
-        {
-            this.starter.BeginAdjust(Settings.Current.SelectedTaskNumberLimit);
         }
     }
 
@@ -840,7 +825,7 @@ public class HomeViewModel : BaseViewModel
                 "提示",
                 deleteFileTip,
                 closeButtonText: "否",
-                primaryButtonText: "是") != Wpfuictrls.MessageBoxResult.Primary)
+                primaryButtonText: "是") != Wpfctrls.MessageBoxResult.Primary)
             {
                 return;
             }
@@ -1114,7 +1099,7 @@ public class HomeViewModel : BaseViewModel
                 "警告",
                 $"已存在以下文件，继续导出将会覆盖原文件，仍然要导出吗？\n{paths}",
                 closeButtonText: "否",
-                primaryButtonText: "是") != Wpfuictrls.MessageBoxResult.Primary)
+                primaryButtonText: "是") != Wpfctrls.MessageBoxResult.Primary)
             {
                 return;
             }
@@ -1132,7 +1117,7 @@ public class HomeViewModel : BaseViewModel
                     "并非所有行包含的算法都一样，如果仍要导出结果，则导出的每个清单里包含的文件数量不一样，" +
                         "仍然要导出吗？",
                     closeButtonText: "否",
-                    primaryButtonText: "是") == Wpfuictrls.MessageBoxResult.Primary)
+                    primaryButtonText: "是") == Wpfctrls.MessageBoxResult.Primary)
                 {
                     break;
                 }
