@@ -1,0 +1,214 @@
+﻿<Page
+    x:Class="HashCalculator.Views.Pages.ParsingSchemeSettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:HashCalculator"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pagemodels="clr-namespace:HashCalculator.ViewModels.Pages"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
+    d:DataContext="{d:DesignInstance Type=pagemodels:SettingsViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <Page.InputBindings>
+        <KeyBinding Key="Esc" Command="{Binding SettingsPagesInputBindingsCmd}" />
+    </Page.InputBindings>
+    <ScrollViewer
+        Padding="10"
+        FontSize="9pt"
+        VerticalScrollBarVisibility="Auto">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                Margin="0,0,0,4"
+                Foreground="#FF006FD6"
+                Text="从校验依据(文件/字符串)解析哈希信息时使用的解析方案：" />
+            <DataGrid
+                Grid.Row="1"
+                Grid.Column="0"
+                AutoGenerateColumns="False"
+                HorizontalScrollBarVisibility="Disabled"
+                IsReadOnly="True"
+                ItemsSource="{Binding Source={x:Static local:Settings.Current}, Path=TemplatesForChecklist}"
+                SelectedItem="{Binding Source={x:Static local:Settings.Current}, Path=SelectedTemplateForChecklist}"
+                SelectionMode="Single">
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="方案名称">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox
+                                    Margin="2"
+                                    Padding="4,2"
+                                    Text="{Binding Name, UpdateSourceTrigger=LostFocus}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="用于类型">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox
+                                    Margin="2"
+                                    Padding="4,2"
+                                    AcceptsReturn="True"
+                                    Text="{Binding Extension, UpdateSourceTrigger=LostFocus}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="解析方式表达式">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox
+                                    Margin="2"
+                                    Padding="4,2"
+                                    FontFamily="Consolas"
+                                    Text="{Binding Template, UpdateSourceTrigger=LostFocus}"
+                                    TextWrapping="WrapWithOverflow" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Width="*" />
+                </DataGrid.Columns>
+            </DataGrid>
+            <StackPanel
+                Grid.Row="1"
+                Grid.Column="1"
+                Margin="4,0,0,0">
+                <Button Command="{Binding AddChecklistTemplateCmd}" Content="添加" />
+                <Button
+                    Margin="0,8,0,0"
+                    Command="{Binding CopyChecklistTemplateCmd}"
+                    Content="复制" />
+                <Button
+                    Margin="0,8,0,0"
+                    Command="{Binding MoveChecklistTemplateUpCmd}"
+                    Content="上移" />
+                <Button
+                    Margin="0,8,0,0"
+                    Command="{Binding MoveChecklistTemplateDownCmd}"
+                    Content="下移" />
+                <wpfui:Button
+                    Margin="0,8,0,0"
+                    Appearance="Danger"
+                    Command="{Binding RemoveChecklistTemplateCmd}"
+                    Content="移除" />
+                <wpfui:Button
+                    Margin="0,8,0,0"
+                    Appearance="Danger"
+                    Command="{Binding ResetChecklistTemplateCmd}"
+                    Content="重置" />
+            </StackPanel>
+            <StackPanel
+                Grid.Row="2"
+                Grid.ColumnSpan="2"
+                Margin="0,4,0,0">
+                <TextBlock
+                    Margin="0,4,0,0"
+                    Foreground="Black"
+                    Text="对于输入【校验依据】输入框的字符串：" />
+                <TextBlock
+                    Margin="24,0,0,0"
+                    FontSize="8pt"
+                    Style="{StaticResource DescTextBlockStyle}"
+                    Text="程序会按顺序使用【用于类型】为空的方案，直到成功或全部失败；" />
+                <TextBlock
+                    Margin="0,4,0,0"
+                    Foreground="Black"
+                    Text="作为校验依据打开的文件或输入【校验依据】输入框的文件：" />
+                <TextBlock
+                    Margin="24,0,0,0"
+                    FontSize="8pt"
+                    Style="{StaticResource DescTextBlockStyle}"
+                    Text="程序会按顺序使用【用于类型】与文件扩展名匹配的方案，直到成功或全部失败；" />
+                <TextBlock
+                    Margin="24,0,0,0"
+                    FontSize="8pt"
+                    Style="{StaticResource DescTextBlockStyle}"
+                    Text="如果仍然没有成功，则按顺序使用【用于类型】为空的方案，直到成功或全部失败；" />
+                <TextBlock
+                    Margin="24,0,0,0"
+                    FontSize="8pt"
+                    Style="{StaticResource DescTextBlockStyle}"
+                    Text="如果文件没有扩展名，则按顺序使用【用于类型】为空的方案，直到成功或全部失败；" />
+                <TextBlock
+                    Margin="0,8,0,0"
+                    Foreground="Black"
+                    Text="表格中的【用于类型】支持输入多个扩展名，每行一个；" />
+                <TextBlock
+                    Margin="0,2,0,0"
+                    Foreground="Black"
+                    Text="而【解析方式表达式】实际上是正则表达式的 C# 版本，其中被两个“$”号 -" />
+                <TextBlock
+                    Margin="0,2,0,0"
+                    Foreground="Black"
+                    Text="包围起来的字符串是本软件预定义的正则表达式命名组：" />
+                <Grid Margin="0,4,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Foreground="Black"
+                        Text="$algo$" />
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Margin="16,0,0,0"
+                        Style="{StaticResource DescTextBlockStyle}"
+                        Text="等同 (?&lt;algo&gt;[A-Za-z0-9-]+)，此位置的匹配结果作为算法名。" />
+                    <TextBlock
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Foreground="Black"
+                        Text="$hash$" />
+                    <TextBlock
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Margin="16,0,0,0"
+                        Style="{StaticResource DescTextBlockStyle}"
+                        Text="等同 (?&lt;hash&gt;[A-Za-z0-9+/=]+)，此位置的匹配结果作为哈希值。" />
+                    <TextBlock
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        Foreground="Black"
+                        Text="$name$" />
+                    <TextBlock
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        Margin="16,0,0,0"
+                        Style="{StaticResource DescTextBlockStyle}"
+                        Text="等同 (?&lt;name&gt;[^:*?\&quot;&lt;&gt;|\t\v\f\r\n]+)，此位置的匹配结果作为文件名。" />
+                </Grid>
+                <TextBlock
+                    Margin="0,4,0,0"
+                    FontSize="8pt"
+                    Style="{StaticResource DescTextBlockStyle}"
+                    Text="你也可以自定义正则表达式命名组，可用的组名： algo 和 hash 和 name。" />
+                <TextBlock
+                    Margin="0,8,0,0"
+                    Foreground="Black"
+                    Text="如何使用以上设置好的方案来解析校验依据？" />
+                <TextBlock
+                    Margin="0,2,0,0"
+                    FontSize="8pt"
+                    Style="{StaticResource DescTextBlockStyle}"
+                    Text="程序会在校验时自动选择方案，具体的选择方式见紧接在表格下方的说明。" />
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
+</Page>

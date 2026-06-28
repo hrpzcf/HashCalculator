@@ -14,7 +14,7 @@ using HashCalculator.ViewModels.Pages;
 using HashCalculator.ViewModels.Windows;
 using HashCalculator.Views.Pages;
 using Wpf.Ui;
-using Wpf.Ui.Abstractions;
+using Wpfuictrls = Wpf.Ui.Controls;
 
 namespace HashCalculator.Views.Windows
 {
@@ -43,9 +43,23 @@ namespace HashCalculator.Views.Windows
             this.viewModel = viewModel;
             this.DataContext = this.viewModel;
             this.InitializeComponent();
-            navigationService.SetNavigationControl(NavigationView);
+            navigationService.SetNavigationControl(this.NavigationView);
+            this.NavigationView.SelectionChanged += this.SelectionChanged;
             NotificationSender.SnackbarService.SetSnackbarPresenter(
                 this.SnackbarPresenter);
+        }
+
+        private void SelectionChanged(Wpfuictrls.NavigationView sender, RoutedEventArgs args)
+        {
+            if (sender.SelectedItem is Wpfuictrls.INavigationViewItem item)
+            {
+                if (item == this.viewModel.SettingsNavigationViewItem ||
+                    item.NavigationViewItemParent == this.viewModel.SettingsNavigationViewItem)
+                {
+                    return;
+                }
+                this.viewModel.SettingsNavigationViewItem.IsExpanded = false;
+            }
         }
 
         private void MainWindowClosing(object sender, CancelEventArgs e)

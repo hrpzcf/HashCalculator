@@ -6,12 +6,12 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Xml.Serialization;
 using HashCalculator.Views.Windows;
 using Newtonsoft.Json;
-using WpfuiCtrls = Wpf.Ui.Controls;
-using HashCalculator.Views.Pages;
+using Wpfuictrls = Wpf.Ui.Controls;
 
 namespace HashCalculator.ViewModels.Pages;
 
@@ -157,6 +157,8 @@ public class SettingsViewModel : BaseViewModel
     private RelayCommand resetLuminanceAndSaturationValuesCmd;
 
     private RelayCommand openBrowserNavigateToWebsiteCmd;
+
+    private RelayCommand settingsPagesInputBindingsCmd;
 
     [JsonIgnore, XmlIgnore]
     public const string CmdStrShowDetails = "SHOW_DETAILS";
@@ -997,7 +999,7 @@ public class SettingsViewModel : BaseViewModel
             "询问",
             "安装外壳扩展可能需要重启资源管理器，确定现在安装吗？",
             closeButtonText: "否",
-            primaryButtonText: "是") != WpfuiCtrls.MessageBoxResult.Primary)
+            primaryButtonText: "是") != Wpfuictrls.MessageBoxResult.Primary)
         {
             return;
         }
@@ -1041,7 +1043,7 @@ public class SettingsViewModel : BaseViewModel
             "询问",
             "卸载外壳扩展可能需要重启资源管理器，确定现在卸载吗？",
             closeButtonText: "否",
-            primaryButtonText: "是") != WpfuiCtrls.MessageBoxResult.Primary)
+            primaryButtonText: "是") != Wpfuictrls.MessageBoxResult.Primary)
         {
             return;
         }
@@ -1499,6 +1501,27 @@ public class SettingsViewModel : BaseViewModel
         {
             this.openBrowserNavigateToWebsiteCmd ??= new RelayCommand(this.OpenBrowserNavigateToWebsiteAction);
             return this.openBrowserNavigateToWebsiteCmd;
+        }
+    }
+
+    private void SettingsPagesInputBindingsAction(object param)
+    {
+        if (param is KeyEventArgs keyEventArgs)
+        {
+            if (keyEventArgs.Key == Key.Escape && keyEventArgs.OriginalSource is DataGrid dataGrid)
+            {
+                dataGrid.SelectedIndex = -1;
+            }
+        }
+    }
+
+    [JsonIgnore, XmlIgnore]
+    public ICommand SettingsPagesInputBindingsCmd
+    {
+        get
+        {
+            this.settingsPagesInputBindingsCmd ??= new RelayCommand(this.SettingsPagesInputBindingsAction);
+            return this.settingsPagesInputBindingsCmd;
         }
     }
 

@@ -1,0 +1,309 @@
+﻿<Page
+    x:Class="HashCalculator.Views.Pages.InterfaceSettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:HashCalculator"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pagemodels="clr-namespace:HashCalculator.ViewModels.Pages"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
+    d:DataContext="{d:DesignInstance Type=pagemodels:SettingsViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <ScrollViewer
+        Padding="10"
+        FontSize="9pt"
+        HorizontalScrollBarVisibility="Auto"
+        VerticalScrollBarVisibility="Auto">
+        <StackPanel>
+            <CheckBox Content="不显示【序号】列" IsChecked="{Binding NoSerialNumColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <CheckBox
+                Margin="0,4,0,0"
+                Content="不显示【完整路径】列"
+                IsChecked="{Binding NoFullPathColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <CheckBox
+                Margin="0,4,0,0"
+                Content="不显示【文件大小】列"
+                IsChecked="{Binding NoFileSizeColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <CheckBox
+                Margin="0,4,0,0"
+                Content="不显示【输出方式】列"
+                IsChecked="{Binding NoOutputTypeColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <CheckBox
+                Margin="0,4,0,0"
+                Content="不显示【任务耗时】列"
+                IsChecked="{Binding NoDurationColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <CheckBox
+                Margin="0,4,0,0"
+                Content="不显示【导出】列"
+                IsChecked="{Binding NoExportColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <CheckBox
+                Margin="0,4,0,0"
+                Content="不显示【校验结果】列"
+                IsChecked="{Binding NoCmpResultColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <CheckBox
+                Margin="0,4,0,0"
+                Content="在校验结果的图标旁显示描述文字"
+                IsChecked="{Binding ShowResultText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <CheckBox
+                Margin="0,4,0,0"
+                Content="使【筛选与操作】窗口跟随主窗口移动"
+                IsChecked="{Binding FilterAndCmderWndFollowsMainWnd, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <CheckBox
+                Margin="0,4,0,0"
+                Content="显示表格中文件的图标"
+                IsChecked="{Binding ShowFileIcon, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <CheckBox
+                Margin="0,4,0,0"
+                Content="显示主窗口工具按钮的名称"
+                IsChecked="{Binding DisplayMainWndButtonText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <StackPanel Margin="0,4,0,0">
+                <CheckBox Content="显示主窗口所有工具按钮" IsChecked="{Binding DisplayMainWindowButtons, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBlock
+                    Margin="16,2,0,0"
+                    Style="{StaticResource DescTextBlockStyle}"
+                    Text="取消勾选并关闭设置窗口后可通过点击右键菜单“显示工具按钮”重新显示" />
+            </StackPanel>
+            <Expander
+                Margin="0,8,0,0"
+                HorizontalAlignment="Left"
+                Foreground="#FF006FD6"
+                Header="分别设置要显示的工具按钮">
+                <StackPanel Margin="4">
+                    <CheckBox
+                        Margin="16,0,0,0"
+                        Content="显示【默认算法】按钮"
+                        IsChecked="{Binding ShowOpenSelectAlgoWndButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <CheckBox
+                        Margin="16,4,0,0"
+                        Content="显示【默认输出方式】按钮"
+                        IsChecked="{Binding ShowSelectedOutputTypeButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <CheckBox
+                        Margin="16,4,0,0"
+                        Content="显示【筛选与操作】按钮"
+                        IsChecked="{Binding ShowOpenCommandPanelButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <CheckBox
+                        Margin="16,4,0,0"
+                        Content="显示【选择文件】按钮"
+                        IsChecked="{Binding ShowSelectFilesToHashButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <CheckBox
+                        Margin="16,4,0,0"
+                        Content="显示【选择目录】按钮"
+                        IsChecked="{Binding ShowSelectFoldersToHashButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <CheckBox
+                        Margin="16,4,0,0"
+                        Content="显示【停止搜索】按钮"
+                        IsChecked="{Binding ShowStopEnumeratingPackageButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <CheckBox
+                        Margin="16,4,0,0"
+                        Content="显示【导出结果】按钮"
+                        IsChecked="{Binding ShowExportHashResultsButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <CheckBox
+                        Margin="16,4,0,0"
+                        Content="显示【新行重算】按钮"
+                        IsChecked="{Binding ShowCopyAndRestartModelsButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <CheckBox
+                        Margin="16,4,0,0"
+                        Content="显示【计算缺值项】按钮"
+                        IsChecked="{Binding ShowRefreshOriginalModelsButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <CheckBox
+                        Margin="16,4,0,0"
+                        Content="显示【重新计算】按钮"
+                        IsChecked="{Binding ShowForceRefreshOriginalModelsButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <CheckBox
+                        Margin="16,4,0,0"
+                        Content="显示【清空表格】按钮"
+                        IsChecked="{Binding ShowClearAllTableLinesButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <CheckBox
+                        Margin="16,4,0,0"
+                        Content="显示【全部开始】按钮"
+                        IsChecked="{Binding ShowContinueDisplayedModelsButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <CheckBox
+                        Margin="16,4,0,0"
+                        Content="显示【全部暂停】按钮"
+                        IsChecked="{Binding ShowPauseDisplayedModelsButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <CheckBox
+                        Margin="16,4,0,0"
+                        Content="显示【全部取消】按钮"
+                        IsChecked="{Binding ShowCancelDisplayedModelsButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <CheckBox
+                        Margin="16,4,0,0"
+                        Content="显示【置顶窗口】按钮"
+                        IsChecked="{Binding ShowMainWindowTopmostButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+            </Expander>
+            <GroupBox
+                Margin="0,8,0,0"
+                Padding="4"
+                Foreground="#FF006FD6"
+                Header="用颜色来标记哈希值相同的行时的颜色参数">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock
+                        Grid.Column="0"
+                        VerticalAlignment="Center"
+                        Foreground="Black"
+                        Text="颜色亮度：" />
+                    <Slider
+                        Grid.Column="1"
+                        Maximum="230"
+                        Minimum="30"
+                        TickFrequency="1"
+                        Value="{Binding LuminanceOfTableRowsWithSameHash, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBlock
+                        Grid.Column="2"
+                        Width="30"
+                        Margin="4,0,0,0"
+                        Foreground="Black"
+                        Text="{Binding LuminanceOfTableRowsWithSameHash}" />
+                    <TextBlock
+                        Grid.Column="3"
+                        Margin="16,0,0,0"
+                        VerticalAlignment="Center"
+                        Foreground="Black"
+                        Text="饱和度：" />
+                    <Slider
+                        Grid.Column="4"
+                        Maximum="240"
+                        Minimum="10"
+                        TickFrequency="1"
+                        Value="{Binding SaturationOfTableRowsWithSameHash, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBlock
+                        Grid.Column="5"
+                        Width="30"
+                        Margin="4,0,0,0"
+                        Foreground="Black"
+                        Text="{Binding SaturationOfTableRowsWithSameHash}" />
+                </Grid>
+            </GroupBox>
+            <GroupBox
+                Margin="0,8,0,0"
+                Padding="4"
+                Foreground="#FF006FD6"
+                Header="相同哈希值筛选器给哈希值列上色时的颜色参数">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock
+                        Grid.Column="0"
+                        VerticalAlignment="Center"
+                        Foreground="Black"
+                        Text="颜色亮度：" />
+                    <Slider
+                        Grid.Column="1"
+                        Maximum="230"
+                        Minimum="30"
+                        TickFrequency="1"
+                        Value="{Binding LuminanceOfTableCellsWithSameHash, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBlock
+                        Grid.Column="2"
+                        Width="30"
+                        Margin="4,0,0,0"
+                        Foreground="Black"
+                        Text="{Binding LuminanceOfTableCellsWithSameHash}" />
+                    <TextBlock
+                        Grid.Column="3"
+                        Margin="16,0,0,0"
+                        VerticalAlignment="Center"
+                        Foreground="Black"
+                        Text="饱和度：" />
+                    <Slider
+                        Grid.Column="4"
+                        Maximum="240"
+                        Minimum="10"
+                        TickFrequency="1"
+                        Value="{Binding SaturationOfTableCellsWithSameHash, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBlock
+                        Grid.Column="5"
+                        Width="30"
+                        Margin="4,0,0,0"
+                        Foreground="Black"
+                        Text="{Binding SaturationOfTableCellsWithSameHash}" />
+                </Grid>
+            </GroupBox>
+            <GroupBox
+                Margin="0,8,0,0"
+                Padding="4"
+                Foreground="#FF006FD6"
+                Header="相同文件夹筛选器给文件名列上色时的颜色参数">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock
+                        Grid.Column="0"
+                        VerticalAlignment="Center"
+                        Foreground="Black"
+                        Text="颜色亮度：" />
+                    <Slider
+                        Grid.Column="1"
+                        Maximum="230"
+                        Minimum="30"
+                        TickFrequency="1"
+                        Value="{Binding LuminanceOfTableCellsWithSameDirectory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBlock
+                        Grid.Column="2"
+                        Width="30"
+                        Margin="4,0,0,0"
+                        Foreground="Black"
+                        Text="{Binding LuminanceOfTableCellsWithSameDirectory}" />
+                    <TextBlock
+                        Grid.Column="3"
+                        Margin="16,0,0,0"
+                        VerticalAlignment="Center"
+                        Foreground="Black"
+                        Text="饱和度：" />
+                    <Slider
+                        Grid.Column="4"
+                        Maximum="240"
+                        Minimum="10"
+                        TickFrequency="1"
+                        Value="{Binding SaturationOfTableCellsWithSameDirectory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBlock
+                        Grid.Column="5"
+                        Width="30"
+                        Margin="4,0,0,0"
+                        Foreground="Black"
+                        Text="{Binding SaturationOfTableCellsWithSameDirectory}" />
+                </Grid>
+            </GroupBox>
+            <Button
+                Margin="0,8,0,0"
+                Padding="8,2"
+                HorizontalAlignment="Left"
+                Command="{Binding ResetLuminanceAndSaturationValuesCmd}"
+                Content="重置所有颜色亮度和饱和度值" />
+            <Button
+                Margin="0,8,0,0"
+                Padding="8,2"
+                HorizontalAlignment="Left"
+                Click="ResetHomePageDataGridColumnsIndex"
+                Content="重置主窗口表格所有列的顺序" />
+            <Button
+                Margin="0,8,0,0"
+                Padding="8,2"
+                HorizontalAlignment="Left"
+                Click="ResetHomePageDataGridColumnsWidth"
+                Content="重置主窗口表格所有列的宽度" />
+        </StackPanel>
+    </ScrollViewer>
+</Page>

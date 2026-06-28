@@ -57,9 +57,10 @@
             x:Name="NavigationView"
             FooterMenuItemsSource="{Binding FooterItems, Mode=OneWay}"
             MenuItemsSource="{Binding MenuItems, Mode=OneWay}"
-            OpenPaneLength="200"
+            OpenPaneLength="220"
             PaneDisplayMode="Left"
-            TitleBar="{Binding ElementName=TitleBar, Mode=OneWay}">
+            TitleBar="{Binding ElementName=TitleBar, Mode=OneWay}"
+            TransitionDuration="100">
             <wpfui:NavigationView.ContentOverlay>
                 <wpfui:SnackbarPresenter x:Name="SnackbarPresenter" />
             </wpfui:NavigationView.ContentOverlay>

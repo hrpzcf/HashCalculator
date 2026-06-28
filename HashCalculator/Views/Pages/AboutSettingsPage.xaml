@@ -1,0 +1,163 @@
+﻿<Page
+    x:Class="HashCalculator.Views.Pages.AboutSettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:HashCalculator"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pagemodels="clr-namespace:HashCalculator.ViewModels.Pages"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
+    d:DataContext="{d:DesignInstance Type=pagemodels:SettingsViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <ScrollViewer
+        Padding="10"
+        FontSize="9pt"
+        HorizontalScrollBarVisibility="Auto"
+        VerticalScrollBarVisibility="Auto">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <StackPanel
+                Grid.Row="0"
+                HorizontalAlignment="Center"
+                Orientation="Horizontal">
+                <Image
+                    Width="64"
+                    Height="64"
+                    Source="/Images/icon.ico" />
+                <StackPanel Margin="8,0,0,0" VerticalAlignment="Center">
+                    <TextBlock FontSize="17pt" Text="{Binding Title}" />
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Foreground="Gray">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="Ver. {0} by {1} @ ">
+                                    <Binding Path="Ver" />
+                                    <Binding Path="Author" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                        <TextBlock>
+                            <Hyperlink
+                                Command="{Binding OpenBrowserNavigateToWebsiteCmd}"
+                                CommandParameter="{Binding Website}"
+                                TextDecorations="None">
+                                <TextBlock Text="{Binding Website}" />
+                            </Hyperlink>
+                        </TextBlock>
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel
+                Grid.Row="1"
+                Margin="0,8,0,0"
+                HorizontalAlignment="Center"
+                Orientation="Horizontal">
+                <TextBlock>
+                    <Hyperlink
+                        Command="{Binding OpenBrowserNavigateToWebsiteCmd}"
+                        CommandParameter="{Binding SrcGitHub}"
+                        TextDecorations="None">
+                        项目地址
+                    </Hyperlink>
+                </TextBlock>
+                <TextBlock Margin="4,0,0,0">
+                    <Hyperlink
+                        Command="{Binding OpenBrowserNavigateToWebsiteCmd}"
+                        CommandParameter="{Binding SrcGitee}"
+                        TextDecorations="None">
+                        (Gitee)
+                    </Hyperlink>
+                </TextBlock>
+                <TextBlock Margin="16,0,0,0">
+                    <Hyperlink
+                        Command="{Binding OpenBrowserNavigateToWebsiteCmd}"
+                        CommandParameter="{Binding IssueGitHub}"
+                        TextDecorations="None">
+                        问题反馈
+                    </Hyperlink>
+                </TextBlock>
+                <TextBlock Margin="4,0,0,0">
+                    <Hyperlink
+                        Command="{Binding OpenBrowserNavigateToWebsiteCmd}"
+                        CommandParameter="{Binding IssueGitee}"
+                        TextDecorations="None">
+                        (Gitee)
+                    </Hyperlink>
+                </TextBlock>
+                <TextBlock Margin="16,0,0,0">
+                    <Hyperlink
+                        Command="{Binding OpenBrowserNavigateToWebsiteCmd}"
+                        CommandParameter="{Binding WikiGitHub}"
+                        TextDecorations="None">
+                        使用帮助
+                    </Hyperlink>
+                </TextBlock>
+                <TextBlock Margin="4,0,0,0">
+                    <Hyperlink
+                        Command="{Binding OpenBrowserNavigateToWebsiteCmd}"
+                        CommandParameter="{Binding WikiGitee}"
+                        TextDecorations="None">
+                        (Gitee)
+                    </Hyperlink>
+                </TextBlock>
+                <TextBlock Margin="16,0,0,0">
+                    <Hyperlink
+                        Command="{Binding OpenBrowserNavigateToWebsiteCmd}"
+                        CommandParameter="{Binding ChangeLogGitHub}"
+                        TextDecorations="None">
+                        更新日志
+                    </Hyperlink>
+                </TextBlock>
+                <TextBlock Margin="4,0,0,0">
+                    <Hyperlink
+                        Command="{Binding OpenBrowserNavigateToWebsiteCmd}"
+                        CommandParameter="{Binding ChangeLogGitee}"
+                        TextDecorations="None">
+                        (Gitee)
+                    </Hyperlink>
+                </TextBlock>
+            </StackPanel>
+            <TextBlock
+                Grid.Row="2"
+                Margin="0,16,0,0"
+                FontSize="12pt"
+                Text="HashCalculator 使用的开源项目：" />
+            <ItemsControl
+                Grid.Row="3"
+                Margin="0,4,0,0"
+                d:ItemsSource="{d:SampleData ItemCount=10}"
+                Grid.IsSharedSizeScope="True"
+                ItemsSource="{Binding OpenSourceProjects}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="0,8,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" SharedSizeGroup="projGroupCol" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Margin="16,0,0,0">
+                                <Hyperlink
+                                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window, AncestorLevel=1}, Path=DataContext.OpenBrowserNavigateToWebsiteCmd}"
+                                    CommandParameter="{Binding Param}"
+                                    TextDecorations="None">
+                                    <TextBlock Text="{Binding Display}" />
+                                </Hyperlink>
+                            </TextBlock>
+                            <TextBlock
+                                Grid.Column="1"
+                                Margin="16,0,8,0"
+                                Foreground="Gray"
+                                Text="{Binding ItemValue}" />
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
+    </ScrollViewer>
+</Page>

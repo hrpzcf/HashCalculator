@@ -8,7 +8,7 @@ using System.Security;
 using HashCalculator.Others;
 using HashCalculator.Views.Windows;
 using Microsoft.Win32;
-using WpfuiCtrls = Wpf.Ui.Controls;
+using Wpfuictrls = Wpf.Ui.Controls;
 
 namespace HashCalculator
 {
@@ -307,7 +307,7 @@ namespace HashCalculator
             Exception exception = JoinExceptionMessagesAndGenerateNew(exception1, exception2);
             if (exception is FileNotFoundException)
             {
-                Func<WpfuiCtrls.MessageBoxResult> callback = () =>
+                Func<Wpfuictrls.MessageBoxResult> callback = () =>
                 {
                     return NotificationSender.ShowMessageBox(
                         MainWindow.Current,
@@ -317,7 +317,7 @@ namespace HashCalculator
                         closeButtonText: "否",
                         primaryButtonText: "是");
                 };
-                if (Synchronization.UI.Invoke(callback) == WpfuiCtrls.MessageBoxResult.Primary)
+                if (Synchronization.UI.Invoke(callback) == Wpfuictrls.MessageBoxResult.Primary)
                 {
                     exception = ForceCleanRegistryKeysManually();
                 }

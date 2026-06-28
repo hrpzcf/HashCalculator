@@ -17,7 +17,7 @@ using HashCalculator.Others;
 using HashCalculator.Views.Windows;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
-using WpfuiCtrls = Wpf.Ui.Controls;
+using Wpfuictrls = Wpf.Ui.Controls;
 
 namespace HashCalculator.ViewModels.Pages;
 
@@ -840,7 +840,7 @@ public class HomeViewModel : BaseViewModel
                 "提示",
                 deleteFileTip,
                 closeButtonText: "否",
-                primaryButtonText: "是") != WpfuiCtrls.MessageBoxResult.Primary)
+                primaryButtonText: "是") != Wpfuictrls.MessageBoxResult.Primary)
             {
                 return;
             }
@@ -1114,7 +1114,7 @@ public class HomeViewModel : BaseViewModel
                 "警告",
                 $"已存在以下文件，继续导出将会覆盖原文件，仍然要导出吗？\n{paths}",
                 closeButtonText: "否",
-                primaryButtonText: "是") != WpfuiCtrls.MessageBoxResult.Primary)
+                primaryButtonText: "是") != Wpfuictrls.MessageBoxResult.Primary)
             {
                 return;
             }
@@ -1132,7 +1132,7 @@ public class HomeViewModel : BaseViewModel
                     "并非所有行包含的算法都一样，如果仍要导出结果，则导出的每个清单里包含的文件数量不一样，" +
                         "仍然要导出吗？",
                     closeButtonText: "否",
-                    primaryButtonText: "是") == WpfuiCtrls.MessageBoxResult.Primary)
+                    primaryButtonText: "是") == Wpfuictrls.MessageBoxResult.Primary)
                 {
                     break;
                 }

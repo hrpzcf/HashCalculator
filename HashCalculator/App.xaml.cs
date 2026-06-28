@@ -29,6 +29,17 @@ public partial class App : Application
             services.AddSingleton<MainViewModel>();
             services.AddSingleton<MainWindow>();
             services.AddSingleton<SettingsPanel>();
+            services.AddSingleton<GeneralSettingsPage>();
+            services.AddSingleton<InterfaceSettingsPage>();
+            services.AddSingleton<TaskSettingsPage>();
+            services.AddSingleton<MenuSettingsPage>();
+            services.AddSingleton<AliasSettingsPage>();
+            services.AddSingleton<CopySettingsPage>();
+            services.AddSingleton<ExportSettingsPage>();
+            services.AddSingleton<ParsingSchemeSettingsPage>();
+            services.AddSingleton<ShortcutSettingsPage>();
+            services.AddSingleton<ConfigSettingsPage>();
+            services.AddSingleton<AboutSettingsPage>();
             services.AddHostedService<ApplicationHostService>();
         }).Build();
 

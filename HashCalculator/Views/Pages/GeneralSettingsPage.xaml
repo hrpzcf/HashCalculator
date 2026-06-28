@@ -1,0 +1,170 @@
+﻿<Page
+    x:Class="HashCalculator.Views.Pages.GeneralSettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:HashCalculator"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pagemodels="clr-namespace:HashCalculator.ViewModels.Pages"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
+    d:DataContext="{d:DesignInstance Type=pagemodels:SettingsViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <ScrollViewer
+        Padding="10"
+        FontSize="9pt"
+        HorizontalScrollBarVisibility="Auto"
+        VerticalScrollBarVisibility="Auto">
+        <StackPanel>
+            <GroupBox
+                Padding="4"
+                Foreground="#FF006FD6"
+                Header="文件搜索策略">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Foreground="Black"
+                            Text="当选择或拖放的多个待计算对象中包含文件夹时：" />
+                        <ComboBox
+                            DisplayMemberPath="Display"
+                            ItemsSource="{Binding AvailableDroppedSearchMethods}"
+                            SelectedValue="{Binding SelectedSearchMethodForDragDrop, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            SelectedValuePath="ItemValue" />
+                    </StackPanel>
+                    <StackPanel Margin="0,2,0,0" Orientation="Horizontal">
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Foreground="Black"
+                            Text="当有需要时如何搜索校验依据文件内列出的文件：" />
+                        <ComboBox
+                            DisplayMemberPath="Display"
+                            ItemsSource="{Binding AvailableQVSearchMethods}"
+                            SelectedValue="{Binding SelectedSearchMethodForChecklist, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            SelectedValuePath="ItemValue"
+                            ToolTip="当表格为空时，如果校验依据选择的是通用格式的哈希值文本文件，则：&#10;点击 [校验] 后程序会自动解析文件并在相同目录下寻找要计算哈希值的文件完成计算并显示校验结果。&#10;通用格式的哈希值文件请参考程序 [导出结果] 功能导出的文件的内容排布格式。" />
+                    </StackPanel>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox
+                Margin="0,8,0,0"
+                Padding="4"
+                Foreground="#FF006FD6"
+                Header="当需要查找校验依据内列出的文件进行计算并校验时">
+                <StackPanel>
+                    <RadioButton
+                        HorizontalAlignment="Left"
+                        Content="使用【默认算法】中被勾选的算法"
+                        IsChecked="{Binding PreferChecklistAlgs, Converter={StaticResource ReverseBooleanValueCvt}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <RadioButton
+                        x:Name="checkBoxPreferChecklistAlgs"
+                        Margin="0,4,0,0"
+                        HorizontalAlignment="Left"
+                        Content="首选校验依据文件内容指定算法，次选校验依据文件扩展名指定算法"
+                        IsChecked="{Binding PreferChecklistAlgs, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <StackPanel Margin="20,2,0,0" Orientation="Horizontal">
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Foreground="Black"
+                            Text="当校验依据文件内容和扩展名皆未指定算法时：" />
+                        <ComboBox
+                            DisplayMemberPath="Display"
+                            IsEnabled="{Binding ElementName=checkBoxPreferChecklistAlgs, Path=IsChecked}"
+                            ItemsSource="{Binding AvailableFetchAlgoOptions}"
+                            SelectedValue="{Binding FetchAlgorithmOption, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            SelectedValuePath="ItemValue" />
+                    </StackPanel>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox
+                Margin="0,8,0,0"
+                Padding="4"
+                Foreground="#FF006FD6"
+                Header="监控剪贴板中新复制的哈希信息用于校验">
+                <StackPanel>
+                    <CheckBox
+                        Margin="0"
+                        Content="通过右键/命令启动计算时使用已经复制的校验依据进行校验"
+                        IsChecked="{Binding UseExistingClipboardTextForCheck, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <CheckBox
+                        x:Name="checkBoxVerifyWhenClipbaordNewHash"
+                        Margin="0,4,0,0"
+                        Content="剪贴板有新复制的哈希信息时自动填充校验依据文本框并校验"
+                        IsChecked="{Binding MonitorNewHashStringInClipboard, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <StackPanel
+                        Margin="0,2,0,0"
+                        IsEnabled="{Binding ElementName=checkBoxVerifyWhenClipbaordNewHash, Path=IsChecked}"
+                        Orientation="Horizontal">
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Foreground="Black"
+                            Text="复制的字符数在此范围内时才触发 (默认8~512)：" />
+                        <TextBox
+                            MinWidth="50"
+                            VerticalAlignment="Center"
+                            Text="{Binding MinCopiedCharsToTriggerHashCheck, Converter={StaticResource StringToIntDefaultEightCvt}, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Foreground="Black"
+                            Text=" ~ " />
+                        <TextBox
+                            MinWidth="50"
+                            VerticalAlignment="Center"
+                            Text="{Binding MaxCopiedCharsToTriggerHashCheck, Converter={StaticResource StringToIntDefaultFiveTwelveCvt}, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                    </StackPanel>
+                    <CheckBox
+                        Margin="0,2,0,0"
+                        Content="完成哈希值校验后把主窗口带到前台 (管理员模式下可能不生效)"
+                        IsChecked="{Binding SwitchMainWndFgWhenNewHashCopied, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        IsEnabled="{Binding ElementName=checkBoxVerifyWhenClipbaordNewHash, Path=IsChecked}" />
+                </StackPanel>
+            </GroupBox>
+            <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
+                <TextBlock VerticalAlignment="Center" Text="校验时自动把算法切换到：" />
+                <ComboBox
+                    DisplayMemberPath="Display"
+                    ItemsSource="{Binding AvailableResultsToSwitchTo}"
+                    SelectedValue="{Binding AlgoToSwitchToAfterHashChecked}"
+                    SelectedValuePath="ItemValue" />
+            </StackPanel>
+            <StackPanel Margin="0,2,0,0" Orientation="Horizontal">
+                <TextBlock VerticalAlignment="Center" Text="拖动文件到软件可执行文件上/启动命令没有子命令时：" />
+                <ComboBox
+                    DisplayMemberPath="Display"
+                    ItemsSource="{Binding AvailableChoicesWhenNoVerb}"
+                    SelectedValue="{Binding SelectionWhenNoVerbIsSpecified}"
+                    SelectedValuePath="ItemValue" />
+            </StackPanel>
+            <CheckBox
+                Margin="0,8,0,0"
+                Content="不计算空文件的哈希值以避免造成【文件内容相同】的误导"
+                IsChecked="{Binding DoNotHashForEmptyFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <CheckBox
+                Margin="0,8,0,0"
+                Content="所有任务完成计算后使用颜色来标记哈希值相同的行"
+                IsChecked="{Binding MarkTheSameHashValues, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBlock
+                Margin="18,2,0,0"
+                FontSize="8pt"
+                Style="{StaticResource DescTextBlockStyle}"
+                Text="此项功能是筛选与操作面板的【相同哈希值】筛选器的简化便捷版，只关注当前算法" />
+            <CheckBox
+                Margin="0,8,0,0"
+                Content="所有计算任务完成后清除所有行的被选中状态"
+                IsChecked="{Binding ClearSelectedItemsAfterCompletion, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <CheckBox
+                Margin="0,8,0,0"
+                Content="右键选择删除文件时直接永久删除而不是移动到回收站"
+                IsChecked="{Binding PermanentlyDeleteFiles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <CheckBox
+                Margin="0,8,0,0"
+                Content="通过命令行、系统右键菜单、关联的文件启动计算前先将表格现有的内容清空"
+                IsChecked="{Binding ClearTableBeforeAddingFilesByCmdLine, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <CheckBox
+                Margin="0,8,0,0"
+                Content="允许运行多个应用程序实例，包括被系统右键菜单或关联的文件启动"
+                IsChecked="{Binding RunInMultiInstMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        </StackPanel>
+    </ScrollViewer>
+</Page>

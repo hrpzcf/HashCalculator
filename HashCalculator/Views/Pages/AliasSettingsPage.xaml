@@ -1,0 +1,69 @@
+﻿<Page
+    x:Class="HashCalculator.Views.Pages.AliasSettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:HashCalculator"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pagemodels="clr-namespace:HashCalculator.ViewModels.Pages"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
+    d:DataContext="{d:DesignInstance Type=pagemodels:SettingsViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <ScrollViewer
+        Padding="10"
+        FontSize="9pt"
+        HorizontalScrollBarVisibility="Auto"
+        VerticalScrollBarVisibility="Auto">
+        <StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock VerticalAlignment="Center" Text="要设置别名的本地算法：" />
+                <ComboBox
+                    MinWidth="115"
+                    VerticalContentAlignment="Center"
+                    DisplayMemberPath="AlgoName"
+                    ItemsSource="{Binding Source={x:Static local:AlgosPanelModel.ProvidedAlgos}}"
+                    SelectedItem="{Binding SelectedInOutModelForAlias}" />
+                <wpfui:Button
+                    Margin="16,0,0,0"
+                    Appearance="Danger"
+                    Command="{Binding ResetAlgorithmAliasCmd}"
+                    Content="全部恢复默认" />
+            </StackPanel>
+            <TextBlock Margin="0,8,0,0" Text="要使用的别名：" />
+            <TextBox
+                Padding="4"
+                VerticalContentAlignment="Top"
+                AcceptsReturn="True"
+                MinLines="3"
+                Text="{Binding SelectedInOutModelForAlias.AlgorithmAlias, UpdateSourceTrigger=LostFocus}"
+                TextWrapping="Wrap" />
+            <TextBlock
+                Margin="0,8,0,0"
+                FontSize="8pt"
+                Style="{StaticResource DescTextBlockStyle}"
+                Text="1. 别名的作用是帮助 HashCalculator 识别那些“不认识”的算法名，例如， -" />
+            <TextBlock
+                Margin="0,4,0,0"
+                FontSize="8pt"
+                Style="{StaticResource DescTextBlockStyle}"
+                Text="当 HashCalculator 解析校验依据时遇到一个算法名“XXH364”，因为本地并没有叫 -" />
+            <TextBlock
+                Margin="0,4,0,0"
+                FontSize="8pt"
+                Style="{StaticResource DescTextBlockStyle}"
+                Text="这个名字的算法所以无法识别。这时你可以给本地“XXH3-64”算法增加一个叫“XXH364”的别名， -" />
+            <TextBlock
+                Margin="0,4,0,0"
+                FontSize="8pt"
+                Style="{StaticResource DescTextBlockStyle}"
+                Text="这样当 HashCalculator 遇到“XXH364”时就知道它实际上就是本地的“XXH3-64”算法。" />
+            <TextBlock
+                Margin="0,4,0,0"
+                FontSize="8pt"
+                Style="{StaticResource DescTextBlockStyle}"
+                Text="2. 别名不区分大小写，可以通过英文逗号、换行来分隔多个不同的别名。" />
+        </StackPanel>
+    </ScrollViewer>
+</Page>
