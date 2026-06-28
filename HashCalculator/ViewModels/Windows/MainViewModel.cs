@@ -43,7 +43,7 @@ public class MainViewModel : BaseViewModel
 
     private void SetupNavigationViewItems()
     {
-        this.MenuItems = [new NavigationViewItem("计算哈希值", SymbolRegular.Home24, typeof(HomePage))];
+        this.MenuItems = [new NavigationViewItem("主页", SymbolRegular.Home24, typeof(HomePage))];
         this.SettingsNavigationViewItem = new NavigationViewItem("设置", SymbolRegular.Settings24, typeof(SettingsPanel))
         {
             MenuItemsSource = new object[]
