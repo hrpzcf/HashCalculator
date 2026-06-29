@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Xml.Serialization;
 using HashCalculator.Views.Windows;
 using Newtonsoft.Json;
+using Wpf.Ui.Appearance;
 using Wpfctrls = Wpf.Ui.Controls;
 
 namespace HashCalculator.ViewModels.Pages;
@@ -135,6 +136,7 @@ public class SettingsViewModel : BaseViewModel
     private int saturationOfTableCellsWithSameDirectory = 240;
     private int luminanceOfTableCellsWithSameHash = 100;
     private int saturationOfTableCellsWithSameHash = 240;
+    private int selectedApplicationThemeIndex = 0;
 
     private RelayCommand installShellExtCmd;
     private RelayCommand unInstallShellExtCmd;
@@ -909,6 +911,36 @@ public class SettingsViewModel : BaseViewModel
         {
             AdjustLuminanceOrSaturation(ref value);
             this.SetPropNotify(ref this.saturationOfTableCellsWithSameHash, value);
+        }
+    }
+
+    public int SelectedApplicationThemeIndex
+    {
+        get => this.selectedApplicationThemeIndex;
+        set
+        {
+            if (value == this.selectedApplicationThemeIndex)
+            {
+                return;
+            }
+            ApplicationTheme theme = (ApplicationTheme)value;
+#if DEBUG
+            if (!Enum.IsDefined<ApplicationTheme>(theme))
+            {
+                NotificationSender.SnackbarError("所选的应用主题不在已定义的应用主题枚举范围之内。");
+            }
+#endif
+            if (theme == ApplicationTheme.Unknown)
+            {
+                ApplicationThemeManager.ApplySystemTheme();
+                SystemThemeWatcher.Watch(MainWindow.Current);
+            }
+            else
+            {
+                SystemThemeWatcher.UnWatch(MainWindow.Current);
+                ApplicationThemeManager.Apply(theme);
+            }
+            this.SetPropNotify(ref this.selectedApplicationThemeIndex, value);
         }
     }
 

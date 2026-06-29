@@ -14,6 +14,20 @@
     mc:Ignorable="d">
     <ScrollViewer Padding="8" VerticalScrollBarVisibility="Auto">
         <StackPanel>
+            <wpfui:CardControl Icon="{wpfui:SymbolIcon Color24}">
+                <wpfui:CardControl.Header>
+                    <StackPanel>
+                        <wpfui:TextBlock FontTypography="BodyStrong" Text="应用主题" />
+                        <wpfui:TextBlock Foreground="{DynamicResource TextFillColorTertiaryBrush}" Text="设置应用程序的主题颜色。" />
+                    </StackPanel>
+                </wpfui:CardControl.Header>
+                <ComboBox SelectedIndex="{Binding SelectedApplicationThemeIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <ComboBoxItem Content="跟随系统" />
+                    <ComboBoxItem Content="深色" />
+                    <ComboBoxItem Content="浅色" />
+                    <ComboBoxItem Content="高对比度" />
+                </ComboBox>
+            </wpfui:CardControl>
             <CheckBox Content="不显示【序号】列" IsChecked="{Binding NoSerialNumColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             <CheckBox
                 Margin="0,4,0,0"

@@ -21,7 +21,6 @@
     SnapsToDevicePixels="True"
     Topmost="{Binding Source={x:Static local:Settings.Current}, Path=MainWndTopmost}"
     UseLayoutRounding="True"
-    WindowBackdropType="Mica"
     WindowState="{Binding Source={x:Static local:Settings.Current}, Path=MainWindowState, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     mc:Ignorable="d">
     <wpfui:FluentWindow.Top>

@@ -31,7 +31,6 @@
                                 Text="{Binding Content}"
                                 TextWrapping="WrapWithOverflow" />
                             <wpfui:TextBlock
-                                Appearance="Secondary"
                                 Foreground="{DynamicResource TextFillColorTertiaryBrush}"
                                 Text="{Binding TargetPageTag}"
                                 TextWrapping="WrapWithOverflow" />

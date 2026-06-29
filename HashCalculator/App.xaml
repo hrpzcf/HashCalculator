@@ -11,7 +11,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <wpfui:ThemesDictionary Theme="Light" />
+                <wpfui:ThemesDictionary />
                 <wpfui:ControlsDictionary />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/ButtonIcons.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/CmderButtonStyles.xaml" />

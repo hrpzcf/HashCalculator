@@ -63,7 +63,7 @@ public class MainViewModel : BaseViewModel
             new NavigationViewItem(
                 "界面设置", SymbolRegular.CalendarSettings20, typeof(InterfaceSettingsPage))
             {
-                TargetPageTag = "颜色主题、部分控件的显示和隐藏等设置项。"
+                TargetPageTag = "应用主题、部分控件的显示和隐藏等设置项。"
             },
             new NavigationViewItem(
                 "任务设置", SymbolRegular.ClipboardTextLtr20, typeof(TaskSettingsPage))
