@@ -23,7 +23,7 @@
             HorizontalScrollBarVisibility="Auto"
             VerticalScrollBarVisibility="Disabled"
             Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWindowButtons, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
-            <Grid Margin="0,4,0,2">
+            <Grid Margin="0,4,0,8">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
