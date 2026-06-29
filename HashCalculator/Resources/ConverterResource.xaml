@@ -197,4 +197,5 @@
     <local:DisplayHcmDataErrorInfoCvt x:Key="DisplayHcmDataErrorInfoCvt" />
     <local:StateAndSelectionWayToMonitoring x:Key="StateAndSelectionWayToMonitoring" />
     <local:DoubleToTwoDecimalPlacesWithUnitsCvt x:Key="DoubleToTwoDecimalPlacesWithUnitsCvt" />
+    <local:CloneIconForSettingsPanelPageCvt x:Key="CloneIconForSettingsPanelPageCvt" />
 </ResourceDictionary>

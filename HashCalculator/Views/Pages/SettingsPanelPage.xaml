@@ -23,7 +23,7 @@
                         d:DataContext="{d:DesignInstance Type=wpfui:NavigationViewItem}"
                         Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Page}, Path=DataContext.NavigatenFromSettingsPanelCmd}"
                         CommandParameter="{Binding TargetPageType}"
-                        Icon="{Binding Icon}">
+                        Icon="{Binding Icon, Converter={StaticResource CloneIconForSettingsPanelPageCvt}}">
                         <StackPanel>
                             <wpfui:TextBlock
                                 FontTypography="BodyStrong"

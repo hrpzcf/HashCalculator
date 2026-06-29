@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 using HashCalculator.ViewModels.Pages;
+using Wpfctrls = Wpf.Ui.Controls;
 
 namespace HashCalculator
 {
@@ -1078,6 +1079,39 @@ namespace HashCalculator
                 return $"{seconds:F2} 秒";
             }
             return default(object);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class CloneIconForSettingsPanelPageCvt : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is Wpfctrls.SymbolIcon symbolIcon)
+            {
+                return new Wpfctrls.SymbolIcon
+                {
+                    FontSize = 32,
+                    Filled = symbolIcon.Filled,
+                    Symbol = symbolIcon.Symbol,
+                };
+            }
+            if (value is Wpfctrls.FontIcon fontIcon)
+            {
+                return new Wpfctrls.FontIcon
+                {
+                    Glyph = fontIcon.Glyph,
+                    FontSize = 32,
+                    FontFamily = fontIcon.FontFamily,
+                    FontStyle = fontIcon.FontStyle,
+                    FontWeight = fontIcon.FontWeight,
+                };
+            }
+            return null;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
