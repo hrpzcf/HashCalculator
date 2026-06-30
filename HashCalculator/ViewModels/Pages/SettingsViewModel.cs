@@ -1658,8 +1658,8 @@ public class SettingsViewModel : BaseViewModel
 
     public static GenericItemModel[] AvailableChoicesWhenNoVerb { get; } =
     {
-        new GenericItemModel("计算输入文件的哈希值", MenuType.Compute),
-        new GenericItemModel("把输入文件作为校验依据", MenuType.CheckHash),
+        new GenericItemModel("计算所有输入文件的哈希值", MenuType.Compute),
+        new GenericItemModel("把所有输入文件作为校验依据", MenuType.CheckHash),
     };
 
     [JsonIgnore, XmlIgnore]
@@ -1696,19 +1696,19 @@ public class SettingsViewModel : BaseViewModel
     [JsonIgnore, XmlIgnore]
     public GenericItemModel[] AvailableFetchAlgoOptions { get; } =
     {
-        new GenericItemModel("使用【默认算法】中被勾选的算法", FetchAlgoOption.SELECTED),
-        new GenericItemModel("使用被勾选且可产生相应长度哈希值的算法", FetchAlgoOption.TATSAMSHDL),
+        new GenericItemModel("使用默认算法中被勾选的算法", FetchAlgoOption.SELECTED),
+        new GenericItemModel("使用被勾选且可产生相应哈希长度的算法", FetchAlgoOption.TATSAMSHDL),
         new GenericItemModel("使用所有可产生相应哈希长度的算法", FetchAlgoOption.TATMSHDL),
     };
 
     [JsonIgnore, XmlIgnore]
     public GenericItemModel[] AvailableResultsToSwitchTo { get; } =
     {
-        new GenericItemModel("保持现状不执行自动切换操作", CmpRes.NoResult),
-        new GenericItemModel("校验结果是【无关联】的算法", CmpRes.Unrelated),
-        new GenericItemModel("校验结果是【已匹配】的算法", CmpRes.Matched),
-        new GenericItemModel("校验结果是【不匹配】的算法", CmpRes.Mismatch),
-        new GenericItemModel("校验结果是【不确定】的算法", CmpRes.Uncertain),
+        new GenericItemModel("保持现状不执行切换操作", CmpRes.NoResult),
+        new GenericItemModel("校验结果是无关联的算法", CmpRes.Unrelated),
+        new GenericItemModel("校验结果是已匹配的算法", CmpRes.Matched),
+        new GenericItemModel("校验结果是不匹配的算法", CmpRes.Mismatch),
+        new GenericItemModel("校验结果是不确定的算法", CmpRes.Uncertain),
     };
 
     [JsonIgnore, XmlIgnore]

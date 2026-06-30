@@ -14,7 +14,7 @@
     ScrollViewer.CanContentScroll="False"
     UseLayoutRounding="True"
     mc:Ignorable="d">
-    <ScrollViewer Padding="8" VerticalScrollBarVisibility="Auto">
+    <ScrollViewer Padding="10" VerticalScrollBarVisibility="Auto">
         <controls:CardItemsControl Margin="8" ItemsSource="{Binding SettingsNavigationItemsSource}">
             <controls:CardItemsControl.ItemTemplate>
                 <DataTemplate>
@@ -25,12 +25,9 @@
                         CommandParameter="{Binding TargetPageType}"
                         Icon="{Binding Icon, Converter={StaticResource CloneIconForSettingsPanelPageCvt}}">
                         <StackPanel>
+                            <wpfui:TextBlock Text="{Binding Content}" TextWrapping="WrapWithOverflow" />
                             <wpfui:TextBlock
-                                FontTypography="BodyStrong"
-                                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                Text="{Binding Content}"
-                                TextWrapping="WrapWithOverflow" />
-                            <wpfui:TextBlock
+                                FontTypography="Caption"
                                 Foreground="{DynamicResource TextFillColorTertiaryBrush}"
                                 Text="{Binding TargetPageTag}"
                                 TextWrapping="WrapWithOverflow" />
