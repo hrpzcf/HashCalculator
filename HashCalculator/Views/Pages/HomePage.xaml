@@ -491,7 +491,7 @@
                     <Separator Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWindowButtons, Converter={StaticResource TrueToVisibilityCollapsedCvt}}" />
                     <MenuItem
                         Command="{Binding DisplayMainWindowButtonsCmd}"
-                        Header="显示工具按钮"
+                        Header="显示功能按钮"
                         Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWindowButtons, Converter={StaticResource TrueToVisibilityCollapsedCvt}}" />
                 </ContextMenu>
             </DataGrid.ContextMenu>
