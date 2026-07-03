@@ -13,54 +13,31 @@
     ScrollViewer.CanContentScroll="False"
     mc:Ignorable="d">
     <ScrollViewer Padding="10" VerticalScrollBarVisibility="Auto">
-        <GroupBox
-            Padding="4"
-            Foreground="#FF006FD6"
-            Header="软件配置文件的保存位置">
-            <StackPanel>
-                <RadioButton
-                    HorizontalAlignment="Left"
-                    Content="{Binding Source={x:Static local:Settings.ConfigInfo}, Path=ActiveConfigDir, Converter={StaticResource ConfigurationLoadedFromExecCvt}}"
-                    IsChecked="{Binding LocationForSavingConfigFiles, Converter={StaticResource ConfigLocationExecToTrueCvt}}"
-                    IsEnabled="{Binding ProcessingShellExtension, Converter={StaticResource ReverseBooleanValueCvt}}" />
-                <RadioButton
-                    Margin="0,4,0,0"
-                    HorizontalAlignment="Left"
-                    Content="{Binding Source={x:Static local:Settings.ConfigInfo}, Path=ActiveConfigDir, Converter={StaticResource ConfigurationLoadedFromUserCvt}}"
-                    IsChecked="{Binding LocationForSavingConfigFiles, Converter={StaticResource ConfigLocationUserToTrueCvt}}"
-                    IsEnabled="{Binding ProcessingShellExtension, Converter={StaticResource ReverseBooleanValueCvt}}" />
-                <RadioButton
-                    Margin="0,4,0,0"
-                    HorizontalAlignment="Left"
-                    Content="{Binding Source={x:Static local:Settings.ConfigInfo}, Path=ActiveConfigDir, Converter={StaticResource ConfigurationLoadedFromPublicUserCvt}}"
-                    IsChecked="{Binding LocationForSavingConfigFiles, Converter={StaticResource ConfigLocationPublicUserToTrueCvt}}"
-                    IsEnabled="{Binding ProcessingShellExtension, Converter={StaticResource ReverseBooleanValueCvt}}" />
-                <RadioButton
-                    Margin="0,4,0,0"
-                    HorizontalAlignment="Left"
-                    Content="{Binding Source={x:Static local:Settings.ConfigInfo}, Path=ActiveConfigDir, Converter={StaticResource ConfigurationLoadedFromProgramDataCvt}}"
-                    IsChecked="{Binding LocationForSavingConfigFiles, Converter={StaticResource ConfigLocationProgramDataToTrueCvt}}"
-                    IsEnabled="{Binding ProcessingShellExtension, Converter={StaticResource ReverseBooleanValueCvt}}" />
-                <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
-                    <TextBlock Foreground="Black" Text="实际保存位置：" />
-                    <TextBlock Style="{StaticResource DescTextBlockStyle}" Text="{Binding DisplayingActiveConfigDir}" />
-                </StackPanel>
-                <TextBlock
-                    Margin="0,16,0,0"
-                    FontSize="8pt"
-                    Style="{StaticResource DescTextBlockStyle}"
-                    Text="软件启动时按以上位置从上到下查找配置文件，找到则停止，否则默认当前目录。" />
-                <TextBlock
-                    Margin="0,4,0,0"
-                    FontSize="8pt"
-                    Style="{StaticResource DescTextBlockStyle}"
-                    Text="软件只会在启动时从配置文件加载一次配置，在正常退出时在所选位置保存配置文件。" />
-                <TextBlock
-                    Margin="0,4,0,0"
-                    FontSize="8pt"
-                    Style="{StaticResource DescTextBlockStyle}"
-                    Text="如果想把软件复制到其他位置使用，则只需要复制 exe 文件和 json 配置文件即可。" />
-            </StackPanel>
-        </GroupBox>
+        <StackPanel>
+            <wpfui:CardControl>
+                <wpfui:CardControl.Header>
+                    <StackPanel>
+                        <wpfui:TextBlock Text="配置文件保存位置" TextWrapping="WrapWithOverflow" />
+                        <wpfui:TextBlock
+                            FontTypography="Caption"
+                            Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                            Text="软件启动时按下拉列表所示位置从上到下查找配置文件，找到则停止，默认当前目录。&#x0a;软件只会在启动时从配置文件加载一次配置，在正常退出时在所选位置保存配置文件。如果想把软件复制到其他位置使用，则只需要复制 exe 文件和 json 配置文件即可。"
+                            TextWrapping="WrapWithOverflow" />
+                        <wpfui:TextBlock
+                            FontTypography="Caption"
+                            Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                            Text="{Binding DisplayingActiveConfigDir, StringFormat=实际保存位置：{0}}"
+                            TextWrapping="WrapWithOverflow" />
+                    </StackPanel>
+                </wpfui:CardControl.Header>
+                <ComboBox
+                    Margin="30,0,0,0"
+                    DisplayMemberPath="Display"
+                    IsEnabled="{Binding ProcessingShellExtension, Converter={StaticResource ReverseBooleanValueCvt}}"
+                    ItemsSource="{Binding AvailableLocationsForSavingConfigFile}"
+                    SelectedValue="{Binding LocationForSavingConfigFiles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    SelectedValuePath="ItemValue" />
+            </wpfui:CardControl>
+        </StackPanel>
     </ScrollViewer>
 </Page>

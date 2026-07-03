@@ -906,11 +906,11 @@ namespace HashCalculator
     {
         public bool Boolean { get; set; }
 
-        public ConfigLocation Loccation { get; set; }
+        public ConfigLocation Location { get; set; }
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is ConfigLocation location && location == this.Loccation)
+            if (value is ConfigLocation location && location == this.Location)
             {
                 return this.Boolean;
             }
@@ -924,7 +924,7 @@ namespace HashCalculator
         {
             if (value is bool boolean && boolean == this.Boolean)
             {
-                return this.Loccation;
+                return this.Location;
             }
             else
             {

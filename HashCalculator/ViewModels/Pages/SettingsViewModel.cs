@@ -1712,6 +1712,15 @@ public class SettingsViewModel : BaseViewModel
     };
 
     [JsonIgnore, XmlIgnore]
+    public GenericItemModel[] AvailableLocationsForSavingConfigFile { get; } =
+    {
+        new GenericItemModel("当前目录", ConfigLocation.ExecDir),
+        new GenericItemModel("用户目录", ConfigLocation.UserDir),
+        new GenericItemModel("公用用户目录", ConfigLocation.PublicUser),
+        new GenericItemModel("程序数据目录", ConfigLocation.ProgramData),
+    };
+
+    [JsonIgnore, XmlIgnore]
     public string SrcGitee => "https://gitee.com/hrpzcf/HashCalculator";
 
     [JsonIgnore, XmlIgnore]

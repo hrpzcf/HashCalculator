@@ -38,19 +38,19 @@
     <local:BetweenConfigLocationAndBooleanCvt
         x:Key="ConfigLocationExecToTrueCvt"
         Boolean="True"
-        Loccation="ExecDir" />
+        Location="ExecDir" />
     <local:BetweenConfigLocationAndBooleanCvt
         x:Key="ConfigLocationUserToTrueCvt"
         Boolean="True"
-        Loccation="UserDir" />
+        Location="UserDir" />
     <local:BetweenConfigLocationAndBooleanCvt
         x:Key="ConfigLocationPublicUserToTrueCvt"
         Boolean="True"
-        Loccation="PublicUser" />
+        Location="PublicUser" />
     <local:BetweenConfigLocationAndBooleanCvt
         x:Key="ConfigLocationProgramDataToTrueCvt"
         Boolean="True"
-        Loccation="ProgramData" />
+        Location="ProgramData" />
     <local:AssociatedMainAndFilterWndPositionCvt
         x:Key="MainWndTopCvt"
         ForLeft="False"
