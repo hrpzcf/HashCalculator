@@ -20,7 +20,7 @@
                         <wpfui:TextBlock Text="同时进行的任务数上限" TextWrapping="WrapWithOverflow" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
-                            Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                             Text="上限选项中除了 1，其他选项都与下一个设置互斥，无法同时开启。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
@@ -43,7 +43,7 @@
                         <TextBlock Text="延迟启动的毫秒数" TextWrapping="WrapWithOverflow" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
-                            Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                             Text="此项设置可一定程度缓解“添加任务”和“启动任务”同时进行导致的表格显示卡顿。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>

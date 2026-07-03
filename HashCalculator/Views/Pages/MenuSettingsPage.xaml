@@ -20,7 +20,7 @@
                         <wpfui:TextBlock Text="安装右键菜单并关联文件" TextWrapping="WrapWithOverflow" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
-                            Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                             Text="安装本程序对系统右键菜单的扩展模块，并建立程序与 .hcb 文件的关联。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
@@ -36,7 +36,7 @@
                         <wpfui:TextBlock Text="卸载右键菜单并取消关联" TextWrapping="WrapWithOverflow" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
-                            Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                             Text="卸载本程序对系统右键菜单的扩展模块，并取消程序与 .hcb 文件的关联。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
@@ -50,15 +50,15 @@
                 <StackPanel>
                     <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
                         <TextBlock Text="安装状态：" />
-                        <TextBlock Foreground="{DynamicResource TextFillColorTertiaryBrush}" Text="{Binding DisplayingShellInstallationState}" />
+                        <TextBlock Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="{Binding DisplayingShellInstallationState}" />
                     </StackPanel>
                     <StackPanel Margin="0,2,0,0" Orientation="Horizontal">
                         <TextBlock Text="安装位置：" />
-                        <TextBlock Foreground="{DynamicResource TextFillColorTertiaryBrush}" Text="{Binding DisplayingShellExtensionDir}" />
+                        <TextBlock Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="{Binding DisplayingShellExtensionDir}" />
                     </StackPanel>
                     <StackPanel Margin="0,2,0,0" Orientation="Horizontal">
                         <TextBlock Text="生效范围：" />
-                        <TextBlock Foreground="{DynamicResource TextFillColorTertiaryBrush}" Text="{Binding DisplayingShellInstallationScope}" />
+                        <TextBlock Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="{Binding DisplayingShellInstallationScope}" />
                     </StackPanel>
                     <StackPanel Margin="0,16,0,0">
                         <TextBlock
@@ -146,7 +146,7 @@
                         <wpfui:TextBlock Text="自定义要集成到系统右键菜单的菜单项" TextWrapping="WrapWithOverflow" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
-                            Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                             Text="通过编辑配置文件实现自定义要集成到系统右键菜单的 HashCalculator 菜单项，提高操作效率。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>

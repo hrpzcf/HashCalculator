@@ -28,7 +28,7 @@
                             <wpfui:TextBlock Text="{Binding Content}" TextWrapping="WrapWithOverflow" />
                             <wpfui:TextBlock
                                 FontTypography="Caption"
-                                Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                 Text="{Binding TargetPageTag}"
                                 TextWrapping="WrapWithOverflow" />
                         </StackPanel>
