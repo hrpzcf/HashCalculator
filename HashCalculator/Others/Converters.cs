@@ -879,60 +879,6 @@ namespace HashCalculator
         }
     }
 
-    internal class ConfigurationLoadedLocationCvt : IValueConverter
-    {
-        public string Display { get; set; }
-
-        public string Location { get; set; }
-
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value is string location &&
-                !string.IsNullOrEmpty(this.Location) &&
-                location.Equals(this.Location, StringComparison.OrdinalIgnoreCase))
-            {
-                return $"{this.Display}（最近加载）";
-            }
-            return this.Display;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    internal class BetweenConfigLocationAndBooleanCvt : IValueConverter
-    {
-        public bool Boolean { get; set; }
-
-        public ConfigLocation Location { get; set; }
-
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value is ConfigLocation location && location == this.Location)
-            {
-                return this.Boolean;
-            }
-            else
-            {
-                return !this.Boolean;
-            }
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value is bool boolean && boolean == this.Boolean)
-            {
-                return this.Location;
-            }
-            else
-            {
-                return ConfigLocation.Unset;
-            }
-        }
-    }
-
     internal class AssociatedMainAndFilterWndPositionCvt : IMultiValueConverter
     {
         /// <summary>
