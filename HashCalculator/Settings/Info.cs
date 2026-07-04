@@ -18,7 +18,7 @@ namespace HashCalculator
         public static readonly Version V = ExecutingName.Version;
         public static readonly string Ver = $"{V.Major}.{V.Minor}.{V.Build}{(V.Revision > 0 ? $"-preview{V.Revision}" : "")}";
 
-        public const string Title = "哈希值批量计算器";
+        public const string Title = "哈希值计算器";
         public const string Author = "hrpzcf";
         public const string Website = "https://www.52pojie.cn";
         public const string Source = "https://github.com/hrpzcf/HashCalculator";

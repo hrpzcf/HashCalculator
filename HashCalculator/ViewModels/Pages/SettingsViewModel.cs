@@ -1762,62 +1762,62 @@ public class SettingsViewModel : BaseViewModel
         new GenericItemModel(
             "BLAKE2",
             "https://github.com/BLAKE2/BLAKE2",
-            "提供 BLAKE2 系列哈希算法的实现"),
+            "提供 BLAKE2 系列哈希算法的实现。"),
         new GenericItemModel(
             "BLAKE3",
             "https://github.com/BLAKE3-team/BLAKE3",
-            "提供 BLAKE3 系列哈希算法的实现"),
+            "提供 BLAKE3 系列哈希算法的实现。"),
         new GenericItemModel(
             "CRC32",
             "https://github.com/stbrumme/crc32",
-            "提供 CRC32 哈希算法的实现"),
+            "提供 CRC32 哈希算法的实现。"),
         new GenericItemModel(
             "GmSSL",
             "https://github.com/guanzhi/GmSSL",
-            "提供 SM3 哈希算法的实现"),
+            "提供 SM3 哈希算法的实现。"),
         new GenericItemModel(
             "OpenHashTab",
             "https://github.com/namazso/OpenHashTab",
-            "提供 CRC64 哈希算法的实现"),
+            "提供 CRC64 哈希算法的实现。"),
         new GenericItemModel(
             "QuickXorHash",
             "https://github.com/namazso/QuickXorHash",
-            "提供 QuickXor 哈希算法的实现"),
+            "提供 QuickXor 哈希算法的实现。"),
         new GenericItemModel(
             "RHash",
             "https://github.com/rhash/RHash",
-            "提供 eD2k/Has160/MD4/RipeMD160/SHA224/Whirlpool 算法的实现"),
+            "提供 eD2k/Has160/MD4/RipeMD160/SHA224/Whirlpool 算法的实现。"),
         new GenericItemModel(
             "Streebog",
             "https://github.com/adegtyarev/streebog",
-            "提供 Streebog 系列哈希算法的实现"),
+            "提供 Streebog 系列哈希算法的实现。"),
         new GenericItemModel(
             "XKCP",
             "https://github.com/XKCP/XKCP",
-            "提供 SHA3 系列哈希算法的实现"),
+            "提供 SHA3 系列哈希算法的实现。"),
         new GenericItemModel(
             "xxHash",
             "https://github.com/Cyan4973/xxHash",
-            "提供 XXH 系列极快速哈希算法的实现"),
+            "提供 XXH 系列极快速哈希算法的实现。"),
         new GenericItemModel(
             "CommandLine",
             "https://github.com/commandlineparser/commandline",
-            "用于解析命令行参数"),
+            "用于解析命令行参数。"),
         new GenericItemModel(
-            "WPF UI Fluent Experience",
+            "WPF UI",
             "https://github.com/lepoco/wpfui",
-            "给 HashCalculator 提供 Fluent 设计控件和样式"),
+            "给 HashCalculator 提供 Fluent Design 控件和样式。"),
         new GenericItemModel(
             "Newtonsoft.Json",
             "https://www.newtonsoft.com/json",
-            "用于读取和保存本软件的相关配置文件"),
+            "用于读取和保存本软件的相关配置文件。"),
         new GenericItemModel(
             "Tiny-json",
             "https://github.com/rafagafe/tiny-json",
-            "用于读取和保存外壳扩展的相关配置文件"),
+            "用于读取和保存外壳扩展的相关配置文件。"),
         new GenericItemModel(
             "WindowsAPICodePack",
             "https://github.com/aybe/Windows-API-Code-Pack-1.1",
-            "用于调用系统接口打开文件/文件夹选择对话框"),
+            "用于调用系统接口打开文件/文件夹选择对话框。"),
     };
 }
