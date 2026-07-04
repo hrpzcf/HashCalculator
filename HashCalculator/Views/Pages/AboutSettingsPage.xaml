@@ -13,14 +13,14 @@
     ScrollViewer.CanContentScroll="False"
     mc:Ignorable="d">
     <ScrollViewer Padding="16" VerticalScrollBarVisibility="Auto">
-        <StackPanel>
-            <wpfui:TextBlock
-                Margin="4,0,0,0"
-                FontTypography="BodyStrong"
-                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                Text="关于软件"
-                TextWrapping="WrapWithOverflow" />
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
             <wpfui:CardExpander
+                Grid.Row="0"
                 Margin="0,4,0,0"
                 ContentPadding="0"
                 Icon="{wpfui:ImageIcon '/Images/icon.ico',
@@ -41,12 +41,10 @@
                             Grid.Column="0"
                             Margin="4,0,0,0"
                             VerticalAlignment="Bottom"
-                            FontSize="16"
                             Text="{Binding Title}" />
                         <wpfui:TextBlock
                             Grid.Row="1"
                             Grid.Column="0"
-                            Margin="0,4,0,0"
                             VerticalAlignment="Top"
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -56,11 +54,11 @@
                             Grid.Row="0"
                             Grid.RowSpan="2"
                             Grid.Column="1"
-                            Margin="0,0,32,0"
+                            Margin="0,0,64,0"
                             VerticalAlignment="Center"
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            Text="{Binding Ver, StringFormat='版本：{0}'}" />
+                            Text="{Binding Ver, StringFormat='当前版本：{0}'}" />
                     </Grid>
                 </wpfui:CardExpander.Header>
                 <StackPanel>
@@ -74,12 +72,31 @@
                         CornerRadius="0"
                         NavigateUri="{Binding Website}">
                         <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <wpfui:TextBlock Grid.Column="0" Text="项目主页" />
-                            <wpfui:SymbolIcon Grid.Column="1" Symbol="Home24" />
+                            <wpfui:TextBlock
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                FontTypography="Caption"
+                                Text="发布站点" />
+                            <wpfui:TextBlock
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                FontTypography="Caption"
+                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                Text="{Binding Website}"
+                                TextWrapping="WrapWithOverflow" />
+                            <wpfui:SymbolIcon
+                                Grid.Row="0"
+                                Grid.RowSpan="2"
+                                Grid.Column="1"
+                                Symbol="Link24" />
                         </Grid>
                     </wpfui:Anchor>
                     <wpfui:Anchor
@@ -92,12 +109,31 @@
                         CornerRadius="0"
                         NavigateUri="{Binding SrcGitHub}">
                         <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <wpfui:TextBlock Grid.Column="0" Text="项目地址" />
-                            <wpfui:SymbolIcon Grid.Column="1" Symbol="Link24" />
+                            <wpfui:TextBlock
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                FontTypography="Caption"
+                                Text="项目地址" />
+                            <wpfui:TextBlock
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                FontTypography="Caption"
+                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                Text="{Binding SrcGitHub}"
+                                TextWrapping="WrapWithOverflow" />
+                            <wpfui:SymbolIcon
+                                Grid.Row="0"
+                                Grid.RowSpan="2"
+                                Grid.Column="1"
+                                Symbol="Link24" />
                         </Grid>
                     </wpfui:Anchor>
                     <wpfui:Anchor
@@ -110,12 +146,31 @@
                         CornerRadius="0"
                         NavigateUri="{Binding IssueGitHub}">
                         <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <wpfui:TextBlock Grid.Column="0" Text="问题反馈" />
-                            <wpfui:SymbolIcon Grid.Column="1" Symbol="Link24" />
+                            <wpfui:TextBlock
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                FontTypography="Caption"
+                                Text="问题反馈" />
+                            <wpfui:TextBlock
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                FontTypography="Caption"
+                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                Text="{Binding IssueGitHub}"
+                                TextWrapping="WrapWithOverflow" />
+                            <wpfui:SymbolIcon
+                                Grid.Row="0"
+                                Grid.RowSpan="2"
+                                Grid.Column="1"
+                                Symbol="Link24" />
                         </Grid>
                     </wpfui:Anchor>
                     <wpfui:Anchor
@@ -128,12 +183,31 @@
                         CornerRadius="0"
                         NavigateUri="{Binding WikiGitHub}">
                         <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <wpfui:TextBlock Grid.Column="0" Text="使用帮助" />
-                            <wpfui:SymbolIcon Grid.Column="1" Symbol="Link24" />
+                            <wpfui:TextBlock
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                FontTypography="Caption"
+                                Text="使用帮助" />
+                            <wpfui:TextBlock
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                FontTypography="Caption"
+                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                Text="{Binding WikiGitHub}"
+                                TextWrapping="WrapWithOverflow" />
+                            <wpfui:SymbolIcon
+                                Grid.Row="0"
+                                Grid.RowSpan="2"
+                                Grid.Column="1"
+                                Symbol="Link24" />
                         </Grid>
                     </wpfui:Anchor>
                     <wpfui:Anchor
@@ -146,72 +220,112 @@
                         CornerRadius="0"
                         NavigateUri="{Binding ChangeLogGitHub}">
                         <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <wpfui:TextBlock Grid.Column="0" Text="更新日志" />
-                            <wpfui:SymbolIcon Grid.Column="1" Symbol="Link24" />
+                            <wpfui:TextBlock
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                FontTypography="Caption"
+                                Text="更新日志" />
+                            <wpfui:SymbolIcon
+                                Grid.Row="0"
+                                Grid.RowSpan="2"
+                                Grid.Column="1"
+                                Symbol="Link24" />
                         </Grid>
                     </wpfui:Anchor>
                 </StackPanel>
             </wpfui:CardExpander>
-            <wpfui:TextBlock
-                Margin="4,16,0,0"
-                FontTypography="BodyStrong"
-                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                Text="使用的开源项目"
-                TextWrapping="WrapWithOverflow" />
-            <ItemsControl
-                Grid.Row="3"
+            <wpfui:CardExpander
+                Grid.Row="1"
                 Margin="0,4,0,0"
-                d:ItemsSource="{d:SampleData ItemCount=10}"
-                Grid.IsSharedSizeScope="True"
-                ItemsSource="{Binding OpenSourceProjects}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel>
-                            <wpfui:Anchor
-                                Margin="0,2,0,0"
-                                Padding="16,8"
-                                HorizontalAlignment="Stretch"
-                                HorizontalContentAlignment="Stretch"
-                                d:DataContext="{d:DesignInstance Type=local:GenericItemModel}"
-                                NavigateUri="{Binding Param}">
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition />
-                                        <RowDefinition />
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <wpfui:TextBlock
-                                        Grid.Row="0"
-                                        Grid.Column="0"
-                                        FontTypography="Body"
-                                        Text="{Binding Display}"
-                                        TextWrapping="WrapWithOverflow" />
-                                    <wpfui:TextBlock
-                                        Grid.Row="1"
-                                        Grid.Column="0"
-                                        Margin="0,4,0,0"
-                                        FontTypography="Caption"
-                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                        Text="{Binding ItemValue}"
-                                        TextWrapping="WrapWithOverflow" />
-                                    <wpfui:SymbolIcon
-                                        Grid.Row="0"
-                                        Grid.RowSpan="2"
-                                        Grid.Column="1"
-                                        Symbol="Link24" />
-                                </Grid>
-                            </wpfui:Anchor>
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </StackPanel>
+                ContentPadding="0,0,0,-1"
+                Icon="{wpfui:SymbolIcon Symbol=Code24,
+                                        FontSize=32}">
+                <wpfui:CardExpander.Header>
+                    <StackPanel>
+                        <wpfui:TextBlock Text="使用的开源项目" TextWrapping="WrapWithOverflow" />
+                        <wpfui:TextBlock
+                            FontTypography="Caption"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            Text="{Binding Ver, StringFormat='当前版本（v{0}）的 HashCalculator 所使用的开源项目清单。'}"
+                            TextWrapping="WrapWithOverflow" />
+                    </StackPanel>
+                </wpfui:CardExpander.Header>
+                <ItemsControl
+                    Grid.Row="3"
+                    d:ItemsSource="{d:SampleData ItemCount=10}"
+                    Grid.IsSharedSizeScope="True"
+                    ItemsSource="{Binding OpenSourceProjects}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <wpfui:Anchor
+                                    Padding="16"
+                                    HorizontalAlignment="Stretch"
+                                    HorizontalContentAlignment="Stretch"
+                                    d:DataContext="{d:DesignInstance Type=local:GenericItemModel}"
+                                    Background="Transparent"
+                                    BorderThickness="0,0,0,1"
+                                    CornerRadius="0"
+                                    NavigateUri="{Binding Param}">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <wpfui:TextBlock
+                                            Grid.Row="0"
+                                            Grid.Column="0"
+                                            FontTypography="Caption"
+                                            Text="{Binding Display}"
+                                            TextWrapping="WrapWithOverflow" />
+                                        <wpfui:TextBlock
+                                            Grid.Row="1"
+                                            Grid.Column="0"
+                                            FontTypography="Caption"
+                                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                            Text="{Binding ItemValue}"
+                                            TextWrapping="WrapWithOverflow" />
+                                        <wpfui:SymbolIcon
+                                            Grid.Row="0"
+                                            Grid.RowSpan="2"
+                                            Grid.Column="1"
+                                            Symbol="Link24" />
+                                    </Grid>
+                                </wpfui:Anchor>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </wpfui:CardExpander>
+            <StackPanel
+                Grid.Row="2"
+                Margin="0,64,0,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom">
+                <wpfui:TextBlock
+                    Margin="0,0,64,0"
+                    FontStyle="Italic"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                    Text="三千铁衣披霜  万籁绝响  举目是残阳" />
+                <wpfui:TextBlock
+                    Margin="0,8,0,0"
+                    HorizontalAlignment="Right"
+                    FontStyle="Italic"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                    Text="——《栖凰》" />
+            </StackPanel>
+        </Grid>
     </ScrollViewer>
 </Page>
