@@ -84,7 +84,7 @@
                                 Grid.Row="0"
                                 Grid.Column="0"
                                 FontTypography="Caption"
-                                Text="发布站点" />
+                                Text="推荐站点" />
                             <wpfui:TextBlock
                                 Grid.Row="1"
                                 Grid.Column="0"
