@@ -138,6 +138,8 @@ public class SettingsViewModel : BaseViewModel
     private int saturationOfTableCellsWithSameHash = 240;
     private int selectedApplicationThemeIndex = 0;
 
+    private long snackbarNotificationTimeSpanSeconds = 2;
+
     private RelayCommand installShellExtCmd;
     private RelayCommand unInstallShellExtCmd;
     private RelayCommand openEditContextMenuCmd;
@@ -159,8 +161,8 @@ public class SettingsViewModel : BaseViewModel
     private RelayCommand resetAlgorithmAliasCmd;
     private RelayCommand resetLuminanceAndSaturationValuesCmd;
 
+    private RelayCommand copyTemplatePlaceholderCmd;
     private RelayCommand openBrowserNavigateToWebsiteCmd;
-
     private RelayCommand settingsPagesInputBindingsCmd;
 
     [JsonIgnore, XmlIgnore]
@@ -944,6 +946,12 @@ public class SettingsViewModel : BaseViewModel
         }
     }
 
+    public long SnackbarNotificationTimeSpanSeconds
+    {
+        get => this.snackbarNotificationTimeSpanSeconds;
+        set => this.SetPropNotify(ref this.snackbarNotificationTimeSpanSeconds, value);
+    }
+
     public string SerialColumnLeftDoubleClick
     {
         get => this.serialColumnLeftDoubleClick;
@@ -1564,6 +1572,25 @@ public class SettingsViewModel : BaseViewModel
         }
     }
 
+    private void CopyTemplatePlaceholderAction(object param)
+    {
+        if (param is string placeholder)
+        {
+            CommonUtils.ClipboardSetText(placeholder);
+            NotificationSender.SnackbarInformation($"已复制占位符：{placeholder}");
+        }
+    }
+
+    [JsonIgnore, XmlIgnore]
+    public ICommand CopyTemplatePlaceholderCmd
+    {
+        get
+        {
+            this.copyTemplatePlaceholderCmd ??= new RelayCommand(this.CopyTemplatePlaceholderAction);
+            return this.copyTemplatePlaceholderCmd;
+        }
+    }
+
     [OnSerializing]
     internal void OnSettingsViewModelSerializing(StreamingContext context)
     {
@@ -1819,5 +1846,17 @@ public class SettingsViewModel : BaseViewModel
             "WindowsAPICodePack",
             "https://github.com/aybe/Windows-API-Code-Pack-1.1",
             "用于调用系统接口打开文件/文件夹选择对话框。"),
+    };
+
+    [JsonIgnore, XmlIgnore]
+    public GenericItemModel[] AvailablePlaceholdersForTemplateOfCopyHash { get; } = new GenericItemModel[]
+    {
+        new GenericItemModel("$algo$", "在复制时此占位符将被替换为实际算法名。"),
+        new GenericItemModel("$hash$", "在复制时此占位符将被替换为实际哈希值。"),
+        new GenericItemModel("$path$", "在复制时此占位符将被替换为实际文件完整路径。"),
+        new GenericItemModel("$relpath$", "此占位符将被替换为实际文件相对路径，起点是被添加的对象所在目录。"),
+        new GenericItemModel("$name$", "在复制时此占位符将被替换为实际文件名。"),
+        new GenericItemModel("$newline$", "在复制时此占位符将被替换为 Windows 换行符。"),
+        new GenericItemModel("$horztab$", "在复制时此占位符将被替换为横向制表符（ \\t ）。"),
     };
 }

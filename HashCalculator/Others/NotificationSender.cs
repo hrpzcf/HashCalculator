@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows;
 using HashCalculator.Views.Windows;
-using Wpfui = Wpf.Ui;
 using Wpfctrls = Wpf.Ui.Controls;
+using Wpfui = Wpf.Ui;
 
 namespace HashCalculator
 {
@@ -20,7 +20,7 @@ namespace HashCalculator
                 message,
                 Wpfctrls.ControlAppearance.Danger,
                 new Wpfctrls.SymbolIcon(Wpfctrls.SymbolRegular.ErrorCircle20),
-                TimeSpan.FromSeconds(3)
+                TimeSpan.FromSeconds(Settings.Current.SnackbarNotificationTimeSpanSeconds)
                 );
         }
 
@@ -31,7 +31,7 @@ namespace HashCalculator
                 message,
                 Wpfctrls.ControlAppearance.Caution,
                 new Wpfctrls.SymbolIcon(Wpfctrls.SymbolRegular.Warning20),
-                TimeSpan.FromSeconds(3)
+                TimeSpan.FromSeconds(Settings.Current.SnackbarNotificationTimeSpanSeconds)
                 );
         }
 
@@ -42,7 +42,7 @@ namespace HashCalculator
                 message,
                 Wpfctrls.ControlAppearance.Primary,
                 new Wpfctrls.SymbolIcon(Wpfctrls.SymbolRegular.CheckmarkCircle20),
-                TimeSpan.FromSeconds(3)
+                TimeSpan.FromSeconds(Settings.Current.SnackbarNotificationTimeSpanSeconds)
                 );
         }
 
@@ -53,7 +53,7 @@ namespace HashCalculator
                 message,
                 Wpfctrls.ControlAppearance.Secondary,
                 new Wpfctrls.SymbolIcon(Wpfctrls.SymbolRegular.Info20),
-                TimeSpan.FromSeconds(3)
+                TimeSpan.FromSeconds(Settings.Current.SnackbarNotificationTimeSpanSeconds)
                 );
         }
 
