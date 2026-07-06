@@ -153,7 +153,6 @@
                 </wpfui:CardControl.Header>
                 <wpfui:ToggleSwitch IsChecked="{Binding DisplayMainWindowButtons, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </wpfui:CardControl>
-
             <wpfui:CardExpander Margin="0,4,0,0">
                 <wpfui:CardExpander.Header>
                     <StackPanel>
@@ -298,7 +297,8 @@
                         Grid.Column="0"
                         HorizontalAlignment="Right"
                         FontSize="16"
-                        Symbol="WeatherSunny32" />
+                        Symbol="WeatherSunny32"
+                        ToolTip="颜色亮度" />
                     <Slider
                         Grid.Row="0"
                         Grid.Column="1"
@@ -316,7 +316,8 @@
                         Margin="0,8,0,0"
                         HorizontalAlignment="Right"
                         FontSize="16"
-                        Symbol="CircleHalfFill20" />
+                        Symbol="CircleHalfFill20"
+                        ToolTip="色饱和度" />
                     <Slider
                         Grid.Row="1"
                         Grid.Column="1"
@@ -355,7 +356,8 @@
                         Grid.Column="0"
                         HorizontalAlignment="Right"
                         FontSize="16"
-                        Symbol="WeatherSunny32" />
+                        Symbol="WeatherSunny32"
+                        ToolTip="颜色亮度" />
                     <Slider
                         Grid.Row="0"
                         Grid.Column="1"
@@ -373,7 +375,8 @@
                         Margin="0,8,0,0"
                         HorizontalAlignment="Right"
                         FontSize="16"
-                        Symbol="CircleHalfFill20" />
+                        Symbol="CircleHalfFill20"
+                        ToolTip="色饱和度" />
                     <Slider
                         Grid.Row="1"
                         Grid.Column="1"
@@ -412,7 +415,8 @@
                         Grid.Column="0"
                         HorizontalAlignment="Right"
                         FontSize="16"
-                        Symbol="WeatherSunny32" />
+                        Symbol="WeatherSunny32"
+                        ToolTip="颜色亮度" />
                     <Slider
                         Grid.Row="0"
                         Grid.Column="1"
@@ -430,7 +434,8 @@
                         Margin="0,8,0,0"
                         HorizontalAlignment="Right"
                         FontSize="16"
-                        Symbol="CircleHalfFill20" />
+                        Symbol="CircleHalfFill20"
+                        ToolTip="色饱和度" />
                     <Slider
                         Grid.Row="1"
                         Grid.Column="1"
@@ -444,7 +449,7 @@
                         Value="{Binding SaturationOfTableCellsWithSameDirectory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </Grid>
             </wpfui:CardControl>
-            <wpfui:CardControl>
+            <wpfui:CardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="Snackbar 提示条显示时长" />
