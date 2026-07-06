@@ -91,7 +91,7 @@
                             Click="ButtonUpdateApplicationPathClick"
                             Content="更新" />
                     </wpfui:CardControl>
-                    <wpfui:CardControl>
+                    <wpfui:CardControl Margin="0,4,0,0">
                         <wpfui:CardControl.Header>
                             <StackPanel>
                                 <wpfui:TextBlock Text="其他须知的原理和提示" />

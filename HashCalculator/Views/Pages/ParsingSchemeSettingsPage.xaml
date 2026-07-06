@@ -102,7 +102,7 @@
             <wpfui:CardExpander Margin="0,4,0,0">
                 <wpfui:CardExpander.Header>
                     <StackPanel>
-                        <wpfui:TextBlock Text="校验依据解析方案的使用帮助和说明" />
+                        <wpfui:TextBlock Text="校验依据解析方案的具体使用帮助和说明" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
