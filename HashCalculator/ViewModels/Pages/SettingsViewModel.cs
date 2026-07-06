@@ -1866,4 +1866,12 @@ public class SettingsViewModel : BaseViewModel
         new GenericItemModel("$horztab$", "导出计算结果时此占位符将被替换为横向制表符（ \\t ）。"),
         new GenericItemModel("$filesize$", "导出计算结果时此占位符将被替换为以“字节”为单位的文件大小值。"),
     };
+
+    [JsonIgnore, XmlIgnore]
+    public GenericItemModel[] AvailablePlaceholdersForParsingSchemeExpression { get; } = new GenericItemModel[]
+    {
+        new GenericItemModel("$algo$", "等同于 (?<algo>[A-Za-z0-9-]+)，此位置的匹配结果作为算法名。"),
+        new GenericItemModel("$hash$", "等同于 (?<hash>[A-Za-z0-9+/=]+)，此位置的匹配结果作为哈希值。"),
+        new GenericItemModel("$name$", "等同于 (?<name>[^:*?\\\"<>|\\t\\v\\f\\r\\n]+)，此位置的匹配结果作为文件名。"),
+    };
 }
