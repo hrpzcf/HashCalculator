@@ -1651,12 +1651,6 @@ public class SettingsViewModel : BaseViewModel
     public bool ClipboardUpdatedByMe { get; set; }
 
     [JsonIgnore, XmlIgnore]
-    public static string ShellExtDir { get; } = "安装位置";
-
-    [JsonIgnore, XmlIgnore]
-    public static string UpdateExePath { get; } = "更新程序路径";
-
-    [JsonIgnore, XmlIgnore]
     public static GenericItemModel[] AvailableOutputTypes { get; } =
     {
         new GenericItemModel("Base64", OutputType.BASE64),

@@ -48,96 +48,61 @@
             </wpfui:CardControl>
             <Expander Margin="0,4,0,0" Header="右键菜单扩展模块状态信息">
                 <StackPanel>
-                    <StackPanel Margin="0,8,0,0" Orientation="Horizontal">
-                        <TextBlock Text="安装状态：" />
-                        <TextBlock Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="{Binding DisplayingShellInstallationState}" />
-                    </StackPanel>
-                    <StackPanel Margin="0,2,0,0" Orientation="Horizontal">
-                        <TextBlock Text="安装位置：" />
-                        <TextBlock Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="{Binding DisplayingShellExtensionDir}" />
-                    </StackPanel>
-                    <StackPanel Margin="0,2,0,0" Orientation="Horizontal">
-                        <TextBlock Text="生效范围：" />
-                        <TextBlock Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="{Binding DisplayingShellInstallationScope}" />
-                    </StackPanel>
-                    <StackPanel Margin="0,16,0,0">
-                        <TextBlock
-                            FontSize="8pt"
-                            Style="{StaticResource DescTextBlockStyle}"
-                            Text="1. 状态为未安装时【安装位置】跟随配置文件的保存位置，已安装则表示实际安装位置" />
-                        <TextBlock
-                            Margin="0,4,0,0"
-                            FontSize="8pt"
-                            Style="{StaticResource DescTextBlockStyle}"
-                            Text="2. 状态为未安装时【生效范围】是指如果安装后将会生效的范围，已安装则表示实际生效范围" />
-                        <TextBlock
-                            Margin="0,4,0,0"
-                            FontSize="8pt"
-                            Style="{StaticResource DescTextBlockStyle}"
-                            Text="3. 以管理员身份启动 HashCalculator 后安装则【生效范围】是当前系统，否则是当前用户" />
-                        <StackPanel Margin="0,4,0,0" Orientation="Horizontal">
-                            <TextBlock
-                                FontSize="8pt"
-                                Style="{StaticResource DescTextBlockStyle}"
-                                Text="4. 安装右键菜单后，程序会在 " />
-                            <TextBlock
-                                Cursor="Hand"
-                                Foreground="Blue"
-                                MouseLeftButtonDown="OnTextBlockMouseLeftButtonDown"
-                                Text="{Binding Source={x:Static pagemodels:SettingsViewModel.ShellExtDir}}" />
-                            <TextBlock
-                                FontSize="8pt"
-                                Style="{StaticResource DescTextBlockStyle}"
-                                Text=" 下释放外壳扩展模块 (HashCalculator[32].dll 文件)" />
+                    <wpfui:CardControl Header="安装状态">
+                        <wpfui:TextBlock
+                            Margin="0,0,4,0"
+                            FontTypography="Caption"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            Text="{Binding DisplayingShellInstallationState}" />
+                    </wpfui:CardControl>
+                    <wpfui:CardControl Header="安装位置">
+                        <StackPanel Orientation="Horizontal">
+                            <wpfui:TextBlock
+                                VerticalAlignment="Center"
+                                FontTypography="Caption"
+                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                Text="{Binding DisplayingShellExtensionDir}" />
+                            <Button
+                                Margin="16,0,0,0"
+                                Click="ButtonBrowseInstallationLocationClick"
+                                Content="打开" />
                         </StackPanel>
-                        <TextBlock
-                            Margin="0,4,0,0"
-                            FontSize="8pt"
-                            Style="{StaticResource DescTextBlockStyle}"
-                            Text="5. 不可强制移动、删除、重命名 HashCalculator[32].dll 文件，否则右键菜单将失效" />
-                        <StackPanel Margin="0,4,0,0" Orientation="Horizontal">
-                            <TextBlock
-                                FontSize="8pt"
-                                Style="{StaticResource DescTextBlockStyle}"
-                                Text="6. 移动或重命名 HashCalculator.exe 文件后，需 " />
-                            <TextBlock
-                                Cursor="Hand"
-                                Foreground="Red"
-                                MouseLeftButtonDown="OnTextBlockMouseLeftButtonDown"
-                                Text="{Binding Source={x:Static pagemodels:SettingsViewModel.UpdateExePath}}" />
-                            <TextBlock
-                                FontSize="8pt"
-                                Style="{StaticResource DescTextBlockStyle}"
-                                Text="，否则将无法被右键菜单唤起" />
-                        </StackPanel>
-                        <TextBlock
-                            Margin="0,4,0,0"
-                            FontSize="8pt"
-                            Style="{StaticResource DescTextBlockStyle}"
-                            Text="7. 删除 HashCalculator.exe 前先卸载右键菜单，程序会清理注册表并删除菜单扩展模块" />
-                        <TextBlock
-                            Margin="0,4,0,0"
-                            FontSize="8pt"
-                            Foreground="Red"
-                            Style="{StaticResource DescTextBlockStyle}"
-                            Text="8. 下载新版本后先在旧版本上卸载右键菜单再打开新版本安装右键菜单以避免出现兼容问题" />
-                        <TextBlock
-                            Margin="0,4,0,0"
-                            FontSize="8pt"
-                            Foreground="Red"
-                            Style="{StaticResource DescTextBlockStyle}"
-                            Text="9. 如果安装位置是用户目录，即使生效范围是【当前系统】，其他用户也可能无法访问菜单" />
-                        <TextBlock
-                            Margin="0,4,0,0"
-                            FontSize="8pt"
-                            Style="{StaticResource DescTextBlockStyle}"
-                            Text="10. 关联 .hcb 文件后，使用 HashCalculator 导出的 .hcb 文件可通过双击进行快速校验" />
-                        <TextBlock
-                            Margin="0,4,0,0"
-                            FontSize="8pt"
-                            Style="{StaticResource DescTextBlockStyle}"
-                            Text="11. 通过双击打开 .hcb 文件进行快速校验要求待计算哈希值的文件与 .hcb 文件在同一目录下" />
-                    </StackPanel>
+                    </wpfui:CardControl>
+                    <wpfui:CardControl Header="生效范围">
+                        <wpfui:TextBlock
+                            Margin="0,0,4,0"
+                            FontTypography="Caption"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            Text="{Binding DisplayingShellInstallationScope}" />
+                    </wpfui:CardControl>
+                    <wpfui:CardControl>
+                        <wpfui:CardControl.Header>
+                            <StackPanel>
+                                <wpfui:TextBlock Text="程序路径" />
+                                <wpfui:TextBlock
+                                    FontTypography="Caption"
+                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                    Text="移动过应用程序位置后，需要更新应用程序路径或者重新安装右键菜单，否则右键菜单将无法调起程序。"
+                                    TextWrapping="WrapWithOverflow" />
+                            </StackPanel>
+                        </wpfui:CardControl.Header>
+                        <Button
+                            Margin="16,0,0,0"
+                            Click="ButtonUpdateApplicationPathClick"
+                            Content="更新" />
+                    </wpfui:CardControl>
+                    <wpfui:CardControl>
+                        <wpfui:CardControl.Header>
+                            <StackPanel>
+                                <wpfui:TextBlock Text="其他须知的原理和提示" />
+                                <wpfui:TextBlock
+                                    FontTypography="Caption"
+                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                    Text="状态为未安装时【安装位置】跟随配置文件的保存位置，已安装则表示实际安装位置；状态为未安装时【生效范围】指如果安装后将会生效的范围，已安装则表示实际生效范围。&#10;以管理员身份启动 HashCalculator 后安装则【生效范围】是当前系统，否则是当前用户。&#10;安装右键菜单后，程序会在【安装位置】下释放外壳扩展模块 HashCalculator[32].dll，不可强制移动、删除、重命名 HashCalculator[32].dll 文件，否则右键菜单将失效。&#10;删除 HashCalculator.exe 前先卸载右键菜单，程序会清理注册表并删除菜单扩展模块，下载新版本后先在旧版本上卸载右键菜单再打开新版本安装右键菜单以避免出现兼容问题。&#10;如果安装位置是用户目录，即使生效范围是【当前系统】，其他用户也可能无法访问菜单。"
+                                    TextWrapping="WrapWithOverflow" />
+                            </StackPanel>
+                        </wpfui:CardControl.Header>
+                    </wpfui:CardControl>
                 </StackPanel>
             </Expander>
             <wpfui:CardControl Margin="0,4,0,0">

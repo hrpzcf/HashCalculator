@@ -1,7 +1,6 @@
 ﻿using System;
+using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
-using HashCalculator.ViewModels.Pages;
 using HashCalculator.Views.Windows;
 
 namespace HashCalculator.Views.Pages;
@@ -14,26 +13,21 @@ public partial class MenuSettingsPage : Page
         this.InitializeComponent();
     }
 
-    private void OnTextBlockMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    private void ButtonUpdateApplicationPathClick(object sender, RoutedEventArgs e)
     {
-        if (sender is TextBlock textBlock)
+        Exception exception;
+        if ((exception = ShellExtHelper.RegUpdateAppPath()) == null)
         {
-            if (textBlock.Text == SettingsViewModel.ShellExtDir)
-            {
-                CommonUtils.OpenFolderAndSelectItem(Settings.ConfigInfo.ShellExtensionDir);
-            }
-            else if (textBlock.Text == SettingsViewModel.UpdateExePath)
-            {
-                Exception exception = ShellExtHelper.RegUpdateAppPath();
-                if (exception == null)
-                {
-                    NotificationSender.ShowMessageBox(MainWindow.Current, "提示", "程序路径更新成功！");
-                }
-                else
-                {
-                    NotificationSender.ShowMessageBox(MainWindow.Current, "错误", $"更新失败：{exception.Message}");
-                }
-            }
+            NotificationSender.ShowMessageBox(MainWindow.Current, "提示", "程序路径更新成功！");
         }
+        else
+        {
+            NotificationSender.ShowMessageBox(MainWindow.Current, "错误", $"更新失败：{exception.Message}");
+        }
+    }
+
+    private void ButtonBrowseInstallationLocationClick(object sender, RoutedEventArgs e)
+    {
+        CommonUtils.OpenFolderAndSelectItem(Settings.ConfigInfo.ShellExtensionDir);
     }
 }
