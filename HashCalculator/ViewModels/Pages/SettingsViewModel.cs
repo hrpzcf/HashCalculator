@@ -1853,4 +1853,17 @@ public class SettingsViewModel : BaseViewModel
         new GenericItemModel("$newline$", "在复制时此占位符将被替换为 Windows 换行符。"),
         new GenericItemModel("$horztab$", "在复制时此占位符将被替换为横向制表符（ \\t ）。"),
     };
+
+    [JsonIgnore, XmlIgnore]
+    public GenericItemModel[] AvailablePlaceholdersForTemplateOfExportHash { get; } = new GenericItemModel[]
+    {
+        new GenericItemModel("$algo$", "导出计算结果时此占位符将被替换为实际算法名。"),
+        new GenericItemModel("$hash$", "导出计算结果时此占位符将被替换为实际哈希值。"),
+        new GenericItemModel("$path$", "导出计算结果时此占位符将被替换为实际文件完整路径。"),
+        new GenericItemModel("$relpath$", "此占位符将被替换为实际文件相对路径，起点是被添加的对象所在目录。"),
+        new GenericItemModel("$name$", "导出计算结果时此占位符将被替换为实际文件名。"),
+        new GenericItemModel("$newline$", "导出计算结果时此占位符将被替换为 Unix 或 Windows 换行符。"),
+        new GenericItemModel("$horztab$", "导出计算结果时此占位符将被替换为横向制表符（ \\t ）。"),
+        new GenericItemModel("$filesize$", "导出计算结果时此占位符将被替换为以“字节”为单位的文件大小值。"),
+    };
 }

@@ -488,19 +488,6 @@ namespace HashCalculator
         }
     }
 
-    internal class RadioExportAllCalculatedAlgosCvt : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return (ExportAlgo)value == ExportAlgo.AllCalculated;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return (bool)value ? ExportAlgo.AllCalculated : ExportAlgo.Current;
-        }
-    }
-
     internal class BytesToIntuitiveFileSizeCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

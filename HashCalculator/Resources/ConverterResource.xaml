@@ -146,7 +146,6 @@
     <local:BytesToStrByOutputTypeCvt x:Key="BytesToStrByOutputTypeCvt" />
     <local:CopyModelsHashMenuEnabledCvt x:Key="CopyModelsHashMenuEnabledCvt" />
     <local:RadioExportCurrentAlgoCvt x:Key="RadioExportCurrentAlgoCvt" />
-    <local:RadioExportAllCalculatedAlgosCvt x:Key="RadioExportAllCalculatedAlgosCvt" />
     <local:BytesToIntuitiveFileSizeCvt x:Key="BytesToIntuitiveFileSizeCvt" />
     <local:MultiLineTextToStrArrayCvt x:Key="MultiLineTextToStrArrayCvt" />
     <local:CmpColorToVisibilityCvt x:Key="CmpColorToVisibilityCvt" />
