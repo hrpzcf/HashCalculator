@@ -48,17 +48,7 @@
                     Text="{Binding SelectedInOutModelForAlias.AlgorithmAlias, UpdateSourceTrigger=LostFocus}"
                     TextWrapping="WrapWithOverflow" />
             </wpfui:CardControl>
-            <wpfui:CardControl>
-                <wpfui:CardControl.Header>
-                    <StackPanel>
-                        <wpfui:TextBlock Text="把所有算法别名恢复默认" />
-                        <wpfui:TextBlock
-                            FontTypography="Caption"
-                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            Text=""
-                            TextWrapping="WrapWithOverflow" />
-                    </StackPanel>
-                </wpfui:CardControl.Header>
+            <wpfui:CardControl Header="把所有算法别名恢复默认">
                 <wpfui:Button
                     Margin="16,0,0,0"
                     Command="{Binding ResetAlgorithmAliasCmd}"
