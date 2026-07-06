@@ -292,42 +292,42 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition />
-                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock
+                    <wpfui:SymbolIcon
                         Grid.Row="0"
                         Grid.Column="0"
                         HorizontalAlignment="Right"
-                        Text="颜色亮度：" />
+                        FontSize="16"
+                        Symbol="WeatherSunny32" />
                     <Slider
                         Grid.Row="0"
                         Grid.Column="1"
+                        Margin="8,0,0,0"
+                        AutoToolTipPlacement="BottomRight"
+                        AutoToolTipPrecision="0"
+                        IsSnapToTickEnabled="True"
                         Maximum="230"
                         Minimum="30"
+                        TickFrequency="1"
                         Value="{Binding LuminanceOfTableRowsWithSameHash, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <TextBlock
-                        Grid.Row="0"
-                        Grid.Column="2"
-                        Width="30"
-                        Margin="4,0,0,0"
-                        Text="{Binding LuminanceOfTableRowsWithSameHash}" />
-                    <TextBlock
+                    <wpfui:SymbolIcon
                         Grid.Row="1"
                         Grid.Column="0"
+                        Margin="0,8,0,0"
                         HorizontalAlignment="Right"
-                        Text="色饱和度：" />
+                        FontSize="16"
+                        Symbol="CircleHalfFill20" />
                     <Slider
                         Grid.Row="1"
                         Grid.Column="1"
+                        Margin="8,8,0,0"
+                        AutoToolTipPlacement="BottomRight"
+                        AutoToolTipPrecision="0"
+                        IsSnapToTickEnabled="True"
                         Maximum="240"
                         Minimum="10"
+                        TickFrequency="1"
                         Value="{Binding SaturationOfTableRowsWithSameHash, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <TextBlock
-                        Grid.Row="1"
-                        Grid.Column="2"
-                        Width="30"
-                        Margin="4,0,0,0"
-                        Text="{Binding SaturationOfTableRowsWithSameHash}" />
                 </Grid>
             </wpfui:CardControl>
             <wpfui:CardControl Margin="0,4,0,0">
@@ -349,42 +349,42 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition />
-                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock
+                    <wpfui:SymbolIcon
                         Grid.Row="0"
                         Grid.Column="0"
                         HorizontalAlignment="Right"
-                        Text="颜色亮度：" />
+                        FontSize="16"
+                        Symbol="WeatherSunny32" />
                     <Slider
                         Grid.Row="0"
                         Grid.Column="1"
+                        Margin="8,0,0,0"
+                        AutoToolTipPlacement="BottomRight"
+                        AutoToolTipPrecision="0"
+                        IsSnapToTickEnabled="True"
                         Maximum="230"
                         Minimum="30"
+                        TickFrequency="1"
                         Value="{Binding LuminanceOfTableCellsWithSameHash, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <TextBlock
-                        Grid.Row="0"
-                        Grid.Column="2"
-                        Width="30"
-                        Margin="4,0,0,0"
-                        Text="{Binding LuminanceOfTableCellsWithSameHash}" />
-                    <TextBlock
+                    <wpfui:SymbolIcon
                         Grid.Row="1"
                         Grid.Column="0"
+                        Margin="0,8,0,0"
                         HorizontalAlignment="Right"
-                        Text="色饱和度：" />
+                        FontSize="16"
+                        Symbol="CircleHalfFill20" />
                     <Slider
                         Grid.Row="1"
                         Grid.Column="1"
+                        Margin="8,8,0,0"
+                        AutoToolTipPlacement="BottomRight"
+                        AutoToolTipPrecision="0"
+                        IsSnapToTickEnabled="True"
                         Maximum="240"
                         Minimum="10"
+                        TickFrequency="1"
                         Value="{Binding SaturationOfTableCellsWithSameHash, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <TextBlock
-                        Grid.Row="1"
-                        Grid.Column="2"
-                        Width="30"
-                        Margin="4,0,0,0"
-                        Text="{Binding SaturationOfTableCellsWithSameHash}" />
                 </Grid>
             </wpfui:CardControl>
             <wpfui:CardControl Margin="0,4,0,0">
@@ -406,51 +406,61 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition />
-                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock
+                    <wpfui:SymbolIcon
                         Grid.Row="0"
                         Grid.Column="0"
                         HorizontalAlignment="Right"
-                        Text="颜色亮度：" />
+                        FontSize="16"
+                        Symbol="WeatherSunny32" />
                     <Slider
                         Grid.Row="0"
                         Grid.Column="1"
+                        Margin="8,0,0,0"
+                        AutoToolTipPlacement="BottomRight"
+                        AutoToolTipPrecision="0"
+                        IsSnapToTickEnabled="True"
                         Maximum="230"
                         Minimum="30"
+                        TickFrequency="1"
                         Value="{Binding LuminanceOfTableCellsWithSameDirectory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <TextBlock
-                        Grid.Row="0"
-                        Grid.Column="2"
-                        Width="30"
-                        Margin="4,0,0,0"
-                        Text="{Binding LuminanceOfTableCellsWithSameDirectory}" />
-                    <TextBlock
+                    <wpfui:SymbolIcon
                         Grid.Row="1"
                         Grid.Column="0"
+                        Margin="0,8,0,0"
                         HorizontalAlignment="Right"
-                        Text="色饱和度：" />
+                        FontSize="16"
+                        Symbol="CircleHalfFill20" />
                     <Slider
                         Grid.Row="1"
                         Grid.Column="1"
+                        Margin="8,8,0,0"
+                        AutoToolTipPlacement="BottomRight"
+                        AutoToolTipPrecision="0"
+                        IsSnapToTickEnabled="True"
                         Maximum="240"
                         Minimum="10"
+                        TickFrequency="1"
                         Value="{Binding SaturationOfTableCellsWithSameDirectory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <TextBlock
-                        Grid.Row="1"
-                        Grid.Column="2"
-                        Width="30"
-                        Margin="4,0,0,0"
-                        Text="{Binding SaturationOfTableCellsWithSameDirectory}" />
                 </Grid>
             </wpfui:CardControl>
-            <wpfui:CardControl Header="Snackbar 提示条显示时长（秒）">
+            <wpfui:CardControl>
+                <wpfui:CardControl.Header>
+                    <StackPanel>
+                        <wpfui:TextBlock Text="Snackbar 提示条显示时长" />
+                        <wpfui:TextBlock
+                            FontTypography="Caption"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            Text="Snackbar 提示条就是窗口底部弹出的信息提示条，时长单位是秒。"
+                            TextWrapping="WrapWithOverflow" />
+                    </StackPanel>
+                </wpfui:CardControl.Header>
                 <Slider
-                    MinWidth="260"
+                    MinWidth="310"
                     AutoToolTipPlacement="BottomRight"
                     AutoToolTipPrecision="0"
                     IsSnapToTickEnabled="True"
-                    Maximum="5"
+                    Maximum="10"
                     Minimum="1"
                     TickFrequency="1"
                     TickPlacement="TopLeft"
