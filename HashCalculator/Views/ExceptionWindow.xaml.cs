@@ -3,7 +3,7 @@ using System.Windows;
 
 namespace HashCalculator
 {
-    public partial class ExceptionWindow : Window
+    public partial class ExceptionWindow
     {
 
         internal ExceptionWindowModel Model { get; }
