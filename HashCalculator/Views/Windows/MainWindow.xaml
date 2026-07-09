@@ -66,7 +66,6 @@
                 <wpfui:SnackbarPresenter x:Name="SnackbarPresenter" />
             </wpfui:NavigationView.ContentOverlay>
         </wpfui:NavigationView>
-
         <wpfui:TitleBar
             x:Name="TitleBar"
             Title="{x:Static local:Info.Title}"
