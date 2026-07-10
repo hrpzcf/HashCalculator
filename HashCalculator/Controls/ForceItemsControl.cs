@@ -3,9 +3,9 @@ using System.Windows.Controls;
 
 namespace HashCalculator.Controls;
 
-public class CardItemsControl : ItemsControl
+public class ForceItemsControl : ItemsControl
 {
-    protected override bool IsItemItsOwnContainerOverride(object item)
+    protected override bool IsItemItsOwnContainerOverride(object i)
     {
         return false;
     }

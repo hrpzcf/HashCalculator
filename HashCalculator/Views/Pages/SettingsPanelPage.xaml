@@ -15,8 +15,8 @@
     UseLayoutRounding="True"
     mc:Ignorable="d">
     <ScrollViewer Padding="10" VerticalScrollBarVisibility="Auto">
-        <controls:CardItemsControl Margin="8" ItemsSource="{Binding SettingsNavigationItemsSource}">
-            <controls:CardItemsControl.ItemTemplate>
+        <controls:ForceItemsControl Margin="8" ItemsSource="{Binding SettingsNavigationItemsSource}">
+            <controls:ForceItemsControl.ItemTemplate>
                 <DataTemplate>
                     <wpfui:CardAction
                         Margin="0,4,0,0"
@@ -34,7 +34,7 @@
                         </StackPanel>
                     </wpfui:CardAction>
                 </DataTemplate>
-            </controls:CardItemsControl.ItemTemplate>
-        </controls:CardItemsControl>
+            </controls:ForceItemsControl.ItemTemplate>
+        </controls:ForceItemsControl>
     </ScrollViewer>
 </Page>
