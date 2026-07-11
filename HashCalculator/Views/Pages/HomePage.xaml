@@ -664,8 +664,7 @@
                                 VerticalAlignment="Center"
                                 DisplayMemberPath="AlgoName"
                                 ItemsSource="{Binding AlgoInOutModels}"
-                                SelectedItem="{Binding CurrentInOutModel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                Style="{StaticResource ComboBoxStyle2}" />
+                                SelectedItem="{Binding CurrentInOutModel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
