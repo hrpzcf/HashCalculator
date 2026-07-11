@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using HashCalculator.ViewModels.Pages;
 using Microsoft.Win32;
 
 namespace HashCalculator
@@ -375,7 +376,7 @@ namespace HashCalculator
                     // 第一个字节储存原字节的低 4 位
                     largerValueBytes[i * 2] = (byte)(bytes[i] | 0xF0);
                     // 第二个字节储存原字节的高 4 位
-                    largerValueBytes[i * 2 + 1] = (byte)((bytes[i] >> 4) | 0xF0);
+                    largerValueBytes[(i * 2) + 1] = (byte)((bytes[i] >> 4) | 0xF0);
                 }
                 return largerValueBytes;
             }
@@ -389,7 +390,7 @@ namespace HashCalculator
                 byte[] smallerValueBytes = new byte[bytes.Length / 2];
                 for (int i = 0; i < smallerValueBytes.Length; ++i)
                 {
-                    smallerValueBytes[i] = (byte)((bytes[i * 2] & 0x0F) | (bytes[i * 2 + 1] << 4));
+                    smallerValueBytes[i] = (byte)((bytes[i * 2] & 0x0F) | (bytes[(i * 2) + 1] << 4));
                 }
                 return smallerValueBytes;
             }
@@ -415,7 +416,7 @@ namespace HashCalculator
             int count = VisualTreeHelper.GetChildrenCount(parent);
             for (int index = 0; index < count; ++index)
             {
-                var childObject = VisualTreeHelper.GetChild(parent, index);
+                DependencyObject childObject = VisualTreeHelper.GetChild(parent, index);
                 if (childObject is T resultObject1)
                 {
                     yield return resultObject1;
@@ -454,7 +455,7 @@ namespace HashCalculator
 
         public static int DigestLength(this AlgoType algoType)
         {
-            foreach (AlgoInOutModel algoInOutModel in AlgosPanelModel.ProvidedAlgos)
+            foreach (AlgoInOutModel algoInOutModel in AlgosPanelPageModel.ProvidedAlgos)
             {
                 if (algoInOutModel.AlgoType == algoType)
                 {

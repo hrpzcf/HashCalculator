@@ -1660,7 +1660,7 @@ public class HomeViewModel : BaseViewModel
             if (this.switchDisplayedAlgoCmds == null)
             {
                 RelayCommand command = new RelayCommand(this.SwitchDisplayedAlgoAction);
-                this.switchDisplayedAlgoCmds = AlgosPanelModel.ProvidedAlgos.Select(
+                this.switchDisplayedAlgoCmds = AlgosPanelPageModel.ProvidedAlgos.Select(
                     obj => new GenericItemModel(obj.AlgoName, obj.AlgoType, command)).ToArray();
             }
             return this.switchDisplayedAlgoCmds;

@@ -5,11 +5,12 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pagemodels="clr-namespace:HashCalculator.ViewModels.Pages"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="默认算法"
     Width="{Binding Source={x:Static local:Settings.Current}, Path=AlgosPanelWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     Height="{Binding Source={x:Static local:Settings.Current}, Path=AlgosPanelHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-    d:DataContext="{d:DesignInstance Type=local:AlgosPanelModel}"
+    d:DataContext="{d:DesignInstance Type=pagemodels:AlgosPanelPageModel}"
     KeyDown="AlgosPanelKeyDown"
     ShowInTaskbar="False"
     UseLayoutRounding="True"
@@ -38,7 +39,7 @@
                 Grid.RowSpan="2"
                 Grid.Column="0"
                 Grid.IsSharedSizeScope="True"
-                ItemsSource="{Binding Path=(local:AlgosPanelModel.AlgoGroups)}"
+                ItemsSource="{x:Static pagemodels:AlgosPanelPageModel.AlgoGroups}"
                 SelectedItem="{Binding SelectedAlgoGroup}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>

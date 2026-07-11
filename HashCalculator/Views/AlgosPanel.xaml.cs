@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using HashCalculator.ViewModels.Pages;
 
 namespace HashCalculator
 {
@@ -7,7 +8,7 @@ namespace HashCalculator
         public AlgosPanel()
         {
             this.InitializeComponent();
-            this.DataContext = new AlgosPanelModel();
+            this.DataContext = new AlgosPanelPageModel();
         }
 
         private void OnButtonCloseWindowClick(object sender, RoutedEventArgs e)

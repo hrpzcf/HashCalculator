@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using HashCalculator.ViewModels.Pages;
 
 namespace HashCalculator
 {
@@ -186,7 +187,7 @@ namespace HashCalculator
             {
                 return false;
             }
-            if (!AlgosPanelModel.TryGetAlgoType(algo, out AlgoType algoType) ||
+            if (!AlgosPanelPageModel.TryGetAlgoType(algo, out AlgoType algoType) ||
                 algoType == AlgoType.UNKNOWN)
             {
                 algoType = this.AlgoTypeFromFileExt;
@@ -194,7 +195,7 @@ namespace HashCalculator
             if (CommonUtils.HashBytesFromString(hash) is byte[] hashBytes)
             {
                 relpath = relpath.Replace('/', '\\');
-                if (!this.fileHashCheckerDict.TryGetValue(relpath, out var hashChecker))
+                if (!this.fileHashCheckerDict.TryGetValue(relpath, out HashChecker hashChecker))
                 {
                     hashChecker = new HashChecker();
                     this.fileHashCheckerDict[relpath] = hashChecker;
@@ -222,7 +223,7 @@ namespace HashCalculator
         {
             if (!string.IsNullOrEmpty(extension))
             {
-                foreach (var model in Settings.Current.TemplatesForChecklist)
+                foreach (TemplateForChecklistModel model in Settings.Current.TemplatesForChecklist)
                 {
                     if (model.ContainsExtension(extension))
                     {
@@ -268,13 +269,16 @@ namespace HashCalculator
             try
             {
                 string fileExt = Path.GetExtension(filePath);
-                if (AlgosPanelModel.TryGetAlgoType(fileExt.TrimStart('.'),
+                if (AlgosPanelPageModel.TryGetAlgoType(fileExt.TrimStart('.'),
                     out AlgoType algoType))
                 {
                     this.AlgoTypeFromFileExt = algoType;
                 }
                 bool contentDecoded = false;
-                if (_supportedEncodings == null) PrepareSupportedEncodings();
+                if (_supportedEncodings == null)
+                {
+                    PrepareSupportedEncodings();
+                }
                 foreach (Encoding encoding in _supportedEncodings)
                 {
                     using (StreamReader reader = new StreamReader(filePath, encoding, true))

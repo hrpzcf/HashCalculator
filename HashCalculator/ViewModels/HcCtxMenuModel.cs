@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Windows.Input;
+using HashCalculator.ViewModels.Pages;
 using Newtonsoft.Json;
 
 namespace HashCalculator
@@ -255,7 +256,7 @@ namespace HashCalculator
 
         public static GenericItemModel[] GenericItemModelsFromProvidedAlgos()
         {
-            return AlgosPanelModel.ProvidedAlgos.Select(
+            return AlgosPanelPageModel.ProvidedAlgos.Select(
                 i => new GenericItemModel(i.AlgoName, i.AlgoType.ToString())).ToArray();
         }
     }

@@ -146,7 +146,7 @@
                                     <DataTemplate>
                                         <ComboBox
                                             DisplayMemberPath="Display"
-                                            ItemsSource="{Binding Path=(local:TemplateForExportModel.AvailableEncodings)}"
+                                            ItemsSource="{x:Static local:TemplateForExportModel.AvailableEncodings}"
                                             SelectedValue="{Binding UsingEncoding, UpdateSourceTrigger=PropertyChanged}"
                                             SelectedValuePath="ItemValue" />
                                     </DataTemplate>

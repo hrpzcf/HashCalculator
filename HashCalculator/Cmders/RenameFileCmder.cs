@@ -65,7 +65,7 @@ namespace HashCalculator
 
         public RenameFileCmder(IEnumerable<HashViewModel> models) : base(models)
         {
-            this._algos = AlgosPanelModel.ProvidedAlgos;
+            this._algos = AlgosPanelPageModel.ProvidedAlgos;
             this.SelectedAlgorithmType = this._algos[0].AlgoType;
             this.UserInterface = new RenameFileCmderCtrl(this);
         }

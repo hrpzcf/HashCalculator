@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Data;
+using HashCalculator.ViewModels.Pages;
 
 namespace HashCalculator
 {
@@ -59,7 +61,7 @@ namespace HashCalculator
 
         public EqualHashByteFilter()
         {
-            this._algos = AlgosPanelModel.ProvidedAlgos.Select(
+            this._algos = AlgosPanelPageModel.ProvidedAlgos.Select(
                 i => i.NewAlgoInOutModel()).ToArray();
             this.Param = this._algos[0];
             this.UserInterface = new EqualHashByteFilterCtrl(this);
@@ -170,7 +172,7 @@ namespace HashCalculator
                     finalHashModels.Count,
                     Settings.Current.LuminanceOfTableCellsWithSameHash,
                     Settings.Current.SaturationOfTableCellsWithSameHash).Select(i => new ComparableColor(i));
-                foreach (var tuple in finalHashModels.ZipElements(colors))
+                foreach (Tuple<KeyValuePair<byte[], ModelCurAlgoDict>, ComparableColor> tuple in finalHashModels.ZipElements(colors))
                 {
                     foreach (HashViewModel model in tuple.Item1.Value.Keys)
                     {
@@ -231,7 +233,7 @@ namespace HashCalculator
                     finalHashModels.Count,
                     Settings.Current.LuminanceOfTableCellsWithSameHash,
                     Settings.Current.SaturationOfTableCellsWithSameHash).Select(i => new ComparableColor(i));
-                foreach (var tuple in finalHashModels.ZipElements(colors))
+                foreach (Tuple<KeyValuePair<byte[], List<HashViewModel>>, ComparableColor> tuple in finalHashModels.ZipElements(colors))
                 {
                     foreach (HashViewModel model in tuple.Item1.Value)
                     {

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
+using HashCalculator.ViewModels.Pages;
 using Newtonsoft.Json;
 
 namespace HashCalculator
@@ -228,7 +229,7 @@ namespace HashCalculator
             {
                 new HcCtxMenuModel("自动选择"),
             };
-            foreach (AlgoInOutModel model in AlgosPanelModel.ProvidedAlgos)
+            foreach (AlgoInOutModel model in AlgosPanelPageModel.ProvidedAlgos)
             {
                 menuCompute.Submenus.Add(new HcCtxMenuModel(model.AlgoName, model.AlgoType.ToString()));
                 menuCheckHash.Submenus.Add(new HcCtxMenuModel(model.AlgoName, model.AlgoType.ToString()));

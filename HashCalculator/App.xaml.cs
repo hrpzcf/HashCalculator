@@ -40,6 +40,8 @@ public partial class App : Application
             services.AddSingleton<ShortcutSettingsPage>();
             services.AddSingleton<ConfigSettingsPage>();
             services.AddSingleton<AboutSettingsPage>();
+            services.AddSingleton<AlgosPanelPage>();
+            services.AddSingleton<AlgosPanelPageModel>();
             services.AddHostedService<ApplicationHostService>();
         }).Build();
 

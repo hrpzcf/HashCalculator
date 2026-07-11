@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
+using HashCalculator.ViewModels.Pages;
 
 namespace HashCalculator
 {
@@ -18,19 +19,13 @@ namespace HashCalculator
 
         public override object[] Items
         {
-            get
-            {
-                return this._algos;
-            }
-            set
-            {
-                this._algos = value as AlgoInOutModel[];
-            }
+            get => this._algos;
+            set => this._algos = value as AlgoInOutModel[];
         }
 
         public HashAlgoFilter()
         {
-            this._algos = AlgosPanelModel.ProvidedAlgos.Select(
+            this._algos = AlgosPanelPageModel.ProvidedAlgos.Select(
                 i => i.NewAlgoInOutModel()).ToArray();
             this.UserInterface = new HashAlgoFilterCtrl(this);
         }
