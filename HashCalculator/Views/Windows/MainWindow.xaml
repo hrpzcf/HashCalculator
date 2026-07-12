@@ -58,7 +58,7 @@
             IsFooterSeparatorVisible="False"
             IsPaneOpen="{Binding Source={x:Static local:Settings.Current}, Path=IsMainWindowNavigationViewPaneOpen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             MenuItemsSource="{Binding MenuItems, Mode=OneWay}"
-            OpenPaneLength="220"
+            OpenPaneLength="210"
             PaneDisplayMode="Left"
             TitleBar="{Binding ElementName=TitleBar, Mode=OneWay}"
             TransitionDuration="100">
