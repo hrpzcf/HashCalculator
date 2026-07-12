@@ -69,6 +69,7 @@
                         <wpfui:CardControl
                             Margin="16,2"
                             Padding="12,12"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                             Header="{Binding AlgoName}">
                             <wpfui:ToggleSwitch IsChecked="{Binding Selected, Mode=TwoWay}" />
                         </wpfui:CardControl>
