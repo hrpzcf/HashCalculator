@@ -3,7 +3,7 @@ using System.Windows.Input;
 
 namespace HashCalculator
 {
-    public partial class HowToExportResults : Window
+    public partial class HowToExportResults
     {
         public HowToExportResults()
         {

@@ -1,0 +1,94 @@
+﻿<UserControl
+    x:Class="HashCalculator.Views.UserControls.ExportSettingsBasicControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:HashCalculator"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pagemodels="clr-namespace:HashCalculator.ViewModels.Pages"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
+    d:DataContext="{d:DesignInstance Type=pagemodels:SettingsViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <StackPanel>
+        <wpfui:CardControl>
+            <wpfui:CardControl.Header>
+                <StackPanel>
+                    <wpfui:TextBlock Text="仅导出每行当前显示的算法的结果" />
+                    <wpfui:TextBlock
+                        FontTypography="Caption"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="打开则导出计算结果时仅导出每行当前显示的算法的结果，关闭则导出所有结果。"
+                        TextWrapping="WrapWithOverflow" />
+                </StackPanel>
+            </wpfui:CardControl.Header>
+            <wpfui:ToggleSwitch IsChecked="{Binding HowToExportHashValues, Converter={StaticResource RadioExportCurrentAlgoCvt}}" />
+        </wpfui:CardControl>
+        <wpfui:CardControl Margin="0,4,0,0">
+            <wpfui:CardControl.Header>
+                <StackPanel>
+                    <wpfui:TextBlock Text="统一使用默认输出方式导出计算结果" />
+                    <wpfui:TextBlock
+                        FontTypography="Caption"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="导出计算结果时统一使用默认输出方式输出哈希值，而不是各行各自选择的输出方式。"
+                        TextWrapping="WrapWithOverflow" />
+                </StackPanel>
+            </wpfui:CardControl.Header>
+            <wpfui:ToggleSwitch IsChecked="{Binding UseDefaultOutputTypeWhenExporting}" />
+        </wpfui:CardControl>
+        <wpfui:CardControl Margin="0,4,0,0">
+            <wpfui:CardControl.Header>
+                <StackPanel>
+                    <wpfui:TextBlock Text="导出复选框控制所有子算法的导出状态" />
+                    <wpfui:TextBlock
+                        FontTypography="Caption"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="使【导出】复选框控制该行所有子算法的导出状态，关闭则仅控制当前显示算法的导出状态。"
+                        TextWrapping="WrapWithOverflow" />
+                </StackPanel>
+            </wpfui:CardControl.Header>
+            <wpfui:ToggleSwitch IsChecked="{Binding ExportInMainControlsChildExports}" />
+        </wpfui:CardControl>
+        <wpfui:CardControl Margin="0,4,0,0">
+            <wpfui:CardControl.Header>
+                <StackPanel>
+                    <wpfui:TextBlock Text="导出计算结果时使用 UNIX 换行符" />
+                    <wpfui:TextBlock
+                        FontTypography="Caption"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="关闭则使用 Windows 换行符，此项设置也影响导出计算结果时 $newline$ 占位符所代表的换行符类型。"
+                        TextWrapping="WrapWithOverflow" />
+                </StackPanel>
+            </wpfui:CardControl.Header>
+            <wpfui:ToggleSwitch IsChecked="{Binding UseUnixStyleLineBreaks}" />
+        </wpfui:CardControl>
+        <wpfui:CardControl Margin="0,4,0,0">
+            <wpfui:CardControl.Header>
+                <StackPanel>
+                    <wpfui:TextBlock Text="不同算法结果分别导出到后缀为算法名的不同文件" />
+                    <wpfui:TextBlock
+                        FontTypography="Caption"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="如果开启此选项，则导出结果时在【另存为】对话框的【文件类型】下拉列表选择的方案只有导出模板和文件编码起作用，扩展名不起作用，用算法名作为扩展名，同时【仅导出每行当前显示的算法的结果】设置不生效，默认导出所有算法结果。"
+                        TextWrapping="WrapWithOverflow" />
+                </StackPanel>
+            </wpfui:CardControl.Header>
+            <wpfui:ToggleSwitch IsChecked="{Binding EachAlgoExportedToSeparateFile}" />
+        </wpfui:CardControl>
+        <wpfui:CardControl Margin="0,4,0,0">
+            <wpfui:CardControl.Header>
+                <StackPanel>
+                    <wpfui:TextBlock Text="导出时打开导出参数小窗口以便于设置本次导出参数" />
+                    <wpfui:TextBlock
+                        FontTypography="Caption"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="在每次导出时都打开导出参数小窗口让用户设置本次的导出参数，需要频繁更改设置的情况下可以避免总是要到设置页更改设置。"
+                        TextWrapping="WrapWithOverflow" />
+                </StackPanel>
+            </wpfui:CardControl.Header>
+            <wpfui:ToggleSwitch IsChecked="{Binding AskUserHowToExportResultsEveryTime}" />
+        </wpfui:CardControl>
+    </StackPanel>
+</UserControl>

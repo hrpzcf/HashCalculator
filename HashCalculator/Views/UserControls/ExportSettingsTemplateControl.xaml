@@ -1,0 +1,143 @@
+﻿<UserControl
+    x:Class="HashCalculator.Views.UserControls.ExportSettingsTemplateControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:HashCalculator"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pagemodels="clr-namespace:HashCalculator.ViewModels.Pages"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
+    d:DataContext="{d:DesignInstance Type=pagemodels:SettingsViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <StackPanel>
+        <wpfui:CardExpander Margin="0,4,0,0">
+            <wpfui:CardExpander.Header>
+                <StackPanel>
+                    <wpfui:TextBlock Text="导出计算结果时的可选方案" />
+                    <wpfui:TextBlock
+                        FontTypography="Caption"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="导出计算结果时【另存为】对话框的【保存类型】列表内的可选方案，包括导出模板、文件类型、文件编码等。点击【导出结果】按钮打开【另存为】对话框后，在【保存类型】下拉列表即可选择方案。"
+                        TextWrapping="WrapWithOverflow" />
+                </StackPanel>
+            </wpfui:CardExpander.Header>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <DataGrid
+                    Grid.Column="0"
+                    AutoGenerateColumns="False"
+                    HorizontalScrollBarVisibility="Disabled"
+                    IsReadOnly="True"
+                    ItemsSource="{Binding Source={x:Static local:Settings.Current}, Path=TemplatesForExport}"
+                    SelectedItem="{Binding Source={x:Static local:Settings.Current}, Path=SelectedTemplateForExport}"
+                    SelectionMode="Single">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="方案名称">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox Text="{Binding Name, UpdateSourceTrigger=LostFocus}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="文件扩展名">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox LostFocus="OnTextBoxExtensionLostFocus" Text="{Binding Extension, UpdateSourceTrigger=LostFocus}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="文件内容模版">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox Text="{Binding Template, UpdateSourceTrigger=LostFocus}" TextWrapping="WrapWithOverflow" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="文件编码">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ComboBox
+                                        DisplayMemberPath="Display"
+                                        ItemsSource="{x:Static local:TemplateForExportModel.AvailableEncodings}"
+                                        SelectedValue="{Binding UsingEncoding, UpdateSourceTrigger=PropertyChanged}"
+                                        SelectedValuePath="ItemValue" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Width="*" />
+                    </DataGrid.Columns>
+                </DataGrid>
+                <StackPanel Grid.Column="1" Margin="16,0,0,0">
+                    <wpfui:Button
+                        Appearance="Secondary"
+                        Command="{Binding AddExportTemplateCmd}"
+                        Content="添加" />
+                    <wpfui:Button
+                        Margin="0,8,0,0"
+                        Appearance="Secondary"
+                        Command="{Binding CopyExportTemplateCmd}"
+                        Content="复制" />
+                    <wpfui:Button
+                        Margin="0,8,0,0"
+                        Appearance="Secondary"
+                        Command="{Binding MoveExportTemplateUpCmd}"
+                        Content="上移" />
+                    <wpfui:Button
+                        Margin="0,8,0,0"
+                        Appearance="Secondary"
+                        Command="{Binding MoveExportTemplateDownCmd}"
+                        Content="下移" />
+                    <wpfui:Button
+                        Margin="0,8,0,0"
+                        Appearance="Danger"
+                        Command="{Binding RemoveExportTemplateCmd}"
+                        Content="移除" />
+                    <wpfui:Button
+                        Margin="0,8,0,0"
+                        Appearance="Danger"
+                        Command="{Binding ResetExportTemplateCmd}"
+                        Content="重置" />
+                </StackPanel>
+            </Grid>
+        </wpfui:CardExpander>
+        <wpfui:CardExpander Margin="0,4,0,0">
+            <wpfui:CardExpander.Header>
+                <StackPanel>
+                    <wpfui:TextBlock Text="可在导出方案模板中使用的占位符及说明" />
+                    <wpfui:TextBlock
+                        FontTypography="Caption"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="这些是可以在“文件内容模版”输入框中使用的占位符，导出计算结果时文件的每一行内容都将按照“文件内容模版”生成。"
+                        TextWrapping="WrapWithOverflow" />
+                </StackPanel>
+            </wpfui:CardExpander.Header>
+            <ItemsControl ItemsSource="{Binding AvailablePlaceholdersForTemplateOfExportHash}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <wpfui:CardControl>
+                            <wpfui:CardControl.Header>
+                                <StackPanel>
+                                    <wpfui:TextBlock Text="{Binding Display}" />
+                                    <wpfui:TextBlock
+                                        FontTypography="Caption"
+                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                        Text="{Binding ItemValue}"
+                                        TextWrapping="WrapWithOverflow" />
+                                </StackPanel>
+                            </wpfui:CardControl.Header>
+                            <Button
+                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}, Path=DataContext.CopyTemplatePlaceholderCmd}"
+                                CommandParameter="{Binding Display}"
+                                Content="复制" />
+                        </wpfui:CardControl>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </wpfui:CardExpander>
+    </StackPanel>
+</UserControl>
