@@ -76,17 +76,17 @@ public class MainViewModel : BaseViewModel
                 TargetPageTag = "安装或卸载系统右键菜单扩展和关联 HCB 格式校验依据。"
             },
             new NavigationViewItem(
-                "算法别名设置", SymbolRegular.MathFormula20, typeof(AliasSettingsPage))
+                "算法别名", SymbolRegular.MathFormula20, typeof(AliasSettingsPage))
             {
                 TargetPageTag = "给算法设置别名以识别校验依据中写法不一样的算法名。"
             },
             new NavigationViewItem(
-                "复制行为设置", SymbolRegular.ClipboardSettings20, typeof(CopySettingsPage))
+                "复制行为", SymbolRegular.ClipboardSettings20, typeof(CopySettingsPage))
             {
                 TargetPageTag = "自定义复制模板，用于控制复制出来的文本排版格式。"
             },
             new NavigationViewItem(
-                "导出行为设置", SymbolRegular.DocumentArrowUp20, typeof(ExportSettingsPage))
+                "导出行为", SymbolRegular.DocumentArrowUp20, typeof(ExportSettingsPage))
             {
                 TargetPageTag = "将计算结果导出到文本文件时的模板和导出行为的设置项。"
             },
@@ -96,7 +96,7 @@ public class MainViewModel : BaseViewModel
                 TargetPageTag = "编辑或自定义从校验依据文本/文件解析出校验信息的解析方案。"
             },
             new NavigationViewItem(
-                "快捷操作设置", SymbolRegular.Send20, typeof(ShortcutSettingsPage))
+                "快捷操作", SymbolRegular.Send20, typeof(ShortcutSettingsPage))
             {
                 TargetPageTag = "部分列的鼠标左键双击响应行为设置项。"
             },
