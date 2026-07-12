@@ -6,12 +6,12 @@ using System.Windows.Input;
 
 namespace HashCalculator.ViewModels.Pages;
 
-internal class AlgosPanelPageModel : BaseViewModel
+public class AlgosPanelPageModel : BaseViewModel
 {
     private RelayCommand clearAllSelectedCmd;
 
     private static readonly AlgoGroupModel _groupOthers = new AlgoGroupModel(
-        "其他算法",
+        "未分类算法",
         new AlgoInOutModel[]
         {
             // XxHash
@@ -118,10 +118,11 @@ internal class AlgosPanelPageModel : BaseViewModel
             _groupBLAKE3,
             _groupStreebog
         ).ToArray());
-    private AlgoGroupModel _selectedAlgoGroup = _groupOthers;
+    private AlgoGroupModel _selectedAlgoGroup = _groupAllAlgos;
 
     public static AlgoGroupModel[] AlgoGroups { get; } = new AlgoGroupModel[]
         {
+            _groupAllAlgos,
             _groupOthers,
             _groupSHA2,
             _groupSHA3,
@@ -131,7 +132,6 @@ internal class AlgosPanelPageModel : BaseViewModel
             _groupBLAKE2sp,
             _groupBLAKE3,
             _groupStreebog,
-            _groupAllAlgos,
         };
 
     public static AlgoInOutModel[] ProvidedAlgos => _groupAllAlgos.Items;

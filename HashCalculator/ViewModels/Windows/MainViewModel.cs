@@ -111,7 +111,10 @@ public class MainViewModel : BaseViewModel
             }
         ];
         this.SettingsNavigationItem.MenuItemsSource = this.SettingsNavigationItemsSource;
-        this.MenuItems = [new NavigationViewItem("主页", SymbolRegular.Home24, typeof(HomePage))];
+        this.MenuItems = [
+            new NavigationViewItem("主页", SymbolRegular.Home24, typeof(HomePage)),
+            new NavigationViewItem("算法", SymbolRegular.MathFormula24, typeof(AlgosPanelPage)),
+        ];
         this.FooterItems = [this.SettingsNavigationItem];
     }
 

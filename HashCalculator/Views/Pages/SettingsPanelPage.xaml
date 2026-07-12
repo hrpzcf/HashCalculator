@@ -14,8 +14,8 @@
     ScrollViewer.CanContentScroll="False"
     UseLayoutRounding="True"
     mc:Ignorable="d">
-    <ScrollViewer Padding="10" VerticalScrollBarVisibility="Auto">
-        <controls:ForceItemsControl Margin="8" ItemsSource="{Binding SettingsNavigationItemsSource}">
+    <ScrollViewer Padding="14,10,14,14" VerticalScrollBarVisibility="Auto">
+        <controls:ForceItemsControl ItemsSource="{Binding SettingsNavigationItemsSource}">
             <controls:ForceItemsControl.ItemTemplate>
                 <DataTemplate>
                     <wpfui:CardAction

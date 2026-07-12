@@ -15,7 +15,7 @@
     <Page.InputBindings>
         <KeyBinding Key="Esc" Command="{Binding SettingsPagesInputBindingsCmd}" />
     </Page.InputBindings>
-    <ScrollViewer Padding="10" VerticalScrollBarVisibility="Auto">
+    <ScrollViewer Padding="14" VerticalScrollBarVisibility="Auto">
         <StackPanel>
             <wpfui:CardExpander>
                 <wpfui:CardExpander.Header>

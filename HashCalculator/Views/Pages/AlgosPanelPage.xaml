@@ -11,92 +11,85 @@
     d:DataContext="{d:DesignInstance Type=pagemodels:AlgosPanelPageModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
+    ScrollViewer.CanContentScroll="False"
     mc:Ignorable="d">
-    <ScrollViewer Padding="16" VerticalScrollBarVisibility="Auto">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Grid Grid.Row="0">
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <ListBox
-                    Grid.Row="0"
-                    Grid.RowSpan="2"
-                    Grid.Column="0"
-                    Grid.IsSharedSizeScope="True"
-                    ItemsSource="{x:Static pagemodels:AlgosPanelPageModel.AlgoGroups}"
-                    SelectedItem="{Binding SelectedAlgoGroup}">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" SharedSizeGroup="algGroupCol" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <TextBlock
-                                    Grid.Column="0"
-                                    Margin="0,0,24,0"
-                                    Text="{Binding GroupName}" />
-                                <TextBlock Grid.Column="1" Text="{Binding SelectedAlgoCount, StringFormat=已选：{0}}">
-                                    <TextBlock.Foreground>
-                                        <MultiBinding Converter="{StaticResource ListBoxIsSelectedForegroundCvt}">
-                                            <Binding Path="IsSelected" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}" />
-                                            <Binding Path="Foreground" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}" />
-                                        </MultiBinding>
-                                    </TextBlock.Foreground>
-                                </TextBlock>
-                            </Grid>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-                <ScrollViewer
-                    Grid.Row="0"
-                    Grid.Column="1"
-                    Margin="4,0,0,0"
-                    HorizontalScrollBarVisibility="Auto"
-                    VerticalScrollBarVisibility="Disabled">
-                    <ItemsControl ItemsSource="{Binding SelectedAlgoGroup.Items}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel Orientation="Vertical" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <CheckBox
-                                    Margin="16,4"
-                                    VerticalContentAlignment="Center"
-                                    CommandParameter="{Binding}"
-                                    Content="{Binding AlgoName}"
-                                    IsChecked="{Binding Selected, Mode=TwoWay}" />
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ScrollViewer>
-                <TextBlock
-                    Grid.Row="1"
-                    Grid.Column="1"
-                    Margin="4,4,0,0"
-                    FontSize="8pt"
-                    Style="{StaticResource DescTextBlockStyle}"
-                    Text="不建议选择太多算法，否则计算时极易造成程序无响应" />
-            </Grid>
+    <Grid Margin="14">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <wpfui:ListView
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            Grid.Column="0"
+            Grid.IsSharedSizeScope="True"
+            ItemsSource="{x:Static pagemodels:AlgosPanelPageModel.AlgoGroups}"
+            SelectedItem="{Binding SelectedAlgoGroup}">
+            <wpfui:ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="8,4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="algGroupCol" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock
+                            Grid.Column="0"
+                            Margin="0,0,24,0"
+                            Text="{Binding GroupName}" />
+                        <TextBlock Grid.Column="1" Text="{Binding SelectedAlgoCount, StringFormat=已选：{0}}">
+                            <TextBlock.Foreground>
+                                <MultiBinding Converter="{StaticResource ListBoxIsSelectedForegroundCvt}">
+                                    <Binding Path="IsSelected" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}" />
+                                    <Binding Path="Foreground" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}" />
+                                </MultiBinding>
+                            </TextBlock.Foreground>
+                        </TextBlock>
+                    </Grid>
+                </DataTemplate>
+            </wpfui:ListView.ItemTemplate>
+        </wpfui:ListView>
+        <ScrollViewer
+            Grid.Row="0"
+            Grid.Column="1"
+            Margin="4,0,0,0"
+            HorizontalScrollBarVisibility="Auto"
+            VerticalScrollBarVisibility="Disabled">
+            <ItemsControl ItemsSource="{Binding SelectedAlgoGroup.Items}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Vertical" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <wpfui:CardControl
+                            Margin="16,2"
+                            Padding="12,12"
+                            Header="{Binding AlgoName}">
+                            <wpfui:ToggleSwitch IsChecked="{Binding Selected, Mode=TwoWay}" />
+                        </wpfui:CardControl>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+        <Grid
+            Grid.Row="1"
+            Grid.Column="1"
+            Margin="0,4,0,0">
+            <wpfui:TextBlock
+                VerticalAlignment="Center"
+                FontTypography="Caption"
+                Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                Text="不建议选择太多算法，否则计算时容易造成程序无响应。" />
             <wpfui:Button
-                Grid.Row="1"
-                Margin="0,8,0,4"
-                Padding="20,4,20,4"
                 HorizontalAlignment="Right"
                 Appearance="Caution"
                 Command="{Binding ClearAllSelectedCmd}"
                 Content="清除" />
         </Grid>
-    </ScrollViewer>
+    </Grid>
 </Page>

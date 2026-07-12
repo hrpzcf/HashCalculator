@@ -25,7 +25,7 @@ namespace HashCalculator
 
         public override int MaxOutputLength => 32;
 
-        public override string NamePrefix => "BLAKE2sp";
+        public override string NamePrefix => "Blake2sp";
 
         public OfficialBlake2sp(int bitLength) : base(bitLength)
         {

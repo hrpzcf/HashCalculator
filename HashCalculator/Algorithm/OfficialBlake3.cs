@@ -30,14 +30,14 @@ namespace HashCalculator
 
         public int DigestLength { get; }
 
-        public string AlgoName => $"BLAKE3-{this.bitLength}";
+        public string AlgoName => $"Blake3-{this.bitLength}";
 
         public AlgoType AlgoType
         {
             get
             {
                 if (this.algoType == AlgoType.UNKNOWN &&
-                    Enum.TryParse($"BLAKE3_{this.bitLength}", true, out AlgoType algo))
+                    Enum.TryParse($"Blake3_{this.bitLength}", true, out AlgoType algo))
                 {
                     this.algoType = algo;
                 }
