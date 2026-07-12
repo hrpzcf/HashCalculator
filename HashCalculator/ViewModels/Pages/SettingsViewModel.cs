@@ -83,7 +83,6 @@ public class SettingsViewModel : BaseViewModel
     private bool isMainWindowNavigationViewPaneOpen = true;
 
     // 主窗口顶部各按钮的显示与否
-    private bool showOpenSelectAlgoWndButton = true;
     private bool showSelectedOutputTypeButton = true;
     private bool showOpenCommandPanelButton = true;
     private bool showSelectFilesToHashButton = true;
@@ -524,12 +523,6 @@ public class SettingsViewModel : BaseViewModel
     {
         get => this.clearTableBeforeAddingFilesByCmdLine;
         set => this.SetPropNotify(ref this.clearTableBeforeAddingFilesByCmdLine, value);
-    }
-
-    public bool ShowOpenSelectAlgoWndButton
-    {
-        get => this.showOpenSelectAlgoWndButton;
-        set => this.SetPropNotify(ref this.showOpenSelectAlgoWndButton, value);
     }
 
     public bool ShowSelectedOutputTypeButton

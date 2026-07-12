@@ -41,7 +41,6 @@ public class HomeViewModel : BaseViewModel
     private RunningState runningState = RunningState.None;
 
     private RelayCommand openCommandPanelCmd;
-    private RelayCommand openSelectAlgoWndCmd;
     private RelayCommand mainWindowTopmostCmd;
     private RelayCommand clearAllTableLinesCmd;
     private RelayCommand exportHashResultsCmd;
@@ -442,20 +441,6 @@ public class HomeViewModel : BaseViewModel
         {
             this.openCommandPanelCmd ??= new RelayCommand(this.OpenCommandPanelAction);
             return this.openCommandPanelCmd;
-        }
-    }
-
-    private void OpenSelectAlgoWndAction(object param)
-    {
-        new AlgosPanel() { Owner = MainWindow.Current }.ShowDialog();
-    }
-
-    public ICommand OpenSelectAlgoWndCmd
-    {
-        get
-        {
-            this.openSelectAlgoWndCmd ??= new RelayCommand(this.OpenSelectAlgoWndAction);
-            return this.openSelectAlgoWndCmd;
         }
     }
 

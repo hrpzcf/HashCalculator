@@ -43,27 +43,6 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <StackPanel
-                    Grid.Column="0"
-                    Margin="0,0,16,0"
-                    VerticalAlignment="Bottom"
-                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowOpenSelectAlgoWndButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
-                    <Button
-                        Command="{Binding OpenSelectAlgoWndCmd}"
-                        Style="{StaticResource ImageButtonStyle2}"
-                        ToolTip="此设置影响变更后才开始计算的行，包括通过【新增计算】/【计算未完成项】/【重新计算】按钮发起的任务">
-                        <Image
-                            Width="32"
-                            Height="32"
-                            Source="{StaticResource algorithmDrawingImage}" />
-                    </Button>
-                    <TextBlock
-                        Margin="0,2"
-                        HorizontalAlignment="Center"
-                        Style="{StaticResource ImgButtonTextStyle1}"
-                        Text="默认算法"
-                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
-                </StackPanel>
-                <StackPanel
                     Grid.Column="1"
                     VerticalAlignment="Bottom"
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowSelectedOutputTypeButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
