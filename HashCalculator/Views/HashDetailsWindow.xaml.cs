@@ -4,7 +4,7 @@ using System.Windows.Input;
 
 namespace HashCalculator
 {
-    public partial class HashDetailsWnd : Window
+    public partial class HashDetailsWnd
     {
         internal HashDetailsWnd(HashViewModel model)
         {
