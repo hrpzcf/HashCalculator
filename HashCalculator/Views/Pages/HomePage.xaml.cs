@@ -91,4 +91,12 @@ public partial class HomePage : Page, INavigableView<HomeViewModel>
     {
         e.Handled = true;
     }
+
+    private void InfoBadgeMouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        if (sender is FrameworkElement element && element.DataContext is HashViewModel viewModel)
+        {
+            viewModel.ShowHashDetailsWindowAction();
+        }
+    }
 }

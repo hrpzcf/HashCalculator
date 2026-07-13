@@ -43,7 +43,6 @@ namespace HashCalculator
         private RelayCommand pauseOrContinueModelSelfCmd;
         private RelayCommand copyThisModelCurHashCmd;
         private RelayCommand copyThisModelAllHashesCmd;
-        private RelayCommand showHashDetailsWindowCmd;
         private RelayCommand tableColumnDoubleClickCmd;
 
         private static readonly Dispatcher synchronization =
@@ -349,18 +348,9 @@ namespace HashCalculator
             }
         }
 
-        private void ShowHashDetailsWindowAction(object param)
+        public void ShowHashDetailsWindowAction()
         {
             new HashDetailsWnd(this) { Owner = MainWindow.Current }.ShowDialog();
-        }
-
-        public ICommand ShowHashDetailsWindowCmd
-        {
-            get
-            {
-                this.showHashDetailsWindowCmd ??= new RelayCommand(this.ShowHashDetailsWindowAction);
-                return this.showHashDetailsWindowCmd;
-            }
         }
 
         private void TableColumnDoubleClickAction(object param)
@@ -372,7 +362,7 @@ namespace HashCalculator
                     case SettingsViewModel.CmdStrShowDetails:
                         if (this.Result == HashResult.Succeeded)
                         {
-                            this.ShowHashDetailsWindowAction(null);
+                            this.ShowHashDetailsWindowAction();
                         }
                         else
                         {

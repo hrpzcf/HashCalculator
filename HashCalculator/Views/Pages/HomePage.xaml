@@ -638,7 +638,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <ComboBox
-                                Margin="2"
+                                Margin="0,4"
                                 VerticalAlignment="Center"
                                 DisplayMemberPath="AlgoName"
                                 ItemsSource="{Binding AlgoInOutModels}"
@@ -783,24 +783,22 @@
                                     ToolTip="取消..."
                                     Visibility="{Binding State, Converter={StaticResource StateWaitingToVisiblityCvt}}" />
                                 <!--  已成功  -->
-                                <Button
+                                <wpfui:InfoBadge
                                     Grid.Column="2"
-                                    Width="21"
-                                    Height="21"
-                                    Margin="0,0,4,0"
+                                    Padding="0"
                                     d:DataContext="{d:DesignInstance local:HashViewModel}"
-                                    Command="{Binding ShowHashDetailsWindowCmd}"
-                                    Content="{Binding AlgoInOutModels.Count}"
-                                    Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}, Path=Foreground}"
-                                    Style="{StaticResource GrayRoundTipButton1}"
-                                    ToolTip="详情...">
-                                    <Button.Visibility>
+                                    MouseDoubleClick="InfoBadgeMouseDoubleClick"
+                                    Severity="Attention"
+                                    Style="{DynamicResource ValueInfoBadgeStyle}"
+                                    ToolTip="双击打开详情窗口..."
+                                    Value="{Binding AlgoInOutModels.Count}">
+                                    <wpfui:InfoBadge.Visibility>
                                         <MultiBinding Converter="{StaticResource StateFinishedResultSucceededToVisibilityCvt}">
                                             <Binding Path="State" />
                                             <Binding Path="Result" />
                                         </MultiBinding>
-                                    </Button.Visibility>
-                                </Button>
+                                    </wpfui:InfoBadge.Visibility>
+                                </wpfui:InfoBadge>
                                 <Button
                                     Grid.Column="3"
                                     Padding="4"

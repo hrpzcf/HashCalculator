@@ -23,6 +23,9 @@
                 <ResourceDictionary Source="/HashCalculator;component/Resources/ImageButtonStyles.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/ImgButtonTextStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <Style TargetType="Image">
+                <Setter Property="RenderOptions.BitmapScalingMode" Value="NearestNeighbor" />
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
