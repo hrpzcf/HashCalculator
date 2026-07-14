@@ -432,6 +432,26 @@ namespace HashCalculator
             yield break;
         }
 
+        public static void CollectGridColumns(this ObservableCollection<DataGridColumn> columns,
+            Dictionary<string, ColumnProperty> order)
+        {
+            foreach (DataGridColumn column in columns)
+            {
+                if (column.Header is string header)
+                {
+                    if (order.TryGetValue(header, out ColumnProperty value))
+                    {
+                        value.Width = column.Width;
+                        value.Index = column.DisplayIndex;
+                    }
+                    else
+                    {
+                        order[header] = new ColumnProperty(column.DisplayIndex, column.Width);
+                    }
+                }
+            }
+        }
+
         public static void ReorderGridColumns(this ObservableCollection<DataGridColumn> columns,
             Dictionary<string, ColumnProperty> order)
         {

@@ -23,6 +23,7 @@ public partial class App : Application
         .ConfigureServices((context, services) =>
         {
             services.AddNavigationViewPageProvider();
+            services.AddHostedService<ApplicationHostService>();
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<HomeViewModel>();
             services.AddSingleton<HomePage>();
@@ -42,7 +43,6 @@ public partial class App : Application
             services.AddSingleton<AboutSettingsPage>();
             services.AddSingleton<AlgosPanelPage>();
             services.AddSingleton<AlgosPanelPageModel>();
-            services.AddHostedService<ApplicationHostService>();
         }).Build();
 
     public static T GetRequiredService<T>() where T : class

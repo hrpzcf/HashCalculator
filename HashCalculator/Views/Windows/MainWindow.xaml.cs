@@ -10,6 +10,7 @@ using CommandLine;
 using HashCalculator.Others;
 using HashCalculator.ViewModels.Pages;
 using HashCalculator.ViewModels.Windows;
+using HashCalculator.Views.Pages;
 using Wpf.Ui;
 using Wpfctrls = Wpf.Ui.Controls;
 
@@ -20,6 +21,8 @@ namespace HashCalculator.Views.Windows
         private bool listenerAdded = false;
         private DateTime lastClipboardUpdateDateTime = DateTime.Now;
         private PresentationSource presentationSrc = null;
+
+        private readonly HomePage _homePage = null;
         private readonly MainViewModel viewModel = null;
 
         private static string[] startupArgs = null;
@@ -34,9 +37,11 @@ namespace HashCalculator.Views.Windows
 
         private bool ProcIdMonitorFlag { get; set; } = true;
 
-        public MainWindow(MainViewModel viewModel, INavigationService navigationService)
+        public MainWindow(MainViewModel viewModel, INavigationService navigationService,
+            HomePage homePage)
         {
             Current = this;
+            this._homePage = homePage;
             this.viewModel = viewModel;
             this.DataContext = this.viewModel;
             this.InitializeComponent();
@@ -81,6 +86,7 @@ namespace HashCalculator.Views.Windows
             // 如果是其他进程实例内的 ProcessIdMonitorProc 方法内的 PIdSynchronizer.Wait 抢到了锁，
             // 则直接进入步骤 3，本进程实例 ProcessIdMonitorProc 方法内的 PIdSynchronizer.Wait 抢不到锁不会往下执行。
             Initializer.PIdSynchronizer.Set();
+            this._homePage.MainDataGrid.Columns.CollectGridColumns(Settings.Current.ColumnsOrder);
         }
 
         private async void MainWindowLoaded(object sender, RoutedEventArgs e)
@@ -107,6 +113,7 @@ namespace HashCalculator.Views.Windows
             Thread thread = new Thread(this.ProcessIdMonitorProc);
             thread.IsBackground = true;
             thread.Start();
+            this._homePage.MainDataGrid.Columns.ReorderGridColumns(Settings.Current.ColumnsOrder);
             if (await Settings.TestCompatibilityOfShellExt() is string notification)
             {
                 NotificationSender.SnackbarError(notification);

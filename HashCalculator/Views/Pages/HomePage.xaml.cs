@@ -16,34 +16,10 @@ public partial class HomePage : Page, INavigableView<HomeViewModel>
 
     public HomePage(HomeViewModel viewModel)
     {
-        this.ViewModel = viewModel;
         Current = this;
+        this.ViewModel = viewModel;
         this.DataContext = this.ViewModel;
-        this.Loaded += this.OnHomePageLoaded;
         this.InitializeComponent();
-    }
-
-    private void OnColumnDisplayIndexChanged(object sender, DataGridColumnEventArgs e)
-    {
-        if (e.Column?.Header is string header)
-        {
-            if (Settings.Current.ColumnsOrder.TryGetValue(header, out ColumnProperty value))
-            {
-                value.Width = e.Column.Width;
-                value.Index = e.Column.DisplayIndex;
-            }
-            else
-            {
-                Settings.Current.ColumnsOrder[header] = new ColumnProperty(
-                    e.Column.DisplayIndex, e.Column.Width);
-            }
-        }
-    }
-
-    private async void OnHomePageLoaded(object sender, RoutedEventArgs e)
-    {
-        this.MainDataGrid.Columns.ReorderGridColumns(Settings.Current.ColumnsOrder);
-        this.MainDataGrid.ColumnDisplayIndexChanged += this.OnColumnDisplayIndexChanged;
     }
 
     private void DataGridHashingFilesDrop(object sender, DragEventArgs e)
