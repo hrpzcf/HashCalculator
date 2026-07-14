@@ -13,11 +13,8 @@ public class MainViewModel : BaseViewModel
 {
     private RelayCommand navigatenFromSettingsPanelCmd;
 
-    public static MainViewModel Current { get; private set; }
-
     public MainViewModel(INavigationService navigationService)
     {
-        Current = this;
         this.NavigationService = navigationService;
         Settings.Current.PropertyChanged += this.OnSettingsPropChanged;
         this.SetupNavigationViewItems();

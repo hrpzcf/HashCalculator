@@ -71,7 +71,7 @@ public partial class HomePage : Page, INavigableView<HomeViewModel>
 
     private void DataGridHashingFilesPrevKeyDown(object sender, KeyEventArgs e)
     {
-        if (e.Key == Key.Escape && sender is System.Windows.Controls.DataGrid dataGrid)
+        if (e.Key == Key.Escape && sender is DataGrid dataGrid)
         {
             dataGrid.SelectedItem = null;
         }
