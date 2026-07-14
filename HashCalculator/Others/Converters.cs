@@ -55,7 +55,7 @@ namespace HashCalculator
                         solidColorBrush.Color = (Color)ColorConverter.ConvertFromString("#FF0000");
                         break;
                     case CmpRes.Uncertain:
-                        solidColorBrush.Color = (Color)ColorConverter.ConvertFromString("#000080");
+                        solidColorBrush.Color = (Color)ColorConverter.ConvertFromString("#9264DC");
                         break;
                     case CmpRes.NoResult:
                     default:

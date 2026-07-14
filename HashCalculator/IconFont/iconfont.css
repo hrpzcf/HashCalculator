@@ -1,6 +1,6 @@
 @font-face {
   font-family: "iconfont"; /* Project id 4757706 */
-  src: url('iconfont.ttf?t=1737688694180') format('truetype');
+  src: url('iconfont.ttf?t=1784008914617') format('truetype');
 }
 
 .iconfont {
@@ -9,6 +9,14 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-mti-guanlian:before {
+  content: "\e916";
+}
+
+.icon-a-yichang4:before {
+  content: "\eb61";
 }
 
 .icon-yipipei:before {
