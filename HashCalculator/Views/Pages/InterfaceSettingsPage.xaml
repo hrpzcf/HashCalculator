@@ -164,13 +164,6 @@
                     </StackPanel>
                 </wpfui:CardExpander.Header>
                 <StackPanel>
-                    <wpfui:CardControl Header="默认算法按钮">
-                        <wpfui:ToggleSwitch
-                            IsChecked="{Binding ShowOpenSelectAlgoWndButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                            LabelPosition="Left"
-                            OffContent="隐藏"
-                            OnContent="显示" />
-                    </wpfui:CardControl>
                     <wpfui:CardControl Header="默认输出方式按钮">
                         <wpfui:ToggleSwitch
                             IsChecked="{Binding ShowSelectedOutputTypeButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
