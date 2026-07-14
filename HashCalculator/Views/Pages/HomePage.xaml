@@ -730,7 +730,7 @@
                                 <!--  不在计算状态  -->
                                 <Border
                                     Grid.Column="1"
-                                    Margin="0,0,8,0"
+                                    Margin="0,0,16,0"
                                     Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}, Path=Background}">
                                     <Border.Visibility>
                                         <MultiBinding Converter="{StaticResource StateFinishedResultSucceededToVisibilityCvt}">
@@ -752,7 +752,7 @@
                                 </Border>
                                 <TextBlock
                                     Grid.Column="1"
-                                    Margin="0,0,8,0"
+                                    Margin="0,0,16,0"
                                     VerticalAlignment="Center"
                                     Text="{Binding ErrorDetails}"
                                     TextTrimming="CharacterEllipsis">
@@ -767,7 +767,7 @@
                                 <!--  ProgressBar的Value绑定需是OneWay，因为默认TwoWay和private set的Progress无法成功绑定  -->
                                 <ProgressBar
                                     Grid.Column="1"
-                                    Margin="0,0,8,0"
+                                    Margin="0,0,16,0"
                                     Maximum="{Binding MaxProgress}"
                                     Visibility="{Binding State, Converter={StaticResource StateRunningToVisiblityCvt}}"
                                     Value="{Binding Progress, Mode=OneWay}" />
@@ -977,7 +977,7 @@
                                 <Label
                                     Grid.Column="0"
                                     Padding="3"
-                                    Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGridRow}, Path=Background}"
+                                    Background="{Binding Background, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGridRow}}"
                                     BorderThickness="0"
                                     Content="{Binding CurrentInOutModel.HashCmpResult, Converter={StaticResource ComparisonResultToIconFontTextCvt}}"
                                     FontFamily="{StaticResource IconFont}"

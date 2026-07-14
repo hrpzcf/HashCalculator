@@ -131,8 +131,7 @@
                                     </Grid.ColumnDefinitions>
                                     <TextBlock
                                         Grid.Column="0"
-                                        Margin="2"
-                                        Padding="2,4"
+                                        Margin="0,0,16,0"
                                         VerticalAlignment="Center"
                                         Background="Transparent">
                                         <TextBlock.Text>
@@ -162,6 +161,11 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTemplateColumn Header="导出">
+                        <DataGridTemplateColumn.HeaderStyle>
+                            <Style BasedOn="{StaticResource DefaultDataGridColumnHeaderStyle}" TargetType="DataGridColumnHeader">
+                                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                            </Style>
+                        </DataGridTemplateColumn.HeaderStyle>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <CheckBox
@@ -173,7 +177,7 @@
                     </DataGridTemplateColumn>
                     <DataGridTemplateColumn Header="校验结果">
                         <DataGridTemplateColumn.HeaderStyle>
-                            <Style BasedOn="{StaticResource DefaultDataGridColumnHeaderStyle}" TargetType="{x:Type DataGridColumnHeader}">
+                            <Style BasedOn="{StaticResource DefaultDataGridColumnHeaderStyle}" TargetType="DataGridColumnHeader">
                                 <Setter Property="HorizontalContentAlignment" Value="Center" />
                             </Style>
                         </DataGridTemplateColumn.HeaderStyle>
@@ -190,7 +194,7 @@
                                     <Label
                                         Grid.Column="0"
                                         Padding="3"
-                                        Background="White"
+                                        Background="{Binding Background, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGridRow}}"
                                         BorderThickness="0"
                                         Content="{Binding HashCmpResult, Converter={StaticResource ComparisonResultToIconFontTextCvt}}"
                                         FontFamily="{StaticResource IconFont}"
