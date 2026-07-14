@@ -863,13 +863,12 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <ComboBox
-                                Margin="2"
+                                Margin="4"
                                 VerticalAlignment="Center"
                                 DisplayMemberPath="Display"
                                 ItemsSource="{x:Static pagemodels:SettingsViewModel.AvailableOutputTypes}"
                                 SelectedValue="{Binding SelectedOutputType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 SelectedValuePath="ItemValue"
-                                Style="{StaticResource ComboBoxStyle2}"
                                 ToolTip="指定计算哈希结果的显示方式：&#10;Base64：以 Base64 编码字符显示计算结果，某些软件配置需要此格式&#10;Hex大写：常用的显示方式，以十六进制大写字母方式显示计算结果&#10;Hex小写：常用的显示方式，以十六进制小写字母方式显示计算结果" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
