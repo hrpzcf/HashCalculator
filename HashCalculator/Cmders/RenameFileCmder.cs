@@ -4,8 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
+using HashCalculator.Others;
 using HashCalculator.ViewModels.Pages;
-using HashCalculator.ViewModels.Windows;
 using HashCalculator.Views.Windows;
 using Wpfctrls = Wpf.Ui.Controls;
 
@@ -13,7 +13,6 @@ namespace HashCalculator
 {
     internal class RenameFileCmder : AbsHashesCmder
     {
-        private readonly AlgoInOutModel[] _algos;
         private RelayCommand renameFilesCmd;
         private RenameFileMethod methodForRenameFile;
         private bool automaticallyFocusAlgorithm = true;
@@ -23,15 +22,9 @@ namespace HashCalculator
 
         public override ContentControl UserInterface { get; }
 
-        public override string Display => "重命名操作目标所指文件";
+        public override string Display => "重命名操作目标所指的文件";
 
         public override string Description => "使用指定算法和指定格式的哈希值作为文件名重命名操作目标所指的文件。";
-
-        public GenericItemModel[] OutputTypes { get; } = new GenericItemModel[]
-        {
-            new GenericItemModel("十六进制小写", OutputType.BinaryLower),
-            new GenericItemModel("十六进制大写", OutputType.BinaryUpper),
-        };
 
         public OutputType BeingUsedOutput { get; set; } = OutputType.BinaryLower;
 
@@ -42,8 +35,6 @@ namespace HashCalculator
         }
 
         public AlgoType SelectedAlgorithmType { get; set; }
-
-        public AlgoInOutModel[] AlgoInOutModels => this._algos;
 
         public string FileNameSeparator
         {
@@ -59,15 +50,14 @@ namespace HashCalculator
 
         public bool CheckIfUsingDistinctFilesFilter { get; set; } = true;
 
-        public RenameFileCmder() : this(HomeViewModel.HashViewModels)
+        public RenameFileCmder() : this(HashModelStore.HashViewModels)
         {
         }
 
         public RenameFileCmder(IEnumerable<HashViewModel> models) : base(models)
         {
-            this._algos = AlgosPanelPageModel.ProvidedAlgos;
-            this.SelectedAlgorithmType = this._algos[0].AlgoType;
             this.UserInterface = new RenameFileCmderCtrl(this);
+            this.SelectedAlgorithmType = AlgosPanelViewModel.ProvidedAlgos[0].AlgoType;
         }
 
         private void RenameFilesAction(object param)
@@ -197,5 +187,18 @@ namespace HashCalculator
                 return this.renameFilesCmd;
             }
         }
+
+        public static GenericItemModel[] AvailableOutputTypes { get; } = new GenericItemModel[]
+        {
+            new GenericItemModel("十六进制小写", OutputType.BinaryLower),
+            new GenericItemModel("十六进制大写", OutputType.BinaryUpper),
+        };
+
+        public static GenericItemModel[] AvailableRenameFileMethods { get; } = new GenericItemModel[]
+        {
+            new GenericItemModel("添加到原文件名的后面", RenameFileMethod.AddToEnd),
+            new GenericItemModel("添加到原文件名的前面", RenameFileMethod.AddToFront),
+            new GenericItemModel("使用哈希值代替原文件名", RenameFileMethod.ReplaceAll),
+        };
     }
 }

@@ -74,7 +74,7 @@
                                             <CheckBox
                                                 VerticalAlignment="Center"
                                                 Content="{Binding Display}"
-                                                Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ComboBoxItem}, Path=Foreground}"
+                                                Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ComboBox}, Path=Foreground}"
                                                 IsChecked="{Binding Selected}" />
                                         </DataTemplate>
                                     </ComboBox.ItemTemplate>

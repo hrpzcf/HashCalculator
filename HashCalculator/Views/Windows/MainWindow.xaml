@@ -8,8 +8,8 @@
     xmlns:winmodels="clr-namespace:HashCalculator.ViewModels.Windows"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="{x:Static local:Info.Title}"
-    Width="{Binding Source={x:Static local:Settings.Current}, Path=MainWndWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-    Height="{Binding Source={x:Static local:Settings.Current}, Path=MainWndHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+    Width="{Binding Source={x:Static local:Settings.Current}, Path=MainWndWidth, Mode=TwoWay}"
+    Height="{Binding Source={x:Static local:Settings.Current}, Path=MainWndHeight, Mode=TwoWay}"
     d:DataContext="{d:DesignInstance Type=winmodels:MainViewModel}"
     d:Height="300"
     d:Width="1100"
@@ -17,46 +17,20 @@
     Closing="MainWindowClosing"
     ExtendsContentIntoTitleBar="True"
     Icon="/Images/icon.ico"
+    Left="{Binding Source={x:Static local:Settings.Current}, Path=MainWindowLeft, Mode=TwoWay}"
     Loaded="MainWindowLoaded"
     SnapsToDevicePixels="True"
+    Top="{Binding Source={x:Static local:Settings.Current}, Path=MainWindowTop, Mode=TwoWay}"
     Topmost="{Binding Source={x:Static local:Settings.Current}, Path=MainWndTopmost}"
     UseLayoutRounding="True"
-    WindowState="{Binding Source={x:Static local:Settings.Current}, Path=MainWindowState, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+    WindowState="{Binding Source={x:Static local:Settings.Current}, Path=MainWindowState, Mode=TwoWay}"
     mc:Ignorable="d">
-    <wpfui:FluentWindow.Top>
-        <MultiBinding Converter="{StaticResource MainWndTopCvt}" Mode="TwoWay">
-            <Binding
-                Mode="TwoWay"
-                Path="MainWindowTop"
-                Source="{x:Static local:Settings.Current}"
-                UpdateSourceTrigger="PropertyChanged" />
-            <Binding
-                Mode="OneWayToSource"
-                Path="FilterAndCmderWndTop"
-                Source="{x:Static local:Settings.Current}"
-                UpdateSourceTrigger="PropertyChanged" />
-        </MultiBinding>
-    </wpfui:FluentWindow.Top>
-    <wpfui:FluentWindow.Left>
-        <MultiBinding Converter="{StaticResource MainWndLeftCvt}" Mode="TwoWay">
-            <Binding
-                Mode="TwoWay"
-                Path="MainWindowLeft"
-                Source="{x:Static local:Settings.Current}"
-                UpdateSourceTrigger="PropertyChanged" />
-            <Binding
-                Mode="OneWayToSource"
-                Path="FilterAndCmderWndLeft"
-                Source="{x:Static local:Settings.Current}"
-                UpdateSourceTrigger="PropertyChanged" />
-        </MultiBinding>
-    </wpfui:FluentWindow.Left>
     <Grid>
         <wpfui:NavigationView
             x:Name="NavigationView"
             FooterMenuItemsSource="{Binding FooterItems, Mode=OneWay}"
             IsFooterSeparatorVisible="False"
-            IsPaneOpen="{Binding Source={x:Static local:Settings.Current}, Path=IsMainWindowNavigationViewPaneOpen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            IsPaneOpen="{Binding Source={x:Static local:Settings.Current}, Path=IsMainWindowNavigationViewPaneOpen, Mode=TwoWay}"
             MenuItemsSource="{Binding MenuItems, Mode=OneWay}"
             OpenPaneLength="210"
             PaneDisplayMode="Left"

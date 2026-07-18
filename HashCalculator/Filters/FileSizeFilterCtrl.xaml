@@ -5,70 +5,50 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pagemodels="clr-namespace:HashCalculator.ViewModels.Pages"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     d:DataContext="{d:DesignInstance Type=local:FileSizeFilter}"
-    d:DesignHeight="160"
-    d:DesignWidth="350"
+    d:DesignWidth="600"
     mc:Ignorable="d">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" MinWidth="100" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
-        <TextBlock
-            Grid.Row="0"
-            Grid.Column="0"
-            VerticalAlignment="Center"
-            Text="文件大小下限：" />
-        <TextBox
-            Grid.Row="0"
-            Grid.Column="1"
-            VerticalAlignment="Center"
-            Text="{Binding MinFileSize, Converter={StaticResource StringToDoubleDefaultZeroCvt}}" />
-        <ComboBox
-            Grid.Row="0"
-            Grid.Column="2"
-            MinWidth="47"
-            Margin="4,0,0,0"
-            VerticalAlignment="Center"
-            DisplayMemberPath="Display"
-            ItemsSource="{Binding Items}"
-            SelectedItem="{Binding MinSizeUnit}" />
-        <TextBlock
-            Grid.Row="1"
-            Grid.Column="0"
-            Margin="0,4,0,0"
-            VerticalAlignment="Center"
-            Text="文件大小上限：" />
-        <TextBox
-            Grid.Row="1"
-            Grid.Column="1"
-            Margin="0,4,0,0"
-            VerticalAlignment="Center"
-            Text="{Binding MaxFileSize, Converter={StaticResource StringToDoubleDefaultZeroCvt}}" />
-        <ComboBox
-            Grid.Row="1"
-            Grid.Column="2"
-            MinWidth="47"
-            Margin="4,4,0,0"
-            VerticalAlignment="Center"
-            DisplayMemberPath="Display"
-            ItemsSource="{Binding Items}"
-            SelectedItem="{Binding MaxSizeUnit}" />
-        <TextBlock
-            Grid.Row="2"
-            Grid.Column="0"
-            Grid.ColumnSpan="4"
-            Margin="0,4,0,0"
-            FontSize="8pt"
-            Style="{StaticResource DescTextBlockStyle}"
-            Text="如果【文件大小上限 &lt; 文件大小下限】则代表不设上限" />
-    </Grid>
+    <StackPanel>
+        <wpfui:CardControl>
+            <wpfui:CardControl.Header>
+                <wpfui:TextBlock FontTypography="BodyStrong" Text="文件大小下限" />
+            </wpfui:CardControl.Header>
+            <StackPanel Orientation="Horizontal">
+                <TextBox
+                    MinWidth="100"
+                    VerticalAlignment="Center"
+                    Text="{Binding MinFileSize, Converter={StaticResource StringToDoubleDefaultZeroCvt}}" />
+                <ComboBox
+                    MinWidth="50"
+                    DisplayMemberPath="Display"
+                    ItemsSource="{Binding Items}"
+                    SelectedItem="{Binding MinSizeUnit}" />
+            </StackPanel>
+        </wpfui:CardControl>
+        <wpfui:CardControl Margin="0,4,0,0">
+            <wpfui:CardControl.Header>
+                <StackPanel>
+                    <wpfui:TextBlock FontTypography="BodyStrong" Text="文件大小上限" />
+                    <wpfui:TextBlock
+                        FontTypography="Caption"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="如果【文件大小上限 &lt; 文件大小下限】则代表不设上限。"
+                        TextWrapping="WrapWithOverflow" />
+                </StackPanel>
+            </wpfui:CardControl.Header>
+            <StackPanel Orientation="Horizontal">
+                <TextBox
+                    MinWidth="100"
+                    VerticalAlignment="Center"
+                    Text="{Binding MaxFileSize, Converter={StaticResource StringToDoubleDefaultZeroCvt}}" />
+                <ComboBox
+                    MinWidth="50"
+                    DisplayMemberPath="Display"
+                    ItemsSource="{Binding Items}"
+                    SelectedItem="{Binding MaxSizeUnit}" />
+            </StackPanel>
+        </wpfui:CardControl>
+    </StackPanel>
 </UserControl>

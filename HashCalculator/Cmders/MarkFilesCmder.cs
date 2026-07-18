@@ -5,8 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
+using HashCalculator.Others;
 using HashCalculator.ViewModels.Pages;
-using HashCalculator.ViewModels.Windows;
 using HashCalculator.Views.Windows;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Wpfctrls = Wpf.Ui.Controls;
@@ -17,8 +17,8 @@ namespace HashCalculator
     {
         private RelayCommand selectFolderCmd;
         private RelayCommand generateMarkedFilesCmd;
-        private string directoryUsedToSaveFiles;
         private EditFileOption markFilesOption;
+        private string directoryUsedToSaveFiles;
 
         private static readonly SizeDelegates delegates = new SizeDelegates()
         {
@@ -30,10 +30,10 @@ namespace HashCalculator
 
         public override ContentControl UserInterface { get; }
 
-        public override string Display => "添加标记改变文件哈希值";
+        public override string Display => "添加标记改变文件的哈希值";
 
-        public override string Description => "给文件添加哈希标记以改变其哈希值，部分文件可正常使用，一般用于避过网络平台的相同文件检测。\n" +
-            "对于改变哈希值后不能正常使用的文件，用【还原被改变哈希值的文件】对其进行还原即可得到原文件。";
+        public override string Description => "给文件添加哈希标记以改变其哈希值，部分文件可正常使用，一般用于在某些" +
+            "情况下避过相同文件检测。对于改变哈希值后不能正常使用的文件，用【还原被改变哈希值的文件】对其进行还原即可得到原文件。";
 
         public EditFileOption MarkFilesOption
         {
@@ -49,7 +49,7 @@ namespace HashCalculator
 
         public bool CheckIfUsingDistinctFilesFilter { get; set; } = true;
 
-        public MarkFilesCmder() : this(HomeViewModel.HashViewModels)
+        public MarkFilesCmder() : this(HashModelStore.HashViewModels)
         {
         }
 
@@ -242,5 +242,12 @@ namespace HashCalculator
                 return this.generateMarkedFilesCmd;
             }
         }
+
+        public static GenericItemModel[] AvailableMarkFilesOptions { get; } = new GenericItemModel[]
+        {
+            new GenericItemModel("直接把哈希标记写入到原文件上", EditFileOption.OriginalFile),
+            new GenericItemModel("在原文件所在目录创建副本并写入标记", EditFileOption.NewInSameLocation),
+            new GenericItemModel("在以下目录创建副本并写入标记", EditFileOption.NewInNewLocation),
+        };
     }
 }

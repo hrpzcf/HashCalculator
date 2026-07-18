@@ -61,7 +61,7 @@ namespace HashCalculator
 
         public EqualHashByteFilter()
         {
-            this._algos = AlgosPanelPageModel.ProvidedAlgos.Select(
+            this._algos = AlgosPanelViewModel.ProvidedAlgos.Select(
                 i => i.NewAlgoInOutModel()).ToArray();
             this.Param = this._algos[0];
             this.UserInterface = new EqualHashByteFilterCtrl(this);

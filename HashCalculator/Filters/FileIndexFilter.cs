@@ -18,7 +18,6 @@ namespace HashCalculator
 
         public FileIndexFilter()
         {
-            this.Selected = true;
             this.UserInterface = new FileIndexFilterCtrl(this);
         }
 

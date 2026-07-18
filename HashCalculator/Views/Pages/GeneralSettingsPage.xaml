@@ -207,7 +207,7 @@
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            Text="所有任务完成计算后使用颜色来标记哈希值相同的行，此项功能是筛选与操作面板的【相同哈希值】筛选器的便捷版，只关注当前算法。"
+                            Text="所有任务完成计算后使用颜色来标记哈希值相同的行，此项功能是筛选页面的【相同哈希值】筛选器的便捷版，只关注当前算法。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
                 </wpfui:CardControl.Header>

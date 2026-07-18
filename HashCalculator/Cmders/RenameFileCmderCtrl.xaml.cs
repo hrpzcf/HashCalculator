@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Windows.Controls;
 using System.Windows.Input;
+using HashCalculator.Views.Windows;
 
 namespace HashCalculator
 {
@@ -20,8 +21,7 @@ namespace HashCalculator
             if (e.Text.IndexOfAny(invalidFileNameChars) != -1)
             {
                 e.Handled = true;
-                NotificationSender.ShowMessageBox(
-                    FilterAndCmdPanel.Current, "提示", $"这个字符(串)不能作为文件名：{e.Text}");
+                NotificationSender.ShowMessageBox(MainWindow.Current, "提示", $"这些字符不能作为文件名：{e.Text}");
             }
         }
     }

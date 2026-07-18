@@ -256,7 +256,7 @@ namespace HashCalculator
 
         public static GenericItemModel[] GenericItemModelsFromProvidedAlgos()
         {
-            return AlgosPanelPageModel.ProvidedAlgos.Select(
+            return AlgosPanelViewModel.ProvidedAlgos.Select(
                 i => new GenericItemModel(i.AlgoName, i.AlgoType.ToString())).ToArray();
         }
     }

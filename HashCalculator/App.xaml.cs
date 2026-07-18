@@ -42,7 +42,10 @@ public partial class App : Application
             services.AddSingleton<ConfigSettingsPage>();
             services.AddSingleton<AboutSettingsPage>();
             services.AddSingleton<AlgosPanelPage>();
-            services.AddSingleton<AlgosPanelPageModel>();
+            services.AddSingleton<AlgosPanelViewModel>();
+            services.AddSingleton<DataGridFiltersPage>();
+            services.AddSingleton<DataGridOperationsPage>();
+            services.AddSingleton<FilterOperationModel>();
         }).Build();
 
     public static T GetRequiredService<T>() where T : class

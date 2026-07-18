@@ -5,122 +5,88 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pagemodels="clr-namespace:HashCalculator.ViewModels.Pages"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     d:DataContext="{d:DesignInstance Type=local:MarkFilesCmder}"
-    d:DesignHeight="200"
-    d:DesignWidth="320"
+    d:DesignWidth="600"
     mc:Ignorable="d">
-    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <TextBlock
-                Grid.Row="0"
-                Grid.Column="0"
-                Grid.ColumnSpan="3"
-                Text="如何给文件添加哈希标记以改变文件的哈希值：" />
-            <RadioButton
-                Grid.Row="1"
-                Grid.Column="0"
-                Grid.ColumnSpan="3"
-                Margin="16,2,0,0"
-                HorizontalAlignment="Left"
-                Content="直接把哈希标记添加到目标文件上"
-                IsChecked="{Binding MarkFilesOption, Converter={StaticResource EditOriginalFileToTrueCvt}}" />
-            <RadioButton
-                Grid.Row="2"
-                Grid.Column="0"
-                Grid.ColumnSpan="3"
-                Margin="16,2,0,0"
-                HorizontalAlignment="Left"
-                Content="在目标文件所在目录创建副本并添加标记"
-                IsChecked="{Binding MarkFilesOption, Converter={StaticResource EditNewInSameLocationToTrueCvt}}" />
-            <RadioButton
-                Grid.Row="3"
-                Grid.Column="0"
-                Grid.ColumnSpan="3"
-                Margin="16,2,0,0"
-                HorizontalAlignment="Left"
-                Content="在以下目录创建目标副本并添加标记"
-                IsChecked="{Binding MarkFilesOption, Converter={StaticResource EditNewInNewLocationToTrueCvt}}" />
-            <TextBox
-                Grid.Row="4"
-                Grid.Column="0"
-                Grid.ColumnSpan="2"
-                Margin="0,2,0,0"
-                Padding="2"
-                IsEnabled="{Binding MarkFilesOption, Converter={StaticResource EditNewInNewLocationToTrueCvt}}"
-                MaxLines="1"
-                Text="{Binding DirectoryUsedToSaveFiles}" />
+    <StackPanel>
+        <wpfui:CardControl>
+            <wpfui:CardControl.Header>
+                <StackPanel>
+                    <wpfui:TextBlock FontTypography="BodyStrong" Text="把哈希标记写入文件的方式" />
+                    <wpfui:TextBlock
+                        FontTypography="Caption"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="选择如何给文件写入哈希标记以改变文件的哈希值。"
+                        TextWrapping="WrapWithOverflow" />
+                </StackPanel>
+            </wpfui:CardControl.Header>
+            <ComboBox
+                DisplayMemberPath="Display"
+                ItemsSource="{x:Static local:MarkFilesCmder.AvailableMarkFilesOptions}"
+                SelectedValue="{Binding MarkFilesOption, Mode=TwoWay}"
+                SelectedValuePath="ItemValue" />
+        </wpfui:CardControl>
+        <wpfui:CardControl Margin="0,4,0,0" IsEnabled="{Binding MarkFilesOption, Converter={StaticResource EditNewInNewLocationToTrueCvt}}">
+            <wpfui:CardControl.Header>
+                <StackPanel>
+                    <wpfui:TextBlock FontTypography="BodyStrong" Text="指定在此目录创建副本" />
+                    <wpfui:TextBlock
+                        FontTypography="Caption"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="当上面设置项选择“在以下目录创建副本并写入标记”时要使用的目录。"
+                        TextWrapping="WrapWithOverflow" />
+                </StackPanel>
+            </wpfui:CardControl.Header>
+            <Grid MinWidth="400">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBox
+                    Grid.Column="0"
+                    MaxLines="1"
+                    Text="{Binding DirectoryUsedToSaveFiles}" />
+                <Button
+                    Grid.Column="1"
+                    Margin="4,0,0,0"
+                    Command="{Binding SelectFolderCmd}"
+                    Content="..." />
+            </Grid>
+        </wpfui:CardControl>
+        <wpfui:CardControl Margin="0,4,0,0">
+            <wpfui:CardControl.Header>
+                <StackPanel>
+                    <wpfui:TextBlock FontTypography="BodyStrong" Text="检查是否应用【有效的文件】筛选器" />
+                    <wpfui:TextBlock
+                        FontTypography="Caption"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="检查当前显示的所有行是否都已经经过【有效的文件】筛选器的筛选以避免误操作。"
+                        TextWrapping="WrapWithOverflow" />
+                </StackPanel>
+            </wpfui:CardControl.Header>
+            <wpfui:ToggleSwitch IsChecked="{Binding CheckIfUsingDistinctFilesFilter, Mode=TwoWay}" />
+        </wpfui:CardControl>
+        <wpfui:CardControl Margin="0,4,0,0">
+            <wpfui:CardControl.Header>
+                <StackPanel>
+                    <wpfui:TextBlock FontTypography="BodyStrong" Text="开始执行哈希标记写入操作" />
+                    <wpfui:TextBlock
+                        FontTypography="Caption"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="此工具只处理任务状态为未开始和已成功的操作目标；添加的哈希标记由目标当前哈希值(如果有)和随机数据等构成；处理时时遇到同名文件自动添加数字后缀，不会覆盖文件。"
+                        TextWrapping="WrapWithOverflow" />
+                </StackPanel>
+            </wpfui:CardControl.Header>
             <Button
-                Grid.Row="4"
-                Grid.Column="2"
-                Margin="4,2,0,0"
-                Padding="4,2"
-                Command="{Binding SelectFolderCmd}"
-                Content="..."
-                IsEnabled="{Binding MarkFilesOption, Converter={StaticResource EditNewInNewLocationToTrueCvt}}" />
-            <Button
-                Grid.Row="5"
-                Grid.Column="0"
-                Margin="0,4,0,0"
                 Padding="16,6"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Center"
                 Background="DarkCyan"
                 BorderThickness="1"
                 Command="{Binding GenerateMarkedFilesCmd}"
                 Content="开始处理"
                 Foreground="White"
-                Style="{StaticResource IndepButtonStyle}"
-                ToolTip="向文件添加由算法、哈希值和随机数据等组成的哈希标记以改变文件的哈希值。" />
-            <CheckBox
-                Grid.Row="5"
-                Grid.Column="1"
-                Grid.ColumnSpan="2"
-                Margin="4,4,0,0"
-                VerticalAlignment="Center"
-                Content="检查是否应用了【有效的文件】筛选器"
-                IsChecked="{Binding CheckIfUsingDistinctFilesFilter}"
-                ToolTip="检查当前显示的所有行是否都已经经过【有效的文件】筛选器的筛选。" />
-            <TextBlock
-                Grid.Row="6"
-                Grid.Column="0"
-                Grid.ColumnSpan="3"
-                Margin="0,4,0,0"
-                FontSize="8pt"
-                Foreground="OrangeRed"
-                Style="{StaticResource DescTextBlockStyle}"
-                Text="此工具只处理任务状态为未开始和已成功的操作目标" />
-            <TextBlock
-                Grid.Row="7"
-                Grid.Column="0"
-                Grid.ColumnSpan="3"
-                FontSize="8pt"
-                Foreground="OrangeRed"
-                Style="{StaticResource DescTextBlockStyle}"
-                Text="添加的哈希标记由目标当前哈希值(如果有)和随机数据等构成" />
-            <TextBlock
-                Grid.Row="8"
-                Grid.Column="0"
-                Grid.ColumnSpan="4"
-                FontSize="8pt"
-                Foreground="OrangeRed"
-                Text="处理时时遇到同名文件自动添加数字后缀，不会覆盖文件" />
-        </Grid>
-    </ScrollViewer>
+                Style="{StaticResource IndepButtonStyle}" />
+        </wpfui:CardControl>
+    </StackPanel>
 </UserControl>

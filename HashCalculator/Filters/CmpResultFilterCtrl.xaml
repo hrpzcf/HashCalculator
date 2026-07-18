@@ -5,36 +5,49 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pagemodels="clr-namespace:HashCalculator.ViewModels.Pages"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     d:DataContext="{d:DesignInstance local:CmpResultFilter}"
     d:DesignHeight="160"
     d:DesignWidth="300"
     mc:Ignorable="d">
-    <StackPanel Orientation="Horizontal">
-        <StackPanel>
+    <StackPanel>
+        <wpfui:CardControl>
+            <wpfui:CardControl.Header>
+                <StackPanel>
+                    <wpfui:TextBlock FontTypography="BodyStrong" Text="要筛选的校验结果" />
+                    <wpfui:TextBlock
+                        FontTypography="Caption"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="要筛选的校验结果可多选，所有符合被选中的校验结果的行都会被筛选出来。"
+                        TextWrapping="WrapWithOverflow" />
+                </StackPanel>
+            </wpfui:CardControl.Header>
             <ComboBox ItemsSource="{Binding Items}" SelectedIndex="0">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
-                        <CheckBox
-                            VerticalContentAlignment="Center"
-                            Content="{Binding Display}"
-                            Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ComboBoxItem}, Path=Foreground}"
-                            IsChecked="{Binding Selected}" />
+                        <wpfui:ToggleSwitch Content="{Binding Display}" IsChecked="{Binding Selected}" />
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
-            <DockPanel Margin="0,4,0,0">
-                <TextBlock
-                    VerticalAlignment="Center"
-                    DockPanel.Dock="Left"
-                    Text="筛选逻辑：" />
-                <ComboBox
-                    DisplayMemberPath="Display"
-                    DockPanel.Dock="Right"
-                    ItemsSource="{Binding FilterLogics}"
-                    SelectedValue="{Binding Param}"
-                    SelectedValuePath="ItemValue"
-                    ToolTip="[要求] 指的是下拉列表中已勾选的校验结果集合&#10;[满足任意要求] 该行的所有校验结果中至少有一个校验结果满足了其中一个要求&#10;[严格满足要求] 该行的所有校验结果涵盖了要求中的所有校验结果，且不含要求以外的校验结果&#10;[在要求范围内] 该行的所有校验结果都在要求的多个校验结果所组成的范围之内&#10;[涵盖所有要求] 该行的所有校验结果涵盖了要求中的所有校验结果，可能含有要求以外的校验结果" />
-            </DockPanel>
-        </StackPanel>
+        </wpfui:CardControl>
+        <wpfui:CardControl Margin="0,4,0,0">
+            <wpfui:CardControl.Header>
+                <StackPanel>
+                    <wpfui:TextBlock FontTypography="BodyStrong" Text="对于多个条件的筛选逻辑" />
+                    <wpfui:TextBlock
+                        FontTypography="Caption"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="筛选逻辑列表中的 [要求] 指的是以上下拉列表中已勾选的校验结果集合，其中：&#10;[满足任意要求] 该行的所有校验结果中至少有一个校验结果满足了其中一个要求&#10;[严格满足要求] 该行的所有校验结果涵盖了要求中的所有校验结果，且不含要求以外的校验结果。&#10;[在要求范围内] 该行的所有校验结果都在要求的多个校验结果所组成的范围之内。&#10;[涵盖所有要求] 该行的所有校验结果涵盖了要求中的所有校验结果，可能含有要求以外的校验结果。"
+                        TextWrapping="WrapWithOverflow" />
+                </StackPanel>
+            </wpfui:CardControl.Header>
+            <ComboBox
+                MinWidth="150"
+                DisplayMemberPath="Display"
+                ItemsSource="{Binding FilterLogics}"
+                SelectedValue="{Binding Param}"
+                SelectedValuePath="ItemValue" />
+        </wpfui:CardControl>
     </StackPanel>
 </UserControl>

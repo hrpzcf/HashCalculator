@@ -5,44 +5,47 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pagemodels="clr-namespace:HashCalculator.ViewModels.Pages"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     d:DataContext="{d:DesignInstance Type=local:HashStringFilter}"
-    d:DesignHeight="160"
-    d:DesignWidth="300"
+    d:DesignWidth="600"
     mc:Ignorable="d">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
-        <wpfui:TextBox
-            Grid.Row="0"
-            Grid.ColumnSpan="3"
-            Padding="4,2"
-            VerticalAlignment="Center"
-            AcceptsReturn="True"
-            PlaceholderText="每行一个哈希值，按回车换行"
-            Text="{Binding Items, Mode=OneWayToSource, Converter={StaticResource MultiLineTextToStrArrayCvt}}"
-            TextWrapping="WrapWithOverflow" />
-        <TextBlock
-            Grid.Row="1"
-            Grid.Column="0"
-            Margin="0,4,0,0"
-            VerticalAlignment="Center"
-            Text="筛选逻辑：" />
-        <ComboBox
-            Grid.Row="1"
-            Grid.Column="1"
-            Margin="0,4,0,0"
-            DisplayMemberPath="Display"
-            ItemsSource="{Binding FilterLogics}"
-            SelectedValue="{Binding Param}"
-            SelectedValuePath="ItemValue"
-            ToolTip="[要求] 指的是上方输入框中已输入的哈希值集合&#10;[满足任意要求] 该行的所有哈希值中至少有一个哈希值满足了其中一个要求&#10;[严格满足要求] 该行的所有哈希值涵盖了要求中的所有哈希值，且不含要求以外的哈希值&#10;[在要求范围内] 该行的所有哈希值都在要求的多个哈希值所组成的范围之内&#10;[涵盖所有要求] 该行的所有哈希值涵盖了要求中的所有哈希值，可能含有要求以外的哈希值" />
-    </Grid>
+    <StackPanel>
+        <wpfui:CardControl>
+            <wpfui:CardControl.Header>
+                <StackPanel>
+                    <wpfui:TextBlock FontTypography="BodyStrong" Text="要筛选出来的哈希值" />
+                    <wpfui:TextBlock
+                        FontTypography="Caption"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="要筛选的哈希值与显示格式无关，比如主页显示十六进制格式，此处填 Base64 格式也可以搜到，所有符合被选中的哈希值的行都会被筛选出来。"
+                        TextWrapping="WrapWithOverflow" />
+                </StackPanel>
+            </wpfui:CardControl.Header>
+            <wpfui:TextBox
+                MinWidth="400"
+                AcceptsReturn="True"
+                PlaceholderText="每行一个哈希值，按回车换行"
+                Text="{Binding Items, Mode=OneWayToSource, Converter={StaticResource MultiLineTextToStrArrayCvt}}"
+                TextWrapping="WrapWithOverflow" />
+        </wpfui:CardControl>
+        <wpfui:CardControl Margin="0,4,0,0">
+            <wpfui:CardControl.Header>
+                <StackPanel>
+                    <wpfui:TextBlock FontTypography="BodyStrong" Text="对于多个条件的筛选逻辑" />
+                    <wpfui:TextBlock
+                        FontTypography="Caption"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="筛选逻辑列表中的 [要求] 指的是以上输入框中已输入的哈希值集合，其中：&#10;[满足任意要求] 该行的所有哈希值中至少有一个哈希值满足了其中一个要求&#10;[严格满足要求] 该行的所有哈希值涵盖了要求中的所有哈希值，且不含要求以外的哈希值。&#10;[在要求范围内] 该行的所有哈希值都在要求的多个哈希值所组成的范围之内。&#10;[涵盖所有要求] 该行的所有哈希值涵盖了要求中的所有哈希值，可能含有要求以外的哈希值。"
+                        TextWrapping="WrapWithOverflow" />
+                </StackPanel>
+            </wpfui:CardControl.Header>
+            <ComboBox
+                MinWidth="150"
+                DisplayMemberPath="Display"
+                ItemsSource="{Binding FilterLogics}"
+                SelectedValue="{Binding Param}"
+                SelectedValuePath="ItemValue" />
+        </wpfui:CardControl>
+    </StackPanel>
 </UserControl>

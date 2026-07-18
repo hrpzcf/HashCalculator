@@ -20,6 +20,7 @@
                 <ResourceDictionary Source="/HashCalculator;component/Resources/ConverterResource.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/DescTextBlockStyles.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/IconFont.xaml" />
+                <ResourceDictionary Source="/HashCalculator;component/Resources/InfoBarStyle.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/ImageButtonStyles.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/ImgButtonTextStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>

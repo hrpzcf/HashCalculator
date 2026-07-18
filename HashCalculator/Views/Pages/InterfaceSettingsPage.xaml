@@ -123,12 +123,6 @@
             </wpfui:CardControl>
             <wpfui:CardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
-                    <wpfui:TextBlock Text="使筛选与操作窗口跟随主窗口移动" TextWrapping="WrapWithOverflow" />
-                </wpfui:CardControl.Header>
-                <wpfui:ToggleSwitch IsChecked="{Binding FilterAndCmderWndFollowsMainWnd, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-            </wpfui:CardControl>
-            <wpfui:CardControl Margin="0,4,0,0">
-                <wpfui:CardControl.Header>
                     <wpfui:TextBlock Text="显示表格中文件的图标" TextWrapping="WrapWithOverflow" />
                 </wpfui:CardControl.Header>
                 <wpfui:ToggleSwitch IsChecked="{Binding ShowFileIcon, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
@@ -171,9 +165,9 @@
                             OffContent="隐藏"
                             OnContent="显示" />
                     </wpfui:CardControl>
-                    <wpfui:CardControl Header="筛选与操作按钮">
+                    <wpfui:CardControl Header="刷新筛选按钮">
                         <wpfui:ToggleSwitch
-                            IsChecked="{Binding ShowOpenCommandPanelButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            IsChecked="{Binding ShowApplyRefreshFilterslButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             LabelPosition="Left"
                             OffContent="隐藏"
                             OnContent="显示" />

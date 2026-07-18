@@ -111,6 +111,8 @@ public class MainViewModel : BaseViewModel
         this.MenuItems = [
             new NavigationViewItem("主页", SymbolRegular.Home24, typeof(HomePage)),
             new NavigationViewItem("算法", SymbolRegular.MathFormula16, typeof(AlgosPanelPage)),
+            new NavigationViewItem("筛选", SymbolRegular.Filter12, typeof(DataGridFiltersPage)),
+            new NavigationViewItem("执行", SymbolRegular.DesktopEdit20, typeof(DataGridOperationsPage)),
         ];
         this.FooterItems = [this.SettingsNavigationItem];
     }

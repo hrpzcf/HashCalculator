@@ -5,134 +5,116 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pagemodels="clr-namespace:HashCalculator.ViewModels.Pages"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     d:DataContext="{d:DesignInstance Type=local:RestoreFilesCmder}"
-    d:DesignHeight="180"
-    d:DesignWidth="400"
+    d:DesignWidth="600"
     mc:Ignorable="d">
-    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <Grid Grid.Row="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <Button
-                    Grid.Column="0"
-                    Padding="6"
-                    VerticalAlignment="Center"
-                    Background="DarkMagenta"
-                    BorderThickness="1"
-                    Command="{Binding RestoreMarkedFilesCmd}"
-                    Content="开始还原"
-                    Foreground="White"
-                    Style="{StaticResource IndepButtonStyle}"
-                    ToolTip="还原被改变过哈希值的文件，如果保存位置有同名文件则给文件名添加数字后缀后保存。" />
-                <Button
-                    Grid.Column="1"
-                    Margin="4,0,0,0"
-                    Padding="6"
-                    VerticalAlignment="Center"
-                    Background="DarkGreen"
-                    BorderThickness="1"
-                    Command="{Binding ShowFilesHcmDataCmd}"
-                    Content="显示哈希标记"
-                    Foreground="White"
-                    Style="{StaticResource IndepButtonStyle}"
-                    ToolTip="在主窗口的【哈希标记】列中显示被改变过哈希值的文件内记录的原文件哈希值和算法。" />
-                <Button
-                    Grid.Column="2"
-                    Margin="4,0,0,0"
-                    Padding="6"
-                    VerticalAlignment="Center"
-                    Background="DarkGoldenrod"
-                    BorderThickness="1"
-                    Command="{Binding HideFilesHcmDataCmd}"
-                    Content="不显示"
-                    Foreground="White"
-                    Style="{StaticResource IndepButtonStyle}"
-                    ToolTip="清空并隐藏主窗口的【哈希标记】列。" />
-            </Grid>
-            <TextBlock
-                Grid.Row="1"
-                Margin="0,4,0,0"
-                Text="为改变哈希值而添加哈希标记的文件如何还原：" />
-            <RadioButton
-                Grid.Row="2"
-                Margin="16,2,0,0"
-                HorizontalAlignment="Left"
-                VerticalContentAlignment="Center"
-                Content="直接在目标文件上剔除哈希标记"
-                IsChecked="{Binding RestoreFilesOption, Converter={StaticResource EditOriginalFileToTrueCvt}}" />
-            <RadioButton
-                Grid.Row="3"
-                Margin="16,2,0,0"
-                HorizontalAlignment="Left"
-                VerticalContentAlignment="Center"
-                Content="在目标文件所在目录创建副本并剔除标记"
-                IsChecked="{Binding RestoreFilesOption, Converter={StaticResource EditNewInSameLocationToTrueCvt}}" />
-            <RadioButton
-                Grid.Row="4"
-                Grid.Column="0"
-                Margin="16,2,0,0"
-                HorizontalAlignment="Left"
-                VerticalContentAlignment="Center"
-                Content="在以下目录创建目标副本并剔除标记"
-                IsChecked="{Binding RestoreFilesOption, Converter={StaticResource EditNewInNewLocationToTrueCvt}}" />
-            <Grid Grid.Row="5" Margin="0,2,0,0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
+    <StackPanel>
+        <wpfui:CardControl Margin="0,4,0,0">
+            <wpfui:CardControl.Header>
+                <StackPanel>
+                    <wpfui:TextBlock FontTypography="BodyStrong" Text="如何还原添加了哈希标记的文件" />
+                    <wpfui:TextBlock
+                        FontTypography="Caption"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="选择如何还原为了改变哈希值而添加哈希标记的文件，没有标记的文件不会被还原。"
+                        TextWrapping="WrapWithOverflow" />
+                </StackPanel>
+            </wpfui:CardControl.Header>
+            <ComboBox
+                DisplayMemberPath="Display"
+                ItemsSource="{x:Static local:RestoreFilesCmder.AvailableRestoreFileOptions}"
+                SelectedValue="{Binding RestoreFilesOption, Mode=TwoWay}"
+                SelectedValuePath="ItemValue" />
+        </wpfui:CardControl>
+        <wpfui:CardControl Margin="0,4,0,0" IsEnabled="{Binding RestoreFilesOption, Converter={StaticResource EditNewInNewLocationToTrueCvt}}">
+            <wpfui:CardControl.Header>
+                <StackPanel>
+                    <wpfui:TextBlock FontTypography="BodyStrong" Text="指定在此目录创建副本" />
+                    <wpfui:TextBlock
+                        FontTypography="Caption"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="当上面设置项选择“在以下目录创建副本并剔除标记”时要使用的目录。"
+                        TextWrapping="WrapWithOverflow" />
+                </StackPanel>
+            </wpfui:CardControl.Header>
+            <StackPanel Orientation="Horizontal">
                 <TextBox
-                    Padding="2"
-                    IsEnabled="{Binding RestoreFilesOption, Converter={StaticResource EditNewInNewLocationToTrueCvt}}"
+                    MinWidth="400"
                     MaxLines="1"
                     Text="{Binding DirectoryUsedToSaveFiles}" />
                 <Button
-                    Grid.Column="1"
                     Margin="4,0,0,0"
-                    Padding="4,2"
                     Command="{Binding SelectFolderCmd}"
-                    Content="..."
-                    IsEnabled="{Binding RestoreFilesOption, Converter={StaticResource EditNewInNewLocationToTrueCvt}}" />
-            </Grid>
-            <CheckBox
-                Grid.Row="6"
-                Grid.Column="0"
-                Grid.ColumnSpan="4"
-                Margin="0,4,0,0"
-                VerticalAlignment="Center"
-                Content="检查是否应用了【有效的文件】筛选器"
-                IsChecked="{Binding CheckIfUsingDistinctFilesFilter}"
-                ToolTip="检查当前显示的所有行是否都已经经过【有效的文件】筛选器的筛选。" />
-            <TextBlock
-                Grid.Row="7"
-                Grid.Column="0"
-                Grid.ColumnSpan="4"
-                Margin="0,4,0,0"
-                FontSize="8pt"
-                Foreground="OrangeRed"
-                Text="所选的操作目标中没有哈希标记的文件将被忽略" />
-            <TextBlock
-                Grid.Row="8"
-                Grid.Column="0"
-                Grid.ColumnSpan="4"
-                FontSize="8pt"
-                Foreground="OrangeRed"
-                Text="还原时遇到同名文件自动添加数字后缀，不会覆盖文件" />
-        </Grid>
-    </ScrollViewer>
+                    Content="..." />
+            </StackPanel>
+        </wpfui:CardControl>
+        <wpfui:CardControl Margin="0,4,0,0">
+            <wpfui:CardControl.Header>
+                <StackPanel>
+                    <wpfui:TextBlock FontTypography="BodyStrong" Text="检查是否应用【有效的文件】筛选器" />
+                    <wpfui:TextBlock
+                        FontTypography="Caption"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="检查当前显示的所有行是否都已经经过【有效的文件】筛选器的筛选以避免误操作。"
+                        TextWrapping="WrapWithOverflow" />
+                </StackPanel>
+            </wpfui:CardControl.Header>
+            <wpfui:ToggleSwitch IsChecked="{Binding CheckIfUsingDistinctFilesFilter, Mode=TwoWay}" />
+        </wpfui:CardControl>
+        <wpfui:CardControl Margin="0,4,0,0">
+            <wpfui:CardControl.Header>
+                <StackPanel>
+                    <wpfui:TextBlock FontTypography="BodyStrong" Text="还原被改变过哈希值的文件" />
+                    <wpfui:TextBlock
+                        FontTypography="Caption"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="还原被改变过哈希值的文件，如果保存位置有同名文件则给文件名添加数字后缀后保存，所选的执行目标中没有哈希标记的文件将被忽略。"
+                        TextWrapping="WrapWithOverflow" />
+                </StackPanel>
+            </wpfui:CardControl.Header>
+            <Button
+                Padding="16,6"
+                Background="DarkMagenta"
+                BorderThickness="1"
+                Command="{Binding RestoreMarkedFilesCmd}"
+                Content="开始还原"
+                Foreground="White"
+                Style="{StaticResource IndepButtonStyle}" />
+        </wpfui:CardControl>
+        <wpfui:CardControl Margin="0,4,0,0">
+            <wpfui:CardControl.Header>
+                <StackPanel>
+                    <wpfui:TextBlock FontTypography="BodyStrong" Text="在主页【哈希标记】列中显示哈希标记" />
+                    <wpfui:TextBlock
+                        FontTypography="Caption"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="在主页的【哈希标记】列中显示被改变过哈希值的文件内记录的原文件哈希值和算法。"
+                        TextWrapping="WrapWithOverflow" />
+                </StackPanel>
+            </wpfui:CardControl.Header>
+            <Button
+                Padding="16,6"
+                Background="DarkGreen"
+                BorderThickness="1"
+                Command="{Binding ShowFilesHcmDataCmd}"
+                Content="显示哈希标记"
+                Foreground="White"
+                Style="{StaticResource IndepButtonStyle}" />
+        </wpfui:CardControl>
+        <wpfui:CardControl Margin="0,4,0,0">
+            <wpfui:CardControl.Header>
+                <wpfui:TextBlock FontTypography="BodyStrong" Text="清空并隐藏主页的【哈希标记】列" />
+            </wpfui:CardControl.Header>
+            <Button
+                Padding="16,6"
+                Background="DarkGoldenrod"
+                BorderThickness="1"
+                Command="{Binding HideFilesHcmDataCmd}"
+                Content="不显示"
+                Foreground="White"
+                Style="{StaticResource IndepButtonStyle}" />
+        </wpfui:CardControl>
+    </StackPanel>
 </UserControl>

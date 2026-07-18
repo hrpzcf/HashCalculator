@@ -5,7 +5,7 @@ using System.Windows.Input;
 
 namespace HashCalculator
 {
-    internal abstract class AbsHashViewFilter : BaseViewModel
+    public abstract class AbsHashViewFilter : BaseViewModel
     {
         private bool _selected = false;
 

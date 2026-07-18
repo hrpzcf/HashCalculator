@@ -5,98 +5,94 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pagemodels="clr-namespace:HashCalculator.ViewModels.Pages"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     d:DataContext="{d:DesignInstance Type=local:SelectTargetsCmder}"
-    d:DesignHeight="100"
     d:DesignWidth="500"
     mc:Ignorable="d">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
-        <WrapPanel Grid.Row="0" Grid.Column="0">
-            <Button
-                Margin="2"
-                Padding="20,6"
-                Background="DarkSlateBlue"
-                BorderThickness="1"
-                Command="{Binding SelectSameHashGroupCmd}"
-                Content="按相同哈希值组选择"
-                Foreground="WhiteSmoke"
-                Style="{StaticResource IndepButtonStyle}"
-                ToolTip="只针对【相同哈希值】筛选器的分组结果，每组选择除了第一行外的所有行，否则取消选择所有行。" />
-            <Button
-                Margin="2"
-                Padding="20,6"
-                Background="DarkSlateGray"
-                BorderThickness="1"
-                Command="{Binding SelectSameEmbeddedHashGroupCmd}"
-                Content="按相同内嵌哈希值组选择"
-                Foreground="WhiteSmoke"
-                Style="{StaticResource IndepButtonStyle}"
-                ToolTip="只针对【相同哈希值】筛选器的分组结果，每组选择除了第一行外的所有行，否则取消选择所有行。" />
-            <Button
-                Margin="2"
-                Padding="20,6"
-                Background="DarkCyan"
-                BorderThickness="1"
-                Command="{Binding SelectSameFolderGroupCmd}"
-                Content="按相同文件夹组选择"
-                Foreground="WhiteSmoke"
-                Style="{StaticResource IndepButtonStyle}"
-                ToolTip="只针对【相同文件夹】筛选器的分组结果，每组选择除了第一行外的所有行，否则取消选择所有行。" />
-            <Button
-                Margin="2"
-                Padding="20,6"
-                Background="DarkMagenta"
-                BorderThickness="1"
-                Command="{Binding SelectHybridGroupsCmd}"
-                Content="按多级嵌套分组选择"
-                Foreground="WhiteSmoke"
-                Style="{StaticResource IndepButtonStyle}"
-                ToolTip="综合考虑【相同哈希值】和【相同文件夹】的嵌套分组结果，每个最底级子组选择除了第一行外的所有行，否则取消选择所有行。" />
-            <Button
-                Margin="2"
-                Padding="20,6"
-                Background="DarkOliveGreen"
-                BorderThickness="1"
-                Command="{Binding SelectAllModelsCmd}"
-                Content="全选"
-                Foreground="WhiteSmoke"
-                Style="{StaticResource IndepButtonStyle}"
-                ToolTip="选择所有行。" />
-            <Button
-                Margin="2"
-                Padding="20,6"
-                Background="DarkBlue"
-                BorderThickness="1"
-                Command="{Binding ReverseSelectModelsCmd}"
-                Content="反选"
-                Foreground="WhiteSmoke"
-                Style="{StaticResource IndepButtonStyle}"
-                ToolTip="把所有行的选择状态改为相反状态。" />
-            <Button
-                Margin="2"
-                Padding="20,6"
-                Background="SaddleBrown"
-                BorderThickness="1"
-                Command="{Binding DeselectAllModelsCmd}"
-                Content="全不选"
-                Foreground="WhiteSmoke"
-                Style="{StaticResource IndepButtonStyle}"
-                ToolTip="取消选择所有行。" />
-        </WrapPanel>
+    <wpfui:CardControl>
+        <wpfui:CardControl.Header>
+            <StackPanel>
+                <WrapPanel>
+                    <Button
+                        Margin="2"
+                        Padding="20,6"
+                        Background="DarkSlateBlue"
+                        BorderThickness="1"
+                        Command="{Binding SelectSameHashGroupCmd}"
+                        Content="按相同哈希值组选择"
+                        Foreground="WhiteSmoke"
+                        Style="{StaticResource IndepButtonStyle}"
+                        ToolTip="只针对【相同哈希值】筛选器的分组结果，每组选择除了第一行外的所有行，否则取消选择所有行。" />
+                    <Button
+                        Margin="2"
+                        Padding="20,6"
+                        Background="DarkSlateGray"
+                        BorderThickness="1"
+                        Command="{Binding SelectSameEmbeddedHashGroupCmd}"
+                        Content="按相同内嵌哈希值组选择"
+                        Foreground="WhiteSmoke"
+                        Style="{StaticResource IndepButtonStyle}"
+                        ToolTip="只针对【相同哈希值】筛选器的分组结果，每组选择除了第一行外的所有行，否则取消选择所有行。" />
+                    <Button
+                        Margin="2"
+                        Padding="20,6"
+                        Background="DarkCyan"
+                        BorderThickness="1"
+                        Command="{Binding SelectSameFolderGroupCmd}"
+                        Content="按相同文件夹组选择"
+                        Foreground="WhiteSmoke"
+                        Style="{StaticResource IndepButtonStyle}"
+                        ToolTip="只针对【相同文件夹】筛选器的分组结果，每组选择除了第一行外的所有行，否则取消选择所有行。" />
+                    <Button
+                        Margin="2"
+                        Padding="20,6"
+                        Background="DarkMagenta"
+                        BorderThickness="1"
+                        Command="{Binding SelectHybridGroupsCmd}"
+                        Content="按多级嵌套分组选择"
+                        Foreground="WhiteSmoke"
+                        Style="{StaticResource IndepButtonStyle}"
+                        ToolTip="综合考虑【相同哈希值】和【相同文件夹】的嵌套分组结果，每个最底级子组选择除了第一行外的所有行，否则取消选择所有行。" />
+                    <Button
+                        Margin="2"
+                        Padding="20,6"
+                        Background="DarkOliveGreen"
+                        BorderThickness="1"
+                        Command="{Binding SelectAllModelsCmd}"
+                        Content="全选"
+                        Foreground="WhiteSmoke"
+                        Style="{StaticResource IndepButtonStyle}"
+                        ToolTip="选择所有行。" />
+                    <Button
+                        Margin="2"
+                        Padding="20,6"
+                        Background="DarkBlue"
+                        BorderThickness="1"
+                        Command="{Binding ReverseSelectModelsCmd}"
+                        Content="反选"
+                        Foreground="WhiteSmoke"
+                        Style="{StaticResource IndepButtonStyle}"
+                        ToolTip="把所有行的选择状态改为相反状态。" />
+                    <Button
+                        Margin="2"
+                        Padding="20,6"
+                        Background="SaddleBrown"
+                        BorderThickness="1"
+                        Command="{Binding DeselectAllModelsCmd}"
+                        Content="全不选"
+                        Foreground="WhiteSmoke"
+                        Style="{StaticResource IndepButtonStyle}"
+                        ToolTip="取消选择所有行。" />
+                </WrapPanel>
+                <wpfui:InfoBar
+                    Margin="0,8,0,0"
+                    IsOpen="{Binding ParentViewModel.IsInformationBarOpened, Mode=OneWay}"
+                    Message="可以用以上按钮来显示【操作目标】列并勾选执行目标，也可以取消后在主窗口选中多行作为目标。当主窗口显示【操作目标】列时以该列被勾选的对象为目标，不显示则以主窗口被选中的行为目标。" />
+            </StackPanel>
+        </wpfui:CardControl.Header>
         <Button
-            Grid.Row="0"
-            Grid.Column="1"
-            Margin="4,0,2,0"
             Padding="20,6"
-            VerticalAlignment="Center"
             Background="DarkGreen"
             BorderThickness="1"
             Command="{Binding CancelSelectionCmd}"
@@ -104,20 +100,5 @@
             Foreground="WhiteSmoke"
             Style="{StaticResource IndepButtonStyle}"
             ToolTip="取消选择所有行并隐藏主窗口的【操作目标】列。" />
-        <TextBlock
-            Grid.Row="1"
-            Grid.Column="0"
-            Grid.ColumnSpan="2"
-            Margin="0,4,0,0"
-            FontSize="8pt"
-            Style="{StaticResource DescTextBlockStyle}"
-            Text="可以用以上按钮来显示【操作目标】列并勾选操作目标，也可以取消后在主窗口选中多行作为目标" />
-        <TextBlock
-            Grid.Row="2"
-            Grid.Column="0"
-            Grid.ColumnSpan="2"
-            FontSize="8pt"
-            Style="{StaticResource DescTextBlockStyle}"
-            Text="当主窗口显示【操作目标】列时以该列被勾选的对象为目标，不显示则以主窗口被选中的行为目标" />
-    </Grid>
+    </wpfui:CardControl>
 </UserControl>

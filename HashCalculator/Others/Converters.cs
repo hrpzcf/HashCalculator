@@ -693,40 +693,6 @@ namespace HashCalculator
         }
     }
 
-    internal class EditOriginalFileToTrueCvt : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return value is EditFileOption option && option == EditFileOption.OriginalFile;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value is bool result && result)
-            {
-                return EditFileOption.OriginalFile;
-            }
-            return default(EditFileOption);
-        }
-    }
-
-    internal class EditNewInSameLocationToTrueCvt : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return value is EditFileOption option && option == EditFileOption.NewInSameLocation;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value is bool result && result)
-            {
-                return EditFileOption.NewInSameLocation;
-            }
-            return default(EditFileOption);
-        }
-    }
-
     internal class EditNewInNewLocationToTrueCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -866,77 +832,6 @@ namespace HashCalculator
         }
     }
 
-    internal class AssociatedMainAndFilterWndPositionCvt : IMultiValueConverter
-    {
-        /// <summary>
-        /// true 是给窗口的左上角横坐标用的，否则是纵坐标用的
-        /// </summary>
-        public bool ForLeft { get; set; }
-
-        /// <summary>
-        /// true 是给主窗口用的，否则是给【筛选和操作】窗口用的
-        /// </summary>
-        public bool ForMainWnd { get; set; }
-
-        public SettingsViewModel Settings { get; set; }
-
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (values[0] is double mainWndCoord && values[1] is double filterWndCoord)
-            {
-                return this.ForMainWnd ? mainWndCoord : filterWndCoord;
-            }
-            return Binding.DoNothing;
-        }
-
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
-        {
-            if (value is double filterOrMainWndCoord && this.Settings != null)
-            {
-                if (this.ForMainWnd)
-                {
-                    if (this.Settings.FilterAndCmderWndFollowsMainWnd)
-                    {
-                        double filterTopOrLeft = this.ForLeft ?
-                            filterOrMainWndCoord + this.Settings.FilterPanelLeftRelToMain :
-                                filterOrMainWndCoord + this.Settings.FilterPanelTopRelToMain;
-                        return new object[] { filterOrMainWndCoord, filterTopOrLeft };
-                    }
-                    else
-                    {
-                        if (!this.ForLeft)
-                        {
-                            this.Settings.FilterPanelTopRelToMain = this.Settings.FilterAndCmderWndTop -
-                                filterOrMainWndCoord;
-                        }
-                        else
-                        {
-                            this.Settings.FilterPanelLeftRelToMain = this.Settings.FilterAndCmderWndLeft -
-                                filterOrMainWndCoord;
-                        }
-                        return new object[] { filterOrMainWndCoord, Binding.DoNothing };
-                    }
-                }
-                else
-                {
-                    if (this.Settings.FilterAndCmderWndFollowsMainWnd)
-                    {
-                        if (!this.ForLeft)
-                        {
-                            this.Settings.FilterPanelTopRelToMain = filterOrMainWndCoord - this.Settings.MainWindowTop;
-                        }
-                        else
-                        {
-                            this.Settings.FilterPanelLeftRelToMain = filterOrMainWndCoord - this.Settings.MainWindowLeft;
-                        }
-                    }
-                    return new object[] { Binding.DoNothing, filterOrMainWndCoord };
-                }
-            }
-            return new object[] { Binding.DoNothing, Binding.DoNothing };
-        }
-    }
-
     internal class StateAndSelectionWayToMonitoring : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
@@ -949,37 +844,6 @@ namespace HashCalculator
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
-        }
-    }
-
-    internal class RenameFileMethodToBooleanCvt : IValueConverter
-    {
-        public RenameFileMethod Method { get; set; }
-
-        public bool Boolean { get; set; }
-
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value is RenameFileMethod method && method == this.Method)
-            {
-                return this.Boolean;
-            }
-            else
-            {
-                return !this.Boolean;
-            }
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value is bool boolean && boolean == this.Boolean)
-            {
-                return this.Method;
-            }
-            else
-            {
-                return Binding.DoNothing;
-            }
         }
     }
 

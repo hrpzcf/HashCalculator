@@ -28,10 +28,6 @@ public class SettingsViewModel : BaseViewModel
     private double algosPanelHeight = 410.0;
     private double hashDetailsWidth = 1200.0;
     private double hashDetailsHeight = 800.0;
-    private double filterAndCmderWndWidth = 540.0;
-    private double filterAndCmderWndHeight = 460.0;
-    private double filterAndCmderWndTop = double.NaN;
-    private double filterAndCmderWndLeft = double.NaN;
     private double shellMenuEditorWidth = 600.0;
     private double shellMenuEditorHeight = 400.0;
     private double shellSubmenuEditorWidth = 400.0;
@@ -69,7 +65,6 @@ public class SettingsViewModel : BaseViewModel
     private bool useExistingClipboardTextForCheck = false;
     private bool monitorNewHashStringInClipboard = true;
     private bool switchMainWndFgWhenNewHashCopied = true;
-    private bool filterAndCmderWndFollowsMainWnd = false;
     private bool caseOfCopiedAlgNameFollowsOutputType = false;
     private bool exportInMainControlsChildExportsInRow = false;
     private bool useUnixStyleLineBreaks = true;
@@ -84,7 +79,7 @@ public class SettingsViewModel : BaseViewModel
 
     // 主窗口顶部各按钮的显示与否
     private bool showSelectedOutputTypeButton = true;
-    private bool showOpenCommandPanelButton = true;
+    private bool showApplyRefreshFilterslButton = true;
     private bool showSelectFilesToHashButton = true;
     private bool showSelectFoldersToHashButton = true;
     private bool showStopEnumeratingPackageButton = true;
@@ -119,7 +114,7 @@ public class SettingsViewModel : BaseViewModel
     private string hashValueColumnLeftDoubleClick = CmdStrShowDetails;
     private string durationColumnLeftDoubleClick = string.Empty;
 
-    private AlgoInOutModel selectedAlgoInOutModel = AlgosPanelPageModel.ProvidedAlgos[0];
+    private AlgoInOutModel selectedAlgoInOutModel = AlgosPanelViewModel.ProvidedAlgos[0];
     private TemplateForExportModel selectedExportTemplate;
     private TemplateForChecklistModel selectedChecklistTemplate;
     private ObservableCollection<TemplateForExportModel> templatesForExport = null;
@@ -313,34 +308,6 @@ public class SettingsViewModel : BaseViewModel
         set => this.SetPropNotify(ref this.hashDetailsHeight, value);
     }
 
-    public double FilterAndCmderWndWidth
-    {
-        get => this.filterAndCmderWndWidth;
-        set => this.SetPropNotify(ref this.filterAndCmderWndWidth, value);
-    }
-
-    public double FilterAndCmderWndHeight
-    {
-        get => this.filterAndCmderWndHeight;
-        set => this.SetPropNotify(ref this.filterAndCmderWndHeight, value);
-    }
-
-    public double FilterAndCmderWndTop
-    {
-        get => this.filterAndCmderWndTop;
-        set => this.SetPropNotify(ref this.filterAndCmderWndTop, value);
-    }
-
-    public double FilterAndCmderWndLeft
-    {
-        get => this.filterAndCmderWndLeft;
-        set => this.SetPropNotify(ref this.filterAndCmderWndLeft, value);
-    }
-
-    public double FilterPanelTopRelToMain { get; set; }
-
-    public double FilterPanelLeftRelToMain { get; set; }
-
     public double ShellMenuEditorWidth
     {
         get => this.shellMenuEditorWidth;
@@ -531,10 +498,10 @@ public class SettingsViewModel : BaseViewModel
         set => this.SetPropNotify(ref this.showSelectedOutputTypeButton, value);
     }
 
-    public bool ShowOpenCommandPanelButton
+    public bool ShowApplyRefreshFilterslButton
     {
-        get => this.showOpenCommandPanelButton;
-        set => this.SetPropNotify(ref this.showOpenCommandPanelButton, value);
+        get => this.showApplyRefreshFilterslButton;
+        set => this.SetPropNotify(ref this.showApplyRefreshFilterslButton, value);
     }
 
     public bool ShowSelectFilesToHashButton
@@ -787,17 +754,6 @@ public class SettingsViewModel : BaseViewModel
     {
         get => this.askUserHowToExportResultsEveryTime;
         set => this.SetPropNotify(ref this.askUserHowToExportResultsEveryTime, value);
-    }
-
-    public bool FilterAndCmderWndFollowsMainWnd
-    {
-        get => this.filterAndCmderWndFollowsMainWnd;
-        set
-        {
-            this.FilterPanelTopRelToMain = this.FilterAndCmderWndTop - this.MainWindowTop;
-            this.FilterPanelLeftRelToMain = this.FilterAndCmderWndLeft - this.MainWindowLeft;
-            this.SetPropNotify(ref this.filterAndCmderWndFollowsMainWnd, value);
-        }
     }
 
     public ConfigLocation LocationForSavingConfigFiles
@@ -1486,7 +1442,7 @@ public class SettingsViewModel : BaseViewModel
 
     private void ResetAlgorithmAliasAction(object param)
     {
-        foreach (AlgoInOutModel model in AlgosPanelPageModel.ProvidedAlgos)
+        foreach (AlgoInOutModel model in AlgosPanelViewModel.ProvidedAlgos)
         {
             model.ResetAlias();
         }
@@ -1597,7 +1553,7 @@ public class SettingsViewModel : BaseViewModel
             // 非 null 但空，统一设置为 null
             this.TemplatesForChecklist = null;
         }
-        this.AlgorithmAliasList = AlgosPanelPageModel.ProvidedAlgos.Where(
+        this.AlgorithmAliasList = AlgosPanelViewModel.ProvidedAlgos.Where(
             i => !string.IsNullOrWhiteSpace(i.AlgorithmAlias)).ToDictionary(
             j => j.AlgoType, k => k.AlgorithmAlias);
         if (this.AlgorithmAliasList.Count == 0)
@@ -1605,7 +1561,7 @@ public class SettingsViewModel : BaseViewModel
             // 内容为空，统一设置为 null
             this.AlgorithmAliasList = null;
         }
-        this.SelectedAlgos = AlgosPanelPageModel.ProvidedAlgos.Where(i => i.Selected).Select(
+        this.SelectedAlgos = AlgosPanelViewModel.ProvidedAlgos.Where(i => i.Selected).Select(
             i => i.AlgoType).ToArray();
     }
 
@@ -1624,7 +1580,7 @@ public class SettingsViewModel : BaseViewModel
         {
             foreach (KeyValuePair<AlgoType, string> keyValuePair in this.AlgorithmAliasList)
             {
-                foreach (AlgoInOutModel inOut in AlgosPanelPageModel.ProvidedAlgos)
+                foreach (AlgoInOutModel inOut in AlgosPanelViewModel.ProvidedAlgos)
                 {
                     if (inOut.AlgoType == keyValuePair.Key)
                     {
@@ -1634,7 +1590,7 @@ public class SettingsViewModel : BaseViewModel
                 }
             }
         }
-        foreach (AlgoInOutModel model in AlgosPanelPageModel.ProvidedAlgos)
+        foreach (AlgoInOutModel model in AlgosPanelViewModel.ProvidedAlgos)
         {
             model.Selected = this.SelectedAlgos?.Contains(model.AlgoType) ?? false;
         }

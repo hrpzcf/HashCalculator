@@ -5,34 +5,30 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pagemodels="clr-namespace:HashCalculator.ViewModels.Pages"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     d:DataContext="{d:DesignInstance Type=local:HashingTaskResultFilter}"
-    d:DesignHeight="160"
-    d:DesignWidth="300"
+    d:DesignWidth="600"
     mc:Ignorable="d">
-    <StackPanel Orientation="Horizontal">
-        <StackPanel>
+    <StackPanel>
+        <wpfui:CardControl>
+            <wpfui:CardControl.Header>
+                <StackPanel>
+                    <wpfui:TextBlock FontTypography="BodyStrong" Text="要筛选出来的任务状态" />
+                    <wpfui:TextBlock
+                        FontTypography="Caption"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="要筛选的任务状态可多选，所有符合被选中的任务状态的行都会被筛选出来。"
+                        TextWrapping="WrapWithOverflow" />
+                </StackPanel>
+            </wpfui:CardControl.Header>
             <ComboBox ItemsSource="{Binding Items}" SelectedIndex="0">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
-                        <CheckBox
-                            VerticalContentAlignment="Center"
-                            Content="{Binding Display}"
-                            Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ComboBoxItem}, Path=Foreground}"
-                            IsChecked="{Binding Selected}" />
+                        <wpfui:ToggleSwitch Content="{Binding Display}" IsChecked="{Binding Selected}" />
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
-            <DockPanel Margin="0,4,0,0" DockPanel.Dock="Left">
-                <TextBlock VerticalAlignment="Center" Text="筛选逻辑：" />
-                <ComboBox
-                    DisplayMemberPath="Display"
-                    DockPanel.Dock="Right"
-                    Foreground="Gray"
-                    IsEnabled="False"
-                    ItemsSource="{Binding FilterLogics}"
-                    SelectedValue="{Binding Param}"
-                    SelectedValuePath="ItemValue" />
-            </DockPanel>
-        </StackPanel>
+        </wpfui:CardControl>
     </StackPanel>
 </UserControl>

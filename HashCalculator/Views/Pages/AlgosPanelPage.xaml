@@ -8,7 +8,7 @@
     xmlns:pagemodels="clr-namespace:HashCalculator.ViewModels.Pages"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="默认算法"
-    d:DataContext="{d:DesignInstance Type=pagemodels:AlgosPanelPageModel}"
+    d:DataContext="{d:DesignInstance Type=pagemodels:AlgosPanelViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     ScrollViewer.CanContentScroll="False"
@@ -27,7 +27,7 @@
             Grid.RowSpan="2"
             Grid.Column="0"
             Grid.IsSharedSizeScope="True"
-            ItemsSource="{x:Static pagemodels:AlgosPanelPageModel.AlgoGroups}"
+            ItemsSource="{x:Static pagemodels:AlgosPanelViewModel.AlgoGroups}"
             SelectedItem="{Binding SelectedAlgoGroup}">
             <wpfui:ListView.ItemTemplate>
                 <DataTemplate>

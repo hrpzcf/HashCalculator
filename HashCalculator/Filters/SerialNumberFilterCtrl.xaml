@@ -5,23 +5,31 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pagemodels="clr-namespace:HashCalculator.ViewModels.Pages"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     d:DataContext="{d:DesignInstance Type=local:SerialNumberFilter}"
     d:DesignHeight="160"
     d:DesignWidth="300"
     mc:Ignorable="d">
     <StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <TextBlock VerticalAlignment="Center" Text="开始序号：" />
+        <wpfui:CardControl>
+            <wpfui:CardControl.Header>
+                <wpfui:TextBlock FontTypography="BodyStrong" Text="开始序号" />
+            </wpfui:CardControl.Header>
             <TextBox MinWidth="100" Text="{Binding SerialLeft, Converter={StaticResource StringToIntDefaultZeroCvt}}" />
-        </StackPanel>
-        <StackPanel Margin="0,4,0,0" Orientation="Horizontal">
-            <TextBlock VerticalAlignment="Center" Text="结束序号：" />
+        </wpfui:CardControl>
+        <wpfui:CardControl Margin="0,4,0,0">
+            <wpfui:CardControl.Header>
+                <StackPanel>
+                    <wpfui:TextBlock FontTypography="BodyStrong" Text="结束序号" />
+                    <wpfui:TextBlock
+                        FontTypography="Caption"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="如果【结束序号 &lt; 开始序号】则代表结束序号不设上限。"
+                        TextWrapping="WrapWithOverflow" />
+                </StackPanel>
+            </wpfui:CardControl.Header>
             <TextBox MinWidth="100" Text="{Binding SerialRight, Converter={StaticResource StringToIntDefaultZeroCvt}}" />
-        </StackPanel>
-        <TextBlock
-            Margin="0,4,0,0"
-            FontSize="8pt"
-            Style="{StaticResource DescTextBlockStyle}"
-            Text="如果【结束序号 &lt; 开始序号】则代表结束序号不设上限" />
+        </wpfui:CardControl>
     </StackPanel>
 </UserControl>

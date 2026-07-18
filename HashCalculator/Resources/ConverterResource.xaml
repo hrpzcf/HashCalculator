@@ -19,26 +19,6 @@
         x:Key="StringToDoubleDefaultZeroCvt"
         Default="0"
         Min="0" />
-    <local:AssociatedMainAndFilterWndPositionCvt
-        x:Key="MainWndTopCvt"
-        ForLeft="False"
-        ForMainWnd="True"
-        Settings="{x:Static local:Settings.Current}" />
-    <local:AssociatedMainAndFilterWndPositionCvt
-        x:Key="MainWndLeftCvt"
-        ForLeft="True"
-        ForMainWnd="True"
-        Settings="{x:Static local:Settings.Current}" />
-    <local:AssociatedMainAndFilterWndPositionCvt
-        x:Key="FilterWndTopCvt"
-        ForLeft="False"
-        ForMainWnd="False"
-        Settings="{x:Static local:Settings.Current}" />
-    <local:AssociatedMainAndFilterWndPositionCvt
-        x:Key="FilterWndLeftCvt"
-        ForLeft="True"
-        ForMainWnd="False"
-        Settings="{x:Static local:Settings.Current}" />
     <local:BooleanToVisibilityCvt
         x:Key="TrueToVisibilityHiddenCvt"
         Boolean="True"
@@ -85,42 +65,15 @@
         Resource="topmost"
         State="True" />
     <local:BooleanToIconResourceCvt
-        x:Key="BtnMoveFilterUpEnabledImgSrcCvt"
-        OtherResource="arrow_up_gray"
-        Resource="arrow_up"
-        State="True" />
-    <local:BooleanToIconResourceCvt
-        x:Key="BtnMoveFilterDownEnabledImgSrcCvt"
-        OtherResource="arrow_down_gray"
-        Resource="arrow_down"
-        State="True" />
-    <local:BooleanToIconResourceCvt
-        x:Key="BtnClearFiltersEnabledImgSrcCvt"
-        OtherResource="clear_filters_gray"
-        Resource="clear_filters"
-        State="True" />
-    <local:BooleanToIconResourceCvt
-        x:Key="BtnRefreshFiltersEnabledImgSrcCvt"
-        OtherResource="refresh_filters_gray"
-        Resource="refresh_filters"
+        x:Key="BtnFilterEnabledImgSrcCvt"
+        OtherResource="filter_gray"
+        Resource="filter"
         State="True" />
     <local:HashStateToButtonTextCvt
         x:Key="SubBtnPauseOrContinueTextCvt"
         Matched="&#xe662;"
         Mismatched="&#xe621;"
         State="Running" />
-    <local:RenameFileMethodToBooleanCvt
-        x:Key="RenameMethodAddToEndToTrueCvt"
-        Boolean="True"
-        Method="AddToEnd" />
-    <local:RenameFileMethodToBooleanCvt
-        x:Key="RenameMethodAddToFrontToTrueCvt"
-        Boolean="True"
-        Method="AddToFront" />
-    <local:RenameFileMethodToBooleanCvt
-        x:Key="RenameMethodReplaceAllToTrueCvt"
-        Boolean="True"
-        Method="ReplaceAll" />
     <local:ComparisonResultToIconFontTextCvt
         x:Key="ComparisonResultToIconFontTextCvt"
         IconFontMatched="&#xe8e4;"
@@ -156,8 +109,6 @@
     <local:SelectSmallerDoubleCvt x:Key="SelectSmallerDoubleCvt" />
     <local:RadiusFromSideLengthCvt x:Key="RadiusFromSideLengthCvt" />
     <local:EditSubmenusButtonEnabledCvt x:Key="EditSubmenusButtonEnabledCvt" />
-    <local:EditOriginalFileToTrueCvt x:Key="EditOriginalFileToTrueCvt" />
-    <local:EditNewInSameLocationToTrueCvt x:Key="EditNewInSameLocationToTrueCvt" />
     <local:EditNewInNewLocationToTrueCvt x:Key="EditNewInNewLocationToTrueCvt" />
     <local:DisplayHcmDataHashNameCvt x:Key="DisplayHcmDataHashNameCvt" />
     <local:DisplayHcmDataHashValueCvt x:Key="DisplayHcmDataHashValueCvt" />

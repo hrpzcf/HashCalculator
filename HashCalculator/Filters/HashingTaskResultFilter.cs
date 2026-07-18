@@ -15,9 +15,9 @@ namespace HashCalculator
 
         public override ContentControl UserInterface { get; }
 
-        public override string Display => "运行结果";
+        public override string Display => "任务状态";
 
-        public override string Description => "将各行中符合指定运行结果的行筛选出来。";
+        public override string Description => "将各行中符合指定任务状态的行筛选出来。";
 
         public override object Param { get; set; } = FilterLogic.Any;
 

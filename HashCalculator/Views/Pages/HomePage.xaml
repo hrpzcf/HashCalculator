@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:others="clr-namespace:HashCalculator.Others"
     xmlns:pagemodels="clr-namespace:HashCalculator.ViewModels.Pages"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     d:DataContext="{d:DesignInstance Type=pagemodels:HomeViewModel}"
@@ -79,21 +80,27 @@
                     Grid.Column="3"
                     Margin="16,0,0,0"
                     VerticalAlignment="Bottom"
-                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowOpenCommandPanelButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
+                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowApplyRefreshFilterslButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
                     <Button
-                        Command="{Binding OpenCommandPanelCmd}"
+                        Command="{Binding FilterAndOperationModel.RefreshFiltersCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
-                        ToolTip="打开【筛选与操作】窗口以进行筛选/对筛选结果进行操作，或关闭已打开的【筛选与操作】窗口">
+                        ToolTip="应用【筛选】页面中勾选的筛选器并刷新筛选，将此页符合筛选条件的行筛选出来。">
+                        <Button.IsEnabled>
+                            <MultiBinding Converter="{StaticResource CmdPanelCriticalControlsEnabledCvt}">
+                                <Binding Path="State" Source="{x:Static pagemodels:HomeViewModel.Current}" />
+                                <Binding Path="FilterAndCmderEnabled" Source="{x:Static local:Settings.Current}" />
+                            </MultiBinding>
+                        </Button.IsEnabled>
                         <Image
                             Width="32"
                             Height="32"
-                            Source="{StaticResource filterDrawingImage}" />
+                            Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnFilterEnabledImgSrcCvt}}" />
                     </Button>
                     <TextBlock
                         Margin="0,2"
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
-                        Text="筛选与操作"
+                        Text="刷新筛选"
                         Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
                 <StackPanel
@@ -370,7 +377,7 @@
             Drop="DataGridHashingFilesDrop"
             Grid.IsSharedSizeScope="True"
             IsReadOnly="True"
-            ItemsSource="{Binding Source={x:Static pagemodels:HomeViewModel.HashViewModelsViewSrc}, IsAsync=True}"
+            ItemsSource="{Binding Source={x:Static others:HashModelStore.HashViewModelsSource}}"
             PreviewKeyDown="DataGridHashingFilesPrevKeyDown"
             ScrollViewer.CanContentScroll="True"
             SelectedItem="{Binding SelectedHashVieModel}"
@@ -1079,7 +1086,7 @@
                     Padding="4,0"
                     VerticalAlignment="Center"
                     Foreground="Gray"
-                    Text="{Binding Source={x:Static pagemodels:HomeViewModel.HashViewModels}, Path=Count}"
+                    Text="{Binding Source={x:Static others:HashModelStore.HashViewModels}, Path=Count}"
                     ToolTip="表格总行数..." />
                 <Image
                     Width="16"

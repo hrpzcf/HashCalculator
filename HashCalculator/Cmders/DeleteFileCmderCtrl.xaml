@@ -5,62 +5,65 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pagemodels="clr-namespace:HashCalculator.ViewModels.Pages"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     d:DataContext="{d:DesignInstance Type=local:DeleteFileCmder}"
     d:DesignHeight="100"
     d:DesignWidth="300"
     mc:Ignorable="d">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
-        <Button
-            Grid.Row="0"
-            Grid.Column="0"
-            Padding="24,6"
-            VerticalAlignment="Center"
-            Background="Red"
-            BorderThickness="1"
-            Command="{Binding DeleteFileDirectlyCmd}"
-            Content="删除"
-            Foreground="White"
-            Style="{StaticResource IndepButtonStyle}"
-            ToolTip="直接删除操作目标，删除前请确认是否正确勾选了要删除的文件" />
-        <Button
-            Grid.Row="0"
-            Grid.Column="1"
-            Margin="4,0,0,0"
-            Padding="16,6"
-            VerticalAlignment="Center"
-            Background="OrangeRed"
-            BorderThickness="1"
-            Command="{Binding MoveToRecycleBinCmd}"
-            Content="移到回收站"
-            Foreground="White"
-            Style="{StaticResource IndepButtonStyle}"
-            ToolTip="把操作目标所指文件移动到回收站，删除前请确认是否正确勾选了要删除的文件" />
-        <CheckBox
-            Grid.Row="1"
-            Grid.ColumnSpan="3"
-            Margin="0,4,0,0"
-            VerticalContentAlignment="Center"
-            Content="检查是否应用了【有效的文件】筛选器"
-            IsChecked="{Binding CheckIfUsingDistinctFilesFilter}"
-            ToolTip="检查当前显示的所有行是否都已经经过【有效的文件】筛选器的筛选" />
-        <TextBlock
-            Grid.Row="2"
-            Grid.ColumnSpan="3"
-            Margin="0,4,0,0"
-            FontSize="8pt"
-            Foreground="OrangeRed"
-            Style="{StaticResource DescTextBlockStyle}"
-            Text="应用【有效的文件】筛选器过滤重复目标可以避免出现误删" />
-    </Grid>
+    <StackPanel>
+        <wpfui:CardControl>
+            <wpfui:CardControl.Header>
+                <StackPanel>
+                    <wpfui:TextBlock FontTypography="BodyStrong" Text="检查是否应用【有效的文件】筛选器" />
+                    <wpfui:TextBlock
+                        FontTypography="Caption"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="检查当前显示的所有行是否都已经经过【有效的文件】筛选器的筛选以避免误操作。"
+                        TextWrapping="WrapWithOverflow" />
+                </StackPanel>
+            </wpfui:CardControl.Header>
+            <wpfui:ToggleSwitch IsChecked="{Binding CheckIfUsingDistinctFilesFilter, Mode=TwoWay}" />
+        </wpfui:CardControl>
+        <wpfui:CardControl Margin="0,4,0,0">
+            <wpfui:CardControl.Header>
+                <StackPanel>
+                    <wpfui:TextBlock FontTypography="BodyStrong" Text="直接永久删除文件" />
+                    <wpfui:TextBlock
+                        FontTypography="Caption"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="直接删除执行目标，删除前请确认是否正确勾选了要删除的文件。应用【有效的文件】筛选器过滤重复目标可以避免出现误删。"
+                        TextWrapping="WrapWithOverflow" />
+                </StackPanel>
+            </wpfui:CardControl.Header>
+            <Button
+                Padding="16,6"
+                Background="Red"
+                BorderThickness="1"
+                Command="{Binding DeleteFileDirectlyCmd}"
+                Content="直接删除"
+                Foreground="White"
+                Style="{StaticResource IndepButtonStyle}" />
+        </wpfui:CardControl>
+        <wpfui:CardControl Margin="0,4,0,0">
+            <wpfui:CardControl.Header>
+                <StackPanel>
+                    <wpfui:TextBlock FontTypography="BodyStrong" Text="删除文件到回收站" />
+                    <wpfui:TextBlock
+                        FontTypography="Caption"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="把执行目标所指文件移动到回收站，删除前请确认是否正确勾选了要删除的文件。应用【有效的文件】筛选器过滤重复目标可以避免出现误删。"
+                        TextWrapping="WrapWithOverflow" />
+                </StackPanel>
+            </wpfui:CardControl.Header>
+            <Button
+                Padding="16,6"
+                Background="OrangeRed"
+                BorderThickness="1"
+                Command="{Binding MoveToRecycleBinCmd}"
+                Content="移到回收站"
+                Foreground="White"
+                Style="{StaticResource IndepButtonStyle}" />
+        </wpfui:CardControl>
+    </StackPanel>
 </UserControl>

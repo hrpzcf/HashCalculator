@@ -5,8 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
+using HashCalculator.Others;
 using HashCalculator.ViewModels.Pages;
-using HashCalculator.ViewModels.Windows;
 using HashCalculator.Views.Windows;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Wpfctrls = Wpf.Ui.Controls;
@@ -34,7 +34,7 @@ namespace HashCalculator
 
         public override string Display => "还原被改变哈希值的文件";
 
-        public override string Description => "功能一：在主窗口【哈希标记】列中显示被改变哈希值的文件内记录的原文件哈希值。\n" +
+        public override string Description => "功能一：在主窗口【哈希标记】列中显示被改变哈希值的文件内记录的原文件哈希值。" +
             "功能二：将被改变过哈希值的文件还原，没有用本程序改变过哈希值的文件将被忽略。";
 
         public EditFileOption RestoreFilesOption
@@ -51,7 +51,7 @@ namespace HashCalculator
 
         public bool CheckIfUsingDistinctFilesFilter { get; set; } = true;
 
-        public RestoreFilesCmder() : this(HomeViewModel.HashViewModels)
+        public RestoreFilesCmder() : this(HashModelStore.HashViewModels)
         {
         }
 
@@ -355,5 +355,12 @@ namespace HashCalculator
                 return this.hideFilesHcmDataCmd;
             }
         }
+
+        public static GenericItemModel[] AvailableRestoreFileOptions { get; } = new GenericItemModel[]
+        {
+            new GenericItemModel("直接在原文件上剔除哈希标记", EditFileOption.OriginalFile),
+            new GenericItemModel("在原文件所在目录创建副本并剔除标记", EditFileOption.NewInSameLocation),
+            new GenericItemModel("在以下目录创建副本并剔除标记", EditFileOption.NewInNewLocation),
+        };
     }
 }

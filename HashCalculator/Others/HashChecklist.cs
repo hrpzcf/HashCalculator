@@ -187,7 +187,7 @@ namespace HashCalculator
             {
                 return false;
             }
-            if (!AlgosPanelPageModel.TryGetAlgoType(algo, out AlgoType algoType) ||
+            if (!AlgosPanelViewModel.TryGetAlgoType(algo, out AlgoType algoType) ||
                 algoType == AlgoType.UNKNOWN)
             {
                 algoType = this.AlgoTypeFromFileExt;
@@ -269,7 +269,7 @@ namespace HashCalculator
             try
             {
                 string fileExt = Path.GetExtension(filePath);
-                if (AlgosPanelPageModel.TryGetAlgoType(fileExt.TrimStart('.'),
+                if (AlgosPanelViewModel.TryGetAlgoType(fileExt.TrimStart('.'),
                     out AlgoType algoType))
                 {
                     this.AlgoTypeFromFileExt = algoType;

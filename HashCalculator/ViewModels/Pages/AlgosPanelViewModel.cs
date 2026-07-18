@@ -6,7 +6,7 @@ using System.Windows.Input;
 
 namespace HashCalculator.ViewModels.Pages;
 
-public class AlgosPanelPageModel : BaseViewModel
+public class AlgosPanelViewModel : BaseViewModel
 {
     private RelayCommand clearAllSelectedCmd;
 

@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -10,7 +8,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
 using HashCalculator.Others;
@@ -37,10 +34,9 @@ public class HomeViewModel : BaseViewModel
     private CancellationTokenSource searchCancellation = new CancellationTokenSource();
     private string hashCheckReport = string.Empty;
     private string hashValueStringOrChecklistPath = null;
-    private FilterAndCmdPanel commandPanelInst = null;
     private RunningState runningState = RunningState.None;
 
-    private RelayCommand openCommandPanelCmd;
+    private RelayCommand applyFiltersCommand;
     private RelayCommand mainWindowTopmostCmd;
     private RelayCommand clearAllTableLinesCmd;
     private RelayCommand exportHashResultsCmd;
@@ -82,46 +78,20 @@ public class HomeViewModel : BaseViewModel
         SetWindowHeight = height => Settings.Current.MainWndDelFileProgressHeight = height,
     };
 
-    public HomeViewModel()
+    public HomeViewModel(FilterOperationModel model)
     {
         Current = this;
-        HashViewModelsViewSrc = new CollectionViewSource();
-        HashViewModelsViewSrc.Source = HashViewModels;
-        HashViewModelsView = HashViewModelsViewSrc.View;
+        this.FilterAndOperationModel = model;
         this.addModelAction = new Action<HashModelArg>(this.AddModelAction);
         this.checkStateTimer = new Timer(this.CheckStateAction);
     }
 
-    public static HomeViewModel Current
-    {
-        get;
-        private set;
-    }
-
-    /// <summary>
-    /// 使用此属性相当于 HashViewModelsViewSrc.View 的简写
-    /// </summary>
-    public static ICollectionView HashViewModelsView
-    {
-        get;
-        private set;
-    }
-
-    /// <summary>
-    /// 用于在 .xaml 文件内绑定到 DataGrid 的 ItemsSource 属性
-    /// 因为直接用 HashViewModels 属性绑定到 ItemsSource，则对视图的分组等操作不会生效
-    /// </summary>
-    public static CollectionViewSource HashViewModelsViewSrc
-    {
-        get;
-        private set;
-    }
-
-    public static ObservableCollection<HashViewModel> HashViewModels { get; }
-        = new ObservableCollection<HashViewModel>();
+    public static HomeViewModel Current { get; private set; }
 
     public ModelStarter Starter { get; } =
         new ModelStarter(Settings.Current.SelectedTaskNumberLimit, 32);
+
+    public FilterOperationModel FilterAndOperationModel { get; private set; }
 
     public string Report
     {
@@ -212,7 +182,8 @@ public class HomeViewModel : BaseViewModel
 
     public void CheckHashUseClipboardText()
     {
-        if (HashViewModels.AnyItem() && this.TestClipboardTextGetChecklist() is HashChecklist checklist)
+        if (HashModelStore.HashViewModels.AnyItem() &&
+            this.TestClipboardTextGetChecklist() is HashChecklist checklist)
         {
             if (this.State != RunningState.Started && this.CheckFilesHashBasedOnStringOrChecklist(checklist) &&
                 Settings.Current.SwitchMainWndFgWhenNewHashCopied)
@@ -265,7 +236,7 @@ public class HomeViewModel : BaseViewModel
         model.ModelCapturedEvent += this.ModelCapturedAction;
         model.ModelCapturedEvent += this.Starter.PendingModel;
         model.ModelReleasedEvent += this.ModelReleasedAction;
-        HashViewModels.Add(model);
+        HashModelStore.HashViewModels.Add(model);
         if (Settings.Current.AutomaticallyStartTaskAfterFileAdded)
         {
             if (Settings.Current.DelayTheStartOfCalculationTasks)
@@ -342,7 +313,7 @@ public class HomeViewModel : BaseViewModel
             uncertain = succeeded = canceled = hasFailed = totalHash = 0;
         Dictionary<byte[], List<HashViewModel>> hashViewModels =
             new Dictionary<byte[], List<HashViewModel>>(BytesComparer.Default);
-        foreach (HashViewModel hm in HashViewModels)
+        foreach (HashViewModel hm in HashModelStore.HashViewModels)
         {
             hm.TableRowColor = null;
             switch (hm.Result)
@@ -394,7 +365,7 @@ public class HomeViewModel : BaseViewModel
             }
         }
         StringBuilder builder = new StringBuilder();
-        builder.Append($"总行数：{HashViewModels.Count}\n已成功：{succeeded}\n");
+        builder.Append($"总行数：{HashModelStore.HashViewModels.Count}\n已成功：{succeeded}\n");
         builder.Append($"已失败：{hasFailed}\n已取消：{canceled}\n\n");
         builder.Append($"校验汇总：\n算法数：{totalHash}\n");
         builder.Append($"已匹配：{matched}\n不匹配：{mismatch}\n");
@@ -415,32 +386,6 @@ public class HomeViewModel : BaseViewModel
                     hashViewModel.TableRowColor = tuple.Item2;
                 }
             }
-        }
-    }
-
-    private void OpenCommandPanelAction(object param)
-    {
-        if (this.commandPanelInst != null)
-        {
-            if (!this.commandPanelInst.CheckPanelPosition())
-            {
-                this.commandPanelInst.Close();
-            }
-        }
-        else
-        {
-            this.commandPanelInst = new FilterAndCmdPanel((o, e) => { this.commandPanelInst = null; });
-            this.commandPanelInst.Owner = MainWindow.Current;
-            this.commandPanelInst.Show();
-        }
-    }
-
-    public ICommand OpenCommandPanelCmd
-    {
-        get
-        {
-            this.openCommandPanelCmd ??= new RelayCommand(this.OpenCommandPanelAction);
-            return this.openCommandPanelCmd;
         }
     }
 
@@ -769,7 +714,7 @@ public class HomeViewModel : BaseViewModel
 
     private void RefreshAllOutputTypeAction(object param)
     {
-        foreach (HashViewModel model in HashViewModels)
+        foreach (HashViewModel model in HashModelStore.HashViewModels)
         {
             if (model.HasBeenRun)
             {
@@ -830,7 +775,7 @@ public class HomeViewModel : BaseViewModel
             foreach (HashViewModel model in targets)
             {
                 model.ShutdownModelWait();
-                HashViewModels.Remove(model);
+                HashModelStore.HashViewModels.Remove(model);
             }
             Task<string> deleteFileTask = Task.Run(() =>
             {
@@ -904,7 +849,7 @@ public class HomeViewModel : BaseViewModel
             {
                 model.ShutdownModel();
                 // 对 HashViewModels 的增删操作是在主线程上进行的，不用加锁
-                HashViewModels.Remove(model);
+                HashModelStore.HashViewModels.Remove(model);
                 this.displayedModels.Remove(model);
             }
             this.GenerateFileHashCheckReport();
@@ -938,7 +883,7 @@ public class HomeViewModel : BaseViewModel
     {
         this.CancelDisplayedModelsAction(null);
         this.serial = 0;
-        HashViewModels.Clear();
+        HashModelStore.HashViewModels.Clear();
         this.displayedModels.Clear();
     }
 
@@ -953,7 +898,7 @@ public class HomeViewModel : BaseViewModel
 
     private void ExporHashResultAction(object param)
     {
-        if (!HashViewModels.Any(i => i.Result == HashResult.Succeeded))
+        if (!HashModelStore.HashViewModels.Any(i => i.Result == HashResult.Succeeded))
         {
             NotificationSender.SnackbarWarning("主窗口列表中没有可以导出的结果。");
             return;
@@ -1051,7 +996,7 @@ public class HomeViewModel : BaseViewModel
     {
         Dictionary<AlgoType, string> algoTypes = new Dictionary<AlgoType, string>();
         List<HashViewModel> validHashViews = new List<HashViewModel>();
-        foreach (HashViewModel hashView in HashViewModels)
+        foreach (HashViewModel hashView in HashModelStore.HashViewModels)
         {
             if (hashView.Result == HashResult.Succeeded &&
                 hashView.AlgoInOutModels != null)
@@ -1136,13 +1081,14 @@ public class HomeViewModel : BaseViewModel
         }
     }
 
-    private void AlgorithmResultsExportedToSameFile(string file, Encoding encoding, string format,
-        OutputType output, bool all)
+    private void AlgorithmResultsExportedToSameFile(string file, Encoding encoding,
+        string format, OutputType output, bool all)
     {
         using (FileStream fileStream = File.Create(file))
         using (StreamWriter streamWriter = new StreamWriter(fileStream, encoding))
         {
-            foreach (HashViewModel hm in HashViewModels.Where(i => i.Result == HashResult.Succeeded))
+            foreach (HashViewModel hm in HashModelStore.HashViewModels
+                .Where(i => i.Result == HashResult.Succeeded))
             {
                 if (hm.GenerateTextInFormat(format, output, all, endLine: true, seeExport: true,
                     casedName: false) is string text)
@@ -1166,7 +1112,7 @@ public class HomeViewModel : BaseViewModel
     {
         if (!newLines)
         {
-            foreach (HashViewModel model in HashViewModels)
+            foreach (HashViewModel model in HashModelStore.HashViewModels)
             {
                 model.StartupModel(force);
             }
@@ -1226,7 +1172,7 @@ public class HomeViewModel : BaseViewModel
 
     private void GenerateOriginFileHashCheckReport()
     {
-        foreach (HashViewModel hm in HashViewModels)
+        foreach (HashViewModel hm in HashModelStore.HashViewModels)
         {
             if (hm.AlgoInOutModels != null)
             {
@@ -1256,7 +1202,7 @@ public class HomeViewModel : BaseViewModel
                 localChecklist = HashChecklist.Text(this.HashStringOrChecklistPath);
             }
             // HashStringOrChecklistPath 是一个文件，但哈希结果列表不是空
-            else if (HashViewModels.Any())
+            else if (HashModelStore.HashViewModels.Any())
             {
                 localChecklist = HashChecklist.File(this.HashStringOrChecklistPath);
                 try
@@ -1297,7 +1243,7 @@ public class HomeViewModel : BaseViewModel
         }
         if (localChecklist.ReasonForFailure == null)
         {
-            foreach (HashViewModel hm in HashViewModels)
+            foreach (HashViewModel hm in HashModelStore.HashViewModels)
             {
                 hm.SetHashCheckResultForModel(localChecklist);
             }
@@ -1413,7 +1359,7 @@ public class HomeViewModel : BaseViewModel
     private void CancelDisplayedModelsAction(object param)
     {
         this.Cancellation?.Cancel();
-        foreach (HashViewModel model in HashViewModels)
+        foreach (HashViewModel model in HashModelStore.HashViewModels)
         {
             model.ShutdownModel();
         }
@@ -1432,7 +1378,7 @@ public class HomeViewModel : BaseViewModel
 
     private void PauseDisplayedModelsAction(object param)
     {
-        foreach (HashViewModel model in HashViewModels)
+        foreach (HashViewModel model in HashModelStore.HashViewModels)
         {
             model.PauseOrContinueModel(PauseMode.Pause);
         }
@@ -1449,7 +1395,7 @@ public class HomeViewModel : BaseViewModel
 
     private void ContinueDisplayedModelsAction(object param)
     {
-        foreach (HashViewModel model in HashViewModels)
+        foreach (HashViewModel model in HashModelStore.HashViewModels)
         {
             model.PauseOrContinueModel(PauseMode.Continue);
         }
@@ -1645,7 +1591,7 @@ public class HomeViewModel : BaseViewModel
             if (this.switchDisplayedAlgoCmds == null)
             {
                 RelayCommand command = new RelayCommand(this.SwitchDisplayedAlgoAction);
-                this.switchDisplayedAlgoCmds = AlgosPanelPageModel.ProvidedAlgos.Select(
+                this.switchDisplayedAlgoCmds = AlgosPanelViewModel.ProvidedAlgos.Select(
                     obj => new GenericItemModel(obj.AlgoName, obj.AlgoType, command)).ToArray();
             }
             return this.switchDisplayedAlgoCmds;

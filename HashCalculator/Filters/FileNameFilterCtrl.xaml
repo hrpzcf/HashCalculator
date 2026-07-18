@@ -5,36 +5,48 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pagemodels="clr-namespace:HashCalculator.ViewModels.Pages"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     d:DataContext="{d:DesignInstance Type=local:FileNameFilter}"
-    d:DesignHeight="160"
-    d:DesignWidth="300"
+    d:DesignWidth="600"
     mc:Ignorable="d">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <wpfui:TextBox
-            Grid.Row="0"
-            VerticalAlignment="Center"
-            MaxLines="1"
-            PlaceholderText="输入文件名片段或正则表达式 (C#)"
-            Text="{Binding Pattern, Mode=OneWayToSource}"
-            TextWrapping="WrapWithOverflow" />
-        <StackPanel
-            Grid.Row="1"
-            Margin="0,4,0,0"
-            Orientation="Horizontal">
-            <CheckBox
-                VerticalContentAlignment="Center"
-                Content="使用正则表达式"
-                IsChecked="{Binding Param}" />
-            <CheckBox
-                Margin="8,0,0,0"
-                VerticalContentAlignment="Center"
-                Content="忽略大小写"
-                IsChecked="{Binding IgnoreCase}" />
-        </StackPanel>
-    </Grid>
+    <StackPanel>
+        <wpfui:CardControl>
+            <wpfui:CardControl.Header>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <wpfui:TextBox
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="3"
+                        MaxLines="1"
+                        PlaceholderText="输入文件名片段或正则表达式 (C#)"
+                        Text="{Binding Pattern, Mode=OneWayToSource}"
+                        TextWrapping="WrapWithOverflow" />
+                    <CheckBox
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Margin="0,4,0,0"
+                        Padding="0"
+                        Content="使用正则表达式"
+                        IsChecked="{Binding Param}" />
+                    <CheckBox
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Margin="16,4,0,0"
+                        Padding="0"
+                        Content="忽略大小写"
+                        IsChecked="{Binding IgnoreCase}" />
+                </Grid>
+            </wpfui:CardControl.Header>
+        </wpfui:CardControl>
+    </StackPanel>
 </UserControl>
