@@ -108,7 +108,6 @@
     <local:CloneParameterArrayCvt x:Key="CloneParameterArrayCvt" />
     <local:SelectSmallerDoubleCvt x:Key="SelectSmallerDoubleCvt" />
     <local:RadiusFromSideLengthCvt x:Key="RadiusFromSideLengthCvt" />
-    <local:EditSubmenusButtonEnabledCvt x:Key="EditSubmenusButtonEnabledCvt" />
     <local:EditNewInNewLocationToTrueCvt x:Key="EditNewInNewLocationToTrueCvt" />
     <local:DisplayHcmDataHashNameCvt x:Key="DisplayHcmDataHashNameCvt" />
     <local:DisplayHcmDataHashValueCvt x:Key="DisplayHcmDataHashValueCvt" />

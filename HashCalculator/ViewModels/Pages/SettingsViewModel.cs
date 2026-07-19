@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Xml.Serialization;
+using HashCalculator.ViewModels.UserControls;
 using HashCalculator.Views.Windows;
 using Newtonsoft.Json;
 using Wpf.Ui.Appearance;
@@ -114,6 +115,7 @@ public class SettingsViewModel : BaseViewModel
     private string hashValueColumnLeftDoubleClick = CmdStrShowDetails;
     private string durationColumnLeftDoubleClick = string.Empty;
 
+    private ShellMenuEditorModel loadedShellMenuEditorModel = null;
     private AlgoInOutModel selectedAlgoInOutModel = AlgosPanelViewModel.ProvidedAlgos[0];
     private TemplateForExportModel selectedExportTemplate;
     private TemplateForChecklistModel selectedChecklistTemplate;
@@ -136,7 +138,10 @@ public class SettingsViewModel : BaseViewModel
 
     private RelayCommand installShellExtCmd;
     private RelayCommand unInstallShellExtCmd;
-    private RelayCommand openEditContextMenuCmd;
+    private RelayCommand loadContextMenuConfigCmd;
+    private RelayCommand saveContextMenuConfigCmd;
+    private RelayCommand cancelContextMenuConfigCmd;
+    private RelayCommand resetContextMenuConfigCmd;
 
     private RelayCommand resetExportTemplateCmd;
     private RelayCommand addExportTemplateCmd;
@@ -1012,7 +1017,7 @@ public class SettingsViewModel : BaseViewModel
         }
         if (!File.Exists(Settings.ConfigInfo.MenuConfigFile))
         {
-            string exception = new ShellMenuEditorModel(MainWindow.Current).SaveMenuListToJsonFile();
+            string exception = new ShellMenuEditorModel().SaveMenuListToJsonFile();
             if (!string.IsNullOrEmpty(exception))
             {
                 NotificationSender.ShowMessageBox(MainWindow.Current, "警告",
@@ -1067,22 +1072,90 @@ public class SettingsViewModel : BaseViewModel
         }
     }
 
-    private void OpenEditContextMenuAction(object param)
+    [JsonIgnore, XmlIgnore]
+    public ShellMenuEditorModel LoadedShellMenuEditorModel
     {
-        ShellMenuEditor shellextEditor = new ShellMenuEditor()
-        {
-            Owner = MainWindow.Current
-        };
-        shellextEditor.ShowDialog();
+        get => this.loadedShellMenuEditorModel;
+        set => this.SetPropNotify(ref this.loadedShellMenuEditorModel, value);
+    }
+
+    private void LoadContextMenuConfigAction(object param)
+    {
+        this.LoadedShellMenuEditorModel = new ShellMenuEditorModel();
     }
 
     [JsonIgnore, XmlIgnore]
-    public ICommand OpenEditContextMenuCmd
+    public ICommand LoadContextMenuConfigCmd
     {
         get
         {
-            this.openEditContextMenuCmd ??= new RelayCommand(this.OpenEditContextMenuAction);
-            return this.openEditContextMenuCmd;
+            this.loadContextMenuConfigCmd ??= new RelayCommand(this.LoadContextMenuConfigAction);
+            return this.loadContextMenuConfigCmd;
+        }
+    }
+
+    private void SaveContextMenuConfigAction(object param)
+    {
+        if (this.LoadedShellMenuEditorModel == null)
+        {
+            NotificationSender.SnackbarWarning("还没有载入右键菜单配置文件。");
+            return;
+        }
+        string optionException = this.LoadedShellMenuEditorModel.SaveMenuListToJsonFile();
+        if (string.IsNullOrEmpty(optionException))
+        {
+            NotificationSender.SnackbarSuccess("右键菜单配置文件已保存！");
+        }
+        else
+        {
+            NotificationSender.SnackbarWarning($"配置文件保存失败：\n{optionException}");
+        }
+        this.LoadedShellMenuEditorModel = null;
+    }
+
+    [JsonIgnore, XmlIgnore]
+    public ICommand SaveContextMenuConfigCmd
+    {
+        get
+        {
+            this.saveContextMenuConfigCmd ??= new RelayCommand(this.SaveContextMenuConfigAction);
+            return this.saveContextMenuConfigCmd;
+        }
+    }
+
+    private void CancelContextMenuConfigAction(object param)
+    {
+        this.LoadedShellMenuEditorModel = null;
+    }
+
+    [JsonIgnore, XmlIgnore]
+    public ICommand CancelContextMenuConfigCmd
+    {
+        get
+        {
+            this.cancelContextMenuConfigCmd ??= new RelayCommand(this.CancelContextMenuConfigAction);
+            return this.cancelContextMenuConfigCmd;
+        }
+    }
+
+    private void ResetContextMenuConfigAction(object param)
+    {
+        if (this.LoadedShellMenuEditorModel == null)
+        {
+            NotificationSender.SnackbarWarning("还没有载入右键菜单配置文件。");
+            return;
+        }
+        this.LoadedShellMenuEditorModel.ManuallyResetMenuList();
+        NotificationSender.ShowMessageBox(MainWindow.Current, "提示", "右键菜单列表已重置，请手动保存改动！");
+    }
+
+    [JsonIgnore, XmlIgnore]
+    public ICommand ResetContextMenuConfigCmd
+    {
+        get
+        {
+            this.resetContextMenuConfigCmd ??= new RelayCommand(this.ResetContextMenuConfigAction);
+            return this.resetContextMenuConfigCmd;
         }
     }
 

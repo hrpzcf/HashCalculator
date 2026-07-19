@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.MemoryMappedFiles;
 using System.Windows;
 using CommandLine;
+using HashCalculator.ViewModels.UserControls;
 using HashCalculator.Views.Windows;
 
 namespace HashCalculator
@@ -149,7 +150,7 @@ namespace HashCalculator
                         {
                             if (!File.Exists(Settings.ConfigInfo.MenuConfigFile))
                             {
-                                string message = new ShellMenuEditorModel(null).SaveMenuListToJsonFile();
+                                string message = new ShellMenuEditorModel().SaveMenuListToJsonFile();
                                 if (!string.IsNullOrEmpty(message) && !option.InstallSilently)
                                 {
                                     MessageBox.Show($"扩展模块配置文件创建失败，快捷菜单将不显示，原因：{message}",

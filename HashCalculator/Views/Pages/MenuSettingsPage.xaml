@@ -6,6 +6,8 @@
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pagemodels="clr-namespace:HashCalculator.ViewModels.Pages"
+    xmlns:usercontrols="clr-namespace:HashCalculator.Views.UserControls"
+    xmlns:userctrlmodels="clr-namespace:HashCalculator.ViewModels.UserControls"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     d:DataContext="{d:DesignInstance Type=pagemodels:SettingsViewModel}"
     d:DesignHeight="450"
@@ -115,8 +117,8 @@
                     </wpfui:CardControl>
                 </StackPanel>
             </Expander>
-            <wpfui:CardControl Margin="0,4,0,0">
-                <wpfui:CardControl.Header>
+            <wpfui:CardExpander Margin="0,4,0,0">
+                <wpfui:CardExpander.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="自定义已经安装的菜单条目" TextWrapping="WrapWithOverflow" />
                         <wpfui:TextBlock
@@ -125,9 +127,84 @@
                             Text="通过编辑配置文件实现自定义要集成到系统右键菜单的 HashCalculator 菜单项，提高操作效率。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
-                </wpfui:CardControl.Header>
-                <Button Command="{Binding OpenEditContextMenuCmd}" Content="编辑" />
-            </wpfui:CardControl>
+                </wpfui:CardExpander.Header>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*" />
+                        <ColumnDefinition Width="2*" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="3"
+                        HorizontalAlignment="Right"
+                        Orientation="Horizontal">
+                        <wpfui:Button
+                            Appearance="Primary"
+                            Command="{Binding LoadContextMenuConfigCmd}"
+                            Content="载入当前菜单" />
+                        <wpfui:Button
+                            Margin="16,0,0,0"
+                            Appearance="Primary"
+                            Command="{Binding SaveContextMenuConfigCmd}"
+                            Content="保存当前改动" />
+                        <wpfui:Button
+                            Margin="16,0,0,0"
+                            Appearance="Primary"
+                            Command="{Binding CancelContextMenuConfigCmd}"
+                            Content="取消" />
+                        <wpfui:Button
+                            Margin="64,0,0,0"
+                            Appearance="Danger"
+                            Command="{Binding ResetContextMenuConfigCmd}"
+                            Content="恢复默认" />
+                    </StackPanel>
+                    <wpfui:TextBlock
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Margin="0,4,0,0"
+                        FontTypography="BodyStrong"
+                        Text="一级菜单项" />
+                    <wpfui:TextBlock
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Margin="16,4,0,0"
+                        FontTypography="BodyStrong"
+                        Text="二级菜单项" />
+                    <Border
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        Margin="0,4,0,0"
+                        BorderBrush="{DynamicResource TextFillColorDisabledBrush}"
+                        BorderThickness="1"
+                        CornerRadius="4">
+                        <usercontrols:ShellMenuEditorControl DataContext="{Binding LoadedShellMenuEditorModel, Mode=OneWay}" />
+                    </Border>
+                    <Border
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        Margin="16,4,0,0"
+                        BorderBrush="{DynamicResource TextFillColorDisabledBrush}"
+                        BorderThickness="1"
+                        CornerRadius="4">
+                        <usercontrols:ShellSubmenuEditorControl DataContext="{Binding LoadedShellMenuEditorModel.SelectedMenu, Mode=OneWay}" />
+                    </Border>
+                    <wpfui:TextBlock
+                        Grid.Row="3"
+                        Grid.ColumnSpan="2"
+                        Margin="0,16,0,0"
+                        FontTypography="Caption"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="表格算法列中的下拉列表允许同时勾选多个算法，可以实现右键菜单一键使用多个算法进行计算。如果不勾选任何算法，则按设置中指定的行为自动选择算法。注意：当前显示哪个算法不重要，只有被勾选的算法起作用。"
+                        TextWrapping="WrapWithOverflow" />
+                </Grid>
+            </wpfui:CardExpander>
         </StackPanel>
     </ScrollViewer>
 </Page>

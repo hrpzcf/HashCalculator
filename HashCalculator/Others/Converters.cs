@@ -679,20 +679,6 @@ namespace HashCalculator
         }
     }
 
-    internal class EditSubmenusButtonEnabledCvt : IMultiValueConverter
-    {
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
-        {
-            Debug.Assert(values != null && values.Length == 2);
-            return values[0] != null && values[1] is bool result && result;
-        }
-
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
     internal class EditNewInNewLocationToTrueCvt : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

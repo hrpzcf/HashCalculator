@@ -36,7 +36,6 @@ public class HomeViewModel : BaseViewModel
     private string hashValueStringOrChecklistPath = null;
     private RunningState runningState = RunningState.None;
 
-    private RelayCommand applyFiltersCommand;
     private RelayCommand mainWindowTopmostCmd;
     private RelayCommand clearAllTableLinesCmd;
     private RelayCommand exportHashResultsCmd;

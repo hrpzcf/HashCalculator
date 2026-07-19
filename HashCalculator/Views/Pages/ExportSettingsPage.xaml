@@ -6,7 +6,7 @@
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pagemodels="clr-namespace:HashCalculator.ViewModels.Pages"
-    xmlns:userctrls="clr-namespace:HashCalculator.Views.UserControls"
+    xmlns:usercontrols="clr-namespace:HashCalculator.Views.UserControls"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     d:DataContext="{d:DesignInstance Type=pagemodels:SettingsViewModel}"
     d:DesignHeight="450"
@@ -18,8 +18,8 @@
     </Page.InputBindings>
     <ScrollViewer Padding="14" VerticalScrollBarVisibility="Auto">
         <StackPanel>
-            <userctrls:ExportSettingsBasicControl />
-            <userctrls:ExportSettingsTemplateControl />
+            <usercontrols:ExportSettingsBasicControl />
+            <usercontrols:ExportSettingsTemplateControl />
         </StackPanel>
     </ScrollViewer>
 </Page>

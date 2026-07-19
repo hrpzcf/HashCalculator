@@ -27,7 +27,7 @@ namespace HashCalculator
         public static void SnackbarWarning(string message)
         {
             SnackbarService.Show(
-                "警告",
+                "提醒",
                 message,
                 Wpfctrls.ControlAppearance.Caution,
                 new Wpfctrls.SymbolIcon(Wpfctrls.SymbolRegular.Warning20),
@@ -49,7 +49,7 @@ namespace HashCalculator
         public static void SnackbarInformation(string message)
         {
             SnackbarService.Show(
-                "提示",
+                "信息",
                 message,
                 Wpfctrls.ControlAppearance.Secondary,
                 new Wpfctrls.SymbolIcon(Wpfctrls.SymbolRegular.Info20),

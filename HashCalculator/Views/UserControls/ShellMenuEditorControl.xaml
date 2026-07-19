@@ -1,0 +1,87 @@
+﻿<UserControl
+    x:Class="HashCalculator.Views.UserControls.ShellMenuEditorControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:HashCalculator"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pagemodels="clr-namespace:HashCalculator.ViewModels.Pages"
+    xmlns:userctrlmodels="clr-namespace:HashCalculator.ViewModels.UserControls"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
+    d:DataContext="{d:DesignInstance Type=userctrlmodels:ShellMenuEditorModel}"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <Grid Margin="8">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <DataGrid
+            Grid.Column="0"
+            AutoGenerateColumns="False"
+            IsReadOnly="True"
+            ItemsSource="{Binding MenuList}"
+            SelectedItem="{Binding SelectedMenu}">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="菜单标题">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding Title, UpdateSourceTrigger=LostFocus}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="类型">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox
+                                DisplayMemberPath="Display"
+                                ItemsSource="{x:Static userctrlmodels:ShellMenuEditorModel.AvailableMenuTypes}"
+                                SelectedValue="{Binding MenuType, UpdateSourceTrigger=PropertyChanged}"
+                                SelectedValuePath="ItemValue" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="有子菜单">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox IsChecked="{Binding HasSubmenus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="算法">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox
+                                IsEnabled="{Binding HasSubmenus, Converter={StaticResource ReverseBooleanValueCvt}}"
+                                ItemsSource="{Binding AvailableAlgTypes}"
+                                SelectedItem="{Binding CurrentAlgoType}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <wpfui:ToggleSwitch Content="{Binding Display}" IsChecked="{Binding Selected}" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Width="*" />
+            </DataGrid.Columns>
+        </DataGrid>
+        <StackPanel Grid.Column="1" Margin="8,0,0,0">
+            <Button Command="{Binding AddMenuListCmd}" Content="新建菜单" />
+            <Button
+                Margin="0,8,0,0"
+                Command="{Binding MoveMenuUpCmd}"
+                Content="上移所选" />
+            <Button
+                Margin="0,8,0,0"
+                Command="{Binding MoveMenuDownCmd}"
+                Content="下移所选" />
+            <wpfui:Button
+                Margin="0,32,0,0"
+                Appearance="Danger"
+                Command="{Binding DeleteMenuCmd}"
+                Content="移除所选" />
+        </StackPanel>
+    </Grid>
+</UserControl>
