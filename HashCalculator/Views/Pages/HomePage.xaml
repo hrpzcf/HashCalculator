@@ -81,7 +81,7 @@
                     Margin="16,0,0,0"
                     VerticalAlignment="Bottom"
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowApplyRefreshFilterslButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
-                    <Button Style="{StaticResource ImageButtonStyle2}" ToolTip="应用【筛选】页面中勾选的筛选器并刷新筛选，将此页符合筛选条件的行筛选出来。">
+                    <Button Style="{StaticResource ImageButtonStyle2}" ToolTip="左键点击应用【筛选】页面中勾选的筛选器并刷新筛选视图，右键点击取消筛选。">
                         <Button.IsEnabled>
                             <MultiBinding Converter="{StaticResource CmdPanelCriticalControlsEnabledCvt}">
                                 <Binding Path="State" Source="{x:Static pagemodels:HomeViewModel.Current}" />
