@@ -73,32 +73,24 @@
                     Grid.RowSpan="2"
                     Grid.Column="2"
                     Margin="16,0,16,0">
-                    <!--  筛选器的刷新按钮  -->
-                    <wpfui:Button
-                        Grid.Row="0"
-                        Command="{Binding RefreshFiltersCmd}"
-                        Content="应用"
-                        Icon="{wpfui:SymbolIcon Symbol=Checkmark32}"
-                        ToolTip="应用已选的筛选器并刷新主页表格视图..." />
                     <wpfui:Button
                         Grid.Row="1"
-                        Margin="0,16,0,0"
                         Command="{Binding MoveFilterUpCmd}"
-                        Content="下移"
+                        Content="下移所选"
                         Icon="{wpfui:SymbolIcon Symbol=ChevronUp12}"
                         ToolTip="上移筛选器..." />
                     <wpfui:Button
                         Grid.Row="2"
                         Margin="0,16,0,0"
                         Command="{Binding MoveFilterDownCmd}"
-                        Content="上移"
+                        Content="上移所选"
                         Icon="{wpfui:SymbolIcon Symbol=ChevronDown12}"
                         ToolTip="下移筛选器..." />
                     <wpfui:Button
                         Grid.Row="3"
                         Margin="0,16,0,0"
                         Command="{Binding ClearFilterSelectionCmd}"
-                        Content="清除"
+                        Content="清除选择"
                         Icon="{wpfui:SymbolIcon Symbol=Dismiss12}"
                         ToolTip="取消所有筛选器的启用状态..." />
                 </StackPanel>

@@ -16,12 +16,10 @@
                 <wpfui:TextBlock FontTypography="BodyStrong" Text="文件大小下限" />
             </wpfui:CardControl.Header>
             <StackPanel Orientation="Horizontal">
-                <TextBox
-                    MinWidth="100"
-                    VerticalAlignment="Center"
-                    Text="{Binding MinFileSize, Converter={StaticResource StringToDoubleDefaultZeroCvt}}" />
+                <TextBox MinWidth="100" Text="{Binding MinFileSize, Converter={StaticResource StringToDoubleDefaultZeroCvt}}" />
                 <ComboBox
                     MinWidth="50"
+                    Margin="4,0,0,0"
                     DisplayMemberPath="Display"
                     ItemsSource="{Binding Items}"
                     SelectedItem="{Binding MinSizeUnit}" />
@@ -39,12 +37,10 @@
                 </StackPanel>
             </wpfui:CardControl.Header>
             <StackPanel Orientation="Horizontal">
-                <TextBox
-                    MinWidth="100"
-                    VerticalAlignment="Center"
-                    Text="{Binding MaxFileSize, Converter={StaticResource StringToDoubleDefaultZeroCvt}}" />
+                <TextBox MinWidth="100" Text="{Binding MaxFileSize, Converter={StaticResource StringToDoubleDefaultZeroCvt}}" />
                 <ComboBox
                     MinWidth="50"
+                    Margin="4,0,0,0"
                     DisplayMemberPath="Display"
                     ItemsSource="{Binding Items}"
                     SelectedItem="{Binding MaxSizeUnit}" />
