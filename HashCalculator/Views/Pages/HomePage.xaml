@@ -81,20 +81,36 @@
                     Margin="16,0,0,0"
                     VerticalAlignment="Bottom"
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowApplyRefreshFilterslButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
-                    <Button
-                        Command="{Binding FilterAndOperationModel.RefreshFiltersCmd}"
-                        Style="{StaticResource ImageButtonStyle2}"
-                        ToolTip="应用【筛选】页面中勾选的筛选器并刷新筛选，将此页符合筛选条件的行筛选出来。">
+                    <Button Style="{StaticResource ImageButtonStyle2}" ToolTip="应用【筛选】页面中勾选的筛选器并刷新筛选，将此页符合筛选条件的行筛选出来。">
                         <Button.IsEnabled>
                             <MultiBinding Converter="{StaticResource CmdPanelCriticalControlsEnabledCvt}">
                                 <Binding Path="State" Source="{x:Static pagemodels:HomeViewModel.Current}" />
-                                <Binding Path="FilterAndCmderEnabled" Source="{x:Static local:Settings.Current}" />
+                                <Binding Path="IsFiltersAndCmdersIdle" Source="{x:Static local:Settings.Current}" />
                             </MultiBinding>
                         </Button.IsEnabled>
-                        <Image
-                            Width="32"
-                            Height="32"
-                            Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnFilterEnabledImgSrcCvt}}" />
+                        <Button.InputBindings>
+                            <MouseBinding
+                                Command="{Binding FilterAndOperationModel.RefreshFiltersCmd}"
+                                CommandParameter="{StaticResource TrueValue}"
+                                MouseAction="LeftClick" />
+                            <MouseBinding
+                                Command="{Binding FilterAndOperationModel.RefreshFiltersCmd}"
+                                CommandParameter="{StaticResource FalseValue}"
+                                MouseAction="RightClick" />
+                        </Button.InputBindings>
+                        <Grid>
+                            <Image
+                                Width="32"
+                                Height="32"
+                                Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnFilterEnabledImgSrcCvt}}" />
+                            <wpfui:InfoBadge
+                                Margin="3"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Bottom"
+                                Severity="Critical"
+                                Style="{DynamicResource DotInfoBadgeStyle}"
+                                Visibility="{Binding FilterAndOperationModel.IsFiltersApplied, Converter={StaticResource TrueToVisibilityVisibleCvt}}" />
+                        </Grid>
                     </Button>
                     <TextBlock
                         Margin="0,2"

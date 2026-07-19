@@ -62,10 +62,10 @@ namespace HashCalculator
 
         private void RenameFilesAction(object param)
         {
-            if (Settings.Current.FilterAndCmderEnabled &&
+            if (Settings.Current.IsFiltersAndCmdersIdle &&
                 this.RefModels is IEnumerable<HashViewModel> models)
             {
-                Settings.Current.FilterAndCmderEnabled = false;
+                Settings.Current.IsFiltersAndCmdersIdle = false;
                 if (!models.Any(i => i.IsExecutionTarget && i.AlgoInOutModels != null))
                 {
                     NotificationSender.ShowMessageBox(
@@ -174,7 +174,7 @@ namespace HashCalculator
                     model.IsExecutionTarget = false;
                 }
             FinishingTouches:
-                Settings.Current.FilterAndCmderEnabled = true;
+                Settings.Current.IsFiltersAndCmdersIdle = true;
                 Settings.Current.IsMainRowSelectedByCheckBox = false;
             }
         }

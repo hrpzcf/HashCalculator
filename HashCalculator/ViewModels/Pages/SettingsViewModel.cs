@@ -577,7 +577,7 @@ public class SettingsViewModel : BaseViewModel
     }
 
     [JsonIgnore, XmlIgnore]
-    public bool FilterAndCmderEnabled
+    public bool IsFiltersAndCmdersIdle
     {
         get => this.filterOrCmderEnabled;
         set => this.SetPropNotify(ref this.filterOrCmderEnabled, value);

@@ -165,10 +165,10 @@ namespace HashCalculator
 
         private async void GenerateMarkedFilesAction(object param)
         {
-            if (Settings.Current.FilterAndCmderEnabled &&
+            if (Settings.Current.IsFiltersAndCmdersIdle &&
                 this.RefModels is IEnumerable<HashViewModel> hashViewModels)
             {
-                Settings.Current.FilterAndCmderEnabled = false;
+                Settings.Current.IsFiltersAndCmdersIdle = false;
                 if (this.MarkFilesOption == EditFileOption.NewInNewLocation)
                 {
                     if (string.IsNullOrEmpty(this.DirectoryUsedToSaveFiles) ||
@@ -229,7 +229,7 @@ namespace HashCalculator
                         MainWindow.Current, "提示", "没有找到任何操作目标，请刷新筛选或手动勾选操作目标！");
                 }
             FinishingTouches:
-                Settings.Current.FilterAndCmderEnabled = true;
+                Settings.Current.IsFiltersAndCmdersIdle = true;
                 Settings.Current.IsMainRowSelectedByCheckBox = false;
             }
         }

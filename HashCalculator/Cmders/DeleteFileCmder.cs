@@ -37,10 +37,10 @@ namespace HashCalculator
 
         private async void DeleteOrMoveToRecycleBin(bool toRecyclebin)
         {
-            if (Settings.Current.FilterAndCmderEnabled &&
+            if (Settings.Current.IsFiltersAndCmdersIdle &&
                 this.RefModels is ObservableCollection<HashViewModel> hashViewModels)
             {
-                Settings.Current.FilterAndCmderEnabled = false;
+                Settings.Current.IsFiltersAndCmdersIdle = false;
                 if (hashViewModels.Any(i => i.IsExecutionTarget))
                 {
                     string promptInfo = toRecyclebin ?
@@ -95,7 +95,7 @@ namespace HashCalculator
                         MainWindow.Current, "提示", "没有找到任何操作目标，请刷新筛选或手动勾选要删除的对象");
                 }
             FinishingTouches:
-                Settings.Current.FilterAndCmderEnabled = true;
+                Settings.Current.IsFiltersAndCmdersIdle = true;
                 Settings.Current.IsMainRowSelectedByCheckBox = false;
             }
         }

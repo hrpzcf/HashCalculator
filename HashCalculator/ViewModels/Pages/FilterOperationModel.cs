@@ -17,6 +17,7 @@ public class FilterOperationModel : BaseViewModel
     private RelayCommand moveFilterUpCmd;
     private RelayCommand moveFilterDownCmd;
     private RelayCommand clearFilterSelectionCmd;
+    private bool _isFiltersApplied = false;
 
     private ICollectionView BoundDataGridView { get; }
 
@@ -40,6 +41,12 @@ public class FilterOperationModel : BaseViewModel
             this.SetPropNotify(ref this.selectedFilter, value);
             this.NotifyPropertyChanged(nameof(this.IsInformationBarOpened));
         }
+    }
+
+    public bool IsFiltersApplied
+    {
+        get => this._isFiltersApplied;
+        set => this.SetPropNotify(ref this._isFiltersApplied, value);
     }
 
     public AbsHashesCmder SelectTableLinesCmder { get; }
@@ -152,17 +159,17 @@ public class FilterOperationModel : BaseViewModel
 
     private async void RefreshFiltersAction(object param)
     {
-        if (!Settings.Current.FilterAndCmderEnabled)
+        if (!Settings.Current.IsFiltersAndCmdersIdle)
         {
             return;
         }
-        Settings.Current.FilterAndCmderEnabled = false;
+        Settings.Current.IsFiltersAndCmdersIdle = false;
         this.SelectTableLinesCmder.Reset();
         foreach (AbsHashesCmder cmder in this.HashModelCmders)
         {
             cmder.Reset();
         }
-        bool filteringShouldBeApplied = param is not bool instruction || instruction;
+        bool filteringShouldBeApplied = (param is not bool instruction) || instruction;
         await Task.Run(() =>
         {
             foreach (HashViewModel model in HashModelStore.HashViewModels)
@@ -218,7 +225,8 @@ public class FilterOperationModel : BaseViewModel
                 }
             }
         }
-        Settings.Current.FilterAndCmderEnabled = true;
+        this.IsFiltersApplied = filteringShouldBeApplied;
+        Settings.Current.IsFiltersAndCmdersIdle = true;
     }
 
     public ICommand RefreshFiltersCmd
