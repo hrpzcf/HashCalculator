@@ -33,12 +33,6 @@ public class SettingsViewModel : BaseViewModel
     private double shellMenuEditorHeight = 400.0;
     private double shellSubmenuEditorWidth = 400.0;
     private double shellSubmenuEditorHeight = 600.0;
-    private double mainWndDelFileProgressWidth = 400.0;
-    private double mainWndDelFileProgressHeight = 200.0;
-    private double markFilesProgressWidth = 400.0;
-    private double markFilesProgressHeight = 200.0;
-    private double restoreFilesProgressWidth = 400.0;
-    private double restoreFilesProgressHeight = 200.0;
     private double exceptionWindowWidth = 800.0;
     private double exceptionWindowHeight = 600.0;
 
@@ -335,42 +329,6 @@ public class SettingsViewModel : BaseViewModel
     {
         get => this.shellSubmenuEditorHeight;
         set => this.SetPropNotify(ref this.shellSubmenuEditorHeight, value);
-    }
-
-    public double MainWndDelFileProgressWidth
-    {
-        get => this.mainWndDelFileProgressWidth;
-        set => this.SetPropNotify(ref this.mainWndDelFileProgressWidth, value);
-    }
-
-    public double MainWndDelFileProgressHeight
-    {
-        get => this.mainWndDelFileProgressHeight;
-        set => this.SetPropNotify(ref this.mainWndDelFileProgressHeight, value);
-    }
-
-    public double MarkFilesProgressWidth
-    {
-        get => this.markFilesProgressWidth;
-        set => this.SetPropNotify(ref this.markFilesProgressWidth, value);
-    }
-
-    public double MarkFilesProgressHeight
-    {
-        get => this.markFilesProgressHeight;
-        set => this.SetPropNotify(ref this.markFilesProgressHeight, value);
-    }
-
-    public double RestoreFilesProgressWidth
-    {
-        get => this.restoreFilesProgressWidth;
-        set => this.SetPropNotify(ref this.restoreFilesProgressWidth, value);
-    }
-
-    public double RestoreFilesProgressHeight
-    {
-        get => this.restoreFilesProgressHeight;
-        set => this.SetPropNotify(ref this.restoreFilesProgressHeight, value);
     }
 
     public double ExceptionWindowWidth

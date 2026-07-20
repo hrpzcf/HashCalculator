@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
 using HashCalculator.Others;
-using HashCalculator.ViewModels.Pages;
 using HashCalculator.Views.Windows;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Wpfctrls = Wpf.Ui.Controls;
@@ -21,14 +20,6 @@ namespace HashCalculator
         private RelayCommand hideFilesHcmDataCmd;
         private string directoryUsedToSaveFiles;
         private EditFileOption restoreFilesOption;
-
-        private static readonly SizeDelegates delegates = new SizeDelegates()
-        {
-            GetWindowWidth = () => Settings.Current.RestoreFilesProgressWidth,
-            SetWindowWidth = width => Settings.Current.RestoreFilesProgressWidth = width,
-            GetWindowHeight = () => Settings.Current.RestoreFilesProgressHeight,
-            SetWindowHeight = height => Settings.Current.RestoreFilesProgressHeight = height,
-        };
 
         public override ContentControl UserInterface { get; }
 
@@ -214,7 +205,10 @@ namespace HashCalculator
                 if (hashViewModels.Any(i => i.IsExecutionTarget))
                 {
                     IEnumerable<HashViewModel> targets = hashViewModels.Where(i => i.IsExecutionTarget);
-                    DoubleProgressModel progressModel = new DoubleProgressModel(delegates);
+                    DoubleProgressModel progressModel = new DoubleProgressModel()
+                    {
+                        WindowTitle = "正在还原...",
+                    };
                     DoubleProgressWindow progressWindow = new DoubleProgressWindow(progressModel)
                     {
                         Owner = MainWindow.Current
@@ -298,7 +292,10 @@ namespace HashCalculator
                 if (hashViewModels.Any(i => i.IsExecutionTarget))
                 {
                     IEnumerable<HashViewModel> targets = hashViewModels.Where(i => i.IsExecutionTarget);
-                    DoubleProgressModel progressModel = new DoubleProgressModel(delegates);
+                    DoubleProgressModel progressModel = new DoubleProgressModel()
+                    {
+                        WindowTitle = "正在读取...",
+                    };
                     DoubleProgressWindow progressWindow = new DoubleProgressWindow(progressModel)
                     {
                         Owner = MainWindow.Current

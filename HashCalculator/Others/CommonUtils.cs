@@ -277,6 +277,7 @@ namespace HashCalculator
             {
                 flags |= FILEOP_FLAGS.FOF_SILENT;
                 flags |= FILEOP_FLAGS.FOF_NOCONFIRMATION;
+                flags |= FILEOP_FLAGS.FOF_NOERRORUI;
             }
             int operationResult;
             if (IntPtr.Size == 4)

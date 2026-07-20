@@ -4,31 +4,6 @@ using System.Windows.Input;
 
 namespace HashCalculator
 {
-    internal delegate double GetWndSize();
-
-    internal delegate void SetWndSize(double size);
-
-    internal class SizeDelegates
-    {
-        public SizeDelegates() { }
-
-        public SizeDelegates(GetWndSize gww, SetWndSize sww, GetWndSize gwh, SetWndSize swh)
-        {
-            this.GetWindowWidth = gww;
-            this.SetWindowWidth = sww;
-            this.GetWindowHeight = gwh;
-            this.SetWindowHeight = swh;
-        }
-
-        public GetWndSize GetWindowWidth { get; set; }
-
-        public SetWndSize SetWindowWidth { get; set; }
-
-        public GetWndSize GetWindowHeight { get; set; }
-
-        public SetWndSize SetWindowHeight { get; set; }
-    }
-
     internal class DoubleProgressModel : BaseViewModel
     {
         private bool isCancelled = false;
@@ -45,47 +20,15 @@ namespace HashCalculator
 
         public DoubleProgressModel() { }
 
-        public DoubleProgressModel(SizeDelegates delegates)
-        {
-            this.SizeDelegates = delegates;
-        }
-
-        public DoubleProgressModel(string title, SizeDelegates delegates)
+        public DoubleProgressModel(string title)
         {
             this.windowTitle = title;
-            this.SizeDelegates = delegates;
         }
 
         public string WindowTitle
         {
             get => this.windowTitle;
             set => this.SetPropNotify(ref this.windowTitle, value);
-        }
-
-        public SizeDelegates SizeDelegates { get; set; }
-
-        public double WindowWidth
-        {
-            get
-            {
-                return this.SizeDelegates?.GetWindowWidth?.Invoke() ?? 400.0;
-            }
-            set
-            {
-                this.SizeDelegates?.SetWindowWidth?.Invoke(value);
-            }
-        }
-
-        public double WindowHeight
-        {
-            get
-            {
-                return this.SizeDelegates?.GetWindowHeight?.Invoke() ?? 200.0;
-            }
-            set
-            {
-                this.SizeDelegates?.SetWindowHeight?.Invoke(value);
-            }
         }
 
         public double CurrentValue
@@ -102,10 +45,7 @@ namespace HashCalculator
 
         public int TotalCount
         {
-            get
-            {
-                return this.totalCount;
-            }
+            get => this.totalCount;
             set
             {
                 this.SetPropNotify(ref this.totalCount, value);
@@ -118,10 +58,7 @@ namespace HashCalculator
 
         public int ProcessedCount
         {
-            get
-            {
-                return this.processedCount;
-            }
+            get => this.processedCount;
             set
             {
                 this.SetPropNotify(ref this.processedCount, value);
@@ -142,13 +79,11 @@ namespace HashCalculator
                 }
                 else
                 {
-                    return $"正在处理第 {this.ProcessedCount}/{this.TotalCount} 个......";
+                    return $"正在处理第 {this.ProcessedCount}/{this.TotalCount} 个...";
                 }
             }
-            set
-            {
-                this.SetPropNotify(ref this.totalString, value);
-            }
+
+            set => this.SetPropNotify(ref this.totalString, value);
         }
 
         public Visibility SubProgressVisibility

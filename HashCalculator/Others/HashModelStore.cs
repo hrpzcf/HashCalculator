@@ -8,7 +8,7 @@ public static class HashModelStore
 {
     static HashModelStore()
     {
-        HashViewModels = new ObservableCollection<HashViewModel>();
+        HashViewModels = new RangeObservableCollection<HashViewModel>();
         HashViewModelsSource = new CollectionViewSource();
         HashViewModelsSource.Source = HashViewModels;
         HashViewModelsView = HashViewModelsSource.View;
@@ -25,5 +25,5 @@ public static class HashModelStore
     /// </summary>
     public static ICollectionView HashViewModelsView { get; }
 
-    public static ObservableCollection<HashViewModel> HashViewModels { get; }
+    public static RangeObservableCollection<HashViewModel> HashViewModels { get; }
 }

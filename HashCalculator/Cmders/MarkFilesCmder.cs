@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
 using HashCalculator.Others;
-using HashCalculator.ViewModels.Pages;
 using HashCalculator.Views.Windows;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Wpfctrls = Wpf.Ui.Controls;
@@ -19,14 +18,6 @@ namespace HashCalculator
         private RelayCommand generateMarkedFilesCmd;
         private EditFileOption markFilesOption;
         private string directoryUsedToSaveFiles;
-
-        private static readonly SizeDelegates delegates = new SizeDelegates()
-        {
-            GetWindowWidth = () => Settings.Current.MarkFilesProgressWidth,
-            SetWindowWidth = width => Settings.Current.MarkFilesProgressWidth = width,
-            GetWindowHeight = () => Settings.Current.MarkFilesProgressHeight,
-            SetWindowHeight = height => Settings.Current.MarkFilesProgressHeight = height,
-        };
 
         public override ContentControl UserInterface { get; }
 
@@ -208,7 +199,10 @@ namespace HashCalculator
                 if (hashViewModels.Any(i => i.IsExecutionTarget))
                 {
                     IEnumerable<HashViewModel> targets = hashViewModels.Where(i => i.IsExecutionTarget);
-                    DoubleProgressModel progressModel = new DoubleProgressModel(delegates);
+                    DoubleProgressModel progressModel = new DoubleProgressModel()
+                    {
+                        WindowTitle = "正在写入...",
+                    };
                     DoubleProgressWindow progressWindow = new DoubleProgressWindow(progressModel)
                     {
                         Owner = MainWindow.Current

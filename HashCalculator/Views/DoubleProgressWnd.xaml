@@ -1,61 +1,79 @@
-﻿<Window
+﻿<wpfui:FluentWindow
     x:Class="HashCalculator.DoubleProgressWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pagemodels="clr-namespace:HashCalculator.ViewModels.Pages"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="{Binding WindowTitle}"
-    Width="{Binding WindowWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-    Height="{Binding WindowHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+    Width="400"
+    MinHeight="0"
     d:DataContext="{d:DesignInstance Type=local:DoubleProgressModel}"
+    ResizeMode="NoResize"
+    ShowInTaskbar="False"
+    SizeToContent="Height"
     SnapsToDevicePixels="True"
     WindowStartupLocation="CenterOwner"
     mc:Ignorable="d">
-    <Grid Margin="32,8">
+    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="2*" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="3*" />
+            <RowDefinition />
         </Grid.RowDefinitions>
-        <ProgressBar
-            Grid.Row="1"
-            Grid.Column="1"
-            Grid.ColumnSpan="2"
-            Maximum="1.0"
-            Visibility="{Binding SubProgressVisibility}"
-            Value="{Binding CurrentValue}" />
-        <TextBlock
-            Grid.Row="2"
-            Margin="0,4,0,0"
-            Foreground="Gray"
-            Text="{Binding CurrentString}"
-            TextTrimming="CharacterEllipsis"
-            Visibility="{Binding SubProgressVisibility}" />
-        <ProgressBar
-            Grid.Row="3"
-            Margin="0,16,0,0"
-            Maximum="{Binding TotalCount}"
-            Visibility="{Binding TotalProgressVisibility}"
-            Value="{Binding ProcessedCount}" />
-        <TextBlock
-            Grid.Row="4"
-            Margin="0,4,0,0"
-            Foreground="Gray"
-            Text="{Binding TotalString}"
-            TextTrimming="CharacterEllipsis"
-            Visibility="{Binding TotalStringVisibility}" />
-        <Button
-            Grid.Row="5"
-            Padding="16,4"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Bottom"
-            Background="{x:Null}"
-            Command="{Binding CancelOperationCmd}"
-            Content="取消"
-            IsEnabled="{Binding IsCancelled, Converter={StaticResource ReverseBooleanValueCvt}}" />
+        <wpfui:TitleBar
+            Title="{Binding WindowTitle}"
+            Grid.Row="0"
+            Height="30"
+            ShowMaximize="False"
+            ShowMinimize="False">
+            <wpfui:TitleBar.Icon>
+                <wpfui:ImageIcon Source="/Images/icon.ico" />
+            </wpfui:TitleBar.Icon>
+        </wpfui:TitleBar>
+        <Grid Grid.Row="1" Margin="16">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <ProgressBar
+                Grid.Row="0"
+                Grid.Column="1"
+                Margin="0,16,0,0"
+                Maximum="1.0"
+                Visibility="{Binding SubProgressVisibility}"
+                Value="{Binding CurrentValue}" />
+            <TextBlock
+                Grid.Row="1"
+                Margin="0,8,0,0"
+                Text="{Binding CurrentString}"
+                TextTrimming="CharacterEllipsis"
+                Visibility="{Binding SubProgressVisibility}" />
+            <ProgressBar
+                Grid.Row="2"
+                Margin="0,16,0,0"
+                Maximum="{Binding TotalCount}"
+                Visibility="{Binding TotalProgressVisibility}"
+                Value="{Binding ProcessedCount}" />
+            <TextBlock
+                Grid.Row="3"
+                Margin="0,8,0,0"
+                Text="{Binding TotalString}"
+                TextTrimming="CharacterEllipsis"
+                Visibility="{Binding TotalStringVisibility}" />
+            <Button
+                Grid.Row="4"
+                Margin="0,16,0,0"
+                Padding="16,4"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Command="{Binding CancelOperationCmd}"
+                Content="取消"
+                IsEnabled="{Binding IsCancelled, Converter={StaticResource ReverseBooleanValueCvt}}" />
+        </Grid>
     </Grid>
-</Window>
+</wpfui:FluentWindow>

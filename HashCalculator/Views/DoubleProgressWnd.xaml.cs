@@ -2,7 +2,7 @@
 
 namespace HashCalculator
 {
-    public partial class DoubleProgressWindow : Window
+    public partial class DoubleProgressWindow 
     {
         private readonly DoubleProgressModel viewModel;
 

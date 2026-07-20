@@ -7,7 +7,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using HashCalculator.Others;
 using HashCalculator.ViewModels.Pages;
-using HashCalculator.ViewModels.Windows;
 using HashCalculator.Views.Windows;
 using Wpfctrls = Wpf.Ui.Controls;
 

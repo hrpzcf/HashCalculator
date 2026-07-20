@@ -69,14 +69,6 @@ public class HomeViewModel : BaseViewModel
     private GenericItemModel[] switchAlgoExportStateCmds;
     private GenericItemModel[] ctrlHashViewModelTaskCmds;
 
-    private static readonly SizeDelegates sizeDelegates = new SizeDelegates()
-    {
-        GetWindowWidth = () => Settings.Current.MainWndDelFileProgressWidth,
-        SetWindowWidth = width => Settings.Current.MainWndDelFileProgressWidth = width,
-        GetWindowHeight = () => Settings.Current.MainWndDelFileProgressHeight,
-        SetWindowHeight = height => Settings.Current.MainWndDelFileProgressHeight = height,
-    };
-
     public HomeViewModel(FilterOperationModel model)
     {
         Current = this;
@@ -758,13 +750,14 @@ public class HomeViewModel : BaseViewModel
             {
                 return;
             }
-            DoubleProgressModel progress = new DoubleProgressModel(sizeDelegates)
+            DoubleProgressModel progress = new DoubleProgressModel()
             {
                 IsCancelled = true,
                 TotalCount = count,
                 SubProgressVisibility = Visibility.Collapsed,
                 TotalProgressVisibility = Visibility.Collapsed,
-                TotalString = "正在删除文件，请稍候...",
+                WindowTitle = "正在删除...",
+                TotalString = "文件数量多的情况下耗时较长，请耐心等候...",
             };
             DoubleProgressWindow progressWindow = new DoubleProgressWindow(progress)
             {
@@ -773,9 +766,9 @@ public class HomeViewModel : BaseViewModel
             HashViewModel[] targets = selectedModels.Cast<HashViewModel>().ToArray();
             foreach (HashViewModel model in targets)
             {
-                model.ShutdownModelWait();
-                HashModelStore.HashViewModels.Remove(model);
+                model.ShutdownModel();
             }
+            HashModelStore.HashViewModels.RemoveRange(targets);
             Task<string> deleteFileTask = Task.Run(() =>
             {
                 try
