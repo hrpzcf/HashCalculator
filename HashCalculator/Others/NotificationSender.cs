@@ -40,7 +40,7 @@ namespace HashCalculator
             SnackbarService.Show(
                 "成功",
                 message,
-                Wpfctrls.ControlAppearance.Primary,
+                Wpfctrls.ControlAppearance.Success,
                 new Wpfctrls.SymbolIcon(Wpfctrls.SymbolRegular.CheckmarkCircle20),
                 TimeSpan.FromSeconds(Settings.Current.SnackbarNotificationTimeSpanSeconds)
                 );
@@ -50,6 +50,17 @@ namespace HashCalculator
         {
             SnackbarService.Show(
                 "信息",
+                message,
+                Wpfctrls.ControlAppearance.Info,
+                new Wpfctrls.SymbolIcon(Wpfctrls.SymbolRegular.Info20),
+                TimeSpan.FromSeconds(Settings.Current.SnackbarNotificationTimeSpanSeconds)
+                );
+        }
+
+        public static void SnackbarSecondary(string message)
+        {
+            SnackbarService.Show(
+                "提示",
                 message,
                 Wpfctrls.ControlAppearance.Secondary,
                 new Wpfctrls.SymbolIcon(Wpfctrls.SymbolRegular.Info20),

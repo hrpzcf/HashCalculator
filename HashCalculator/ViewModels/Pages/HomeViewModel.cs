@@ -494,11 +494,11 @@ public class HomeViewModel : BaseViewModel
             if (stringBuilder.Length != 0)
             {
                 CommonUtils.ClipboardSetText(stringBuilder.ToString());
-                NotificationSender.SnackbarSuccess("已复制文件名或文件路径到剪贴板");
+                NotificationSender.SnackbarSuccess("已复制文件名或文件路径到剪贴板。");
             }
             if (!copyName && !fullPathCopied)
             {
-                NotificationSender.SnackbarWarning("文件不存在所以完整路径没有被复制");
+                NotificationSender.SnackbarWarning("文件不存在所以完整路径没有被复制。");
             }
         }
     }
@@ -894,12 +894,12 @@ public class HomeViewModel : BaseViewModel
     {
         if (!HashModelStore.HashViewModels.Any(i => i.Result == HashResult.Succeeded))
         {
-            NotificationSender.SnackbarWarning("主窗口列表中没有可以导出的结果。");
+            NotificationSender.SnackbarSecondary("主页列表中没有可以导出的结果。");
             return;
         }
         if (Settings.Current.TemplatesForExport?.Any() != true)
         {
-            NotificationSender.SnackbarWarning("没有导出方案可用，请到【导出结果设置】中添加。");
+            NotificationSender.SnackbarWarning("没有可用的导出方案，请到【导出行为】中添加。");
             return;
         }
         if (Settings.Current.AskUserHowToExportResultsEveryTime)
@@ -932,7 +932,7 @@ public class HomeViewModel : BaseViewModel
         if (usedModels.Count == 0)
         {
             NotificationSender.SnackbarWarning(
-                "没有可用方案，可能方案的扩展名中存在不能用作文件名的字符，请到【导出结果设置】中修改。");
+                "没有可用方案，可能方案的扩展名中存在不能用作文件名的字符，请到【导出行为】中修改。");
             return;
         }
         try
@@ -1208,7 +1208,7 @@ public class HomeViewModel : BaseViewModel
                 }
                 catch (Exception)
                 {
-                    NotificationSender.SnackbarError("无法获取哈希值清单文件所在目录");
+                    NotificationSender.SnackbarWarning("无法获取哈希值清单文件所在目录。");
                     return false;
                 }
             }

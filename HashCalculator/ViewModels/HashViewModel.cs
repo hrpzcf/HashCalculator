@@ -427,7 +427,7 @@ namespace HashCalculator
                         }
                         else
                         {
-                            NotificationSender.SnackbarError("文件不存在，未复制完整路径！");
+                            NotificationSender.SnackbarWarning("文件不存在，未复制完整路径！");
                         }
                         break;
                 }

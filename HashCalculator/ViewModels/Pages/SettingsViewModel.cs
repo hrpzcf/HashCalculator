@@ -1073,7 +1073,7 @@ public class SettingsViewModel : BaseViewModel
         }
         else
         {
-            NotificationSender.SnackbarWarning($"配置文件保存失败：\n{optionException}");
+            NotificationSender.SnackbarError($"配置文件保存失败：\n{optionException}");
         }
         this.LoadedShellMenuEditorModel = null;
     }
@@ -1564,7 +1564,7 @@ public class SettingsViewModel : BaseViewModel
         if (param is string placeholder)
         {
             CommonUtils.ClipboardSetText(placeholder);
-            NotificationSender.SnackbarInformation($"已复制占位符：{placeholder}");
+            NotificationSender.SnackbarSecondary($"已复制占位符：{placeholder}");
         }
     }
 
