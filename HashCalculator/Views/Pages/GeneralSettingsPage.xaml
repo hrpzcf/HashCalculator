@@ -242,6 +242,19 @@
             <wpfui:CardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
                     <StackPanel>
+                        <wpfui:TextBlock Text="移动到回收站时不显示系统对话框" TextWrapping="WrapWithOverflow" />
+                        <wpfui:TextBlock
+                            FontTypography="Caption"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            Text="在主页把文件移动到回收站时不显示系统的进度对话框。"
+                            TextWrapping="WrapWithOverflow" />
+                    </StackPanel>
+                </wpfui:CardControl.Header>
+                <wpfui:ToggleSwitch IsChecked="{Binding MoveFilesToRecycleBinSilently, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </wpfui:CardControl>
+            <wpfui:CardControl Margin="0,4,0,0">
+                <wpfui:CardControl.Header>
+                    <StackPanel>
                         <wpfui:TextBlock Text="启动计算前先将表格现有的内容清空" TextWrapping="WrapWithOverflow" />
                         <wpfui:TextBlock
                             FontTypography="Caption"

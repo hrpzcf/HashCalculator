@@ -796,7 +796,8 @@ public class HomeViewModel : BaseViewModel
                     else
                     {
                         string allInOneStr = '\0'.Join(targets.Select(i => i.Information.FullName));
-                        if (!CommonUtils.SendToRecycleBin(MainWindow.WndHandle, allInOneStr))
+                        if (!CommonUtils.SendToRecycleBin(MainWindow.WndHandle,
+                            allInOneStr, Settings.Current.MoveFilesToRecycleBinSilently))
                         {
                             return "移动文件到回收站失败，可能部分文件未移动！";
                         }

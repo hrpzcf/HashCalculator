@@ -71,6 +71,7 @@ public class SettingsViewModel : BaseViewModel
     private bool clearTableBeforeAddingFilesByCmdLine = false;
     private bool clearSelectedItemsAfterCompletion = false;
     private bool isMainWindowNavigationViewPaneOpen = true;
+    private bool moveFilesToRecycleBinSilently = false;
 
     // 主窗口顶部各按钮的显示与否
     private bool showSelectedOutputTypeButton = true;
@@ -447,6 +448,12 @@ public class SettingsViewModel : BaseViewModel
     {
         get => this.isMainWindowNavigationViewPaneOpen;
         set => this.SetPropNotify(ref this.isMainWindowNavigationViewPaneOpen, value);
+    }
+
+    public bool MoveFilesToRecycleBinSilently
+    {
+        get => this.moveFilesToRecycleBinSilently;
+        set => this.SetPropNotify(ref this.moveFilesToRecycleBinSilently, value);
     }
 
     public bool ClearTableBeforeAddingFilesByCmdLine
