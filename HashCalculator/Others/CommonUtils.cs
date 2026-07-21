@@ -471,11 +471,11 @@ namespace HashCalculator
 
         public static bool ClipboardSetText(Window owner, string text)
         {
-            string reasonForFailure = text != null ? null : "要复制的内容为空";
+            string reasonForFailure = text != null ? null : "要复制的内容为空。";
             if (reasonForFailure == null)
             {
                 reasonForFailure = USER32.OpenClipboard(MainWindow.WndHandle) ?
-                    null : "打开剪贴板失败，剪贴板可能正被其他程序占用";
+                    null : "打开剪贴板失败，剪贴板可能正被其他程序占用。";
                 if (reasonForFailure == null)
                 {
                     IntPtr hMem = IntPtr.Zero;
@@ -490,11 +490,11 @@ namespace HashCalculator
                     if (reasonForFailure == null)
                     {
                         reasonForFailure = hMem != IntPtr.Zero && USER32.EmptyClipboard() ?
-                            null : "无法为内容分配内存或无法取得剪贴板所有权";
+                            null : "无法为内容分配内存或无法取得剪贴板所有权。";
                         if (reasonForFailure == null)
                         {
                             reasonForFailure = USER32.SetClipboardData(CF.CF_UNICODETEXT, hMem) == hMem ?
-                                null : "无法将内容更新到剪贴板上";
+                                null : "无法将内容更新到剪贴板上。";
                             if (reasonForFailure == null)
                             {
                                 Settings.Current.ClipboardUpdatedByMe = true;
@@ -534,7 +534,7 @@ namespace HashCalculator
                 }
                 catch (Exception e)
                 {
-                    NotificationSender.ShowMessageBox(owner, "读取剪贴板失败", $"错误详情：{e.Message}");
+                    NotificationSender.ShowMessageBox(owner, "剪贴板读取失败", $"错误详情：{e.Message}");
                 }
                 finally
                 {

@@ -37,7 +37,10 @@ namespace HashCalculator.Views.Windows
 
         private bool ProcIdMonitorFlag { get; set; } = true;
 
-        public MainWindow(MainWindowModel viewModel, INavigationService navigationService,
+        public MainWindow(
+            MainWindowModel viewModel,
+            ISnackbarService snackbarService,
+            INavigationService navigationService,
             HomePage homePage)
         {
             Current = this;
@@ -45,10 +48,9 @@ namespace HashCalculator.Views.Windows
             this.viewModel = viewModel;
             this.DataContext = this.viewModel;
             this.InitializeComponent();
+            snackbarService.SetSnackbarPresenter(this.SnackbarPresenter);
             navigationService.SetNavigationControl(this.NavigationView);
             this.NavigationView.SelectionChanged += this.SelectionChanged;
-            NotificationSender.SnackbarService.SetSnackbarPresenter(
-                this.SnackbarPresenter);
         }
 
         private void SelectionChanged(Wpfctrls.NavigationView sender, RoutedEventArgs args)

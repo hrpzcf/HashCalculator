@@ -965,7 +965,7 @@ public class SettingsViewModel : BaseViewModel
             "询问",
             "安装外壳扩展可能需要重启资源管理器，确定现在安装吗？",
             closeButtonText: "否",
-            primaryButtonText: "是") != Wpfctrls.MessageBoxResult.Primary)
+            primaryButtonText: "是") != Wpfctrls.ContentDialogResult.Primary)
         {
             return;
         }
@@ -985,8 +985,8 @@ public class SettingsViewModel : BaseViewModel
             string exception = new ShellMenuEditorModel().SaveMenuListToJsonFile();
             if (!string.IsNullOrEmpty(exception))
             {
-                NotificationSender.ShowMessageBox(MainWindow.Current, "警告",
-                    $"外壳扩展模块配置文件创建失败，快捷菜单将不显示，原因：{exception}");
+                NotificationSender.ShowMessageBox(MainWindow.Current,
+                    "警告", $"外壳扩展模块配置文件创建失败，快捷菜单将不显示，原因：{exception}");
             }
         }
         this.ProcessingShellExtension = false;
@@ -1009,7 +1009,7 @@ public class SettingsViewModel : BaseViewModel
             "询问",
             "卸载外壳扩展可能需要重启资源管理器，确定现在卸载吗？",
             closeButtonText: "否",
-            primaryButtonText: "是") != Wpfctrls.MessageBoxResult.Primary)
+            primaryButtonText: "是") != Wpfctrls.ContentDialogResult.Primary)
         {
             return;
         }
@@ -1464,8 +1464,7 @@ public class SettingsViewModel : BaseViewModel
     private void ResetChecklistTemplateAction(object param)
     {
         this.ResetTemplatesForChecklist();
-        NotificationSender.ShowMessageBox(
-            MainWindow.Current, "提示", "已重置解析检验依据方案列表。");
+        NotificationSender.ShowMessageBox(MainWindow.Current, "提示", "已重置解析检验依据方案列表。");
     }
 
     [JsonIgnore, XmlIgnore]
@@ -1484,8 +1483,7 @@ public class SettingsViewModel : BaseViewModel
         {
             model.ResetAlias();
         }
-        NotificationSender.ShowMessageBox(
-            MainWindow.Current, "提示", "已将所有算法的别名恢复到默认状态！");
+        NotificationSender.ShowMessageBox(MainWindow.Current, "提示", "已将所有算法的别名恢复到默认状态！");
     }
 
     [JsonIgnore, XmlIgnore]

@@ -65,5 +65,6 @@
                 Content="确定"
                 IsDefault="True" />
         </Grid>
+        <wpfui:ContentDialogHost x:Name="RootContentDialogHost" />
     </Grid>
 </wpfui:FluentWindow>

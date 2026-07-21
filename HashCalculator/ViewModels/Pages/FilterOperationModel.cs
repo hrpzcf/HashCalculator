@@ -194,8 +194,8 @@ public class FilterOperationModel : BaseViewModel
                         {
                             Application.Current.Dispatcher.Invoke(() =>
                             {
-                                NotificationSender.ShowMessageBox(MainWindow.Current, "筛选出错",
-                                    $"筛选器名：{filter.Display}\n错误详情：{ex.Message}");
+                                NotificationSender.ShowMessageBox(MainWindow.Current,
+                                    "筛选出错", $"筛选器名：{filter.Display}\n错误详情：{ex.Message}");
                             });
                         }
                     }

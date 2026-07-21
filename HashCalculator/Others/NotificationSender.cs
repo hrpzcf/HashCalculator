@@ -1,117 +1,128 @@
 ﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
-using HashCalculator.Views.Windows;
-using Wpfctrls = Wpf.Ui.Controls;
-using Wpfui = Wpf.Ui;
+using System.Windows.Threading;
+using Wpf.Ui;
+using Wpf.Ui.Controls;
 
 namespace HashCalculator
 {
-    internal static class NotificationSender
+    public static class NotificationSender
     {
+        private static readonly ISnackbarService _snackbarService;
+
         static NotificationSender()
         {
-            SnackbarService ??= new Wpfui.SnackbarService();
+            _snackbarService ??= App.GetRequiredService<ISnackbarService>();
         }
 
         public static void SnackbarError(string message)
         {
-            SnackbarService.Show(
+            _snackbarService.Show(
                 "错误",
                 message,
-                Wpfctrls.ControlAppearance.Danger,
-                new Wpfctrls.SymbolIcon(Wpfctrls.SymbolRegular.ErrorCircle20),
+                ControlAppearance.Danger,
+                new SymbolIcon(SymbolRegular.ErrorCircle20),
                 TimeSpan.FromSeconds(Settings.Current.SnackbarNotificationTimeSpanSeconds)
                 );
         }
 
         public static void SnackbarWarning(string message)
         {
-            SnackbarService.Show(
+            _snackbarService.Show(
                 "提醒",
                 message,
-                Wpfctrls.ControlAppearance.Caution,
-                new Wpfctrls.SymbolIcon(Wpfctrls.SymbolRegular.Warning20),
+                ControlAppearance.Caution,
+                new SymbolIcon(SymbolRegular.Warning20),
                 TimeSpan.FromSeconds(Settings.Current.SnackbarNotificationTimeSpanSeconds)
                 );
         }
 
         public static void SnackbarSuccess(string message)
         {
-            SnackbarService.Show(
+            _snackbarService.Show(
                 "成功",
                 message,
-                Wpfctrls.ControlAppearance.Success,
-                new Wpfctrls.SymbolIcon(Wpfctrls.SymbolRegular.CheckmarkCircle20),
+                ControlAppearance.Success,
+                new SymbolIcon(SymbolRegular.CheckmarkCircle20),
                 TimeSpan.FromSeconds(Settings.Current.SnackbarNotificationTimeSpanSeconds)
                 );
         }
 
         public static void SnackbarInformation(string message)
         {
-            SnackbarService.Show(
+            _snackbarService.Show(
                 "信息",
                 message,
-                Wpfctrls.ControlAppearance.Info,
-                new Wpfctrls.SymbolIcon(Wpfctrls.SymbolRegular.Info20),
+                ControlAppearance.Info,
+                new SymbolIcon(SymbolRegular.Info20),
                 TimeSpan.FromSeconds(Settings.Current.SnackbarNotificationTimeSpanSeconds)
                 );
         }
 
         public static void SnackbarSecondary(string message)
         {
-            SnackbarService.Show(
+            _snackbarService.Show(
                 "提示",
                 message,
-                Wpfctrls.ControlAppearance.Secondary,
-                new Wpfctrls.SymbolIcon(Wpfctrls.SymbolRegular.Info20),
+                ControlAppearance.Secondary,
+                new SymbolIcon(SymbolRegular.Info20),
                 TimeSpan.FromSeconds(Settings.Current.SnackbarNotificationTimeSpanSeconds)
                 );
         }
 
-        public static Wpfctrls.MessageBoxResult ShowMessageBox(
+        private static ContentDialogResult ShowDialogSync(ContentDialog dialog)
+        {
+            DispatcherFrame frame = new DispatcherFrame();
+            Task<ContentDialogResult> showContentDialogTask = dialog.ShowAsync();
+            showContentDialogTask.ContinueWith(
+                task => frame.Continue = false,
+                TaskScheduler.FromCurrentSynchronizationContext()
+            );
+            Dispatcher.PushFrame(frame);
+            return showContentDialogTask.Result;
+        }
+
+        public static ContentDialogResult ShowMessageBox(
             Window owner,
             string title,
             string content,
-            string closeButtonText = null,
-            string primaryButtonText = null,
-            string secondaryButtonText = null)
+            string primaryButtonText = "",
+            string secondaryButtonText = "",
+            string closeButtonText = "",
+            ContentDialogButton defaultButton = ContentDialogButton.Close)
         {
-            owner ??= MainWindow.Current;
-            bool isCloseButtonEnabled = !string.IsNullOrEmpty(closeButtonText);
-            bool isPrimaryButtonEnabled = !string.IsNullOrEmpty(primaryButtonText);
-            bool isSecondaryButtonEnabled = !string.IsNullOrEmpty(secondaryButtonText);
-            if (!isPrimaryButtonEnabled && !isSecondaryButtonEnabled)
+            if (string.IsNullOrEmpty(closeButtonText))
             {
-                isCloseButtonEnabled = true;
-                if (string.IsNullOrEmpty(closeButtonText))
-                {
-                    closeButtonText = "确定";
-                }
+                closeButtonText = "确定";
             }
-            return new Wpfctrls.MessageBox()
+            // 选窗口：优先 owner；否则当前激活窗口；再否则应用主窗口。
+            Window window = owner
+                ?? Application.Current.Windows.OfType<Window>().First(w => w.IsActive)
+                ?? Application.Current.MainWindow;
+            ContentDialogHost contentDialogHost = ContentDialogHost.GetForWindow(window)
+                ?? ContentDialogHost.GetForWindow(Application.Current.MainWindow);
+            ContentDialog toBeShownContentDialogInstance = new ContentDialog(contentDialogHost)
             {
-                Owner = owner,
                 Title = title,
                 Content = content,
-                IsCloseButtonEnabled = isCloseButtonEnabled,
                 CloseButtonText = closeButtonText,
-                IsPrimaryButtonEnabled = isPrimaryButtonEnabled,
                 PrimaryButtonText = primaryButtonText,
-                IsSecondaryButtonEnabled = isSecondaryButtonEnabled,
                 SecondaryButtonText = secondaryButtonText,
-            }.ShowDialogAsync().GetAwaiter().GetResult();
+                DefaultButton = defaultButton,
+            };
+
+            // 不能用 .GetAwaiter().GetResult()：ContentDialog.ShowAsync
+            // 内部用了 RunContinuationsAsynchronously，同步阻塞会卡死。
+            // 改用 DispatcherFrame 跑嵌套消息循环：调用栈同步阻塞、UI 仍能响应、
+            // 同步返回结果。这是 WPF Window.ShowDialog() 的实现原理。
+            return ShowDialogSync(toBeShownContentDialogInstance);
         }
 
-        public static Wpfctrls.MessageBoxResult ShowMessageBox(
-            string title,
-            string content,
-            string closeButtonText = null,
-            string primaryButtonText = null,
-            string secondaryButtonText = null)
+        public static ContentDialogResult ShowMessageBox(string title, string content)
         {
-            return ShowMessageBox(null, title, content, closeButtonText, primaryButtonText, secondaryButtonText);
+            return ShowMessageBox(null, title, content);
         }
-
-        public static Wpfui.SnackbarService SnackbarService { get; }
     }
 }

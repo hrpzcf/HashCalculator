@@ -48,5 +48,6 @@
                 <wpfui:ImageIcon Source="/Images/icon.ico" />
             </wpfui:TitleBar.Icon>
         </wpfui:TitleBar>
+        <wpfui:ContentDialogHost x:Name="RootContentDialogHost" />
     </Grid>
 </wpfui:FluentWindow>

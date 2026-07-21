@@ -747,7 +747,7 @@ public class HomeViewModel : BaseViewModel
                 "提示",
                 deleteFileTip,
                 closeButtonText: "否",
-                primaryButtonText: "是") != Wpfctrls.MessageBoxResult.Primary)
+                primaryButtonText: "是") != Wpfctrls.ContentDialogResult.Primary)
             {
                 return;
             }
@@ -1023,7 +1023,7 @@ public class HomeViewModel : BaseViewModel
                 "警告",
                 $"已存在以下文件，继续导出将会覆盖原文件，仍然要导出吗？\n{paths}",
                 closeButtonText: "否",
-                primaryButtonText: "是") != Wpfctrls.MessageBoxResult.Primary)
+                primaryButtonText: "是") != Wpfctrls.ContentDialogResult.Primary)
             {
                 return;
             }
@@ -1041,7 +1041,7 @@ public class HomeViewModel : BaseViewModel
                     "并非所有行包含的算法都一样，如果仍要导出结果，则导出的每个清单里包含的文件数量不一样，" +
                         "仍然要导出吗？",
                     closeButtonText: "否",
-                    primaryButtonText: "是") == Wpfctrls.MessageBoxResult.Primary)
+                    primaryButtonText: "是") == Wpfctrls.ContentDialogResult.Primary)
                 {
                     break;
                 }

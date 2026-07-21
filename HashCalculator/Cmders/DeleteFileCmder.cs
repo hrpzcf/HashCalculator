@@ -42,14 +42,14 @@ namespace HashCalculator
                 Settings.Current.IsFiltersAndCmdersIdle = false;
                 if (hashViewModels.Any(i => i.IsExecutionTarget))
                 {
-                    string promptInfo = toRecyclebin ?
-                        "确定把操作目标所指的文件移动到回收站吗？" : "确定直接删除操作目标所指的文件吗？";
+                    string promptInfo = toRecyclebin ? "确定把操作目标所指的文件移动到回收站吗？"
+                        : "确定直接删除操作目标所指的文件吗？";
                     if (NotificationSender.ShowMessageBox(
                         MainWindow.Current,
                         "警告",
                         promptInfo,
                         closeButtonText: "取消",
-                        primaryButtonText: "确定") == Wpfctrls.MessageBoxResult.Primary)
+                        primaryButtonText: "确定") == Wpfctrls.ContentDialogResult.Primary)
                     {
                         if (this.CheckIfUsingDistinctFilesFilter &&
                             !hashViewModels.Where(i => i.Matched).All(i => i.FileIndex != null))
@@ -59,7 +59,7 @@ namespace HashCalculator
                                 "提示",
                                 "没有应用【有效的文件】筛选器，要继续操作吗？",
                                 closeButtonText: "否",
-                                primaryButtonText: "是") != Wpfctrls.MessageBoxResult.Primary)
+                                primaryButtonText: "是") != Wpfctrls.ContentDialogResult.Primary)
                             {
                                 goto FinishingTouches;
                             }

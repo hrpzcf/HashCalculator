@@ -79,5 +79,6 @@
                 </wpfui:SplitButton.Flyout>
             </wpfui:SplitButton>
         </Grid>
+        <wpfui:ContentDialogHost x:Name="RootContentDialogHost" />
     </Grid>
 </wpfui:FluentWindow>

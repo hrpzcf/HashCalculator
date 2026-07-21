@@ -24,6 +24,7 @@ public partial class App : Application
         {
             services.AddNavigationViewPageProvider();
             services.AddHostedService<ApplicationHostService>();
+            services.AddSingleton<ISnackbarService, SnackbarService>();
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<HomeViewModel>();
             services.AddSingleton<HomePage>();

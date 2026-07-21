@@ -76,5 +76,6 @@
                 Content="取消"
                 IsEnabled="{Binding IsCancelled, Converter={StaticResource ReverseBooleanValueCvt}}" />
         </Grid>
+        <wpfui:ContentDialogHost x:Name="RootContentDialogHost" />
     </Grid>
 </wpfui:FluentWindow>

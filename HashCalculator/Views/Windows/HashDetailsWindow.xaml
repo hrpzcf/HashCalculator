@@ -216,5 +216,6 @@
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
+        <wpfui:ContentDialogHost x:Name="RootContentDialogHost" />
     </Grid>
 </wpfui:FluentWindow>

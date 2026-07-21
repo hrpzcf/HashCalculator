@@ -307,7 +307,7 @@ namespace HashCalculator
             Exception exception = JoinExceptionMessagesAndGenerateNew(exception1, exception2);
             if (exception is FileNotFoundException)
             {
-                Func<Wpfctrls.MessageBoxResult> callback = () =>
+                Func<Wpfctrls.ContentDialogResult> callback = () =>
                 {
                     return NotificationSender.ShowMessageBox(
                         MainWindow.Current,
@@ -317,7 +317,7 @@ namespace HashCalculator
                         closeButtonText: "否",
                         primaryButtonText: "是");
                 };
-                if (Synchronization.UI.Invoke(callback) == Wpfctrls.MessageBoxResult.Primary)
+                if (Synchronization.UI.Invoke(callback) == Wpfctrls.ContentDialogResult.Primary)
                 {
                     exception = ForceCleanRegistryKeysManually();
                 }
