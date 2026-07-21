@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
 using HashCalculator.Others;
+using HashCalculator.ViewModels.Windows;
 using HashCalculator.Views.Windows;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Wpfctrls = Wpf.Ui.Controls;
@@ -74,7 +75,7 @@ namespace HashCalculator
         }
 
         private async Task<string> GenerateMarkedFiles(IEnumerable<HashViewModel> models,
-            DoubleProgressWindow doubleProgressWindow, DoubleProgressModel doubleProgressModel)
+            ProgressWindow doubleProgressWindow, ProgressWindowModel doubleProgressModel)
         {
             try
             {
@@ -199,11 +200,11 @@ namespace HashCalculator
                 if (hashViewModels.Any(i => i.IsExecutionTarget))
                 {
                     IEnumerable<HashViewModel> targets = hashViewModels.Where(i => i.IsExecutionTarget);
-                    DoubleProgressModel progressModel = new DoubleProgressModel()
+                    ProgressWindowModel progressModel = new ProgressWindowModel()
                     {
                         WindowTitle = "正在写入...",
                     };
-                    DoubleProgressWindow progressWindow = new DoubleProgressWindow(progressModel)
+                    ProgressWindow progressWindow = new ProgressWindow(progressModel)
                     {
                         Owner = MainWindow.Current
                     };

@@ -11,6 +11,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 using HashCalculator.Others;
+using HashCalculator.ViewModels.Windows;
 using HashCalculator.Views.Windows;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
@@ -750,7 +751,7 @@ public class HomeViewModel : BaseViewModel
             {
                 return;
             }
-            DoubleProgressModel progress = new DoubleProgressModel()
+            ProgressWindowModel progress = new ProgressWindowModel()
             {
                 IsCancelled = true,
                 TotalCount = count,
@@ -759,7 +760,7 @@ public class HomeViewModel : BaseViewModel
                 WindowTitle = "正在删除...",
                 TotalString = "文件数量多的情况下耗时较长，请耐心等候...",
             };
-            DoubleProgressWindow progressWindow = new DoubleProgressWindow(progress)
+            ProgressWindow progressWindow = new ProgressWindow(progress)
             {
                 Owner = MainWindow.Current,
             };

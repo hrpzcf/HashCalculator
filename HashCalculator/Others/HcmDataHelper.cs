@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using HashCalculator.ViewModels.Windows;
 
 namespace HashCalculator
 {
@@ -52,7 +53,7 @@ namespace HashCalculator
             return stream != this._stream && StreamWritable(stream);
         }
 
-        private bool InternalStreamCopyTo(Stream stream, long start, long count, DoubleProgressModel progress)
+        private bool InternalStreamCopyTo(Stream stream, long start, long count, ProgressWindowModel progress)
         {
             if (start < 0L || count <= 0L || start + count > this._stream.Length)
             {
@@ -168,7 +169,7 @@ namespace HashCalculator
         /// <summary>
         /// 从带有哈希标记 (HCM 标记) 的文件中还原出无标记的文件。
         /// </summary>
-        public bool RestoreMarkedFile(Stream newStream, DoubleProgressModel progress)
+        public bool RestoreMarkedFile(Stream newStream, ProgressWindowModel progress)
         {
             return this.UseableExternal(newStream) &&
                 this.ReadHcmData(out HcmData hcmData) &&
@@ -179,7 +180,7 @@ namespace HashCalculator
         /// <summary>
         /// 从带有哈希标记 (HCM 标记) 的文件中还原出无标记的文件。
         /// </summary>
-        public bool RestoreMarkedFile(Stream newStream, HcmData hcmData, DoubleProgressModel progress)
+        public bool RestoreMarkedFile(Stream newStream, HcmData hcmData, ProgressWindowModel progress)
         {
             return hcmData?.DataReliable == true &&
                 this.UseableExternal(newStream) &&
@@ -199,7 +200,7 @@ namespace HashCalculator
         /// 生成有哈希标记的文件，哈希标记 (HCM 标记) 具体格式如下：<br/>
         /// 分隔符，算法名，哈希值，随机数据，HcmData.MARKER，1 字节分隔符长度，1 字节算法名长度，2 字节哈希长度，1 字节随机数据长度
         /// </summary>
-        public bool GenerateMarkedFile(Stream newStream, AlgoInOutModel model, DoubleProgressModel progress)
+        public bool GenerateMarkedFile(Stream newStream, AlgoInOutModel model, ProgressWindowModel progress)
         {
             return AvailableInOutModel(model) &&
                 StreamReadable(this._stream) &&
