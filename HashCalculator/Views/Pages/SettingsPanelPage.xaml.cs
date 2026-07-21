@@ -4,11 +4,11 @@ using Wpf.Ui.Abstractions.Controls;
 
 namespace HashCalculator.Views.Pages;
 
-public partial class SettingsPanelPage : Page, INavigableView<MainViewModel>
+public partial class SettingsPanelPage : Page, INavigableView<MainWindowModel>
 {
-    public MainViewModel ViewModel { get; init; }
+    public MainWindowModel ViewModel { get; init; }
 
-    public SettingsPanelPage(MainViewModel viewModel)
+    public SettingsPanelPage(MainWindowModel viewModel)
     {
         this.ViewModel = viewModel;
         this.DataContext = viewModel;

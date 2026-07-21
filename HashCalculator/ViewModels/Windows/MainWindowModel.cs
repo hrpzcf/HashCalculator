@@ -9,11 +9,11 @@ using Wpf.Ui.Controls;
 
 namespace HashCalculator.ViewModels.Windows;
 
-public class MainViewModel : BaseViewModel
+public class MainWindowModel : BaseViewModel
 {
     private RelayCommand navigatenFromSettingsPanelCmd;
 
-    public MainViewModel(INavigationService navigationService)
+    public MainWindowModel(INavigationService navigationService)
     {
         this.NavigationService = navigationService;
         Settings.Current.PropertyChanged += this.OnSettingsPropChanged;

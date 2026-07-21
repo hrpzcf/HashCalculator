@@ -27,7 +27,7 @@ public partial class App : Application
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<HomeViewModel>();
             services.AddSingleton<HomePage>();
-            services.AddSingleton<MainViewModel>();
+            services.AddSingleton<MainWindowModel>();
             services.AddSingleton<MainWindow>();
             services.AddSingleton<SettingsPanelPage>();
             services.AddSingleton<GeneralSettingsPage>();

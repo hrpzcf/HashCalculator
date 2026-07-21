@@ -23,7 +23,7 @@ namespace HashCalculator.Views.Windows
         private PresentationSource presentationSrc = null;
 
         private readonly HomePage _homePage = null;
-        private readonly MainViewModel viewModel = null;
+        private readonly MainWindowModel viewModel = null;
 
         private static string[] startupArgs = null;
         private static readonly TimeSpan clipboardTriggerMinInterval =
@@ -37,7 +37,7 @@ namespace HashCalculator.Views.Windows
 
         private bool ProcIdMonitorFlag { get; set; } = true;
 
-        public MainWindow(MainViewModel viewModel, INavigationService navigationService,
+        public MainWindow(MainWindowModel viewModel, INavigationService navigationService,
             HomePage homePage)
         {
             Current = this;

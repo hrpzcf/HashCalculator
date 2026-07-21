@@ -10,7 +10,7 @@
     xmlns:pageviews="clr-namespace:HashCalculator.Views.Pages"
     xmlns:winmodels="clr-namespace:HashCalculator.ViewModels.Windows"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
-    d:DataContext="{d:DesignInstance Type=winmodels:MainViewModel}"
+    d:DataContext="{d:DesignInstance Type=winmodels:MainWindowModel}"
     ScrollViewer.CanContentScroll="False"
     UseLayoutRounding="True"
     mc:Ignorable="d">

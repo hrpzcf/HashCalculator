@@ -10,7 +10,7 @@
     Title="{x:Static local:Info.Title}"
     Width="{Binding Source={x:Static local:Settings.Current}, Path=MainWndWidth, Mode=TwoWay}"
     Height="{Binding Source={x:Static local:Settings.Current}, Path=MainWndHeight, Mode=TwoWay}"
-    d:DataContext="{d:DesignInstance Type=winmodels:MainViewModel}"
+    d:DataContext="{d:DesignInstance Type=winmodels:MainWindowModel}"
     d:Height="300"
     d:Width="1100"
     Closed="MainWindowClosed"
