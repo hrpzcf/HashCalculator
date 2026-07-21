@@ -350,7 +350,7 @@ namespace HashCalculator
 
         public void ShowHashDetailsWindowAction()
         {
-            new HashDetailsWnd(this) { Owner = MainWindow.Current }.ShowDialog();
+            new HashDetailsWindow(this) { Owner = MainWindow.Current }.ShowDialog();
         }
 
         private void TableColumnDoubleClickAction(object param)
