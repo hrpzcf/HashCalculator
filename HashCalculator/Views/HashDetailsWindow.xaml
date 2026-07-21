@@ -23,12 +23,15 @@
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <wpfui:TitleBar Title="详情" Grid.Row="0">
+        <wpfui:TitleBar
+            Title="详情"
+            Grid.Row="0"
+            Height="30">
             <wpfui:TitleBar.Icon>
                 <wpfui:ImageIcon Source="/Images/icon.ico" />
             </wpfui:TitleBar.Icon>
         </wpfui:TitleBar>
-        <Grid Grid.Row="1" Margin="8,0,8,8">
+        <Grid Grid.Row="1" Margin="8,4,8,8">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
