@@ -169,6 +169,7 @@ public class FilterOperationModel : BaseViewModel
         {
             cmder.Reset();
         }
+        int appliedFiltersCount = 0;
         bool filteringShouldBeApplied = (param is not bool instruction) || instruction;
         await Task.Run(() =>
         {
@@ -189,6 +190,7 @@ public class FilterOperationModel : BaseViewModel
                         try
                         {
                             filter.FilterObjects(HashModelStore.HashViewModels);
+                            appliedFiltersCount++;
                         }
                         catch (Exception ex)
                         {
@@ -226,6 +228,9 @@ public class FilterOperationModel : BaseViewModel
             }
         }
         this.IsFiltersApplied = filteringShouldBeApplied;
+        string promptMessage = filteringShouldBeApplied ?
+            $"已应用 {appliedFiltersCount} 个筛选器并刷新筛选视图。" : $"已取消筛选并刷新视图。";
+        NotificationSender.SnackbarSecondary(promptMessage);
         Settings.Current.IsFiltersAndCmdersIdle = true;
     }
 
