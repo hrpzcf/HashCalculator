@@ -37,7 +37,7 @@
             TitleBar="{Binding ElementName=TitleBar, Mode=OneWay}"
             TransitionDuration="100">
             <wpfui:NavigationView.ContentOverlay>
-                <wpfui:SnackbarPresenter x:Name="SnackbarPresenter" />
+                <wpfui:SnackbarPresenter x:Name="SnackbarPresenter" Margin="0,0,0,32" />
             </wpfui:NavigationView.ContentOverlay>
         </wpfui:NavigationView>
         <wpfui:TitleBar
