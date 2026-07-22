@@ -71,7 +71,7 @@
                     <wpfui:TextBlock
                         FontTypography="Caption"
                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                        Text="还原被改变过哈希值的文件，如果保存位置有同名文件则给文件名添加数字后缀后保存，所选的执行目标中没有哈希标记的文件将被忽略。"
+                        Text="还原被改变过哈希值的文件，如果保存位置有同名文件则给文件名添加数字后缀后保存，所选的操作目标中没有哈希标记的文件将被忽略。"
                         TextWrapping="WrapWithOverflow" />
                 </StackPanel>
             </wpfui:CardControl.Header>
