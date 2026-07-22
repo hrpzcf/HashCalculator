@@ -859,7 +859,7 @@ public class SettingsViewModel : BaseViewModel
             else
             {
                 SystemThemeWatcher.UnWatch(MainWindow.Current);
-                ApplicationThemeManager.Apply(theme);
+                ApplicationThemeManager.Apply(theme, Wpfctrls.WindowBackdropType.None);
             }
             this.SetPropNotify(ref this.selectedApplicationThemeIndex, value);
         }
