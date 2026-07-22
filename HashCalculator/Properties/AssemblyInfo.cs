@@ -6,7 +6,7 @@ using System.Windows;
 // 有关程序集的一般信息由以下
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("哈希值批量计算器")]
+[assembly: AssemblyTitle("哈希值计算器")]
 [assembly: AssemblyDescription("多功能文件哈希值计算工具，支持批量计算、批量校验、筛选、导出哈希结果等")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("HashCalculator")]

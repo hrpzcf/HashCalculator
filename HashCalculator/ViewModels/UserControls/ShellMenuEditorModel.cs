@@ -156,7 +156,7 @@ public class ShellMenuEditorModel : BaseViewModel
         {
             new HcCtxMenuModel("默认算法"),
         };
-        HcCtxMenuModel menuCheckHash = new HcCtxMenuModel("作为哈希校验依据打开", true, MenuType.CheckHash);
+        HcCtxMenuModel menuCheckHash = new HcCtxMenuModel("作为哈希校验信息打开", true, MenuType.CheckHash);
         menuCheckHash.Submenus = new ObservableCollection<HcCtxMenuModel>
         {
             new HcCtxMenuModel("自动选择"),
@@ -260,6 +260,6 @@ public class ShellMenuEditorModel : BaseViewModel
         new GenericItemModel[]
         {
             new GenericItemModel("计算哈希菜单", MenuType.Compute),
-            new GenericItemModel("校验依据菜单", MenuType.CheckHash),
+            new GenericItemModel("校验信息菜单", MenuType.CheckHash),
         };
 }

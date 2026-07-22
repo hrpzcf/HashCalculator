@@ -27,7 +27,7 @@ namespace HashCalculator
         public static readonly TemplateForChecklistModel HcbFile =
             new TemplateForChecklistModel()
             {
-                Name = "校验依据",
+                Name = "校验信息",
                 Extension = ".hcb",
                 Template = "^#$algo$ \\*?$hash$ \\*?$name$\\r?$"
             };

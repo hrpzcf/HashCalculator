@@ -1665,7 +1665,7 @@ public class SettingsViewModel : BaseViewModel
     public static GenericItemModel[] AvailableChoicesWhenNoVerb { get; } =
     {
         new GenericItemModel("计算所有输入文件的哈希值", MenuType.Compute),
-        new GenericItemModel("把所有输入文件作为校验依据", MenuType.CheckHash),
+        new GenericItemModel("把所有输入文件作为校验信息", MenuType.CheckHash),
     };
 
     [JsonIgnore, XmlIgnore]

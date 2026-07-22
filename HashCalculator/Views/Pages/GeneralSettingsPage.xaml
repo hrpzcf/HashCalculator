@@ -34,11 +34,11 @@
             <wpfui:CardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
                     <StackPanel>
-                        <wpfui:TextBlock Text="如何搜索校验依据文件内列出的文件" TextWrapping="WrapWithOverflow" />
+                        <wpfui:TextBlock Text="如何搜索校验信息文件内列出的文件" TextWrapping="WrapWithOverflow" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            Text="当打开校验依据文件时如何根据校验依据文件内列出的文件名在本地搜索。"
+                            Text="当打开校验信息文件时如何根据校验信息文件内列出的文件名在本地搜索。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
                 </wpfui:CardControl.Header>
@@ -51,11 +51,11 @@
             <wpfui:CardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
                     <StackPanel>
-                        <wpfui:TextBlock Text="首选校验依据文件内容或扩展名指定的算法" TextWrapping="WrapWithOverflow" />
+                        <wpfui:TextBlock Text="首选校验信息文件内容或扩展名指定的算法" TextWrapping="WrapWithOverflow" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            Text="这是当需要查找校验依据内列出的文件进行计算并校验时的首选算法，关闭则使用默认算法中被勾选的算法。"
+                            Text="这是当需要查找校验信息内列出的文件进行计算并校验时的首选算法，关闭则使用默认算法中被勾选的算法。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
                 </wpfui:CardControl.Header>
@@ -64,11 +64,11 @@
             <wpfui:CardControl Margin="0,4,0,0" IsEnabled="{Binding PreferChecklistAlgs, Mode=OneWay}">
                 <wpfui:CardControl.Header>
                     <StackPanel>
-                        <wpfui:TextBlock Text="当校验依据文件内容和扩展名皆未指定算法时" TextWrapping="WrapWithOverflow" />
+                        <wpfui:TextBlock Text="当校验信息文件内容和扩展名皆未指定算法时" TextWrapping="WrapWithOverflow" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            Text="如果启用了首选校验依据文件内容或扩展名指定算法，但都没在校验依据文件内容和扩展名找到算法时，回退到此选项。"
+                            Text="如果启用了首选校验信息文件内容或扩展名指定算法，但都没在校验信息文件内容和扩展名找到算法时，回退到此选项。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
                 </wpfui:CardControl.Header>
@@ -81,11 +81,11 @@
             <wpfui:CardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
                     <StackPanel>
-                        <wpfui:TextBlock Text="使用已经复制的校验依据进行校验" TextWrapping="WrapWithOverflow" />
+                        <wpfui:TextBlock Text="使用已经复制的校验信息进行校验" TextWrapping="WrapWithOverflow" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            Text="通过右键或命令启动计算时，计算完成后使用已经复制的校验依据进行校验。"
+                            Text="通过右键或命令启动计算时，计算完成后使用已经复制的校验信息进行校验。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
                 </wpfui:CardControl.Header>
@@ -94,11 +94,11 @@
             <wpfui:CardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
                     <StackPanel>
-                        <wpfui:TextBlock Text="有新复制的校验依据内容时自动启动校验" TextWrapping="WrapWithOverflow" />
+                        <wpfui:TextBlock Text="有新复制的校验信息时自动启动校验" TextWrapping="WrapWithOverflow" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            Text="当计算完成后，剪贴板有新复制的校验依据内容时自动填充校验依据文本框并启动校验。"
+                            Text="当计算完成后，剪贴板有新复制的校验信息时自动填充校验信息文本框并启动校验。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
                 </wpfui:CardControl.Header>
@@ -107,7 +107,7 @@
             <wpfui:CardControl Margin="0,4,0,0" IsEnabled="{Binding MonitorNewHashStringInClipboard, Mode=OneWay}">
                 <wpfui:CardControl.Header>
                     <StackPanel>
-                        <wpfui:TextBlock Text="触发校验的新复制字符数范围" TextWrapping="WrapWithOverflow" />
+                        <wpfui:TextBlock Text="能触发校验的新复制的字符数范围" TextWrapping="WrapWithOverflow" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -134,7 +134,7 @@
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            Text="当从别处复制新校验依据后自动完成哈希值校验，然后把主窗口带到前台展示校验结果。"
+                            Text="当从别处复制新校验信息后自动完成哈希值校验，然后把主窗口带到前台展示校验结果。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
                 </wpfui:CardControl.Header>

@@ -21,7 +21,7 @@
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            Text="别名的作用是帮助 HashCalculator 识别那些“不认识”的算法名。当解析校验依据时遇到算法名“XXH364”，本地并没有这个名字的算法所以无法识别，这时可以给本地“XXH3-64”算法增加“XXH364”别名，这时遇到“XXH364”就知道它是本地的“XXH3-64”算法。"
+                            Text="别名的作用是帮助 HashCalculator 识别那些“不认识”的算法名。当解析校验信息时遇到算法名“XXH364”，本地并没有这个名字的算法所以无法识别，这时可以给本地“XXH3-64”算法增加“XXH364”别名，这时遇到“XXH364”就知道它是本地的“XXH3-64”算法。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
                 </wpfui:CardControl.Header>

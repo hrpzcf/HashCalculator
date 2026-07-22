@@ -154,7 +154,7 @@ public class HomeViewModel : BaseViewModel
     }
 
     /// <summary>
-    /// 检查剪贴板字符，在符合要求时把它设置到主窗口的校验依据输入框内
+    /// 检查剪贴板字符，在符合要求时把它设置到主窗口的校验信息输入框内
     /// </summary>
     public HashChecklist TestClipboardTextGetChecklist()
     {
@@ -1187,7 +1187,7 @@ public class HomeViewModel : BaseViewModel
             if (string.IsNullOrEmpty(this.HashStringOrChecklistPath))
             {
                 this.GenerateOriginFileHashCheckReport();
-                NotificationSender.SnackbarWarning("校验依据输入框没有任何内容！");
+                NotificationSender.SnackbarWarning("校验信息输入框没有任何内容！");
                 return false;
             }
             // HashStringOrChecklistPath 不是一个文件

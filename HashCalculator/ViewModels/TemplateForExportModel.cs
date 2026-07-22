@@ -25,7 +25,7 @@ namespace HashCalculator
 
         public static readonly TemplateForExportModel HcbModel =
             new TemplateForExportModel(
-                "校验依据",
+                "校验信息",
                 ".hcb",
                 "#$algo$ *$hash$ *$relpath$");
 
