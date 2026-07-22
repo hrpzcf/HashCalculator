@@ -9,7 +9,6 @@
     xmlns:userctrls="clr-namespace:HashCalculator.Views.UserControls"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     Width="610"
-    Height="Auto"
     d:DataContext="{d:DesignInstance pagemodels:SettingsViewModel}"
     KeyDown="WindowKeyDown"
     ScrollViewer.CanContentScroll="False"

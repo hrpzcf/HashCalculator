@@ -9,9 +9,10 @@
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     d:DataContext="{d:DesignInstance Type=local:RestoreFilesCmder}"
     d:DesignWidth="600"
+    SnapsToDevicePixels="True"
     mc:Ignorable="d">
     <StackPanel>
-        <wpfui:CardControl Margin="0,4,0,0">
+        <wpfui:CardControl>
             <wpfui:CardControl.Header>
                 <StackPanel>
                     <wpfui:TextBlock FontTypography="BodyStrong" Text="如何还原添加了哈希标记的文件" />

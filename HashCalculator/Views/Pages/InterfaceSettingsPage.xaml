@@ -10,6 +10,7 @@
     d:DataContext="{d:DesignInstance Type=pagemodels:SettingsViewModel}"
     d:DesignWidth="800"
     ScrollViewer.CanContentScroll="False"
+    SnapsToDevicePixels="True"
     mc:Ignorable="d">
     <ScrollViewer Padding="14" VerticalScrollBarVisibility="Auto">
         <StackPanel>

@@ -10,9 +10,9 @@
     xmlns:userctrlmodels="clr-namespace:HashCalculator.ViewModels.UserControls"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     d:DataContext="{d:DesignInstance Type=pagemodels:SettingsViewModel}"
-    d:DesignHeight="450"
     d:DesignWidth="800"
     ScrollViewer.CanContentScroll="False"
+    SnapsToDevicePixels="True"
     mc:Ignorable="d">
     <ScrollViewer Padding="14" VerticalScrollBarVisibility="Auto">
         <StackPanel>

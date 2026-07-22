@@ -8,6 +8,7 @@
     xmlns:pagemodels="clr-namespace:HashCalculator.ViewModels.Pages"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     d:DesignWidth="600"
+    SnapsToDevicePixels="True"
     mc:Ignorable="d">
     <StackPanel>
         <wpfui:CardControl>

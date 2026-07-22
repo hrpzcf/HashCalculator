@@ -11,6 +11,8 @@
     Height="{Binding ExceptionWindowHeight, Source={x:Static local:Settings.Current}, Mode=TwoWay}"
     d:DataContext="{d:DesignInstance Type=winmodels:ExceptionWindowModel}"
     ShowInTaskbar="False"
+    SnapsToDevicePixels="True"
+    UseLayoutRounding="True"
     WindowStartupLocation="CenterOwner"
     mc:Ignorable="d">
     <Grid>

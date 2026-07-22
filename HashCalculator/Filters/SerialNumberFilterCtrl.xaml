@@ -8,8 +8,8 @@
     xmlns:pagemodels="clr-namespace:HashCalculator.ViewModels.Pages"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     d:DataContext="{d:DesignInstance Type=local:SerialNumberFilter}"
-    d:DesignHeight="160"
     d:DesignWidth="300"
+    SnapsToDevicePixels="True"
     mc:Ignorable="d">
     <StackPanel>
         <wpfui:CardControl>

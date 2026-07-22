@@ -11,10 +11,10 @@
     Width="{Binding Source={x:Static local:Settings.Current}, Path=HashDetailsWndWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     Height="{Binding Source={x:Static local:Settings.Current}, Path=HashDetailsWndHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     d:DataContext="{d:DesignInstance Type=local:HashViewModel}"
-    d:Height="300"
     d:Width="500"
     KeyDown="HashDetailsWndKeyDown"
     ShowInTaskbar="False"
+    SnapsToDevicePixels="True"
     UseLayoutRounding="True"
     WindowStartupLocation="CenterOwner"
     mc:Ignorable="d">

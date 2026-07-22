@@ -9,6 +9,7 @@
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     d:DataContext="{d:DesignInstance Type=local:HashStringFilter}"
     d:DesignWidth="600"
+    SnapsToDevicePixels="True"
     mc:Ignorable="d">
     <StackPanel>
         <wpfui:CardControl>

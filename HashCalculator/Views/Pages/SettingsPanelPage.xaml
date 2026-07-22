@@ -11,8 +11,9 @@
     xmlns:winmodels="clr-namespace:HashCalculator.ViewModels.Windows"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     d:DataContext="{d:DesignInstance Type=winmodels:MainWindowModel}"
+    d:Width="800"
     ScrollViewer.CanContentScroll="False"
-    UseLayoutRounding="True"
+    SnapsToDevicePixels="True"
     mc:Ignorable="d">
     <ScrollViewer Padding="14,10,14,14" VerticalScrollBarVisibility="Auto">
         <controls:ForceItemsControl ItemsSource="{Binding SettingsNavigationItemsSource}">

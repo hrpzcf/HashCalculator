@@ -10,6 +10,7 @@
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     d:DataContext="{d:DesignInstance Type=userctrlmodels:HcCtxMenuModel}"
     d:DesignWidth="800"
+    SnapsToDevicePixels="True"
     Visibility="{Binding HasSubmenus, Converter={StaticResource TrueToVisibilityVisibleCvt}}"
     mc:Ignorable="d">
     <Grid Margin="8">

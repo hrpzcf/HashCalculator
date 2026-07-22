@@ -16,6 +16,7 @@
     ShowInTaskbar="False"
     SizeToContent="Height"
     SnapsToDevicePixels="True"
+    UseLayoutRounding="True"
     WindowStartupLocation="CenterOwner"
     mc:Ignorable="d">
     <Grid>
