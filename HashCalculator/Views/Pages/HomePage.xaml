@@ -12,13 +12,12 @@
     d:DesignHeight="450"
     d:DesignWidth="1200"
     ScrollViewer.CanContentScroll="False"
+    SnapsToDevicePixels="True"
     mc:Ignorable="d">
     <Grid Grid.Row="1" Margin="8,0,8,8">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <ScrollViewer
@@ -379,707 +378,701 @@
         </ScrollViewer>
         <Border
             Grid.Row="1"
-            Height="1"
-            HorizontalAlignment="Stretch"
-            BorderBrush="{DynamicResource TextFillColorDisabledBrush}"
-            BorderThickness="1" />
-        <DataGrid
-            x:Name="MainDataGrid"
-            Grid.Row="2"
-            Margin="0,4"
-            AllowDrop="True"
-            AutoGenerateColumns="False"
-            CanUserReorderColumns="True"
-            Drop="DataGridHashingFilesDrop"
-            Grid.IsSharedSizeScope="True"
-            IsReadOnly="True"
-            ItemsSource="{Binding Source={x:Static others:HashModelStore.HashViewModelsSource}}"
-            PreviewKeyDown="DataGridHashingFilesPrevKeyDown"
-            ScrollViewer.CanContentScroll="True"
-            SelectedItem="{Binding SelectedHashVieModel}"
-            SelectionMode="Extended"
-            VirtualizingPanel.IsContainerVirtualizable="True"
-            VirtualizingPanel.IsVirtualizing="True"
-            VirtualizingPanel.IsVirtualizingWhenGrouping="True"
-            VirtualizingPanel.VirtualizationMode="Recycling">
-            <local:ExecTargetAttach.Monitoring>
-                <MultiBinding Converter="{StaticResource StateAndSelectionWayToMonitoring}" Mode="OneWay">
-                    <Binding Mode="OneWay" Path="State" />
-                    <Binding
-                        Mode="OneWay"
-                        Path="IsMainRowSelectedByCheckBox"
-                        Source="{x:Static local:Settings.Current}" />
-                </MultiBinding>
-            </local:ExecTargetAttach.Monitoring>
-            <DataGrid.ContextMenu>
-                <ContextMenu>
-                    <MenuItem
-                        Command="{Binding OpenModelsFilePathCmd}"
-                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
-                        Header="打开文件" />
-                    <MenuItem
-                        Command="{Binding OpenFolderSelectItemsCmd}"
-                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
-                        Header="打开位置" />
-                    <Separator />
-                    <MenuItem Header="任务控制" ItemsSource="{Binding CtrlHashViewModelTaskCmds}">
-                        <MenuItem.ItemContainerStyle>
-                            <Style TargetType="MenuItem">
-                                <Setter Property="Header" Value="{Binding Display}" />
-                                <Setter Property="Command" Value="{Binding ItemValue}" />
-                                <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}" />
+            Margin="0,0,0,4"
+            Padding="4"
+            BorderBrush="{DynamicResource ControlStrokeColorSecondaryBrush}"
+            BorderThickness="1"
+            CornerRadius="6">
+            <DataGrid
+                x:Name="MainDataGrid"
+                AllowDrop="True"
+                AutoGenerateColumns="False"
+                CanUserReorderColumns="True"
+                Drop="DataGridHashingFilesDrop"
+                Grid.IsSharedSizeScope="True"
+                IsReadOnly="True"
+                ItemsSource="{Binding Source={x:Static others:HashModelStore.HashViewModelsSource}}"
+                PreviewKeyDown="DataGridHashingFilesPrevKeyDown"
+                ScrollViewer.CanContentScroll="True"
+                SelectedItem="{Binding SelectedHashVieModel}"
+                SelectionMode="Extended"
+                VirtualizingPanel.IsContainerVirtualizable="True"
+                VirtualizingPanel.IsVirtualizing="True"
+                VirtualizingPanel.IsVirtualizingWhenGrouping="True"
+                VirtualizingPanel.VirtualizationMode="Recycling">
+                <local:ExecTargetAttach.Monitoring>
+                    <MultiBinding Converter="{StaticResource StateAndSelectionWayToMonitoring}" Mode="OneWay">
+                        <Binding Mode="OneWay" Path="State" />
+                        <Binding
+                            Mode="OneWay"
+                            Path="IsMainRowSelectedByCheckBox"
+                            Source="{x:Static local:Settings.Current}" />
+                    </MultiBinding>
+                </local:ExecTargetAttach.Monitoring>
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem
+                            Command="{Binding OpenModelsFilePathCmd}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
+                            Header="打开文件" />
+                        <MenuItem
+                            Command="{Binding OpenFolderSelectItemsCmd}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
+                            Header="打开位置" />
+                        <Separator />
+                        <MenuItem Header="任务控制" ItemsSource="{Binding CtrlHashViewModelTaskCmds}">
+                            <MenuItem.ItemContainerStyle>
+                                <Style TargetType="MenuItem">
+                                    <Setter Property="Header" Value="{Binding Display}" />
+                                    <Setter Property="Command" Value="{Binding ItemValue}" />
+                                    <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}" />
+                                </Style>
+                            </MenuItem.ItemContainerStyle>
+                        </MenuItem>
+                        <MenuItem Header="切换所选行当前算法" ItemsSource="{Binding SwitchDisplayedAlgoCmds}">
+                            <MenuItem.ItemContainerStyle>
+                                <Style TargetType="MenuItem">
+                                    <Setter Property="Header" Value="{Binding Display}" />
+                                    <Setter Property="Command" Value="{Binding ItemValue}" />
+                                    <Setter Property="CommandParameter">
+                                        <Setter.Value>
+                                            <MultiBinding Converter="{StaticResource CloneParameterArrayCvt}">
+                                                <Binding Path="Param" />
+                                                <Binding Path="PlacementTarget.SelectedItems" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}" />
+                                            </MultiBinding>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </MenuItem.ItemContainerStyle>
+                        </MenuItem>
+                        <MenuItem Header="切换所选行导出状态" ItemsSource="{Binding SwitchAlgoExportStateCmds}">
+                            <MenuItem.ItemContainerStyle>
+                                <Style TargetType="MenuItem">
+                                    <Setter Property="Header" Value="{Binding Display}" />
+                                    <Setter Property="Command" Value="{Binding ItemValue}" />
+                                    <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}" />
+                                </Style>
+                            </MenuItem.ItemContainerStyle>
+                        </MenuItem>
+                        <Separator />
+                        <MenuItem
+                            Command="{Binding CopyFilesNameCmd}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
+                            Header="复制文件名" />
+                        <MenuItem
+                            Command="{Binding CopyFilesFullPathCmd}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
+                            Header="复制文件的完整路径" />
+                        <MenuItem
+                            Header="按模板复制所选行当前结果"
+                            IsEnabled="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems, Converter={StaticResource CopyModelsHashMenuEnabledCvt}}"
+                            ItemsSource="{Binding CopyModelsHashMenuCmds}">
+                            <MenuItem.ItemContainerStyle>
+                                <Style TargetType="MenuItem">
+                                    <Setter Property="Header" Value="{Binding Display}" />
+                                    <Setter Property="Command" Value="{Binding ItemValue}" />
+                                    <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}" />
+                                </Style>
+                            </MenuItem.ItemContainerStyle>
+                        </MenuItem>
+                        <MenuItem
+                            Header="按模板复制所选行所有结果"
+                            IsEnabled="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems, Converter={StaticResource CopyModelsHashMenuEnabledCvt}}"
+                            ItemsSource="{Binding CopyModelsAllHashesMenuCmds}">
+                            <MenuItem.ItemContainerStyle>
+                                <Style TargetType="MenuItem">
+                                    <Setter Property="Header" Value="{Binding Display}" />
+                                    <Setter Property="Command" Value="{Binding ItemValue}" />
+                                    <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}" />
+                                </Style>
+                            </MenuItem.ItemContainerStyle>
+                        </MenuItem>
+                        <MenuItem
+                            Command="{Binding CopyModelsCurHashWithNoFormatCmd}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
+                            Header="复制所选行当前哈希值"
+                            IsEnabled="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems, Converter={StaticResource CopyModelsHashMenuEnabledCvt}}" />
+                        <MenuItem
+                            Command="{Binding CopyModelsAllHashWithNoFormatCmd}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
+                            Header="复制所选行所有哈希值"
+                            IsEnabled="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems, Converter={StaticResource CopyModelsHashMenuEnabledCvt}}" />
+                        <Separator />
+                        <MenuItem
+                            Command="{Binding DeleteSelectedModelsFileCmd}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
+                            Header="删除文件" />
+                        <MenuItem
+                            Command="{Binding RemoveSelectedModelsCmd}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
+                            Header="移除所选行" />
+                        <Separator />
+                        <MenuItem
+                            Command="{Binding OpenFilesPropertyCmd}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
+                            Header="文件属性" />
+                        <Separator Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWindowButtons, Converter={StaticResource TrueToVisibilityCollapsedCvt}}" />
+                        <MenuItem
+                            Command="{Binding DisplayMainWindowButtonsCmd}"
+                            Header="显示功能按钮"
+                            Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWindowButtons, Converter={StaticResource TrueToVisibilityCollapsedCvt}}" />
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn
+                        CanUserSort="True"
+                        Header="序号"
+                        SortMemberPath="SerialNumber"
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoSerialNumColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
+                        <DataGridTemplateColumn.HeaderStyle>
+                            <Style BasedOn="{StaticResource DefaultDataGridColumnHeaderStyle}" TargetType="DataGridColumnHeader">
+                                <Setter Property="HorizontalContentAlignment" Value="Center" />
                             </Style>
-                        </MenuItem.ItemContainerStyle>
-                    </MenuItem>
-                    <MenuItem Header="切换所选行当前算法" ItemsSource="{Binding SwitchDisplayedAlgoCmds}">
-                        <MenuItem.ItemContainerStyle>
-                            <Style TargetType="MenuItem">
-                                <Setter Property="Header" Value="{Binding Display}" />
-                                <Setter Property="Command" Value="{Binding ItemValue}" />
-                                <Setter Property="CommandParameter">
-                                    <Setter.Value>
-                                        <MultiBinding Converter="{StaticResource CloneParameterArrayCvt}">
-                                            <Binding Path="Param" />
-                                            <Binding Path="PlacementTarget.SelectedItems" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}" />
-                                        </MultiBinding>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                        </MenuItem.ItemContainerStyle>
-                    </MenuItem>
-                    <MenuItem Header="切换所选行导出状态" ItemsSource="{Binding SwitchAlgoExportStateCmds}">
-                        <MenuItem.ItemContainerStyle>
-                            <Style TargetType="MenuItem">
-                                <Setter Property="Header" Value="{Binding Display}" />
-                                <Setter Property="Command" Value="{Binding ItemValue}" />
-                                <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}" />
-                            </Style>
-                        </MenuItem.ItemContainerStyle>
-                    </MenuItem>
-                    <Separator />
-                    <MenuItem
-                        Command="{Binding CopyFilesNameCmd}"
-                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
-                        Header="复制文件名" />
-                    <MenuItem
-                        Command="{Binding CopyFilesFullPathCmd}"
-                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
-                        Header="复制文件的完整路径" />
-                    <MenuItem
-                        Header="按模板复制所选行当前结果"
-                        IsEnabled="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems, Converter={StaticResource CopyModelsHashMenuEnabledCvt}}"
-                        ItemsSource="{Binding CopyModelsHashMenuCmds}">
-                        <MenuItem.ItemContainerStyle>
-                            <Style TargetType="MenuItem">
-                                <Setter Property="Header" Value="{Binding Display}" />
-                                <Setter Property="Command" Value="{Binding ItemValue}" />
-                                <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}" />
-                            </Style>
-                        </MenuItem.ItemContainerStyle>
-                    </MenuItem>
-                    <MenuItem
-                        Header="按模板复制所选行所有结果"
-                        IsEnabled="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems, Converter={StaticResource CopyModelsHashMenuEnabledCvt}}"
-                        ItemsSource="{Binding CopyModelsAllHashesMenuCmds}">
-                        <MenuItem.ItemContainerStyle>
-                            <Style TargetType="MenuItem">
-                                <Setter Property="Header" Value="{Binding Display}" />
-                                <Setter Property="Command" Value="{Binding ItemValue}" />
-                                <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}" />
-                            </Style>
-                        </MenuItem.ItemContainerStyle>
-                    </MenuItem>
-                    <MenuItem
-                        Command="{Binding CopyModelsCurHashWithNoFormatCmd}"
-                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
-                        Header="复制所选行当前哈希值"
-                        IsEnabled="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems, Converter={StaticResource CopyModelsHashMenuEnabledCvt}}" />
-                    <MenuItem
-                        Command="{Binding CopyModelsAllHashWithNoFormatCmd}"
-                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
-                        Header="复制所选行所有哈希值"
-                        IsEnabled="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems, Converter={StaticResource CopyModelsHashMenuEnabledCvt}}" />
-                    <Separator />
-                    <MenuItem
-                        Command="{Binding DeleteSelectedModelsFileCmd}"
-                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
-                        Header="删除文件" />
-                    <MenuItem
-                        Command="{Binding RemoveSelectedModelsCmd}"
-                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
-                        Header="移除所选行" />
-                    <Separator />
-                    <MenuItem
-                        Command="{Binding OpenFilesPropertyCmd}"
-                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
-                        Header="文件属性" />
-                    <Separator Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWindowButtons, Converter={StaticResource TrueToVisibilityCollapsedCvt}}" />
-                    <MenuItem
-                        Command="{Binding DisplayMainWindowButtonsCmd}"
-                        Header="显示功能按钮"
-                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWindowButtons, Converter={StaticResource TrueToVisibilityCollapsedCvt}}" />
-                </ContextMenu>
-            </DataGrid.ContextMenu>
-            <DataGrid.Columns>
-                <DataGridTemplateColumn
-                    CanUserSort="True"
-                    Header="序号"
-                    SortMemberPath="SerialNumber"
-                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoSerialNumColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
-                    <DataGridTemplateColumn.HeaderStyle>
-                        <Style BasedOn="{StaticResource DefaultDataGridColumnHeaderStyle}" TargetType="DataGridColumnHeader">
-                            <Setter Property="HorizontalContentAlignment" Value="Center" />
-                        </Style>
-                    </DataGridTemplateColumn.HeaderStyle>
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Border Padding="4" Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}, Path=Background}">
-                                <TextBlock
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    Text="{Binding SerialNumber}" />
-                                <Border.InputBindings>
-                                    <MouseBinding
-                                        Command="{Binding TableColumnDoubleClickCmd}"
-                                        CommandParameter="{Binding Source={x:Static local:Settings.Current}, Path=SerialColumnLeftDoubleClick}"
-                                        MouseAction="LeftDoubleClick" />
-                                </Border.InputBindings>
-                            </Border>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTemplateColumn
-                    MinWidth="100"
-                    CanUserSort="True"
-                    Header="文件名"
-                    SortMemberPath="FileName">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" SharedSizeGroup="fdGroup" />
-                                    <ColumnDefinition Width="Auto" SharedSizeGroup="fileIcon" />
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
-                                <Border
-                                    Grid.Row="0"
-                                    Grid.Column="0"
-                                    Width="7"
-                                    Margin="0,0,2,0"
-                                    BorderBrush="White"
-                                    BorderThickness="1"
-                                    Visibility="{Binding FdGroupId, Converter={StaticResource CmpColorToVisibilityCvt}}">
-                                    <Border.Background>
-                                        <MultiBinding Converter="{StaticResource CmpColorOrBrushToColorBrushCvt}">
-                                            <Binding Path="FdGroupId" />
-                                            <Binding Path="Background" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}" />
-                                        </MultiBinding>
-                                    </Border.Background>
-                                </Border>
-                                <Image
-                                    Grid.Row="0"
-                                    Grid.Column="1"
-                                    Margin="0,0,4,0"
-                                    VerticalAlignment="Center"
-                                    Source="{Binding FileIcon}"
-                                    Stretch="None"
-                                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowFileIcon, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
-                                    <Image.LayoutTransform>
-                                        <ScaleTransform ScaleX="{Binding Source={x:Static local:Settings.Current}, Path=DpiScaleX}" ScaleY="{Binding Source={x:Static local:Settings.Current}, Path=DpiScaleY}" />
-                                    </Image.LayoutTransform>
-                                </Image>
-                                <Border
-                                    Grid.Row="0"
-                                    Grid.Column="2"
-                                    Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}, Path=Background}">
+                        </DataGridTemplateColumn.HeaderStyle>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Border Padding="4" Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}, Path=Background}">
+                                    <TextBlock
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Text="{Binding SerialNumber}" />
                                     <Border.InputBindings>
                                         <MouseBinding
                                             Command="{Binding TableColumnDoubleClickCmd}"
-                                            CommandParameter="{Binding Source={x:Static local:Settings.Current}, Path=FileNameColumnLeftDoubleClick}"
+                                            CommandParameter="{Binding Source={x:Static local:Settings.Current}, Path=SerialColumnLeftDoubleClick}"
+                                            MouseAction="LeftDoubleClick" />
+                                    </Border.InputBindings>
+                                </Border>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn
+                        MinWidth="100"
+                        CanUserSort="True"
+                        Header="文件名"
+                        SortMemberPath="FileName">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="fdGroup" />
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="fileIcon" />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <Border
+                                        Grid.Row="0"
+                                        Grid.Column="0"
+                                        Width="7"
+                                        Margin="0,0,2,0"
+                                        BorderBrush="White"
+                                        BorderThickness="1"
+                                        Visibility="{Binding FdGroupId, Converter={StaticResource CmpColorToVisibilityCvt}}">
+                                        <Border.Background>
+                                            <MultiBinding Converter="{StaticResource CmpColorOrBrushToColorBrushCvt}">
+                                                <Binding Path="FdGroupId" />
+                                                <Binding Path="Background" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}" />
+                                            </MultiBinding>
+                                        </Border.Background>
+                                    </Border>
+                                    <Image
+                                        Grid.Row="0"
+                                        Grid.Column="1"
+                                        Margin="0,0,4,0"
+                                        VerticalAlignment="Center"
+                                        Source="{Binding FileIcon}"
+                                        Stretch="None"
+                                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowFileIcon, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
+                                        <Image.LayoutTransform>
+                                            <ScaleTransform ScaleX="{Binding Source={x:Static local:Settings.Current}, Path=DpiScaleX}" ScaleY="{Binding Source={x:Static local:Settings.Current}, Path=DpiScaleY}" />
+                                        </Image.LayoutTransform>
+                                    </Image>
+                                    <Border
+                                        Grid.Row="0"
+                                        Grid.Column="2"
+                                        Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}, Path=Background}">
+                                        <Border.InputBindings>
+                                            <MouseBinding
+                                                Command="{Binding TableColumnDoubleClickCmd}"
+                                                CommandParameter="{Binding Source={x:Static local:Settings.Current}, Path=FileNameColumnLeftDoubleClick}"
+                                                MouseAction="LeftDoubleClick" />
+                                        </Border.InputBindings>
+                                        <TextBlock
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding FileName}"
+                                            TextTrimming="CharacterEllipsis"
+                                            ToolTip="{Binding Information}">
+                                            <TextBlock.Foreground>
+                                                <MultiBinding Converter="{StaticResource InvalidFileNameForegroundCvt}">
+                                                    <Binding Path="InvalidFileName" />
+                                                    <Binding Path="Foreground" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}" />
+                                                </MultiBinding>
+                                            </TextBlock.Foreground>
+                                        </TextBlock>
+                                    </Border>
+                                </Grid>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn
+                        MinWidth="100"
+                        CanUserSort="True"
+                        Header="完整路径"
+                        SortMemberPath="Information"
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoFullPathColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Border Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}, Path=Background}">
+                                    <Border.InputBindings>
+                                        <MouseBinding
+                                            Command="{Binding TableColumnDoubleClickCmd}"
+                                            CommandParameter="{Binding Source={x:Static local:Settings.Current}, Path=FullPathColumnLeftDoubleClick}"
                                             MouseAction="LeftDoubleClick" />
                                     </Border.InputBindings>
                                     <TextBlock
                                         HorizontalAlignment="Left"
                                         VerticalAlignment="Center"
-                                        Text="{Binding FileName}"
+                                        Text="{Binding Information}"
                                         TextTrimming="CharacterEllipsis"
-                                        ToolTip="{Binding Information}">
-                                        <TextBlock.Foreground>
-                                            <MultiBinding Converter="{StaticResource InvalidFileNameForegroundCvt}">
-                                                <Binding Path="InvalidFileName" />
-                                                <Binding Path="Foreground" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}" />
-                                            </MultiBinding>
-                                        </TextBlock.Foreground>
-                                    </TextBlock>
+                                        ToolTip="{Binding Information}" />
                                 </Border>
-                            </Grid>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTemplateColumn
-                    MinWidth="100"
-                    CanUserSort="True"
-                    Header="完整路径"
-                    SortMemberPath="Information"
-                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoFullPathColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Border Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}, Path=Background}">
-                                <Border.InputBindings>
-                                    <MouseBinding
-                                        Command="{Binding TableColumnDoubleClickCmd}"
-                                        CommandParameter="{Binding Source={x:Static local:Settings.Current}, Path=FullPathColumnLeftDoubleClick}"
-                                        MouseAction="LeftDoubleClick" />
-                                </Border.InputBindings>
-                                <TextBlock
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    Text="{Binding Information}"
-                                    TextTrimming="CharacterEllipsis"
-                                    ToolTip="{Binding Information}" />
-                            </Border>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTemplateColumn
-                    CanUserSort="True"
-                    Header="文件大小"
-                    SortMemberPath="FileLength"
-                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoFileSizeColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
-                    <DataGridTemplateColumn.HeaderStyle>
-                        <Style BasedOn="{StaticResource DefaultDataGridColumnHeaderStyle}" TargetType="DataGridColumnHeader">
-                            <Setter Property="HorizontalContentAlignment" Value="Center" />
-                        </Style>
-                    </DataGridTemplateColumn.HeaderStyle>
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Border Padding="4" Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}, Path=Background}">
-                                <Border.InputBindings>
-                                    <MouseBinding
-                                        Command="{Binding TableColumnDoubleClickCmd}"
-                                        CommandParameter="{Binding Source={x:Static local:Settings.Current}, Path=FileSizeColumnLeftDoubleClick}"
-                                        MouseAction="LeftDoubleClick" />
-                                </Border.InputBindings>
-                                <TextBlock
-                                    HorizontalAlignment="Right"
-                                    VerticalAlignment="Center"
-                                    Text="{Binding FileLength, Converter={StaticResource BytesToIntuitiveFileSizeCvt}}">
-                                    <TextBlock.ToolTip>
-                                        <ToolTip Content="{Binding FileLength, Mode=OneWay}" ContentStringFormat="{}{0} 字节" />
-                                    </TextBlock.ToolTip>
-
-                                </TextBlock>
-                            </Border>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTemplateColumn
-                    CanUserSort="True"
-                    Header="算法"
-                    SortMemberPath="CurrentInOutModel.AlgoType">
-                    <DataGridTemplateColumn.HeaderStyle>
-                        <Style BasedOn="{StaticResource DefaultDataGridColumnHeaderStyle}" TargetType="DataGridColumnHeader">
-                            <Setter Property="HorizontalContentAlignment" Value="Center" />
-                        </Style>
-                    </DataGridTemplateColumn.HeaderStyle>
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <ComboBox
-                                Margin="0,2"
-                                DisplayMemberPath="AlgoName"
-                                ItemsSource="{Binding AlgoInOutModels}"
-                                SelectedItem="{Binding CurrentInOutModel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTemplateColumn
-                    CanUserSort="True"
-                    Header="操作目标"
-                    SortMemberPath="IsExecutionTarget"
-                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=IsMainRowSelectedByCheckBox, Converter={StaticResource TrueToVisibilityVisibleCvt}, Mode=OneWay}">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <TextBlock
-                                    Grid.Column="1"
-                                    Margin="1,0"
-                                    Padding="0,4">
-                                    <TextBlock.Background>
-                                        <MultiBinding Converter="{StaticResource MultiCmpColorToColorBrushCvt}">
-                                            <Binding Path="GroupId" />
-                                            <Binding Path="FdGroupId" />
-                                        </MultiBinding>
-                                    </TextBlock.Background>
-                                </TextBlock>
-                                <CheckBox
-                                    Grid.ColumnSpan="2"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    Foreground="#FFFFFFFF"
-                                    IsChecked="{Binding IsExecutionTarget, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                            </Grid>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTemplateColumn
-                    MinWidth="210"
-                    CanUserSort="True"
-                    Header="哈希值"
-                    SortMemberPath="CurrentHashString">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition />
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <Border
-                                    Grid.Column="0"
-                                    Width="7"
-                                    Margin="0,0,4,0"
-                                    BorderBrush="White"
-                                    BorderThickness="1"
-                                    Visibility="{Binding GroupId, Converter={StaticResource CmpColorToVisibilityCvt}}">
-                                    <Border.Background>
-                                        <MultiBinding Converter="{StaticResource CmpColorOrBrushToColorBrushCvt}">
-                                            <Binding Path="GroupId" />
-                                            <Binding Path="Background" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}" />
-                                        </MultiBinding>
-                                    </Border.Background>
-                                </Border>
-                                <!--  不在计算状态  -->
-                                <Border
-                                    Grid.Column="1"
-                                    Margin="0,0,16,0"
-                                    Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}, Path=Background}">
-                                    <Border.Visibility>
-                                        <MultiBinding Converter="{StaticResource StateFinishedResultSucceededToVisibilityCvt}">
-                                            <Binding Path="State" />
-                                            <Binding Path="Result" />
-                                        </MultiBinding>
-                                    </Border.Visibility>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn
+                        CanUserSort="True"
+                        Header="文件大小"
+                        SortMemberPath="FileLength"
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoFileSizeColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
+                        <DataGridTemplateColumn.HeaderStyle>
+                            <Style BasedOn="{StaticResource DefaultDataGridColumnHeaderStyle}" TargetType="DataGridColumnHeader">
+                                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                            </Style>
+                        </DataGridTemplateColumn.HeaderStyle>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Border Padding="4" Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}, Path=Background}">
                                     <Border.InputBindings>
                                         <MouseBinding
                                             Command="{Binding TableColumnDoubleClickCmd}"
-                                            CommandParameter="{Binding Source={x:Static local:Settings.Current}, Path=HashValueColumnLeftDoubleClick}"
+                                            CommandParameter="{Binding Source={x:Static local:Settings.Current}, Path=FileSizeColumnLeftDoubleClick}"
                                             MouseAction="LeftDoubleClick" />
                                     </Border.InputBindings>
                                     <TextBlock
+                                        HorizontalAlignment="Right"
                                         VerticalAlignment="Center"
-                                        Text="{Binding CurrentHashString}"
-                                        TextTrimming="CharacterEllipsis"
-                                        ToolTip="{Binding ModelDetails}" />
+                                        Text="{Binding FileLength, Converter={StaticResource BytesToIntuitiveFileSizeCvt}}">
+                                        <TextBlock.ToolTip>
+                                            <ToolTip Content="{Binding FileLength, Mode=OneWay}" ContentStringFormat="{}{0} 字节" />
+                                        </TextBlock.ToolTip>
+
+                                    </TextBlock>
                                 </Border>
-                                <TextBlock
-                                    Grid.Column="1"
-                                    Margin="0,0,16,0"
-                                    VerticalAlignment="Center"
-                                    Text="{Binding ErrorDetails}"
-                                    TextTrimming="CharacterEllipsis">
-                                    <TextBlock.Visibility>
-                                        <MultiBinding Converter="{StaticResource StateNotRunningResultSucceededToVisibilityCvt}">
-                                            <Binding Path="State" />
-                                            <Binding Path="Result" />
-                                        </MultiBinding>
-                                    </TextBlock.Visibility>
-                                </TextBlock>
-                                <!--  正在计算状态  -->
-                                <!--  ProgressBar的Value绑定需是OneWay，因为默认TwoWay和private set的Progress无法成功绑定  -->
-                                <ProgressBar
-                                    Grid.Column="1"
-                                    Margin="0,0,16,0"
-                                    Maximum="{Binding MaxProgress}"
-                                    Visibility="{Binding State, Converter={StaticResource StateRunningToVisiblityCvt}}"
-                                    Value="{Binding Progress, Mode=OneWay}" />
-                                <Button
-                                    Grid.Column="3"
-                                    Padding="4"
-                                    Command="{Binding ShutdownModelSelfCmd}"
-                                    Content="&#xe61f;"
-                                    FontFamily="{StaticResource IconFont}"
-                                    FontSize="15pt"
-                                    Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}, Path=Foreground}"
-                                    Style="{StaticResource ImageButtonStyle1}"
-                                    ToolTip="停止..."
-                                    Visibility="{Binding State, Converter={StaticResource StateRunningToVisiblityCvt}}" />
-                                <Button
-                                    Grid.Column="4"
-                                    Padding="4"
-                                    Command="{Binding PauseOrContinueModelSelfCmd}"
-                                    Content="{Binding State, Converter={StaticResource SubBtnPauseOrContinueTextCvt}}"
-                                    FontFamily="{StaticResource IconFont}"
-                                    FontSize="15pt"
-                                    Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}, Path=Foreground}"
-                                    Style="{StaticResource ImageButtonStyle1}"
-                                    ToolTip="{Binding State, Converter={StaticResource SubBtnPauseToolTipCvt}}"
-                                    Visibility="{Binding State, Converter={StaticResource StateRunningToVisiblityCvt}}" />
-                                <!--  正排队  -->
-                                <Button
-                                    Grid.Column="4"
-                                    Padding="4"
-                                    Command="{Binding ShutdownModelSelfCmd}"
-                                    Content="&#xe620;"
-                                    FontFamily="{StaticResource IconFont}"
-                                    FontSize="15pt"
-                                    Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}, Path=Foreground}"
-                                    Style="{StaticResource ImageButtonStyle1}"
-                                    ToolTip="取消..."
-                                    Visibility="{Binding State, Converter={StaticResource StateWaitingToVisiblityCvt}}" />
-                                <!--  已成功  -->
-                                <wpfui:InfoBadge
-                                    Grid.Column="2"
-                                    Padding="0"
-                                    d:DataContext="{d:DesignInstance local:HashViewModel}"
-                                    MouseDoubleClick="InfoBadgeMouseDoubleClick"
-                                    Severity="Attention"
-                                    Style="{DynamicResource ValueInfoBadgeStyle}"
-                                    ToolTip="双击打开详情窗口..."
-                                    Value="{Binding AlgoInOutModels.Count}">
-                                    <wpfui:InfoBadge.Visibility>
-                                        <MultiBinding Converter="{StaticResource StateFinishedResultSucceededToVisibilityCvt}">
-                                            <Binding Path="State" />
-                                            <Binding Path="Result" />
-                                        </MultiBinding>
-                                    </wpfui:InfoBadge.Visibility>
-                                </wpfui:InfoBadge>
-                                <Button
-                                    Grid.Column="3"
-                                    Padding="4"
-                                    Command="{Binding CopyThisModelCurHashCmd}"
-                                    Content="&#xe718;"
-                                    FontFamily="{StaticResource IconFont}"
-                                    FontSize="14pt"
-                                    Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}, Path=Foreground}"
-                                    Style="{StaticResource ImageButtonStyle1}"
-                                    ToolTip="按模板复制该行当前结果...">
-                                    <Button.Visibility>
-                                        <MultiBinding Converter="{StaticResource StateFinishedResultSucceededToVisibilityCvt}">
-                                            <Binding Path="State" />
-                                            <Binding Path="Result" />
-                                        </MultiBinding>
-                                    </Button.Visibility>
-                                </Button>
-                                <Button
-                                    Grid.Column="4"
-                                    Padding="4"
-                                    Command="{Binding CopyThisModelAllHashesCmd}"
-                                    Content="&#xe751;"
-                                    FontFamily="{StaticResource IconFont}"
-                                    FontSize="14pt"
-                                    Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}, Path=Foreground}"
-                                    Style="{StaticResource ImageButtonStyle1}"
-                                    ToolTip="按模板复制该行所有结果...">
-                                    <Button.Visibility>
-                                        <MultiBinding Converter="{StaticResource StateFinishedResultSucceededToVisibilityCvt}">
-                                            <Binding Path="State" />
-                                            <Binding Path="Result" />
-                                        </MultiBinding>
-                                    </Button.Visibility>
-                                </Button>
-                                <!--  未成功  -->
-                                <Button
-                                    Grid.Column="4"
-                                    Padding="4"
-                                    Command="{Binding RestartModelSelfCmd}"
-                                    Content="&#xe621;"
-                                    FontFamily="{StaticResource IconFont}"
-                                    FontSize="14pt"
-                                    Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}, Path=Foreground}"
-                                    Style="{StaticResource ImageButtonStyle1}"
-                                    ToolTip="开始...">
-                                    <Button.Visibility>
-                                        <MultiBinding Converter="{StaticResource StateNoStateFinishedResultNotSucceedToVisibilityCvt}">
-                                            <Binding Path="State" />
-                                            <Binding Path="Result" />
-                                        </MultiBinding>
-                                    </Button.Visibility>
-                                </Button>
-                            </Grid>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTemplateColumn
-                    CanUserSort="True"
-                    Header="输出方式"
-                    SortMemberPath="SelectedOutputType"
-                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoOutputTypeColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
-                    <DataGridTemplateColumn.HeaderStyle>
-                        <Style BasedOn="{StaticResource DefaultDataGridColumnHeaderStyle}" TargetType="DataGridColumnHeader">
-                            <Setter Property="HorizontalContentAlignment" Value="Center" />
-                        </Style>
-                    </DataGridTemplateColumn.HeaderStyle>
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <ComboBox
-                                Margin="0,2"
-                                DisplayMemberPath="Display"
-                                ItemsSource="{x:Static pagemodels:SettingsViewModel.AvailableOutputTypes}"
-                                SelectedValue="{Binding SelectedOutputType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                SelectedValuePath="ItemValue"
-                                ToolTip="指定计算哈希结果的显示方式：&#10;Base64：以 Base64 编码字符显示计算结果，某些软件配置需要此格式&#10;Hex大写：常用的显示方式，以十六进制大写字母方式显示计算结果&#10;Hex小写：常用的显示方式，以十六进制小写字母方式显示计算结果" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTemplateColumn
-                    MinWidth="80"
-                    CanUserSort="True"
-                    Header="任务耗时"
-                    SortMemberPath="DurationofTask"
-                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoDurationColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
-                    <DataGridTemplateColumn.HeaderStyle>
-                        <Style BasedOn="{StaticResource DefaultDataGridColumnHeaderStyle}" TargetType="DataGridColumnHeader">
-                            <Setter Property="HorizontalContentAlignment" Value="Center" />
-                        </Style>
-                    </DataGridTemplateColumn.HeaderStyle>
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Border Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}, Path=Background}">
-                                <Border.InputBindings>
-                                    <MouseBinding
-                                        Command="{Binding TableColumnDoubleClickCmd}"
-                                        CommandParameter="{Binding Source={x:Static local:Settings.Current}, Path=DurationColumnLeftDoubleClick}"
-                                        MouseAction="LeftDoubleClick" />
-                                </Border.InputBindings>
-                                <TextBlock
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn
+                        CanUserSort="True"
+                        Header="算法"
+                        SortMemberPath="CurrentInOutModel.AlgoType">
+                        <DataGridTemplateColumn.HeaderStyle>
+                            <Style BasedOn="{StaticResource DefaultDataGridColumnHeaderStyle}" TargetType="DataGridColumnHeader">
+                                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                            </Style>
+                        </DataGridTemplateColumn.HeaderStyle>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox
+                                    Margin="0,2"
+                                    DisplayMemberPath="AlgoName"
+                                    ItemsSource="{Binding AlgoInOutModels}"
+                                    SelectedItem="{Binding CurrentInOutModel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn
+                        CanUserSort="True"
+                        Header="操作目标"
+                        SortMemberPath="IsExecutionTarget"
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=IsMainRowSelectedByCheckBox, Converter={StaticResource TrueToVisibilityVisibleCvt}, Mode=OneWay}">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Margin="1,0"
+                                        Padding="0,4">
+                                        <TextBlock.Background>
+                                            <MultiBinding Converter="{StaticResource MultiCmpColorToColorBrushCvt}">
+                                                <Binding Path="GroupId" />
+                                                <Binding Path="FdGroupId" />
+                                            </MultiBinding>
+                                        </TextBlock.Background>
+                                    </TextBlock>
+                                    <CheckBox
+                                        Grid.ColumnSpan="2"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Foreground="#FFFFFFFF"
+                                        IsChecked="{Binding IsExecutionTarget, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </Grid>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn
+                        MinWidth="210"
+                        CanUserSort="True"
+                        Header="哈希值"
+                        SortMemberPath="CurrentHashString">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Border
+                                        Grid.Column="0"
+                                        Width="7"
+                                        Margin="0,0,4,0"
+                                        BorderBrush="White"
+                                        BorderThickness="1"
+                                        Visibility="{Binding GroupId, Converter={StaticResource CmpColorToVisibilityCvt}}">
+                                        <Border.Background>
+                                            <MultiBinding Converter="{StaticResource CmpColorOrBrushToColorBrushCvt}">
+                                                <Binding Path="GroupId" />
+                                                <Binding Path="Background" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}" />
+                                            </MultiBinding>
+                                        </Border.Background>
+                                    </Border>
+                                    <!--  不在计算状态  -->
+                                    <Border
+                                        Grid.Column="1"
+                                        Margin="0,0,16,0"
+                                        Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}, Path=Background}">
+                                        <Border.Visibility>
+                                            <MultiBinding Converter="{StaticResource StateFinishedResultSucceededToVisibilityCvt}">
+                                                <Binding Path="State" />
+                                                <Binding Path="Result" />
+                                            </MultiBinding>
+                                        </Border.Visibility>
+                                        <Border.InputBindings>
+                                            <MouseBinding
+                                                Command="{Binding TableColumnDoubleClickCmd}"
+                                                CommandParameter="{Binding Source={x:Static local:Settings.Current}, Path=HashValueColumnLeftDoubleClick}"
+                                                MouseAction="LeftDoubleClick" />
+                                        </Border.InputBindings>
+                                        <TextBlock
+                                            VerticalAlignment="Center"
+                                            Text="{Binding CurrentHashString}"
+                                            TextTrimming="CharacterEllipsis"
+                                            ToolTip="{Binding ModelDetails}" />
+                                    </Border>
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Margin="0,0,16,0"
+                                        VerticalAlignment="Center"
+                                        Text="{Binding ErrorDetails}"
+                                        TextTrimming="CharacterEllipsis">
+                                        <TextBlock.Visibility>
+                                            <MultiBinding Converter="{StaticResource StateNotRunningResultSucceededToVisibilityCvt}">
+                                                <Binding Path="State" />
+                                                <Binding Path="Result" />
+                                            </MultiBinding>
+                                        </TextBlock.Visibility>
+                                    </TextBlock>
+                                    <!--  正在计算状态  -->
+                                    <!--  ProgressBar的Value绑定需是OneWay，因为默认TwoWay和private set的Progress无法成功绑定  -->
+                                    <ProgressBar
+                                        Grid.Column="1"
+                                        Margin="0,0,16,0"
+                                        Maximum="{Binding MaxProgress}"
+                                        Visibility="{Binding State, Converter={StaticResource StateRunningToVisiblityCvt}}"
+                                        Value="{Binding Progress, Mode=OneWay}" />
+                                    <Button
+                                        Grid.Column="3"
+                                        Padding="4"
+                                        Command="{Binding ShutdownModelSelfCmd}"
+                                        Content="&#xe61f;"
+                                        FontFamily="{StaticResource IconFont}"
+                                        FontSize="15pt"
+                                        Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}, Path=Foreground}"
+                                        Style="{StaticResource ImageButtonStyle1}"
+                                        ToolTip="停止..."
+                                        Visibility="{Binding State, Converter={StaticResource StateRunningToVisiblityCvt}}" />
+                                    <Button
+                                        Grid.Column="4"
+                                        Padding="4"
+                                        Command="{Binding PauseOrContinueModelSelfCmd}"
+                                        Content="{Binding State, Converter={StaticResource SubBtnPauseOrContinueTextCvt}}"
+                                        FontFamily="{StaticResource IconFont}"
+                                        FontSize="15pt"
+                                        Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}, Path=Foreground}"
+                                        Style="{StaticResource ImageButtonStyle1}"
+                                        ToolTip="{Binding State, Converter={StaticResource SubBtnPauseToolTipCvt}}"
+                                        Visibility="{Binding State, Converter={StaticResource StateRunningToVisiblityCvt}}" />
+                                    <!--  正排队  -->
+                                    <Button
+                                        Grid.Column="4"
+                                        Padding="4"
+                                        Command="{Binding ShutdownModelSelfCmd}"
+                                        Content="&#xe620;"
+                                        FontFamily="{StaticResource IconFont}"
+                                        FontSize="15pt"
+                                        Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}, Path=Foreground}"
+                                        Style="{StaticResource ImageButtonStyle1}"
+                                        ToolTip="取消..."
+                                        Visibility="{Binding State, Converter={StaticResource StateWaitingToVisiblityCvt}}" />
+                                    <!--  已成功  -->
+                                    <wpfui:InfoBadge
+                                        Grid.Column="2"
+                                        Padding="0"
+                                        d:DataContext="{d:DesignInstance local:HashViewModel}"
+                                        MouseDoubleClick="InfoBadgeMouseDoubleClick"
+                                        Severity="Attention"
+                                        Style="{DynamicResource ValueInfoBadgeStyle}"
+                                        ToolTip="双击打开详情窗口..."
+                                        Value="{Binding AlgoInOutModels.Count}">
+                                        <wpfui:InfoBadge.Visibility>
+                                            <MultiBinding Converter="{StaticResource StateFinishedResultSucceededToVisibilityCvt}">
+                                                <Binding Path="State" />
+                                                <Binding Path="Result" />
+                                            </MultiBinding>
+                                        </wpfui:InfoBadge.Visibility>
+                                    </wpfui:InfoBadge>
+                                    <Button
+                                        Grid.Column="3"
+                                        Padding="4"
+                                        Command="{Binding CopyThisModelCurHashCmd}"
+                                        Content="&#xe718;"
+                                        FontFamily="{StaticResource IconFont}"
+                                        FontSize="14pt"
+                                        Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}, Path=Foreground}"
+                                        Style="{StaticResource ImageButtonStyle1}"
+                                        ToolTip="按模板复制该行当前结果...">
+                                        <Button.Visibility>
+                                            <MultiBinding Converter="{StaticResource StateFinishedResultSucceededToVisibilityCvt}">
+                                                <Binding Path="State" />
+                                                <Binding Path="Result" />
+                                            </MultiBinding>
+                                        </Button.Visibility>
+                                    </Button>
+                                    <Button
+                                        Grid.Column="4"
+                                        Padding="4"
+                                        Command="{Binding CopyThisModelAllHashesCmd}"
+                                        Content="&#xe751;"
+                                        FontFamily="{StaticResource IconFont}"
+                                        FontSize="14pt"
+                                        Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}, Path=Foreground}"
+                                        Style="{StaticResource ImageButtonStyle1}"
+                                        ToolTip="按模板复制该行所有结果...">
+                                        <Button.Visibility>
+                                            <MultiBinding Converter="{StaticResource StateFinishedResultSucceededToVisibilityCvt}">
+                                                <Binding Path="State" />
+                                                <Binding Path="Result" />
+                                            </MultiBinding>
+                                        </Button.Visibility>
+                                    </Button>
+                                    <!--  未成功  -->
+                                    <Button
+                                        Grid.Column="4"
+                                        Padding="4"
+                                        Command="{Binding RestartModelSelfCmd}"
+                                        Content="&#xe621;"
+                                        FontFamily="{StaticResource IconFont}"
+                                        FontSize="14pt"
+                                        Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}, Path=Foreground}"
+                                        Style="{StaticResource ImageButtonStyle1}"
+                                        ToolTip="开始...">
+                                        <Button.Visibility>
+                                            <MultiBinding Converter="{StaticResource StateNoStateFinishedResultNotSucceedToVisibilityCvt}">
+                                                <Binding Path="State" />
+                                                <Binding Path="Result" />
+                                            </MultiBinding>
+                                        </Button.Visibility>
+                                    </Button>
+                                </Grid>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn
+                        CanUserSort="True"
+                        Header="输出方式"
+                        SortMemberPath="SelectedOutputType"
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoOutputTypeColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
+                        <DataGridTemplateColumn.HeaderStyle>
+                            <Style BasedOn="{StaticResource DefaultDataGridColumnHeaderStyle}" TargetType="DataGridColumnHeader">
+                                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                            </Style>
+                        </DataGridTemplateColumn.HeaderStyle>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox
+                                    Margin="0,2"
+                                    DisplayMemberPath="Display"
+                                    ItemsSource="{x:Static pagemodels:SettingsViewModel.AvailableOutputTypes}"
+                                    SelectedValue="{Binding SelectedOutputType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    SelectedValuePath="ItemValue"
+                                    ToolTip="指定计算哈希结果的显示方式：&#10;Base64：以 Base64 编码字符显示计算结果，某些软件配置需要此格式&#10;Hex大写：常用的显示方式，以十六进制大写字母方式显示计算结果&#10;Hex小写：常用的显示方式，以十六进制小写字母方式显示计算结果" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn
+                        MinWidth="80"
+                        CanUserSort="True"
+                        Header="任务耗时"
+                        SortMemberPath="DurationofTask"
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoDurationColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
+                        <DataGridTemplateColumn.HeaderStyle>
+                            <Style BasedOn="{StaticResource DefaultDataGridColumnHeaderStyle}" TargetType="DataGridColumnHeader">
+                                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                            </Style>
+                        </DataGridTemplateColumn.HeaderStyle>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Border Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}, Path=Background}">
+                                    <Border.InputBindings>
+                                        <MouseBinding
+                                            Command="{Binding TableColumnDoubleClickCmd}"
+                                            CommandParameter="{Binding Source={x:Static local:Settings.Current}, Path=DurationColumnLeftDoubleClick}"
+                                            MouseAction="LeftDoubleClick" />
+                                    </Border.InputBindings>
+                                    <TextBlock
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Text="{Binding DurationofTask, Converter={StaticResource DoubleToTwoDecimalPlacesWithUnitsCvt}, Mode=OneWay}" />
+                                </Border>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn
+                        CanUserSort="True"
+                        Header="导出"
+                        SortMemberPath="CurrentInOutModel.Export"
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoExportColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
+                        <DataGridTemplateColumn.HeaderStyle>
+                            <Style BasedOn="{StaticResource DefaultDataGridColumnHeaderStyle}" TargetType="DataGridColumnHeader">
+                                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                            </Style>
+                        </DataGridTemplateColumn.HeaderStyle>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox
                                     HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    Text="{Binding DurationofTask, Converter={StaticResource DoubleToTwoDecimalPlacesWithUnitsCvt}, Mode=OneWay}" />
-                            </Border>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTemplateColumn
-                    CanUserSort="True"
-                    Header="导出"
-                    SortMemberPath="CurrentInOutModel.Export"
-                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoExportColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
-                    <DataGridTemplateColumn.HeaderStyle>
-                        <Style BasedOn="{StaticResource DefaultDataGridColumnHeaderStyle}" TargetType="DataGridColumnHeader">
-                            <Setter Property="HorizontalContentAlignment" Value="Center" />
-                        </Style>
-                    </DataGridTemplateColumn.HeaderStyle>
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <CheckBox
-                                HorizontalAlignment="Center"
-                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Page}, AncestorLevel=1}, Path=DataContext.ChangeAlgosExportStateCmd}"
-                                CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}, Path=DataContext}"
-                                IsChecked="{Binding CurrentInOutModel.Export, Mode=OneWay}" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTemplateColumn
-                    MinWidth="60"
-                    CanUserSort="True"
-                    Header="校验结果"
-                    SortMemberPath="CurrentInOutModel.HashCmpResult"
-                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoCmpResultColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
-                    <DataGridTemplateColumn.HeaderStyle>
-                        <Style BasedOn="{StaticResource DefaultDataGridColumnHeaderStyle}" TargetType="DataGridColumnHeader">
-                            <Setter Property="HorizontalContentAlignment" Value="Center" />
-                            <Setter Property="ToolTipService.ShowDuration" Value="60000" />
-                            <Setter Property="ToolTip" Value="{Binding DataContext.Report, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGrid}}}" />
-                        </Style>
-                    </DataGridTemplateColumn.HeaderStyle>
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <Grid.Visibility>
-                                    <MultiBinding Converter="{StaticResource AlgoModelAndCmpResToVisibilityCvt}">
-                                        <Binding Path="CurrentInOutModel" />
-                                        <Binding Path="CurrentInOutModel.HashCmpResult" />
-                                    </MultiBinding>
-                                </Grid.Visibility>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
-                                <Label
-                                    Grid.Column="0"
-                                    Padding="3"
-                                    Background="{Binding Background, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGridRow}}"
-                                    BorderThickness="0"
-                                    Content="{Binding CurrentInOutModel.HashCmpResult, Converter={StaticResource ComparisonResultToIconFontTextCvt}}"
-                                    FontFamily="{StaticResource IconFont}"
-                                    FontSize="22px"
-                                    Foreground="{Binding CurrentInOutModel.HashCmpResult, Converter={StaticResource ComparisonResultToForegroundCvt}}" />
-                                <TextBlock
-                                    Grid.Column="1"
-                                    Margin="4,0,0,0"
-                                    VerticalAlignment="Center"
-                                    Text="{Binding CurrentInOutModel.HashCmpResult, Converter={StaticResource ComparisonResultToTextCvt}}"
-                                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowResultText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
-                            </Grid>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="哈希标记" Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowHashInTagColumn, Converter={StaticResource TrueToVisibilityVisibleCvt}}">
-                    <DataGridTemplateColumn.HeaderStyle>
-                        <Style BasedOn="{StaticResource DefaultDataGridColumnHeaderStyle}" TargetType="DataGridColumnHeader">
-                            <Setter Property="HorizontalContentAlignment" Value="Center" />
-                        </Style>
-                    </DataGridTemplateColumn.HeaderStyle>
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" SharedSizeGroup="inTagHashGroup" />
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
-                                <TextBlock
-                                    Grid.Column="0"
-                                    Grid.ColumnSpan="2"
-                                    Padding="4"
-                                    VerticalAlignment="Center"
-                                    Background="Transparent"
-                                    Text="{Binding HcmDataFromFile, Converter={StaticResource DisplayHcmDataErrorInfoCvt}}" />
-                                <TextBlock
-                                    Grid.Column="0"
-                                    Padding="4"
-                                    VerticalAlignment="Center"
-                                    Text="{Binding HcmDataFromFile, Converter={StaticResource DisplayHcmDataHashNameCvt}}">
-                                    <TextBlock.Background>
-                                        <MultiBinding Converter="{StaticResource CmpColorOrBrushToColorBrushCvt}">
-                                            <Binding Path="EhGroupId" />
-                                            <Binding Path="Background" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}" />
+                                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Page}, AncestorLevel=1}, Path=DataContext.ChangeAlgosExportStateCmd}"
+                                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}, Path=DataContext}"
+                                    IsChecked="{Binding CurrentInOutModel.Export, Mode=OneWay}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn
+                        MinWidth="60"
+                        CanUserSort="True"
+                        Header="校验结果"
+                        SortMemberPath="CurrentInOutModel.HashCmpResult"
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=NoCmpResultColumn, Converter={StaticResource TrueToVisibilityHiddenCvt}, Mode=OneWay}">
+                        <DataGridTemplateColumn.HeaderStyle>
+                            <Style BasedOn="{StaticResource DefaultDataGridColumnHeaderStyle}" TargetType="DataGridColumnHeader">
+                                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                <Setter Property="ToolTipService.ShowDuration" Value="60000" />
+                                <Setter Property="ToolTip" Value="{Binding DataContext.Report, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGrid}}}" />
+                            </Style>
+                        </DataGridTemplateColumn.HeaderStyle>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <Grid.Visibility>
+                                        <MultiBinding Converter="{StaticResource AlgoModelAndCmpResToVisibilityCvt}">
+                                            <Binding Path="CurrentInOutModel" />
+                                            <Binding Path="CurrentInOutModel.HashCmpResult" />
                                         </MultiBinding>
-                                    </TextBlock.Background>
-                                </TextBlock>
-                                <TextBlock
-                                    Grid.Column="1"
-                                    Margin="4,0,0,0"
-                                    Padding="4"
-                                    VerticalAlignment="Center"
-                                    TextTrimming="CharacterEllipsis">
-                                    <TextBlock.Text>
-                                        <MultiBinding Converter="{StaticResource DisplayHcmDataHashValueCvt}">
-                                            <Binding Path="HcmDataFromFile" />
-                                            <Binding Path="SelectedOutputType" />
-                                        </MultiBinding>
-                                    </TextBlock.Text>
-                                    <TextBlock.Background>
-                                        <MultiBinding Converter="{StaticResource CmpColorOrBrushToColorBrushCvt}">
-                                            <Binding Path="EhGroupId" />
-                                            <Binding Path="Background" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}" />
-                                        </MultiBinding>
-                                    </TextBlock.Background>
-                                </TextBlock>
-                            </Grid>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
-        <Border
-            Grid.Row="3"
-            Height="1"
-            HorizontalAlignment="Stretch"
-            BorderBrush="{DynamicResource TextFillColorDisabledBrush}"
-            BorderThickness="1" />
-        <Grid Grid.Row="4" Margin="0,4,0,0">
+                                    </Grid.Visibility>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <Label
+                                        Grid.Column="0"
+                                        Padding="3"
+                                        Background="{Binding Background, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGridRow}}"
+                                        BorderThickness="0"
+                                        Content="{Binding CurrentInOutModel.HashCmpResult, Converter={StaticResource ComparisonResultToIconFontTextCvt}}"
+                                        FontFamily="{StaticResource IconFont}"
+                                        FontSize="22px"
+                                        Foreground="{Binding CurrentInOutModel.HashCmpResult, Converter={StaticResource ComparisonResultToForegroundCvt}}" />
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Margin="4,0,0,0"
+                                        VerticalAlignment="Center"
+                                        Text="{Binding CurrentInOutModel.HashCmpResult, Converter={StaticResource ComparisonResultToTextCvt}}"
+                                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowResultText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
+                                </Grid>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="哈希标记" Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowHashInTagColumn, Converter={StaticResource TrueToVisibilityVisibleCvt}}">
+                        <DataGridTemplateColumn.HeaderStyle>
+                            <Style BasedOn="{StaticResource DefaultDataGridColumnHeaderStyle}" TargetType="DataGridColumnHeader">
+                                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                            </Style>
+                        </DataGridTemplateColumn.HeaderStyle>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="inTagHashGroup" />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="2"
+                                        Padding="4"
+                                        VerticalAlignment="Center"
+                                        Background="Transparent"
+                                        Text="{Binding HcmDataFromFile, Converter={StaticResource DisplayHcmDataErrorInfoCvt}}" />
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Padding="4"
+                                        VerticalAlignment="Center"
+                                        Text="{Binding HcmDataFromFile, Converter={StaticResource DisplayHcmDataHashNameCvt}}">
+                                        <TextBlock.Background>
+                                            <MultiBinding Converter="{StaticResource CmpColorOrBrushToColorBrushCvt}">
+                                                <Binding Path="EhGroupId" />
+                                                <Binding Path="Background" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}" />
+                                            </MultiBinding>
+                                        </TextBlock.Background>
+                                    </TextBlock>
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Margin="4,0,0,0"
+                                        Padding="4"
+                                        VerticalAlignment="Center"
+                                        TextTrimming="CharacterEllipsis">
+                                        <TextBlock.Text>
+                                            <MultiBinding Converter="{StaticResource DisplayHcmDataHashValueCvt}">
+                                                <Binding Path="HcmDataFromFile" />
+                                                <Binding Path="SelectedOutputType" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                        <TextBlock.Background>
+                                            <MultiBinding Converter="{StaticResource CmpColorOrBrushToColorBrushCvt}">
+                                                <Binding Path="EhGroupId" />
+                                                <Binding Path="Background" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}" />
+                                            </MultiBinding>
+                                        </TextBlock.Background>
+                                    </TextBlock>
+                                </Grid>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+        <Grid Grid.Row="2" Margin="0,4,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition />

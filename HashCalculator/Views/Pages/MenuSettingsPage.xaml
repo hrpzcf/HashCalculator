@@ -181,7 +181,7 @@
                         Grid.Row="2"
                         Grid.Column="0"
                         Margin="0,4,0,0"
-                        BorderBrush="{DynamicResource TextFillColorDisabledBrush}"
+                        BorderBrush="{DynamicResource ControlStrokeColorSecondaryBrush}"
                         BorderThickness="1"
                         CornerRadius="4">
                         <usercontrols:ShellMenuEditorControl DataContext="{Binding LoadedShellMenuEditorModel, Mode=OneWay}" />
@@ -190,7 +190,7 @@
                         Grid.Row="2"
                         Grid.Column="1"
                         Margin="16,4,0,0"
-                        BorderBrush="{DynamicResource TextFillColorDisabledBrush}"
+                        BorderBrush="{DynamicResource ControlStrokeColorSecondaryBrush}"
                         BorderThickness="1"
                         CornerRadius="4">
                         <usercontrols:ShellSubmenuEditorControl DataContext="{Binding LoadedShellMenuEditorModel.SelectedMenu, Mode=OneWay}" />
