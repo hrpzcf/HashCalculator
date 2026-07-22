@@ -1,6 +1,6 @@
 <div align="center">
 
-# 哈希值批量计算器 (HashCalculator)
+# 哈希值计算器 (HashCalculator)
 
 [![GitHub stars](https://img.shields.io/github/stars/hrpzcf/HashCalculator?style=flat)](https://github.com/hrpzcf/HashCalculator/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/hrpzcf/HashCalculator?style=flat)](https://github.com/hrpzcf/HashCalculator/network)
@@ -52,7 +52,7 @@
 - 支持直接拖拽文件/文件夹到主界面表格中计算文件哈希值。
 - 支持在计算过程中暂停、继续、取消所有正在进行的任务或单个正在进行的任务。
 - 支持把计算所得的结果导出为文本文件，预置 .txt/.csv/.hcb 导出格式，也可以自定义导出格式。
-- 支持自定义校验依据（文件哈希值清单）解析方案，便于直接将同类软件导出的结果作为校验依据打开进行自动校验。
+- 支持自定义校验信息（文件哈希值清单）解析方案，便于直接将同类软件导出的结果作为校验信息打开进行自动校验。
     - 预置 .txt/.csv/.hcb/.sfv/.sums/.hash 等类型文件的解析方案。
 - 支持指定命令行参数启动。
 - 其他未列出的有用的功能...
@@ -65,9 +65,9 @@
     - 参数 1：`-a`或`--algo`，指定计算文件哈希值的时候使用的算法，可省略。
     - 示例：`hashcalculator compute -a sha_1,sha_256 "文件1路径" "文件2路径" "文件夹1路径" ...`
 
-2. 子命令：`verify`，用于从校验依据文件（文件哈希值清单）获知一批待计算哈希值的文件（文件名或相对路径）并计算，然后与校验依据文件内记录的哈希值进行对比，检查计算结果和校验依据文件内记录的哈希值是否一致。
+2. 子命令：`verify`，用于从校验信息文件（文件哈希值清单）获知一批待计算哈希值的文件（文件名或相对路径）并计算，然后与校验信息文件内记录的哈希值进行对比，检查计算结果和校验信息文件内记录的哈希值是否一致。
     - 参数 1：`-a`或`--algo`，指定计算文件哈希值的时候使用的算法，可省略。如果省略该参数则按软件设置的策略决定使用什么算法。
-    - 参数 2：`-l`或`--list`，指定校验依据文件（文件哈希值清单）的路径，此参数必需，不可省略。
+    - 参数 2：`-l`或`--list`，指定校验信息文件（文件哈希值清单）的路径，此参数必需，不可省略。
     - 示例：`hashcalculator verify -a sha_1,sha_256 -l "D:\xxx\sha256sums"`
 
 3. 子命令：`shell`，用于安装或卸载 HashCalculator 的系统右键菜单。
