@@ -9,7 +9,7 @@ namespace HashCalculator
         string Algos { get; set; }
     }
 
-    [Verb("verify", HelpText = "用预期的哈希值清单来校验目标文件的哈希值是否与预期相符。")]
+    [Verb("verify", HelpText = "用校验信息文件来校验目标文件的哈希值是否与预期相符。")]
     internal class VerifyHash : IOptions
     {
         public const string Verb = "verify";

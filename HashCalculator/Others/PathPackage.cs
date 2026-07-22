@@ -159,7 +159,7 @@ namespace HashCalculator
                         if (!File.Exists(path))
                         {
                             argument.Deprecated = true;
-                            argument.Message = "找不到文件，可能哈希值清单与此文件相对位置不正确";
+                            argument.Message = "找不到文件，可能校验信息文件与此文件相对位置不正确";
                         }
                         yield return argument;
                     }

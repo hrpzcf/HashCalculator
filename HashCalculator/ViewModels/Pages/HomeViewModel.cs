@@ -1208,7 +1208,7 @@ public class HomeViewModel : BaseViewModel
                 }
                 catch (Exception)
                 {
-                    NotificationSender.SnackbarWarning("无法获取哈希值清单文件所在目录。");
+                    NotificationSender.SnackbarWarning("无法获取校验信息文件的目录信息。");
                     return false;
                 }
             }
@@ -1255,7 +1255,7 @@ public class HomeViewModel : BaseViewModel
     {
         CommonOpenFileDialog openFile = new CommonOpenFileDialog
         {
-            Title = "选择【哈希值清单】文件",
+            Title = "选择校验信息文件",
             InitialDirectory = Settings.Current.LastUsedPath,
         };
         if (openFile.ShowDialog() == CommonFileDialogResult.Ok)
