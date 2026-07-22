@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using HashCalculator.Others;
 using HashCalculator.ViewModels.Pages;
+using HashCalculator.ViewModels.Windows;
 using HashCalculator.Views.Windows;
 using Wpfctrls = Wpf.Ui.Controls;
 
@@ -37,7 +38,7 @@ namespace HashCalculator
         private async void DeleteOrMoveToRecycleBin(bool toRecyclebin)
         {
             if (Settings.Current.IsFiltersAndCmdersIdle &&
-                this.RefModels is ObservableCollection<HashViewModel> hashViewModels)
+                this.RefModels is RangeObservableCollection<HashViewModel> hashViewModels)
             {
                 Settings.Current.IsFiltersAndCmdersIdle = false;
                 if (hashViewModels.Any(i => i.IsExecutionTarget))
@@ -65,26 +66,79 @@ namespace HashCalculator
                             }
                         }
                         HashViewModel[] targets = hashViewModels.Where(i => i.IsExecutionTarget).ToArray();
+                        ProgressWindowModel progress = new ProgressWindowModel()
+                        {
+                            IsCancelled = true,
+                            TotalCount = targets.Length,
+                            SubProgressVisibility = Visibility.Collapsed,
+                            TotalProgressVisibility = Visibility.Collapsed,
+                            WindowTitle = "正在删除...",
+                            TotalString = "文件数量多的情况下耗时较长，请耐心等候...",
+                        };
+                        ProgressWindow progressWindow = new ProgressWindow(progress)
+                        {
+                            Owner = MainWindow.Current,
+                        };
                         foreach (HashViewModel model in targets)
                         {
                             model.ShutdownModelWait();
-                            hashViewModels.Remove(model);
                         }
-                        await Task.Run(() =>
+                        hashViewModels.RemoveRange(targets);
+                        Task<string> deleteFilesTask = Task.Run(() =>
                         {
-                            if (!toRecyclebin)
+                            try
                             {
-                                foreach (HashViewModel model in targets)
+                                if (!toRecyclebin)
                                 {
-                                    try { model.Information.Delete(); } catch (Exception) { }
+                                    List<string> fileNameList = new List<string>();
+                                    foreach (HashViewModel model in targets)
+                                    {
+                                        try
+                                        {
+                                            model.Information.Delete();
+                                        }
+                                        catch (Exception)
+                                        {
+                                            fileNameList.Add(model.FileName);
+                                        }
+                                    }
+                                    if (fileNameList.Count != 0)
+                                    {
+                                        return "以下文件删除失败：\n" + '\n'.Join(fileNameList);
+                                    }
+                                    return default(string);
                                 }
+                                else
+                                {
+                                    string pathsInOneString = '\0'.Join(
+                                        targets.Select(i => i.Information.FullName));
+                                    if (!CommonUtils.SendToRecycleBin(MainWindow.WndHandle, pathsInOneString,
+                                        Settings.Current.MoveFilesToRecycleBinSilently))
+                                    {
+                                        return "移动文件到回收站失败，可能部分文件未移动！";
+                                    }
+                                }
+                                return default(string);
                             }
-                            else
+                            catch (Exception ex)
                             {
-                                string pathsInOneString = '\0'.Join(targets.Select(i => i.Information.FullName));
-                                CommonUtils.SendToRecycleBin(MainWindow.WndHandle, pathsInOneString);
+                                return $"删除文件或移动文件到回收站的过程出现异常：{ex.Message}";
+                            }
+                            finally
+                            {
+                                progress.AutoClose = true;
+                                Synchronization.UI.Invoke(() =>
+                                {
+                                    progressWindow.DialogResult = false;
+                                });
                             }
                         });
+                        progressWindow.ShowDialog();
+                        string exceptionMessage = await deleteFilesTask;
+                        if (!string.IsNullOrEmpty(exceptionMessage))
+                        {
+                            NotificationSender.ShowMessageBox(MainWindow.Current, "错误", exceptionMessage);
+                        }
                         HomeViewModel.Current.GenerateFileHashCheckReport();
                     }
                 }
