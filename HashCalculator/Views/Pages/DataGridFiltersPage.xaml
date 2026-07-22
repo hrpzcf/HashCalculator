@@ -86,7 +86,7 @@
                         Command="{Binding RefreshFiltersCmd}"
                         CommandParameter="{StaticResource TrueValue}"
                         Content="刷新筛选"
-                        Icon="{wpfui:SymbolIcon Symbol=ArrowSync12}"
+                        Icon="{wpfui:SymbolIcon Symbol=ArrowSync16}"
                         ToolTip="应用已选择的筛选器并刷新主页视图。" />
                     <wpfui:Button
                         Grid.Row="1"
