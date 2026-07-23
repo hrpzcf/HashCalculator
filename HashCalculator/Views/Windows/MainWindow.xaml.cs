@@ -25,7 +25,7 @@ namespace HashCalculator.Views.Windows
         private PresentationSource presentationSrc = null;
 
         private readonly HomePage _homePage = null;
-        private readonly MainWindowModel viewModel = null;
+        private readonly MainWindowModel _viewModel = null;
 
         private static string[] startupArgs = null;
         private static readonly TimeSpan clipboardTriggerMinInterval =
@@ -47,8 +47,8 @@ namespace HashCalculator.Views.Windows
         {
             Current = this;
             this._homePage = homePage;
-            this.viewModel = viewModel;
-            this.DataContext = this.viewModel;
+            this._viewModel = viewModel;
+            this.DataContext = this._viewModel;
             this.InitializeComponent();
             snackbarService.SetSnackbarPresenter(this.SnackbarPresenter);
             navigationService.SetNavigationControl(this.NavigationView);
@@ -59,12 +59,11 @@ namespace HashCalculator.Views.Windows
         {
             if (sender.SelectedItem is Wpfctrls.INavigationViewItem item)
             {
-                if (item == this.viewModel.SettingsNavigationItem ||
-                    item.NavigationViewItemParent == this.viewModel.SettingsNavigationItem)
+                if (item != this._viewModel.SettingsNavigationItem
+                    && item.NavigationViewItemParent != this._viewModel.SettingsNavigationItem)
                 {
-                    return;
+                    this._viewModel.SettingsNavigationItem.IsExpanded = false;
                 }
-                this.viewModel.SettingsNavigationItem.IsExpanded = false;
             }
         }
 
@@ -82,6 +81,7 @@ namespace HashCalculator.Views.Windows
                 hwndSource.Dispose();
             }
             this.ProcIdMonitorFlag = false;
+            this._homePage.MainDataGrid.Columns.CollectGridColumns(Settings.Current.ColumnsOrder);
             // 此处与 ProcessIdMonitorProc 方法内的 PIdSynchronizer.Set 不重复，原因：
             // 如果是本进程实例内的 ProcessIdMonitorProc 方法内的 PIdSynchronizer.Wait 抢到了锁，
             // 1. 本进程实例 ProcessIdMonitorProc 方法内进入 if (!this.ProcIdMonitorFlag) 分支，
@@ -90,7 +90,6 @@ namespace HashCalculator.Views.Windows
             // 如果是其他进程实例内的 ProcessIdMonitorProc 方法内的 PIdSynchronizer.Wait 抢到了锁，
             // 则直接进入步骤 3，本进程实例 ProcessIdMonitorProc 方法内的 PIdSynchronizer.Wait 抢不到锁不会往下执行。
             Initializer.PIdSynchronizer.Set();
-            this._homePage.MainDataGrid.Columns.CollectGridColumns(Settings.Current.ColumnsOrder);
         }
 
         private async void MainWindowLoaded(object sender, RoutedEventArgs e)
