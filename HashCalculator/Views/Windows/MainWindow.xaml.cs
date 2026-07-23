@@ -6,14 +6,12 @@ using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Interop;
-using System.Windows.Media;
 using CommandLine;
 using HashCalculator.Others;
 using HashCalculator.ViewModels.Pages;
 using HashCalculator.ViewModels.Windows;
 using HashCalculator.Views.Pages;
 using Wpf.Ui;
-using Wpf.Ui.Appearance;
 using Wpfctrls = Wpf.Ui.Controls;
 
 namespace HashCalculator.Views.Windows
@@ -104,11 +102,6 @@ namespace HashCalculator.Views.Windows
                     this.AddClipboardListener();
                 }
             }
-            // 深色主题下把窗口背景调浅(WPF UI 默认 #FF202020 太黑)。
-            // Changed 事件在 Apply 内部、RestoreContentBackground 之前触发,
-            // 所以在这里覆盖 ApplicationBackgroundBrush 能被 RestoreContentBackground 取到。
-            this.UpdateWindowBackgroundByTheme(default, default);
-            ApplicationThemeManager.Changed += this.UpdateWindowBackgroundByTheme;
             Settings.Current.PropertyChanged += this.SettingsPropertyChanged;
             if (ShellExtHelper.RunningAsAdmin)
             {
@@ -141,28 +134,6 @@ namespace HashCalculator.Views.Windows
                 {
                     this.RemoveClipboardListener();
                 }
-            }
-        }
-
-        /// <summary>
-        /// 深色主题下将窗口背景色调浅(WPF UI 默认 #FF202020 太黑)。
-        /// 通过覆盖窗口自身资源字典里的 ApplicationBackgroundBrush 实现:
-        /// RestoreContentBackground 取的是 window.Resources["ApplicationBackgroundBrush"],
-        /// 所以在这里覆盖能被它正确取到。
-        /// </summary>
-        private void UpdateWindowBackgroundByTheme(ApplicationTheme t, Color c)
-        {
-            // 不用 t 判断是因为要在订阅前手动运行此方法，此时 t 是手动传入的 default。
-            if (ApplicationThemeManager.GetAppTheme() == ApplicationTheme.Dark)
-            {
-                this.Resources["ApplicationBackgroundBrush"] = new SolidColorBrush(
-                    (Color)ColorConverter.ConvertFromString("#252525"));
-            }
-            else
-            {
-                // Remove 后从窗口资源取到 null，触发 fallback(GetFallbackBackgroundBrush),
-                // fallback 会根据当前主题返回对应的原值(深色 #FF202020，浅色 #FFFAFAFA)
-                this.Resources.Remove("ApplicationBackgroundBrush");
             }
         }
 
