@@ -612,4 +612,15 @@ namespace HashCalculator
         /// </summary>
         SHGFI_USEFILEATTRIBUTES = 0x000000010,
     }
+
+    /// <summary>
+    /// https://learn.microsoft.com/en-us/windows/win32/api/shlobj_core/nf-shlobj_core-shgetfolderlocation
+    /// </summary>
+    public enum CSIDL
+    {
+        /// <summary>
+        /// 回收站（虚拟文件夹）。
+        /// </summary>
+        CSIDL_BITBUCKET = 0x0000000a,
+    }
 }

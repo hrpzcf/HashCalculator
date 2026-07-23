@@ -240,7 +240,24 @@ namespace HashCalculator
         /// https://learn.microsoft.com/en-us/windows/win32/api/shlobj_core/nf-shlobj_core-shchangenotify
         /// </summary>
         [DllImport("shell32.dll")]
-        internal static extern void SHChangeNotify(HChangeNotifyEventID wEventId, HChangeNotifyFlags uFlags, IntPtr dwItem1, IntPtr dwItem2);
+        internal static extern void SHChangeNotify(HChangeNotifyEventID wEventId, HChangeNotifyFlags uFlags,
+            IntPtr dwItem1, IntPtr dwItem2);
+
+        /// <summary>
+        /// https://learn.microsoft.com/en-us/windows/win32/api/shlobj_core/nf-shlobj_core-shgetfolderlocation
+        /// </summary>
+        [DllImport("shell32.dll")]
+        internal static extern int SHGetFolderLocation(IntPtr hwndOwner, CSIDL nFolder, IntPtr hToken,
+            uint dwReserved, out IntPtr ppidl);
+    }
+
+    internal static class OLE32
+    {
+        /// <summary>
+        /// https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemfree
+        /// </summary>
+        [DllImport("ole32.dll")]
+        internal static extern void CoTaskMemFree(IntPtr hMemBlock);
     }
 
     internal static class KERNEL32

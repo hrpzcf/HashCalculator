@@ -302,6 +302,18 @@ namespace HashCalculator
                 };
                 operationResult = SHELL32.SHFileOperationW64(ref data);
             }
+            if (operationResult == 0)
+            {
+                // SHFileOperation 批量删除大量文件后，回收站图标状态可能不会自动刷新。
+                // 获取回收站 PIDL 后发送 SHCNE_UPDATEDIR 通知，使桌面回收站图标及时更新。
+                if (SHELL32.SHGetFolderLocation(IntPtr.Zero, CSIDL.CSIDL_BITBUCKET,
+                    IntPtr.Zero, 0U, out IntPtr recycleBinPidl) == 0)
+                {
+                    SHELL32.SHChangeNotify(HChangeNotifyEventID.SHCNE_UPDATEDIR,
+                        HChangeNotifyFlags.SHCNF_IDLIST, recycleBinPidl, IntPtr.Zero);
+                    OLE32.CoTaskMemFree(recycleBinPidl);
+                }
+            }
             return operationResult == 0;
         }
 
