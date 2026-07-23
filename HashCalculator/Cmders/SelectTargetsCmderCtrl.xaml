@@ -16,7 +16,7 @@
             <StackPanel>
                 <WrapPanel>
                     <Button
-                        Margin="2"
+                        Margin="4"
                         Padding="20,6"
                         Background="DarkSlateBlue"
                         BorderThickness="1"
@@ -26,7 +26,7 @@
                         Style="{StaticResource IndepButtonStyle}"
                         ToolTip="只针对【相同哈希值】筛选器的分组结果，每组选择除了第一行外的所有行，否则取消选择所有行。" />
                     <Button
-                        Margin="2"
+                        Margin="4"
                         Padding="20,6"
                         Background="DarkSlateGray"
                         BorderThickness="1"
@@ -36,7 +36,7 @@
                         Style="{StaticResource IndepButtonStyle}"
                         ToolTip="只针对【相同哈希值】筛选器的分组结果，每组选择除了第一行外的所有行，否则取消选择所有行。" />
                     <Button
-                        Margin="2"
+                        Margin="4"
                         Padding="20,6"
                         Background="DarkCyan"
                         BorderThickness="1"
@@ -46,7 +46,7 @@
                         Style="{StaticResource IndepButtonStyle}"
                         ToolTip="只针对【相同文件夹】筛选器的分组结果，每组选择除了第一行外的所有行，否则取消选择所有行。" />
                     <Button
-                        Margin="2"
+                        Margin="4"
                         Padding="20,6"
                         Background="DarkMagenta"
                         BorderThickness="1"
@@ -56,7 +56,7 @@
                         Style="{StaticResource IndepButtonStyle}"
                         ToolTip="综合考虑【相同哈希值】和【相同文件夹】的嵌套分组结果，每个最底级子组选择除了第一行外的所有行，否则取消选择所有行。" />
                     <Button
-                        Margin="2"
+                        Margin="4"
                         Padding="20,6"
                         Background="DarkOliveGreen"
                         BorderThickness="1"
@@ -66,7 +66,7 @@
                         Style="{StaticResource IndepButtonStyle}"
                         ToolTip="选择所有行。" />
                     <Button
-                        Margin="2"
+                        Margin="4"
                         Padding="20,6"
                         Background="DarkBlue"
                         BorderThickness="1"
@@ -76,7 +76,7 @@
                         Style="{StaticResource IndepButtonStyle}"
                         ToolTip="把所有行的选择状态改为相反状态。" />
                     <Button
-                        Margin="2"
+                        Margin="4"
                         Padding="20,6"
                         Background="SaddleBrown"
                         BorderThickness="1"
