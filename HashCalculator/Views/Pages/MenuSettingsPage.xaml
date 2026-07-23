@@ -168,13 +168,13 @@
                     <wpfui:TextBlock
                         Grid.Row="1"
                         Grid.Column="0"
-                        Margin="0,4,0,0"
+                        Margin="0,8,0,0"
                         FontTypography="BodyStrong"
                         Text="一级菜单项" />
                     <wpfui:TextBlock
                         Grid.Row="1"
                         Grid.Column="1"
-                        Margin="16,4,0,0"
+                        Margin="16,8,0,0"
                         FontTypography="BodyStrong"
                         Text="二级菜单项" />
                     <Border
