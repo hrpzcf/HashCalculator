@@ -660,12 +660,7 @@
                                     <TextBlock
                                         HorizontalAlignment="Right"
                                         VerticalAlignment="Center"
-                                        Text="{Binding FileLength, Converter={StaticResource BytesToIntuitiveFileSizeCvt}}">
-                                        <TextBlock.ToolTip>
-                                            <ToolTip Content="{Binding FileLength, Mode=OneWay}" ContentStringFormat="{}{0} 字节" />
-                                        </TextBlock.ToolTip>
-
-                                    </TextBlock>
+                                        Text="{Binding FileLength, Converter={StaticResource BytesToIntuitiveFileSizeCvt}}" />
                                 </Border>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -767,8 +762,7 @@
                                         <TextBlock
                                             VerticalAlignment="Center"
                                             Text="{Binding CurrentHashString}"
-                                            TextTrimming="CharacterEllipsis"
-                                            ToolTip="{Binding ModelDetails}" />
+                                            TextTrimming="CharacterEllipsis" />
                                     </Border>
                                     <TextBlock
                                         Grid.Column="1"
@@ -915,8 +909,7 @@
                                     DisplayMemberPath="Display"
                                     ItemsSource="{x:Static pagemodels:SettingsViewModel.AvailableOutputTypes}"
                                     SelectedValue="{Binding SelectedOutputType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                    SelectedValuePath="ItemValue"
-                                    ToolTip="指定计算哈希结果的显示方式：&#10;Base64：以 Base64 编码字符显示计算结果，某些软件配置需要此格式&#10;Hex大写：常用的显示方式，以十六进制大写字母方式显示计算结果&#10;Hex小写：常用的显示方式，以十六进制小写字母方式显示计算结果" />
+                                    SelectedValuePath="ItemValue" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -1125,7 +1118,7 @@
                 Appearance="Secondary"
                 Command="{Binding SelectChecklistFileCmd}"
                 Content="..."
-                ToolTip="打开【选择文件】对话框选择校验信息文件，将选择的文件路径填充到校验信息输入框中" />
+                ToolTip="打开【选择文件】对话框选择校验信息文件，将选择的文件路径填充到校验信息输入框中。" />
             <wpfui:Button
                 Grid.Column="3"
                 Margin="8,0,0,0"

@@ -22,7 +22,6 @@ namespace HashCalculator
         private string _fileName = string.Empty;
         private string _currentHashString = null;
         private string _errorDetails = "任务未开始...";
-        private string _modelDetails = "暂无详情...";
         private long _fileLength = 0L;
         private long _progress = 0L;
         private long _maxProgress = 0L;
@@ -235,12 +234,6 @@ namespace HashCalculator
         {
             get => this._errorDetails;
             set => this.SetPropNotify(ref this._errorDetails, value);
-        }
-
-        public string ModelDetails
-        {
-            get => this._modelDetails;
-            set => this.SetPropNotify(ref this._modelDetails, value);
         }
 
         public double DurationofTask
@@ -524,7 +517,7 @@ namespace HashCalculator
             }
             if (this.AlgoInOutModels != null)
             {
-                foreach (var model in this.AlgoInOutModels)
+                foreach (AlgoInOutModel model in this.AlgoInOutModels)
                 {
                     model.HashResult = null;
                     model.Export = false;
@@ -938,8 +931,6 @@ namespace HashCalculator
             synchronization.Invoke(() =>
             {
                 this.DurationofTask = duration;
-                this.ModelDetails = $"文件名称：{this.FileName}\n文件大小：{CommonUtils.FileSizeCvt(this.FileLength)}\n"
-                    + $"任务任务耗时：{duration:f2}秒";
                 this.State = HashState.Finished;
             });
             this.ModelReleasedEvent?.InvokeAsync(this);
