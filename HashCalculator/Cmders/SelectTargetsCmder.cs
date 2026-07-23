@@ -51,19 +51,26 @@ namespace HashCalculator
                     model.IsExecutionTarget = false;
                 }
                 Settings.Current.IsMainRowSelectedByCheckBox = false;
+                NotificationSender.SnackbarSecondary($"已取消选择所有行并隐藏【操作目标】列...");
             }
         }
 
         private void SelectAllModelsAction(object param)
         {
+            int count = 0;
             if (this.RefModels is IEnumerable<HashViewModel> models)
             {
                 Settings.Current.IsMainRowSelectedByCheckBox = true;
                 foreach (HashViewModel model in models)
                 {
                     model.IsExecutionTarget = model.Matched;
+                    if (model.IsExecutionTarget)
+                    {
+                        count++;
+                    }
                 }
             }
+            NotificationSender.SnackbarSecondary($"已选择 {count} 行...");
         }
 
         public ICommand SelectAllModelsCmd
@@ -85,6 +92,7 @@ namespace HashCalculator
                     model.IsExecutionTarget = false;
                 }
             }
+            NotificationSender.SnackbarSecondary($"已取消所有行的选中状态...");
         }
 
         public ICommand DeselectAllModelsCmd
@@ -98,6 +106,7 @@ namespace HashCalculator
 
         private void ReverseSelectModelsAction(object param)
         {
+            int count = 0;
             if (this.RefModels is IEnumerable<HashViewModel> models)
             {
                 Settings.Current.IsMainRowSelectedByCheckBox = true;
@@ -106,6 +115,7 @@ namespace HashCalculator
                     model.IsExecutionTarget = model.Matched && !model.IsExecutionTarget;
                 }
             }
+            NotificationSender.SnackbarSecondary($"已选择 {count} 行...");
         }
 
         public ICommand ReverseSelectModelsCmd
@@ -119,6 +129,7 @@ namespace HashCalculator
 
         private void SelectSameHashGroupAction(object param)
         {
+            int count = 0;
             if (this.RefModels is IEnumerable<HashViewModel> models)
             {
                 Settings.Current.IsMainRowSelectedByCheckBox = true;
@@ -136,6 +147,7 @@ namespace HashCalculator
                     }
                 }
             }
+            NotificationSender.SnackbarSecondary($"已选择 {count} 行...");
         }
 
         public ICommand SelectSameHashGroupCmd
@@ -149,6 +161,7 @@ namespace HashCalculator
 
         private void SelectSameEmbeddedHashGroupAction(object param)
         {
+            int count = 0;
             if (this.RefModels is IEnumerable<HashViewModel> models)
             {
                 Settings.Current.IsMainRowSelectedByCheckBox = true;
@@ -166,6 +179,7 @@ namespace HashCalculator
                     }
                 }
             }
+            NotificationSender.SnackbarSecondary($"已选择 {count} 行...");
         }
 
         public ICommand SelectSameEmbeddedHashGroupCmd
@@ -179,6 +193,7 @@ namespace HashCalculator
 
         private void SelectSameFolderGroupAction(object param)
         {
+            int count = 0;
             if (this.RefModels is IEnumerable<HashViewModel> models)
             {
                 Settings.Current.IsMainRowSelectedByCheckBox = true;
@@ -196,6 +211,7 @@ namespace HashCalculator
                     }
                 }
             }
+            NotificationSender.SnackbarSecondary($"已选择 {count} 行...");
         }
 
         public ICommand SelectSameFolderGroupCmd
@@ -230,6 +246,7 @@ namespace HashCalculator
 
         private void SelectHybridGroupsAction(object param)
         {
+            int count = 0;
             if (this.RefModels is IEnumerable<HashViewModel> models)
             {
                 Settings.Current.IsMainRowSelectedByCheckBox = true;
@@ -239,6 +256,7 @@ namespace HashCalculator
                 }
                 this.CheckCollectionViewGroupItems(this.BoundDataGridView.Groups);
             }
+            NotificationSender.SnackbarSecondary($"已选择 {count} 行...");
         }
 
         public ICommand SelectHybridGroupsCmd
