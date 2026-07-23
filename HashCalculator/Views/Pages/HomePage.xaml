@@ -1078,33 +1078,37 @@
                     Margin="0,0,12,0"
                     IsIndeterminate="True"
                     Visibility="{Binding State, Converter={StaticResource LoadingImageVisiblityCvt}}" />
-                <Image
-                    Width="16"
-                    Height="16"
-                    Source="{StaticResource total_linesDrawingImage}"
+                <TextBlock
+                    VerticalAlignment="Center"
+                    FontFamily="{StaticResource IconFont}"
+                    FontSize="16"
+                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                    Text="&#xe607;"
                     ToolTip="表格总行数..." />
                 <TextBlock
-                    Padding="4,0"
+                    Margin="8,0,0,0"
                     VerticalAlignment="Center"
-                    Foreground="Gray"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                     Text="{Binding Source={x:Static others:HashModelStore.HashViewModels}, Path=Count}"
                     ToolTip="表格总行数..." />
-                <Image
-                    Width="16"
-                    Height="16"
-                    Margin="6,0,0,0"
-                    Source="{StaticResource remainingDrawingImage}"
+                <TextBlock
+                    Margin="16,0,0,0"
+                    VerticalAlignment="Center"
+                    FontFamily="{StaticResource IconFont}"
+                    FontSize="16"
+                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                    Text="&#xe67c;"
                     ToolTip="待计算行数..." />
                 <TextBlock
-                    Padding="4,0"
+                    Margin="8,0,0,0"
                     VerticalAlignment="Center"
-                    Foreground="Gray"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                     Text="{Binding TobeComputedModelsCount}"
                     ToolTip="待计算行数..." />
             </StackPanel>
             <wpfui:TextBox
                 Grid.Column="1"
-                Margin="8,0,0,0"
+                Margin="16,0,0,0"
                 AcceptsReturn="True"
                 MaxLines="3"
                 PlaceholderText="校验信息：可在此输入单个或多个哈希值(每行一个)、使用后面的 [...] 按钮选择校验信息文件、粘贴检验信息文件的单行或多行内容"

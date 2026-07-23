@@ -6,6 +6,20 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "29522648",
+      "name": "时钟",
+      "font_class": "clock",
+      "unicode": "e67c",
+      "unicode_decimal": 59004
+    },
+    {
+      "icon_id": "9673160",
+      "name": "列表",
+      "font_class": "list",
+      "unicode": "e607",
+      "unicode_decimal": 58887
+    },
+    {
       "icon_id": "42856782",
       "name": "文件关联",
       "font_class": "mti-guanlian",
