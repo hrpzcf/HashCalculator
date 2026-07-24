@@ -12,6 +12,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using HashCalculator.ViewModels.Pages;
 using Microsoft.Win32;
+using Wpf.Ui.Appearance;
 
 namespace HashCalculator
 {
@@ -483,6 +484,25 @@ namespace HashCalculator
                 }
             }
             return default(int);
+        }
+
+        public static ApplicationTheme GetEffectiveTheme(this ApplicationTheme theme)
+        {
+            if (theme == ApplicationTheme.Unknown)
+            {
+                // 不能直接调 ApplySystemTheme()，它内部默认用 Mica 背景，
+                // 在 Win11 上会触发 RemoveBackground 把窗口擦成透明，导致黑色底色。
+                SystemThemeManager.UpdateSystemThemeCache();
+                return SystemThemeManager.GetCachedSystemTheme() switch
+                {
+                    SystemTheme.Dark or SystemTheme.CapturedMotion or SystemTheme.Glow
+                        => ApplicationTheme.Dark,
+                    SystemTheme.HC1 or SystemTheme.HC2 or SystemTheme.HCBlack or SystemTheme.HCWhite
+                        => ApplicationTheme.HighContrast,
+                    _ => ApplicationTheme.Light
+                };
+            }
+            return theme;
         }
     }
 }

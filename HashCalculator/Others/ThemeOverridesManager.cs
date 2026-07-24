@@ -32,36 +32,35 @@ internal static class ThemeOverridesManager
         ApplicationThemeManager.Changed += OnThemeChanged;
     }
 
-    private static void OnThemeChanged(ApplicationTheme theme, Color accent)
-    {
-        ApplyForTheme(theme);
-    }
-
     /// <summary>
     /// 根据主题替换 Application.Resources.MergedDictionaries 中的覆盖字典。
     /// </summary>
-    private static void ApplyForTheme(ApplicationTheme theme)
+    private static void OnThemeChanged(ApplicationTheme theme, Color accent)
     {
-        string targetUri = theme switch
+        string resourceUri = theme switch
         {
             ApplicationTheme.Dark => DarkOverridesUri,
             ApplicationTheme.Light => LightOverridesUri,
             _ => null // HighContrast 不应用覆盖
         };
-        Collection<ResourceDictionary> dictionaries = Application.Current.Resources.MergedDictionaries;
+        Collection<ResourceDictionary> dictionaries =
+            Application.Current.Resources.MergedDictionaries;
         // 移除现有的覆盖字典
         for (int i = dictionaries.Count - 1; i >= 0; i--)
         {
-            if (dictionaries[i]?.Source?.ToString() is string src &&
-                (src.Contains("LightOverrides") || src.Contains("DarkOverrides")))
+            if (dictionaries[i]?.Source?.ToString() is string source &&
+                (source.Contains("LightOverrides") || source.Contains("DarkOverrides")))
             {
                 dictionaries.RemoveAt(i);
             }
         }
         // 添加对应主题的覆盖字典（Light/Dark 时才加）
-        if (targetUri != null)
+        if (resourceUri != null)
         {
-            dictionaries.Add(new ResourceDictionary { Source = new Uri(targetUri, UriKind.Absolute) });
+            dictionaries.Add(new ResourceDictionary
+            {
+                Source = new Uri(resourceUri, UriKind.Absolute)
+            });
         }
     }
 }

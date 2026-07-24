@@ -840,7 +840,7 @@ public class SettingsViewModel : BaseViewModel
         get => this.selectedApplicationThemeIndex;
         set
         {
-            if (value == this.selectedApplicationThemeIndex)
+            if (MainWindow.Current != null && value == this.selectedApplicationThemeIndex)
             {
                 return;
             }
@@ -853,14 +853,20 @@ public class SettingsViewModel : BaseViewModel
 #endif
             if (theme == ApplicationTheme.Unknown)
             {
-                ApplicationThemeManager.ApplySystemTheme();
-                SystemThemeWatcher.Watch(MainWindow.Current);
+                theme = theme.GetEffectiveTheme();
+                if (MainWindow.Current != null)
+                {
+                    SystemThemeWatcher.Watch(MainWindow.Current, Wpfctrls.WindowBackdropType.None);
+                }
             }
             else
             {
-                SystemThemeWatcher.UnWatch(MainWindow.Current);
-                ApplicationThemeManager.Apply(theme, Wpfctrls.WindowBackdropType.None);
+                if (MainWindow.Current != null)
+                {
+                    SystemThemeWatcher.UnWatch(MainWindow.Current);
+                }
             }
+            ApplicationThemeManager.Apply(theme, Wpfctrls.WindowBackdropType.None);
             this.SetPropNotify(ref this.selectedApplicationThemeIndex, value);
         }
     }

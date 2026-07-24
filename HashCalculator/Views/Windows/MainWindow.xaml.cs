@@ -12,6 +12,7 @@ using HashCalculator.ViewModels.Pages;
 using HashCalculator.ViewModels.Windows;
 using HashCalculator.Views.Pages;
 using Wpf.Ui;
+using Wpf.Ui.Appearance;
 using Wpfctrls = Wpf.Ui.Controls;
 
 namespace HashCalculator.Views.Windows
@@ -51,6 +52,10 @@ namespace HashCalculator.Views.Windows
             snackbarService.SetSnackbarPresenter(this.SnackbarPresenter);
             navigationService.SetNavigationControl(this.NavigationView);
             this.NavigationView.SelectionChanged += this.SelectionChanged;
+            if (Settings.Current.SelectedApplicationThemeIndex == 0)
+            {
+                SystemThemeWatcher.Watch(this, Wpfctrls.WindowBackdropType.None);
+            }
         }
 
         private void SelectionChanged(Wpfctrls.NavigationView sender, RoutedEventArgs args)
