@@ -381,7 +381,7 @@
             Padding="4"
             BorderBrush="{DynamicResource ControlStrokeColorSecondaryBrush}"
             BorderThickness="1"
-            CornerRadius="6">
+            CornerRadius="4">
             <DataGrid
                 x:Name="MainDataGrid"
                 AllowDrop="True"
