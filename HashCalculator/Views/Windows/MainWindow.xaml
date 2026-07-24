@@ -30,6 +30,7 @@
             FooterMenuItemsSource="{Binding FooterItems, Mode=OneWay}"
             IsFooterSeparatorVisible="False"
             IsPaneOpen="{Binding Source={x:Static local:Settings.Current}, Path=IsMainWindowNavigationViewPaneOpen, Mode=TwoWay}"
+            IsTopSeparatorVisible="False"
             MenuItemsSource="{Binding MenuItems, Mode=OneWay}"
             OpenPaneLength="210"
             PaneDisplayMode="Left"
