@@ -64,6 +64,8 @@ public partial class App : Application
         Settings.LoadSettings();
         Initializer.ParseArgsForShell(e.Args);
         Initializer.PushArgs(e.Args);
+        // 注册主题覆盖字典的自动替换（监听 ApplicationThemeManager.Changed）
+        ThemeOverridesManager.Initialize();
         // 必须要在 Settings.LoadSettings 后执行，否则它们依赖的 Settings 未就绪
         _host.Start();
     }
