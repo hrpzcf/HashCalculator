@@ -87,7 +87,7 @@
                 Text="不建议选择太多算法，否则计算时容易造成程序无响应。" />
             <wpfui:Button
                 HorizontalAlignment="Right"
-                Appearance="Caution"
+                Appearance="Primary"
                 Command="{Binding ClearAllSelectedCmd}"
                 Content="清除" />
         </Grid>
