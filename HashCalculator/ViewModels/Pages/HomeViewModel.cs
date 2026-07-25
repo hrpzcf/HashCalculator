@@ -323,9 +323,9 @@ public class HomeViewModel : BaseViewModel
                         byte[] key = hm.CurrentInOutModel.HashResult;
                         if (!hashViewModels.TryGetValue(key, out List<HashViewModel> value))
                         {
-                            hashViewModels[key] = new List<HashViewModel>();
+                            value = new List<HashViewModel>();
+                            hashViewModels[key] = value;
                         }
-
                         value.Add(hm);
                     }
                     break;
