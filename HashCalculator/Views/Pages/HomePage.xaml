@@ -387,6 +387,7 @@
                 AllowDrop="True"
                 AutoGenerateColumns="False"
                 CanUserReorderColumns="True"
+                CellStyle="{StaticResource DataGridCellStyle1}"
                 Drop="DataGridHashingFilesDrop"
                 Grid.IsSharedSizeScope="True"
                 IsReadOnly="True"
