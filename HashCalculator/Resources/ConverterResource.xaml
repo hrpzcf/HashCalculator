@@ -103,7 +103,6 @@
     <local:MultiLineTextToStrArrayCvt x:Key="MultiLineTextToStrArrayCvt" />
     <local:CmpColorToVisibilityCvt x:Key="CmpColorToVisibilityCvt" />
     <local:CmpColorToColorBrushCvt x:Key="CmpColorToColorBrushCvt" />
-    <local:MultiCmpColorToColorBrushCvt x:Key="MultiCmpColorToColorBrushCvt" />
     <local:CmpColorOrBrushToColorBrushCvt x:Key="CmpColorOrBrushToColorBrushCvt" />
     <local:CloneParameterArrayCvt x:Key="CloneParameterArrayCvt" />
     <local:SelectSmallerDoubleCvt x:Key="SelectSmallerDoubleCvt" />
