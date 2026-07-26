@@ -51,7 +51,7 @@ namespace HashCalculator
                     model.IsExecutionTarget = false;
                 }
                 Settings.Current.IsMainRowSelectedByCheckBox = false;
-                NotificationSender.SnackbarSecondary($"已取消选择所有行并隐藏【操作目标】列...");
+                NotificationSender.SnackbarSecondary($"已取消所有行的选择状态并隐藏【操作目标】列...");
             }
         }
 
@@ -92,7 +92,7 @@ namespace HashCalculator
                     model.IsExecutionTarget = false;
                 }
             }
-            NotificationSender.SnackbarSecondary($"已取消所有行的选中状态...");
+            NotificationSender.SnackbarSecondary($"已取消所有行的选择状态...");
         }
 
         public ICommand DeselectAllModelsCmd
@@ -113,6 +113,10 @@ namespace HashCalculator
                 foreach (HashViewModel model in models)
                 {
                     model.IsExecutionTarget = model.Matched && !model.IsExecutionTarget;
+                    if (model.IsExecutionTarget)
+                    {
+                        count++;
+                    }
                 }
             }
             NotificationSender.SnackbarSecondary($"已选择 {count} 行...");
@@ -144,6 +148,7 @@ namespace HashCalculator
                     foreach (HashViewModel model in group.Skip(1))
                     {
                         model.IsExecutionTarget = true;
+                        count++;
                     }
                 }
             }
@@ -176,6 +181,7 @@ namespace HashCalculator
                     foreach (HashViewModel model in group.Skip(1))
                     {
                         model.IsExecutionTarget = true;
+                        count++;
                     }
                 }
             }
@@ -208,6 +214,7 @@ namespace HashCalculator
                     foreach (HashViewModel model in group.Skip(1))
                     {
                         model.IsExecutionTarget = true;
+                        count++;
                     }
                 }
             }
@@ -223,8 +230,9 @@ namespace HashCalculator
             }
         }
 
-        private void CheckCollectionViewGroupItems(IEnumerable<object> groups)
+        private int CheckCollectionViewGroupItems(IEnumerable<object> groups)
         {
+            int count = 0;
             if (groups != null)
             {
                 foreach (CollectionViewGroup group in groups.Cast<CollectionViewGroup>())
@@ -234,14 +242,16 @@ namespace HashCalculator
                         foreach (HashViewModel model in group.Items.Skip(1).Cast<HashViewModel>())
                         {
                             model.IsExecutionTarget = true;
+                            count++;
                         }
                     }
                     else
                     {
-                        this.CheckCollectionViewGroupItems(group.Items);
+                        count += this.CheckCollectionViewGroupItems(group.Items);
                     }
                 }
             }
+            return count;
         }
 
         private void SelectHybridGroupsAction(object param)
@@ -254,7 +264,7 @@ namespace HashCalculator
                 {
                     model.IsExecutionTarget = false;
                 }
-                this.CheckCollectionViewGroupItems(this.BoundDataGridView.Groups);
+                count = this.CheckCollectionViewGroupItems(this.BoundDataGridView.Groups);
             }
             NotificationSender.SnackbarSecondary($"已选择 {count} 行...");
         }
