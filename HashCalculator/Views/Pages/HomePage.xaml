@@ -953,13 +953,10 @@
                         </DataGridTemplateColumn.HeaderStyle>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <Grid.Visibility>
-                                        <MultiBinding Converter="{StaticResource AlgoModelAndCmpResToVisibilityCvt}">
-                                            <Binding Path="CurrentInOutModel" />
-                                            <Binding Path="CurrentInOutModel.HashCmpResult" />
-                                        </MultiBinding>
-                                    </Grid.Visibility>
+                                <Grid
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Visibility="{Binding CurrentInOutModel.HashCmpResult, Converter={StaticResource ComparisonResultToVisibilityCvt}}">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition />

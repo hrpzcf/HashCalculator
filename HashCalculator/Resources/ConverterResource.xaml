@@ -85,7 +85,6 @@
     <local:ComparisonResultToTextCvt x:Key="ComparisonResultToTextCvt" />
     <local:ComparisonResultToForegroundCvt x:Key="ComparisonResultToForegroundCvt" />
     <local:ComparisonResultToVisibilityCvt x:Key="ComparisonResultToVisibilityCvt" />
-    <local:AlgoModelAndCmpResToVisibilityCvt x:Key="AlgoModelAndCmpResToVisibilityCvt" />
     <local:StateRunningToVisiblityCvt x:Key="StateRunningToVisiblityCvt" />
     <local:StateWaitingToVisiblityCvt x:Key="StateWaitingToVisiblityCvt" />
     <local:StateFinishedResultSucceededToVisibilityCvt x:Key="StateFinishedResultSucceededToVisibilityCvt" />
