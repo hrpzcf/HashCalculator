@@ -195,15 +195,14 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
-                                    <Label
+                                    <TextBlock
                                         Grid.Column="0"
                                         Padding="3"
-                                        Background="{Binding Background, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGridRow}}"
-                                        BorderThickness="0"
-                                        Content="{Binding HashCmpResult, Converter={StaticResource ComparisonResultToIconFontTextCvt}}"
+                                        Background="Transparent"
                                         FontFamily="{StaticResource IconFont}"
-                                        FontSize="21px"
-                                        Foreground="{Binding HashCmpResult, Converter={StaticResource ComparisonResultToForegroundCvt}}" />
+                                        FontSize="22px"
+                                        Foreground="{Binding HashCmpResult, Converter={StaticResource ComparisonResultToForegroundCvt}}"
+                                        Text="{Binding HashCmpResult, Converter={StaticResource ComparisonResultToIconFontTextCvt}}" />
                                     <TextBlock
                                         Grid.Column="1"
                                         Margin="4,0,0,0"
