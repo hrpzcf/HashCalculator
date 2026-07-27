@@ -58,7 +58,7 @@ public class MainWindowModel : BaseViewModel
                 TargetPageTag = "常用设置和其他不便分类的设置项。"
             },
             new NavigationViewItem(
-                "界面设置", SymbolRegular.CalendarSettings20, typeof(InterfaceSettingsPage))
+                "外观设置", SymbolRegular.CalendarSettings20, typeof(InterfaceSettingsPage))
             {
                 TargetPageTag = "应用主题、部分控件的显示和隐藏等设置项。"
             },
