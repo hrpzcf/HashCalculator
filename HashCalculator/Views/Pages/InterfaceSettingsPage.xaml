@@ -118,7 +118,7 @@
             </wpfui:CardExpander>
             <wpfui:CardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
-                    <wpfui:TextBlock Text="在校验结果的图标旁显示描述文字" TextWrapping="WrapWithOverflow" />
+                    <wpfui:TextBlock Text="在校验结果图标旁显示描述" TextWrapping="WrapWithOverflow" />
                 </wpfui:CardControl.Header>
                 <wpfui:ToggleSwitch IsChecked="{Binding ShowResultText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </wpfui:CardControl>
