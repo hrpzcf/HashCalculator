@@ -699,7 +699,7 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" SharedSizeGroup="sameHashIndicator" />
                                         <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="displayingHashGroup" />
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
