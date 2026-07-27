@@ -13,7 +13,7 @@ namespace HashCalculator
 
         public abstract ContentControl UserInterface { get; }
 
-        public virtual void Reset() { }
+        public virtual void Reset(bool showTips) { }
 
         public AbsHashesCmder(IEnumerable<HashViewModel> models)
         {

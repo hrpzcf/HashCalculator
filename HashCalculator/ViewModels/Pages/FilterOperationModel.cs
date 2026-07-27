@@ -164,10 +164,10 @@ public class FilterOperationModel : BaseViewModel
             return;
         }
         Settings.Current.IsFiltersAndCmdersIdle = false;
-        this.SelectTableLinesCmder.Reset();
+        this.SelectTableLinesCmder.Reset(false);
         foreach (AbsHashesCmder cmder in this.HashModelCmders)
         {
-            cmder.Reset();
+            cmder.Reset(false);
         }
         int appliedFiltersCount = 0;
         bool filteringShouldBeApplied = (param is not bool instruction) || instruction;

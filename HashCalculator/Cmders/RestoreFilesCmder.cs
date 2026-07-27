@@ -52,7 +52,7 @@ namespace HashCalculator
             this.UserInterface = new RestoreFilesCmderCtrl(this);
         }
 
-        public override void Reset()
+        public override void Reset(bool showTips)
         {
             this.HideFilesHcmDataAction(null);
         }

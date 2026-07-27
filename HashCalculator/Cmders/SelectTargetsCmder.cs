@@ -42,7 +42,7 @@ namespace HashCalculator
             this.UserInterface = new SelectTargetsCmderCtrl(this);
         }
 
-        public override void Reset()
+        public override void Reset(bool showTips)
         {
             if (this.RefModels is IEnumerable<HashViewModel> models)
             {
@@ -50,8 +50,11 @@ namespace HashCalculator
                 {
                     model.IsExecutionTarget = false;
                 }
+                if (showTips)
+                {
+                    NotificationSender.SnackbarSecondary($"已取消所有行的选择状态并隐藏【操作目标】列...");
+                }
                 Settings.Current.IsMainRowSelectedByCheckBox = false;
-                NotificationSender.SnackbarSecondary($"已取消所有行的选择状态并隐藏【操作目标】列...");
             }
         }
 
@@ -282,7 +285,7 @@ namespace HashCalculator
         {
             get
             {
-                this.cancelSelectionCmd ??= new RelayCommand(@object => { this.Reset(); });
+                this.cancelSelectionCmd ??= new RelayCommand(@object => { this.Reset(true); });
                 return this.cancelSelectionCmd;
             }
         }
