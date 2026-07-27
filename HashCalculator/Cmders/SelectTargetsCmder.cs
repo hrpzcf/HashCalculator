@@ -142,7 +142,7 @@ namespace HashCalculator
                     model.IsExecutionTarget = false;
                 }
                 IEnumerable<IGrouping<ComparableColor, HashViewModel>> byGroupId =
-                    models.Where(i => i.Matched && i.GroupId != null).GroupBy(i => i.GroupId);
+                    models.Where(i => i.Matched && i.HashGroupID != null).GroupBy(i => i.HashGroupID);
                 foreach (IGrouping<ComparableColor, HashViewModel> group in byGroupId)
                 {
                     foreach (HashViewModel model in group.Skip(1))
@@ -174,8 +174,8 @@ namespace HashCalculator
                 {
                     model.IsExecutionTarget = false;
                 }
-                IEnumerable<IGrouping<ComparableColor, HashViewModel>> byEhGroupId =
-                    models.Where(i => i.Matched && i.EhGroupId != null).GroupBy(i => i.EhGroupId);
+                IEnumerable<IGrouping<ComparableColor, HashViewModel>> byEhGroupId = models.Where(
+                    i => i.Matched && i.EmbeddedHashGroupID != null).GroupBy(i => i.EmbeddedHashGroupID);
                 foreach (IGrouping<ComparableColor, HashViewModel> group in byEhGroupId)
                 {
                     foreach (HashViewModel model in group.Skip(1))
@@ -208,7 +208,7 @@ namespace HashCalculator
                     model.IsExecutionTarget = false;
                 }
                 IEnumerable<IGrouping<ComparableColor, HashViewModel>> byGroupId =
-                    models.Where(i => i.Matched && i.FdGroupId != null).GroupBy(i => i.FdGroupId);
+                    models.Where(i => i.Matched && i.FolderGroupID != null).GroupBy(i => i.FolderGroupID);
                 foreach (IGrouping<ComparableColor, HashViewModel> group in byGroupId)
                 {
                     foreach (HashViewModel model in group.Skip(1))

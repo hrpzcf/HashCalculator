@@ -104,8 +104,8 @@ namespace HashCalculator
                                     {
                                         if (new HcmDataHelper(fileStream).RestoreMarkedFile())
                                         {
-                                            model.EhGroupId = null;
                                             model.HcmDataFromFile = null;
+                                            model.EmbeddedHashGroupID = null;
                                         }
                                     }
                                     goto RoundEndsAndNext;

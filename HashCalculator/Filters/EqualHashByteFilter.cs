@@ -21,10 +21,10 @@ namespace HashCalculator
 
     internal class EqualHashByteFilter : AbsHashViewFilter
     {
-        private static readonly PropertyGroupDescription groupIdDesc =
-            new PropertyGroupDescription(nameof(HashViewModel.GroupId));
-        private static readonly PropertyGroupDescription ehGroupIdDesc =
-            new PropertyGroupDescription(nameof(HashViewModel.EhGroupId));
+        private static readonly PropertyGroupDescription hashGroupIdDesc =
+            new PropertyGroupDescription(nameof(HashViewModel.HashGroupID));
+        private static readonly PropertyGroupDescription embeddedHashGroupIdDesc =
+            new PropertyGroupDescription(nameof(HashViewModel.EmbeddedHashGroupID));
 
         private AlgoInOutModel[] _algos;
         private bool checkEmbeddedHashValue = false;
@@ -103,7 +103,7 @@ namespace HashCalculator
                 {
                     focusedAlgoType = (this.Param as AlgoInOutModel).AlgoType;
                 }
-                this.GroupDescriptions[0] = groupIdDesc;
+                this.GroupDescriptions[0] = hashGroupIdDesc;
                 Dictionary<byte[], ModelCurAlgoDict> groupByHashBytes =
                     new Dictionary<byte[], ModelCurAlgoDict>(BytesComparer.Default);
                 foreach (HashViewModel model in models)
@@ -176,7 +176,7 @@ namespace HashCalculator
                 {
                     foreach (HashViewModel model in tuple.Item1.Value.Keys)
                     {
-                        model.GroupId = tuple.Item2;
+                        model.HashGroupID = tuple.Item2;
                     }
                 }
             }
@@ -186,7 +186,7 @@ namespace HashCalculator
         {
             if (models != null)
             {
-                this.GroupDescriptions[0] = ehGroupIdDesc;
+                this.GroupDescriptions[0] = embeddedHashGroupIdDesc;
                 Dictionary<byte[], List<HashViewModel>> groupByHashBytes =
                     new Dictionary<byte[], List<HashViewModel>>(BytesComparer.Default);
                 foreach (HashViewModel model in models)
@@ -237,7 +237,7 @@ namespace HashCalculator
                 {
                     foreach (HashViewModel model in tuple.Item1.Value)
                     {
-                        model.EhGroupId = tuple.Item2;
+                        model.EmbeddedHashGroupID = tuple.Item2;
                     }
                 }
                 Settings.Current.ShowHashInTagColumn = true;

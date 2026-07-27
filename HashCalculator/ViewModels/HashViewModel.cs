@@ -30,7 +30,7 @@ namespace HashCalculator
         private HcmData _hcmDataFromFile = null;
         private AlgoInOutModel _currentInOutModel = null;
         private ObservableCollection<AlgoInOutModel> _algoInOutModels = null;
-        private ComparableColor _tableRowColor = null;
+        private ComparableColor _hashColorID = null;
         private ComparableColor _hashGroupId = null;
         private ComparableColor _embeddedHashGroupId = null;
         private ComparableColor _folderGroupId = null;
@@ -149,16 +149,16 @@ namespace HashCalculator
             set => this.SetPropNotify(ref this._hcmDataFromFile, value);
         }
 
-        public ComparableColor TableRowColor
+        public ComparableColor HashColorID
         {
-            get => this._tableRowColor;
-            set => this.SetPropNotify(ref this._tableRowColor, value);
+            get => this._hashColorID;
+            set => this.SetPropNotify(ref this._hashColorID, value);
         }
 
         /// <summary>
         /// 相同哈希值分组标识
         /// </summary>
-        public ComparableColor GroupId
+        public ComparableColor HashGroupID
         {
             get => this._hashGroupId;
             set => this.SetPropNotify(ref this._hashGroupId, value);
@@ -167,7 +167,7 @@ namespace HashCalculator
         /// <summary>
         /// 相同的内嵌哈希值分组标识
         /// </summary>
-        public ComparableColor EhGroupId
+        public ComparableColor EmbeddedHashGroupID
         {
             get => this._embeddedHashGroupId;
             set => this.SetPropNotify(ref this._embeddedHashGroupId, value);
@@ -176,7 +176,7 @@ namespace HashCalculator
         /// <summary>
         /// 相同文件夹分组标识
         /// </summary>
-        public ComparableColor FdGroupId
+        public ComparableColor FolderGroupID
         {
             get => this._folderGroupId;
             set => this.SetPropNotify(ref this._folderGroupId, value);
@@ -492,8 +492,8 @@ namespace HashCalculator
 
         public void ResetHashViewModel()
         {
+            this.HashGroupID = null;
             this.DurationofTask = double.NaN;
-            this.GroupId = null;
             this.Progress = 0;
             this.MaxProgress = 0;
             // 设置 this.State 后 ErrorDetails 也被自动设置

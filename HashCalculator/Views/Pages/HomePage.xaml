@@ -579,10 +579,10 @@
                                         Margin="0,4,8,4"
                                         BorderBrush="White"
                                         BorderThickness="1"
-                                        Visibility="{Binding FdGroupId, Converter={StaticResource CmpColorToVisibilityCvt}}">
+                                        Visibility="{Binding FolderGroupID, Converter={StaticResource CmpColorToVisibilityCvt}}">
                                         <Border.Background>
                                             <MultiBinding Converter="{StaticResource CmpColorOrBrushToColorBrushCvt}">
-                                                <Binding Path="FdGroupId" />
+                                                <Binding Path="FolderGroupID" />
                                                 <Binding Path="Background" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}" />
                                             </MultiBinding>
                                         </Border.Background>
@@ -716,10 +716,10 @@
                                         Margin="0,4,8,4"
                                         BorderBrush="White"
                                         BorderThickness="1"
-                                        Visibility="{Binding TableRowColor, Converter={StaticResource CmpColorToVisibilityCvt}}">
+                                        Visibility="{Binding HashColorID, Converter={StaticResource CmpColorToVisibilityCvt}}">
                                         <Border.Background>
                                             <MultiBinding Converter="{StaticResource CmpColorOrBrushToColorBrushCvt}">
-                                                <Binding Path="TableRowColor" />
+                                                <Binding Path="HashColorID" />
                                                 <Binding Path="Background" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}" />
                                             </MultiBinding>
                                         </Border.Background>
@@ -730,10 +730,10 @@
                                         Margin="0,4,8,4"
                                         BorderBrush="White"
                                         BorderThickness="1"
-                                        Visibility="{Binding GroupId, Converter={StaticResource CmpColorToVisibilityCvt}}">
+                                        Visibility="{Binding HashGroupID, Converter={StaticResource CmpColorToVisibilityCvt}}">
                                         <Border.Background>
                                             <MultiBinding Converter="{StaticResource CmpColorOrBrushToColorBrushCvt}">
-                                                <Binding Path="GroupId" />
+                                                <Binding Path="HashGroupID" />
                                                 <Binding Path="Background" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}" />
                                             </MultiBinding>
                                         </Border.Background>
@@ -1021,10 +1021,10 @@
                                         Margin="0,4,8,4"
                                         BorderBrush="White"
                                         BorderThickness="1"
-                                        Visibility="{Binding EhGroupId, Converter={StaticResource CmpColorToVisibilityCvt}}">
+                                        Visibility="{Binding EmbeddedHashGroupID, Converter={StaticResource CmpColorToVisibilityCvt}}">
                                         <Border.Background>
                                             <MultiBinding Converter="{StaticResource CmpColorOrBrushToColorBrushCvt}">
-                                                <Binding Path="EhGroupId" />
+                                                <Binding Path="EmbeddedHashGroupID" />
                                                 <Binding Path="Background" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}" />
                                             </MultiBinding>
                                         </Border.Background>

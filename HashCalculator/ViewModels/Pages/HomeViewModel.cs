@@ -307,7 +307,7 @@ public class HomeViewModel : BaseViewModel
             new Dictionary<byte[], List<HashViewModel>>(BytesComparer.Default);
         foreach (HashViewModel hm in HashModelStore.HashViewModels)
         {
-            hm.TableRowColor = null;
+            hm.HashColorID = null;
             switch (hm.Result)
             {
                 case HashResult.Canceled:
@@ -375,7 +375,7 @@ public class HomeViewModel : BaseViewModel
             {
                 foreach (HashViewModel hashViewModel in tuple.Item1.Value)
                 {
-                    hashViewModel.TableRowColor = tuple.Item2;
+                    hashViewModel.HashColorID = tuple.Item2;
                 }
             }
         }

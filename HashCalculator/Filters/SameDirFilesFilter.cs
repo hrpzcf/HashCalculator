@@ -22,7 +22,7 @@ namespace HashCalculator
         public override GroupDescription[] GroupDescriptions { get; } =
             new GroupDescription[]
             {
-                new PropertyGroupDescription(nameof(HashViewModel.FdGroupId)),
+                new PropertyGroupDescription(nameof(HashViewModel.FolderGroupID)),
             };
 
         public SameDirFilesFilter()
@@ -63,7 +63,7 @@ namespace HashCalculator
                     {
                         foreach (HashViewModel model in tuple.Item1.Value)
                         {
-                            model.FdGroupId = tuple.Item2;
+                            model.FolderGroupID = tuple.Item2;
                         }
                     }
                 }

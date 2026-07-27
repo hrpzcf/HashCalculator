@@ -177,9 +177,9 @@ public class FilterOperationModel : BaseViewModel
             {
                 model.Matched = true;
                 model.FileIndex = null;
-                model.GroupId = null;
-                model.FdGroupId = null;
-                model.EhGroupId = null;
+                model.HashGroupID = null;
+                model.EmbeddedHashGroupID = null;
+                model.FolderGroupID = null;
             }
             if (filteringShouldBeApplied)
             {
