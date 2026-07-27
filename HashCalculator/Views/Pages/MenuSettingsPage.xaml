@@ -160,7 +160,7 @@
                             Command="{Binding CancelContextMenuConfigCmd}"
                             Content="取消" />
                         <wpfui:Button
-                            Margin="64,0,0,0"
+                            Margin="16,0,0,0"
                             Appearance="Danger"
                             Command="{Binding ResetContextMenuConfigCmd}"
                             Content="恢复默认" />
