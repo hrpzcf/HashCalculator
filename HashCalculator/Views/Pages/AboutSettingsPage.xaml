@@ -254,7 +254,7 @@
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            Text="{Binding Ver, StringFormat='当前版本（v{0}）的 HashCalculator 所使用的开源项目清单。'}"
+                            Text="{Binding Ver, StringFormat='HashCalculator 当前版本 ( {0} ) 所使用的开源项目清单。'}"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
                 </wpfui:CardExpander.Header>
