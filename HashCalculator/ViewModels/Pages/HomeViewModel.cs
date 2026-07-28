@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -22,8 +22,10 @@ namespace HashCalculator.ViewModels.Pages;
 public class HomeViewModel : BaseViewModel
 {
     private const int interval = 600;
+    private const int addModelRangeBatchSize = 20;
     private readonly Timer checkStateTimer = null;
     private readonly Action<HashModelArg> addModelAction;
+    private readonly Action<IEnumerable<HashModelArg>> addModelItemsAction;
     private readonly Lock displayingModelLock = new Lock();
     private readonly Lock changeRunningStateLock = new Lock();
     private volatile int serial = 0;
@@ -75,6 +77,7 @@ public class HomeViewModel : BaseViewModel
         Current = this;
         this.FilterAndOperationModel = model;
         this.addModelAction = new Action<HashModelArg>(this.AddModelAction);
+        this.addModelItemsAction = new Action<IEnumerable<HashModelArg>>(this.AddModelItemsAction);
         this.checkStateTimer = new Timer(this.CheckStateAction);
     }
 
@@ -242,6 +245,38 @@ public class HomeViewModel : BaseViewModel
         }
     }
 
+    private void AddModelItemsAction(IEnumerable<HashModelArg> args)
+    {
+        List<HashViewModel> preprocessedModels = new();
+        bool delayTheStartOfCalculationTasks =
+            Settings.Current.DelayTheStartOfCalculationTasks;
+        bool automaticallyStartTaskAfterFileAdded =
+            Settings.Current.AutomaticallyStartTaskAfterFileAdded;
+        int millisecondsOfDelayedStartup =
+            Settings.Current.MillisecondsOfDelayedStartup;
+        foreach (HashModelArg arg in args)
+        {
+            HashViewModel model = new HashViewModel(++this.serial, arg);
+            preprocessedModels.Add(model);
+            model.ModelCapturedEvent += this.ModelCapturedAction;
+            model.ModelCapturedEvent += this.Starter.PendingModel;
+            model.ModelReleasedEvent += this.ModelReleasedAction;
+            if (automaticallyStartTaskAfterFileAdded)
+            {
+                if (delayTheStartOfCalculationTasks)
+                {
+                    model.StartupModel(force: false, millisecondsOfDelayedStartup);
+                }
+                else
+                {
+                    model.StartupModel(force: false);
+                }
+            }
+        }
+        this.displayedModels.AddRange(preprocessedModels);
+        HashModelStore.HashViewModels.AddItems(preprocessedModels);
+    }
+
     public async void BeginDisplayModels(IEnumerable<HashViewModel> models, bool resetAlg)
     {
         CancellationToken token = this.Cancellation.Token;
@@ -249,6 +284,7 @@ public class HomeViewModel : BaseViewModel
         {
             lock (this.displayingModelLock)
             {
+                List<HashModelArg> buffer = new(addModelRangeBatchSize);
                 foreach (HashModelArg arg in models.Select(i => i.Arguments))
                 {
                     if (token.IsCancellationRequested)
@@ -259,7 +295,18 @@ public class HomeViewModel : BaseViewModel
                     {
                         arg.PresetAlgos = null;
                     }
-                    Synchronization.UI.Invoke(this.addModelAction, DispatcherPriority.Background, arg);
+                    buffer.Add(arg);
+                    if (buffer.Count >= addModelRangeBatchSize)
+                    {
+                        Synchronization.UI.Invoke(
+                            this.addModelItemsAction, DispatcherPriority.Background, buffer);
+                        buffer.Clear();
+                    }
+                }
+                if (buffer.Count > 0)
+                {
+                    Synchronization.UI.Invoke(
+                        this.addModelItemsAction, DispatcherPriority.Background, buffer);
                 }
             }
         }, token);
@@ -273,9 +320,11 @@ public class HomeViewModel : BaseViewModel
             CancellationToken stopSearchingToken = this.searchCancellation.Token;
             lock (this.displayingModelLock)
             {
+                List<HashModelArg> buffer = new(addModelRangeBatchSize);
                 foreach (PathPackage package in packages)
                 {
-                    if (token.IsCancellationRequested || stopSearchingToken.IsCancellationRequested)
+                    if (token.IsCancellationRequested ||
+                        stopSearchingToken.IsCancellationRequested)
                     {
                         break;
                     }
@@ -286,8 +335,19 @@ public class HomeViewModel : BaseViewModel
                         {
                             break;
                         }
-                        Synchronization.UI.Invoke(this.addModelAction, DispatcherPriority.Background, arg);
+                        buffer.Add(arg);
+                        if (buffer.Count >= addModelRangeBatchSize)
+                        {
+                            Synchronization.UI.Invoke(
+                                this.addModelItemsAction, DispatcherPriority.Background, buffer);
+                            buffer.Clear();
+                        }
                     }
+                }
+                if (buffer.Count > 0)
+                {
+                    Synchronization.UI.Invoke(
+                        this.addModelItemsAction, DispatcherPriority.Background, buffer);
                 }
             }
         }, token);
@@ -769,7 +829,7 @@ public class HomeViewModel : BaseViewModel
             {
                 model.ShutdownModel();
             }
-            HashModelStore.HashViewModels.RemoveRange(targets);
+            HashModelStore.HashViewModels.RemoveItems(targets);
             Task<string> deleteFileTask = Task.Run(() =>
             {
                 try
@@ -843,8 +903,8 @@ public class HomeViewModel : BaseViewModel
             {
                 model.ShutdownModel();
                 // 对 HashViewModels 的增删操作是在主线程上进行的，不用加锁
-                HashModelStore.HashViewModels.Remove(model);
                 this.displayedModels.Remove(model);
+                HashModelStore.HashViewModels.Remove(model);
             }
             this.GenerateFileHashCheckReport();
         }
@@ -877,8 +937,8 @@ public class HomeViewModel : BaseViewModel
     {
         this.CancelDisplayedModelsAction(null);
         this.serial = 0;
-        HashModelStore.HashViewModels.Clear();
         this.displayedModels.Clear();
+        HashModelStore.HashViewModels.Clear();
     }
 
     public ICommand ClearAllTableLinesCmd

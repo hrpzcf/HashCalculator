@@ -83,7 +83,7 @@ namespace HashCalculator
                         {
                             model.ShutdownModelWait();
                         }
-                        hashViewModels.RemoveRange(targets);
+                        hashViewModels.RemoveItems(targets);
                         Task<string> deleteFilesTask = Task.Run(() =>
                         {
                             try

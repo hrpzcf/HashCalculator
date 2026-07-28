@@ -1,15 +1,13 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Linq;
 
 namespace HashCalculator;
 
 /// <summary>
-/// 支持 O(n) 批量增删且只触发一次 Reset 通知的 ObservableCollection 派生类。
-/// 适用于大数据量场景（如主表格数千行）的批量增删，避免逐项通知导致的性能问题。
+/// 支持批量增删的 ObservableCollection 派生类。
 /// </summary>
 public class RangeObservableCollection<T> : ObservableCollection<T>
 {
@@ -25,11 +23,42 @@ public class RangeObservableCollection<T> : ObservableCollection<T>
     public RangeObservableCollection(List<T> list) : base(list) { }
 
     /// <summary>
-    /// 批量删除符合条件的项，只触发一次 Reset 通知。
-    /// 内部优先使用 List&lt;T&gt;.RemoveAll 实现 O(n) 一次扫描；
-    /// 若底层 Items 不是 List&lt;T&gt;，则退回 Clear + Add 的 O(n) 重建方式。
+    /// 批量添加项。
     /// </summary>
-    public void RemoveRange(IEnumerable<T> items)
+    public void AddItems(IEnumerable<T> items)
+    {
+        ArgumentNullException.ThrowIfNull(items);
+        int addedItemCount = 0;
+        int newItemsBaseIndex = this.Items.Count;
+        if (this.Items is List<T> values)
+        {
+            values.AddRange(items);
+            addedItemCount = values.Count - newItemsBaseIndex;
+        }
+        else
+        {
+            foreach (T item in items)
+            {
+                this.Items.Add(item);
+                addedItemCount++;
+            }
+        }
+        if (addedItemCount > 0)
+        {
+            for (int i = 0; i < addedItemCount; i++)
+            {
+                int index = newItemsBaseIndex + i;
+                this.OnCollectionChanged(new NotifyCollectionChangedEventArgs(
+                    NotifyCollectionChangedAction.Add, this.Items[index], index));
+            }
+            this.NotifyRangeObservableCollectionPropertyChanged();
+        }
+    }
+
+    /// <summary>
+    /// 批量删除项，根据删除比例自动选择 Reset 或逐项 Remove 通知。
+    /// </summary>
+    public void RemoveItems(IEnumerable<T> items)
     {
         ArgumentNullException.ThrowIfNull(items);
         HashSet<T> itemSet = new HashSet<T>(items);
@@ -37,72 +66,60 @@ public class RangeObservableCollection<T> : ObservableCollection<T>
         {
             return;
         }
-        if (this.Items is List<T> list)
+        int originalCount = this.Items.Count;
+        List<(int Index, T Item)> itemsToRemove = new();
+        for (int i = 0; i < originalCount; i++)
         {
-            int removedCount = list.RemoveAll(i => itemSet.Contains(i));
-            if (removedCount == 0)
+            T item = this.Items[i];
+            if (itemSet.Contains(item))
             {
-                return;
+                itemsToRemove.Add((i, item));
             }
+        }
+        int removedCount = itemsToRemove.Count;
+        if (removedCount > 0)
+        {
+            // 从高位向低位逐个移除，保证索引不偏移
+            for (int i = itemsToRemove.Count - 1; i >= 0; i--)
+            {
+                (int itemIndex, T item) = itemsToRemove[i];
+                this.Items.RemoveAt(itemIndex);
+                this.OnCollectionChanged(new NotifyCollectionChangedEventArgs(
+                    NotifyCollectionChangedAction.Remove, item, itemIndex));
+            }
+            this.NotifyRangeObservableCollectionPropertyChanged();
+        }
+    }
+
+    /// <summary>
+    /// 批量替换集合内容（清空后批量添加），始终触发 Reset 通知。
+    /// </summary>
+    public void ReplaceAll(IEnumerable<T> items)
+    {
+        ArgumentNullException.ThrowIfNull(items);
+        this.Items.Clear();
+        if (items is List<T> values)
+        {
+            values.AddRange(items);
         }
         else
         {
-            // 兜底：底层不是 List<T> 时用 Clear + Add 重建
-            List<T> kept = this.Items.Where(i => !itemSet.Contains(i)).ToList();
-            if (kept.Count == this.Items.Count)
-            {
-                return;
-            }
-            this.Items.Clear();
-            foreach (T item in kept)
+            foreach (T item in items)
             {
                 this.Items.Add(item);
             }
         }
-        this.NotifyRangeObservableCollectionReset();
-    }
-
-    /// <summary>
-    /// 批量添加项，只触发一次 Reset 通知。
-    /// 直接操作底层 Items 绕过逐项通知。
-    /// </summary>
-    public void AddRange(IEnumerable<T> items)
-    {
-        ArgumentNullException.ThrowIfNull(items);
-        bool added = false;
-        foreach (T item in items)
-        {
-            this.Items.Add(item);
-            added = true;
-        }
-        if (!added)
-        {
-            return;
-        }
-        this.NotifyRangeObservableCollectionReset();
-    }
-
-    /// <summary>
-    /// 批量替换集合内容（清空后批量添加），只触发一次 Reset 通知。
-    /// </summary>
-    public void ReplaceRange(IEnumerable<T> items)
-    {
-        ArgumentNullException.ThrowIfNull(items);
-        this.Items.Clear();
-        foreach (T item in items)
-        {
-            this.Items.Add(item);
-        }
-        this.NotifyRangeObservableCollectionReset();
+        this.OnCollectionChanged(new NotifyCollectionChangedEventArgs(
+            NotifyCollectionChangedAction.Reset));
+        this.NotifyRangeObservableCollectionPropertyChanged();
     }
 
     /// <summary>
     /// 触发一次 Reset 通知并刷新 Count 和 Item[] 属性，
     /// 供批量操作完成后统一通知订阅者使用。
     /// </summary>
-    private void NotifyRangeObservableCollectionReset()
+    private void NotifyRangeObservableCollectionPropertyChanged()
     {
-        this.OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         this.OnPropertyChanged(new PropertyChangedEventArgs(nameof(this.Count)));
         this.OnPropertyChanged(new PropertyChangedEventArgs(IndexerPropertyName));
     }
