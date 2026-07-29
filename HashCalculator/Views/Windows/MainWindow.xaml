@@ -42,7 +42,7 @@
         </wpfui:NavigationView>
         <wpfui:TitleBar
             x:Name="TitleBar"
-            Title="{x:Static local:Info.Title}"
+            Title="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=wpfui:FluentWindow}, Path=Title}"
             CloseWindowByDoubleClickOnIcon="True">
             <wpfui:TitleBar.Icon>
                 <wpfui:ImageIcon Source="/Images/icon.ico" />
