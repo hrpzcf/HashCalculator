@@ -13,7 +13,7 @@
     ScrollViewer.CanContentScroll="False"
     SnapsToDevicePixels="True"
     mc:Ignorable="d">
-    <Grid Grid.Row="1" Margin="8,0,8,8">
+    <Grid Margin="8,0,8,8">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition />
@@ -377,7 +377,6 @@
         </ScrollViewer>
         <Border
             Grid.Row="1"
-            Margin="0,0,0,4"
             Padding="4"
             BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
             BorderThickness="1"
@@ -1030,7 +1029,7 @@
                 </DataGrid.Columns>
             </DataGrid>
         </Border>
-        <Grid Grid.Row="2" Margin="0,4,0,0">
+        <Grid Grid.Row="2" Margin="0,8,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition />
