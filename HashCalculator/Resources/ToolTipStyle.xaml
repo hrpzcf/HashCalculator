@@ -1,34 +1,21 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="clr-namespace:Wpf.Ui.Controls;assembly=Wpf.Ui">
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml">
 
     <!--
-        覆盖 wpfui ToolTip 默认模板：
-        1. 将 MaxWidth 从默认 260 加宽到 400。
-        2. 设置 TextAlignment 为 Left（左对齐）。
-        3. 将 ContentPresenter.Resources 内 TextBlock 的 TextWrapping 从 WrapWithOverflow 改为 Wrap，
-        使换行不保证整词完整性（更激进地按行宽断行）。
-        其余所有属性条目保持 wpfui 默认模板不变。
+        基于 wpfui 默认 ToolTip 样式，仅覆盖以下三项：
+        1. MaxWidth 从 260 加宽到 450。
+        2. TextAlignment 从 Justify 改为 Left。
+        3. 重写 Template，将 TextBlock.TextWrapping 从 WrapWithOverflow 改为 Wrap。
     -->
-    <Style x:Key="CustomToolTipStyle" TargetType="{x:Type ToolTip}">
-        <Setter Property="Width" Value="Auto" />
+    <Style BasedOn="{StaticResource DefaultToolTipStyle}" TargetType="{x:Type ToolTip}">
         <Setter Property="MaxWidth" Value="450" />
-        <Setter Property="Height" Value="Auto" />
-        <Setter Property="TextElement.FontSize" Value="12" />
-        <Setter Property="TextElement.FontWeight" Value="Normal" />
-        <Setter Property="TextBlock.LineHeight" Value="16" />
         <Setter Property="TextBlock.TextAlignment" Value="Left" />
-        <Setter Property="TextElement.Foreground" Value="{DynamicResource ToolTipForeground}" />
-        <Setter Property="Foreground" Value="{DynamicResource ToolTipForeground}" />
-        <Setter Property="Background" Value="{DynamicResource ToolTipBackground}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource ToolTipBorderBrush}" />
-        <Setter Property="SnapsToDevicePixels" Value="True" />
-        <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ToolTip">
-                    <controls:EffectThicknessDecorator Thickness="15">
+                    <wpfui:EffectThicknessDecorator Thickness="15">
                         <Border
                             Name="Border"
                             Width="{TemplateBinding Width}"
@@ -48,6 +35,7 @@
                                     ShadowDepth="5"
                                     Color="#202020" />
                             </Border.Effect>
+
                             <ContentPresenter
                                 Margin="4"
                                 HorizontalAlignment="Left"
@@ -59,13 +47,10 @@
                                 </ContentPresenter.Resources>
                             </ContentPresenter>
                         </Border>
-                    </controls:EffectThicknessDecorator>
+                    </wpfui:EffectThicknessDecorator>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
-
-    <!--  增加一个无 Key 的 ToolTip 样式，以便使所有 ToolTip 默认应用此样式。  -->
-    <Style BasedOn="{StaticResource CustomToolTipStyle}" TargetType="{x:Type ToolTip}" />
 
 </ResourceDictionary>

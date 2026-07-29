@@ -4,34 +4,11 @@
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml">
 
     <!--
-        覆盖 wpfui InfoBar 默认模板：
-        1. 将模板内写死的 VerticalAlignment="Top" 改为 TemplateBinding VerticalContentAlignment，
-           使 VerticalContentAlignment 属性真正生效。
-        2. 将 ContentBorder 写死的 Padding="16,12" 改为 TemplateBinding Padding，
-           修复 Padding 属性不生效的问题。
-        其余保持 wpfui 默认模板不变。
+        基于 wpfui 默认 InfoBar 样式，仅覆盖以下两点：
+        1. ContentBorder.Padding 从写死的 "16,12" 改为 {TemplateBinding Padding}。
+        2. 各处 VerticalAlignment 从写死的 "Top" 改为 {TemplateBinding VerticalContentAlignment}。
     -->
-    <Style TargetType="{x:Type wpfui:InfoBar}">
-        <Setter Property="Background">
-            <Setter.Value>
-                <SolidColorBrush Color="{DynamicResource ControlFillColorDefault}" />
-            </Setter.Value>
-        </Setter>
-        <Setter Property="Foreground" Value="{DynamicResource InfoBarTitleForeground}" />
-        <Setter Property="Padding" Value="16,12" />
-        <Setter Property="HorizontalAlignment" Value="Stretch" />
-        <Setter Property="VerticalAlignment" Value="Center" />
-        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-        <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="BorderBrush" Value="{DynamicResource InfoBarBorderBrush}" />
-        <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}" />
-        <Setter Property="FontWeight" Value="Normal" />
-        <Setter Property="Border.CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
-        <Setter Property="Focusable" Value="False" />
-        <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
-        <Setter Property="SnapsToDevicePixels" Value="True" />
-        <Setter Property="OverridesDefaultStyle" Value="True" />
+    <Style BasedOn="{StaticResource {x:Type wpfui:InfoBar}}" TargetType="{x:Type wpfui:InfoBar}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type wpfui:InfoBar}">
@@ -51,9 +28,7 @@
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <Border
-                                    Margin="0,2,14,0"
-                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                                <Border Margin="0,2,14,0" VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
                                     <wpfui:SymbolIcon
                                         x:Name="SymbolIcon"
                                         VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
@@ -61,9 +36,7 @@
                                         FontSize="16" />
                                 </Border>
 
-                                <WrapPanel
-                                    Grid.Column="1"
-                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                                <WrapPanel Grid.Column="1" VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
                                     <TextBlock
                                         x:Name="TitleText"
                                         Margin="0,0,14,0"
@@ -112,7 +85,6 @@
                             <Setter Property="Visibility" Value="Collapsed" />
                         </Trigger>
 
-                        <!-- Collapse TitleText when Title is null or empty to release layout space -->
                         <Trigger Property="Title" Value="{x:Null}">
                             <Setter TargetName="TitleText" Property="Visibility" Value="Collapsed" />
                         </Trigger>
@@ -130,18 +102,21 @@
                             <Setter TargetName="ContentBorder" Property="Background" Value="{DynamicResource InfoBarInformationalSeverityBackgroundBrush}" />
                             <Setter TargetName="ContentBorder" Property="BorderBrush" Value="{DynamicResource InfoBarInformationalSeverityBorderBrush}" />
                         </Trigger>
+
                         <Trigger Property="Severity" Value="Success">
                             <Setter TargetName="SymbolIcon" Property="Foreground" Value="{DynamicResource InfoBarSuccessSeverityIconBackground}" />
                             <Setter TargetName="SymbolIcon" Property="Symbol" Value="CheckmarkCircle24" />
                             <Setter TargetName="ContentBorder" Property="Background" Value="{DynamicResource InfoBarSuccessSeverityBackgroundBrush}" />
                             <Setter TargetName="ContentBorder" Property="BorderBrush" Value="{DynamicResource InfoBarSuccessSeverityBorderBrush}" />
                         </Trigger>
+
                         <Trigger Property="Severity" Value="Warning">
                             <Setter TargetName="SymbolIcon" Property="Foreground" Value="{DynamicResource InfoBarWarningSeverityIconBackground}" />
                             <Setter TargetName="SymbolIcon" Property="Symbol" Value="ErrorCircle24" />
                             <Setter TargetName="ContentBorder" Property="Background" Value="{DynamicResource InfoBarWarningSeverityBackgroundBrush}" />
                             <Setter TargetName="ContentBorder" Property="BorderBrush" Value="{DynamicResource InfoBarWarningSeverityBorderBrush}" />
                         </Trigger>
+
                         <Trigger Property="Severity" Value="Error">
                             <Setter TargetName="SymbolIcon" Property="Foreground" Value="{DynamicResource InfoBarErrorSeverityIconBackground}" />
                             <Setter TargetName="SymbolIcon" Property="Symbol" Value="DismissCircle24" />

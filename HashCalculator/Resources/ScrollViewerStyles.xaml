@@ -25,6 +25,7 @@
                             Margin="{TemplateBinding Padding}">
                             <ScrollContentPresenter CanContentScroll="{TemplateBinding CanContentScroll}" />
                         </Grid>
+
                         <ScrollBar
                             x:Name="PART_VerticalScrollBar"
                             Grid.Row="0"
@@ -33,6 +34,7 @@
                             ViewportSize="{TemplateBinding ViewportHeight}"
                             Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"
                             Value="{TemplateBinding VerticalOffset}" />
+
                         <ScrollBar
                             x:Name="PART_HorizontalScrollBar"
                             Grid.Row="1"
