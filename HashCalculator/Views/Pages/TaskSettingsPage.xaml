@@ -56,6 +56,28 @@
             <wpfui:CardControl Margin="0,4,0,0" Header="文件被添加后自动启动对该文件的计算任务">
                 <wpfui:ToggleSwitch IsChecked="{Binding AutomaticallyStartTaskAfterFileAdded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </wpfui:CardControl>
+            <wpfui:CardControl Margin="0,4,0,0">
+                <wpfui:CardControl.Header>
+                    <StackPanel>
+                        <wpfui:TextBlock Text="按此数量分批将文件添加到主页" />
+                        <wpfui:TextBlock
+                            FontTypography="Caption"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            Text="设为 0 则逐条将搜索到的文件添加到主页上，否则成批添加（不会妨碍数量少于此值的情况）。当计算大批小文件完成速度快于文件显示速度时，调整合适的批量值可以更快完成全部计算。"
+                            TextWrapping="WrapWithOverflow" />
+                    </StackPanel>
+                </wpfui:CardControl.Header>
+                <Slider
+                    MinWidth="200"
+                    AutoToolTipPlacement="BottomRight"
+                    AutoToolTipPrecision="0"
+                    IsSnapToTickEnabled="True"
+                    Maximum="30"
+                    Minimum="0"
+                    TickFrequency="5"
+                    TickPlacement="TopLeft"
+                    Value="{Binding AddHashViewModelsBatchSize, Mode=TwoWay}" />
+            </wpfui:CardControl>
         </StackPanel>
     </ScrollViewer>
 </Page>

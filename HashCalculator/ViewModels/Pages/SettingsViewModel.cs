@@ -128,6 +128,7 @@ public class SettingsViewModel : BaseViewModel
     private int luminanceOfTableCellsWithSameHash = 100;
     private int saturationOfTableCellsWithSameHash = 240;
     private int selectedApplicationThemeIndex = 0;
+    private int addHashViewModelsBatchSize = 1;
 
     private long snackbarNotificationTimeSpanSeconds = 2;
 
@@ -869,6 +870,12 @@ public class SettingsViewModel : BaseViewModel
             ApplicationThemeManager.Apply(theme, Wpfctrls.WindowBackdropType.None);
             this.SetPropNotify(ref this.selectedApplicationThemeIndex, value);
         }
+    }
+
+    public int AddHashViewModelsBatchSize
+    {
+        get => this.addHashViewModelsBatchSize;
+        set => this.SetPropNotify(ref this.addHashViewModelsBatchSize, value);
     }
 
     public long SnackbarNotificationTimeSpanSeconds

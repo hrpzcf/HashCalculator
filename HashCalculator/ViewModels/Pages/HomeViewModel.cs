@@ -22,7 +22,6 @@ namespace HashCalculator.ViewModels.Pages;
 public class HomeViewModel : BaseViewModel
 {
     private const int interval = 600;
-    private const int addModelRangeBatchSize = 20;
     private readonly Timer checkStateTimer = null;
     private readonly Action<HashModelArg> addModelAction;
     private readonly Action<IEnumerable<HashModelArg>> addModelItemsAction;
@@ -277,36 +276,50 @@ public class HomeViewModel : BaseViewModel
         HashModelStore.HashViewModels.AddItems(preprocessedModels);
     }
 
-    public async void BeginDisplayModels(IEnumerable<HashViewModel> models, bool resetAlg)
+    public async void BeginDisplayModels(IEnumerable<HashViewModel> models)
     {
         CancellationToken token = this.Cancellation.Token;
         await Task.Run(() =>
         {
             lock (this.displayingModelLock)
             {
-                List<HashModelArg> buffer = new(addModelRangeBatchSize);
-                foreach (HashModelArg arg in models.Select(i => i.Arguments))
+                int batchSize = Settings.Current.AddHashViewModelsBatchSize;
+                if (batchSize <= 1)
                 {
-                    if (token.IsCancellationRequested)
+                    foreach (HashModelArg arg in models.Select(i => i.Arguments))
                     {
-                        break;
-                    }
-                    if (resetAlg)
-                    {
+                        if (token.IsCancellationRequested)
+                        {
+                            break;
+                        }
                         arg.PresetAlgos = null;
-                    }
-                    buffer.Add(arg);
-                    if (buffer.Count >= addModelRangeBatchSize)
-                    {
-                        Synchronization.UI.Invoke(
-                            this.addModelItemsAction, DispatcherPriority.Background, buffer);
-                        buffer.Clear();
+                        Synchronization.UI.Invoke(this.addModelAction,
+                            DispatcherPriority.Background, arg);
                     }
                 }
-                if (buffer.Count > 0)
+                else
                 {
-                    Synchronization.UI.Invoke(
-                        this.addModelItemsAction, DispatcherPriority.Background, buffer);
+                    List<HashModelArg> buffer = new(batchSize);
+                    foreach (HashModelArg arg in models.Select(i => i.Arguments))
+                    {
+                        if (token.IsCancellationRequested)
+                        {
+                            break;
+                        }
+                        arg.PresetAlgos = null;
+                        buffer.Add(arg);
+                        if (buffer.Count >= batchSize)
+                        {
+                            Synchronization.UI.Invoke(this.addModelItemsAction,
+                                DispatcherPriority.Background, buffer);
+                            buffer.Clear();
+                        }
+                    }
+                    if (buffer.Count > 0)
+                    {
+                        Synchronization.UI.Invoke(this.addModelItemsAction,
+                            DispatcherPriority.Background, buffer);
+                    }
                 }
             }
         }, token);
@@ -320,34 +333,59 @@ public class HomeViewModel : BaseViewModel
             CancellationToken stopSearchingToken = this.searchCancellation.Token;
             lock (this.displayingModelLock)
             {
-                List<HashModelArg> buffer = new(addModelRangeBatchSize);
-                foreach (PathPackage package in packages)
+                int batchSize = Settings.Current.AddHashViewModelsBatchSize;
+                if (batchSize <= 1)
                 {
-                    if (token.IsCancellationRequested ||
-                        stopSearchingToken.IsCancellationRequested)
+                    foreach (PathPackage package in packages)
                     {
-                        break;
-                    }
-                    package.StopSearchingToken = stopSearchingToken;
-                    foreach (HashModelArg arg in package)
-                    {
-                        if (token.IsCancellationRequested)
+                        if (token.IsCancellationRequested ||
+                            stopSearchingToken.IsCancellationRequested)
                         {
                             break;
                         }
-                        buffer.Add(arg);
-                        if (buffer.Count >= addModelRangeBatchSize)
+                        package.StopSearchingToken = stopSearchingToken;
+                        foreach (HashModelArg arg in package)
                         {
-                            Synchronization.UI.Invoke(
-                                this.addModelItemsAction, DispatcherPriority.Background, buffer);
-                            buffer.Clear();
+                            if (token.IsCancellationRequested)
+                            {
+                                break;
+                            }
+                            Synchronization.UI.Invoke(this.addModelAction,
+                                DispatcherPriority.Background, arg);
                         }
                     }
                 }
-                if (buffer.Count > 0)
+                else
                 {
-                    Synchronization.UI.Invoke(
-                        this.addModelItemsAction, DispatcherPriority.Background, buffer);
+                    List<HashModelArg> buffer = new(batchSize);
+                    foreach (PathPackage package in packages)
+                    {
+                        if (token.IsCancellationRequested ||
+                            stopSearchingToken.IsCancellationRequested)
+                        {
+                            break;
+                        }
+                        package.StopSearchingToken = stopSearchingToken;
+                        foreach (HashModelArg arg in package)
+                        {
+                            if (token.IsCancellationRequested)
+                            {
+                                break;
+                            }
+                            buffer.Add(arg);
+                            if (buffer.Count >= batchSize)
+                            {
+                                Synchronization.UI.Invoke(this.addModelItemsAction,
+                                    DispatcherPriority.Background, buffer);
+                                buffer.Clear();
+                            }
+                        }
+                    }
+                    if (buffer.Count > 0)
+                    {
+                        Synchronization.UI.Invoke(this.addModelItemsAction,
+                            DispatcherPriority.Background, buffer);
+                    }
                 }
             }
         }, token);
@@ -1177,7 +1215,7 @@ public class HomeViewModel : BaseViewModel
             {
                 List<HashViewModel> args = this.displayedModels;
                 this.displayedModels = new List<HashViewModel>();
-                this.BeginDisplayModels(args, true);
+                this.BeginDisplayModels(args);
             }
         }
     }
@@ -1523,7 +1561,7 @@ public class HomeViewModel : BaseViewModel
     {
         if (param is IList selectedModels)
         {
-            this.BeginDisplayModels(selectedModels.Cast<HashViewModel>(), true);
+            this.BeginDisplayModels(selectedModels.Cast<HashViewModel>());
         }
     }
 
