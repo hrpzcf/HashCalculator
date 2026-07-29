@@ -63,7 +63,7 @@
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            Text="设为 0 则逐条将搜索到的文件添加到主页上，否则成批添加（不会妨碍数量少于此值的情况）。当计算大批小文件完成速度快于文件显示速度时，调整合适的批量值可以更快完成全部计算。"
+                            Text="设为 0 是逐条将搜索到的文件添加到主页上，否则分批添加（不会妨碍数量少于此值的情况）。当大批小文件计算完成速度快于文件添加速度时，调整合适的批量值可以更快完成全部计算。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
                 </wpfui:CardControl.Header>
