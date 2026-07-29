@@ -41,10 +41,7 @@
                     SelectionMode="Single">
                     <wpfui:ListView.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock
-                                Padding="10,8"
-                                Text="{Binding Display}"
-                                ToolTip="{Binding Description}" />
+                            <TextBlock Padding="10,8" Text="{Binding Display}" />
                         </DataTemplate>
                     </wpfui:ListView.ItemTemplate>
                 </wpfui:ListView>
