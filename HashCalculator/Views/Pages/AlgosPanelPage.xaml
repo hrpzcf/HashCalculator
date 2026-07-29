@@ -44,14 +44,10 @@
                                 Grid.Column="0"
                                 Margin="0,0,24,0"
                                 Text="{Binding GroupName}" />
-                            <TextBlock Grid.Column="1" Text="{Binding SelectedAlgoCount, StringFormat=已选：{0}}">
-                                <TextBlock.Foreground>
-                                    <MultiBinding Converter="{StaticResource ListBoxIsSelectedForegroundCvt}">
-                                        <Binding Path="IsSelected" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}" />
-                                        <Binding Path="Foreground" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}" />
-                                    </MultiBinding>
-                                </TextBlock.Foreground>
-                            </TextBlock>
+                            <TextBlock
+                                Grid.Column="1"
+                                Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                                Text="{Binding SelectedAlgoCount, StringFormat=已选：{0}}" />
                         </Grid>
                     </DataTemplate>
                 </wpfui:ListView.ItemTemplate>
