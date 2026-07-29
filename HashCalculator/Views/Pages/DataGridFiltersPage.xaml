@@ -31,31 +31,38 @@
                     <ColumnDefinition />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <wpfui:ListView
+                <Border
                     Grid.Row="0"
-                    Grid.RowSpan="2"
+                    Grid.RowSpan="3"
                     Grid.Column="0"
-                    d:ItemsSource="{d:SampleData}"
-                    ItemsSource="{Binding HashModelFilters}"
-                    SelectedIndex="0"
-                    SelectedItem="{Binding SelectedFilter}"
-                    SelectionMode="Single">
-                    <wpfui:ListView.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <CheckBox
-                                    VerticalAlignment="Center"
-                                    Command="{Binding FilterChangedCmd}"
-                                    IsChecked="{Binding Selected, Mode=TwoWay}"
-                                    PreviewMouseDown="FiltersItemPreviewMouseDown" />
-                                <TextBlock
-                                    Margin="0,0,16,0"
-                                    VerticalAlignment="Center"
-                                    Text="{Binding Display}" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </wpfui:ListView.ItemTemplate>
-                </wpfui:ListView>
+                    Padding="8"
+                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="4">
+                    <wpfui:ListView
+                        d:ItemsSource="{d:SampleData}"
+                        ItemsSource="{Binding HashModelFilters}"
+                        SelectedIndex="0"
+                        SelectedItem="{Binding SelectedFilter}"
+                        SelectionMode="Single">
+                        <wpfui:ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <CheckBox
+                                        VerticalAlignment="Center"
+                                        Command="{Binding FilterChangedCmd}"
+                                        IsChecked="{Binding Selected, Mode=TwoWay}"
+                                        PreviewMouseDown="FiltersItemPreviewMouseDown" />
+                                    <TextBlock
+                                        Margin="0,0,16,0"
+                                        VerticalAlignment="Center"
+                                        Text="{Binding Display}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </wpfui:ListView.ItemTemplate>
+                    </wpfui:ListView>
+                </Border>
+
                 <ContentControl
                     Grid.Row="0"
                     Grid.Column="1"

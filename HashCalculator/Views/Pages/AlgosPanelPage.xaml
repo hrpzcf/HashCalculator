@@ -21,36 +21,42 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <wpfui:ListView
+        <Border
             Grid.Row="0"
             Grid.RowSpan="2"
             Grid.Column="0"
-            Grid.IsSharedSizeScope="True"
-            ItemsSource="{x:Static pagemodels:AlgosPanelViewModel.AlgoGroups}"
-            SelectedItem="{Binding SelectedAlgoGroup}">
-            <wpfui:ListView.ItemTemplate>
-                <DataTemplate>
-                    <Grid Margin="8,4">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="algGroupCol" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock
-                            Grid.Column="0"
-                            Margin="0,0,24,0"
-                            Text="{Binding GroupName}" />
-                        <TextBlock Grid.Column="1" Text="{Binding SelectedAlgoCount, StringFormat=已选：{0}}">
-                            <TextBlock.Foreground>
-                                <MultiBinding Converter="{StaticResource ListBoxIsSelectedForegroundCvt}">
-                                    <Binding Path="IsSelected" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}" />
-                                    <Binding Path="Foreground" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}" />
-                                </MultiBinding>
-                            </TextBlock.Foreground>
-                        </TextBlock>
-                    </Grid>
-                </DataTemplate>
-            </wpfui:ListView.ItemTemplate>
-        </wpfui:ListView>
+            Padding="8"
+            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+            BorderThickness="1"
+            CornerRadius="4">
+            <wpfui:ListView
+                Grid.IsSharedSizeScope="True"
+                ItemsSource="{x:Static pagemodels:AlgosPanelViewModel.AlgoGroups}"
+                SelectedItem="{Binding SelectedAlgoGroup}">
+                <wpfui:ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="8,4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" SharedSizeGroup="algGroupCol" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Margin="0,0,24,0"
+                                Text="{Binding GroupName}" />
+                            <TextBlock Grid.Column="1" Text="{Binding SelectedAlgoCount, StringFormat=已选：{0}}">
+                                <TextBlock.Foreground>
+                                    <MultiBinding Converter="{StaticResource ListBoxIsSelectedForegroundCvt}">
+                                        <Binding Path="IsSelected" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}" />
+                                        <Binding Path="Foreground" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ListBoxItem}" />
+                                    </MultiBinding>
+                                </TextBlock.Foreground>
+                            </TextBlock>
+                        </Grid>
+                    </DataTemplate>
+                </wpfui:ListView.ItemTemplate>
+            </wpfui:ListView>
+        </Border>
         <ScrollViewer
             Grid.Row="0"
             Grid.Column="1"
