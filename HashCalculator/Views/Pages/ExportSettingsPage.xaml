@@ -16,7 +16,7 @@
     <Page.InputBindings>
         <KeyBinding Key="Esc" Command="{Binding SettingsPagesInputBindingsCmd}" />
     </Page.InputBindings>
-    <ScrollViewer Padding="14" VerticalScrollBarVisibility="Auto">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel>
             <usercontrols:ExportSettingsBasicControl />
             <usercontrols:ExportSettingsTemplateControl />

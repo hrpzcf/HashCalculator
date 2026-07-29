@@ -27,6 +27,7 @@
     <Grid>
         <wpfui:NavigationView
             x:Name="NavigationView"
+            Padding="8,0,8,8"
             FooterMenuItemsSource="{Binding FooterItems, Mode=OneWay}"
             IsFooterSeparatorVisible="False"
             IsPaneOpen="{Binding Source={x:Static local:Settings.Current}, Path=IsMainWindowNavigationViewPaneOpen, Mode=TwoWay}"

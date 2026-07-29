@@ -23,6 +23,7 @@
                 <ResourceDictionary Source="/HashCalculator;component/Resources/ImgButtonTextStyles.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/ToolTipStyle.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/DataGridCellStyles.xaml" />
+                <ResourceDictionary Source="/HashCalculator;component/Resources/ScrollViewerStyles.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Themes/LightOverrides.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <sys:Boolean x:Key="TrueValue">true</sys:Boolean>

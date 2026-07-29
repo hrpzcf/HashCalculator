@@ -14,7 +14,7 @@
     ScrollViewer.CanContentScroll="False"
     SnapsToDevicePixels="True"
     mc:Ignorable="d">
-    <ScrollViewer Padding="14" VerticalScrollBarVisibility="Auto">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel>
             <wpfui:CardControl>
                 <wpfui:CardControl.Header>

@@ -13,7 +13,7 @@
     ScrollViewer.CanContentScroll="False"
     SnapsToDevicePixels="True"
     mc:Ignorable="d">
-    <Grid Margin="8,0,8,8">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition />

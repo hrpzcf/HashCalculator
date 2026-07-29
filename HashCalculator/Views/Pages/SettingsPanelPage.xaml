@@ -15,7 +15,7 @@
     ScrollViewer.CanContentScroll="False"
     SnapsToDevicePixels="True"
     mc:Ignorable="d">
-    <ScrollViewer Padding="14,10,14,14" VerticalScrollBarVisibility="Auto">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
         <controls:ForceItemsControl ItemsSource="{Binding SettingsNavigationItemsSource}">
             <controls:ForceItemsControl.ItemTemplate>
                 <DataTemplate>
