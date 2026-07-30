@@ -23,7 +23,6 @@
         </Grid.ColumnDefinitions>
         <Border
             Grid.Row="0"
-            Grid.RowSpan="2"
             Grid.Column="0"
             Padding="8"
             BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
@@ -57,7 +56,7 @@
         <ScrollViewer
             Grid.Row="0"
             Grid.Column="1"
-            Margin="4,-2,0,0"
+            Margin="8,0,0,0"
             HorizontalScrollBarVisibility="Auto"
             VerticalScrollBarVisibility="Disabled">
             <ItemsControl ItemsSource="{Binding SelectedAlgoGroup.Items}">
@@ -69,8 +68,8 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <wpfui:CardControl
-                            Margin="16,2"
-                            Padding="12,12"
+                            Margin="16,0,0,8"
+                            Padding="12"
                             Header="{Binding AlgoName}">
                             <wpfui:ToggleSwitch IsChecked="{Binding Selected, Mode=TwoWay}" />
                         </wpfui:CardControl>
@@ -78,20 +77,21 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
-        <Grid
+        <wpfui:Button
+            Grid.Row="1"
+            Grid.Column="0"
+            Margin="0,16,0,0"
+            HorizontalAlignment="Stretch"
+            Appearance="Primary"
+            Command="{Binding ClearAllSelectedCmd}"
+            Content="清除所有选择" />
+        <wpfui:TextBlock
             Grid.Row="1"
             Grid.Column="1"
-            Margin="20,4,0,0">
-            <wpfui:TextBlock
-                VerticalAlignment="Center"
-                FontTypography="Caption"
-                Foreground="{DynamicResource TextFillColorTertiaryBrush}"
-                Text="不建议选择太多算法，否则计算时容易造成程序无响应。" />
-            <wpfui:Button
-                HorizontalAlignment="Right"
-                Appearance="Primary"
-                Command="{Binding ClearAllSelectedCmd}"
-                Content="清除" />
-        </Grid>
+            Margin="20,0,0,0"
+            VerticalAlignment="Bottom"
+            FontTypography="Caption"
+            Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+            Text="不建议选择太多算法，否则计算时容易造成程序无响应。" />
     </Grid>
 </Page>
