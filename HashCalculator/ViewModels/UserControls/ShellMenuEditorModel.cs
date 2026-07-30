@@ -161,7 +161,7 @@ public class ShellMenuEditorModel : BaseViewModel
         {
             new HcCtxMenuModel("自动选择"),
         };
-        foreach (AlgoInOutModel model in AlgosPanelViewModel.ProvidedAlgos)
+        foreach (AlgoInOutModel model in AlgorithmsModel.ProvidedAlgos)
         {
             menuCompute.Submenus.Add(new HcCtxMenuModel(model.AlgoName, model.AlgoType.ToString()));
             menuCheckHash.Submenus.Add(new HcCtxMenuModel(model.AlgoName, model.AlgoType.ToString()));

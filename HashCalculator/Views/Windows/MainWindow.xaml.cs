@@ -181,7 +181,7 @@ namespace HashCalculator.Views.Windows
                 List<AlgoType> resolvedAlgoTypeList = new List<AlgoType>();
                 foreach (string algoTypeStr in option.Algos.Split(','))
                 {
-                    if (AlgosPanelViewModel.TryGetAlgoType(algoTypeStr, out AlgoType algoType) &&
+                    if (AlgorithmsModel.TryGetAlgoType(algoTypeStr, out AlgoType algoType) &&
                         algoType != AlgoType.UNKNOWN)
                     {
                         resolvedAlgoTypeList.Add(algoType);

@@ -256,7 +256,7 @@ public class HcCtxMenuModel : BaseViewModel
 
     public static GenericItemModel[] GenericItemModelsFromProvidedAlgos()
     {
-        return AlgosPanelViewModel.ProvidedAlgos.Select(
+        return AlgorithmsModel.ProvidedAlgos.Select(
             i => new GenericItemModel(i.AlgoName, i.AlgoType.ToString())).ToArray();
     }
 }

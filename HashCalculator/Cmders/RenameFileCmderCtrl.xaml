@@ -38,7 +38,7 @@
             </wpfui:CardControl.Header>
             <ComboBox
                 DisplayMemberPath="AlgoName"
-                ItemsSource="{x:Static pagemodels:AlgosPanelViewModel.ProvidedAlgos}"
+                ItemsSource="{x:Static pagemodels:AlgorithmsModel.ProvidedAlgos}"
                 SelectedValue="{Binding SelectedAlgorithmType, Mode=TwoWay}"
                 SelectedValuePath="AlgoType" />
         </wpfui:CardControl>

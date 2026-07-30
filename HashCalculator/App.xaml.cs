@@ -26,10 +26,13 @@ public partial class App : Application
             services.AddHostedService<ApplicationHostService>();
             services.AddSingleton<ISnackbarService, SnackbarService>();
             services.AddSingleton<INavigationService, NavigationService>();
+
             services.AddSingleton<HomeViewModel>();
             services.AddSingleton<HomePage>();
+
             services.AddSingleton<MainWindowModel>();
             services.AddSingleton<MainWindow>();
+
             services.AddSingleton<SettingsPanelPage>();
             services.AddSingleton<GeneralSettingsPage>();
             services.AddSingleton<InterfaceSettingsPage>();
@@ -42,8 +45,10 @@ public partial class App : Application
             services.AddSingleton<ShortcutSettingsPage>();
             services.AddSingleton<ConfigSettingsPage>();
             services.AddSingleton<AboutSettingsPage>();
+
             services.AddSingleton<AlgosPanelPage>();
-            services.AddSingleton<AlgosPanelViewModel>();
+            services.AddSingleton<AlgorithmsModel>();
+
             services.AddSingleton<DataGridFiltersPage>();
             services.AddSingleton<DataGridOperationsPage>();
             services.AddSingleton<FilterOperationModel>();

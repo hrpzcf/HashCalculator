@@ -476,7 +476,7 @@ namespace HashCalculator
 
         public static int DigestLength(this AlgoType algoType)
         {
-            foreach (AlgoInOutModel algoInOutModel in AlgosPanelViewModel.ProvidedAlgos)
+            foreach (AlgoInOutModel algoInOutModel in AlgorithmsModel.ProvidedAlgos)
             {
                 if (algoInOutModel.AlgoType == algoType)
                 {

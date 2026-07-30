@@ -29,7 +29,7 @@
                     MinWidth="120"
                     VerticalContentAlignment="Center"
                     DisplayMemberPath="AlgoName"
-                    ItemsSource="{x:Static pagemodels:AlgosPanelViewModel.ProvidedAlgos}"
+                    ItemsSource="{x:Static pagemodels:AlgorithmsModel.ProvidedAlgos}"
                     SelectedItem="{Binding SelectedInOutModelForAlias}" />
             </wpfui:CardControl>
             <wpfui:CardControl Margin="0,4,0,0">

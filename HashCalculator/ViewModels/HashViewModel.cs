@@ -91,11 +91,11 @@ namespace HashCalculator
             this.InvalidFileName = arg.IsInvalidName;
             if (arg.PresetAlgos != null)
             {
-                this.AlgoInOutModels = AlgosPanelViewModel.GetKnownAlgos(arg.PresetAlgos);
+                this.AlgoInOutModels = AlgorithmsModel.GetKnownAlgos(arg.PresetAlgos);
             }
             else if (Settings.Current.PreferChecklistAlgs && arg.HashChecklist != null)
             {
-                this.AlgoInOutModels = AlgosPanelViewModel.GetAlgsFromChecklist(arg.HashChecklist,
+                this.AlgoInOutModels = AlgorithmsModel.GetAlgsFromChecklist(arg.HashChecklist,
                     this.RelativePath);
             }
             this.PropertyChanged += this.CurrentHashStringHandler;
@@ -461,7 +461,7 @@ namespace HashCalculator
             if (this.AlgoInOutModels == null || this.AlgoInOutModels.Count == 0)
             {
                 this.AlgoInOutModels = new ObservableCollection<AlgoInOutModel>(
-                    AlgosPanelViewModel.GetSelectedAlgos());
+                    AlgorithmsModel.GetSelectedAlgos());
             }
             this.CurrentInOutModel = this.AlgoInOutModels[0];
             foreach (AlgoInOutModel model in this.AlgoInOutModels)

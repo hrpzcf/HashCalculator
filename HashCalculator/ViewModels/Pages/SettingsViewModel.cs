@@ -111,7 +111,7 @@ public class SettingsViewModel : BaseViewModel
     private string durationColumnLeftDoubleClick = string.Empty;
 
     private ShellMenuEditorModel loadedShellMenuEditorModel = null;
-    private AlgoInOutModel selectedAlgoInOutModel = AlgosPanelViewModel.ProvidedAlgos[0];
+    private AlgoInOutModel selectedAlgoInOutModel = AlgorithmsModel.ProvidedAlgos[0];
     private TemplateForExportModel selectedExportTemplate;
     private TemplateForChecklistModel selectedChecklistTemplate;
     private ObservableCollection<TemplateForExportModel> templatesForExport = null;
@@ -1492,7 +1492,7 @@ public class SettingsViewModel : BaseViewModel
 
     private void ResetAlgorithmAliasAction(object param)
     {
-        foreach (AlgoInOutModel model in AlgosPanelViewModel.ProvidedAlgos)
+        foreach (AlgoInOutModel model in AlgorithmsModel.ProvidedAlgos)
         {
             model.ResetAlias();
         }
@@ -1602,7 +1602,7 @@ public class SettingsViewModel : BaseViewModel
             // 非 null 但空，统一设置为 null
             this.TemplatesForChecklist = null;
         }
-        this.AlgorithmAliasList = AlgosPanelViewModel.ProvidedAlgos.Where(
+        this.AlgorithmAliasList = AlgorithmsModel.ProvidedAlgos.Where(
             i => !string.IsNullOrWhiteSpace(i.AlgorithmAlias)).ToDictionary(
             j => j.AlgoType, k => k.AlgorithmAlias);
         if (this.AlgorithmAliasList.Count == 0)
@@ -1610,7 +1610,7 @@ public class SettingsViewModel : BaseViewModel
             // 内容为空，统一设置为 null
             this.AlgorithmAliasList = null;
         }
-        this.SelectedAlgos = AlgosPanelViewModel.ProvidedAlgos.Where(i => i.Selected).Select(
+        this.SelectedAlgos = AlgorithmsModel.ProvidedAlgos.Where(i => i.Selected).Select(
             i => i.AlgoType).ToArray();
     }
 
@@ -1629,7 +1629,7 @@ public class SettingsViewModel : BaseViewModel
         {
             foreach (KeyValuePair<AlgoType, string> keyValuePair in this.AlgorithmAliasList)
             {
-                foreach (AlgoInOutModel inOut in AlgosPanelViewModel.ProvidedAlgos)
+                foreach (AlgoInOutModel inOut in AlgorithmsModel.ProvidedAlgos)
                 {
                     if (inOut.AlgoType == keyValuePair.Key)
                     {
@@ -1639,7 +1639,7 @@ public class SettingsViewModel : BaseViewModel
                 }
             }
         }
-        foreach (AlgoInOutModel model in AlgosPanelViewModel.ProvidedAlgos)
+        foreach (AlgoInOutModel model in AlgorithmsModel.ProvidedAlgos)
         {
             model.Selected = this.SelectedAlgos?.Contains(model.AlgoType) ?? false;
         }

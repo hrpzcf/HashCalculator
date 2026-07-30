@@ -25,7 +25,7 @@ namespace HashCalculator
 
         public HashAlgoFilter()
         {
-            this._algos = AlgosPanelViewModel.ProvidedAlgos.Select(
+            this._algos = AlgorithmsModel.ProvidedAlgos.Select(
                 i => i.NewAlgoInOutModel()).ToArray();
             this.UserInterface = new HashAlgoFilterCtrl(this);
         }
