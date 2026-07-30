@@ -226,7 +226,7 @@ namespace HashCalculator
                 else
                 {
                     NotificationSender.ShowMessageBox(
-                        MainWindow.Current, "提示", "没有找到任何操作目标，请刷新筛选或手动勾选操作目标！");
+                        MainWindow.Current, "提示", "没有找到任何操作目标，请选择操作目标！");
                 }
             FinishingTouches:
                 Settings.Current.IsFiltersAndCmdersIdle = true;
@@ -317,7 +317,7 @@ namespace HashCalculator
                 else
                 {
                     NotificationSender.ShowMessageBox(
-                        MainWindow.Current, "提示", "没有找到任何操作目标，请刷新筛选或手动勾选操作目标！");
+                        MainWindow.Current, "提示", "没有找到任何操作目标，请选择选操作目标！");
                 }
                 Settings.Current.IsFiltersAndCmdersIdle = true;
                 Settings.Current.IsMainRowSelectedByCheckBox = false;

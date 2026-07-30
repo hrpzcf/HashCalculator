@@ -83,7 +83,7 @@
                     Margin="32,4,0,0"
                     VerticalContentAlignment="Center"
                     IsOpen="{Binding IsInformationBarOpened, Mode=OneWay}"
-                    Message="主页左键点击【刷新筛选】按钮与此页【刷新筛选】按钮功能相同，主页右键点击【刷新筛选】按钮与此页【取消筛选】按钮功能相同。筛选状态下主页【刷新筛选】按钮左下角会显示红点。" />
+                    Message="主页左键点击【刷新筛选】按钮与此页【刷新筛选】按钮功能相同，主页右键点击【刷新筛选】按钮与此页【禁用筛选】按钮功能相同。筛选状态下主页【刷新筛选】按钮左下角会显示红点。" />
                 <StackPanel
                     Grid.Row="0"
                     Grid.RowSpan="2"
@@ -101,7 +101,7 @@
                         Margin="0,16,0,0"
                         Command="{Binding RefreshFiltersCmd}"
                         CommandParameter="{StaticResource FalseValue}"
-                        Content="取消筛选"
+                        Content="禁用筛选"
                         Icon="{wpfui:SymbolIcon Symbol=Dismiss12}"
                         ToolTip="取消应用已选择的筛选器并刷新主页视图。" />
                     <wpfui:Button
