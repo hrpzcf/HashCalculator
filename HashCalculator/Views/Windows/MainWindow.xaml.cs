@@ -136,18 +136,29 @@ namespace HashCalculator.Views.Windows
             Settings.Current.PreviousVer = Info.Ver;
         }
 
+        /// <summary>
+        /// 需要立即响应的设置变更
+        /// </summary>
         private void SettingsPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(Settings.Current.MonitorNewHashStringInClipboard))
+            switch (e.PropertyName)
             {
-                if (Settings.Current.MonitorNewHashStringInClipboard)
-                {
-                    this.AddClipboardListener();
-                }
-                else
-                {
-                    this.RemoveClipboardListener();
-                }
+                case nameof(Settings.Current.MonitorNewHashStringInClipboard):
+                    if (Settings.Current.MonitorNewHashStringInClipboard)
+                    {
+                        this.AddClipboardListener();
+                    }
+                    else
+                    {
+                        this.RemoveClipboardListener();
+                    }
+                    break;
+                case nameof(Settings.Current.RunInMultiInstMode):
+                    Initializer.RunMultiMode = Settings.Current.RunInMultiInstMode;
+                    break;
+                case nameof(Settings.Current.SelectedTaskNumberLimit):
+                    HomeViewModel.Current.Starter.BeginAdjust(Settings.Current.SelectedTaskNumberLimit);
+                    break;
             }
         }
 
