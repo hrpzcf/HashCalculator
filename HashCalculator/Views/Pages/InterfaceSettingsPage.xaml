@@ -17,7 +17,7 @@
             <wpfui:CardControl>
                 <wpfui:CardControl.Header>
                     <StackPanel>
-                        <wpfui:TextBlock Text="应用主题" TextWrapping="WrapWithOverflow" />
+                        <wpfui:TextBlock Text="应用主题" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -35,7 +35,7 @@
             <wpfui:CardExpander Margin="0,4,0,0">
                 <wpfui:CardExpander.Header>
                     <StackPanel>
-                        <wpfui:TextBlock Text="部分列的显示与隐藏" TextWrapping="WrapWithOverflow" />
+                        <wpfui:TextBlock Text="部分列的显示与隐藏" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -46,7 +46,7 @@
                 <StackPanel>
                     <wpfui:CardControl>
                         <wpfui:CardControl.Header>
-                            <wpfui:TextBlock Text="序号列" TextWrapping="WrapWithOverflow" />
+                            <wpfui:TextBlock Text="序号列" />
                         </wpfui:CardControl.Header>
                         <wpfui:ToggleSwitch
                             IsChecked="{Binding NoSerialNumColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -56,7 +56,7 @@
                     </wpfui:CardControl>
                     <wpfui:CardControl>
                         <wpfui:CardControl.Header>
-                            <wpfui:TextBlock Text="完整路径列" TextWrapping="WrapWithOverflow" />
+                            <wpfui:TextBlock Text="完整路径列" />
                         </wpfui:CardControl.Header>
                         <wpfui:ToggleSwitch
                             IsChecked="{Binding NoFullPathColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -66,7 +66,7 @@
                     </wpfui:CardControl>
                     <wpfui:CardControl>
                         <wpfui:CardControl.Header>
-                            <wpfui:TextBlock Text="文件大小列" TextWrapping="WrapWithOverflow" />
+                            <wpfui:TextBlock Text="文件大小列" />
                         </wpfui:CardControl.Header>
                         <wpfui:ToggleSwitch
                             IsChecked="{Binding NoFileSizeColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -76,7 +76,7 @@
                     </wpfui:CardControl>
                     <wpfui:CardControl>
                         <wpfui:CardControl.Header>
-                            <wpfui:TextBlock Text="输出方式列" TextWrapping="WrapWithOverflow" />
+                            <wpfui:TextBlock Text="输出方式列" />
                         </wpfui:CardControl.Header>
                         <wpfui:ToggleSwitch
                             IsChecked="{Binding NoOutputTypeColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -86,7 +86,7 @@
                     </wpfui:CardControl>
                     <wpfui:CardControl>
                         <wpfui:CardControl.Header>
-                            <wpfui:TextBlock Text="任务耗时列" TextWrapping="WrapWithOverflow" />
+                            <wpfui:TextBlock Text="任务耗时列" />
                         </wpfui:CardControl.Header>
                         <wpfui:ToggleSwitch
                             IsChecked="{Binding NoDurationColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -96,7 +96,7 @@
                     </wpfui:CardControl>
                     <wpfui:CardControl>
                         <wpfui:CardControl.Header>
-                            <wpfui:TextBlock Text="导出列" TextWrapping="WrapWithOverflow" />
+                            <wpfui:TextBlock Text="导出列" />
                         </wpfui:CardControl.Header>
                         <wpfui:ToggleSwitch
                             IsChecked="{Binding NoExportColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -106,7 +106,7 @@
                     </wpfui:CardControl>
                     <wpfui:CardControl>
                         <wpfui:CardControl.Header>
-                            <wpfui:TextBlock Text="校验结果列" TextWrapping="WrapWithOverflow" />
+                            <wpfui:TextBlock Text="校验结果列" />
                         </wpfui:CardControl.Header>
                         <wpfui:ToggleSwitch
                             IsChecked="{Binding NoCmpResultColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -118,26 +118,26 @@
             </wpfui:CardExpander>
             <wpfui:CardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
-                    <wpfui:TextBlock Text="在校验结果图标旁显示描述" TextWrapping="WrapWithOverflow" />
+                    <wpfui:TextBlock Text="在校验结果图标旁显示描述" />
                 </wpfui:CardControl.Header>
                 <wpfui:ToggleSwitch IsChecked="{Binding ShowResultText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </wpfui:CardControl>
             <wpfui:CardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
-                    <wpfui:TextBlock Text="显示表格中文件的图标" TextWrapping="WrapWithOverflow" />
+                    <wpfui:TextBlock Text="显示表格中文件的图标" />
                 </wpfui:CardControl.Header>
                 <wpfui:ToggleSwitch IsChecked="{Binding ShowFileIcon, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </wpfui:CardControl>
             <wpfui:CardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
-                    <wpfui:TextBlock Text="显示主窗口功能按钮的名称" TextWrapping="WrapWithOverflow" />
+                    <wpfui:TextBlock Text="显示主窗口功能按钮的名称" />
                 </wpfui:CardControl.Header>
                 <wpfui:ToggleSwitch IsChecked="{Binding DisplayMainWndButtonText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </wpfui:CardControl>
             <wpfui:CardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
                     <StackPanel>
-                        <wpfui:TextBlock Text="功能按钮显隐总开关" TextWrapping="WrapWithOverflow" />
+                        <wpfui:TextBlock Text="功能按钮显隐总开关" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -150,7 +150,7 @@
             <wpfui:CardExpander Margin="0,4,0,0">
                 <wpfui:CardExpander.Header>
                     <StackPanel>
-                        <wpfui:TextBlock Text="功能按钮显隐细分开关" TextWrapping="WrapWithOverflow" />
+                        <wpfui:TextBlock Text="功能按钮显隐细分开关" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -262,7 +262,7 @@
             <wpfui:CardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
                     <StackPanel>
-                        <wpfui:TextBlock Text="相同哈希值行的强调色参数" TextWrapping="WrapWithOverflow" />
+                        <wpfui:TextBlock Text="相同哈希值行的强调色参数" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -321,7 +321,7 @@
             <wpfui:CardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
                     <StackPanel>
-                        <wpfui:TextBlock Text="筛选相同哈希值行的强调色参数" TextWrapping="WrapWithOverflow" />
+                        <wpfui:TextBlock Text="筛选相同哈希值行的强调色参数" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -380,7 +380,7 @@
             <wpfui:CardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
                     <StackPanel>
-                        <wpfui:TextBlock Text="筛选相同文件夹时的强调色参数" TextWrapping="WrapWithOverflow" />
+                        <wpfui:TextBlock Text="筛选相同文件夹时的强调色参数" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"

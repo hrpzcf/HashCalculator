@@ -17,7 +17,7 @@
             <wpfui:CardControl>
                 <wpfui:CardControl.Header>
                     <StackPanel>
-                        <wpfui:TextBlock Text="同时进行的任务数上限" TextWrapping="WrapWithOverflow" />
+                        <wpfui:TextBlock Text="同时进行的任务数上限" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -40,7 +40,7 @@
             <wpfui:CardControl Margin="0,4,0,0" IsEnabled="{Binding DelayTheStartOfCalculationTasks, Mode=OneWay}">
                 <wpfui:CardControl.Header>
                     <StackPanel>
-                        <TextBlock Text="延迟启动的毫秒数" TextWrapping="WrapWithOverflow" />
+                        <TextBlock Text="延迟启动的毫秒数" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"

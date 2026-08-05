@@ -250,7 +250,7 @@
                                         FontSize=32}">
                 <wpfui:CardExpander.Header>
                     <StackPanel>
-                        <wpfui:TextBlock Text="使用的开源项目" TextWrapping="WrapWithOverflow" />
+                        <wpfui:TextBlock Text="使用的开源项目" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
