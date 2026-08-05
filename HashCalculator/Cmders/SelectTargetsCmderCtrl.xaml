@@ -11,7 +11,7 @@
     d:DesignWidth="600"
     SnapsToDevicePixels="True"
     mc:Ignorable="d">
-    <wpfui:CardControl>
+    <wpfui:CardControl Padding="8">
         <wpfui:CardControl.Header>
             <StackPanel>
                 <WrapPanel>
@@ -86,10 +86,12 @@
                         Style="{StaticResource IndepButtonStyle}"
                         ToolTip="取消选择所有行。" />
                 </WrapPanel>
-                <wpfui:InfoBar
-                    Margin="0,8,0,0"
-                    IsOpen="{Binding ParentViewModel.IsInformationBarOpened, Mode=OneWay}"
-                    Message="可以用以上按钮来显示【操作目标】列并勾选操作目标，也可以取消后在主窗口选中多行作为目标。当主窗口显示【操作目标】列时以该列被勾选的对象为目标，不显示则以主窗口被选中的行为目标。" />
+                <wpfui:TextBlock
+                    Margin="0,4,0,0"
+                    FontSize="12"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                    Text="可以用以上按钮来显示【操作目标】列并勾选操作目标，也可以取消后在主窗口选中多行作为目标。当主窗口显示【操作目标】列时以该列被勾选的对象为目标，不显示则以主窗口被选中的行为目标。"
+                    TextWrapping="Wrap" />
             </StackPanel>
         </wpfui:CardControl.Header>
         <Button
