@@ -19,7 +19,7 @@
             <wpfui:CardControl>
                 <wpfui:CardControl.Header>
                     <StackPanel>
-                        <wpfui:TextBlock Text="安装右键菜单并关联文件" TextWrapping="WrapWithOverflow" />
+                        <wpfui:TextBlock Text="安装右键菜单并关联文件" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -35,7 +35,7 @@
             <wpfui:CardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
                     <StackPanel>
-                        <wpfui:TextBlock Text="卸载右键菜单并取消关联" TextWrapping="WrapWithOverflow" />
+                        <wpfui:TextBlock Text="卸载右键菜单并取消关联" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -120,7 +120,7 @@
             <wpfui:CardExpander Margin="0,4,0,0">
                 <wpfui:CardExpander.Header>
                     <StackPanel>
-                        <wpfui:TextBlock Text="自定义已经安装的菜单条目" TextWrapping="WrapWithOverflow" />
+                        <wpfui:TextBlock Text="自定义已经安装的菜单条目" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"

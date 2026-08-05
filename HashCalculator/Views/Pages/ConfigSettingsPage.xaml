@@ -17,7 +17,7 @@
             <wpfui:CardControl>
                 <wpfui:CardControl.Header>
                     <StackPanel>
-                        <wpfui:TextBlock Text="配置文件保存位置" TextWrapping="WrapWithOverflow" />
+                        <wpfui:TextBlock Text="配置文件保存位置" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"

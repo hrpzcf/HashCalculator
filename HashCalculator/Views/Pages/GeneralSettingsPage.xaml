@@ -17,7 +17,7 @@
             <wpfui:CardControl>
                 <wpfui:CardControl.Header>
                     <StackPanel>
-                        <wpfui:TextBlock Text="如何搜索文件夹内容" TextWrapping="WrapWithOverflow" />
+                        <wpfui:TextBlock Text="如何搜索文件夹内容" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -34,7 +34,7 @@
             <wpfui:CardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
                     <StackPanel>
-                        <wpfui:TextBlock Text="如何搜索校验信息文件内列出的文件" TextWrapping="WrapWithOverflow" />
+                        <wpfui:TextBlock Text="如何搜索校验信息文件内列出的文件" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -51,7 +51,7 @@
             <wpfui:CardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
                     <StackPanel>
-                        <wpfui:TextBlock Text="首选校验信息文件内容或扩展名指定的算法" TextWrapping="WrapWithOverflow" />
+                        <wpfui:TextBlock Text="首选校验信息文件内容或扩展名指定的算法" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -64,7 +64,7 @@
             <wpfui:CardControl Margin="0,4,0,0" IsEnabled="{Binding PreferChecklistAlgs, Mode=OneWay}">
                 <wpfui:CardControl.Header>
                     <StackPanel>
-                        <wpfui:TextBlock Text="当校验信息文件内容和扩展名皆未指定算法时" TextWrapping="WrapWithOverflow" />
+                        <wpfui:TextBlock Text="当校验信息文件内容和扩展名皆未指定算法时" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -81,7 +81,7 @@
             <wpfui:CardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
                     <StackPanel>
-                        <wpfui:TextBlock Text="使用已经复制的校验信息进行校验" TextWrapping="WrapWithOverflow" />
+                        <wpfui:TextBlock Text="使用已经复制的校验信息进行校验" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -94,7 +94,7 @@
             <wpfui:CardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
                     <StackPanel>
-                        <wpfui:TextBlock Text="有新复制的校验信息时自动启动校验" TextWrapping="WrapWithOverflow" />
+                        <wpfui:TextBlock Text="有新复制的校验信息时自动启动校验" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -107,7 +107,7 @@
             <wpfui:CardControl Margin="0,4,0,0" IsEnabled="{Binding MonitorNewHashStringInClipboard, Mode=OneWay}">
                 <wpfui:CardControl.Header>
                     <StackPanel>
-                        <wpfui:TextBlock Text="能触发校验的新复制的字符数范围" TextWrapping="WrapWithOverflow" />
+                        <wpfui:TextBlock Text="能触发校验的新复制的字符数范围" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -130,7 +130,7 @@
             <wpfui:CardControl Margin="0,4,0,0" IsEnabled="{Binding MonitorNewHashStringInClipboard, Mode=OneWay}">
                 <wpfui:CardControl.Header>
                     <StackPanel>
-                        <wpfui:TextBlock Text="完成哈希值校验后把主窗口带到前台" TextWrapping="WrapWithOverflow" />
+                        <wpfui:TextBlock Text="完成哈希值校验后把主窗口带到前台" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -143,7 +143,7 @@
             <wpfui:CardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
                     <StackPanel>
-                        <wpfui:TextBlock Text="校验后自动切换显示什么结果的算法" TextWrapping="WrapWithOverflow" />
+                        <wpfui:TextBlock Text="校验后自动切换显示什么结果的算法" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -160,7 +160,7 @@
             <wpfui:CardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
                     <StackPanel>
-                        <wpfui:TextBlock Text="从命令行启动程序但未提供子命令时" TextWrapping="WrapWithOverflow" />
+                        <wpfui:TextBlock Text="从命令行启动程序但未提供子命令时" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -177,7 +177,7 @@
             <wpfui:CardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
                     <StackPanel>
-                        <wpfui:TextBlock Text="允许运行多个应用程序实例" TextWrapping="WrapWithOverflow" />
+                        <wpfui:TextBlock Text="允许运行多个应用程序实例" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -190,7 +190,7 @@
             <wpfui:CardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
                     <StackPanel>
-                        <wpfui:TextBlock Text="不计算空文件的哈希值" TextWrapping="WrapWithOverflow" />
+                        <wpfui:TextBlock Text="不计算空文件的哈希值" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -203,7 +203,7 @@
             <wpfui:CardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
                     <StackPanel>
-                        <wpfui:TextBlock Text="使用颜色来标记哈希值相同的行" TextWrapping="WrapWithOverflow" />
+                        <wpfui:TextBlock Text="使用颜色来标记哈希值相同的行" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -216,7 +216,7 @@
             <wpfui:CardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
                     <StackPanel>
-                        <wpfui:TextBlock Text="所有任务完成后清除选中状态" TextWrapping="WrapWithOverflow" />
+                        <wpfui:TextBlock Text="所有任务完成后清除选中状态" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -229,7 +229,7 @@
             <wpfui:CardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
                     <StackPanel>
-                        <wpfui:TextBlock Text="右键选择删除文件时直接永久删除" TextWrapping="WrapWithOverflow" />
+                        <wpfui:TextBlock Text="右键选择删除文件时直接永久删除" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -242,7 +242,7 @@
             <wpfui:CardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
                     <StackPanel>
-                        <wpfui:TextBlock Text="移动到回收站时不显示系统对话框" TextWrapping="WrapWithOverflow" />
+                        <wpfui:TextBlock Text="移动到回收站时不显示系统对话框" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -255,7 +255,7 @@
             <wpfui:CardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
                     <StackPanel>
-                        <wpfui:TextBlock Text="启动计算前先将表格现有的内容清空" TextWrapping="WrapWithOverflow" />
+                        <wpfui:TextBlock Text="启动计算前先将表格现有的内容清空" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"

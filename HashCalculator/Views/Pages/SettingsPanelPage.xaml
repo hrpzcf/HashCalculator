@@ -26,7 +26,7 @@
                         CommandParameter="{Binding TargetPageType}"
                         Icon="{Binding Icon, Converter={StaticResource CloneIconForSettingsPanelPageCvt}}">
                         <StackPanel>
-                            <wpfui:TextBlock Text="{Binding Content}" TextWrapping="WrapWithOverflow" />
+                            <wpfui:TextBlock Text="{Binding Content}" />
                             <wpfui:TextBlock
                                 FontTypography="Caption"
                                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
