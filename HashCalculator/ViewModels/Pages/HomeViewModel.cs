@@ -806,12 +806,17 @@ public class HomeViewModel : BaseViewModel
 
     private void OpenFilterOperationWindowAction(object param)
     {
-        if (this.filterWindowInstance == null)
+        if (this.filterWindowInstance is null)
         {
             this.filterWindowInstance = App.GetRequiredService<FilterOperationWindow>();
             this.filterWindowInstance.Closed += (s, e) => { this.filterWindowInstance = null; };
+            this.filterWindowInstance.Show();
         }
-        this.filterWindowInstance.Show();
+        else
+        {
+            this.filterWindowInstance.WindowState = WindowState.Normal;
+            this.filterWindowInstance.Activate();
+        }
     }
 
     public ICommand OpenFilterOperationWindowCmd
