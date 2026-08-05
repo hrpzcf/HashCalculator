@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Windows.Input;
-using HashCalculator.ViewModels.Pages;
 using HashCalculator.Views.Pages;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
@@ -16,7 +14,6 @@ public class MainWindowModel : BaseViewModel
 
     public MainWindowModel()
     {
-        Settings.Current.PropertyChanged += this.OnSettingsPropChanged;
         this.InitializeNavigationViewItems();
     }
 
@@ -31,22 +28,6 @@ public class MainWindowModel : BaseViewModel
     public void SetupModelNavigationService(NavigationService service)
     {
         this._navigationService = service;
-    }
-
-    /// <summary>
-    /// 需要立即响应的设置变更
-    /// </summary>
-    private void OnSettingsPropChanged(object sender, PropertyChangedEventArgs e)
-    {
-        switch (e.PropertyName)
-        {
-            case nameof(Settings.Current.RunInMultiInstMode):
-                Initializer.RunMultiMode = Settings.Current.RunInMultiInstMode;
-                break;
-            case nameof(Settings.Current.SelectedTaskNumberLimit):
-                HomeViewModel.Current.Starter.BeginAdjust(Settings.Current.SelectedTaskNumberLimit);
-                break;
-        }
     }
 
     private void InitializeNavigationViewItems()
