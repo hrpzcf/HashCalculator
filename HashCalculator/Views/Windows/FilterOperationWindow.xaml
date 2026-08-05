@@ -36,7 +36,7 @@
         <wpfui:NavigationView
             x:Name="NavigationViewOnFilterOperationWindow"
             Grid.Row="1"
-            Margin="0,4,4,4"
+            Margin="0,4,4,8"
             IsBackButtonVisible="Collapsed"
             IsFooterSeparatorVisible="False"
             IsPaneOpen="False"

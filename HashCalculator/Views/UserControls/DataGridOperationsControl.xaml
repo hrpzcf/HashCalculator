@@ -73,7 +73,7 @@
                     Grid.Row="1"
                     Grid.Column="0"
                     Grid.ColumnSpan="2"
-                    Margin="-1,4,0,0"
+                    Margin="-1,4,0,-1"
                     VerticalContentAlignment="Center"
                     IsOpen="{Binding IsInformationBarOpened, Mode=OneWay}"
                     Message="{Binding SelectedCmder.Description}" />

@@ -79,7 +79,7 @@
                     Margin="16,0,0,0"
                     VerticalAlignment="Bottom"
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowApplyRefreshFilterslButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
-                    <Button Style="{StaticResource ImageButtonStyle2}" ToolTip="左键点击应用【筛选】页面中勾选的筛选器并刷新筛选视图，右键点击禁用筛选。">
+                    <Button Style="{StaticResource ImageButtonStyle2}" ToolTip="左键点击应用/禁用【筛选】页面中勾选的筛选器并刷新视图，右键点击打开筛选与操作窗口。">
                         <Button.IsEnabled>
                             <MultiBinding Converter="{StaticResource CmdPanelCriticalControlsEnabledCvt}">
                                 <Binding Path="State" Source="{x:Static pagemodels:HomeViewModel.Current}" />
@@ -87,18 +87,8 @@
                             </MultiBinding>
                         </Button.IsEnabled>
                         <Button.InputBindings>
-                            <MouseBinding
-                                Command="{Binding OpenFilterOperationWindowCmd}"
-                                CommandParameter="{x:Null}"
-                                MouseAction="MiddleClick" />
-                            <MouseBinding
-                                Command="{Binding FilterAndOperationModel.RefreshFiltersCmd}"
-                                CommandParameter="{StaticResource TrueValue}"
-                                MouseAction="LeftClick" />
-                            <MouseBinding
-                                Command="{Binding FilterAndOperationModel.RefreshFiltersCmd}"
-                                CommandParameter="{StaticResource FalseValue}"
-                                MouseAction="RightClick" />
+                            <MouseBinding Command="{Binding FilterAndOperationModel.HomePageRefreshFiltersCmd}" MouseAction="LeftClick" />
+                            <MouseBinding Command="{Binding OpenFilterOperationWindowCmd}" MouseAction="RightClick" />
                         </Button.InputBindings>
                         <Grid>
                             <Image

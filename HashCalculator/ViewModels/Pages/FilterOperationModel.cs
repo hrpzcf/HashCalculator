@@ -16,12 +16,16 @@ public class FilterOperationModel : BaseViewModel
 {
     private AbsHashesCmder selectedCmder;
     private AbsHashViewFilter selectedFilter;
+    private NavigationService _navigationService;
+
     private RelayCommand refreshFiltersCmd;
+    private RelayCommand homePageRefreshFiltersCmd;
     private RelayCommand moveFilterUpCmd;
     private RelayCommand moveFilterDownCmd;
     private RelayCommand clearFilterSelectionCmd;
+
     private bool _isFiltersApplied = false;
-    private NavigationService _navigationService;
+    private bool _stateForRefreshFilters = false;
 
     private ICollectionView BoundDataGridView { get; }
 
@@ -191,6 +195,7 @@ public class FilterOperationModel : BaseViewModel
         }
         int appliedFiltersCount = 0;
         bool filteringShouldBeApplied = (param is not bool instruction) || instruction;
+        this._stateForRefreshFilters = filteringShouldBeApplied;
         await Task.Run(() =>
         {
             foreach (HashViewModel model in HashModelStore.HashViewModels)
@@ -260,6 +265,21 @@ public class FilterOperationModel : BaseViewModel
         {
             this.refreshFiltersCmd ??= new RelayCommand(this.RefreshFiltersAction);
             return this.refreshFiltersCmd;
+        }
+    }
+
+    private void HomePageRefreshFiltersAction(object param)
+    {
+        this._stateForRefreshFilters = !this._stateForRefreshFilters;
+        this.RefreshFiltersAction(this._stateForRefreshFilters);
+    }
+
+    public ICommand HomePageRefreshFiltersCmd
+    {
+        get
+        {
+            this.homePageRefreshFiltersCmd ??= new RelayCommand(this.HomePageRefreshFiltersAction);
+            return this.homePageRefreshFiltersCmd;
         }
     }
 }

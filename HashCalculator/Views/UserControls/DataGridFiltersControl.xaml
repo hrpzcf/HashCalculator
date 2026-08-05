@@ -62,16 +62,11 @@
                     ToolTip="取消所有筛选器的启用状态..." />
             </StackPanel>
             <Grid Grid.Row="1" Margin="0,8,0,0">
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Border
-                    Grid.Row="0"
                     Grid.Column="0"
                     Padding="4"
                     BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
@@ -99,7 +94,6 @@
                     </wpfui:ListView>
                 </Border>
                 <ScrollViewer
-                    Grid.Row="0"
                     Grid.Column="1"
                     Margin="4,0,0,0"
                     HorizontalScrollBarVisibility="Disabled"
@@ -113,20 +107,12 @@
                         <wpfui:InfoBar
                             Title="{Binding SelectedFilter.Display}"
                             Grid.Row="1"
-                            Margin="0,4,0,0"
+                            Margin="0,4,0,-1"
                             VerticalContentAlignment="Center"
                             IsOpen="{Binding IsInformationBarOpened, Mode=OneWay}"
                             Message="{Binding SelectedFilter.Description}" />
                     </Grid>
                 </ScrollViewer>
-                <wpfui:InfoBar
-                    Grid.Row="1"
-                    Grid.Column="0"
-                    Grid.ColumnSpan="2"
-                    Margin="-1,4,0,0"
-                    VerticalContentAlignment="Center"
-                    IsOpen="{Binding IsInformationBarOpened, Mode=OneWay}"
-                    Message="主页左键点击【刷新筛选】按钮与此页【刷新筛选】按钮功能相同，主页右键点击【刷新筛选】按钮与此页【禁用筛选】按钮功能相同。筛选状态下主页【刷新筛选】按钮左下角会显示红点。" />
             </Grid>
         </Grid>
     </Border>
