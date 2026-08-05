@@ -6,73 +6,12 @@
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pagemodels="clr-namespace:HashCalculator.ViewModels.Pages"
+    xmlns:usercontrols="clr-namespace:HashCalculator.Views.UserControls"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     d:DataContext="{d:DesignInstance Type=pagemodels:FilterOperationModel}"
     d:DesignWidth="800"
     ScrollViewer.CanContentScroll="False"
     SnapsToDevicePixels="True"
     mc:Ignorable="d">
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <Border Padding="4" BorderThickness="0">
-            <Border.IsEnabled>
-                <MultiBinding Converter="{StaticResource CmdPanelCriticalControlsEnabledCvt}">
-                    <Binding Path="State" Source="{x:Static pagemodels:HomeViewModel.Current}" />
-                    <Binding Path="IsFiltersAndCmdersIdle" Source="{x:Static local:Settings.Current}" />
-                </MultiBinding>
-            </Border.IsEnabled>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <Border
-                    Grid.Row="0"
-                    Grid.RowSpan="3"
-                    Grid.Column="0"
-                    Padding="8"
-                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                    BorderThickness="1"
-                    CornerRadius="4">
-                    <wpfui:ListView
-                        d:ItemsSource="{d:SampleData}"
-                        ItemsSource="{Binding HashModelCmders}"
-                        SelectedIndex="0"
-                        SelectedItem="{Binding SelectedCmder}"
-                        SelectionMode="Single">
-                        <wpfui:ListView.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Padding="10,8" Text="{Binding Display}" />
-                            </DataTemplate>
-                        </wpfui:ListView.ItemTemplate>
-                    </wpfui:ListView>
-                </Border>
-                <!--  操作目标选择器命令  -->
-                <ContentControl
-                    Grid.Row="0"
-                    Grid.Column="1"
-                    Margin="32,0,0,0"
-                    Padding="16"
-                    Content="{Binding SelectTableLinesCmder.UserInterface}" />
-                <ContentControl
-                    Grid.Row="1"
-                    Grid.Column="1"
-                    Margin="32,16,0,0"
-                    Padding="16"
-                    Content="{Binding SelectedCmder.UserInterface}" />
-                <wpfui:InfoBar
-                    Title="{Binding SelectedCmder.Display}"
-                    Grid.Row="2"
-                    Grid.Column="1"
-                    Margin="32,16,0,0"
-                    VerticalContentAlignment="Center"
-                    IsOpen="{Binding IsInformationBarOpened, Mode=OneWay}"
-                    Message="{Binding SelectedCmder.Description}" />
-            </Grid>
-        </Border>
-    </ScrollViewer>
+    <usercontrols:DataGridOperationsControl />
 </Page>

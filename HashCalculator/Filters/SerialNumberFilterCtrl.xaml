@@ -12,13 +12,13 @@
     SnapsToDevicePixels="True"
     mc:Ignorable="d">
     <StackPanel>
-        <wpfui:CardControl>
+        <wpfui:CardControl Padding="8">
             <wpfui:CardControl.Header>
                 <wpfui:TextBlock FontTypography="BodyStrong" Text="开始序号" />
             </wpfui:CardControl.Header>
             <TextBox MinWidth="100" Text="{Binding SerialLeft, Converter={StaticResource StringToIntDefaultZeroCvt}}" />
         </wpfui:CardControl>
-        <wpfui:CardControl Margin="0,4,0,0">
+        <wpfui:CardControl Margin="0,4,0,0" Padding="8">
             <wpfui:CardControl.Header>
                 <StackPanel>
                     <wpfui:TextBlock FontTypography="BodyStrong" Text="结束序号" />

@@ -12,7 +12,7 @@
     SnapsToDevicePixels="True"
     mc:Ignorable="d">
     <StackPanel>
-        <wpfui:CardControl>
+        <wpfui:CardControl Padding="8">
             <wpfui:CardControl.Header>
                 <Grid>
                     <Grid.RowDefinitions>
@@ -32,17 +32,17 @@
                         PlaceholderText="输入文件名片段或正则表达式 (C#)"
                         Text="{Binding Pattern, Mode=OneWayToSource}"
                         TextWrapping="WrapWithOverflow" />
-                    <CheckBox
+                    <wpfui:ToggleSwitch
                         Grid.Row="1"
                         Grid.Column="0"
-                        Margin="0,4,0,0"
+                        Margin="0,8,0,0"
                         Padding="0"
                         Content="使用正则表达式"
                         IsChecked="{Binding Param}" />
-                    <CheckBox
+                    <wpfui:ToggleSwitch
                         Grid.Row="1"
                         Grid.Column="1"
-                        Margin="16,4,0,0"
+                        Margin="16,8,0,0"
                         Padding="0"
                         Content="忽略大小写"
                         IsChecked="{Binding IgnoreCase}" />

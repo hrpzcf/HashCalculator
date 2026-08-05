@@ -88,6 +88,10 @@
                         </Button.IsEnabled>
                         <Button.InputBindings>
                             <MouseBinding
+                                Command="{Binding OpenFilterOperationWindowCmd}"
+                                CommandParameter="{x:Null}"
+                                MouseAction="MiddleClick" />
+                            <MouseBinding
                                 Command="{Binding FilterAndOperationModel.RefreshFiltersCmd}"
                                 CommandParameter="{StaticResource TrueValue}"
                                 MouseAction="LeftClick" />

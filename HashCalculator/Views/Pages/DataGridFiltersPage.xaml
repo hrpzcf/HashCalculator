@@ -6,127 +6,12 @@
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pagemodels="clr-namespace:HashCalculator.ViewModels.Pages"
+    xmlns:usercontrols="clr-namespace:HashCalculator.Views.UserControls"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     d:DataContext="{d:DesignInstance Type=pagemodels:FilterOperationModel}"
     d:DesignWidth="800"
     ScrollViewer.CanContentScroll="False"
     SnapsToDevicePixels="True"
     mc:Ignorable="d">
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <Border BorderThickness="0">
-            <Border.IsEnabled>
-                <MultiBinding Converter="{StaticResource CmdPanelCriticalControlsEnabledCvt}">
-                    <Binding Path="State" Source="{x:Static pagemodels:HomeViewModel.Current}" />
-                    <Binding Path="IsFiltersAndCmdersIdle" Source="{x:Static local:Settings.Current}" />
-                </MultiBinding>
-            </Border.IsEnabled>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <Border
-                    Grid.Row="0"
-                    Grid.RowSpan="3"
-                    Grid.Column="0"
-                    Padding="8"
-                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                    BorderThickness="1"
-                    CornerRadius="4">
-                    <wpfui:ListView
-                        d:ItemsSource="{d:SampleData}"
-                        ItemsSource="{Binding HashModelFilters}"
-                        SelectedIndex="0"
-                        SelectedItem="{Binding SelectedFilter}"
-                        SelectionMode="Single">
-                        <wpfui:ListView.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <CheckBox
-                                        VerticalAlignment="Center"
-                                        Command="{Binding FilterChangedCmd}"
-                                        IsChecked="{Binding Selected, Mode=TwoWay}"
-                                        PreviewMouseDown="FiltersItemPreviewMouseDown" />
-                                    <TextBlock
-                                        Margin="0,0,16,0"
-                                        VerticalAlignment="Center"
-                                        Text="{Binding Display}" />
-                                </StackPanel>
-                            </DataTemplate>
-                        </wpfui:ListView.ItemTemplate>
-                    </wpfui:ListView>
-                </Border>
-
-                <ContentControl
-                    Grid.Row="0"
-                    Grid.Column="1"
-                    Margin="32,0,0,0"
-                    Padding="16"
-                    Content="{Binding SelectedFilter.UserInterface}" />
-                <wpfui:InfoBar
-                    Title="{Binding SelectedFilter.Display}"
-                    Grid.Row="1"
-                    Grid.Column="1"
-                    Margin="32,0,0,0"
-                    VerticalContentAlignment="Center"
-                    IsOpen="{Binding IsInformationBarOpened, Mode=OneWay}"
-                    Message="{Binding SelectedFilter.Description}" />
-                <wpfui:InfoBar
-                    Grid.Row="2"
-                    Grid.Column="1"
-                    Margin="32,4,0,0"
-                    VerticalContentAlignment="Center"
-                    IsOpen="{Binding IsInformationBarOpened, Mode=OneWay}"
-                    Message="主页左键点击【刷新筛选】按钮与此页【刷新筛选】按钮功能相同，主页右键点击【刷新筛选】按钮与此页【禁用筛选】按钮功能相同。筛选状态下主页【刷新筛选】按钮左下角会显示红点。" />
-                <StackPanel
-                    Grid.Row="0"
-                    Grid.RowSpan="2"
-                    Grid.Column="2"
-                    Margin="16,0,16,0">
-                    <wpfui:Button
-                        Grid.Row="1"
-                        Command="{Binding RefreshFiltersCmd}"
-                        CommandParameter="{StaticResource TrueValue}"
-                        Content="刷新筛选"
-                        Icon="{wpfui:SymbolIcon Symbol=ArrowSync16}"
-                        ToolTip="应用已选择的筛选器并刷新主页视图。" />
-                    <wpfui:Button
-                        Grid.Row="1"
-                        Margin="0,16,0,0"
-                        Command="{Binding RefreshFiltersCmd}"
-                        CommandParameter="{StaticResource FalseValue}"
-                        Content="禁用筛选"
-                        Icon="{wpfui:SymbolIcon Symbol=Dismiss12}"
-                        ToolTip="取消应用已选择的筛选器并刷新主页视图。" />
-                    <wpfui:Button
-                        Grid.Row="1"
-                        Margin="0,16,0,0"
-                        Command="{Binding MoveFilterUpCmd}"
-                        Content="下移所选"
-                        Icon="{wpfui:SymbolIcon Symbol=ChevronUp12}"
-                        ToolTip="上移筛选器..." />
-                    <wpfui:Button
-                        Grid.Row="2"
-                        Margin="0,16,0,0"
-                        Command="{Binding MoveFilterDownCmd}"
-                        Content="上移所选"
-                        Icon="{wpfui:SymbolIcon Symbol=ChevronDown12}"
-                        ToolTip="下移筛选器..." />
-                    <wpfui:Button
-                        Grid.Row="3"
-                        Margin="0,16,0,0"
-                        Command="{Binding ClearFilterSelectionCmd}"
-                        Content="清除选择"
-                        Icon="{wpfui:SymbolIcon Symbol=Dismiss12}"
-                        ToolTip="取消所有筛选器的启用状态..." />
-                </StackPanel>
-            </Grid>
-        </Border>
-    </ScrollViewer>
+    <usercontrols:DataGridFiltersControl />
 </Page>

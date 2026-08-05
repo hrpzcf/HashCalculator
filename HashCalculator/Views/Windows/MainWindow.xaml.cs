@@ -12,6 +12,7 @@ using HashCalculator.ViewModels.Pages;
 using HashCalculator.ViewModels.Windows;
 using HashCalculator.Views.Pages;
 using Wpf.Ui;
+using Wpf.Ui.Abstractions;
 using Wpf.Ui.Appearance;
 using Wpfctrls = Wpf.Ui.Controls;
 
@@ -22,6 +23,7 @@ namespace HashCalculator.Views.Windows
         private bool listenerAdded = false;
         private DateTime lastClipboardUpdateDateTime = DateTime.Now;
         private PresentationSource presentationSrc = null;
+        private NavigationService _navigationService = null;
 
         private readonly HomePage _homePage = null;
         private readonly MainWindowModel _viewModel = null;
@@ -38,27 +40,33 @@ namespace HashCalculator.Views.Windows
 
         private bool ProcIdMonitorFlag { get; set; } = true;
 
-        public MainWindow(
-            MainWindowModel viewModel,
-            ISnackbarService snackbarService,
-            INavigationService navigationService,
-            HomePage homePage)
+        public MainWindow(MainWindowModel viewModel,
+            ISnackbarService snackbarService, HomePage homePage)
         {
             Current = this;
             this._homePage = homePage;
             this._viewModel = viewModel;
             this.DataContext = this._viewModel;
             this.InitializeComponent();
+            this.InitializeNavigation(this._viewModel);
             snackbarService.SetSnackbarPresenter(this.SnackbarPresenter);
-            navigationService.SetNavigationControl(this.NavigationView);
-            this.NavigationView.SelectionChanged += this.SelectionChanged;
             if (Settings.Current.SelectedApplicationThemeIndex == 0)
             {
                 SystemThemeWatcher.Watch(this, Wpfctrls.WindowBackdropType.None);
             }
         }
 
-        private void SelectionChanged(Wpfctrls.NavigationView sender, RoutedEventArgs args)
+        private void InitializeNavigation(MainWindowModel model)
+        {
+            this.NavigationView.SelectionChanged += this.NavigationChanged;
+            INavigationViewPageProvider pageProvider =
+                App.GetRequiredService<INavigationViewPageProvider>();
+            this._navigationService = new NavigationService(pageProvider);
+            this._navigationService.SetNavigationControl(this.NavigationView);
+            model.SetupModelNavigationService(this._navigationService);
+        }
+
+        private void NavigationChanged(Wpfctrls.NavigationView sender, RoutedEventArgs args)
         {
             if (sender.SelectedItem is Wpfctrls.INavigationViewItem item)
             {
@@ -97,6 +105,7 @@ namespace HashCalculator.Views.Windows
 
         private async void MainWindowLoaded(object sender, RoutedEventArgs e)
         {
+            this._navigationService.Navigate(typeof(HomePage));
             WndHandle = new WindowInteropHelper(this).Handle;
             this.presentationSrc = PresentationSource.FromVisual(this);
             if (this.presentationSrc is HwndSource hwndSrc)

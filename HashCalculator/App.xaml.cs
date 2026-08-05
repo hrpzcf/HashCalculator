@@ -5,10 +5,12 @@ using HashCalculator.Services;
 using HashCalculator.ViewModels.Pages;
 using HashCalculator.ViewModels.Windows;
 using HashCalculator.Views.Pages;
+using HashCalculator.Views.UserControls;
 using HashCalculator.Views.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Wpf.Ui;
+using Wpf.Ui.Abstractions;
 using Wpf.Ui.DependencyInjection;
 
 namespace HashCalculator;
@@ -22,10 +24,12 @@ public partial class App : Application
     private static readonly IHost _host = Host.CreateDefaultBuilder()
         .ConfigureServices((context, services) =>
         {
-            services.AddNavigationViewPageProvider();
+            services.AddSingleton<INavigationViewPageProvider,
+                DependencyInjectionNavigationViewPageProvider>();
+
             services.AddHostedService<ApplicationHostService>();
+
             services.AddSingleton<ISnackbarService, SnackbarService>();
-            services.AddSingleton<INavigationService, NavigationService>();
 
             services.AddSingleton<HomeViewModel>();
             services.AddSingleton<HomePage>();
@@ -49,9 +53,12 @@ public partial class App : Application
             services.AddSingleton<AlgosPanelPage>();
             services.AddSingleton<AlgorithmsModel>();
 
-            services.AddSingleton<DataGridFiltersPage>();
-            services.AddSingleton<DataGridOperationsPage>();
+            services.AddSingleton<DataGridFiltersControl>();
+            services.AddSingleton<DataGridOperationsControl>();
             services.AddSingleton<FilterOperationModel>();
+            // 因为 FilterOperationWindow 可能会经常关闭打开，
+            // 所以不能注册为 Singleton 模式。
+            services.AddTransient<FilterOperationWindow>();
         }).Build();
 
     public static T GetRequiredService<T>() where T : class

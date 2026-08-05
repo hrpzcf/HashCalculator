@@ -12,7 +12,7 @@
     SnapsToDevicePixels="True"
     mc:Ignorable="d">
     <StackPanel>
-        <wpfui:CardControl>
+        <wpfui:CardControl Padding="8">
             <wpfui:CardControl.Header>
                 <StackPanel>
                     <wpfui:TextBlock FontTypography="BodyStrong" Text="关注第一行当前显示的算法" />
@@ -25,7 +25,10 @@
             </wpfui:CardControl.Header>
             <wpfui:ToggleSwitch IsChecked="{Binding AutomaticallyFocusAlgorithm, Mode=TwoWay}" />
         </wpfui:CardControl>
-        <wpfui:CardControl Margin="0,4,0,0" IsEnabled="{Binding AutomaticallyFocusAlgorithm, Converter={StaticResource ReverseBooleanValueCvt}, Mode=TwoWay}">
+        <wpfui:CardControl
+            Margin="0,4,0,0"
+            Padding="8"
+            IsEnabled="{Binding AutomaticallyFocusAlgorithm, Converter={StaticResource ReverseBooleanValueCvt}, Mode=TwoWay}">
             <wpfui:CardControl.Header>
                 <StackPanel>
                     <wpfui:TextBlock FontTypography="BodyStrong" Text="另行指定关注的算法" />
@@ -42,7 +45,7 @@
                 SelectedValue="{Binding SelectedAlgorithmType, Mode=TwoWay}"
                 SelectedValuePath="AlgoType" />
         </wpfui:CardControl>
-        <wpfui:CardControl Margin="0,4,0,0">
+        <wpfui:CardControl Margin="0,4,0,0" Padding="8">
             <wpfui:CardControl.Header>
                 <StackPanel>
                     <wpfui:TextBlock FontTypography="BodyStrong" Text="要作为文件名的哈希值格式" />
@@ -59,7 +62,7 @@
                 SelectedValue="{Binding BeingUsedOutput, Mode=TwoWay}"
                 SelectedValuePath="ItemValue" />
         </wpfui:CardControl>
-        <wpfui:CardControl Margin="0,4,0,0">
+        <wpfui:CardControl Margin="0,4,0,0" Padding="8">
             <wpfui:CardControl.Header>
                 <StackPanel>
                     <wpfui:TextBlock FontTypography="BodyStrong" Text="重命名方式" />
@@ -76,7 +79,7 @@
                 SelectedValue="{Binding MethodForRenameFile, Mode=TwoWay}"
                 SelectedValuePath="ItemValue" />
         </wpfui:CardControl>
-        <wpfui:CardControl Margin="0,4,0,0">
+        <wpfui:CardControl Margin="0,4,0,0" Padding="8">
             <wpfui:CardControl.Header>
                 <StackPanel>
                     <wpfui:TextBlock FontTypography="BodyStrong" Text="重命名时使用的分隔符" />
@@ -88,12 +91,12 @@
                 </StackPanel>
             </wpfui:CardControl.Header>
             <TextBox
-                MinWidth="150"
+                MinWidth="80"
                 MaxLines="1"
                 PreviewTextInput="TextBoxPreviewTextInput"
                 Text="{Binding FileNameSeparator, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
         </wpfui:CardControl>
-        <wpfui:CardControl Margin="0,4,0,0">
+        <wpfui:CardControl Margin="0,4,0,0" Padding="8">
             <wpfui:CardControl.Header>
                 <StackPanel>
                     <wpfui:TextBlock FontTypography="BodyStrong" Text="检查是否应用【有效的文件】筛选器" />
@@ -106,7 +109,7 @@
             </wpfui:CardControl.Header>
             <wpfui:ToggleSwitch IsChecked="{Binding CheckIfUsingDistinctFilesFilter, Mode=TwoWay}" />
         </wpfui:CardControl>
-        <wpfui:CardControl Margin="0,4,0,0">
+        <wpfui:CardControl Margin="0,4,0,0" Padding="8">
             <wpfui:CardControl.Header>
                 <StackPanel>
                     <wpfui:TextBlock FontTypography="BodyStrong" Text="开始按以上设置执行重命名操作" />

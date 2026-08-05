@@ -12,7 +12,7 @@
     SnapsToDevicePixels="True"
     mc:Ignorable="d">
     <StackPanel>
-        <wpfui:CardControl>
+        <wpfui:CardControl Padding="8">
             <wpfui:CardControl.Header>
                 <StackPanel>
                     <wpfui:TextBlock FontTypography="BodyStrong" Text="要筛选出来的哈希值" />
@@ -21,25 +21,43 @@
                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                         Text="要筛选的哈希值与显示格式无关，比如主页显示十六进制格式，此处填 Base64 格式也可以搜到，所有符合被选中的哈希值的行都会被筛选出来。"
                         TextWrapping="WrapWithOverflow" />
+                    <wpfui:TextBox
+                        Margin="-2,4,0,0"
+                        AcceptsReturn="True"
+                        PlaceholderText="每行一个哈希值，按回车换行"
+                        Text="{Binding Items, Mode=TwoWay, Converter={StaticResource MultiLineTextToStrArrayCvt}}"
+                        TextWrapping="Wrap" />
                 </StackPanel>
             </wpfui:CardControl.Header>
-            <wpfui:TextBox
-                MinWidth="400"
-                AcceptsReturn="True"
-                PlaceholderText="每行一个哈希值，按回车换行"
-                Text="{Binding Items, Mode=OneWayToSource, Converter={StaticResource MultiLineTextToStrArrayCvt}}"
-                TextWrapping="WrapWithOverflow" />
         </wpfui:CardControl>
-        <wpfui:CardControl Margin="0,4,0,0">
+        <wpfui:CardControl Margin="0,4,0,0" Padding="8">
             <wpfui:CardControl.Header>
-                <StackPanel>
-                    <wpfui:TextBlock FontTypography="BodyStrong" Text="对于多个条件的筛选逻辑" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
                     <wpfui:TextBlock
-                        FontTypography="Caption"
-                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                        Text="筛选逻辑列表中的 [要求] 指的是以上输入框中已输入的哈希值集合，其中：&#10;[满足任意要求] 该行的所有哈希值中至少有一个哈希值满足了其中一个要求&#10;[严格满足要求] 该行的所有哈希值涵盖了要求中的所有哈希值，且不含要求以外的哈希值。&#10;[在要求范围内] 该行的所有哈希值都在要求的多个哈希值所组成的范围之内。&#10;[涵盖所有要求] 该行的所有哈希值涵盖了要求中的所有哈希值，可能含有要求以外的哈希值。"
-                        TextWrapping="WrapWithOverflow" />
-                </StackPanel>
+                        Grid.Column="0"
+                        VerticalAlignment="Center"
+                        FontTypography="BodyStrong"
+                        Text="对于多个条件的筛选逻辑" />
+                    <Button
+                        Grid.Column="1"
+                        Margin="4,0,0,0"
+                        Padding="0"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Click="ButtonClick">
+                        <wpfui:SymbolIcon Symbol="QuestionCircle12" />
+                    </Button>
+                    <wpfui:Flyout
+                        Grid.Column="0"
+                        IsOpen="{Binding IsCaptionFlyoutShowed, Mode=TwoWay}"
+                        Placement="Top">
+                        <TextBlock Text="筛选逻辑列表中的 [要求] 指的是以上输入框中已输入的哈希值集合，其中：&#10;[满足任意要求] 该行的所有哈希值中至少有一个哈希值满足了其中一个要求&#10;[严格满足要求] 该行的所有哈希值涵盖了要求中的所有哈希值，且不含要求以外的哈希值。&#10;[在要求范围内] 该行的所有哈希值都在要求的多个哈希值所组成的范围之内。&#10;[涵盖所有要求] 该行的所有哈希值涵盖了要求中的所有哈希值，可能含有要求以外的哈希值。" TextWrapping="WrapWithOverflow" />
+                    </wpfui:Flyout>
+                </Grid>
             </wpfui:CardControl.Header>
             <ComboBox
                 MinWidth="150"

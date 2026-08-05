@@ -5,7 +5,10 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using HashCalculator.Others;
+using HashCalculator.Views.UserControls;
 using HashCalculator.Views.Windows;
+using Wpf.Ui;
+using Wpf.Ui.Controls;
 
 namespace HashCalculator.ViewModels.Pages;
 
@@ -18,6 +21,7 @@ public class FilterOperationModel : BaseViewModel
     private RelayCommand moveFilterDownCmd;
     private RelayCommand clearFilterSelectionCmd;
     private bool _isFiltersApplied = false;
+    private NavigationService _navigationService;
 
     private ICollectionView BoundDataGridView { get; }
 
@@ -49,6 +53,8 @@ public class FilterOperationModel : BaseViewModel
         set => this.SetPropNotify(ref this._isFiltersApplied, value);
     }
 
+    public ObservableCollection<NavigationViewItem> MenuItems { get; }
+
     public AbsHashesCmder SelectTableLinesCmder { get; }
 
     public ObservableCollection<AbsHashesCmder> HashModelCmders { get; }
@@ -58,6 +64,13 @@ public class FilterOperationModel : BaseViewModel
     public FilterOperationModel(ICollectionView view)
     {
         this.BoundDataGridView = view;
+        this.MenuItems = new ObservableCollection<NavigationViewItem>()
+        {
+            new NavigationViewItem("筛选", SymbolRegular.Filter12,
+                typeof(DataGridFiltersControl)),
+            new NavigationViewItem("操作", SymbolRegular.DesktopEdit20,
+                typeof(DataGridOperationsControl)),
+        };
         this.SelectTableLinesCmder = new SelectTargetsCmder(this);
         this.HashModelCmders = new ObservableCollection<AbsHashesCmder>()
         {
@@ -80,10 +93,17 @@ public class FilterOperationModel : BaseViewModel
             new SameDirFilesFilter(),
             new EqualHashByteFilter(),
         };
+        this.selectedCmder = this.HashModelCmders[0];
+        this.selectedFilter = this.HashModelFilters[0];
     }
 
     public FilterOperationModel() : this(HashModelStore.HashViewModelsView)
     {
+    }
+
+    public void SetupModelNavigationService(NavigationService service)
+    {
+        this._navigationService = service;
     }
 
     public void ResetFiltersAndRefresh()

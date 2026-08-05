@@ -12,7 +12,7 @@
     SnapsToDevicePixels="True"
     mc:Ignorable="d">
     <StackPanel>
-        <wpfui:CardExpander>
+        <wpfui:CardExpander Padding="8" ContentPadding="8">
             <wpfui:CardExpander.Header>
                 <RadioButton IsChecked="{Binding CheckEmbeddedHashValue, Converter={StaticResource ReverseBooleanValueCvt}}">
                     <RadioButton.Content>
@@ -20,7 +20,7 @@
                     </RadioButton.Content>
                 </RadioButton>
             </wpfui:CardExpander.Header>
-            <Grid Margin="64,0,0,0" IsEnabled="{Binding CheckEmbeddedHashValue, Converter={StaticResource ReverseBooleanValueCvt}}">
+            <Grid Margin="24,0,0,0" IsEnabled="{Binding CheckEmbeddedHashValue, Converter={StaticResource ReverseBooleanValueCvt}}">
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition />
@@ -51,7 +51,7 @@
                     SelectedItem="{Binding Param}" />
             </Grid>
         </wpfui:CardExpander>
-        <wpfui:CardControl Margin="0,4,0,0">
+        <wpfui:CardControl Margin="0,4,0,0" Padding="8">
             <wpfui:CardControl.Header>
                 <StackPanel>
                     <RadioButton IsChecked="{Binding CheckEmbeddedHashValue}">
@@ -67,7 +67,7 @@
                 </StackPanel>
             </wpfui:CardControl.Header>
         </wpfui:CardControl>
-        <wpfui:CardControl Margin="0,4,0,0">
+        <wpfui:CardControl Margin="0,4,0,0" Padding="8">
             <wpfui:CardControl.Header>
                 <StackPanel>
                     <wpfui:TextBlock
