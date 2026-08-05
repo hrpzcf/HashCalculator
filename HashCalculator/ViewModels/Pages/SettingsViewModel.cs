@@ -6,14 +6,13 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Xml.Serialization;
 using HashCalculator.ViewModels.UserControls;
 using HashCalculator.Views.Windows;
 using Newtonsoft.Json;
 using Wpf.Ui.Appearance;
-using Wpfctrls = Wpf.Ui.Controls;
+using Wpf.Ui.Controls;
 
 namespace HashCalculator.ViewModels.Pages;
 
@@ -869,33 +868,23 @@ public class SettingsViewModel : BaseViewModel
         get => this.selectedApplicationThemeIndex;
         set
         {
-            if (MainWindow.Current != null && value == this.selectedApplicationThemeIndex)
+            if (MainWindow.Current != null &&
+                value == this.selectedApplicationThemeIndex)
             {
                 return;
             }
             ApplicationTheme theme = (ApplicationTheme)value;
-#if DEBUG
-            if (!Enum.IsDefined<ApplicationTheme>(theme))
-            {
-                NotificationSender.SnackbarError("所选的应用主题不在已定义的应用主题枚举范围之内。");
-            }
-#endif
             if (theme == ApplicationTheme.Unknown)
             {
-                theme = theme.GetEffectiveTheme();
-                if (MainWindow.Current != null)
-                {
-                    SystemThemeWatcher.Watch(MainWindow.Current, Wpfctrls.WindowBackdropType.None);
-                }
+                SystemThemeWatcher.Watch(MainWindow.Current, WindowBackdropType.None);
             }
             else
             {
-                if (MainWindow.Current != null)
-                {
-                    SystemThemeWatcher.UnWatch(MainWindow.Current);
-                }
+                SystemThemeWatcher.UnWatch(MainWindow.Current);
             }
-            ApplicationThemeManager.Apply(theme, Wpfctrls.WindowBackdropType.None);
+            // 解决 Unknown 或者 value 超出 enum 范围的情况
+            theme = theme.InvalidToEffectiveTheme();
+            ApplicationThemeManager.Apply(theme, WindowBackdropType.None);
             this.SetPropNotify(ref this.selectedApplicationThemeIndex, value);
         }
     }
@@ -1006,7 +995,7 @@ public class SettingsViewModel : BaseViewModel
             "询问",
             "安装外壳扩展可能需要重启资源管理器，确定现在安装吗？",
             closeButtonText: "否",
-            primaryButtonText: "是") != Wpfctrls.ContentDialogResult.Primary)
+            primaryButtonText: "是") != ContentDialogResult.Primary)
         {
             return;
         }
@@ -1050,7 +1039,7 @@ public class SettingsViewModel : BaseViewModel
             "询问",
             "卸载外壳扩展可能需要重启资源管理器，确定现在卸载吗？",
             closeButtonText: "否",
-            primaryButtonText: "是") != Wpfctrls.ContentDialogResult.Primary)
+            primaryButtonText: "是") != ContentDialogResult.Primary)
         {
             return;
         }
@@ -1581,7 +1570,8 @@ public class SettingsViewModel : BaseViewModel
     {
         if (param is KeyEventArgs keyEventArgs)
         {
-            if (keyEventArgs.Key == Key.Escape && keyEventArgs.OriginalSource is DataGrid dataGrid)
+            if (keyEventArgs.Key == Key.Escape &&
+                keyEventArgs.OriginalSource is System.Windows.Controls.DataGrid dataGrid)
             {
                 dataGrid.SelectedIndex = -1;
             }

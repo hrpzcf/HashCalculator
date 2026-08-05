@@ -486,9 +486,9 @@ namespace HashCalculator
             return default(int);
         }
 
-        public static ApplicationTheme GetEffectiveTheme(this ApplicationTheme theme)
+        public static ApplicationTheme InvalidToEffectiveTheme(this ApplicationTheme theme)
         {
-            if (theme == ApplicationTheme.Unknown)
+            if (theme == ApplicationTheme.Unknown || !Enum.IsDefined(theme))
             {
                 // 不能直接调 ApplySystemTheme()，它内部默认用 Mica 背景，
                 // 在 Win11 上会触发 RemoveBackground 把窗口擦成透明，导致黑色底色。

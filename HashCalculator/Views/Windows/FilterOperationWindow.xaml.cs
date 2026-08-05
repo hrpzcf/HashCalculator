@@ -1,8 +1,11 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
+using System.Windows.Media;
 using HashCalculator.ViewModels.Pages;
 using HashCalculator.Views.UserControls;
 using Wpf.Ui;
 using Wpf.Ui.Abstractions;
+using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 
 namespace HashCalculator.Views.Windows;
@@ -25,8 +28,17 @@ public partial class FilterOperationWindow
         INavigationViewPageProvider pageProvider =
             App.GetRequiredService<INavigationViewPageProvider>();
         this._navigationService = new NavigationService(pageProvider);
-        this._navigationService.SetNavigationControl(this.NavigationViewOnFilterOperationWindow);
+        this._navigationService.SetNavigationControl(this.NavigationViewOnFilterWindow);
         model.SetupModelNavigationService(this._navigationService);
+    }
+
+    private void OnThemeChanged(ApplicationTheme theme, Color accent)
+    {
+        if (!this.IsLoaded)
+        {
+            return;
+        }
+        WindowBackgroundManager.UpdateBackground(this, theme, WindowBackdropType.None);
     }
 
     private void FilterOperationWindowLoaded(object sender, RoutedEventArgs e)
@@ -35,13 +47,19 @@ public partial class FilterOperationWindow
         //this.SetValue(BorderBrushProperty, this.FindResource("SystemAccentColorBrush"));
 
         this._navigationService.Navigate(typeof(DataGridFiltersControl));
+
+        // 订阅主题变化事件：切换主题时手动刷新本窗口背景，
+        // 因为 ApplicationThemeManager.Apply 只自动刷新主窗口背景，
+        // 对非主窗口（本窗口）需要手动调用 WindowBackgroundManager.UpdateBackground。
+        ApplicationThemeManager.Changed += this.OnThemeChanged;
     }
 
-    private void FilterOperationWindowClosed(object sender, System.EventArgs e)
+    private void FilterOperationWindowClosed(object sender, EventArgs e)
     {
-        if (this.NavigationViewOnFilterOperationWindow.SelectedItem is NavigationViewItem item)
+        ApplicationThemeManager.Changed -= this.OnThemeChanged;
+        if (this.NavigationViewOnFilterWindow.SelectedItem is NavigationViewItem navigationItem)
         {
-            item.Deactivate(this.NavigationViewOnFilterOperationWindow);
+            navigationItem.Deactivate(this.NavigationViewOnFilterWindow);
         }
     }
 }
