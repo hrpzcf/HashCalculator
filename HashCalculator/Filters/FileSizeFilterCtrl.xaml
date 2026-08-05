@@ -19,7 +19,7 @@
             <StackPanel Orientation="Horizontal">
                 <TextBox MinWidth="100" Text="{Binding MinFileSize, Converter={StaticResource StringToDoubleDefaultZeroCvt}}" />
                 <ComboBox
-                    MinWidth="50"
+                    MinWidth="80"
                     Margin="4,0,0,0"
                     DisplayMemberPath="Display"
                     ItemsSource="{Binding Items}"
@@ -40,7 +40,7 @@
             <StackPanel Orientation="Horizontal">
                 <TextBox MinWidth="100" Text="{Binding MaxFileSize, Converter={StaticResource StringToDoubleDefaultZeroCvt}}" />
                 <ComboBox
-                    MinWidth="50"
+                    MinWidth="80"
                     Margin="4,0,0,0"
                     DisplayMemberPath="Display"
                     ItemsSource="{Binding Items}"
