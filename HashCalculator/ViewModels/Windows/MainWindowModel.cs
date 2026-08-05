@@ -11,16 +11,14 @@ namespace HashCalculator.ViewModels.Windows;
 
 public class MainWindowModel : BaseViewModel
 {
+    private NavigationService _navigationService;
     private RelayCommand navigatenFromSettingsPanelCmd;
 
-    public MainWindowModel(INavigationService navigationService)
+    public MainWindowModel()
     {
-        this.NavigationService = navigationService;
         Settings.Current.PropertyChanged += this.OnSettingsPropChanged;
-        this.SetupNavigationViewItems();
+        this.InitializeNavigationViewItems();
     }
-
-    public INavigationService NavigationService { get; private set; }
 
     public NavigationViewItem SettingsNavigationItem { get; private set; }
 
@@ -29,6 +27,11 @@ public class MainWindowModel : BaseViewModel
     public ObservableCollection<NavigationViewItem> MenuItems { get; private set; }
 
     public ObservableCollection<NavigationViewItem> FooterItems { get; private set; }
+
+    public void SetupModelNavigationService(NavigationService service)
+    {
+        this._navigationService = service;
+    }
 
     /// <summary>
     /// 需要立即响应的设置变更
@@ -46,7 +49,7 @@ public class MainWindowModel : BaseViewModel
         }
     }
 
-    private void SetupNavigationViewItems()
+    private void InitializeNavigationViewItems()
     {
         this.SettingsNavigationItem = new NavigationViewItem(
             "设置", SymbolRegular.Settings24, typeof(SettingsPanelPage));
@@ -111,17 +114,17 @@ public class MainWindowModel : BaseViewModel
         this.MenuItems = [
             new NavigationViewItem("主页", SymbolRegular.Home24, typeof(HomePage)),
             new NavigationViewItem("算法", SymbolRegular.MathFormula16, typeof(AlgosPanelPage)),
-            new NavigationViewItem("筛选", SymbolRegular.Filter12, typeof(DataGridFiltersPage)),
-            new NavigationViewItem("操作", SymbolRegular.DesktopEdit20, typeof(DataGridOperationsPage)),
+            //new NavigationViewItem("筛选", SymbolRegular.Filter12, typeof(DataGridFiltersPage)),
+            //new NavigationViewItem("操作", SymbolRegular.DesktopEdit20, typeof(DataGridOperationsPage)),
         ];
         this.FooterItems = [this.SettingsNavigationItem];
     }
 
     private void NavigatenFromSettingsPanelAction(object param)
     {
-        if (param is Type type)
+        if (param is Type type && this._navigationService is not null)
         {
-            this.NavigationService.Navigate(type);
+            this._navigationService.Navigate(type);
         }
     }
 

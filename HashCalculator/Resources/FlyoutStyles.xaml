@@ -1,0 +1,60 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml">
+
+    <!--
+        基于 wpfui 默认 Flyout 样式，仅重写 Template 为 Flyout 增加阴影。
+        阴影采用紧凑型参数（BlurRadius=12、Opacity=0.35），使阴影能在较小的
+        EffectThicknessDecorator 装饰区内自然消隐，避免被 Popup 边界硬性裁剪，
+        同时无需为了容纳阴影而过度扩大装饰区导致 Flyout 定位偏差。
+    -->
+    <Style BasedOn="{StaticResource DefaultFlyoutStyle}" TargetType="{x:Type wpfui:Flyout}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type wpfui:Flyout}">
+                    <Grid>
+                        <Popup
+                            x:Name="PART_Popup"
+                            MinWidth="{TemplateBinding MinWidth}"
+                            MinHeight="{TemplateBinding MinHeight}"
+                            HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                            AllowsTransparency="{TemplateBinding Popup.AllowsTransparency}"
+                            Focusable="False"
+                            IsOpen="{TemplateBinding IsOpen}"
+                            Placement="{TemplateBinding Placement}"
+                            PopupAnimation="{TemplateBinding Popup.PopupAnimation}"
+                            StaysOpen="{TemplateBinding Popup.StaysOpen}"
+                            VerticalOffset="1">
+                            <wpfui:EffectThicknessDecorator Thickness="15">
+                                <Border
+                                    x:Name="PopupBorder"
+                                    Margin="{TemplateBinding Margin}"
+                                    Padding="{TemplateBinding Padding}"
+                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="{DynamicResource PopupCornerRadius}"
+                                    SnapsToDevicePixels="True">
+                                    <Border.Effect>
+                                        <DropShadowEffect
+                                            BlurRadius="12"
+                                            Direction="0"
+                                            Opacity="0.35"
+                                            ShadowDepth="0"
+                                            Color="#202020" />
+                                    </Border.Effect>
+                                    <ContentPresenter Content="{TemplateBinding Content}" />
+                                </Border>
+                            </wpfui:EffectThicknessDecorator>
+                        </Popup>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

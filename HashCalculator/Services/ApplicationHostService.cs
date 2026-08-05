@@ -19,15 +19,6 @@ public class ApplicationHostService : IHostedService
         this._serviceProvider = serviceProvider;
     }
 
-    private void OnMainWindowLoaded(object sender, RoutedEventArgs e)
-    {
-        if (sender is not MainWindow mainWindow)
-        {
-            return;
-        }
-        mainWindow.NavigationView.Navigate(typeof(HomePage));
-    }
-
     public Task StartAsync(CancellationToken cancellationToken)
     {
         if (Application.Current.Windows.OfType<MainWindow>().Any())
@@ -35,7 +26,6 @@ public class ApplicationHostService : IHostedService
             return Task.CompletedTask;
         }
         MainWindow mainWindow = this._serviceProvider.GetRequiredService<MainWindow>();
-        mainWindow.Loaded += this.OnMainWindowLoaded;
         mainWindow.Show();
         return Task.CompletedTask;
     }

@@ -37,6 +37,7 @@ public class HomeViewModel : BaseViewModel
     private string hashCheckReport = string.Empty;
     private string hashValueStringOrChecklistPath = null;
     private RunningState runningState = RunningState.None;
+    private FilterOperationWindow filterWindowInstance = null;
 
     private RelayCommand mainWindowTopmostCmd;
     private RelayCommand clearAllTableLinesCmd;
@@ -64,6 +65,7 @@ public class HomeViewModel : BaseViewModel
     private RelayCommand copyModelsCurHashWithNoFormatCmd;
     private RelayCommand copyModelsAllHashWithNoFormatCmd;
     private RelayCommand displayMainWindowButtonsCmd;
+    private RelayCommand openFilterOperationWindowCmd;
 
     private GenericItemModel[] copyModelsHashMenuCmds;
     private GenericItemModel[] copyModelsAllHashesMenuCmds;
@@ -799,6 +801,25 @@ public class HomeViewModel : BaseViewModel
         {
             this.displayMainWindowButtonsCmd ??= new RelayCommand(this.DisplayMainWindowButtonsAction);
             return this.displayMainWindowButtonsCmd;
+        }
+    }
+
+    private void OpenFilterOperationWindowAction(object param)
+    {
+        if (this.filterWindowInstance == null)
+        {
+            this.filterWindowInstance = App.GetRequiredService<FilterOperationWindow>();
+            this.filterWindowInstance.Closed += (s, e) => { this.filterWindowInstance = null; };
+        }
+        this.filterWindowInstance.Show();
+    }
+
+    public ICommand OpenFilterOperationWindowCmd
+    {
+        get
+        {
+            this.openFilterOperationWindowCmd ??= new RelayCommand(this.OpenFilterOperationWindowAction);
+            return this.openFilterOperationWindowCmd;
         }
     }
 

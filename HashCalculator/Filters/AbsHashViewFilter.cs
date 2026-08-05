@@ -8,6 +8,7 @@ namespace HashCalculator
     public abstract class AbsHashViewFilter : BaseViewModel
     {
         private bool _selected = false;
+        private bool isCaptionFlyoutShowed = false;
 
         public AbsHashViewFilter()
         {
@@ -24,6 +25,12 @@ namespace HashCalculator
         {
             get => this._selected;
             set => this.SetPropNotify(ref this._selected, value);
+        }
+
+        public bool IsCaptionFlyoutShowed
+        {
+            get => this.isCaptionFlyoutShowed;
+            set => this.SetPropNotify(ref this.isCaptionFlyoutShowed, value);
         }
 
         public abstract string Display { get; }

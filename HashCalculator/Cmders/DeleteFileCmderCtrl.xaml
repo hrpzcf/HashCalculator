@@ -12,7 +12,7 @@
     SnapsToDevicePixels="True"
     mc:Ignorable="d">
     <StackPanel>
-        <wpfui:CardControl>
+        <wpfui:CardControl Padding="8">
             <wpfui:CardControl.Header>
                 <StackPanel>
                     <wpfui:TextBlock FontTypography="BodyStrong" Text="检查是否应用【有效的文件】筛选器" />
@@ -25,7 +25,7 @@
             </wpfui:CardControl.Header>
             <wpfui:ToggleSwitch IsChecked="{Binding CheckIfUsingDistinctFilesFilter, Mode=TwoWay}" />
         </wpfui:CardControl>
-        <wpfui:CardControl Margin="0,4,0,0">
+        <wpfui:CardControl Margin="0,4,0,0" Padding="8">
             <wpfui:CardControl.Header>
                 <StackPanel>
                     <wpfui:TextBlock FontTypography="BodyStrong" Text="直接永久删除文件" />
@@ -45,7 +45,7 @@
                 Foreground="White"
                 Style="{StaticResource IndepButtonStyle}" />
         </wpfui:CardControl>
-        <wpfui:CardControl Margin="0,4,0,0">
+        <wpfui:CardControl Margin="0,4,0,0" Padding="8">
             <wpfui:CardControl.Header>
                 <StackPanel>
                     <wpfui:TextBlock FontTypography="BodyStrong" Text="删除文件到回收站" />

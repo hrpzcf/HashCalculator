@@ -35,6 +35,10 @@ public class SettingsViewModel : BaseViewModel
     private double shellSubmenuEditorHeight = 600.0;
     private double exceptionWindowWidth = 800.0;
     private double exceptionWindowHeight = 600.0;
+    private double filterOperationWindowTop = double.NaN;
+    private double filterOperationWindowLeft = double.NaN;
+    private double filterOperationWindowWidth = 800;
+    private double filterOperationWindowHeight = 600;
 
     private bool mainWndTopmost = false;
     private bool showFileIcon = true;
@@ -343,6 +347,30 @@ public class SettingsViewModel : BaseViewModel
     {
         get => this.exceptionWindowHeight;
         set => this.SetPropNotify(ref this.exceptionWindowHeight, value);
+    }
+
+    public double FilterOperationWindowTop
+    {
+        get => this.filterOperationWindowTop;
+        set => this.SetPropNotify(ref this.filterOperationWindowTop, value);
+    }
+
+    public double FilterOperationWindowLeft
+    {
+        get => this.filterOperationWindowLeft;
+        set => this.SetPropNotify(ref this.filterOperationWindowLeft, value);
+    }
+
+    public double FilterOperationWindowWidth
+    {
+        get => this.filterOperationWindowWidth;
+        set => this.SetPropNotify(ref this.filterOperationWindowWidth, value);
+    }
+
+    public double FilterOperationWindowHeight
+    {
+        get => this.filterOperationWindowHeight;
+        set => this.SetPropNotify(ref this.filterOperationWindowHeight, value);
     }
 
     public Dictionary<string, ColumnProperty> ColumnsOrder { get; } =

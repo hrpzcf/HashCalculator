@@ -497,7 +497,7 @@ namespace HashCalculator
             {
                 return string.Join("\n", textLineArray);
             }
-            return null;
+            return string.Empty;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -507,7 +507,7 @@ namespace HashCalculator
                 return multiLineText.Split(['\n', '\r'], StringSplitOptions.RemoveEmptyEntries)
                     .Select(i => i.Trim()).ToArray();
             }
-            return default(string[]);
+            return Array.Empty<string>();
         }
     }
 

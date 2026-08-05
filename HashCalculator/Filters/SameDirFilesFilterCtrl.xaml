@@ -12,10 +12,10 @@
     SnapsToDevicePixels="True"
     mc:Ignorable="d">
     <StackPanel>
-        <wpfui:CardControl>
+        <wpfui:CardControl Padding="8">
             <wpfui:CardControl.Header>
                 <StackPanel>
-                    <wpfui:TextBlock FontTypography="BodyStrong" Text="按文件所在的文件夹对当前显示的行进行分组" />
+                    <wpfui:TextBlock FontTypography="BodyStrong" Text="按文件所在的文件夹对当前显示的所有行进行分组" />
                     <wpfui:TextBlock
                         FontTypography="Caption"
                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
