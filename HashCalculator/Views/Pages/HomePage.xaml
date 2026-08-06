@@ -1040,6 +1040,7 @@
                 Grid.Column="1"
                 Margin="16,0,0,0"
                 AcceptsReturn="True"
+                AllowDrop="True"
                 MaxLines="3"
                 PlaceholderText="校验信息：可在此输入单个或多个哈希值(每行一个)、使用后面的 [...] 按钮选择校验信息文件、粘贴检验信息文件的单行或多行内容"
                 PreviewDragOver="HashStringOrChecklistPathPreviewDragOver"
