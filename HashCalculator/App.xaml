@@ -29,6 +29,8 @@
             </ResourceDictionary.MergedDictionaries>
             <sys:Boolean x:Key="TrueValue">true</sys:Boolean>
             <sys:Boolean x:Key="FalseValue">false</sys:Boolean>
+            <!-- 覆盖 wpfui 的 TextControlThemePadding（影响各输入框），原值 10,8,10,7 -->
+            <Thickness x:Key="TextControlThemePadding">4,8,4,7</Thickness>
             <Style TargetType="Image">
                 <Setter Property="RenderOptions.BitmapScalingMode" Value="NearestNeighbor" />
             </Style>
