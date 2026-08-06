@@ -1,11 +1,14 @@
-<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <!-- 消除 NavigationView 内容区与 Pane 间的色差（卡片浮动感） -->
+    <!--  消除 NavigationView 内容区与 Pane 间的色差（卡片浮动感）  -->
     <SolidColorBrush x:Key="NavigationViewContentBackground" Color="Transparent" />
     <SolidColorBrush x:Key="NavigationViewContentGridBorderBrush" Color="Transparent" />
 
-    <!-- 浅色背景色对齐 WinUI3 标准 (#F3F3F3) -->
+    <!--  浅色背景色对齐 WinUI3 标准 (#F3F3F3)  -->
     <Color x:Key="ApplicationBackgroundColor">#F3F3F3</Color>
+
+    <!--  主页顶部 Image 按钮的悬停/按下反馈背景色（浅色主题）  -->
+    <SolidColorBrush x:Key="ImageBtnBackgroundPressed" Color="#1F000000" />
+    <SolidColorBrush x:Key="ImageBtnBackgroundPointerOver" Color="#0E000000" />
 
 </ResourceDictionary>

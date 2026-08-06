@@ -17,19 +17,24 @@ internal static class ThemeOverridesManager
     private const string LightOverridesUri =
         "pack://application:,,,/HashCalculator;component/Themes/LightOverrides.xaml";
 
-    private static bool _initialized;
+    private static bool _initialized = false;
 
     /// <summary>
     /// 注册主题变更事件。需在 App 启动早期调用一次。
     /// </summary>
     public static void Initialize()
     {
-        if (_initialized)
+        if (!_initialized)
         {
-            return;
+            _initialized = true;
+            ApplicationThemeManager.Changed += OnThemeChanged;
+            // 启动时立即加载当前主题对应的覆盖字典，避免依赖后续的 Changed 事件
+            // （该事件只在主题切换时触发，启动时可能不触发）。
+            // 注意：Initialize() 在 Settings.LoadSettings() 之后调用，后者反序列化时会触发
+            // SelectedApplicationThemeIndex setter -> ApplicationThemeManager.Apply，因此
+            // GetAppTheme() 此时必然返回已应用的主题（Dark/Light），不会是 Unknown。
+            OnThemeChanged(ApplicationThemeManager.GetAppTheme(), Colors.Transparent);
         }
-        _initialized = true;
-        ApplicationThemeManager.Changed += OnThemeChanged;
     }
 
     /// <summary>

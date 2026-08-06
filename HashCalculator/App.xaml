@@ -24,7 +24,6 @@
                 <ResourceDictionary Source="/HashCalculator;component/Resources/ImageButtonStyles.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/ImgButtonTextStyles.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/InfoBarStyle.xaml" />
-                <ResourceDictionary Source="/HashCalculator;component/Themes/LightOverrides.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/ScrollViewerStyles.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/ToolTipStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>

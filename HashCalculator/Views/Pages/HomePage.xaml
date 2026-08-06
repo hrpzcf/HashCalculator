@@ -24,7 +24,7 @@
             HorizontalScrollBarVisibility="Auto"
             VerticalScrollBarVisibility="Disabled"
             Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWindowButtons, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
-            <Grid Margin="0,4,0,8">
+            <Grid Margin="0,0,0,4">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
@@ -68,7 +68,6 @@
                         </Button>
                     </StackPanel>
                     <TextBlock
-                        Margin="0,2"
                         HorizontalAlignment="Left"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="默认输出方式"
@@ -79,7 +78,10 @@
                     Margin="16,0,0,0"
                     VerticalAlignment="Bottom"
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowApplyRefreshFilterslButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
-                    <Button Style="{StaticResource ImageButtonStyle2}" ToolTip="左键点击应用/禁用【筛选】页面中勾选的筛选器并刷新视图，右键点击打开筛选与操作窗口。">
+                    <Button
+                        Command="{Binding FilterAndOperationModel.HomePageRefreshFiltersCmd}"
+                        Style="{StaticResource ImageButtonStyle2}"
+                        ToolTip="左键点击应用/禁用【筛选】页面中勾选的筛选器并刷新视图，右键点击打开筛选与操作窗口。">
                         <Button.IsEnabled>
                             <MultiBinding Converter="{StaticResource CmdPanelCriticalControlsEnabledCvt}">
                                 <Binding Path="State" Source="{x:Static pagemodels:HomeViewModel.Current}" />
@@ -87,7 +89,6 @@
                             </MultiBinding>
                         </Button.IsEnabled>
                         <Button.InputBindings>
-                            <MouseBinding Command="{Binding FilterAndOperationModel.HomePageRefreshFiltersCmd}" MouseAction="LeftClick" />
                             <MouseBinding Command="{Binding OpenFilterOperationWindowCmd}" MouseAction="RightClick" />
                         </Button.InputBindings>
                         <Grid>
@@ -105,7 +106,7 @@
                         </Grid>
                     </Button>
                     <TextBlock
-                        Margin="0,2"
+                        Margin="0"
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="刷新筛选"
@@ -126,7 +127,6 @@
                             Source="{StaticResource select_fileDrawingImage}" />
                     </Button>
                     <TextBlock
-                        Margin="0,2"
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="选择文件"
@@ -147,7 +147,6 @@
                             Source="{StaticResource select_folderDrawingImage}" />
                     </Button>
                     <TextBlock
-                        Margin="0,2"
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="选择目录"
@@ -168,7 +167,6 @@
                             Source="{StaticResource stop_searchingDrawingImage}" />
                     </Button>
                     <TextBlock
-                        Margin="0,2"
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="停止搜索"
@@ -190,7 +188,6 @@
                             Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnExportEnabledImgSrcCvt}}" />
                     </Button>
                     <TextBlock
-                        Margin="0,2"
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="导出结果"
@@ -212,7 +209,6 @@
                             Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnNewLineEnabledImgSrcCvt}}" />
                     </Button>
                     <TextBlock
-                        Margin="0,2"
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="新行重算"
@@ -234,7 +230,6 @@
                             Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnRefreshEnabledImgSrcCvt}}" />
                     </Button>
                     <TextBlock
-                        Margin="0,2"
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="计算缺值项"
@@ -256,7 +251,6 @@
                             Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnForceRefreshEnabledImgSrcCvt}}" />
                     </Button>
                     <TextBlock
-                        Margin="0,2"
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="重新计算"
@@ -277,7 +271,6 @@
                             Source="{StaticResource clear_tableDrawingImage}" />
                     </Button>
                     <TextBlock
-                        Margin="0,2"
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="清空表格"
@@ -298,7 +291,6 @@
                             Source="{StaticResource continue_tasksDrawingImage}" />
                     </Button>
                     <TextBlock
-                        Margin="0,2"
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="全部开始"
@@ -319,7 +311,6 @@
                             Source="{StaticResource pause_tasksDrawingImage}" />
                     </Button>
                     <TextBlock
-                        Margin="0,2"
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="全部暂停"
@@ -340,7 +331,6 @@
                             Source="{StaticResource cancel_tasksDrawingImage}" />
                     </Button>
                     <TextBlock
-                        Margin="0,2"
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="全部取消"
@@ -361,7 +351,6 @@
                             Source="{Binding Source={x:Static local:Settings.Current}, Path=MainWndTopmost, Converter={StaticResource BtnTopmostEnabledImgSrcCvt}}" />
                     </Button>
                     <TextBlock
-                        Margin="0,2"
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="置顶窗口"
