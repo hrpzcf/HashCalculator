@@ -81,12 +81,12 @@
                 </StackPanel>
                 <Border
                     Width="2"
-                    Margin="16,0,0,0"
+                    Margin="8,0,0,0"
                     BorderBrush="{DynamicResource SeparatorBorderBrush}"
                     BorderThickness="1"
                     CornerRadius="4" />
                 <StackPanel
-                    Margin="16,0,0,0"
+                    Margin="8,0,0,0"
                     VerticalAlignment="Bottom"
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowCopyAndRestartModelsButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
                     <Button
@@ -147,12 +147,12 @@
                 </StackPanel>
                 <Border
                     Width="2"
-                    Margin="16,0,0,0"
+                    Margin="8,0,0,0"
                     BorderBrush="{DynamicResource SeparatorBorderBrush}"
                     BorderThickness="1"
                     CornerRadius="4" />
                 <StackPanel
-                    Margin="16,0,0,0"
+                    Margin="8,0,0,0"
                     VerticalAlignment="Bottom"
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowApplyRefreshFilterslButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
                     <Button
@@ -233,12 +233,12 @@
                 </StackPanel>
                 <Border
                     Width="2"
-                    Margin="16,0,0,0"
+                    Margin="8,0,0,0"
                     BorderBrush="{DynamicResource SeparatorBorderBrush}"
                     BorderThickness="1"
                     CornerRadius="4" />
                 <StackPanel
-                    Margin="16,0,0,0"
+                    Margin="8,0,0,0"
                     VerticalAlignment="Bottom"
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowContinueDisplayedModelsButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
                     <Button
@@ -315,12 +315,12 @@
                 </StackPanel>
                 <Border
                     Width="2"
-                    Margin="16,0,0,0"
+                    Margin="8,0,0,0"
                     BorderBrush="{DynamicResource SeparatorBorderBrush}"
                     BorderThickness="1"
                     CornerRadius="4" />
                 <StackPanel
-                    Margin="16,0,0,0"
+                    Margin="8,0,0,0"
                     VerticalAlignment="Bottom"
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowMainWindowTopmostButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
                     <Button
