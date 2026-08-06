@@ -43,14 +43,14 @@
                     Grid.Row="1"
                     Margin="16,0,0,0"
                     Command="{Binding MoveFilterUpCmd}"
-                    Content="下移所选"
+                    Content="上移所选"
                     Icon="{wpfui:SymbolIcon Symbol=ChevronUp12}"
                     ToolTip="上移筛选器..." />
                 <wpfui:Button
                     Grid.Row="2"
                     Margin="16,0,0,0"
                     Command="{Binding MoveFilterDownCmd}"
-                    Content="上移所选"
+                    Content="下移所选"
                     Icon="{wpfui:SymbolIcon Symbol=ChevronDown12}"
                     ToolTip="下移筛选器..." />
                 <wpfui:Button
