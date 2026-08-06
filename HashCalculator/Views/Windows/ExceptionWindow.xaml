@@ -7,13 +7,14 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:winmodels="clr-namespace:HashCalculator.ViewModels.Windows"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
-    Width="{Binding ExceptionWindowWidth, Source={x:Static local:Settings.Current}, Mode=TwoWay}"
-    Height="{Binding ExceptionWindowHeight, Source={x:Static local:Settings.Current}, Mode=TwoWay}"
+    Width="{Binding Source={x:Static local:Settings.Current}, Path=ExceptionWindowWidth, Mode=TwoWay}"
+    Height="{Binding Source={x:Static local:Settings.Current}, Path=ExceptionWindowHeight, Mode=TwoWay}"
     d:DataContext="{d:DesignInstance Type=winmodels:ExceptionWindowModel}"
     ShowInTaskbar="False"
     SnapsToDevicePixels="True"
     UseLayoutRounding="True"
     WindowStartupLocation="CenterOwner"
+    WindowState="{Binding Source={x:Static local:Settings.Current}, Path=ExceptionWindowState, Mode=TwoWay}"
     mc:Ignorable="d">
     <Grid>
         <Grid.RowDefinitions>

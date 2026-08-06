@@ -98,6 +98,7 @@ public class SettingsViewModel : BaseViewModel
     private FetchAlgoOption fetchAlgorithmOption = FetchAlgoOption.TATSAMSHDL;
     private OutputType selectedOutputType = OutputType.BinaryUpper;
     private WindowState mainWindowState = WindowState.Normal;
+    private WindowState exceptionWindowState = WindowState.Normal;
     private ConfigLocation locationForSavingConfigFiles = ConfigLocation.Unset;
 
     private string lastUsedPath = string.Empty;
@@ -276,6 +277,36 @@ public class SettingsViewModel : BaseViewModel
         set => this.SetPropNotify(ref this.mainWindowState, value);
     }
 
+    public double ExceptionWindowWidth
+    {
+        get => this.exceptionWindowWidth;
+        set
+        {
+            if (this.ExceptionWindowState == WindowState.Normal)
+            {
+                this.SetPropNotify(ref this.exceptionWindowWidth, value);
+            }
+        }
+    }
+
+    public double ExceptionWindowHeight
+    {
+        get => this.exceptionWindowHeight;
+        set
+        {
+            if (this.ExceptionWindowState == WindowState.Normal)
+            {
+                this.SetPropNotify(ref this.exceptionWindowHeight, value);
+            }
+        }
+    }
+
+    public WindowState ExceptionWindowState
+    {
+        get => this.exceptionWindowState;
+        set => this.SetPropNotify(ref this.exceptionWindowState, value);
+    }
+
     public double SettingsWndWidth
     {
         get => this.settingsWndWidth;
@@ -334,18 +365,6 @@ public class SettingsViewModel : BaseViewModel
     {
         get => this.shellSubmenuEditorHeight;
         set => this.SetPropNotify(ref this.shellSubmenuEditorHeight, value);
-    }
-
-    public double ExceptionWindowWidth
-    {
-        get => this.exceptionWindowWidth;
-        set => this.SetPropNotify(ref this.exceptionWindowWidth, value);
-    }
-
-    public double ExceptionWindowHeight
-    {
-        get => this.exceptionWindowHeight;
-        set => this.SetPropNotify(ref this.exceptionWindowHeight, value);
     }
 
     public double FilterOperationWindowTop
