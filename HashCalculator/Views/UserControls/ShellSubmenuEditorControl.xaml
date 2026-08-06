@@ -35,10 +35,17 @@
                 <DataGridTemplateColumn Header="算法">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <ComboBox ItemsSource="{Binding AvailableAlgTypes}" SelectedItem="{Binding CurrentAlgoType}">
+                            <ComboBox
+                                MinWidth="152"
+                                ItemsSource="{Binding AvailableAlgTypes}"
+                                SelectedItem="{Binding CurrentAlgoType}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
-                                        <wpfui:ToggleSwitch Content="{Binding Display}" IsChecked="{Binding Selected}" />
+                                        <CheckBox
+                                            Padding="0,-1"
+                                            Content="{Binding Display}"
+                                            IsChecked="{Binding Selected}"
+                                            Style="{StaticResource NoMinCheckBoxStyle}" />
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>

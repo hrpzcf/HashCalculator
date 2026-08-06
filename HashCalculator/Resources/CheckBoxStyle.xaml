@@ -1,0 +1,16 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--
+        基于 wpfui 默认 CheckBox 样式（DefaultCheckBoxStyle），仅覆盖一处：
+        MinWidth/MinHeight 从 wpfui 的 120×32 去掉（设为 0），不再把紧凑的 CheckBox 撑大。
+        Padding 保持 wpfui 原样；如需单个 CheckBox 紧凑，可在元素上手写 Padding/Margin 覆盖。
+    -->
+    <Style
+        x:Key="NoMinCheckBoxStyle"
+        BasedOn="{StaticResource DefaultCheckBoxStyle}"
+        TargetType="{x:Type CheckBox}">
+        <Setter Property="MinWidth" Value="0" />
+        <Setter Property="MinHeight" Value="0" />
+    </Style>
+
+</ResourceDictionary>

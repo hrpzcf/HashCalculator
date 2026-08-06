@@ -23,10 +23,17 @@
                         TextWrapping="WrapWithOverflow" />
                 </StackPanel>
             </wpfui:CardControl.Header>
-            <ComboBox ItemsSource="{Binding Items}" SelectedIndex="0">
+            <ComboBox
+                MinWidth="150"
+                ItemsSource="{Binding Items}"
+                SelectedIndex="0">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
-                        <wpfui:ToggleSwitch Content="{Binding AlgoName}" IsChecked="{Binding Selected}" />
+                        <CheckBox
+                            Padding="0,-1"
+                            Content="{Binding AlgoName}"
+                            IsChecked="{Binding Selected}"
+                            Style="{StaticResource NoMinCheckBoxStyle}" />
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>

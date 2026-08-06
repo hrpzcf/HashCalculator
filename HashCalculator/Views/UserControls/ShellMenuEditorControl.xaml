@@ -53,12 +53,17 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <ComboBox
+                                MinWidth="152"
                                 IsEnabled="{Binding HasSubmenus, Converter={StaticResource ReverseBooleanValueCvt}}"
                                 ItemsSource="{Binding AvailableAlgTypes}"
                                 SelectedItem="{Binding CurrentAlgoType}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
-                                        <wpfui:ToggleSwitch Content="{Binding Display}" IsChecked="{Binding Selected}" />
+                                        <CheckBox
+                                            Padding="0,-1"
+                                            Content="{Binding Display}"
+                                            IsChecked="{Binding Selected}"
+                                            Style="{StaticResource NoMinCheckBoxStyle}" />
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>

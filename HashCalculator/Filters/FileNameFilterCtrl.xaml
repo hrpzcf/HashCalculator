@@ -32,20 +32,22 @@
                         PlaceholderText="输入文件名片段或正则表达式 (C#)"
                         Text="{Binding Pattern, Mode=OneWayToSource}"
                         TextWrapping="WrapWithOverflow" />
-                    <wpfui:ToggleSwitch
+                    <CheckBox
                         Grid.Row="1"
                         Grid.Column="0"
                         Margin="0,8,0,0"
                         Padding="0"
                         Content="使用正则表达式"
-                        IsChecked="{Binding Param}" />
-                    <wpfui:ToggleSwitch
+                        IsChecked="{Binding Param}"
+                        Style="{StaticResource NoMinCheckBoxStyle}" />
+                    <CheckBox
                         Grid.Row="1"
                         Grid.Column="1"
                         Margin="16,8,0,0"
                         Padding="0"
                         Content="忽略大小写"
-                        IsChecked="{Binding IgnoreCase}" />
+                        IsChecked="{Binding IgnoreCase}"
+                        Style="{StaticResource NoMinCheckBoxStyle}" />
                 </Grid>
             </wpfui:CardControl.Header>
         </wpfui:CardControl>

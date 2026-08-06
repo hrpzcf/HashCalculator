@@ -80,13 +80,15 @@
                         SelectionMode="Single">
                         <wpfui:ListView.ItemTemplate>
                             <DataTemplate>
-                                <StackPanel Margin="8,0" Orientation="Horizontal">
+                                <!--  使用 TextBlock 显示 Display 原因是防止一点列表项就自动勾选  -->
+                                <StackPanel Margin="8,5" Orientation="Horizontal">
                                     <CheckBox
                                         Padding="0"
                                         VerticalAlignment="Center"
                                         Command="{Binding FilterChangedCmd}"
                                         IsChecked="{Binding Selected, Mode=TwoWay}"
-                                        PreviewMouseDown="FiltersItemPreviewMouseDown" />
+                                        PreviewMouseDown="FiltersItemPreviewMouseDown"
+                                        Style="{StaticResource NoMinCheckBoxStyle}" />
                                     <TextBlock VerticalAlignment="Center" Text="{Binding Display}" />
                                 </StackPanel>
                             </DataTemplate>

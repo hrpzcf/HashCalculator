@@ -53,7 +53,7 @@
                         <wpfui:ListView.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock
-                                    Padding="8,4"
+                                    Padding="8,6"
                                     VerticalAlignment="Center"
                                     Text="{Binding Display}" />
                             </DataTemplate>
