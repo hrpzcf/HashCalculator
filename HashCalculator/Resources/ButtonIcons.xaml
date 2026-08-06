@@ -94,13 +94,6 @@
         <GeometryDrawing Brush="#FFFFFFFF" Geometry="{StaticResource select_fileGeometry4}" />
     </DrawingGroup>
     <DrawingImage x:Key="select_fileDrawingImage" Drawing="{StaticResource select_fileDrawingGroup}" />
-    <Geometry x:Key="refresh_filtersGeometry1">F1 M1024,1024z M0,0z M375.6,502C377.2,372 380,207.6 604,75.6 609.6,71.6 606.8,62.8 600,64 171.6,131.6 136.4,424.8 135.6,502L48,502C34.8,502,27.2,517.2,35.2,527.6L241.6,794.8C248,803.2,260.4,803.2,266.8,794.8L474.8,527.6C482.8,517.2,475.6,501.6,462,501.6L375.6,501.6z</Geometry>
-    <Geometry x:Key="refresh_filtersGeometry2">F1 M1024,1024z M0,0z M648.4,522C646.4,652 643.6,816 420,948 414.4,952 417.2,960.8 424,959.6 852.4,892 887.6,599.2 888.4,522L976,522C989.2,522,996.8,506.8,988.8,496.4L782.4,229.2C776,220.8,763.6,220.8,757.2,229.2L549.2,496.4C541.2,506.8,548.4,522.4,562,522.4L648.4,522.4z</Geometry>
-    <DrawingGroup x:Key="refresh_filtersDrawingGroup" ClipGeometry="M0,0 V1024 H1024 V0 H0 Z">
-        <GeometryDrawing Brush="#FF3BC74A" Geometry="{StaticResource refresh_filtersGeometry1}" />
-        <GeometryDrawing Brush="#FF00CBF9" Geometry="{StaticResource refresh_filtersGeometry2}" />
-    </DrawingGroup>
-    <DrawingImage x:Key="refresh_filtersDrawingImage" Drawing="{StaticResource refresh_filtersDrawingGroup}" />
     <Geometry x:Key="filter_grayGeometry1">F1 M1024,1024z M0,0z M0,0 M170.666667,0L853.333333,0Q1024,0,1024,170.666667L1024,853.333333Q1024,1024,853.333333,1024L170.666667,1024Q-2.8421709430404E-14,1024,-2.8421709430404E-14,853.333333L-2.8421709430404E-14,170.666667Q-2.8421709430404E-14,-2.8421709430404E-14,170.666667,-2.8421709430404E-14z</Geometry>
     <Geometry x:Key="filter_grayGeometry2">F1 M1024,1024z M0,0z M464.384,824.277333C430.506667,824.277333,404.906667,797.269333,404.906667,761.514667L404.906667,566.528 272.298667,367.018667C254.805334,343.168 251.093334,314.837334 262.656,291.925333 274.090667,269.482667 298.666667,256 328.362667,256L695.722667,256C725.333334,256 749.824,269.397333 761.301333,291.84 772.906666,314.624 769.28,342.826667 751.530667,367.36L619.093333,566.528 619.093333,709.333333C619.093333,741.76,597.76,774.186666,568.32,786.304L489.557333,819.072C481.536,822.485333,473.130666,824.192,464.384,824.277333z</Geometry>
     <DrawingGroup x:Key="filter_grayDrawingGroup" ClipGeometry="M0,0 V1024 H1024 V0 H0 Z">
@@ -254,13 +247,6 @@
         <GeometryDrawing Brush="#FFFFFFFF" Geometry="{StaticResource calculate_force_grayGeometry2}" />
     </DrawingGroup>
     <DrawingImage x:Key="calculate_force_grayDrawingImage" Drawing="{StaticResource calculate_force_grayDrawingGroup}" />
-    <Geometry x:Key="refresh_filters_grayGeometry1">F1 M1024,1024z M0,0z M375.6,502C377.2,372 380,207.6 604,75.6 609.6,71.6 606.8,62.8 600,64 171.6,131.6 136.4,424.8 135.6,502L48,502C34.8,502,27.2,517.2,35.2,527.6L241.6,794.8C248,803.2,260.4,803.2,266.8,794.8L474.8,527.6C482.8,517.2,475.6,501.6,462,501.6L375.6,501.6z</Geometry>
-    <Geometry x:Key="refresh_filters_grayGeometry2">F1 M1024,1024z M0,0z M648.4,522C646.4,652 643.6,816 420,948 414.4,952 417.2,960.8 424,959.6 852.4,892 887.6,599.2 888.4,522L976,522C989.2,522,996.8,506.8,988.8,496.4L782.4,229.2C776,220.8,763.6,220.8,757.2,229.2L549.2,496.4C541.2,506.8,548.4,522.4,562,522.4L648.4,522.4z</Geometry>
-    <DrawingGroup x:Key="refresh_filters_grayDrawingGroup" ClipGeometry="M0,0 V1024 H1024 V0 H0 Z">
-        <GeometryDrawing Brush="#FF8F8F8F" Geometry="{StaticResource refresh_filters_grayGeometry1}" />
-        <GeometryDrawing Brush="#FF949494" Geometry="{StaticResource refresh_filters_grayGeometry2}" />
-    </DrawingGroup>
-    <DrawingImage x:Key="refresh_filters_grayDrawingImage" Drawing="{StaticResource refresh_filters_grayDrawingGroup}" />
     <Geometry x:Key="topmostGeometry1">F1 M1024,1024z M0,0z M0,0 M204.8,0L819.2,0Q1024,0,1024,204.8L1024,819.2Q1024,1024,819.2,1024L204.8,1024Q5.6843418860808E-14,1024,5.6843418860808E-14,819.2L5.6843418860808E-14,204.8Q5.6843418860808E-14,5.6843418860808E-14,204.8,5.6843418860808E-14z</Geometry>
     <Geometry x:Key="topmostGeometry2">F1 M1024,1024z M0,0z M822.8864,607.6928L548.7104,243.456A32.7168,32.7168,0,0,0,495.2576,242.5856L206.592,606.976A32.8192,32.8192,0,0,0,233.1136,659.1488L368.6912,659.1488 368.6912,828.1088A47.0016,47.0016,0,0,0,415.6416,875.0592L611.6864,875.0592A47.0016,47.0016,0,0,0,658.6368,828.1088L658.6368,659.1488 795.4944,659.1488A32.9216,32.9216,0,0,0,822.8864,607.9488z M822.8864,607.6928</Geometry>
     <Geometry x:Key="topmostGeometry3">F1 M1024,1024z M0,0z M235.264,224.3072L791.6544,224.3072A35.84,35.84,0,0,0,828.6208,189.1328A35.84,35.84,0,0,0,791.6544,153.9584L235.264,153.9584A35.84,35.84,0,0,0,198.3488,189.1328A35.84,35.84,0,0,0,235.264,224.3072z M235.264,224.3072</Geometry>
