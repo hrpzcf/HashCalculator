@@ -63,16 +63,21 @@ public partial class HomePage : Page, INavigableView<HomeViewModel>
         this.ViewModel.HashStringOrChecklistPath = data[0];
     }
 
-    private void TextBoxHashStringOrChecklistPathPreviewDragOver(object sender, DragEventArgs e)
+    private void HashStringOrChecklistPathPreviewDragOver(object sender, DragEventArgs e)
     {
         e.Handled = true;
     }
 
     private void InfoBadgeMouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
-        if (sender is FrameworkElement element && element.DataContext is HashViewModel viewModel)
+        if (sender is FrameworkElement element && element.DataContext is HashViewModel hashViewModel)
         {
-            viewModel.ShowHashDetailsWindowAction();
+            hashViewModel.ShowHashDetailsWindowAction();
         }
+    }
+
+    private void DefaultOutputTypeSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        this.ViewModel.RefreshAllOutputTypeAction();
     }
 }

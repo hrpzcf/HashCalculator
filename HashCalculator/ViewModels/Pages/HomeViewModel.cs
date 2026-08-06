@@ -57,7 +57,6 @@ public class HomeViewModel : BaseViewModel
     private RelayCommand openFolderSelectItemsCmd;
     private RelayCommand openModelsFilePathCmd;
     private RelayCommand openFilesPropertyCmd;
-    private RelayCommand refreshAllOutputTypeCmd;
     private RelayCommand deleteSelectedModelsFileCmd;
     private RelayCommand removeSelectedModelsCmd;
     private RelayCommand stopEnumeratingPackageCmd;
@@ -828,7 +827,7 @@ public class HomeViewModel : BaseViewModel
         }
     }
 
-    private void RefreshAllOutputTypeAction(object param)
+    public void RefreshAllOutputTypeAction()
     {
         foreach (HashViewModel model in HashModelStore.HashViewModels)
         {
@@ -836,15 +835,6 @@ public class HomeViewModel : BaseViewModel
             {
                 model.SelectedOutputType = Settings.Current.SelectedOutputType;
             }
-        }
-    }
-
-    public ICommand RefreshAllOutputTypeCmd
-    {
-        get
-        {
-            this.refreshAllOutputTypeCmd ??= new RelayCommand(this.RefreshAllOutputTypeAction);
-            return this.refreshAllOutputTypeCmd;
         }
     }
 
