@@ -48,8 +48,8 @@
                     Content="卸载"
                     IsEnabled="{Binding ProcessingShellExtension, Converter={StaticResource ReverseBooleanValueCvt}}" />
             </wpfui:CardControl>
-            <Expander Margin="0,4,0,0">
-                <Expander.Header>
+            <wpfui:CardExpander Margin="0,4,0,0">
+                <wpfui:CardExpander.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="右键菜单扩展模块状态信息和说明" />
                         <wpfui:TextBlock
@@ -58,7 +58,7 @@
                             Text="包含 HashCalculator 的右键菜单扩展的安装状态、安装位置、帮助信息等。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
-                </Expander.Header>
+                </wpfui:CardExpander.Header>
                 <StackPanel>
                     <wpfui:CardControl Header="安装状态">
                         <wpfui:TextBlock
@@ -116,7 +116,7 @@
                         </wpfui:CardControl.Header>
                     </wpfui:CardControl>
                 </StackPanel>
-            </Expander>
+            </wpfui:CardExpander>
             <wpfui:CardExpander Margin="0,4,0,0">
                 <wpfui:CardExpander.Header>
                     <StackPanel>
