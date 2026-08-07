@@ -159,20 +159,6 @@
                     </StackPanel>
                 </wpfui:CardExpander.Header>
                 <StackPanel>
-                    <wpfui:CardControl Header="默认输出方式按钮">
-                        <wpfui:ToggleSwitch
-                            IsChecked="{Binding ShowSelectedOutputTypeButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                            LabelPosition="Left"
-                            OffContent="隐藏"
-                            OnContent="显示" />
-                    </wpfui:CardControl>
-                    <wpfui:CardControl Header="刷新筛选按钮">
-                        <wpfui:ToggleSwitch
-                            IsChecked="{Binding ShowApplyRefreshFilterslButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                            LabelPosition="Left"
-                            OffContent="隐藏"
-                            OnContent="显示" />
-                    </wpfui:CardControl>
                     <wpfui:CardControl Header="选择文件按钮">
                         <wpfui:ToggleSwitch
                             IsChecked="{Binding ShowSelectFilesToHashButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -190,13 +176,6 @@
                     <wpfui:CardControl Header="停止搜索按钮">
                         <wpfui:ToggleSwitch
                             IsChecked="{Binding ShowStopEnumeratingPackageButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                            LabelPosition="Left"
-                            OffContent="隐藏"
-                            OnContent="显示" />
-                    </wpfui:CardControl>
-                    <wpfui:CardControl Header="导出结果按钮">
-                        <wpfui:ToggleSwitch
-                            IsChecked="{Binding ShowExportHashResultsButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             LabelPosition="Left"
                             OffContent="隐藏"
                             OnContent="显示" />
@@ -222,13 +201,6 @@
                             OffContent="隐藏"
                             OnContent="显示" />
                     </wpfui:CardControl>
-                    <wpfui:CardControl Header="清空表格按钮">
-                        <wpfui:ToggleSwitch
-                            IsChecked="{Binding ShowClearAllTableLinesButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                            LabelPosition="Left"
-                            OffContent="隐藏"
-                            OnContent="显示" />
-                    </wpfui:CardControl>
                     <wpfui:CardControl Header="全部开始按钮">
                         <wpfui:ToggleSwitch
                             IsChecked="{Binding ShowContinueDisplayedModelsButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -246,6 +218,34 @@
                     <wpfui:CardControl Header="全部取消按钮">
                         <wpfui:ToggleSwitch
                             IsChecked="{Binding ShowCancelDisplayedModelsButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            LabelPosition="Left"
+                            OffContent="隐藏"
+                            OnContent="显示" />
+                    </wpfui:CardControl>
+                    <wpfui:CardControl Header="清空表格按钮">
+                        <wpfui:ToggleSwitch
+                            IsChecked="{Binding ShowClearAllTableLinesButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            LabelPosition="Left"
+                            OffContent="隐藏"
+                            OnContent="显示" />
+                    </wpfui:CardControl>
+                    <wpfui:CardControl Header="默认输出方式按钮">
+                        <wpfui:ToggleSwitch
+                            IsChecked="{Binding ShowSelectedOutputTypeButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            LabelPosition="Left"
+                            OffContent="隐藏"
+                            OnContent="显示" />
+                    </wpfui:CardControl>
+                    <wpfui:CardControl Header="刷新筛选按钮">
+                        <wpfui:ToggleSwitch
+                            IsChecked="{Binding ShowApplyRefreshFilterslButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            LabelPosition="Left"
+                            OffContent="隐藏"
+                            OnContent="显示" />
+                    </wpfui:CardControl>
+                    <wpfui:CardControl Header="导出结果按钮">
+                        <wpfui:ToggleSwitch
+                            IsChecked="{Binding ShowExportHashResultsButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             LabelPosition="Left"
                             OffContent="隐藏"
                             OnContent="显示" />
