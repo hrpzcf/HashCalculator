@@ -185,8 +185,8 @@ publish/
 *.azurePubxml
 # Note: Comment the next line if you want to checkin your web deploy settings,
 # but database connection strings (with potential passwords) will be unencrypted
-*.pubxml
-*.publishproj
+# *.pubxml
+# *.publishproj
 
 # Microsoft Azure Web App publish settings. Comment the next line if you want to
 # checkin your Azure Web App publish settings, but sensitive information contained
@@ -363,6 +363,5 @@ MigrationBackup/
 # Others
 /.vscode
 /HashCalculator/ShellExt
-/HashCalculator/Costura-win-x64/
-/HashCalculator/Costura-win-x86/
+/HashCalculator/LibraryFiles/
 /.codebuddy/

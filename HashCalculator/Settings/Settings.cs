@@ -161,13 +161,21 @@ namespace HashCalculator
         }
 
         /// <summary>
-        /// 当前 hashalgs.dll 的释放与加载由 Costura.Fody 在临时文件目录完成，<br/>
-        /// 之前版本的 HashCalculator 释放到配置文件目录或 Library 目录的 hashalgs.dll 可全部删除。
+        /// 当前 hashalgs.dll 随发布配置以 None 方式复制到 exe 所在目录，<br/>
+        /// 单文件发布时由 PublishSingleFile 打包进 exe 并在运行时解压加载。<br/>
+        /// 因此 exe 所在目录下的 hashalgs.dll 是程序运行所必需的，不能删除。<br/>
+        /// 仅清理之前版本遗留到其他配置目录或 Library 目录的 hashalgs.dll 文件。
         /// </summary>
         private static void DeleteTheAlgDllsThatAreNoLongerInUse()
         {
             foreach (string configPath in ConfigPaths.ConfigDirectoryPaths)
             {
+                // 跳过 exe 所在目录下的 hashalgs.dll，该文件是复制来的必需文件
+                if (configPath.Equals(ConfigPaths.ConfigDirExec,
+                    StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
                 string unusedAlgDllPath = Path.Combine(configPath, HashAlgs);
                 if (File.Exists(unusedAlgDllPath))
                 {
@@ -175,9 +183,7 @@ namespace HashCalculator
                     {
                         File.Delete(unusedAlgDllPath);
                     }
-                    catch
-                    {
-                    }
+                    catch { }
                 }
             }
             // 删除已弃用的、放置在单独目录的算法动态库

@@ -11,9 +11,14 @@
         <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
         <BaseOutputPath>..\Bin</BaseOutputPath>
+        <Platforms>x86;x64</Platforms>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+        <DebugType>none</DebugType>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
         <DebugType>none</DebugType>
     </PropertyGroup>
 
@@ -26,7 +31,6 @@
 
     <ItemGroup>
         <PackageReference Include="CommandLineParser" Version="2.9.1" />
-        <PackageReference Include="Costura.Fody" Version="6.2.0" IncludeAssets="runtime; compile; build; native; contentfiles; analyzers; buildtransitive" PrivateAssets="all" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.9" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
         <PackageReference Include="WindowsAPICodePack-Core" Version="1.1.2" NoWarn="NU1701" />
@@ -39,18 +43,22 @@
         <Resource Include="Images\icon.ico" />
         <Resource Include="Images\loading.gif" />
         <Resource Include="IconFont\iconfont.ttf" />
-        <Resource Include="FodyWeavers.xml" />
     </ItemGroup>
 
     <ItemGroup>
         <EmbeddedResource Include="ShellExt\HashCalculator.dll" />
         <EmbeddedResource Include="ShellExt\HashCalculator32.dll" />
-        <EmbeddedResource Include="Costura-win-x64\hashalgs.dll" />
-        <EmbeddedResource Include="Costura-win-x86\hashalgs.dll" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(Platform)' == 'x64'">
+        <None Include="LibraryFiles\hashalgs_x64.dll" Link="hashalgs.dll" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(Platform)' == 'x86'">
+        <None Include="LibraryFiles\hashalgs_x86.dll" Link="hashalgs.dll" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="FodyWeavers.xsd" />
         <None Include="IconFont\demo.css" />
         <None Include="IconFont\demo_index.html" />
         <None Include="IconFont\iconfont.css" />
