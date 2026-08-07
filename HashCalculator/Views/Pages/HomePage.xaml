@@ -154,92 +154,6 @@
                 <StackPanel
                     Margin="8,0,0,0"
                     VerticalAlignment="Bottom"
-                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowApplyRefreshFilterslButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
-                    <Button
-                        Command="{Binding FilterAndOperationModel.HomePageRefreshFiltersCmd}"
-                        Style="{StaticResource ImageButtonStyle2}"
-                        ToolTip="左键点击应用/禁用【筛选】页面中勾选的筛选器并刷新视图，右键点击打开筛选与操作窗口。">
-                        <Button.IsEnabled>
-                            <MultiBinding Converter="{StaticResource CmdPanelCriticalControlsEnabledCvt}">
-                                <Binding Path="State" Source="{x:Static pagemodels:HomeViewModel.Current}" />
-                                <Binding Path="IsFiltersAndCmdersIdle" Source="{x:Static local:Settings.Current}" />
-                            </MultiBinding>
-                        </Button.IsEnabled>
-                        <Button.InputBindings>
-                            <MouseBinding Command="{Binding OpenFilterOperationWindowCmd}" MouseAction="RightClick" />
-                        </Button.InputBindings>
-                        <Grid>
-                            <Image
-                                Width="32"
-                                Height="32"
-                                Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnFilterEnabledImgSrcCvt}}" />
-                            <wpfui:InfoBadge
-                                Margin="3"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Bottom"
-                                Severity="Critical"
-                                Style="{DynamicResource DotInfoBadgeStyle}"
-                                Visibility="{Binding FilterAndOperationModel.IsFiltersApplied, Converter={StaticResource TrueToVisibilityVisibleCvt}}" />
-                        </Grid>
-                    </Button>
-                    <TextBlock
-                        Margin="0"
-                        HorizontalAlignment="Center"
-                        Style="{StaticResource ImgButtonTextStyle1}"
-                        Text="刷新筛选"
-                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
-                </StackPanel>
-                <StackPanel
-                    Margin="8,0,0,0"
-                    VerticalAlignment="Bottom"
-                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowExportHashResultsButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
-                    <Button
-                        Command="{Binding ExportHashResultsCmd}"
-                        IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBooleanCvt}}"
-                        Style="{StaticResource ImageButtonStyle2}"
-                        ToolTip="将表格中所有行的哈希值计算结果导出为文本文件&#10;导出的内容使用的输出方式受到【默认输出方式】的控制而不受各行自己的【输出方式】的控制&#10;只有计算成功且【导出】列被勾选的行的结果会被导出。">
-                        <Image
-                            Width="32"
-                            Height="32"
-                            Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnExportEnabledImgSrcCvt}}" />
-                    </Button>
-                    <TextBlock
-                        HorizontalAlignment="Center"
-                        Style="{StaticResource ImgButtonTextStyle1}"
-                        Text="导出结果"
-                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
-                </StackPanel>
-                <StackPanel
-                    Margin="8,0,0,0"
-                    VerticalAlignment="Bottom"
-                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowSelectedOutputTypeButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
-                    <Border Height="44">
-                        <ComboBox
-                            MinWidth="135"
-                            VerticalAlignment="Center"
-                            DisplayMemberPath="Display"
-                            IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBooleanCvt}}"
-                            ItemsSource="{x:Static pagemodels:SettingsViewModel.AvailableOutputTypesLong}"
-                            SelectedValue="{Binding Source={x:Static local:Settings.Current}, Path=SelectedOutputType}"
-                            SelectedValuePath="ItemValue"
-                            SelectionChanged="DefaultOutputTypeSelectionChanged"
-                            ToolTip="切换后刷新所有行的输出方式，同时影响【导出结果】按钮的行为，其中十六进制大/小写是常用的输出方式。" />
-                    </Border>
-                    <TextBlock
-                        HorizontalAlignment="Left"
-                        Style="{StaticResource ImgButtonTextStyle1}"
-                        Text="默认输出方式"
-                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
-                </StackPanel>
-                <Border
-                    Width="2"
-                    Margin="8,0,0,0"
-                    BorderBrush="{DynamicResource SeparatorBorderBrush}"
-                    BorderThickness="1"
-                    CornerRadius="4" />
-                <StackPanel
-                    Margin="8,0,0,0"
-                    VerticalAlignment="Bottom"
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowContinueDisplayedModelsButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
                     <Button
                         Command="{Binding ContinueDisplayedModelsCmd}"
@@ -311,6 +225,92 @@
                         HorizontalAlignment="Center"
                         Style="{StaticResource ImgButtonTextStyle1}"
                         Text="清空表格"
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
+                </StackPanel>
+                <Border
+                    Width="2"
+                    Margin="8,0,0,0"
+                    BorderBrush="{DynamicResource SeparatorBorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="4" />
+                <StackPanel
+                    Margin="8,0,0,0"
+                    VerticalAlignment="Bottom"
+                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowSelectedOutputTypeButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
+                    <Border Height="44">
+                        <ComboBox
+                            MinWidth="135"
+                            VerticalAlignment="Center"
+                            DisplayMemberPath="Display"
+                            IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBooleanCvt}}"
+                            ItemsSource="{x:Static pagemodels:SettingsViewModel.AvailableOutputTypesLong}"
+                            SelectedValue="{Binding Source={x:Static local:Settings.Current}, Path=SelectedOutputType}"
+                            SelectedValuePath="ItemValue"
+                            SelectionChanged="DefaultOutputTypeSelectionChanged"
+                            ToolTip="切换后刷新所有行的输出方式，同时影响【导出结果】按钮的行为，其中十六进制大/小写是常用的输出方式。" />
+                    </Border>
+                    <TextBlock
+                        HorizontalAlignment="Left"
+                        Style="{StaticResource ImgButtonTextStyle1}"
+                        Text="默认输出方式"
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
+                </StackPanel>
+                <StackPanel
+                    Margin="8,0,0,0"
+                    VerticalAlignment="Bottom"
+                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowApplyRefreshFilterslButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
+                    <Button
+                        Command="{Binding FilterAndOperationModel.HomePageRefreshFiltersCmd}"
+                        Style="{StaticResource ImageButtonStyle2}"
+                        ToolTip="左键点击应用/禁用【筛选】页面中勾选的筛选器并刷新视图，右键点击打开筛选与操作窗口。">
+                        <Button.IsEnabled>
+                            <MultiBinding Converter="{StaticResource CmdPanelCriticalControlsEnabledCvt}">
+                                <Binding Path="State" Source="{x:Static pagemodels:HomeViewModel.Current}" />
+                                <Binding Path="IsFiltersAndCmdersIdle" Source="{x:Static local:Settings.Current}" />
+                            </MultiBinding>
+                        </Button.IsEnabled>
+                        <Button.InputBindings>
+                            <MouseBinding Command="{Binding OpenFilterOperationWindowCmd}" MouseAction="RightClick" />
+                        </Button.InputBindings>
+                        <Grid>
+                            <Image
+                                Width="32"
+                                Height="32"
+                                Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnFilterEnabledImgSrcCvt}}" />
+                            <wpfui:InfoBadge
+                                Margin="3"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Bottom"
+                                Severity="Critical"
+                                Style="{DynamicResource DotInfoBadgeStyle}"
+                                Visibility="{Binding FilterAndOperationModel.IsFiltersApplied, Converter={StaticResource TrueToVisibilityVisibleCvt}}" />
+                        </Grid>
+                    </Button>
+                    <TextBlock
+                        Margin="0"
+                        HorizontalAlignment="Center"
+                        Style="{StaticResource ImgButtonTextStyle1}"
+                        Text="刷新筛选"
+                        Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
+                </StackPanel>
+                <StackPanel
+                    Margin="8,0,0,0"
+                    VerticalAlignment="Bottom"
+                    Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowExportHashResultsButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
+                    <Button
+                        Command="{Binding ExportHashResultsCmd}"
+                        IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBooleanCvt}}"
+                        Style="{StaticResource ImageButtonStyle2}"
+                        ToolTip="将表格中所有行的哈希值计算结果导出为文本文件&#10;导出的内容使用的输出方式受到【默认输出方式】的控制而不受各行自己的【输出方式】的控制&#10;只有计算成功且【导出】列被勾选的行的结果会被导出。">
+                        <Image
+                            Width="32"
+                            Height="32"
+                            Source="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Parent.IsEnabled, Converter={StaticResource BtnExportEnabledImgSrcCvt}}" />
+                    </Button>
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        Style="{StaticResource ImgButtonTextStyle1}"
+                        Text="导出结果"
                         Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
                 <Border
