@@ -14,4 +14,8 @@
     <!--  CardControl 鼠标悬浮背景色（浅色主题）：比默认白色卡片明显偏深，hover 反馈清晰  -->
     <SolidColorBrush x:Key="CardControlMouseHoverBackground" Color="#0D000000" />
 
+    <!--  Anchor 鼠标悬浮背景色（浅色主题）：比 CardControlMouseHoverBackground 略暗  -->
+    <SolidColorBrush x:Key="AnchorPressedBackground" Color="#0A000000" />
+    <SolidColorBrush x:Key="AnchorMouseOverBackground" Color="#0D000000" />
+
 </ResourceDictionary>

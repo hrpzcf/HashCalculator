@@ -31,4 +31,17 @@
         </Style.Triggers>
     </Style>
 
+    <!--
+        继承 wpfui 的默认 Anchor（HyperlinkButton）样式。
+        Button 模板内部已通过 IsMouseOver + IsPressed 触发器把 ContentBorder 背景
+        绑定到 MouseOverBackground 属性，因此这里只需直接设置 MouseOverBackground，
+        即可实现悬浮背景色变化，无需再写 Trigger。
+        背景使用各主题自定义的 AnchorMouseOverBackground（见 Themes/LightOverrides.xaml、
+        Themes/DarkOverrides.xaml，由 ThemeOverridesManager 按主题动态加载）。
+    -->
+    <Style BasedOn="{StaticResource DefaultUiAnchorStyle}" TargetType="{x:Type wpfui:Anchor}">
+        <Setter Property="PressedBackground" Value="{DynamicResource AnchorPressedBackground}" />
+        <Setter Property="MouseOverBackground" Value="{DynamicResource AnchorMouseOverBackground}" />
+    </Style>
+
 </ResourceDictionary>

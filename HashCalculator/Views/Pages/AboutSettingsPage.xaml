@@ -68,6 +68,7 @@
                         Background="Transparent"
                         BorderThickness="0,0,0,1"
                         CornerRadius="0"
+                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                         NavigateUri="{Binding Website}">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -104,6 +105,7 @@
                         Background="Transparent"
                         BorderThickness="0,0,0,1"
                         CornerRadius="0"
+                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                         NavigateUri="{Binding SrcGitHub}">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -140,6 +142,7 @@
                         Background="Transparent"
                         BorderThickness="0,0,0,1"
                         CornerRadius="0"
+                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                         NavigateUri="{Binding IssueGitHub}">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -176,6 +179,7 @@
                         Background="Transparent"
                         BorderThickness="0,0,0,1"
                         CornerRadius="0"
+                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                         NavigateUri="{Binding WikiGitHub}">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -212,6 +216,7 @@
                         Background="Transparent"
                         BorderThickness="0,0,0,1"
                         CornerRadius="0"
+                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                         NavigateUri="{Binding ChangeLogGitHub}">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -273,6 +278,7 @@
                                 Background="Transparent"
                                 BorderThickness="0,0,0,1"
                                 CornerRadius="0"
+                                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                 NavigateUri="{Binding Param}">
                                 <Grid>
                                     <Grid.RowDefinitions>
