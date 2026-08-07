@@ -26,6 +26,7 @@
             <StackPanel Grid.Row="0" Orientation="Horizontal">
                 <wpfui:Button
                     Grid.Row="1"
+                    Appearance="Primary"
                     Command="{Binding RefreshFiltersCmd}"
                     CommandParameter="{StaticResource TrueValue}"
                     Content="刷新筛选"
@@ -34,6 +35,7 @@
                 <wpfui:Button
                     Grid.Row="1"
                     Margin="16,0,0,0"
+                    Appearance="Primary"
                     Command="{Binding RefreshFiltersCmd}"
                     CommandParameter="{StaticResource FalseValue}"
                     Content="禁用筛选"
@@ -42,6 +44,7 @@
                 <wpfui:Button
                     Grid.Row="1"
                     Margin="16,0,0,0"
+                    Appearance="Primary"
                     Command="{Binding MoveFilterUpCmd}"
                     Content="上移所选"
                     Icon="{wpfui:SymbolIcon Symbol=ChevronUp12}"
@@ -49,6 +52,7 @@
                 <wpfui:Button
                     Grid.Row="2"
                     Margin="16,0,0,0"
+                    Appearance="Primary"
                     Command="{Binding MoveFilterDownCmd}"
                     Content="下移所选"
                     Icon="{wpfui:SymbolIcon Symbol=ChevronDown12}"
@@ -56,6 +60,7 @@
                 <wpfui:Button
                     Grid.Row="3"
                     Margin="16,0,0,0"
+                    Appearance="Primary"
                     Command="{Binding ClearFilterSelectionCmd}"
                     Content="清除选择"
                     Icon="{wpfui:SymbolIcon Symbol=Dismiss12}"
