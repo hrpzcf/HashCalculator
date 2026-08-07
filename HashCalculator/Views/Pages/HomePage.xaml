@@ -223,7 +223,7 @@
                             SelectedValue="{Binding Source={x:Static local:Settings.Current}, Path=SelectedOutputType}"
                             SelectedValuePath="ItemValue"
                             SelectionChanged="DefaultOutputTypeSelectionChanged"
-                            ToolTip="此设置影响变更后才开始计算的行和【刷新输出】按钮、【导出结果】按钮的行为，其中十六进制大/小写是常用的输出方式。" />
+                            ToolTip="切换后刷新所有行的输出方式，同时影响【导出结果】按钮的行为，其中十六进制大/小写是常用的输出方式。" />
                     </Border>
                     <TextBlock
                         HorizontalAlignment="Left"
