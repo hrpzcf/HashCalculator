@@ -8,4 +8,7 @@
     <SolidColorBrush x:Key="ImageBtnBackgroundPressed" Color="#08FFFFFF" />
     <SolidColorBrush x:Key="ImageBtnBackgroundPointerOver" Color="#15FFFFFF" />
 
+    <!--  CardControl 鼠标悬浮背景色（深色主题）：比默认卡片背景明显偏亮，hover 反馈清晰  -->
+    <SolidColorBrush x:Key="CardControlMouseHoverBackground" Color="#1DFFFFFF" />
+
 </ResourceDictionary>

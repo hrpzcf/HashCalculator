@@ -15,6 +15,7 @@
                 <wpfui:ThemesDictionary />
                 <wpfui:ControlsDictionary />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/ButtonIcons.xaml" />
+                <ResourceDictionary Source="/HashCalculator;component/Resources/CardControlStyles.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/CmderButtonStyles.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/CheckBoxStyle.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/ConverterResource.xaml" />
