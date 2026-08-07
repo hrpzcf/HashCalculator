@@ -8,7 +8,7 @@
         <UseWPF>true</UseWPF>
         <ApplicationIcon>Images\icon.ico</ApplicationIcon>
         <StartupObject>HashCalculator.App</StartupObject>
-        <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+        <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
         <BaseOutputPath>..\Bin</BaseOutputPath>
         <Platforms>x86;x64</Platforms>
