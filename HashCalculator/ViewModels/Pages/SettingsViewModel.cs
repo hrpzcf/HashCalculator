@@ -131,8 +131,8 @@ public class SettingsViewModel : BaseViewModel
     private int saturationOfTableCellsWithSameDirectory = 240;
     private int luminanceOfTableCellsWithSameHash = 100;
     private int saturationOfTableCellsWithSameHash = 240;
+    private int addHashViewModelsBatchSize = 0;
     private int selectedApplicationThemeIndex = 0;
-    private int addHashViewModelsBatchSize = 1;
 
     private long snackbarNotificationTimeSpanSeconds = 2;
 
