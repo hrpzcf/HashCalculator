@@ -25,8 +25,9 @@ namespace HashCalculator.Views.Windows
         private PresentationSource presentationSrc = null;
         private NavigationService _navigationService = null;
 
-        private readonly HomePage _homePage = null;
         private readonly MainWindowModel _viewModel = null;
+        private readonly HomePage _homePage = null;
+        private readonly HomeViewModel _homePageViewModel = null;
 
         private static string[] startupArgs = null;
         private static readonly TimeSpan clipboardTriggerMinInterval =
@@ -40,12 +41,16 @@ namespace HashCalculator.Views.Windows
 
         private bool ProcIdMonitorFlag { get; set; } = true;
 
-        public MainWindow(MainWindowModel viewModel,
-            ISnackbarService snackbarService, HomePage homePage)
+        public MainWindow(
+            MainWindowModel viewModel,
+            HomePage homePage,
+            HomeViewModel homePageViewModel,
+            ISnackbarService snackbarService)
         {
             Current = this;
-            this._homePage = homePage;
             this._viewModel = viewModel;
+            this._homePage = homePage;
+            this._homePageViewModel = homePageViewModel;
             this.DataContext = this._viewModel;
             this.InitializeComponent();
             this.InitializeNavigation(this._viewModel);
@@ -157,7 +162,7 @@ namespace HashCalculator.Views.Windows
                     Initializer.RunMultiMode = Settings.Current.RunInMultiInstMode;
                     break;
                 case nameof(Settings.Current.SelectedTaskNumberLimit):
-                    HomeViewModel.Current.Starter.BeginAdjust(Settings.Current.SelectedTaskNumberLimit);
+                    this._homePageViewModel.Starter.BeginAdjust(Settings.Current.SelectedTaskNumberLimit);
                     break;
             }
         }
@@ -186,7 +191,7 @@ namespace HashCalculator.Views.Windows
                 if (!Settings.Current.ClipboardUpdatedByMe &&
                     DateTime.Now - this.lastClipboardUpdateDateTime > clipboardTriggerMinInterval)
                 {
-                    HomeViewModel.Current.CheckHashUseClipboardText();
+                    this._homePageViewModel.CheckHashUseClipboardText();
                 }
                 Settings.Current.ClipboardUpdatedByMe = false;
                 this.lastClipboardUpdateDateTime = DateTime.Now;
@@ -224,12 +229,12 @@ namespace HashCalculator.Views.Windows
                 {
                     Synchronization.UI.Invoke(() =>
                     {
-                        HomeViewModel.Current.ClearAllTableLinesAction(null);
+                        this._homePageViewModel.ClearAllTableLinesAction(null);
                     });
                 }
                 if (Settings.Current.UseExistingClipboardTextForCheck)
                 {
-                    hashChecklist = HomeViewModel.Current.TestClipboardTextGetChecklist();
+                    hashChecklist = this._homePageViewModel.TestClipboardTextGetChecklist();
                 }
                 string[] filePaths = option.FilePaths.Where(i => File.Exists(i) || Directory.Exists(i)).ToArray();
                 // 此处逻辑针对命令行传来的待计算文件/文件夹路径，一般由右键菜单生成命令
@@ -245,7 +250,7 @@ namespace HashCalculator.Views.Windows
                     package.OnlyFilesThatExistInChecklist = false;
                     package.PresetAlgoTypes = this.GetAlgoTypesFromOption(option);
                 }
-                HomeViewModel.Current.BeginDisplayModels(packages);
+                this._homePageViewModel.BeginDisplayModels(packages);
             }
         }
 
@@ -269,7 +274,7 @@ namespace HashCalculator.Views.Windows
                     {
                         Synchronization.UI.Invoke(() =>
                         {
-                            HomeViewModel.Current.ClearAllTableLinesAction(null);
+                            this._homePageViewModel.ClearAllTableLinesAction(null);
                         });
                     }
                     // 这里添加要计算哈希值的文件时，看作以多选文件的方式添，所以
@@ -278,7 +283,7 @@ namespace HashCalculator.Views.Windows
                     PathPackage package = new PathPackage(filesDir, filesDir, newChecklist,
                         Settings.Current.SelectedSearchMethodForChecklist);
                     package.PresetAlgoTypes = types;
-                    HomeViewModel.Current.BeginDisplayModels(package);
+                    this._homePageViewModel.BeginDisplayModels(package);
                 }
             }
         }
