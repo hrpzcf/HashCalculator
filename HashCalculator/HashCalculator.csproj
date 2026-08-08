@@ -44,11 +44,17 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Platform)' == 'x64'">
-        <None Include="LibraryFiles\hashalgs_x64.dll" Link="hashalgs.dll" CopyToOutputDirectory="IfDifferent" CopyToPublishDirectory="IfDifferent" />
+        <None Include="LibraryFiles\hashalgs_x64.dll" TargetPath="hashalgs.dll">
+            <CopyToOutputDirectory>IfDifferent</CopyToOutputDirectory>
+            <CopyToPublishDirectory>IfDifferent</CopyToPublishDirectory>
+        </None>
     </ItemGroup>
 
     <ItemGroup Condition="'$(Platform)' == 'x86'">
-        <None Include="LibraryFiles\hashalgs_x86.dll" Link="hashalgs.dll" CopyToOutputDirectory="IfDifferent" CopyToPublishDirectory="IfDifferent" />
+        <None Include="LibraryFiles\hashalgs_x86.dll" TargetPath="hashalgs.dll">
+            <CopyToOutputDirectory>IfDifferent</CopyToOutputDirectory>
+            <CopyToPublishDirectory>IfDifferent</CopyToPublishDirectory>
+        </None>
     </ItemGroup>
 
     <ItemGroup>
