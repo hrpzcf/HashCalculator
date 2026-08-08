@@ -47,7 +47,7 @@
                             VerticalAlignment="Top"
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            Text="{Binding Author, StringFormat='Copyright © {0} 和 HashCalculator 的贡献者们。'}"
+                            Text="{Binding Author, StringFormat='Copyright © 2022~2026 {0} 和 HashCalculator 的贡献者们。'}"
                             TextWrapping="WrapWithOverflow" />
                         <wpfui:TextBlock
                             Grid.Row="0"
