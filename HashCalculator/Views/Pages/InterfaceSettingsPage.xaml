@@ -180,6 +180,13 @@
                             OffContent="隐藏"
                             OnContent="显示" />
                     </wpfui:CardControl>
+                    <wpfui:CardControl Header="按钮分隔线 1">
+                        <wpfui:ToggleSwitch
+                            IsChecked="{Binding ShowSeparatorBesideFuncButtons1, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            LabelPosition="Left"
+                            OffContent="隐藏"
+                            OnContent="显示" />
+                    </wpfui:CardControl>
                     <wpfui:CardControl Header="新行重算按钮">
                         <wpfui:ToggleSwitch
                             IsChecked="{Binding ShowCopyAndRestartModelsButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -197,6 +204,13 @@
                     <wpfui:CardControl Header="重新计算按钮">
                         <wpfui:ToggleSwitch
                             IsChecked="{Binding ShowForceRefreshOriginalModelsButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            LabelPosition="Left"
+                            OffContent="隐藏"
+                            OnContent="显示" />
+                    </wpfui:CardControl>
+                    <wpfui:CardControl Header="按钮分隔线 2">
+                        <wpfui:ToggleSwitch
+                            IsChecked="{Binding ShowSeparatorBesideFuncButtons2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             LabelPosition="Left"
                             OffContent="隐藏"
                             OnContent="显示" />
@@ -229,6 +243,13 @@
                             OffContent="隐藏"
                             OnContent="显示" />
                     </wpfui:CardControl>
+                    <wpfui:CardControl Header="按钮分隔线 3">
+                        <wpfui:ToggleSwitch
+                            IsChecked="{Binding ShowSeparatorBesideFuncButtons3, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            LabelPosition="Left"
+                            OffContent="隐藏"
+                            OnContent="显示" />
+                    </wpfui:CardControl>
                     <wpfui:CardControl Header="默认输出方式按钮">
                         <wpfui:ToggleSwitch
                             IsChecked="{Binding ShowSelectedOutputTypeButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -246,6 +267,13 @@
                     <wpfui:CardControl Header="导出结果按钮">
                         <wpfui:ToggleSwitch
                             IsChecked="{Binding ShowExportHashResultsButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            LabelPosition="Left"
+                            OffContent="隐藏"
+                            OnContent="显示" />
+                    </wpfui:CardControl>
+                    <wpfui:CardControl Header="按钮分隔线 4">
+                        <wpfui:ToggleSwitch
+                            IsChecked="{Binding ShowSeparatorBesideFuncButtons4, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             LabelPosition="Left"
                             OffContent="隐藏"
                             OnContent="显示" />

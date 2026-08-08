@@ -91,6 +91,10 @@ public class SettingsViewModel : BaseViewModel
     private bool showCancelDisplayedModelsButton = true;
     private bool showContinueDisplayedModelsButton = true;
     private bool showMainWindowTopmostButton = true;
+    private bool showSeparatorBesideFuncButtons1 = true;
+    private bool showSeparatorBesideFuncButtons2 = true;
+    private bool showSeparatorBesideFuncButtons3 = true;
+    private bool showSeparatorBesideFuncButtons4 = true;
 
     private CmpRes algoToSwitchToAfterHashChecked = CmpRes.Matched;
     private MenuType selectionWhenNoVerbIsSpecified = MenuType.Compute;
@@ -591,6 +595,30 @@ public class SettingsViewModel : BaseViewModel
     {
         get => this.showMainWindowTopmostButton;
         set => this.SetPropNotify(ref this.showMainWindowTopmostButton, value);
+    }
+
+    public bool ShowSeparatorBesideFuncButtons1
+    {
+        get => this.showSeparatorBesideFuncButtons1;
+        set => this.SetPropNotify(ref this.showSeparatorBesideFuncButtons1, value);
+    }
+
+    public bool ShowSeparatorBesideFuncButtons2
+    {
+        get => this.showSeparatorBesideFuncButtons2;
+        set => this.SetPropNotify(ref this.showSeparatorBesideFuncButtons2, value);
+    }
+
+    public bool ShowSeparatorBesideFuncButtons3
+    {
+        get => this.showSeparatorBesideFuncButtons3;
+        set => this.SetPropNotify(ref this.showSeparatorBesideFuncButtons3, value);
+    }
+
+    public bool ShowSeparatorBesideFuncButtons4
+    {
+        get => this.showSeparatorBesideFuncButtons4;
+        set => this.SetPropNotify(ref this.showSeparatorBesideFuncButtons4, value);
     }
 
     [JsonIgnore, XmlIgnore]
