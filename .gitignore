@@ -362,6 +362,5 @@ MigrationBackup/
 
 # Others
 /.vscode
-/HashCalculator/ShellExt
-/HashCalculator/LibraryFiles/
 /.codebuddy/
+/HashCalculator/LibraryFiles/

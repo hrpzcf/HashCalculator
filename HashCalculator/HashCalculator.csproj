@@ -23,13 +23,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <None Remove="ShellExt\HashCalculator.exp" />
-        <None Remove="ShellExt\HashCalculator.lib" />
-        <None Remove="ShellExt\HashCalculator32.exp" />
-        <None Remove="ShellExt\HashCalculator32.lib" />
-    </ItemGroup>
-
-    <ItemGroup>
         <PackageReference Include="CommandLineParser" Version="2.9.1" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.9" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
@@ -46,8 +39,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="ShellExt\HashCalculator.dll" />
-        <EmbeddedResource Include="ShellExt\HashCalculator32.dll" />
+        <EmbeddedResource Include="LibraryFiles\HashCalculator.dll" />
+        <EmbeddedResource Include="LibraryFiles\HashCalculator32.dll" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(Platform)' == 'x64'">

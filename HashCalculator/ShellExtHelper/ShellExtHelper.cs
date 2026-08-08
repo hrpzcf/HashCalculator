@@ -546,6 +546,6 @@ namespace HashCalculator
         private static readonly RegNode nodeHashCalculatorPath;
         private static readonly string executablePath = Environment.ProcessPath;
         private static readonly string executableDir = Path.GetDirectoryName(executablePath);
-        private static readonly string embeddedShellExtPath = $"HashCalculator.ShellExt.{Settings.ShellExtensionName}";
+        private static readonly string embeddedShellExtPath = $"HashCalculator.LibraryFiles.{Settings.ShellExtensionName}";
     }
 }
