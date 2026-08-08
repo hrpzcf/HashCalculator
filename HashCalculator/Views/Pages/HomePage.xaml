@@ -21,10 +21,11 @@
         </Grid.RowDefinitions>
         <ScrollViewer
             Grid.Row="0"
+            Margin="2,0,0,2"
             HorizontalScrollBarVisibility="Auto"
             VerticalScrollBarVisibility="Disabled"
             Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWindowButtons, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
-            <StackPanel Margin="0,0,0,4" Orientation="Horizontal">
+            <StackPanel Margin="0,0,0,2" Orientation="Horizontal">
                 <StackPanel VerticalAlignment="Bottom" Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowSelectFilesToHashButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
                     <Button
                         Command="{Binding SelectFilesToHashCmd}"
@@ -80,9 +81,9 @@
                         Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
                 <Border
-                    Width="2"
+                    Width="1"
                     Margin="8,0,0,0"
-                    BorderBrush="{DynamicResource SeparatorBorderBrush}"
+                    BorderBrush="{DynamicResource ControlStrokeColorSecondaryBrush}"
                     BorderThickness="1"
                     CornerRadius="4" />
                 <StackPanel
@@ -146,9 +147,9 @@
                         Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
                 <Border
-                    Width="2"
+                    Width="1"
                     Margin="8,0,0,0"
-                    BorderBrush="{DynamicResource SeparatorBorderBrush}"
+                    BorderBrush="{DynamicResource ControlStrokeColorSecondaryBrush}"
                     BorderThickness="1"
                     CornerRadius="4" />
                 <StackPanel
@@ -228,9 +229,9 @@
                         Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
                 <Border
-                    Width="2"
+                    Width="1"
                     Margin="8,0,0,0"
-                    BorderBrush="{DynamicResource SeparatorBorderBrush}"
+                    BorderBrush="{DynamicResource ControlStrokeColorSecondaryBrush}"
                     BorderThickness="1"
                     CornerRadius="4" />
                 <StackPanel
@@ -314,9 +315,9 @@
                         Visibility="{Binding Source={x:Static local:Settings.Current}, Path=DisplayMainWndButtonText, Converter={StaticResource FalseToVisibilityCollapsedCvt}}" />
                 </StackPanel>
                 <Border
-                    Width="2"
+                    Width="1"
                     Margin="8,0,0,0"
-                    BorderBrush="{DynamicResource SeparatorBorderBrush}"
+                    BorderBrush="{DynamicResource ControlStrokeColorSecondaryBrush}"
                     BorderThickness="1"
                     CornerRadius="4" />
                 <StackPanel
