@@ -20,6 +20,7 @@
                 <ResourceDictionary Source="/HashCalculator;component/Resources/CheckBoxStyle.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/ConverterResource.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/DataGridCellStyles.xaml" />
+                <ResourceDictionary Source="/HashCalculator;component/Resources/DataGridRowStyles.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/FlyoutStyles.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/IconFont.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/ImageButtonStyles.xaml" />

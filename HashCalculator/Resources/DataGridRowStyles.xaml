@@ -1,0 +1,116 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Wpf.Ui.Controls;assembly=Wpf.Ui">
+
+    <!--
+        继承自 wpfui 默认的 DataGridRow 样式（DefaultDataGridRowStyle），将行背景色绑定到 HashColorID。
+        HashColorID 为 null 时由 CmpColorToColorBrushCvt 返回透明，从而透出默认背景色。
+        
+        注意：这里重写了 Template。鼠标悬浮时在 DGR_Border 上单层覆盖 wpfui 默认悬浮背景色，配合
+        HomePage 自定义单元格 Border 经 HashColorHoverToBrushCvt 在悬浮时转透明，使悬浮色只绘制一层，
+        整行统一、不出现深浅割裂；选中时仅当 HashColorID 为 null 才覆盖为选中背景色，避免选中丢色。
+    -->
+    <Style
+        x:Key="HomeDataGridRowStyle"
+        BasedOn="{StaticResource DefaultDataGridRowStyle}"
+        TargetType="{x:Type DataGridRow}">
+        <Setter Property="Background" Value="{Binding HashColorID, Converter={StaticResource CmpColorToColorBrushCvt}}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type DataGridRow}">
+                    <Border
+                        x:Name="DGR_Border"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{DynamicResource ControlCornerRadius}"
+                        SnapsToDevicePixels="True">
+                        <SelectiveScrollingGrid>
+                            <SelectiveScrollingGrid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </SelectiveScrollingGrid.ColumnDefinitions>
+                            <SelectiveScrollingGrid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </SelectiveScrollingGrid.RowDefinitions>
+                            <DataGridCellsPresenter
+                                Grid.Column="1"
+                                ItemsPanel="{TemplateBinding ItemsPanel}"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                            <DataGridDetailsPresenter
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                SelectiveScrollingGrid.SelectiveScrollingOrientation="{Binding AreRowDetailsFrozen, ConverterParameter={x:Static SelectiveScrollingOrientation.Vertical}, Converter={x:Static DataGrid.RowDetailsScrollingConverter}, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                                Visibility="{TemplateBinding DetailsVisibility}" />
+                            <DataGridRowHeader
+                                Grid.Row="0"
+                                Grid.RowSpan="2"
+                                Grid.Column="0"
+                                SelectiveScrollingGrid.SelectiveScrollingOrientation="Vertical"
+                                Visibility="{Binding HeadersVisibility, ConverterParameter={x:Static DataGridHeadersVisibility.Row}, Converter={x:Static DataGrid.HeadersVisibilityConverter}, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" />
+                            <Rectangle
+                                x:Name="ActiveRectangle"
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Width="3"
+                                Height="18"
+                                Margin="0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Fill="{DynamicResource ListViewItemPillFillBrush}"
+                                RadiusX="2"
+                                RadiusY="2"
+                                Visibility="Collapsed" />
+                        </SelectiveScrollingGrid>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <!--  选中行时始终显示左侧指示条。  -->
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="ActiveRectangle" Property="Visibility" Value="Visible" />
+                        </Trigger>
+
+                        <!--
+                            鼠标悬浮时在 DGR_Border 上无条件覆盖 wpfui 默认悬浮背景色（单层绘制）。
+                            此时 HomePage 自定义单元格的 Border 经 HashColorHoverToBrushCvt 转为透明，
+                            透出此悬浮色，整行统一悬浮色、不出现深浅割裂。
+                        -->
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="DGR_Border" Property="Background" Value="{DynamicResource ListViewItemBackgroundPointerOver}" />
+                        </Trigger>
+                        <!--
+                            选中时仅当 HashColorID 为 null 才在 DGR_Border 上覆盖选中背景色，
+                            避免选中后丢失绑定的 HashColorID 颜色。
+                        -->
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="True" />
+                                <Condition Binding="{Binding HashColorID}" Value="{x:Null}" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="DGR_Border" Property="Background" Value="{DynamicResource ListViewItemBackgroundPointerOver}" />
+                        </MultiDataTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--
+        应用于 HomePage 中绑定行背景的自定义单元格 Border。
+        背景经 HashColorHoverToBrushCvt：悬浮时返回透明（透出 DGR_Border 单层悬浮色，避免叠加割裂），
+        非悬浮时返回 HashColorID 对应颜色（null 时为透明）。
+    -->
+    <Style x:Key="HashCellBorderStyle" TargetType="{x:Type Border}">
+        <Setter Property="Background">
+            <Setter.Value>
+                <MultiBinding Converter="{StaticResource HashColorHoverToBrushCvt}">
+                    <Binding Path="HashColorID" />
+                    <Binding Path="IsMouseOver" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGridRow}}" />
+                </MultiBinding>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>
