@@ -15,6 +15,7 @@ using HashCalculator.ViewModels.Windows;
 using HashCalculator.Views.Windows;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using Wpf.Ui;
 using Wpfctrls = Wpf.Ui.Controls;
 
 namespace HashCalculator.ViewModels.Pages;
@@ -38,6 +39,7 @@ public class HomeViewModel : BaseViewModel
     private string hashValueStringOrChecklistPath = null;
     private RunningState runningState = RunningState.None;
     private FilterOperationWindow filterWindowInstance = null;
+    private NavigationService _navigationService = null;
 
     private RelayCommand mainWindowTopmostCmd;
     private RelayCommand clearAllTableLinesCmd;
@@ -156,6 +158,11 @@ public class HomeViewModel : BaseViewModel
         }
     }
 
+    public void SetModelNavigationService(NavigationService service)
+    {
+        this._navigationService = service;
+    }
+
     /// <summary>
     /// 检查剪贴板字符，在符合要求时把它设置到主窗口的校验信息输入框内
     /// </summary>
@@ -184,6 +191,7 @@ public class HomeViewModel : BaseViewModel
                 Settings.Current.SwitchMainWndFgWhenNewHashCopied)
             {
                 CommonUtils.ShowWindowForeground(MainWindow.ProcessId);
+                // TODO: 实现跨进程导航至主页
             }
         }
     }

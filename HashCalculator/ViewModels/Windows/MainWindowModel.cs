@@ -10,7 +10,7 @@ namespace HashCalculator.ViewModels.Windows;
 public class MainWindowModel : BaseViewModel
 {
     private NavigationService _navigationService;
-    private RelayCommand navigatenFromSettingsPanelCmd;
+    private RelayCommand navigateFromSettingsPanelCmd;
 
     public MainWindowModel()
     {
@@ -25,7 +25,7 @@ public class MainWindowModel : BaseViewModel
 
     public ObservableCollection<NavigationViewItem> FooterItems { get; private set; }
 
-    public void SetupModelNavigationService(NavigationService service)
+    public void SetModelNavigationService(NavigationService service)
     {
         this._navigationService = service;
     }
@@ -101,20 +101,20 @@ public class MainWindowModel : BaseViewModel
         this.FooterItems = [this.SettingsNavigationItem];
     }
 
-    private void NavigatenFromSettingsPanelAction(object param)
+    private void NavigateFromSettingsPanelAction(object param)
     {
-        if (param is Type type && this._navigationService is not null)
+        if (param is Type pageType && this._navigationService is not null)
         {
-            this._navigationService.Navigate(type);
+            this._navigationService.Navigate(pageType);
         }
     }
 
-    public ICommand NavigatenFromSettingsPanelCmd
+    public ICommand NavigateFromSettingsPanelCmd
     {
         get
         {
-            this.navigatenFromSettingsPanelCmd ??= new RelayCommand(this.NavigatenFromSettingsPanelAction);
-            return this.navigatenFromSettingsPanelCmd;
+            this.navigateFromSettingsPanelCmd ??= new RelayCommand(this.NavigateFromSettingsPanelAction);
+            return this.navigateFromSettingsPanelCmd;
         }
     }
 }

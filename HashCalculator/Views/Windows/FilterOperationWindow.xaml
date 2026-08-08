@@ -34,7 +34,7 @@
             </wpfui:TitleBar.Icon>
         </wpfui:TitleBar>
         <wpfui:NavigationView
-            x:Name="NavigationViewOnFilterWindow"
+            x:Name="FilterOperationNavigationView"
             Grid.Row="1"
             Margin="0,4,4,8"
             IsBackButtonVisible="Collapsed"

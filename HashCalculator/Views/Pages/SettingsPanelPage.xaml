@@ -22,7 +22,7 @@
                     <wpfui:CardAction
                         Margin="0,4,0,0"
                         d:DataContext="{d:DesignInstance Type=wpfui:NavigationViewItem}"
-                        Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Page}, Path=DataContext.NavigatenFromSettingsPanelCmd}"
+                        Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Page}, Path=DataContext.NavigateFromSettingsPanelCmd}"
                         CommandParameter="{Binding TargetPageType}"
                         Icon="{Binding Icon, Converter={StaticResource CloneIconForSettingsPanelPageCvt}}">
                         <StackPanel>

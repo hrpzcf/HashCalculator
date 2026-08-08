@@ -25,10 +25,10 @@ public partial class FilterOperationWindow
 
     private void InitializeNavigation(FilterOperationModel model)
     {
-        INavigationViewPageProvider pageProvider =
-            App.GetRequiredService<INavigationViewPageProvider>();
+        INavigationViewPageProvider pageProvider = App.GetRequiredService
+            <INavigationViewPageProvider>();
         this._navigationService = new NavigationService(pageProvider);
-        this._navigationService.SetNavigationControl(this.NavigationViewOnFilterWindow);
+        this._navigationService.SetNavigationControl(this.FilterOperationNavigationView);
         model.SetupModelNavigationService(this._navigationService);
     }
 
@@ -46,20 +46,19 @@ public partial class FilterOperationWindow
         //this.SetValue(BorderThicknessProperty, new Thickness(1));
         //this.SetValue(BorderBrushProperty, this.FindResource("SystemAccentColorBrush"));
 
-        this._navigationService.Navigate(typeof(DataGridFiltersControl));
-
         // 订阅主题变化事件：切换主题时手动刷新本窗口背景，
         // 因为 ApplicationThemeManager.Apply 只自动刷新主窗口背景，
         // 对非主窗口（本窗口）需要手动调用 WindowBackgroundManager.UpdateBackground。
         ApplicationThemeManager.Changed += this.OnThemeChanged;
+        this._navigationService.Navigate(typeof(DataGridFiltersControl));
     }
 
     private void FilterOperationWindowClosed(object sender, EventArgs e)
     {
         ApplicationThemeManager.Changed -= this.OnThemeChanged;
-        if (this.NavigationViewOnFilterWindow.SelectedItem is NavigationViewItem navigationItem)
+        if (this.FilterOperationNavigationView.SelectedItem is NavigationViewItem navigationItem)
         {
-            navigationItem.Deactivate(this.NavigationViewOnFilterWindow);
+            navigationItem.Deactivate(this.FilterOperationNavigationView);
         }
     }
 }
