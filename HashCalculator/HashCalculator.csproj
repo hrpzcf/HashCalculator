@@ -64,4 +64,16 @@
         <None Include="IconFont\iconfont.js" />
         <None Include="IconFont\iconfont.json" />
     </ItemGroup>
+
+    <Target Name="RenamePublishedExe" AfterTargets="Publish" Condition="'$(PublishProtocol)' != ''">
+        <GetAssemblyIdentity AssemblyFiles="$(TargetDir)$(AssemblyName).dll">
+            <Output TaskParameter="Assemblies" ItemName="_AsmIdentity" />
+        </GetAssemblyIdentity>
+        <PropertyGroup>
+            <_PublishedFileVersion>@(_AsmIdentity->'%(Version)')</_PublishedFileVersion>
+        </PropertyGroup>
+        <Move SourceFiles="$(PublishDir)$(AssemblyName).exe"
+              DestinationFiles="$(PublishDir)$(AssemblyName)_$(Platform)-$(_PublishedFileVersion).exe"
+              OverwriteReadOnlyFiles="true" />
+    </Target>
 </Project>
