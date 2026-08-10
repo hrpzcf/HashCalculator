@@ -10,7 +10,6 @@
         <StartupObject>HashCalculator.App</StartupObject>
         <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-        <BaseOutputPath>..\Bin</BaseOutputPath>
         <Platforms>x86;x64</Platforms>
     </PropertyGroup>
 
@@ -70,19 +69,19 @@
             <Output TaskParameter="Assemblies" ItemName="_AsmIdentity" />
         </GetAssemblyIdentity>
         <PropertyGroup>
-            <_PublishedFileVersion>@(_AsmIdentity->'%(Version)')</_PublishedFileVersion>
+            <_LongVersion>@(_AsmIdentity->'%(Version)')</_LongVersion>
             <!-- 取版本号前 3 段，第 4 段不为 0 时追加 -previewN -->
-            <_ShortVer>$(_PublishedFileVersion.Split('.')[0]).$(_PublishedFileVersion.Split('.')[1]).$(_PublishedFileVersion.Split('.')[2])</_ShortVer>
-            <_Revision>$(_PublishedFileVersion.Split('.')[3])</_Revision>
+            <_ShortVer>$(_LongVersion.Split('.')[0]).$(_LongVersion.Split('.')[1]).$(_LongVersion.Split('.')[2])</_ShortVer>
+            <_Revision>$(_LongVersion.Split('.')[3])</_Revision>
         </PropertyGroup>
         <PropertyGroup Condition="'$(_Revision)' == '0'">
-            <_FileVersion>$(_ShortVer)</_FileVersion>
+            <_FileNameVersionString>$(_ShortVer)</_FileNameVersionString>
         </PropertyGroup>
         <PropertyGroup Condition="'$(_Revision)' != '0'">
-            <_FileVersion>$(_ShortVer)-preview$(_Revision)</_FileVersion>
+            <_FileNameVersionString>$(_ShortVer)-preview$(_Revision)</_FileNameVersionString>
         </PropertyGroup>
         <Move SourceFiles="$(PublishDir)$(AssemblyName).exe"
-              DestinationFiles="$(PublishDir)$(AssemblyName)-$(Platform)-$(_FileVersion).exe"
-              OverwriteReadOnlyFiles="true" />
+            DestinationFiles="$(PublishDir)$(AssemblyName)-$(Platform)-$(_FileNameVersionString).exe"
+            OverwriteReadOnlyFiles="true" />
     </Target>
 </Project>
