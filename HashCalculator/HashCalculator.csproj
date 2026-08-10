@@ -73,7 +73,7 @@
             <_PublishedFileVersion>@(_AsmIdentity->'%(Version)')</_PublishedFileVersion>
         </PropertyGroup>
         <Move SourceFiles="$(PublishDir)$(AssemblyName).exe"
-              DestinationFiles="$(PublishDir)$(AssemblyName)_$(Platform)-$(_PublishedFileVersion).exe"
+              DestinationFiles="$(PublishDir)$(AssemblyName)-$(Platform)-$(_PublishedFileVersion).exe"
               OverwriteReadOnlyFiles="true" />
     </Target>
 </Project>
