@@ -1,6 +1,6 @@
 <div align="center">
 
-# HashCalculator（哈希计算器）
+# HashCalculator（哈希值计算器）
 
 [![GitHub stars](https://img.shields.io/github/stars/hrpzcf/HashCalculator?style=flat)](https://github.com/hrpzcf/HashCalculator/stargazers)
 [![GitHub issues](https://img.shields.io/github/issues/hrpzcf/HashCalculator)](https://github.com/hrpzcf/HashCalculator/issues)
