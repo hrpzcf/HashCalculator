@@ -18,6 +18,8 @@
                 <ResourceDictionary Source="/HashCalculator;component/Resources/CardControlStyles.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/CmderButtonStyles.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/CheckBoxStyle.xaml" />
+                <ResourceDictionary Source="/HashCalculator;component/Resources/ComboBoxStyles.xaml" />
+                <ResourceDictionary Source="/HashCalculator;component/Resources/ContextMenuStyles.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/ConverterResource.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/DataGridCellStyles.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/DataGridRowStyles.xaml" />
@@ -26,6 +28,7 @@
                 <ResourceDictionary Source="/HashCalculator;component/Resources/ImageButtonStyles.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/ImgButtonTextStyles.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/InfoBarStyle.xaml" />
+                <ResourceDictionary Source="/HashCalculator;component/Resources/MenuItemStyles.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/ScrollViewerStyles.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/ToolTipStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
