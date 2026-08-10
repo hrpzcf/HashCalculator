@@ -71,9 +71,18 @@
         </GetAssemblyIdentity>
         <PropertyGroup>
             <_PublishedFileVersion>@(_AsmIdentity->'%(Version)')</_PublishedFileVersion>
+            <!-- 取版本号前 3 段，第 4 段不为 0 时追加 -previewN -->
+            <_ShortVer>$(_PublishedFileVersion.Split('.')[0]).$(_PublishedFileVersion.Split('.')[1]).$(_PublishedFileVersion.Split('.')[2])</_ShortVer>
+            <_Revision>$(_PublishedFileVersion.Split('.')[3])</_Revision>
+        </PropertyGroup>
+        <PropertyGroup Condition="'$(_Revision)' == '0'">
+            <_FileVersion>$(_ShortVer)</_FileVersion>
+        </PropertyGroup>
+        <PropertyGroup Condition="'$(_Revision)' != '0'">
+            <_FileVersion>$(_ShortVer)-preview$(_Revision)</_FileVersion>
         </PropertyGroup>
         <Move SourceFiles="$(PublishDir)$(AssemblyName).exe"
-              DestinationFiles="$(PublishDir)$(AssemblyName)-$(Platform)-$(_PublishedFileVersion).exe"
+              DestinationFiles="$(PublishDir)$(AssemblyName)-$(Platform)-$(_FileVersion).exe"
               OverwriteReadOnlyFiles="true" />
     </Target>
 </Project>
