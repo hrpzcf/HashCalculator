@@ -1,25 +1,44 @@
 <div align="center">
 
-# 哈希值计算器 (HashCalculator)
+# HashCalculator（哈希计算器）
 
 [![GitHub stars](https://img.shields.io/github/stars/hrpzcf/HashCalculator?style=flat)](https://github.com/hrpzcf/HashCalculator/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/hrpzcf/HashCalculator?style=flat)](https://github.com/hrpzcf/HashCalculator/network)
 [![GitHub issues](https://img.shields.io/github/issues/hrpzcf/HashCalculator)](https://github.com/hrpzcf/HashCalculator/issues)
+[![GitHub forks](https://img.shields.io/github/forks/hrpzcf/HashCalculator?style=flat)](https://github.com/hrpzcf/HashCalculator/network)
 [![GitHub license](https://img.shields.io/github/license/hrpzcf/HashCalculator)](https://github.com/hrpzcf/HashCalculator/blob/main/LICENSE)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/w/hrpzcf/HashCalculator)
 [![GitHub release](https://img.shields.io/github/v/release/hrpzcf/HashCalculator)](https://github.com/hrpzcf/HashCalculator/releases)
-[![GitHub downloads](https://img.shields.io/github/downloads/hrpzcf/HashCalculator/total)](https://github.com/hrpzcf/HashCalculator/releases)
 
 </div>
 
 <br/>
 
-# 简介
+## 项目介绍
 
-- HashCalculator 是一个文件哈希值计算工具，主要功能是批量计算文件哈希值，批量校验文件哈希值正确性，统计、查找、筛选计算结果和校验结果等。它是一个开源软件，源代码托管在 [GitHub](https://github.com/hrpzcf/HashCalculator) 和 [Gitee](https://gitee.com/hrpzcf/HashCalculator) 上。 
+HashCalculator 是一款**开源、免费、单文件免安装**的文件哈希值计算工具，支持**批量计算**与**批量校验**文件哈希值，并提供**统计、查找、筛选**等功能，可有效满足日常文件完整性校验、下载结果核对等场景的需求。
+
+- 技术特点：基于 .NET 10 + WPF 开发，界面现代化，操作流畅。
 
 <br/>
 
-# 特点
+## 下载与使用
+
+- 前往 [Releases](https://github.com/hrpzcf/HashCalculator/releases) 页面下载最新版本的可执行文件。
+- 下载后解压（或直接）运行 `HashCalculator.exe` 即可开始使用。
+- 也可通过 `hashcalculator` 命令行形式调用（详见下方 [命令行参数说明](#命令行参数说明)）。
+
+<br/>
+
+## 快速开始
+
+1. **计算哈希值**：将文件或文件夹直接拖拽到主界面表格中，或使用「选择文件 / 选择文件夹」按钮添加对象，软件会自动计算所选算法的哈希值。
+2. **校验哈希值**：把校验信息（文件哈希值清单）内容粘贴到「哈希值校验信息」输入框，或将 `.hcb` / `.sfv` / `.sums` 等校验信息文件打开，软件即可自动完成比对并显示校验结果。
+3. **系统右键菜单**：通过 `shell` 子命令安装右键菜单扩展后，可在资源管理器中右键文件或文件夹一键计算哈希值（详见下方 [命令行参数说明](#命令行参数说明)）。
+4. **结果导出**：计算完成后，可一键导出为 `.txt` / `.csv` / `.hcb` 等格式，也支持自定义导出格式。
+
+<br/>
+
+## 功能特性
 
 - 支持多种哈希算法：
     - SHA1
@@ -55,11 +74,11 @@
 - 支持自定义校验信息（文件哈希值清单）解析方案，便于直接将同类软件导出的结果作为校验信息打开进行自动校验。
     - 预置 .txt/.csv/.hcb/.sfv/.sums/.hash 等类型文件的解析方案。
 - 支持指定命令行参数启动。
-- 其他未列出的有用的功能...
+- 以及更多实用功能。
 
 <br/>
 
-# 命令行参数说明
+## 命令行参数说明
 
 1. 子命令：`compute`，用于计算文件或文件夹内的文件的哈希值。
     - 参数 1：`-a`或`--algo`，指定计算文件哈希值的时候使用的算法，可省略。
@@ -78,7 +97,30 @@
 
 <br/>
 
-# 截图
+## 技术栈与运行环境
+
+- **技术框架**：基于 .NET 10 的 WPF 桌面应用
+- **主要依赖**：
+    - [CommandLineParser](https://github.com/commandlineparser/commandline)（命令行参数解析）
+    - [Newtonsoft.Json](https://www.newtonsoft.com/json)（配置与数据处理）
+    - [WindowsAPICodePack](https://github.com/aybe/Windows-API-Code-Pack-1.1)（系统 Shell 交互）
+    - [WPF UI](https://github.com/lepoco/wpfui)（现代化 Fluent experience UI 控件）
+- **运行环境**：
+    - **系统要求**：推荐 Windows 10 及以上版本。本程序基于 .NET 10 开发，而 .NET 10 不支持 Windows 7，因此程序无法在 Windows 7 上运行。
+    - **框架依赖**：本程序依赖 **.NET 10 桌面运行时**（.NET 10 Desktop Runtime），首次使用前请先下载 **.NET 10 桌面运行时** 安装程序进行安装。若未安装，程序将无法运行。
+        - 前往 [下载 .NET 10 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/10.0) 安装程序，根据系统选择 x86 或 x64 版本安装即可。
+- **平台版本**：提供 x86 与 x64 两个平台版本。
+- **发布形式**：单文件可执行程序，免安装，解压后直接运行。采用框架依赖方式发布，与系统上其他 .NET 程序**共用同一套 .NET 10 桌面运行时**，避免重复打包运行时，节省磁盘空间。
+
+<br/>
+
+## 开源许可
+
+本项目使用 **GNU GPL v3.0** 开源协议授权，详情请参阅 [LICENSE](LICENSE.txt)。
+
+<br/>
+
+## 界面预览
 
 ![window1](./Screenshots/window1.png)
 
@@ -100,7 +142,6 @@
 
 <br />
 
-# 更新日志
+## 更新日志
 
-- [软件更新日志](https://github.com/hrpzcf/HashCalculator/blob/main/CHANGELOG.md)
-- [软件更新日志 (Gitee)](https://gitee.com/hrpzcf/HashCalculator/blob/main/CHANGELOG.md)
+- [程序更新日志](https://github.com/hrpzcf/HashCalculator/blob/main/CHANGELOG.md)
