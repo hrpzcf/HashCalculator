@@ -40,6 +40,8 @@
                 </wpfui:CardControl.Header>
                 <TextBox
                     MinWidth="360"
+                    FontFamily="Consolas"
+                    FontSize="15"
                     MaxLines="1"
                     Text="{Binding FormatForGenerateText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
             </wpfui:CardControl>

@@ -54,7 +54,11 @@
                         <DataGridTemplateColumn Header="文件内容模版">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBox Text="{Binding Template, UpdateSourceTrigger=LostFocus}" TextWrapping="WrapWithOverflow" />
+                                    <TextBox
+                                        FontFamily="Consolas"
+                                        FontSize="15"
+                                        Text="{Binding Template, UpdateSourceTrigger=LostFocus}"
+                                        TextWrapping="WrapWithOverflow" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
