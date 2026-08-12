@@ -26,8 +26,6 @@
     <Style BasedOn="{StaticResource DefaultToolTipStyle}" TargetType="{x:Type ToolTip}">
         <Setter Property="MaxWidth" Value="450" />
         <Setter Property="TextBlock.TextAlignment" Value="Left" />
-        <Setter Property="VerticalOffset" Value="-10" />
-        <Setter Property="HorizontalOffset" Value="-20" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ToolTip">
