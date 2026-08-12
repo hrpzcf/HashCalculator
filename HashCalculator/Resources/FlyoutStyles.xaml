@@ -27,7 +27,7 @@
                             PopupAnimation="{TemplateBinding Popup.PopupAnimation}"
                             StaysOpen="{TemplateBinding Popup.StaysOpen}"
                             VerticalOffset="1">
-                            <wpfui:EffectThicknessDecorator Thickness="15">
+                            <wpfui:EffectThicknessDecorator Thickness="16">
                                 <Border
                                     x:Name="PopupBorder"
                                     Margin="{TemplateBinding Margin}"

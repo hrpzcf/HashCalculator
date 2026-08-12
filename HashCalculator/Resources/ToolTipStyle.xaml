@@ -15,7 +15,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ToolTip">
-                    <wpfui:EffectThicknessDecorator Thickness="15">
+                    <wpfui:EffectThicknessDecorator Thickness="16">
                         <Border
                             Name="Border"
                             Width="{TemplateBinding Width}"

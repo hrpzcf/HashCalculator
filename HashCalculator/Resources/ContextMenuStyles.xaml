@@ -1,0 +1,72 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml">
+
+    <!--
+        基于 wpfui 默认 ContextMenu 样式（UiContextMenu），仅将 EffectThicknessDecorator 的
+        Thickness 从 30 改为 32（4 的倍数），避免非 100% DPI 下装饰器非整数 Margin
+        导致内容重采样模糊。保留装饰器结构（定位正确，官方已验证）。
+    -->
+    <Style
+        x:Key="FixedUiContextMenu"
+        BasedOn="{StaticResource UiContextMenu}"
+        TargetType="{x:Type ContextMenu}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ContextMenu}">
+                    <wpfui:EffectThicknessDecorator Thickness="32">
+                        <Border
+                            x:Name="Border"
+                            Padding="0,3,0,3"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="8">
+                            <Border.Effect>
+                                <DropShadowEffect
+                                    BlurRadius="20"
+                                    Direction="270"
+                                    Opacity="0.135"
+                                    ShadowDepth="10"
+                                    Color="#202020" />
+                            </Border.Effect>
+                            <Border.RenderTransform>
+                                <TranslateTransform />
+                            </Border.RenderTransform>
+                            <StackPanel
+                                ClipToBounds="True"
+                                IsItemsHost="True"
+                                KeyboardNavigation.DirectionalNavigation="Cycle"
+                                Orientation="Vertical" />
+                        </Border>
+                    </wpfui:EffectThicknessDecorator>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsOpen" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="Border"
+                                            Storyboard.TargetProperty="(Border.RenderTransform).(TranslateTransform.Y)"
+                                            From="-90"
+                                            To="0"
+                                            Duration="00:00:00.167">
+                                            <DoubleAnimation.EasingFunction>
+                                                <CircleEase EasingMode="EaseOut" />
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--  覆盖默认 ContextMenu 样式，使其应用上述修复  -->
+    <Style BasedOn="{StaticResource FixedUiContextMenu}" TargetType="{x:Type ContextMenu}" />
+
+</ResourceDictionary>
