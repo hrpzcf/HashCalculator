@@ -1371,7 +1371,7 @@ public class SettingsViewModel : BaseViewModel
     private void ResetExportTemplateAction(object param)
     {
         this.ResetTemplatesForExport();
-        NotificationSender.ShowMessageBox(MainWindow.Current, "提示", "已重置导出结果方案列表。");
+        NotificationSender.ShowMessageBox(MainWindow.Current, "提示", "已重置结果导出方案列表。");
     }
 
     [JsonIgnore, XmlIgnore]
@@ -1541,7 +1541,7 @@ public class SettingsViewModel : BaseViewModel
     private void ResetChecklistTemplateAction(object param)
     {
         this.ResetTemplatesForChecklist();
-        NotificationSender.ShowMessageBox(MainWindow.Current, "提示", "已重置解析检验依据方案列表。");
+        NotificationSender.ShowMessageBox(MainWindow.Current, "提示", "已重置校验信息解析方案列表。");
     }
 
     [JsonIgnore, XmlIgnore]
@@ -1759,22 +1759,22 @@ public class SettingsViewModel : BaseViewModel
         new GenericItemModel("按模板复制当前结果", CmdStrCopyCurHashByTemplate),
         new GenericItemModel("按模板复制所有结果", CmdStrCopyAllHashByTemplate),
         new GenericItemModel("复制文件名", CmdStrCopyFileName),
-        new GenericItemModel("复制文件完整路径", CmdStrCopyFilePath),
+        new GenericItemModel("复制完整路径", CmdStrCopyFilePath),
     };
 
     [JsonIgnore, XmlIgnore]
     public GenericItemModel[] AvailableDroppedSearchMethods { get; } =
     {
-        new GenericItemModel("搜索该文件夹的一代子文件", SearchMethod.Children),
-        new GenericItemModel("搜索该文件夹的全部子文件", SearchMethod.Descendants),
+        new GenericItemModel("搜索该文件夹的直属子文件", SearchMethod.Children),
+        new GenericItemModel("搜索该文件夹的所有子文件", SearchMethod.Descendants),
         new GenericItemModel("不对该文件夹进行搜索操作", SearchMethod.DontSearch),
     };
 
     [JsonIgnore, XmlIgnore]
     public GenericItemModel[] AvailableQVSearchMethods { get; } =
     {
-        new GenericItemModel("搜索依据所在目录的一代子文件", SearchMethod.Children),
-        new GenericItemModel("搜索依据所在目录的所有子文件", SearchMethod.Descendants),
+        new GenericItemModel("搜索该文件夹的直属子文件", SearchMethod.Children),
+        new GenericItemModel("搜索该文件夹的所有子文件", SearchMethod.Descendants),
     };
 
     [JsonIgnore, XmlIgnore]

@@ -18,11 +18,11 @@
             <controls:MinLimitedCardControl>
                 <controls:MinLimitedCardControl.Header>
                     <StackPanel>
-                        <wpfui:TextBlock Text="如何搜索文件夹内容" />
+                        <wpfui:TextBlock Text="如何处理待计算对象中的文件夹" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            Text="当选择或拖放的多个待计算对象中包含文件夹时如何搜索文件夹内的文件。"
+                            Text="当选择或拖放的多个待计算对象中含有文件夹时，此选项控制该如何对待这些文件夹。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
                 </controls:MinLimitedCardControl.Header>
@@ -35,11 +35,11 @@
             <controls:MinLimitedCardControl Margin="0,4,0,0">
                 <controls:MinLimitedCardControl.Header>
                     <StackPanel>
-                        <wpfui:TextBlock Text="如何搜索校验信息文件内列出的文件" />
+                        <wpfui:TextBlock Text="如何搜索校验信息文件所在文件夹内的文件" />
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            Text="当打开校验信息文件时如何根据校验信息文件内列出的文件名在本地搜索。"
+                            Text="当以打开校验信息文件的方式启动计算任务时，程序读取校验信息中列出的文件，然后在校验信息文件所在文件夹搜索，此选项控制搜索方式。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
                 </controls:MinLimitedCardControl.Header>
@@ -56,7 +56,7 @@
                         <wpfui:TextBlock
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            Text="这是当需要查找校验信息内列出的文件进行计算并校验时的首选算法，关闭则使用默认算法中被勾选的算法。"
+                            Text="这是当需要查找校验信息文件内列出的文件进行计算并校验时的首选算法，关闭则使用默认算法中被勾选的算法。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
                 </controls:MinLimitedCardControl.Header>
