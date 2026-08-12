@@ -16,7 +16,7 @@
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel>
             <controls:MinLimitedCardControl>
-                <wpfui:CardControl.Header>
+                <controls:MinLimitedCardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="如何搜索文件夹内容" />
                         <wpfui:TextBlock
@@ -25,7 +25,7 @@
                             Text="当选择或拖放的多个待计算对象中包含文件夹时如何搜索文件夹内的文件。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
-                </wpfui:CardControl.Header>
+                </controls:MinLimitedCardControl.Header>
                 <ComboBox
                     DisplayMemberPath="Display"
                     ItemsSource="{Binding AvailableDroppedSearchMethods}"
@@ -33,7 +33,7 @@
                     SelectedValuePath="ItemValue" />
             </controls:MinLimitedCardControl>
             <controls:MinLimitedCardControl Margin="0,4,0,0">
-                <wpfui:CardControl.Header>
+                <controls:MinLimitedCardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="如何搜索校验信息文件内列出的文件" />
                         <wpfui:TextBlock
@@ -42,7 +42,7 @@
                             Text="当打开校验信息文件时如何根据校验信息文件内列出的文件名在本地搜索。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
-                </wpfui:CardControl.Header>
+                </controls:MinLimitedCardControl.Header>
                 <ComboBox
                     DisplayMemberPath="Display"
                     ItemsSource="{Binding AvailableQVSearchMethods}"
@@ -50,7 +50,7 @@
                     SelectedValuePath="ItemValue" />
             </controls:MinLimitedCardControl>
             <controls:MinLimitedCardControl Margin="0,4,0,0">
-                <wpfui:CardControl.Header>
+                <controls:MinLimitedCardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="首选校验信息文件内容或扩展名指定的算法" />
                         <wpfui:TextBlock
@@ -59,11 +59,11 @@
                             Text="这是当需要查找校验信息内列出的文件进行计算并校验时的首选算法，关闭则使用默认算法中被勾选的算法。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
-                </wpfui:CardControl.Header>
+                </controls:MinLimitedCardControl.Header>
                 <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding PreferChecklistAlgs, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </controls:MinLimitedCardControl>
             <controls:MinLimitedCardControl Margin="0,4,0,0" IsEnabled="{Binding PreferChecklistAlgs, Mode=OneWay}">
-                <wpfui:CardControl.Header>
+                <controls:MinLimitedCardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="当校验信息文件内容和扩展名皆未指定算法时" />
                         <wpfui:TextBlock
@@ -72,7 +72,7 @@
                             Text="如果启用了首选校验信息文件内容或扩展名指定算法，但都没在校验信息文件内容和扩展名找到算法时，回退到此选项。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
-                </wpfui:CardControl.Header>
+                </controls:MinLimitedCardControl.Header>
                 <ComboBox
                     DisplayMemberPath="Display"
                     ItemsSource="{Binding AvailableFetchAlgoOptions}"
@@ -80,7 +80,7 @@
                     SelectedValuePath="ItemValue" />
             </controls:MinLimitedCardControl>
             <controls:MinLimitedCardControl Margin="0,4,0,0">
-                <wpfui:CardControl.Header>
+                <controls:MinLimitedCardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="使用已经复制的校验信息进行校验" />
                         <wpfui:TextBlock
@@ -89,11 +89,11 @@
                             Text="通过右键或命令启动计算时，计算完成后使用已经复制的校验信息进行校验。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
-                </wpfui:CardControl.Header>
+                </controls:MinLimitedCardControl.Header>
                 <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding UseExistingClipboardTextForCheck, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </controls:MinLimitedCardControl>
             <controls:MinLimitedCardControl Margin="0,4,0,0">
-                <wpfui:CardControl.Header>
+                <controls:MinLimitedCardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="有新复制的校验信息时自动启动校验" />
                         <wpfui:TextBlock
@@ -102,11 +102,11 @@
                             Text="当计算完成后，剪贴板有新复制的校验信息时自动填充校验信息文本框并启动校验。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
-                </wpfui:CardControl.Header>
+                </controls:MinLimitedCardControl.Header>
                 <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding MonitorNewHashStringInClipboard, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </controls:MinLimitedCardControl>
             <controls:MinLimitedCardControl Margin="0,4,0,0" IsEnabled="{Binding MonitorNewHashStringInClipboard, Mode=OneWay}">
-                <wpfui:CardControl.Header>
+                <controls:MinLimitedCardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="能触发校验的新复制的字符数范围" />
                         <wpfui:TextBlock
@@ -115,7 +115,7 @@
                             Text="当新复制的字符数在此范围内时才触发自动校验，默认 8 到 512。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
-                </wpfui:CardControl.Header>
+                </controls:MinLimitedCardControl.Header>
                 <Grid HorizontalAlignment="Stretch">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
@@ -135,7 +135,7 @@
                 </Grid>
             </controls:MinLimitedCardControl>
             <controls:MinLimitedCardControl Margin="0,4,0,0" IsEnabled="{Binding MonitorNewHashStringInClipboard, Mode=OneWay}">
-                <wpfui:CardControl.Header>
+                <controls:MinLimitedCardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="完成哈希值校验后把主窗口带到前台" />
                         <wpfui:TextBlock
@@ -144,11 +144,11 @@
                             Text="当从别处复制新校验信息后自动完成哈希值校验，然后把主窗口带到前台展示校验结果。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
-                </wpfui:CardControl.Header>
+                </controls:MinLimitedCardControl.Header>
                 <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding SwitchMainWndFgWhenNewHashCopied, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </controls:MinLimitedCardControl>
             <controls:MinLimitedCardControl Margin="0,4,0,0">
-                <wpfui:CardControl.Header>
+                <controls:MinLimitedCardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="校验后自动切换显示什么结果的算法" />
                         <wpfui:TextBlock
@@ -157,7 +157,7 @@
                             Text="当每个文件同时使用了多种算法，校验后要自动切换显示什么校验结果的算法。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
-                </wpfui:CardControl.Header>
+                </controls:MinLimitedCardControl.Header>
                 <ComboBox
                     DisplayMemberPath="Display"
                     ItemsSource="{Binding AvailableResultsToSwitchTo}"
@@ -165,7 +165,7 @@
                     SelectedValuePath="ItemValue" />
             </controls:MinLimitedCardControl>
             <controls:MinLimitedCardControl Margin="0,4,0,0">
-                <wpfui:CardControl.Header>
+                <controls:MinLimitedCardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="从命令行启动程序但未提供子命令时" />
                         <wpfui:TextBlock
@@ -174,7 +174,7 @@
                             Text="从命令行启动程序包括像拖动文件到程序可执行文件或程序图标上、手动输入命令行忘记输入子命令等操作。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
-                </wpfui:CardControl.Header>
+                </controls:MinLimitedCardControl.Header>
                 <ComboBox
                     DisplayMemberPath="Display"
                     ItemsSource="{Binding AvailableChoicesWhenNoVerb}"
@@ -182,7 +182,7 @@
                     SelectedValuePath="ItemValue" />
             </controls:MinLimitedCardControl>
             <controls:MinLimitedCardControl Margin="0,4,0,0">
-                <wpfui:CardControl.Header>
+                <controls:MinLimitedCardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="允许运行多个应用程序实例" />
                         <wpfui:TextBlock
@@ -191,11 +191,11 @@
                             Text="打开此开关则允许运行多个应用程序实例，包括被系统右键菜单或关联的文件启动时，关闭则只允许运行一个实例。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
-                </wpfui:CardControl.Header>
+                </controls:MinLimitedCardControl.Header>
                 <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding RunInMultiInstMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </controls:MinLimitedCardControl>
             <controls:MinLimitedCardControl Margin="0,4,0,0">
-                <wpfui:CardControl.Header>
+                <controls:MinLimitedCardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="不计算空文件的哈希值" />
                         <wpfui:TextBlock
@@ -204,11 +204,11 @@
                             Text="不计算空文件的哈希值以避免造成文件内容相同的误导。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
-                </wpfui:CardControl.Header>
+                </controls:MinLimitedCardControl.Header>
                 <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding DoNotHashForEmptyFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </controls:MinLimitedCardControl>
             <controls:MinLimitedCardControl Margin="0,4,0,0">
-                <wpfui:CardControl.Header>
+                <controls:MinLimitedCardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="使用颜色来标记哈希值相同的行" />
                         <wpfui:TextBlock
@@ -217,11 +217,11 @@
                             Text="所有任务完成计算后使用颜色来标记哈希值相同的行，此项功能是筛选页面的【相同哈希值】筛选器的便捷版，只关注当前算法。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
-                </wpfui:CardControl.Header>
+                </controls:MinLimitedCardControl.Header>
                 <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding MarkTheSameHashValues, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </controls:MinLimitedCardControl>
             <controls:MinLimitedCardControl Margin="0,4,0,0">
-                <wpfui:CardControl.Header>
+                <controls:MinLimitedCardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="所有任务完成后清除选中状态" />
                         <wpfui:TextBlock
@@ -230,11 +230,11 @@
                             Text="在所有计算任务完成后清除所有行的被选中状态。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
-                </wpfui:CardControl.Header>
+                </controls:MinLimitedCardControl.Header>
                 <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding ClearSelectedItemsAfterCompletion, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </controls:MinLimitedCardControl>
             <controls:MinLimitedCardControl Margin="0,4,0,0">
-                <wpfui:CardControl.Header>
+                <controls:MinLimitedCardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="右键选择删除文件时直接永久删除" />
                         <wpfui:TextBlock
@@ -243,11 +243,11 @@
                             Text="打开此开关则在文件列表右键选择删除文件时直接永久删除，关闭则删除文件时移动到回收站。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
-                </wpfui:CardControl.Header>
+                </controls:MinLimitedCardControl.Header>
                 <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding PermanentlyDeleteFiles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </controls:MinLimitedCardControl>
             <controls:MinLimitedCardControl Margin="0,4,0,0">
-                <wpfui:CardControl.Header>
+                <controls:MinLimitedCardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="移动到回收站时不显示系统对话框" />
                         <wpfui:TextBlock
@@ -256,11 +256,11 @@
                             Text="在主页把文件移动到回收站时不显示系统的进度对话框。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
-                </wpfui:CardControl.Header>
+                </controls:MinLimitedCardControl.Header>
                 <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding MoveFilesToRecycleBinSilently, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </controls:MinLimitedCardControl>
             <controls:MinLimitedCardControl Margin="0,4,0,0">
-                <wpfui:CardControl.Header>
+                <controls:MinLimitedCardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="启动计算前先将表格现有的内容清空" />
                         <wpfui:TextBlock
@@ -269,7 +269,7 @@
                             Text="在程序已经运行的情况下，通过命令行、系统右键菜单、关联的文件启动计算前先将表格现有的内容清空。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
-                </wpfui:CardControl.Header>
+                </controls:MinLimitedCardControl.Header>
                 <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding ClearTableBeforeAddingFilesByCmdLine, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </controls:MinLimitedCardControl>
         </StackPanel>

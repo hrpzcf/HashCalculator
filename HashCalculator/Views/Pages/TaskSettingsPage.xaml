@@ -16,7 +16,7 @@
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel>
             <controls:MinLimitedCardControl>
-                <wpfui:CardControl.Header>
+                <controls:MinLimitedCardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="同时进行的任务数上限" />
                         <wpfui:TextBlock
@@ -25,7 +25,7 @@
                             Text="上限选项中除了 1，其他选项都与下一个设置互斥，无法同时开启。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
-                </wpfui:CardControl.Header>
+                </controls:MinLimitedCardControl.Header>
                 <ComboBox
                     DisplayMemberPath="Display"
                     ItemsSource="{Binding AvailableTaskNumLimits}"
@@ -39,7 +39,7 @@
                 <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding DelayTheStartOfCalculationTasks, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </controls:MinLimitedCardControl>
             <controls:MinLimitedCardControl Margin="0,4,0,0" IsEnabled="{Binding DelayTheStartOfCalculationTasks, Mode=OneWay}">
-                <wpfui:CardControl.Header>
+                <controls:MinLimitedCardControl.Header>
                     <StackPanel>
                         <TextBlock Text="延迟启动的毫秒数" />
                         <wpfui:TextBlock
@@ -48,7 +48,7 @@
                             Text="此项设置可一定程度缓解“添加任务”和“启动任务”同时进行导致的表格显示卡顿。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
-                </wpfui:CardControl.Header>
+                </controls:MinLimitedCardControl.Header>
                 <TextBox
                     MinWidth="100"
                     MaxLines="1"
@@ -58,7 +58,7 @@
                 <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding AutomaticallyStartTaskAfterFileAdded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </controls:MinLimitedCardControl>
             <controls:MinLimitedCardControl Margin="0,4,0,0">
-                <wpfui:CardControl.Header>
+                <controls:MinLimitedCardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="按此数量分批将文件添加到主页" />
                         <wpfui:TextBlock
@@ -67,7 +67,7 @@
                             Text="设为 0 是逐条将搜索到的文件添加到主页上，否则分批添加（不会妨碍数量少于此值的情况）。当大批小文件计算完成速度快于文件添加速度时，调整合适的批量值可以更快完成全部计算。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
-                </wpfui:CardControl.Header>
+                </controls:MinLimitedCardControl.Header>
                 <Slider
                     MinWidth="200"
                     AutoToolTipPlacement="BottomRight"

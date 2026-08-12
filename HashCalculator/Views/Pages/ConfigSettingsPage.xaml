@@ -16,7 +16,7 @@
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel>
             <controls:MinLimitedCardControl>
-                <wpfui:CardControl.Header>
+                <controls:MinLimitedCardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="配置文件保存位置" />
                         <wpfui:TextBlock
@@ -30,7 +30,7 @@
                             Text="{Binding DisplayingActiveConfigDir, StringFormat=实际保存位置：{0}}"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
-                </wpfui:CardControl.Header>
+                </controls:MinLimitedCardControl.Header>
                 <ComboBox
                     Margin="30,0,0,0"
                     DisplayMemberPath="Display"

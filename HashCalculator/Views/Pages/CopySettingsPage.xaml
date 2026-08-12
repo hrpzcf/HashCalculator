@@ -16,7 +16,7 @@
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel>
             <controls:MinLimitedCardControl>
-                <wpfui:CardControl.Header>
+                <controls:MinLimitedCardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="用模版来定制复制的内容" />
                         <wpfui:TextBlock
@@ -25,11 +25,11 @@
                             Text="当点击含有“按模板复制”字样的按钮或菜单时，使用模版来定制想要复制的内容。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
-                </wpfui:CardControl.Header>
+                </controls:MinLimitedCardControl.Header>
                 <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding GenerateTextInFormat, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </controls:MinLimitedCardControl>
             <controls:MinLimitedCardControl Margin="0,4,0,0" IsEnabled="{Binding GenerateTextInFormat, Mode=OneWay}">
-                <wpfui:CardControl.Header>
+                <controls:MinLimitedCardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="用于定制复制内容的模板" />
                         <wpfui:TextBlock
@@ -38,7 +38,7 @@
                             Text="可以在输入框中任意使用以下占位符来指定实际要复制的内容，用法见下方使用说明。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
-                </wpfui:CardControl.Header>
+                </controls:MinLimitedCardControl.Header>
                 <TextBox
                     MinWidth="360"
                     FontFamily="Consolas"
@@ -47,9 +47,9 @@
                     Text="{Binding FormatForGenerateText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
             </controls:MinLimitedCardControl>
             <controls:MinLimitedCardControl Margin="0,4,0,0">
-                <wpfui:CardControl.Header>
+                <controls:MinLimitedCardControl.Header>
                     <wpfui:TextBlock Text="复制的内容含算法名时算法名的大小写跟随十六进制输出方式" />
-                </wpfui:CardControl.Header>
+                </controls:MinLimitedCardControl.Header>
                 <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding CaseOfCopiedAlgNameFollowsOutputType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </controls:MinLimitedCardControl>
             <wpfui:CardExpander Margin="0,4,0,0">
@@ -67,7 +67,7 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <controls:MinLimitedCardControl>
-                                <wpfui:CardControl.Header>
+                                <controls:MinLimitedCardControl.Header>
                                     <StackPanel>
                                         <wpfui:TextBlock Text="{Binding Display}" />
                                         <wpfui:TextBlock
@@ -76,7 +76,7 @@
                                             Text="{Binding ItemValue}"
                                             TextWrapping="WrapWithOverflow" />
                                     </StackPanel>
-                                </wpfui:CardControl.Header>
+                                </controls:MinLimitedCardControl.Header>
                                 <Button
                                     HorizontalAlignment="Right"
                                     Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}, Path=DataContext.CopyTemplatePlaceholderCmd}"

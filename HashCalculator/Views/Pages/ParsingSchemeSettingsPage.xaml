@@ -117,19 +117,19 @@
                 </wpfui:CardExpander.Header>
                 <StackPanel>
                     <controls:MinLimitedCardControl>
-                        <wpfui:CardControl.Header>
+                        <controls:MinLimitedCardControl.Header>
                             <wpfui:TextBlock
                                 FontTypography="Caption"
                                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                 Text="对于输入【校验信息】输入框的字符串：程序会按顺序使用【用于类型】为空的方案，直到成功或全部失败；&#10;作为校验信息打开的文件或输入【校验信息】输入框的文件：&#10;程序会按顺序使用【用于类型】与文件扩展名匹配的方案，直到成功或全部失败；&#10;如果仍然没有成功，则按顺序使用【用于类型】为空的方案，直到成功或全部失败；&#10;如果文件没有扩展名，则按顺序使用【用于类型】为空的方案，直到成功或全部失败；&#10;表格中的【用于类型】支持输入多个扩展名，每行一个；&#10;而【解析方式表达式】实际上是正则表达式的 C# 版本，其中被两个“$”号包围起来的字符串是本软件预定义的正则表达式命名组，说明见下方列表。&#10;您也可以在表达式中使用自定义正则表达式命名组，可用的组名： algo、hash 和 name。"
                                 TextWrapping="WrapWithOverflow" />
-                        </wpfui:CardControl.Header>
+                        </controls:MinLimitedCardControl.Header>
                     </controls:MinLimitedCardControl>
                     <ItemsControl Margin="0,4,0,0" ItemsSource="{Binding AvailablePlaceholdersForParsingSchemeExpression}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <controls:MinLimitedCardControl>
-                                    <wpfui:CardControl.Header>
+                                    <controls:MinLimitedCardControl.Header>
                                         <StackPanel>
                                             <wpfui:TextBlock Text="{Binding Display}" />
                                             <wpfui:TextBlock
@@ -138,7 +138,7 @@
                                                 Text="{Binding ItemValue}"
                                                 TextWrapping="WrapWithOverflow" />
                                         </StackPanel>
-                                    </wpfui:CardControl.Header>
+                                    </controls:MinLimitedCardControl.Header>
                                     <Button
                                         HorizontalAlignment="Right"
                                         Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}, Path=DataContext.CopyTemplatePlaceholderCmd}"

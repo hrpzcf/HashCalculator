@@ -16,7 +16,7 @@
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel>
             <controls:MinLimitedCardControl>
-                <wpfui:CardControl.Header>
+                <controls:MinLimitedCardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="应用主题" />
                         <wpfui:TextBlock
@@ -25,7 +25,7 @@
                             Text="设置应用程序的主题颜色。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
-                </wpfui:CardControl.Header>
+                </controls:MinLimitedCardControl.Header>
                 <ComboBox SelectedIndex="{Binding SelectedApplicationThemeIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <ComboBoxItem Content="跟随系统" />
                     <ComboBoxItem Content="深色" />
@@ -46,9 +46,9 @@
                 </wpfui:CardExpander.Header>
                 <StackPanel>
                     <controls:MinLimitedCardControl>
-                        <wpfui:CardControl.Header>
+                        <controls:MinLimitedCardControl.Header>
                             <wpfui:TextBlock Text="序号列" />
-                        </wpfui:CardControl.Header>
+                        </controls:MinLimitedCardControl.Header>
                         <wpfui:ToggleSwitch
                             HorizontalAlignment="Right"
                             IsChecked="{Binding NoSerialNumColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -57,9 +57,9 @@
                             OnContent="隐藏" />
                     </controls:MinLimitedCardControl>
                     <controls:MinLimitedCardControl>
-                        <wpfui:CardControl.Header>
+                        <controls:MinLimitedCardControl.Header>
                             <wpfui:TextBlock Text="完整路径列" />
-                        </wpfui:CardControl.Header>
+                        </controls:MinLimitedCardControl.Header>
                         <wpfui:ToggleSwitch
                             HorizontalAlignment="Right"
                             IsChecked="{Binding NoFullPathColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -68,9 +68,9 @@
                             OnContent="隐藏" />
                     </controls:MinLimitedCardControl>
                     <controls:MinLimitedCardControl>
-                        <wpfui:CardControl.Header>
+                        <controls:MinLimitedCardControl.Header>
                             <wpfui:TextBlock Text="文件大小列" />
-                        </wpfui:CardControl.Header>
+                        </controls:MinLimitedCardControl.Header>
                         <wpfui:ToggleSwitch
                             HorizontalAlignment="Right"
                             IsChecked="{Binding NoFileSizeColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -79,9 +79,9 @@
                             OnContent="隐藏" />
                     </controls:MinLimitedCardControl>
                     <controls:MinLimitedCardControl>
-                        <wpfui:CardControl.Header>
+                        <controls:MinLimitedCardControl.Header>
                             <wpfui:TextBlock Text="输出方式列" />
-                        </wpfui:CardControl.Header>
+                        </controls:MinLimitedCardControl.Header>
                         <wpfui:ToggleSwitch
                             HorizontalAlignment="Right"
                             IsChecked="{Binding NoOutputTypeColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -90,9 +90,9 @@
                             OnContent="隐藏" />
                     </controls:MinLimitedCardControl>
                     <controls:MinLimitedCardControl>
-                        <wpfui:CardControl.Header>
+                        <controls:MinLimitedCardControl.Header>
                             <wpfui:TextBlock Text="任务耗时列" />
-                        </wpfui:CardControl.Header>
+                        </controls:MinLimitedCardControl.Header>
                         <wpfui:ToggleSwitch
                             HorizontalAlignment="Right"
                             IsChecked="{Binding NoDurationColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -101,9 +101,9 @@
                             OnContent="隐藏" />
                     </controls:MinLimitedCardControl>
                     <controls:MinLimitedCardControl>
-                        <wpfui:CardControl.Header>
+                        <controls:MinLimitedCardControl.Header>
                             <wpfui:TextBlock Text="导出列" />
-                        </wpfui:CardControl.Header>
+                        </controls:MinLimitedCardControl.Header>
                         <wpfui:ToggleSwitch
                             HorizontalAlignment="Right"
                             IsChecked="{Binding NoExportColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -112,9 +112,9 @@
                             OnContent="隐藏" />
                     </controls:MinLimitedCardControl>
                     <controls:MinLimitedCardControl>
-                        <wpfui:CardControl.Header>
+                        <controls:MinLimitedCardControl.Header>
                             <wpfui:TextBlock Text="校验结果列" />
-                        </wpfui:CardControl.Header>
+                        </controls:MinLimitedCardControl.Header>
                         <wpfui:ToggleSwitch
                             HorizontalAlignment="Right"
                             IsChecked="{Binding NoCmpResultColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -125,25 +125,25 @@
                 </StackPanel>
             </wpfui:CardExpander>
             <controls:MinLimitedCardControl Margin="0,4,0,0">
-                <wpfui:CardControl.Header>
+                <controls:MinLimitedCardControl.Header>
                     <wpfui:TextBlock Text="在校验结果图标旁显示描述" />
-                </wpfui:CardControl.Header>
+                </controls:MinLimitedCardControl.Header>
                 <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding ShowResultText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </controls:MinLimitedCardControl>
             <controls:MinLimitedCardControl Margin="0,4,0,0">
-                <wpfui:CardControl.Header>
+                <controls:MinLimitedCardControl.Header>
                     <wpfui:TextBlock Text="显示表格中文件的图标" />
-                </wpfui:CardControl.Header>
+                </controls:MinLimitedCardControl.Header>
                 <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding ShowFileIcon, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </controls:MinLimitedCardControl>
             <controls:MinLimitedCardControl Margin="0,4,0,0">
-                <wpfui:CardControl.Header>
+                <controls:MinLimitedCardControl.Header>
                     <wpfui:TextBlock Text="显示主窗口功能按钮的名称" />
-                </wpfui:CardControl.Header>
+                </controls:MinLimitedCardControl.Header>
                 <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding DisplayMainWndButtonText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </controls:MinLimitedCardControl>
             <controls:MinLimitedCardControl Margin="0,4,0,0">
-                <wpfui:CardControl.Header>
+                <controls:MinLimitedCardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="功能按钮显隐总开关" />
                         <wpfui:TextBlock
@@ -152,7 +152,7 @@
                             Text="取消勾选并关闭设置窗口后可通过点击右键菜单“显示功能按钮”重新显示。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
-                </wpfui:CardControl.Header>
+                </controls:MinLimitedCardControl.Header>
                 <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding DisplayMainWindowButtons, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </controls:MinLimitedCardControl>
             <wpfui:CardExpander Margin="0,4,0,0">
@@ -314,7 +314,7 @@
                 </StackPanel>
             </wpfui:CardExpander>
             <controls:MinLimitedCardControl Margin="0,4,0,0">
-                <wpfui:CardControl.Header>
+                <controls:MinLimitedCardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="相同哈希值行的强调色参数" />
                         <wpfui:TextBlock
@@ -323,7 +323,7 @@
                             Text="开启“使用颜色来标记哈希值相同的行”后，可以通过调整此参数避免上色时与字体色或背景色过于接近导致不易分辨。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
-                </wpfui:CardControl.Header>
+                </controls:MinLimitedCardControl.Header>
                 <Grid MinWidth="300">
                     <Grid.RowDefinitions>
                         <RowDefinition />
@@ -373,7 +373,7 @@
                 </Grid>
             </controls:MinLimitedCardControl>
             <controls:MinLimitedCardControl Margin="0,4,0,0">
-                <wpfui:CardControl.Header>
+                <controls:MinLimitedCardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="筛选相同哈希值行的强调色参数" />
                         <wpfui:TextBlock
@@ -382,7 +382,7 @@
                             Text="筛选相同哈希值时，相同哈希值的行会被上色，可以通过调整此参数避免上色时与字体色或背景色过于接近导致不易分辨。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
-                </wpfui:CardControl.Header>
+                </controls:MinLimitedCardControl.Header>
                 <Grid MinWidth="300">
                     <Grid.RowDefinitions>
                         <RowDefinition />
@@ -432,7 +432,7 @@
                 </Grid>
             </controls:MinLimitedCardControl>
             <controls:MinLimitedCardControl Margin="0,4,0,0">
-                <wpfui:CardControl.Header>
+                <controls:MinLimitedCardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="筛选相同文件夹时的强调色参数" />
                         <wpfui:TextBlock
@@ -441,7 +441,7 @@
                             Text="筛选相同文件夹时，相同文件夹的行会被上色，可以通过调整此参数避免上色时与字体色或背景色过于接近导致不易分辨。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
-                </wpfui:CardControl.Header>
+                </controls:MinLimitedCardControl.Header>
                 <Grid MinWidth="300">
                     <Grid.RowDefinitions>
                         <RowDefinition />
@@ -491,7 +491,7 @@
                 </Grid>
             </controls:MinLimitedCardControl>
             <controls:MinLimitedCardControl Margin="0,4,0,0">
-                <wpfui:CardControl.Header>
+                <controls:MinLimitedCardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="Snackbar 提示条显示时长" />
                         <wpfui:TextBlock
@@ -500,7 +500,7 @@
                             Text="Snackbar 提示条就是窗口底部弹出的信息提示条，时长单位是秒。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
-                </wpfui:CardControl.Header>
+                </controls:MinLimitedCardControl.Header>
                 <Slider
                     MinWidth="300"
                     AutoToolTipPlacement="BottomRight"
