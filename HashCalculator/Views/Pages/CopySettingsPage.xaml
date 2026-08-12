@@ -2,6 +2,7 @@
     x:Class="HashCalculator.Views.Pages.CopySettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:HashCalculator.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -14,7 +15,7 @@
     mc:Ignorable="d">
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel>
-            <wpfui:CardControl>
+            <controls:MinLimitedCardControl>
                 <wpfui:CardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="用模版来定制复制的内容" />
@@ -25,9 +26,9 @@
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
                 </wpfui:CardControl.Header>
-                <wpfui:ToggleSwitch IsChecked="{Binding GenerateTextInFormat, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-            </wpfui:CardControl>
-            <wpfui:CardControl Margin="0,4,0,0" IsEnabled="{Binding GenerateTextInFormat, Mode=OneWay}">
+                <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding GenerateTextInFormat, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </controls:MinLimitedCardControl>
+            <controls:MinLimitedCardControl Margin="0,4,0,0" IsEnabled="{Binding GenerateTextInFormat, Mode=OneWay}">
                 <wpfui:CardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="用于定制复制内容的模板" />
@@ -44,13 +45,13 @@
                     FontSize="15"
                     MaxLines="1"
                     Text="{Binding FormatForGenerateText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
-            </wpfui:CardControl>
-            <wpfui:CardControl Margin="0,4,0,0">
+            </controls:MinLimitedCardControl>
+            <controls:MinLimitedCardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
                     <wpfui:TextBlock Text="复制的内容含算法名时算法名的大小写跟随十六进制输出方式" />
                 </wpfui:CardControl.Header>
-                <wpfui:ToggleSwitch IsChecked="{Binding CaseOfCopiedAlgNameFollowsOutputType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-            </wpfui:CardControl>
+                <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding CaseOfCopiedAlgNameFollowsOutputType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </controls:MinLimitedCardControl>
             <wpfui:CardExpander Margin="0,4,0,0">
                 <wpfui:CardExpander.Header>
                     <StackPanel>
@@ -65,7 +66,7 @@
                 <ItemsControl ItemsSource="{Binding AvailablePlaceholdersForTemplateOfCopyHash}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <wpfui:CardControl>
+                            <controls:MinLimitedCardControl>
                                 <wpfui:CardControl.Header>
                                     <StackPanel>
                                         <wpfui:TextBlock Text="{Binding Display}" />
@@ -77,10 +78,11 @@
                                     </StackPanel>
                                 </wpfui:CardControl.Header>
                                 <Button
+                                    HorizontalAlignment="Right"
                                     Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}, Path=DataContext.CopyTemplatePlaceholderCmd}"
                                     CommandParameter="{Binding Display}"
                                     Content="复制" />
-                            </wpfui:CardControl>
+                            </controls:MinLimitedCardControl>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

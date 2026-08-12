@@ -8,14 +8,21 @@
         实现明显的悬浮高亮效果（不包含按下/Pressed 效果，也不改动边框）。
         背景使用各主题自定义的 CardControlMouseHoverBackground（见 Themes/LightOverrides.xaml、
         Themes/DarkOverrides.xaml，由 ThemeOverridesManager 按主题动态加载）。
+        此样式带 key，供需要继承悬浮高亮效果的自定义 CardControl 子类 BasedOn；
+        下方的无 key 样式继承它，保持默认 CardControl 的全局悬浮效果不变。
     -->
-    <Style BasedOn="{StaticResource DefaultUiCardControlStyle}" TargetType="{x:Type wpfui:CardControl}">
+    <Style
+        x:Key="CardControlMouseHoverStyle"
+        BasedOn="{StaticResource DefaultUiCardControlStyle}"
+        TargetType="{x:Type wpfui:CardControl}">
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Background" Value="{DynamicResource CardControlMouseHoverBackground}" />
             </Trigger>
         </Style.Triggers>
     </Style>
+
+    <Style BasedOn="{StaticResource CardControlMouseHoverStyle}" TargetType="{x:Type wpfui:CardControl}" />
 
     <!--
         给 CardExpander 加上与 CardControl 相同的悬浮背景色效果。

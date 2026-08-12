@@ -2,6 +2,7 @@
     x:Class="HashCalculator.Views.Pages.AlgosPanelPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:HashCalculator.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -67,12 +68,12 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <wpfui:CardControl
+                        <controls:MinLimitedCardControl
                             Margin="16,0,0,8"
                             Padding="12"
                             Header="{Binding AlgoName}">
-                            <wpfui:ToggleSwitch IsChecked="{Binding Selected, Mode=TwoWay}" />
-                        </wpfui:CardControl>
+                            <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding Selected, Mode=TwoWay}" />
+                        </controls:MinLimitedCardControl>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

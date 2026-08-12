@@ -2,6 +2,7 @@
     x:Class="HashCalculator.Views.Pages.MenuSettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:HashCalculator.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -16,7 +17,7 @@
     mc:Ignorable="d">
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel>
-            <wpfui:CardControl>
+            <controls:MinLimitedCardControl>
                 <wpfui:CardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="安装右键菜单并关联文件" />
@@ -28,11 +29,12 @@
                     </StackPanel>
                 </wpfui:CardControl.Header>
                 <Button
+                    HorizontalAlignment="Right"
                     Command="{Binding InstallShellExtCmd}"
                     Content="安装"
                     IsEnabled="{Binding ProcessingShellExtension, Converter={StaticResource ReverseBooleanValueCvt}}" />
-            </wpfui:CardControl>
-            <wpfui:CardControl Margin="0,4,0,0">
+            </controls:MinLimitedCardControl>
+            <controls:MinLimitedCardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="卸载右键菜单并取消关联" />
@@ -44,10 +46,11 @@
                     </StackPanel>
                 </wpfui:CardControl.Header>
                 <Button
+                    HorizontalAlignment="Right"
                     Command="{Binding UnInstallShellExtCmd}"
                     Content="卸载"
                     IsEnabled="{Binding ProcessingShellExtension, Converter={StaticResource ReverseBooleanValueCvt}}" />
-            </wpfui:CardControl>
+            </controls:MinLimitedCardControl>
             <wpfui:CardExpander Margin="0,4,0,0">
                 <wpfui:CardExpander.Header>
                     <StackPanel>
@@ -60,16 +63,18 @@
                     </StackPanel>
                 </wpfui:CardExpander.Header>
                 <StackPanel>
-                    <wpfui:CardControl Header="安装状态">
+                    <controls:MinLimitedCardControl Header="安装状态">
                         <wpfui:TextBlock
                             Margin="0,0,4,0"
+                            HorizontalAlignment="Right"
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                             Text="{Binding DisplayingShellInstallationState}" />
-                    </wpfui:CardControl>
-                    <wpfui:CardControl Header="安装位置">
+                    </controls:MinLimitedCardControl>
+                    <controls:MinLimitedCardControl Header="安装位置">
                         <StackPanel Orientation="Horizontal">
                             <wpfui:TextBlock
+                                HorizontalAlignment="Right"
                                 VerticalAlignment="Center"
                                 FontTypography="Caption"
                                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -79,15 +84,16 @@
                                 Click="ButtonBrowseInstallationLocationClick"
                                 Content="打开" />
                         </StackPanel>
-                    </wpfui:CardControl>
-                    <wpfui:CardControl Header="生效范围">
+                    </controls:MinLimitedCardControl>
+                    <controls:MinLimitedCardControl Header="生效范围">
                         <wpfui:TextBlock
                             Margin="0,0,4,0"
+                            HorizontalAlignment="Right"
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                             Text="{Binding DisplayingShellInstallationScope}" />
-                    </wpfui:CardControl>
-                    <wpfui:CardControl>
+                    </controls:MinLimitedCardControl>
+                    <controls:MinLimitedCardControl>
                         <wpfui:CardControl.Header>
                             <StackPanel>
                                 <wpfui:TextBlock Text="程序路径" />
@@ -100,10 +106,11 @@
                         </wpfui:CardControl.Header>
                         <Button
                             Margin="16,0,0,0"
+                            HorizontalAlignment="Right"
                             Click="ButtonUpdateApplicationPathClick"
                             Content="更新" />
-                    </wpfui:CardControl>
-                    <wpfui:CardControl Margin="0,4,0,0">
+                    </controls:MinLimitedCardControl>
+                    <controls:MinLimitedCardControl Margin="0,4,0,0">
                         <wpfui:CardControl.Header>
                             <StackPanel>
                                 <wpfui:TextBlock Text="其他须知的原理和提示" />
@@ -114,7 +121,7 @@
                                     TextWrapping="WrapWithOverflow" />
                             </StackPanel>
                         </wpfui:CardControl.Header>
-                    </wpfui:CardControl>
+                    </controls:MinLimitedCardControl>
                 </StackPanel>
             </wpfui:CardExpander>
             <wpfui:CardExpander Margin="0,4,0,0">

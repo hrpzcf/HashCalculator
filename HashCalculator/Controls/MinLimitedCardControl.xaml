@@ -1,0 +1,89 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:HashCalculator.Controls">
+
+    <!--
+        针对 MinLimitedCardControl 的无 key 隐式样式。
+        BasedOn CardControlMouseHoverStyle（继承 wpfui 默认 CardControl 样式的所有属性
+        以及悬浮背景高亮触发器），仅额外覆盖 Template，使内容区（Content 所在的
+        ContentPresenter）应用 MinContentWidth / MinContentHeight 的最小尺寸限制。
+        模板整体复刻 wpfui 的 CardControl 模板，只在 ContentPresenter 上加两个绑定。
+        MinContentWidth / MinContentHeight 默认值由控件属性元数据提供（0），
+        此处通过 setter 统一设置 MinContentWidth 默认值。
+    -->
+    <Style BasedOn="{StaticResource CardControlMouseHoverStyle}" TargetType="{x:Type local:MinLimitedCardControl}">
+        <Setter Property="MinContentWidth" Value="250" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:MinLimitedCardControl}">
+                    <Border
+                        x:Name="ContentBorder"
+                        Width="{TemplateBinding Width}"
+                        Height="{TemplateBinding Height}"
+                        MinWidth="{TemplateBinding MinWidth}"
+                        MinHeight="{TemplateBinding MinHeight}"
+                        Padding="{TemplateBinding Padding}"
+                        HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                        VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                        <Grid HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <ContentControl
+                                x:Name="ControlIcon"
+                                Grid.Column="0"
+                                Margin="{StaticResource CardControlIconMargin}"
+                                VerticalAlignment="Center"
+                                Content="{TemplateBinding Icon}"
+                                Focusable="False"
+                                FontSize="{StaticResource CardControlIconSize}"
+                                Foreground="{TemplateBinding Foreground}"
+                                KeyboardNavigation.IsTabStop="False" />
+                            <ContentPresenter
+                                x:Name="HeaderContentPresenter"
+                                Grid.Column="1"
+                                VerticalAlignment="Center"
+                                Content="{TemplateBinding Header}"
+                                TextElement.Foreground="{TemplateBinding Foreground}" />
+                            <ContentPresenter
+                                x:Name="ContentPresenter"
+                                Grid.Column="2"
+                                MinWidth="{TemplateBinding MinContentWidth}"
+                                MinHeight="{TemplateBinding MinContentHeight}"
+                                Margin="{StaticResource CardControlContentMargin}"
+                                VerticalAlignment="Center"
+                                Content="{TemplateBinding Content}"
+                                TextElement.Foreground="{TemplateBinding Foreground}" />
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Content" Value="{x:Null}">
+                            <Setter TargetName="ContentPresenter" Property="Margin" Value="0" />
+                        </Trigger>
+                        <Trigger Property="Content" Value="">
+                            <Setter TargetName="ContentPresenter" Property="Margin" Value="0" />
+                        </Trigger>
+                        <Trigger Property="Header" Value="{x:Null}">
+                            <Setter TargetName="ControlIcon" Property="Margin" Value="0" />
+                        </Trigger>
+                        <Trigger Property="Header" Value="">
+                            <Setter TargetName="ControlIcon" Property="Margin" Value="0" />
+                        </Trigger>
+                        <Trigger Property="Icon" Value="{x:Null}">
+                            <Setter TargetName="ControlIcon" Property="Margin" Value="0" />
+                            <Setter TargetName="ControlIcon" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

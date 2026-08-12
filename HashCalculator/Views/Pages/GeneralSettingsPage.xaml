@@ -2,6 +2,7 @@
     x:Class="HashCalculator.Views.Pages.GeneralSettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:HashCalculator.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -14,7 +15,7 @@
     mc:Ignorable="d">
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel>
-            <wpfui:CardControl>
+            <controls:MinLimitedCardControl>
                 <wpfui:CardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="如何搜索文件夹内容" />
@@ -30,8 +31,8 @@
                     ItemsSource="{Binding AvailableDroppedSearchMethods}"
                     SelectedValue="{Binding SelectedSearchMethodForDragDrop, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     SelectedValuePath="ItemValue" />
-            </wpfui:CardControl>
-            <wpfui:CardControl Margin="0,4,0,0">
+            </controls:MinLimitedCardControl>
+            <controls:MinLimitedCardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="如何搜索校验信息文件内列出的文件" />
@@ -47,8 +48,8 @@
                     ItemsSource="{Binding AvailableQVSearchMethods}"
                     SelectedValue="{Binding SelectedSearchMethodForChecklist, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     SelectedValuePath="ItemValue" />
-            </wpfui:CardControl>
-            <wpfui:CardControl Margin="0,4,0,0">
+            </controls:MinLimitedCardControl>
+            <controls:MinLimitedCardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="首选校验信息文件内容或扩展名指定的算法" />
@@ -59,9 +60,9 @@
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
                 </wpfui:CardControl.Header>
-                <wpfui:ToggleSwitch IsChecked="{Binding PreferChecklistAlgs, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-            </wpfui:CardControl>
-            <wpfui:CardControl Margin="0,4,0,0" IsEnabled="{Binding PreferChecklistAlgs, Mode=OneWay}">
+                <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding PreferChecklistAlgs, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </controls:MinLimitedCardControl>
+            <controls:MinLimitedCardControl Margin="0,4,0,0" IsEnabled="{Binding PreferChecklistAlgs, Mode=OneWay}">
                 <wpfui:CardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="当校验信息文件内容和扩展名皆未指定算法时" />
@@ -77,8 +78,8 @@
                     ItemsSource="{Binding AvailableFetchAlgoOptions}"
                     SelectedValue="{Binding FetchAlgorithmOption, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     SelectedValuePath="ItemValue" />
-            </wpfui:CardControl>
-            <wpfui:CardControl Margin="0,4,0,0">
+            </controls:MinLimitedCardControl>
+            <controls:MinLimitedCardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="使用已经复制的校验信息进行校验" />
@@ -89,9 +90,9 @@
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
                 </wpfui:CardControl.Header>
-                <wpfui:ToggleSwitch IsChecked="{Binding UseExistingClipboardTextForCheck, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-            </wpfui:CardControl>
-            <wpfui:CardControl Margin="0,4,0,0">
+                <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding UseExistingClipboardTextForCheck, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </controls:MinLimitedCardControl>
+            <controls:MinLimitedCardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="有新复制的校验信息时自动启动校验" />
@@ -102,9 +103,9 @@
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
                 </wpfui:CardControl.Header>
-                <wpfui:ToggleSwitch IsChecked="{Binding MonitorNewHashStringInClipboard, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-            </wpfui:CardControl>
-            <wpfui:CardControl Margin="0,4,0,0" IsEnabled="{Binding MonitorNewHashStringInClipboard, Mode=OneWay}">
+                <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding MonitorNewHashStringInClipboard, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </controls:MinLimitedCardControl>
+            <controls:MinLimitedCardControl Margin="0,4,0,0" IsEnabled="{Binding MonitorNewHashStringInClipboard, Mode=OneWay}">
                 <wpfui:CardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="能触发校验的新复制的字符数范围" />
@@ -115,19 +116,25 @@
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
                 </wpfui:CardControl.Header>
-                <StackPanel Orientation="Horizontal">
+                <Grid HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" MinWidth="4" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
                     <wpfui:TextBox
+                        Grid.Column="0"
                         MinWidth="120"
                         PlaceholderText="输入下限值"
                         Text="{Binding MinCopiedCharsToTriggerHashCheck, Converter={StaticResource StringToIntDefaultEightCvt}, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
                     <wpfui:TextBox
+                        Grid.Column="2"
                         MinWidth="120"
-                        Margin="4,0,0,0"
                         PlaceholderText="输入上限值"
                         Text="{Binding MaxCopiedCharsToTriggerHashCheck, Converter={StaticResource StringToIntDefaultFiveTwelveCvt}, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
-                </StackPanel>
-            </wpfui:CardControl>
-            <wpfui:CardControl Margin="0,4,0,0" IsEnabled="{Binding MonitorNewHashStringInClipboard, Mode=OneWay}">
+                </Grid>
+            </controls:MinLimitedCardControl>
+            <controls:MinLimitedCardControl Margin="0,4,0,0" IsEnabled="{Binding MonitorNewHashStringInClipboard, Mode=OneWay}">
                 <wpfui:CardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="完成哈希值校验后把主窗口带到前台" />
@@ -138,9 +145,9 @@
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
                 </wpfui:CardControl.Header>
-                <wpfui:ToggleSwitch IsChecked="{Binding SwitchMainWndFgWhenNewHashCopied, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-            </wpfui:CardControl>
-            <wpfui:CardControl Margin="0,4,0,0">
+                <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding SwitchMainWndFgWhenNewHashCopied, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </controls:MinLimitedCardControl>
+            <controls:MinLimitedCardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="校验后自动切换显示什么结果的算法" />
@@ -156,8 +163,8 @@
                     ItemsSource="{Binding AvailableResultsToSwitchTo}"
                     SelectedValue="{Binding AlgoToSwitchToAfterHashChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     SelectedValuePath="ItemValue" />
-            </wpfui:CardControl>
-            <wpfui:CardControl Margin="0,4,0,0">
+            </controls:MinLimitedCardControl>
+            <controls:MinLimitedCardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="从命令行启动程序但未提供子命令时" />
@@ -173,8 +180,8 @@
                     ItemsSource="{Binding AvailableChoicesWhenNoVerb}"
                     SelectedValue="{Binding SelectionWhenNoVerbIsSpecified, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     SelectedValuePath="ItemValue" />
-            </wpfui:CardControl>
-            <wpfui:CardControl Margin="0,4,0,0">
+            </controls:MinLimitedCardControl>
+            <controls:MinLimitedCardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="允许运行多个应用程序实例" />
@@ -185,9 +192,9 @@
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
                 </wpfui:CardControl.Header>
-                <wpfui:ToggleSwitch IsChecked="{Binding RunInMultiInstMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-            </wpfui:CardControl>
-            <wpfui:CardControl Margin="0,4,0,0">
+                <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding RunInMultiInstMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </controls:MinLimitedCardControl>
+            <controls:MinLimitedCardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="不计算空文件的哈希值" />
@@ -198,9 +205,9 @@
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
                 </wpfui:CardControl.Header>
-                <wpfui:ToggleSwitch IsChecked="{Binding DoNotHashForEmptyFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-            </wpfui:CardControl>
-            <wpfui:CardControl Margin="0,4,0,0">
+                <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding DoNotHashForEmptyFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </controls:MinLimitedCardControl>
+            <controls:MinLimitedCardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="使用颜色来标记哈希值相同的行" />
@@ -211,9 +218,9 @@
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
                 </wpfui:CardControl.Header>
-                <wpfui:ToggleSwitch IsChecked="{Binding MarkTheSameHashValues, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-            </wpfui:CardControl>
-            <wpfui:CardControl Margin="0,4,0,0">
+                <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding MarkTheSameHashValues, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </controls:MinLimitedCardControl>
+            <controls:MinLimitedCardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="所有任务完成后清除选中状态" />
@@ -224,9 +231,9 @@
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
                 </wpfui:CardControl.Header>
-                <wpfui:ToggleSwitch IsChecked="{Binding ClearSelectedItemsAfterCompletion, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-            </wpfui:CardControl>
-            <wpfui:CardControl Margin="0,4,0,0">
+                <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding ClearSelectedItemsAfterCompletion, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </controls:MinLimitedCardControl>
+            <controls:MinLimitedCardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="右键选择删除文件时直接永久删除" />
@@ -237,9 +244,9 @@
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
                 </wpfui:CardControl.Header>
-                <wpfui:ToggleSwitch IsChecked="{Binding PermanentlyDeleteFiles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-            </wpfui:CardControl>
-            <wpfui:CardControl Margin="0,4,0,0">
+                <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding PermanentlyDeleteFiles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </controls:MinLimitedCardControl>
+            <controls:MinLimitedCardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="移动到回收站时不显示系统对话框" />
@@ -250,9 +257,9 @@
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
                 </wpfui:CardControl.Header>
-                <wpfui:ToggleSwitch IsChecked="{Binding MoveFilesToRecycleBinSilently, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-            </wpfui:CardControl>
-            <wpfui:CardControl Margin="0,4,0,0">
+                <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding MoveFilesToRecycleBinSilently, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </controls:MinLimitedCardControl>
+            <controls:MinLimitedCardControl Margin="0,4,0,0">
                 <wpfui:CardControl.Header>
                     <StackPanel>
                         <wpfui:TextBlock Text="启动计算前先将表格现有的内容清空" />
@@ -263,8 +270,8 @@
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
                 </wpfui:CardControl.Header>
-                <wpfui:ToggleSwitch IsChecked="{Binding ClearTableBeforeAddingFilesByCmdLine, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-            </wpfui:CardControl>
+                <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding ClearTableBeforeAddingFilesByCmdLine, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </controls:MinLimitedCardControl>
         </StackPanel>
     </ScrollViewer>
 </Page>

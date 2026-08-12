@@ -31,6 +31,7 @@
                 <ResourceDictionary Source="/HashCalculator;component/Resources/MenuItemStyles.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/ScrollViewerStyles.xaml" />
                 <ResourceDictionary Source="/HashCalculator;component/Resources/ToolTipStyle.xaml" />
+                <ResourceDictionary Source="/HashCalculator;component/Controls/MinLimitedCardControl.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <sys:Boolean x:Key="TrueValue">true</sys:Boolean>
             <sys:Boolean x:Key="FalseValue">false</sys:Boolean>
