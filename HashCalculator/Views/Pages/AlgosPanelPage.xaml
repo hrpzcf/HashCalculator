@@ -68,12 +68,12 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <controls:MinLimitedCardControl
+                        <wpfui:CardControl
                             Margin="16,0,0,8"
                             Padding="12"
                             Header="{Binding AlgoName}">
                             <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding Selected, Mode=TwoWay}" />
-                        </controls:MinLimitedCardControl>
+                        </wpfui:CardControl>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
