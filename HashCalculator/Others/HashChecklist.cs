@@ -200,9 +200,9 @@ namespace HashCalculator
                     hashChecker = new HashChecker();
                     this.fileHashCheckerDict[relpath] = hashChecker;
                 }
-                // 从依据内容和扩展名推断 algoType 后，无论是否仍是 UNKNOWN，都添加到 HashChecker
+                // 从校验信息文件内容和扩展名推断 algoType 后，无论是否仍是 UNKNOWN，都添加到 HashChecker
                 hashChecker.AddCheckerItem(relpath, algoType, hashBytes);
-                // 如果 algoType 仍然是 UNKNOWN，则假定解析依据所得哈希值对应算法与启动校验时指定的算法相同
+                // 如果 algoType 仍然是 UNKNOWN，则假定解析校验信息所得哈希值对应算法与启动校验时指定的算法相同
                 // 遍历启动校验时用户指定的算法，如该算法的摘要长度与 hashBytes 长度相同则添加到 HashChecker
                 if (algoType == AlgoType.UNKNOWN && this.AlgoTypesFromOption?.Length > 0)
                 {
@@ -310,7 +310,7 @@ namespace HashCalculator
                         }
                         else if (!anyItemAdded)
                         {
-                            this.ReasonForFailure = "没有搜集到依据，请检查校验信息文件内容。";
+                            this.ReasonForFailure = "没有搜集到校验信息，请检查校验信息文件内容。";
                         }
                         break;
                     }
@@ -348,7 +348,7 @@ namespace HashCalculator
             }
             else if (!anyItemAdded)
             {
-                this.ReasonForFailure = "没有搜集到依据，请检查输入的文本内容。";
+                this.ReasonForFailure = "没有搜集到校验信息，请检查输入的文本内容。";
             }
             return this.ReasonForFailure;
         }
