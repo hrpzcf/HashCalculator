@@ -22,6 +22,7 @@
                     <StackPanel>
                         <wpfui:TextBlock Text="安装右键菜单并关联文件" />
                         <wpfui:TextBlock
+                            Margin="0,2,0,0"
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                             Text="安装本程序对系统右键菜单的扩展模块，并建立程序与 .hcb 文件的关联。"
@@ -39,6 +40,7 @@
                     <StackPanel>
                         <wpfui:TextBlock Text="卸载右键菜单并取消关联" />
                         <wpfui:TextBlock
+                            Margin="0,2,0,0"
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                             Text="卸载本程序对系统右键菜单的扩展模块，并取消程序与 .hcb 文件的关联。"
@@ -56,6 +58,7 @@
                     <StackPanel>
                         <wpfui:TextBlock Text="右键菜单扩展模块状态信息和说明" />
                         <wpfui:TextBlock
+                            Margin="0,2,0,0"
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                             Text="包含 HashCalculator 的右键菜单扩展的安装状态、安装位置、帮助信息等。"
@@ -63,38 +66,38 @@
                     </StackPanel>
                 </wpfui:CardExpander.Header>
                 <StackPanel>
-                    <controls:MinLimitedCardControl Header="安装状态">
+                    <wpfui:CardControl Header="安装状态">
                         <wpfui:TextBlock
                             Margin="0,0,4,0"
-                            HorizontalAlignment="Right"
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                             Text="{Binding DisplayingShellInstallationState}" />
-                    </controls:MinLimitedCardControl>
-                    <controls:MinLimitedCardControl Header="安装位置">
-                        <StackPanel Orientation="Horizontal">
-                            <wpfui:TextBlock
-                                HorizontalAlignment="Right"
-                                VerticalAlignment="Center"
-                                FontTypography="Caption"
-                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                Text="{Binding DisplayingShellExtensionDir}" />
-                            <Button
-                                Margin="16,0,0,0"
-                                Click="ButtonBrowseInstallationLocationClick"
-                                Content="打开" />
-                        </StackPanel>
-                    </controls:MinLimitedCardControl>
-                    <controls:MinLimitedCardControl Header="生效范围">
+                    </wpfui:CardControl>
+                    <wpfui:CardControl>
+                        <wpfui:CardControl.Header>
+                            <StackPanel>
+                                <TextBlock Text="安装位置" />
+                                <wpfui:TextBlock
+                                    FontTypography="Caption"
+                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                    Text="{Binding DisplayingShellExtensionDir}"
+                                    TextWrapping="WrapWithOverflow" />
+                            </StackPanel>
+                        </wpfui:CardControl.Header>
+                        <Button
+                            Margin="16,0,0,0"
+                            Click="ButtonBrowseInstallationLocationClick"
+                            Content="打开" />
+                    </wpfui:CardControl>
+                    <wpfui:CardControl Header="生效范围">
                         <wpfui:TextBlock
                             Margin="0,0,4,0"
-                            HorizontalAlignment="Right"
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                             Text="{Binding DisplayingShellInstallationScope}" />
-                    </controls:MinLimitedCardControl>
-                    <controls:MinLimitedCardControl>
-                        <controls:MinLimitedCardControl.Header>
+                    </wpfui:CardControl>
+                    <wpfui:CardControl>
+                        <wpfui:CardControl.Header>
                             <StackPanel>
                                 <wpfui:TextBlock Text="程序路径" />
                                 <wpfui:TextBlock
@@ -103,15 +106,14 @@
                                     Text="移动过应用程序位置后，需要更新应用程序路径或者重新安装右键菜单，否则右键菜单将无法调起程序。"
                                     TextWrapping="WrapWithOverflow" />
                             </StackPanel>
-                        </controls:MinLimitedCardControl.Header>
+                        </wpfui:CardControl.Header>
                         <Button
                             Margin="16,0,0,0"
-                            HorizontalAlignment="Right"
                             Click="ButtonUpdateApplicationPathClick"
                             Content="更新" />
-                    </controls:MinLimitedCardControl>
-                    <controls:MinLimitedCardControl Margin="0,4,0,0">
-                        <controls:MinLimitedCardControl.Header>
+                    </wpfui:CardControl>
+                    <wpfui:CardControl Margin="0,4,0,0">
+                        <wpfui:CardControl.Header>
                             <StackPanel>
                                 <wpfui:TextBlock Text="其他须知的原理和提示" />
                                 <wpfui:TextBlock
@@ -120,8 +122,8 @@
                                     Text="状态为未安装时【安装位置】跟随配置文件的保存位置，已安装则表示实际安装位置；状态为未安装时【生效范围】指如果安装后将会生效的范围，已安装则表示实际生效范围。&#10;以管理员身份启动 HashCalculator 后安装则【生效范围】是当前系统，否则是当前用户。&#10;安装右键菜单后，程序会在【安装位置】下释放外壳扩展模块 HashCalculator[32].dll，不可强制移动、删除、重命名 HashCalculator[32].dll 文件，否则右键菜单将失效。&#10;删除 HashCalculator.exe 前先卸载右键菜单，程序会清理注册表并删除菜单扩展模块，下载新版本后先在旧版本上卸载右键菜单再打开新版本安装右键菜单以避免出现兼容问题。&#10;如果安装位置是用户目录，即使生效范围是【当前系统】，其他用户也可能无法访问菜单。"
                                     TextWrapping="WrapWithOverflow" />
                             </StackPanel>
-                        </controls:MinLimitedCardControl.Header>
-                    </controls:MinLimitedCardControl>
+                        </wpfui:CardControl.Header>
+                    </wpfui:CardControl>
                 </StackPanel>
             </wpfui:CardExpander>
             <wpfui:CardExpander Margin="0,4,0,0">
@@ -129,6 +131,7 @@
                     <StackPanel>
                         <wpfui:TextBlock Text="自定义已经安装的菜单条目" />
                         <wpfui:TextBlock
+                            Margin="0,2,0,0"
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                             Text="通过编辑配置文件实现自定义要集成到系统右键菜单的 HashCalculator 菜单项，提高操作效率。"

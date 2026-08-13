@@ -23,6 +23,7 @@
                     <StackPanel>
                         <wpfui:TextBlock Text="解析校验信息(文件/字符串)的解析方案" />
                         <wpfui:TextBlock
+                            Margin="0,2,0,0"
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                             Text="解析方案就是从校验信息(文件/字符串)读取有用信息的方案。程序会在校验时自动选择方案，具体的选择方式见下方的说明。"
@@ -109,6 +110,7 @@
                     <StackPanel>
                         <wpfui:TextBlock Text="校验信息解析方案的具体使用帮助和说明" />
                         <wpfui:TextBlock
+                            Margin="0,2,0,0"
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                             Text="包含校验信息解析方案的使用帮助、说明和解析方式表达式的占位符用法。"

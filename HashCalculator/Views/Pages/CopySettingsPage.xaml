@@ -20,6 +20,7 @@
                     <StackPanel>
                         <wpfui:TextBlock Text="用模版来定制复制的内容" />
                         <wpfui:TextBlock
+                            Margin="0,2,0,0"
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                             Text="当点击含有“按模板复制”字样的按钮或菜单时，使用模版来定制想要复制的内容。"
@@ -33,6 +34,7 @@
                     <StackPanel>
                         <wpfui:TextBlock Text="用于定制复制内容的模板" />
                         <wpfui:TextBlock
+                            Margin="0,2,0,0"
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                             Text="可以在输入框中任意使用以下占位符来指定实际要复制的内容，用法见下方使用说明。"
@@ -46,10 +48,7 @@
                     MaxLines="1"
                     Text="{Binding FormatForGenerateText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
             </controls:MinLimitedCardControl>
-            <controls:MinLimitedCardControl Margin="0,4,0,0">
-                <controls:MinLimitedCardControl.Header>
-                    <wpfui:TextBlock Text="复制的内容含算法名时算法名的大小写跟随十六进制输出方式" />
-                </controls:MinLimitedCardControl.Header>
+            <controls:MinLimitedCardControl Margin="0,4,0,0" Header="复制的内容含算法名时算法名的大小写跟随十六进制输出方式">
                 <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding CaseOfCopiedAlgNameFollowsOutputType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </controls:MinLimitedCardControl>
             <wpfui:CardExpander Margin="0,4,0,0">
@@ -57,6 +56,7 @@
                     <StackPanel>
                         <wpfui:TextBlock Text="可在模板中使用的占位符及使用说明" />
                         <wpfui:TextBlock
+                            Margin="0,2,0,0"
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                             Text="模板设置影响所有含有“按模板复制”字样的按钮或菜单的复制效果，模版留空效果与关闭“用模版来定制复制的内容”效果相同。模板对于那些会复制出多行内容的按钮或菜单来说是每一行的模版。"

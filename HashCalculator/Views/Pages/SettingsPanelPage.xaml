@@ -28,6 +28,7 @@
                         <StackPanel>
                             <wpfui:TextBlock Text="{Binding Content}" />
                             <wpfui:TextBlock
+                                Margin="0,2,0,0"
                                 FontTypography="Caption"
                                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                 Text="{Binding TargetPageTag}"
