@@ -91,19 +91,19 @@ namespace HashCalculator
             switch (branch)
             {
                 case RegBranch.HKCU:
-                    Current.DisplayingShellInstallationState = "已安装";
+                    Current.DisplayingShellInstallationState = "已经安装";
                     Current.DisplayingShellInstallationScope = "当前用户";
                     break;
                 case RegBranch.HKLM:
-                    Current.DisplayingShellInstallationState = "已安装";
+                    Current.DisplayingShellInstallationState = "已经安装";
                     Current.DisplayingShellInstallationScope = "当前系统";
                     break;
                 case RegBranch.BOTH:
-                    Current.DisplayingShellInstallationState = "已安装";
+                    Current.DisplayingShellInstallationState = "已经安装";
                     Current.DisplayingShellInstallationScope = "当前系统和用户";
                     break;
                 case RegBranch.NEITHER:
-                    Current.DisplayingShellInstallationState = "未安装";
+                    Current.DisplayingShellInstallationState = "没有安装";
                     Current.DisplayingShellInstallationScope = ShellExtHelper.RunningAsAdmin ? "当前系统" : "当前用户";
                     break;
                 default:

@@ -68,10 +68,15 @@
                 <StackPanel>
                     <wpfui:CardControl Header="安装状态">
                         <wpfui:TextBlock
-                            Margin="0,0,4,0"
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                             Text="{Binding DisplayingShellInstallationState}" />
+                    </wpfui:CardControl>
+                    <wpfui:CardControl Header="生效范围">
+                        <wpfui:TextBlock
+                            FontTypography="Caption"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            Text="{Binding DisplayingShellInstallationScope}" />
                     </wpfui:CardControl>
                     <wpfui:CardControl>
                         <wpfui:CardControl.Header>
@@ -88,13 +93,6 @@
                             Margin="16,0,0,0"
                             Click="ButtonBrowseInstallationLocationClick"
                             Content="打开" />
-                    </wpfui:CardControl>
-                    <wpfui:CardControl Header="生效范围">
-                        <wpfui:TextBlock
-                            Margin="0,0,4,0"
-                            FontTypography="Caption"
-                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            Text="{Binding DisplayingShellInstallationScope}" />
                     </wpfui:CardControl>
                     <wpfui:CardControl>
                         <wpfui:CardControl.Header>
