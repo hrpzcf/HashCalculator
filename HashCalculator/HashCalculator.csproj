@@ -29,6 +29,7 @@
         <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" NoWarn="NU1701" />
         <PackageReference Include="WPF-UI" Version="4.3.0" />
         <PackageReference Include="WPF-UI.DependencyInjection" Version="4.3.0" />
+        <PackageReference Include="WPF-UI.Tray" Version="4.3.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -80,8 +81,6 @@
         <PropertyGroup Condition="'$(_Revision)' != '0'">
             <_FileNameVersionString>$(_ShortVer)-preview$(_Revision)</_FileNameVersionString>
         </PropertyGroup>
-        <Move SourceFiles="$(PublishDir)$(AssemblyName).exe"
-            DestinationFiles="$(PublishDir)$(AssemblyName)-$(Platform)-$(_FileNameVersionString).exe"
-            OverwriteReadOnlyFiles="true" />
+        <Move SourceFiles="$(PublishDir)$(AssemblyName).exe" DestinationFiles="$(PublishDir)$(AssemblyName)-$(Platform)-$(_FileNameVersionString).exe" OverwriteReadOnlyFiles="true" />
     </Target>
 </Project>

@@ -75,6 +75,7 @@ public class SettingsViewModel : BaseViewModel
     private bool clearSelectedItemsAfterCompletion = false;
     private bool isMainWindowNavigationViewPaneOpen = true;
     private bool moveFilesToRecycleBinSilently = false;
+    private bool hideWindowToSystemTrayWhenClosing = false;
 
     // 主窗口顶部各按钮的显示与否
     private bool showSelectedOutputTypeButton = true;
@@ -278,8 +279,17 @@ public class SettingsViewModel : BaseViewModel
     public WindowState MainWindowState
     {
         get => this.mainWindowState;
-        set => this.SetPropNotify(ref this.mainWindowState, value);
+        set
+        {
+            if (value != WindowState.Minimized)
+            {
+                this.MainWindowStateWithoutMinimized = value;
+            }
+            this.SetPropNotify(ref this.mainWindowState, value);
+        }
     }
+
+    public WindowState MainWindowStateWithoutMinimized { get; set; }
 
     public double ExceptionWindowWidth
     {
@@ -505,6 +515,12 @@ public class SettingsViewModel : BaseViewModel
     {
         get => this.moveFilesToRecycleBinSilently;
         set => this.SetPropNotify(ref this.moveFilesToRecycleBinSilently, value);
+    }
+
+    public bool HideWindowToSystemTrayWhenClosing
+    {
+        get => this.hideWindowToSystemTrayWhenClosing;
+        set => this.SetPropNotify(ref this.hideWindowToSystemTrayWhenClosing, value);
     }
 
     public bool ClearTableBeforeAddingFilesByCmdLine
@@ -1707,6 +1723,10 @@ public class SettingsViewModel : BaseViewModel
         foreach (AlgoInOutModel model in AlgorithmsModel.ProvidedAlgos)
         {
             model.Selected = this.SelectedAlgos?.Contains(model.AlgoType) ?? false;
+        }
+        if (this.MainWindowState == WindowState.Minimized)
+        {
+            this.MainWindowState = this.MainWindowStateWithoutMinimized;
         }
     }
 

@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:tray="http://schemas.lepo.co/wpfui/2022/xaml/tray"
     xmlns:winmodels="clr-namespace:HashCalculator.ViewModels.Windows"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="{x:Static local:Info.Title}"
@@ -49,6 +50,25 @@
                 <wpfui:ImageIcon Source="/Images/icon.ico" />
             </wpfui:TitleBar.Icon>
         </wpfui:TitleBar>
+        <tray:NotifyIcon
+            FocusOnLeftClick="True"
+            Icon="/Images/icon.ico"
+            MenuOnRightClick="True">
+            <tray:NotifyIcon.TooltipText>
+                <MultiBinding StringFormat="{}{1} {0}">
+                    <Binding Source="{x:Static local:Info.Ver}" />
+                    <Binding Source="{x:Static local:Info.Title}" />
+                </MultiBinding>
+            </tray:NotifyIcon.TooltipText>
+            <tray:NotifyIcon.Menu>
+                <ContextMenu>
+                    <wpfui:MenuItem Click="MenuItemNavigateToHomePageClick" Header="主页" />
+                    <wpfui:MenuItem Click="MenuItemNavigateToSettingsClick" Header="设置" />
+                    <Separator />
+                    <wpfui:MenuItem Click="MenuItemShutdownApplicationClick" Header="退出" />
+                </ContextMenu>
+            </tray:NotifyIcon.Menu>
+        </tray:NotifyIcon>
         <wpfui:ContentDialogHost x:Name="RootContentDialogHost" />
     </Grid>
 </wpfui:FluentWindow>

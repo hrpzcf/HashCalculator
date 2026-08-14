@@ -289,6 +289,20 @@
                 </controls:MinLimitedCardControl.Header>
                 <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding ClearTableBeforeAddingFilesByCmdLine, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </controls:MinLimitedCardControl>
+            <controls:MinLimitedCardControl Margin="0,4,0,0">
+                <controls:MinLimitedCardControl.Header>
+                    <StackPanel>
+                        <wpfui:TextBlock Text="点击窗口关闭按钮时把窗口隐藏到系统托盘栏" />
+                        <wpfui:TextBlock
+                            Margin="0,2,0,0"
+                            FontTypography="Caption"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            Text="把此设置项打开则点击窗口关闭按钮时把窗口隐藏到系统托盘栏而不退出程序。"
+                            TextWrapping="WrapWithOverflow" />
+                    </StackPanel>
+                </controls:MinLimitedCardControl.Header>
+                <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding HideWindowToSystemTrayWhenClosing, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </controls:MinLimitedCardControl>
         </StackPanel>
     </ScrollViewer>
 </Page>

@@ -86,7 +86,15 @@ public partial class MainWindow
 
     private void MainWindowClosing(object sender, CancelEventArgs e)
     {
-        e.Cancel = Settings.Current.ProcessingShellExtension;
+        if (Settings.Current.HideWindowToSystemTrayWhenClosing)
+        {
+            e.Cancel = true;
+            this.Visibility = Visibility.Hidden;
+        }
+        else
+        {
+            e.Cancel = Settings.Current.ProcessingShellExtension;
+        }
     }
 
     private void MainWindowClosed(object sender, EventArgs e)
@@ -394,5 +402,38 @@ public partial class MainWindow
             thread.IsBackground = true;
             thread.Start();
         }
+    }
+
+    private void EnsureMainWindowIsShownAndActivated()
+    {
+        if (!this.IsVisible)
+        {
+            this.Visibility = Visibility.Visible;
+        }
+        if (this.WindowState == WindowState.Maximized)
+        {
+            this.WindowState = Settings.Current.MainWindowStateWithoutMinimized;
+        }
+        if (!this.IsActive)
+        {
+            this.Activate();
+        }
+    }
+
+    private void MenuItemNavigateToHomePageClick(object sender, RoutedEventArgs e)
+    {
+        this.EnsureMainWindowIsShownAndActivated();
+        this._navigationService.Navigate(typeof(HomePage));
+    }
+
+    private void MenuItemNavigateToSettingsClick(object sender, RoutedEventArgs e)
+    {
+        this.EnsureMainWindowIsShownAndActivated();
+        this._navigationService.Navigate(typeof(SettingsPanelPage));
+    }
+
+    private void MenuItemShutdownApplicationClick(object sender, RoutedEventArgs e)
+    {
+        Application.Current.Shutdown();
     }
 }
