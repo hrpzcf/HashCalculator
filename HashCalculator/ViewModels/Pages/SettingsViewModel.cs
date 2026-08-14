@@ -1780,7 +1780,7 @@ public class SettingsViewModel : BaseViewModel
     [JsonIgnore, XmlIgnore]
     public GenericItemModel[] AvailableFetchAlgoOptions { get; } =
     {
-        new GenericItemModel("使用算法页中被勾选的算法", FetchAlgoOption.SELECTED),
+        new GenericItemModel("使用【算法】页中被勾选的算法", FetchAlgoOption.SELECTED),
         new GenericItemModel("使用被勾选且可产生相应哈希长度的算法", FetchAlgoOption.TATSAMSHDL),
         new GenericItemModel("使用所有可产生相应哈希长度的算法", FetchAlgoOption.TATMSHDL),
     };
