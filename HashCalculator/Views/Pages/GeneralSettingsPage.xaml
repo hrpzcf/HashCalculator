@@ -59,7 +59,7 @@
                             Margin="0,2,0,0"
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            Text="这是当需要查找校验信息文件内列出的文件进行计算并校验时的首选算法，关闭则使用默认算法中被勾选的算法。"
+                            Text="这是当需要查找校验信息文件内列出的文件进行计算并校验时的首选算法，关闭则使用算法页中被勾选的算法。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
                 </controls:MinLimitedCardControl.Header>
