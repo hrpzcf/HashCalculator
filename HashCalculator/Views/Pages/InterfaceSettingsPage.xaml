@@ -47,83 +47,76 @@
                     </StackPanel>
                 </wpfui:CardExpander.Header>
                 <StackPanel>
-                    <controls:MinLimitedCardControl>
-                        <controls:MinLimitedCardControl.Header>
+                    <wpfui:CardControl>
+                        <wpfui:CardControl.Header>
                             <wpfui:TextBlock Text="序号列" />
-                        </controls:MinLimitedCardControl.Header>
+                        </wpfui:CardControl.Header>
                         <wpfui:ToggleSwitch
-                            HorizontalAlignment="Right"
                             IsChecked="{Binding NoSerialNumColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             LabelPosition="Left"
                             OffContent="显示"
                             OnContent="隐藏" />
-                    </controls:MinLimitedCardControl>
-                    <controls:MinLimitedCardControl>
-                        <controls:MinLimitedCardControl.Header>
+                    </wpfui:CardControl>
+                    <wpfui:CardControl>
+                        <wpfui:CardControl.Header>
                             <wpfui:TextBlock Text="完整路径列" />
-                        </controls:MinLimitedCardControl.Header>
+                        </wpfui:CardControl.Header>
                         <wpfui:ToggleSwitch
-                            HorizontalAlignment="Right"
                             IsChecked="{Binding NoFullPathColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             LabelPosition="Left"
                             OffContent="显示"
                             OnContent="隐藏" />
-                    </controls:MinLimitedCardControl>
-                    <controls:MinLimitedCardControl>
-                        <controls:MinLimitedCardControl.Header>
+                    </wpfui:CardControl>
+                    <wpfui:CardControl>
+                        <wpfui:CardControl.Header>
                             <wpfui:TextBlock Text="文件大小列" />
-                        </controls:MinLimitedCardControl.Header>
+                        </wpfui:CardControl.Header>
                         <wpfui:ToggleSwitch
-                            HorizontalAlignment="Right"
                             IsChecked="{Binding NoFileSizeColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             LabelPosition="Left"
                             OffContent="显示"
                             OnContent="隐藏" />
-                    </controls:MinLimitedCardControl>
-                    <controls:MinLimitedCardControl>
-                        <controls:MinLimitedCardControl.Header>
+                    </wpfui:CardControl>
+                    <wpfui:CardControl>
+                        <wpfui:CardControl.Header>
                             <wpfui:TextBlock Text="输出方式列" />
-                        </controls:MinLimitedCardControl.Header>
+                        </wpfui:CardControl.Header>
                         <wpfui:ToggleSwitch
-                            HorizontalAlignment="Right"
                             IsChecked="{Binding NoOutputTypeColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             LabelPosition="Left"
                             OffContent="显示"
                             OnContent="隐藏" />
-                    </controls:MinLimitedCardControl>
-                    <controls:MinLimitedCardControl>
-                        <controls:MinLimitedCardControl.Header>
+                    </wpfui:CardControl>
+                    <wpfui:CardControl>
+                        <wpfui:CardControl.Header>
                             <wpfui:TextBlock Text="任务耗时列" />
-                        </controls:MinLimitedCardControl.Header>
+                        </wpfui:CardControl.Header>
                         <wpfui:ToggleSwitch
-                            HorizontalAlignment="Right"
                             IsChecked="{Binding NoDurationColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             LabelPosition="Left"
                             OffContent="显示"
                             OnContent="隐藏" />
-                    </controls:MinLimitedCardControl>
-                    <controls:MinLimitedCardControl>
-                        <controls:MinLimitedCardControl.Header>
+                    </wpfui:CardControl>
+                    <wpfui:CardControl>
+                        <wpfui:CardControl.Header>
                             <wpfui:TextBlock Text="导出列" />
-                        </controls:MinLimitedCardControl.Header>
+                        </wpfui:CardControl.Header>
                         <wpfui:ToggleSwitch
-                            HorizontalAlignment="Right"
                             IsChecked="{Binding NoExportColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             LabelPosition="Left"
                             OffContent="显示"
                             OnContent="隐藏" />
-                    </controls:MinLimitedCardControl>
-                    <controls:MinLimitedCardControl>
-                        <controls:MinLimitedCardControl.Header>
+                    </wpfui:CardControl>
+                    <wpfui:CardControl>
+                        <wpfui:CardControl.Header>
                             <wpfui:TextBlock Text="校验结果列" />
-                        </controls:MinLimitedCardControl.Header>
+                        </wpfui:CardControl.Header>
                         <wpfui:ToggleSwitch
-                            HorizontalAlignment="Right"
                             IsChecked="{Binding NoCmpResultColumn, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             LabelPosition="Left"
                             OffContent="显示"
                             OnContent="隐藏" />
-                    </controls:MinLimitedCardControl>
+                    </wpfui:CardControl>
                 </StackPanel>
             </wpfui:CardExpander>
             <controls:MinLimitedCardControl Margin="0,4,0,0">
@@ -171,150 +164,132 @@
                     </StackPanel>
                 </wpfui:CardExpander.Header>
                 <StackPanel>
-                    <controls:MinLimitedCardControl Header="选择文件按钮">
+                    <wpfui:CardControl Header="选择文件按钮">
                         <wpfui:ToggleSwitch
-                            HorizontalAlignment="Right"
                             IsChecked="{Binding ShowSelectFilesToHashButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             LabelPosition="Left"
                             OffContent="隐藏"
                             OnContent="显示" />
-                    </controls:MinLimitedCardControl>
-                    <controls:MinLimitedCardControl Header="选择目录按钮">
+                    </wpfui:CardControl>
+                    <wpfui:CardControl Header="选择目录按钮">
                         <wpfui:ToggleSwitch
-                            HorizontalAlignment="Right"
                             IsChecked="{Binding ShowSelectFoldersToHashButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             LabelPosition="Left"
                             OffContent="隐藏"
                             OnContent="显示" />
-                    </controls:MinLimitedCardControl>
-                    <controls:MinLimitedCardControl Header="停止搜索按钮">
+                    </wpfui:CardControl>
+                    <wpfui:CardControl Header="停止搜索按钮">
                         <wpfui:ToggleSwitch
-                            HorizontalAlignment="Right"
                             IsChecked="{Binding ShowStopEnumeratingPackageButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             LabelPosition="Left"
                             OffContent="隐藏"
                             OnContent="显示" />
-                    </controls:MinLimitedCardControl>
-                    <controls:MinLimitedCardControl Header="按钮分隔线 1">
+                    </wpfui:CardControl>
+                    <wpfui:CardControl Header="按钮分隔线 1">
                         <wpfui:ToggleSwitch
-                            HorizontalAlignment="Right"
                             IsChecked="{Binding ShowSeparatorBesideFuncButtons1, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             LabelPosition="Left"
                             OffContent="隐藏"
                             OnContent="显示" />
-                    </controls:MinLimitedCardControl>
-                    <controls:MinLimitedCardControl Header="新行重算按钮">
+                    </wpfui:CardControl>
+                    <wpfui:CardControl Header="新行重算按钮">
                         <wpfui:ToggleSwitch
-                            HorizontalAlignment="Right"
                             IsChecked="{Binding ShowCopyAndRestartModelsButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             LabelPosition="Left"
                             OffContent="隐藏"
                             OnContent="显示" />
-                    </controls:MinLimitedCardControl>
-                    <controls:MinLimitedCardControl Header="计算缺值项按钮">
+                    </wpfui:CardControl>
+                    <wpfui:CardControl Header="计算缺值项按钮">
                         <wpfui:ToggleSwitch
-                            HorizontalAlignment="Right"
                             IsChecked="{Binding ShowRefreshOriginalModelsButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             LabelPosition="Left"
                             OffContent="隐藏"
                             OnContent="显示" />
-                    </controls:MinLimitedCardControl>
-                    <controls:MinLimitedCardControl Header="重新计算按钮">
+                    </wpfui:CardControl>
+                    <wpfui:CardControl Header="重新计算按钮">
                         <wpfui:ToggleSwitch
-                            HorizontalAlignment="Right"
                             IsChecked="{Binding ShowForceRefreshOriginalModelsButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             LabelPosition="Left"
                             OffContent="隐藏"
                             OnContent="显示" />
-                    </controls:MinLimitedCardControl>
-                    <controls:MinLimitedCardControl Header="按钮分隔线 2">
+                    </wpfui:CardControl>
+                    <wpfui:CardControl Header="按钮分隔线 2">
                         <wpfui:ToggleSwitch
-                            HorizontalAlignment="Right"
                             IsChecked="{Binding ShowSeparatorBesideFuncButtons2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             LabelPosition="Left"
                             OffContent="隐藏"
                             OnContent="显示" />
-                    </controls:MinLimitedCardControl>
-                    <controls:MinLimitedCardControl Header="全部开始按钮">
+                    </wpfui:CardControl>
+                    <wpfui:CardControl Header="全部开始按钮">
                         <wpfui:ToggleSwitch
-                            HorizontalAlignment="Right"
                             IsChecked="{Binding ShowContinueDisplayedModelsButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             LabelPosition="Left"
                             OffContent="隐藏"
                             OnContent="显示" />
-                    </controls:MinLimitedCardControl>
-                    <controls:MinLimitedCardControl Header="全部暂停按钮">
+                    </wpfui:CardControl>
+                    <wpfui:CardControl Header="全部暂停按钮">
                         <wpfui:ToggleSwitch
-                            HorizontalAlignment="Right"
                             IsChecked="{Binding ShowPauseDisplayedModelsButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             LabelPosition="Left"
                             OffContent="隐藏"
                             OnContent="显示" />
-                    </controls:MinLimitedCardControl>
-                    <controls:MinLimitedCardControl Header="全部取消按钮">
+                    </wpfui:CardControl>
+                    <wpfui:CardControl Header="全部取消按钮">
                         <wpfui:ToggleSwitch
-                            HorizontalAlignment="Right"
                             IsChecked="{Binding ShowCancelDisplayedModelsButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             LabelPosition="Left"
                             OffContent="隐藏"
                             OnContent="显示" />
-                    </controls:MinLimitedCardControl>
-                    <controls:MinLimitedCardControl Header="清空表格按钮">
+                    </wpfui:CardControl>
+                    <wpfui:CardControl Header="清空表格按钮">
                         <wpfui:ToggleSwitch
-                            HorizontalAlignment="Right"
                             IsChecked="{Binding ShowClearAllTableLinesButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             LabelPosition="Left"
                             OffContent="隐藏"
                             OnContent="显示" />
-                    </controls:MinLimitedCardControl>
-                    <controls:MinLimitedCardControl Header="按钮分隔线 3">
+                    </wpfui:CardControl>
+                    <wpfui:CardControl Header="按钮分隔线 3">
                         <wpfui:ToggleSwitch
-                            HorizontalAlignment="Right"
                             IsChecked="{Binding ShowSeparatorBesideFuncButtons3, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             LabelPosition="Left"
                             OffContent="隐藏"
                             OnContent="显示" />
-                    </controls:MinLimitedCardControl>
-                    <controls:MinLimitedCardControl Header="默认输出方式按钮">
+                    </wpfui:CardControl>
+                    <wpfui:CardControl Header="默认输出方式按钮">
                         <wpfui:ToggleSwitch
-                            HorizontalAlignment="Right"
                             IsChecked="{Binding ShowSelectedOutputTypeButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             LabelPosition="Left"
                             OffContent="隐藏"
                             OnContent="显示" />
-                    </controls:MinLimitedCardControl>
-                    <controls:MinLimitedCardControl Header="刷新筛选按钮">
+                    </wpfui:CardControl>
+                    <wpfui:CardControl Header="刷新筛选按钮">
                         <wpfui:ToggleSwitch
-                            HorizontalAlignment="Right"
                             IsChecked="{Binding ShowApplyRefreshFilterslButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             LabelPosition="Left"
                             OffContent="隐藏"
                             OnContent="显示" />
-                    </controls:MinLimitedCardControl>
-                    <controls:MinLimitedCardControl Header="导出结果按钮">
+                    </wpfui:CardControl>
+                    <wpfui:CardControl Header="导出结果按钮">
                         <wpfui:ToggleSwitch
-                            HorizontalAlignment="Right"
                             IsChecked="{Binding ShowExportHashResultsButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             LabelPosition="Left"
                             OffContent="隐藏"
                             OnContent="显示" />
-                    </controls:MinLimitedCardControl>
-                    <controls:MinLimitedCardControl Header="按钮分隔线 4">
+                    </wpfui:CardControl>
+                    <wpfui:CardControl Header="按钮分隔线 4">
                         <wpfui:ToggleSwitch
-                            HorizontalAlignment="Right"
                             IsChecked="{Binding ShowSeparatorBesideFuncButtons4, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             LabelPosition="Left"
                             OffContent="隐藏"
                             OnContent="显示" />
-                    </controls:MinLimitedCardControl>
-                    <controls:MinLimitedCardControl Header="置顶窗口按钮">
+                    </wpfui:CardControl>
+                    <wpfui:CardControl Header="置顶窗口按钮">
                         <wpfui:ToggleSwitch
-                            HorizontalAlignment="Right"
                             IsChecked="{Binding ShowMainWindowTopmostButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             LabelPosition="Left"
                             OffContent="隐藏"
                             OnContent="显示" />
-                    </controls:MinLimitedCardControl>
+                    </wpfui:CardControl>
                 </StackPanel>
             </wpfui:CardExpander>
             <controls:MinLimitedCardControl Margin="0,4,0,0">

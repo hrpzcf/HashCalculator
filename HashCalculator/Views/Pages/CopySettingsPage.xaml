@@ -66,8 +66,8 @@
                 <ItemsControl ItemsSource="{Binding AvailablePlaceholdersForTemplateOfCopyHash}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <controls:MinLimitedCardControl>
-                                <controls:MinLimitedCardControl.Header>
+                            <wpfui:CardControl>
+                                <wpfui:CardControl.Header>
                                     <StackPanel>
                                         <wpfui:TextBlock Text="{Binding Display}" />
                                         <wpfui:TextBlock
@@ -76,13 +76,12 @@
                                             Text="{Binding ItemValue}"
                                             TextWrapping="WrapWithOverflow" />
                                     </StackPanel>
-                                </controls:MinLimitedCardControl.Header>
+                                </wpfui:CardControl.Header>
                                 <Button
-                                    HorizontalAlignment="Right"
                                     Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}, Path=DataContext.CopyTemplatePlaceholderCmd}"
                                     CommandParameter="{Binding Display}"
                                     Content="复制" />
-                            </controls:MinLimitedCardControl>
+                            </wpfui:CardControl>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
