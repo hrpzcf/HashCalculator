@@ -34,7 +34,6 @@
                     </StackPanel>
                 </controls:MinLimitedCardControl.Header>
                 <ComboBox
-                    Margin="30,0,0,0"
                     DisplayMemberPath="Display"
                     IsEnabled="{Binding ProcessingShellExtension, Converter={StaticResource ReverseBooleanValueCvt}}"
                     ItemsSource="{Binding AvailableLocationsForSavingConfigFile}"
