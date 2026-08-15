@@ -38,7 +38,6 @@ public class HomeViewModel : BaseViewModel
     private string hashCheckReport = string.Empty;
     private string hashValueStringOrChecklistPath = null;
     private RunningState runningState = RunningState.None;
-    private FilterOperationWindow filterWindowInstance = null;
     private NavigationService _navigationService = null;
 
     private RelayCommand mainWindowTopmostCmd;
@@ -87,6 +86,8 @@ public class HomeViewModel : BaseViewModel
 
     public ModelStarter Starter { get; } =
         new ModelStarter(Settings.Current.SelectedTaskNumberLimit, 32);
+
+    public FilterOperationWindow FilterWindowInstance { get; private set; }
 
     public FilterOperationModel FilterAndOperationModel { get; private set; }
 
@@ -813,16 +814,22 @@ public class HomeViewModel : BaseViewModel
 
     private void OpenFilterOperationWindowAction(object param)
     {
-        if (this.filterWindowInstance is null)
+        if (this.FilterWindowInstance is null)
         {
-            this.filterWindowInstance = App.GetRequiredService<FilterOperationWindow>();
-            this.filterWindowInstance.Closed += (s, e) => { this.filterWindowInstance = null; };
-            this.filterWindowInstance.Show();
+            this.FilterWindowInstance = App.GetRequiredService<FilterOperationWindow>();
+            this.FilterWindowInstance.Closed += (s, e) => { this.FilterWindowInstance = null; };
+            this.FilterWindowInstance.Show();
         }
         else
         {
-            this.filterWindowInstance.WindowState = WindowState.Normal;
-            this.filterWindowInstance.Activate();
+            if (this.FilterWindowInstance.WindowState != WindowState.Normal)
+            {
+                this.FilterWindowInstance.WindowState = WindowState.Normal;
+            }
+            if (!this.FilterWindowInstance.IsActive)
+            {
+                this.FilterWindowInstance.Activate();
+            }
         }
     }
 

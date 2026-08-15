@@ -39,7 +39,7 @@ public class MainWindowModel : BaseViewModel
             new NavigationViewItem(
                 "常规设置", SymbolRegular.LauncherSettings20, typeof(GeneralSettingsPage))
             {
-                TargetPageTag = "常用设置和其他不便分类的设置项。"
+                TargetPageTag = "常用的设置和其他不便分类的设置项。"
             },
             new NavigationViewItem(
                 "外观设置", SymbolRegular.CalendarSettings20, typeof(InterfaceSettingsPage))
@@ -49,7 +49,7 @@ public class MainWindowModel : BaseViewModel
             new NavigationViewItem(
                 "任务设置", SymbolRegular.ClipboardTextLtr20, typeof(TaskSettingsPage))
             {
-                TargetPageTag = "与哈希值计算任务有关的设置项。"
+                TargetPageTag = "一些与哈希值计算任务有关的设置项。"
             },
             new NavigationViewItem(
                 "菜单与文件关联", SymbolRegular.CursorClick20, typeof(MenuSettingsPage))

@@ -51,8 +51,9 @@
             </wpfui:TitleBar.Icon>
         </wpfui:TitleBar>
         <tray:NotifyIcon
-            FocusOnLeftClick="True"
+            FocusOnLeftClick="False"
             Icon="/Images/icon.ico"
+            LeftClick="NotifyIconLeftClick"
             MenuOnRightClick="True">
             <tray:NotifyIcon.TooltipText>
                 <MultiBinding StringFormat="{}{1} {0}">
@@ -63,6 +64,7 @@
             <tray:NotifyIcon.Menu>
                 <ContextMenu>
                     <wpfui:MenuItem Click="MenuItemNavigateToHomePageClick" Header="主页" />
+                    <wpfui:MenuItem Click="MenuItemNavigateToAlgosPanelClick" Header="算法" />
                     <wpfui:MenuItem Click="MenuItemNavigateToSettingsClick" Header="设置" />
                     <Separator />
                     <wpfui:MenuItem Click="MenuItemShutdownApplicationClick" Header="退出" />

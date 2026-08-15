@@ -43,7 +43,8 @@ public partial class FilterOperationWindow
 
     private void FilterOperationWindowLoaded(object sender, RoutedEventArgs e)
     {
-        //this.SetValue(BorderThicknessProperty, new Thickness(1));
+        // 添加筛选与操作窗口的边框强调色，使其在主窗口背景色下更显眼
+        //this.SetValue(BorderThicknessProperty, new Thickness(2));
         //this.SetValue(BorderBrushProperty, this.FindResource("SystemAccentColorBrush"));
 
         // 订阅主题变化事件：切换主题时手动刷新本窗口背景，

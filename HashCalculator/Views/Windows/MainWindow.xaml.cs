@@ -88,8 +88,9 @@ public partial class MainWindow
     {
         if (Settings.Current.HideWindowToSystemTrayWhenClosing)
         {
+            this.Hide();
+            this._homePageViewModel.FilterWindowInstance?.Hide();
             e.Cancel = true;
-            this.Visibility = Visibility.Hidden;
         }
         else
         {
@@ -404,13 +405,17 @@ public partial class MainWindow
         }
     }
 
-    private void EnsureMainWindowIsShownAndActivated()
+    private void EnsureWindowIsShownAndActivated()
     {
         if (!this.IsVisible)
         {
-            this.Visibility = Visibility.Visible;
+            this.Show();
         }
-        if (this.WindowState == WindowState.Maximized)
+        if (this._homePageViewModel.FilterWindowInstance?.IsVisible == false)
+        {
+            this._homePageViewModel.FilterWindowInstance.Show();
+        }
+        if (this.WindowState == WindowState.Minimized)
         {
             this.WindowState = Settings.Current.MainWindowStateWithoutMinimized;
         }
@@ -422,18 +427,29 @@ public partial class MainWindow
 
     private void MenuItemNavigateToHomePageClick(object sender, RoutedEventArgs e)
     {
-        this.EnsureMainWindowIsShownAndActivated();
+        this.EnsureWindowIsShownAndActivated();
         this._navigationService.Navigate(typeof(HomePage));
+    }
+
+    private void MenuItemNavigateToAlgosPanelClick(object sender, RoutedEventArgs e)
+    {
+        this.EnsureWindowIsShownAndActivated();
+        this._navigationService.Navigate(typeof(AlgosPanelPage));
     }
 
     private void MenuItemNavigateToSettingsClick(object sender, RoutedEventArgs e)
     {
-        this.EnsureMainWindowIsShownAndActivated();
+        this.EnsureWindowIsShownAndActivated();
         this._navigationService.Navigate(typeof(SettingsPanelPage));
     }
 
     private void MenuItemShutdownApplicationClick(object sender, RoutedEventArgs e)
     {
         Application.Current.Shutdown();
+    }
+
+    private void NotifyIconLeftClick(Wpf.Ui.Tray.Controls.NotifyIcon sender, RoutedEventArgs e)
+    {
+        this.EnsureWindowIsShownAndActivated();
     }
 }
