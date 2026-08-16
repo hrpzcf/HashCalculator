@@ -214,8 +214,10 @@ public class SettingsViewModel : BaseViewModel
         this.PropertyChanged += Settings.MoveConfigFiles;
     }
 
+    [JsonIgnore, XmlIgnore]
     public double DpiScaleX => 1.0 / CommonUtils.GetScreenScalingFactor();
 
+    [JsonIgnore, XmlIgnore]
     public double DpiScaleY => 1.0 / CommonUtils.GetScreenScalingFactor();
 
     public string PreviousVer { get; set; }
