@@ -3,10 +3,12 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Encodings.Web;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Windows.Input;
 using HashCalculator.ViewModels.Pages;
 using HashCalculator.Views.Windows;
-using Newtonsoft.Json;
 
 namespace HashCalculator.ViewModels.UserControls;
 
@@ -15,6 +17,11 @@ public class ShellMenuEditorModel : BaseViewModel
     private HcCtxMenuModel _selectedMenu;
     private ObservableCollection<HcCtxMenuModel> _menuList;
     private static readonly Encoding menuEncoding = Encoding.Unicode;
+    private static readonly JsonSerializerOptions JsonOptions = new JsonSerializerOptions()
+    {
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
+    };
     private RelayCommand _addMenuCmd;
     private RelayCommand _deleteMenuCmd;
     private RelayCommand _moveMenuUpCmd;
@@ -176,13 +183,10 @@ public class ShellMenuEditorModel : BaseViewModel
         {
             try
             {
-                JsonSerializer jsonSerializer = new JsonSerializer();
-                jsonSerializer.NullValueHandling = NullValueHandling.Ignore;
-                jsonSerializer.DefaultValueHandling = DefaultValueHandling.Populate;
                 using (StreamReader sr = new StreamReader(Settings.ConfigInfo.MenuConfigFile, menuEncoding))
-                using (JsonTextReader jsonTextReader = new JsonTextReader(sr))
                 {
-                    this.MenuList = jsonSerializer.Deserialize<ObservableCollection<HcCtxMenuModel>>(jsonTextReader);
+                    this.MenuList = JsonSerializer.Deserialize<ObservableCollection<HcCtxMenuModel>>(
+                        sr.ReadToEnd(), JsonOptions);
                 }
             }
             catch (Exception ex)
@@ -240,13 +244,9 @@ public class ShellMenuEditorModel : BaseViewModel
             {
                 return checkMenuResult;
             }
-            JsonSerializer jsonSerializer = new JsonSerializer();
-            jsonSerializer.NullValueHandling = NullValueHandling.Ignore;
-            jsonSerializer.DefaultValueHandling = DefaultValueHandling.Ignore;
             using (StreamWriter sw = new StreamWriter(Settings.ConfigInfo.MenuConfigFile, false, menuEncoding))
-            using (JsonTextWriter jsonTextWriter = new JsonTextWriter(sw))
             {
-                jsonSerializer.Serialize(jsonTextWriter, this.MenuList, typeof(ObservableCollection<HcCtxMenuModel>));
+                sw.Write(JsonSerializer.Serialize(this.MenuList, JsonOptions));
                 return null;
             }
         }

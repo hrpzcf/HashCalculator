@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Windows.Input;
 using HashCalculator.ViewModels.Pages;
 using HashCalculator.Views.Windows;
-using Newtonsoft.Json;
 
 namespace HashCalculator.ViewModels.UserControls;
 
-public class HcCtxMenuModel : BaseViewModel
+public class HcCtxMenuModel : BaseViewModel, IJsonOnSerializing, IJsonOnDeserialized
 {
     private const char sep = ',';
     private string _title;
@@ -203,8 +202,7 @@ public class HcCtxMenuModel : BaseViewModel
         }
     }
 
-    [OnDeserialized]
-    internal void OnHcCtxMenuModelDeserialized(StreamingContext context)
+    void IJsonOnDeserialized.OnDeserialized()
     {
         this.HasSubmenus = this.Submenus != null;
         if (!this.HasSubmenus)
@@ -227,8 +225,7 @@ public class HcCtxMenuModel : BaseViewModel
         }
     }
 
-    [OnSerializing]
-    internal void OnHcCtxMenuModelSerializing(StreamingContext context)
+    void IJsonOnSerializing.OnSerializing()
     {
         if (this.HasSubmenus)
         {

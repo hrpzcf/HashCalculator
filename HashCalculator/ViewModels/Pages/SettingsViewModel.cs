@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
+using System.Reflection;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml.Serialization;
 using HashCalculator.ViewModels.UserControls;
 using HashCalculator.Views.Windows;
-using Newtonsoft.Json;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 
 namespace HashCalculator.ViewModels.Pages;
 
-public class SettingsViewModel : BaseViewModel
+public class SettingsViewModel : BaseViewModel, IJsonOnSerializing, IJsonOnDeserialized
 {
     private double mainWndWidth = 1100.0;
     private double mainWndHeight = 760.0;
@@ -407,7 +407,7 @@ public class SettingsViewModel : BaseViewModel
         set => this.SetPropNotify(ref this.filterOperationWindowHeight, value);
     }
 
-    public Dictionary<string, ColumnProperty> ColumnsOrder { get; } =
+    public Dictionary<string, ColumnProperty> ColumnsOrder { get; set; } =
          new Dictionary<string, ColumnProperty>();
 
     public OutputType SelectedOutputType
@@ -1672,8 +1672,7 @@ public class SettingsViewModel : BaseViewModel
         }
     }
 
-    [OnSerializing]
-    internal void OnSettingsViewModelSerializing(StreamingContext context)
+    void IJsonOnSerializing.OnSerializing()
     {
         if (this.TemplatesForExport != null && !this.TemplatesForExport.Any())
         {
@@ -1697,8 +1696,7 @@ public class SettingsViewModel : BaseViewModel
             i => i.AlgoType).ToArray();
     }
 
-    [OnDeserialized]
-    internal void OnSettingsViewModelDeserialized(StreamingContext context)
+    void IJsonOnDeserialized.OnDeserialized()
     {
         if (this.TemplatesForExport == null || !this.TemplatesForExport.Any())
         {
@@ -1732,6 +1730,50 @@ public class SettingsViewModel : BaseViewModel
         }
     }
 
+    /// <summary>
+    /// 将 other 中可序列化的实例属性值回填到当前实例（Settings.Current）。
+    /// 仅回填：public、可写、非静态、非 [JsonIgnore]、类型一致、来源可读的属性。
+    /// </summary>
+    internal void CopyFromOther(SettingsViewModel sourceModel)
+    {
+        if (sourceModel == null)
+        {
+            return;
+        }
+        Type targetType = this.GetType();
+        Type sourceType = sourceModel.GetType();
+        foreach (PropertyInfo target in targetType.GetProperties(
+            BindingFlags.Public | BindingFlags.Instance))
+        {
+            if (target.GetIndexParameters().Length > 0)
+            {
+                continue;
+            }
+            if (target.GetCustomAttribute<JsonIgnoreAttribute>() != null)
+            {
+                continue;
+            }
+            if (target.GetMethod?.IsStatic == true)
+            {
+                continue;
+            }
+            if (!target.CanWrite)
+            {
+                continue;
+            }
+            PropertyInfo source = sourceType.GetProperty(target.Name);
+            if (source == null || !source.CanRead || source.GetMethod.IsStatic)
+            {
+                continue;
+            }
+            if (source.PropertyType != target.PropertyType)
+            {
+                continue;
+            }
+            target.SetValue(this, source.GetValue(sourceModel));
+        }
+    }
+
     [JsonIgnore, XmlIgnore]
     public bool ClipboardUpdatedByMe { get; set; }
 
@@ -1762,7 +1804,8 @@ public class SettingsViewModel : BaseViewModel
         new GenericItemModel("32", 32),
     };
 
-    public static GenericItemModel[] AvailableChoicesWhenNoVerb { get; } =
+    [JsonIgnore, XmlIgnore]
+    public GenericItemModel[] AvailableChoicesWhenNoVerb { get; } =
     {
         new GenericItemModel("计算所有输入文件的哈希值", MenuType.Compute),
         new GenericItemModel("把所有输入文件作为校验信息", MenuType.CheckHash),

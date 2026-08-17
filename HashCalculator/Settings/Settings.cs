@@ -2,9 +2,11 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Text.Encodings.Web;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using HashCalculator.ViewModels.Pages;
-using Newtonsoft.Json;
 
 namespace HashCalculator
 {
@@ -15,13 +17,19 @@ namespace HashCalculator
         /// </summary>
         public const string HashAlgs = "hashalgs.dll";
 
-        public static string ShellExtensionName { get; } = Environment.Is64BitOperatingSystem ?
-            "HashCalculator.dll" : "HashCalculator32.dll";
+        public static string ShellExtensionName { get; } = Environment.Is64BitOperatingSystem
+            ? "HashCalculator.dll" : "HashCalculator32.dll";
 
         public static ConfigPaths ConfigInfo { get; private set; }
 
         public static SettingsViewModel Current { get; private set; }
             = new SettingsViewModel();
+
+        private static readonly JsonSerializerOptions JsonOptions = new JsonSerializerOptions()
+        {
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+        };
 
         static Settings()
         {
@@ -138,20 +146,10 @@ namespace HashCalculator
                     Directory.CreateDirectory(ConfigInfo.ActiveConfigDir);
                 }
                 using (StreamWriter sw = new StreamWriter(ConfigInfo.ActiveConfigFile))
-                using (JsonTextWriter jsonTextWriter = new JsonTextWriter(sw))
                 {
-                    JsonSerializerSettings settings = new JsonSerializerSettings()
-                    {
-                        NullValueHandling = NullValueHandling.Ignore,
-                        Error = (s, e) =>
-                        {
-                            e.ErrorContext.Handled = true;
-                        },
-                    };
-                    JsonSerializer jsonSerializer = JsonSerializer.Create(settings);
-                    jsonSerializer.Serialize(jsonTextWriter, Current, typeof(SettingsViewModel));
-                    return true;
+                    sw.Write(JsonSerializer.Serialize(Current, JsonOptions));
                 }
+                return true;
             }
             catch (Exception ex)
             {
@@ -215,20 +213,17 @@ namespace HashCalculator
                     // SettingsViewModel.LocationForSavingConfigFiles 属性变化触发的移
                     // 动配置文件位置的操作（无法移动还没有关闭的文件）
                     string jContent = File.ReadAllText(ConfigInfo.ActiveConfigFile);
-                    using (StringReader sr = new StringReader(jContent))
-                    using (JsonTextReader jsonTextReader = new JsonTextReader(sr))
+                    try
                     {
-                        JsonSerializerSettings settings = new JsonSerializerSettings()
-                        {
-                            NullValueHandling = NullValueHandling.Ignore,
-                            Error = (s, e) =>
-                            {
-                                e.ErrorContext.Handled = true;
-                            },
-                        };
-                        JsonSerializer jsonSerializer = JsonSerializer.Create(settings);
-                        jsonSerializer.Populate(jsonTextReader, Current);
-                        settingsViewModelLoaded = true;
+                        SettingsViewModel model =
+                            JsonSerializer.Deserialize<SettingsViewModel>(jContent, JsonOptions);
+                        Current.CopyFromOther(model);
+                        settingsViewModelLoaded = model != null;
+                    }
+                    catch (JsonException)
+                    {
+                        // 配置内容损坏（如字段类型不匹配），整体回退默认设置
+                        settingsViewModelLoaded = false;
                     }
                 }
             }
