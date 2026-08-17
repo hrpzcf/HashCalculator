@@ -1957,10 +1957,6 @@ public class SettingsViewModel : BaseViewModel, IJsonOnSerializing, IJsonOnDeser
             "https://github.com/lepoco/wpfui",
             "给 HashCalculator 提供 Fluent Design 控件和样式。"),
         new GenericItemModel(
-            "Newtonsoft.Json",
-            "https://www.newtonsoft.com/json",
-            "用于读取和保存本软件的相关配置文件。"),
-        new GenericItemModel(
             "Tiny-json",
             "https://github.com/rafagafe/tiny-json",
             "用于读取和保存外壳扩展的相关配置文件。"),

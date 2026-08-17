@@ -102,9 +102,8 @@ HashCalculator 是一款**开源、免费、单文件免安装**的文件哈希�
 - **技术框架**：基于 .NET 10 的 WPF 桌面应用
 - **主要依赖**：
     - [CommandLineParser](https://github.com/commandlineparser/commandline)（命令行参数解析）
-    - [Newtonsoft.Json](https://www.newtonsoft.com/json)（配置与数据处理）
-    - [WindowsAPICodePack](https://github.com/aybe/Windows-API-Code-Pack-1.1)（系统 Shell 交互）
     - [WPF UI](https://github.com/lepoco/wpfui)（现代化 Fluent experience UI 控件）
+    - [WindowsAPICodePack](https://github.com/aybe/Windows-API-Code-Pack-1.1)（系统 Shell 交互）
 - **运行环境**：
     - **系统要求**：推荐 Windows 10 及以上版本。本程序基于 .NET 10 开发，而 .NET 10 不支持 Windows 7，因此程序无法在 Windows 7 上运行。
     - **框架依赖**：本程序依赖 **.NET 10 桌面运行时**（.NET 10 Desktop Runtime），首次使用前请先下载 **.NET 10 桌面运行时** 安装程序进行安装。若未安装，程序将无法运行。
