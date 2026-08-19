@@ -1,50 +1,85 @@
 ﻿using System.Collections.Generic;
-using CommandLine;
+using System.CommandLine;
 
-namespace HashCalculator
+namespace HashCalculator;
+
+internal static class CmdOptions
 {
-    internal interface IOptions
+    public const string ShellExtVerb = "shell";
+    public const string ComputeHashVerb = "compute";
+    public const string CheckHashVerb = "verify";
+    public const string ChecklistArgLong = "--list";
+    public const string ChecklistArgShort = "-l";
+
+    /// <summary>
+    /// compute 和 verify 共用的 -a/--algo 选项
+    /// </summary>
+    public static readonly Option<string> AlgoOption =
+        new Option<string>("--algo", "-a")
+        {
+            Description = "要使用的哈希算法名称（名称中的横杠替换为下划线），如：SHA_1。",
+        };
+
+    /// <summary>
+    /// compute 子命令：计算目标文件、文件夹内的文件的哈希值
+    /// </summary>
+    public static readonly Argument<IEnumerable<string>> PathsToCompute =
+        new Argument<IEnumerable<string>>("paths")
+        {
+            Arity = ArgumentArity.OneOrMore,
+        };
+    public static readonly Command ComputeCommand =
+        new Command(ComputeHashVerb, "用指定算法计算目标文件、文件夹内的文件的哈希值。")
+        {
+            AlgoOption,
+            PathsToCompute,
+        };
+
+    /// <summary>
+    /// verify 子命令：用校验信息文件来校验目标文件的哈希值是否与预期相符
+    /// </summary>
+    public static readonly Option<string> CheckListOption =
+        new Option<string>(ChecklistArgLong, ChecklistArgShort)
+        {
+            Required = true,
+        };
+    /// <summary>
+    /// 用于吸收 verify 命令多余的位置参数（如误输入的 token），避免触发"未识别命令或参数"错误
+    /// </summary>
+    public static readonly Argument<IEnumerable<string>> ExtraArguments =
+        new Argument<IEnumerable<string>>("extra")
+        {
+            Arity = ArgumentArity.ZeroOrMore,
+        };
+    public static readonly Command CheckHashCommand =
+        new Command(CheckHashVerb, "用校验信息文件来校验目标文件的哈希值是否与预期相符。")
+        {
+            AlgoOption,
+            CheckListOption,
+            ExtraArguments,
+        };
+
+    /// <summary>
+    /// shell 子命令：安装或卸载 HashCalculator 的系统右键菜单
+    /// </summary>
+    public static readonly Option<bool> SilentOption = new Option<bool>("--silent", "-s");
+    public static readonly Option<bool> InstallOption = new Option<bool>("--install", "-i");
+    public static readonly Option<bool> UninstallOption = new Option<bool>("--uninstall", "-u");
+    public static readonly Command ShellExtCommand =
+        new Command(ShellExtVerb, "安装或卸载 HashCalculator 的系统右键菜单扩展模块。")
+        {
+            InstallOption,
+            UninstallOption,
+            SilentOption,
+        };
+
+    /// <summary>
+    /// 根命令：挂载 compute、verify、shell 三个子命令
+    /// </summary>
+    public static readonly RootCommand RootCommand = new RootCommand("HashCalculator")
     {
-        [Option('a', "algo", HelpText = "要使用的哈希算法名称（名称中的横杠替换为下划线），如：SHA_1")]
-        string Algos { get; set; }
-    }
-
-    [Verb("verify", HelpText = "用校验信息文件来校验目标文件的哈希值是否与预期相符。")]
-    internal class VerifyHash : IOptions
-    {
-        public const string Verb = "verify";
-        public const string Checklist = "--list";
-
-        public string Algos { get; set; }
-
-        [Option('l', "list", Required = true)]
-        public string ChecklistPath { get; set; }
-    }
-
-    [Verb("compute", HelpText = "用指定算法计算目标文件、文件夹内的文件的哈希值。")]
-    internal class ComputeHash : IOptions
-    {
-        public const string Verb = "compute";
-
-        public string Algos { get; set; }
-
-        [Value(0, Min = 1, Required = true)]
-        public IEnumerable<string> FilePaths { get; set; }
-    }
-
-    [Verb("shell", HelpText = "安装或卸载 HashCalculator 的系统右键菜单。")]
-    internal class ShellInstallation : IOptions
-    {
-        // 本类实现 IOptions 接口并没有实际用处
-        public string Algos { get; set; }
-
-        [Option('s', "silent")]
-        public bool InstallSilently { get; set; }
-
-        [Option('i', "install", SetName = "installation")]
-        public bool Install { get; set; }
-
-        [Option('u', "uninstall", SetName = "installation")]
-        public bool Uninstall { get; set; }
-    }
+        ComputeCommand,
+        CheckHashCommand,
+        ShellExtCommand,
+    };
 }

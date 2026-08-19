@@ -74,7 +74,11 @@ public partial class App : Application
         // 该代码与 .NET Framework 中的行为相同。
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         Settings.LoadSettings();
-        Initializer.ParseArgsForShell(e.Args);
+        if (Initializer.ParseArgsForShell(e.Args))
+        {
+            Current.Shutdown();
+            return;
+        }
         Initializer.PushArgs(e.Args);
         // 注册主题覆盖字典的自动替换（监听 ApplicationThemeManager.Changed）。
         ThemeOverridesManager.Initialize();

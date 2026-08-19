@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.CommandLine;
+using System.CommandLine.Parsing;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Interop;
-using CommandLine;
 using HashCalculator.Others;
 using HashCalculator.ViewModels.Pages;
 using HashCalculator.ViewModels.Windows;
@@ -209,12 +210,12 @@ public partial class MainWindow
         return IntPtr.Zero;
     }
 
-    private List<AlgoType> GetAlgoTypesFromOption(IOptions option)
+    private List<AlgoType> GetAlgoTypesFromOption(string algoStr)
     {
-        if (option != null && !string.IsNullOrEmpty(option.Algos))
+        if (!string.IsNullOrEmpty(algoStr))
         {
             List<AlgoType> resolvedAlgoTypeList = new List<AlgoType>();
-            foreach (string algoTypeStr in option.Algos.Split(','))
+            foreach (string algoTypeStr in algoStr.Split(','))
             {
                 if (AlgorithmsModel.TryGetAlgoType(algoTypeStr, out AlgoType algoType) &&
                     algoType != AlgoType.UNKNOWN)
@@ -230,9 +231,9 @@ public partial class MainWindow
         return default(List<AlgoType>);
     }
 
-    private void ParsedComputeHashHandler(ComputeHash option)
+    private void ParsedComputeHashHandler(IEnumerable<string> paths, string algoStr)
     {
-        if (option.FilePaths != null)
+        if (paths != null)
         {
             HashChecklist hashChecklist = null;
             if (Settings.Current.ClearTableBeforeAddingFilesByCmdLine)
@@ -246,7 +247,7 @@ public partial class MainWindow
             {
                 hashChecklist = this._homePageViewModel.TestClipboardTextGetChecklist();
             }
-            string[] filePaths = option.FilePaths.Where(i => File.Exists(i) || Directory.Exists(i)).ToArray();
+            string[] filePaths = paths.Where(i => File.Exists(i) || Directory.Exists(i)).ToArray();
             // 此处逻辑针对命令行传来的待计算文件/文件夹路径，一般由右键菜单生成命令
             // 如果是用户手动输入命令，则这些路径有可能分属不同的父目录，所以逐个处理
             PathPackage[] packages = new PathPackage[filePaths.Length];
@@ -258,18 +259,18 @@ public partial class MainWindow
                     Settings.Current.SelectedSearchMethodForDragDrop);
                 packages[i] = package;
                 package.OnlyFilesThatExistInChecklist = false;
-                package.PresetAlgoTypes = this.GetAlgoTypesFromOption(option);
+                package.PresetAlgoTypes = this.GetAlgoTypesFromOption(algoStr);
             }
             this._homePageViewModel.BeginDisplayModels(packages);
         }
     }
 
-    private void ParsedVerifyHashHandler(VerifyHash option)
+    private void ParsedVerifyHashHandler(string checklistPath, string algoStr)
     {
-        if (File.Exists(option.ChecklistPath))
+        if (File.Exists(checklistPath))
         {
-            List<AlgoType> types = this.GetAlgoTypesFromOption(option);
-            HashChecklist newChecklist = HashChecklist.File(option.ChecklistPath,
+            List<AlgoType> types = this.GetAlgoTypesFromOption(algoStr);
+            HashChecklist newChecklist = HashChecklist.File(checklistPath,
                 types);
             if (newChecklist.ReasonForFailure != null)
             {
@@ -288,8 +289,8 @@ public partial class MainWindow
                     });
                 }
                 // 这里添加要计算哈希值的文件时，看作以多选文件的方式添，所以
-                // PathPackage 的 parent 参数应是 option.ChecklistPath 所在目录
-                string filesDir = Path.GetDirectoryName(option.ChecklistPath);
+                // PathPackage 的 parent 参数应是 checklistPath 所在目录
+                string filesDir = Path.GetDirectoryName(checklistPath);
                 PathPackage package = new PathPackage(filesDir, filesDir, newChecklist,
                     Settings.Current.SelectedSearchMethodForChecklist);
                 package.PresetAlgoTypes = types;
@@ -298,27 +299,8 @@ public partial class MainWindow
         }
     }
 
-    private void NotParsedArgumentsHandler(byte degree, IEnumerable<Error> errors, string[] args)
+    private List<string> RewriteArgsWithVerb(string[] args)
     {
-        using (IEnumerator<Error> enumerator = errors.GetEnumerator())
-        {
-            // 判断集合元素数量为空或者 1 个以上元素直接返回
-            if (!enumerator.MoveNext())
-            {
-                return;
-            }
-            Error error = enumerator.Current;
-            if (enumerator.MoveNext())
-            {
-                return;
-            }
-            // 有命令但没有指定谓词出现 BadVerbSelectedError
-            if (error?.Tag != ErrorType.BadVerbSelectedError)
-            {
-                return;
-            }
-        }
-        bool commandGood = false;
         List<string> argList = args.ToList();
         if (Settings.Current.SelectionWhenNoVerbIsSpecified == MenuType.CheckHash)
         {
@@ -326,38 +308,44 @@ public partial class MainWindow
             {
                 if (File.Exists(args[i]))
                 {
-                    argList.Insert(i, VerifyHash.Checklist);
-                    commandGood = true;
+                    argList.Insert(i, CmdOptions.ChecklistArgLong);
                     break;
                 }
             }
-            argList.Insert(0, VerifyHash.Verb);
+            argList.Insert(0, CmdOptions.CheckHashVerb);
         }
         else
         {
-            argList.Insert(0, ComputeHash.Verb);
-            commandGood = true;
+            argList.Insert(0, CmdOptions.ComputeHashVerb);
         }
-        if (commandGood)
-        {
-            this.InternalParseArguments(argList.ToArray(), ++degree);
-        }
+        return argList;
     }
 
-    private void InternalParseArguments(string[] args, byte degree = 1)
+    private void InternalParseArguments(string[] args)
     {
-        ParserResult<object> result = Parser.Default.ParseArguments<ComputeHash, VerifyHash>(args);
-        if (result.Value is ComputeHash computeHashOption)
+        ParseResult result = CmdOptions.RootCommand.Parse(args);
+        // 仅当"未指定任何 verb 且存在参数 token"时尝试自动插入 verb，其余情况忽略
+        if (result.Errors.Count != 0 &&
+            !result.Tokens.Any(t => t.Type == TokenType.Command) &&
+            result.Tokens.Any(t => t.Type == TokenType.Argument))
         {
-            this.ParsedComputeHashHandler(computeHashOption);
+            result = CmdOptions.RootCommand.Parse(this.RewriteArgsWithVerb(args));
         }
-        else if (result.Value is VerifyHash verifyHashOption)
+        if (result.Errors.Count != 0)
         {
-            this.ParsedVerifyHashHandler(verifyHashOption);
+            return;
         }
-        else if (result.Value is null && degree < 2)
+        if (result.GetResult(CmdOptions.ComputeCommand) is CommandResult computeCmd)
         {
-            result.WithNotParsed(errorList => this.NotParsedArgumentsHandler(degree, errorList, args));
+            string algoStr = computeCmd.GetValue(CmdOptions.AlgoOption);
+            IEnumerable<string> paths = computeCmd.GetValue(CmdOptions.PathsToCompute);
+            this.ParsedComputeHashHandler(paths, algoStr);
+        }
+        else if (result.GetResult(CmdOptions.CheckHashCommand) is CommandResult verifyCmd)
+        {
+            string algoStr = verifyCmd.GetValue(CmdOptions.AlgoOption);
+            string listPath = verifyCmd.GetValue(CmdOptions.CheckListOption);
+            this.ParsedVerifyHashHandler(listPath, algoStr);
         }
     }
 
