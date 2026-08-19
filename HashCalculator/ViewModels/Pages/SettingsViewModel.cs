@@ -1956,10 +1956,6 @@ public class SettingsViewModel : BaseViewModel, IJsonOnSerializing, IJsonOnDeser
             "Tiny-json",
             "https://github.com/rafagafe/tiny-json",
             "用于读取和保存外壳扩展的相关配置文件。"),
-        new GenericItemModel(
-            "WindowsAPICodePack",
-            "https://github.com/aybe/Windows-API-Code-Pack-1.1",
-            "用于调用系统接口打开文件/文件夹选择对话框。"),
     };
 
     [JsonIgnore, XmlIgnore]

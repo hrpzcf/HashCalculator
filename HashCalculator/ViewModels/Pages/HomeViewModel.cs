@@ -14,7 +14,6 @@ using HashCalculator.Others;
 using HashCalculator.ViewModels.Windows;
 using HashCalculator.Views.Windows;
 using Microsoft.Win32;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using Wpf.Ui;
 using Wpfctrls = Wpf.Ui.Controls;
 
@@ -1382,12 +1381,14 @@ public class HomeViewModel : BaseViewModel
 
     private void SelectChecklistFileAction(object param)
     {
-        CommonOpenFileDialog openFile = new CommonOpenFileDialog
+        OpenFileDialog openFile = new OpenFileDialog
         {
             Title = "选择校验信息文件",
             InitialDirectory = Settings.Current.LastUsedPath,
+            CheckFileExists = true,
+            CheckPathExists = true,
         };
-        if (openFile.ShowDialog() == CommonFileDialogResult.Ok)
+        if (openFile.ShowDialog() == true)
         {
             Settings.Current.LastUsedPath = Path.GetDirectoryName(openFile.FileName);
             this.HashStringOrChecklistPath = openFile.FileName;
@@ -1419,20 +1420,19 @@ public class HomeViewModel : BaseViewModel
 
     private void SelectFilesToHashAction(object param)
     {
-        CommonOpenFileDialog fileOpen = new CommonOpenFileDialog
+        OpenFileDialog openFiles = new OpenFileDialog
         {
             Title = "选择文件",
             InitialDirectory = Settings.Current.LastUsedPath,
             Multiselect = true,
-            EnsureValidNames = true,
         };
-        if (fileOpen.ShowDialog() != CommonFileDialogResult.Ok)
+        if (openFiles.ShowDialog() != true)
         {
             return;
         }
-        string parentDir = Path.GetDirectoryName(fileOpen.FileNames.First());
+        string parentDir = Path.GetDirectoryName(openFiles.FileNames.First());
         Settings.Current.LastUsedPath = parentDir;
-        this.BeginDisplayModels(new PathPackage(parentDir, fileOpen.FileNames,
+        this.BeginDisplayModels(new PathPackage(parentDir, openFiles.FileNames,
             Settings.Current.SelectedSearchMethodForDragDrop));
     }
 
@@ -1447,14 +1447,12 @@ public class HomeViewModel : BaseViewModel
 
     private void SelectFolderToHashAction(object param)
     {
-        CommonOpenFileDialog folderOpen = new CommonOpenFileDialog()
+        OpenFolderDialog openFolders = new OpenFolderDialog()
         {
-            IsFolderPicker = true,
             InitialDirectory = Settings.Current.LastUsedPath,
             Multiselect = true,
-            EnsureValidNames = true,
         };
-        if (folderOpen.ShowDialog() != CommonFileDialogResult.Ok)
+        if (openFolders.ShowDialog() != true)
         {
             return;
         }
@@ -1463,11 +1461,11 @@ public class HomeViewModel : BaseViewModel
         {
             searchMethod = SearchMethod.Children;
         }
-        string firstDir = folderOpen.FileNames.First();
+        string firstDir = openFolders.FolderNames.First();
         // firstDir 是分区根目录时 GetDirectoryName 返回 null
         string parentDir = Path.GetDirectoryName(firstDir) ?? firstDir;
         Settings.Current.LastUsedPath = parentDir;
-        this.BeginDisplayModels(new PathPackage(parentDir, folderOpen.FileNames, searchMethod));
+        this.BeginDisplayModels(new PathPackage(parentDir, openFolders.FolderNames, searchMethod));
     }
 
     public ICommand SelectFoldersToHashCmd

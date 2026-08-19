@@ -24,8 +24,6 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.10" />
         <PackageReference Include="System.CommandLine" Version="2.0.11" />
-        <PackageReference Include="WindowsAPICodePack-Core" Version="1.1.2" NoWarn="NU1701" />
-        <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" NoWarn="NU1701" />
         <PackageReference Include="WPF-UI" Version="4.3.0" />
         <PackageReference Include="WPF-UI.DependencyInjection" Version="4.3.0" />
         <PackageReference Include="WPF-UI.Tray" Version="4.3.0" />
