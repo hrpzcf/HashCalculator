@@ -9,6 +9,7 @@ using HashCalculator.Views.UserControls;
 using HashCalculator.Views.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Wpf.Ui;
 using Wpf.Ui.Abstractions;
 using Wpf.Ui.DependencyInjection;
@@ -22,6 +23,7 @@ public partial class App : Application
     private ExceptionWindow _exceptionMessageBox = null;
 
     private static readonly IHost _host = Host.CreateDefaultBuilder()
+        .ConfigureLogging(logging => logging.ClearProviders())
         .ConfigureServices((context, services) =>
         {
             services.AddSingleton<INavigationViewPageProvider,
