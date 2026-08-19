@@ -1949,10 +1949,6 @@ public class SettingsViewModel : BaseViewModel, IJsonOnSerializing, IJsonOnDeser
             "https://github.com/Cyan4973/xxHash",
             "提供 XXH 系列极快速哈希算法的实现。"),
         new GenericItemModel(
-            "CommandLineParser",
-            "https://github.com/commandlineparser/commandline",
-            "用于解析命令行参数。"),
-        new GenericItemModel(
             "WPF UI",
             "https://github.com/lepoco/wpfui",
             "给 HashCalculator 提供 Fluent Design 控件和样式。"),
