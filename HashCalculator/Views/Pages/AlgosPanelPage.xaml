@@ -42,8 +42,7 @@
                             </Grid.ColumnDefinitions>
                             <TextBlock
                                 Grid.Column="0"
-                                Margin="0,0,24,0"
-                                HorizontalAlignment="Right"
+                                Margin="0,0,16,0"
                                 Text="{Binding GroupName}" />
                             <TextBlock
                                 Grid.Column="1"

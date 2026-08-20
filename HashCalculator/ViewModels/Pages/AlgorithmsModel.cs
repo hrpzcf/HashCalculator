@@ -34,7 +34,7 @@ public class AlgorithmsModel : BaseViewModel
             new AlgoInOutModel(new RHashRipeMD160(), "RipeMD-160"),
         });
     private static readonly AlgoGroupModel _groupXXHash = new AlgoGroupModel(
-        "xxHash",
+        "XXHASH",
         new AlgoInOutModel[]
         {
             // XxHash
@@ -65,7 +65,7 @@ public class AlgorithmsModel : BaseViewModel
             new AlgoInOutModel(new XkcpSHA3(512), "SHA3512"),
         });
     private static readonly AlgoGroupModel _groupBlake2b = new AlgoGroupModel(
-        "Blake2b",
+        "BLAKE2B",
         new AlgoInOutModel[]
         {
             new AlgoInOutModel(new OfficialBlake2b(224), "Blake2b224"),
@@ -74,7 +74,7 @@ public class AlgorithmsModel : BaseViewModel
             new AlgoInOutModel(new OfficialBlake2b(512), "Blake2b,Blake2b512"),
         });
     private static readonly AlgoGroupModel _groupBlake2bp = new AlgoGroupModel(
-        "Blake2bp",
+        "BLAKE2BP",
         new AlgoInOutModel[]
         {
             new AlgoInOutModel(new OfficialBlake2bp(224), "Blake2bp224"),
@@ -83,21 +83,21 @@ public class AlgorithmsModel : BaseViewModel
             new AlgoInOutModel(new OfficialBlake2bp(512), "Blake2bp,Blake2bp512"),
         });
     private static readonly AlgoGroupModel _groupBlake2s = new AlgoGroupModel(
-        "Blake2s",
+        "BLAKE2S",
         new AlgoInOutModel[]
         {
             new AlgoInOutModel(new OfficialBlake2s(224), "Blake2s224"),
             new AlgoInOutModel(new OfficialBlake2s(256), "Blake2s,Blake2s256"),
         });
     private static readonly AlgoGroupModel _groupBlake2sp = new AlgoGroupModel(
-        "Blake2sp",
+        "BLAKE2SP",
         new AlgoInOutModel[]
         {
             new AlgoInOutModel(new OfficialBlake2sp(224), "Blake2sp224"),
             new AlgoInOutModel(new OfficialBlake2sp(256), "Blake2sp,Blake2sp256"),
         });
     private static readonly AlgoGroupModel _groupBlake3 = new AlgoGroupModel(
-        "Blake3",
+        "BLAKE3",
         new AlgoInOutModel[]
         {
             new AlgoInOutModel(new OfficialBlake3(224), "Blake3224"),
@@ -106,7 +106,7 @@ public class AlgorithmsModel : BaseViewModel
             new AlgoInOutModel(new OfficialBlake3(512), "Blake3512"),
         });
     private static readonly AlgoGroupModel _groupStreebog = new AlgoGroupModel(
-        "Streebog",
+        "STREEBOG",
         new AlgoInOutModel[]
         {
             new AlgoInOutModel(new Gost34_11_2012(256), "Streebog256,GOST-2012-256,GOST 2012 (256)"),
