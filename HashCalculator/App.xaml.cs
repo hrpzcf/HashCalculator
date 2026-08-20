@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using System.Windows;
 using System.Windows.Threading;
 using HashCalculator.Services;
@@ -22,8 +22,15 @@ public partial class App : Application
     private bool _isSessionEndingHandled = false;
     private ExceptionWindow _exceptionMessageBox = null;
 
+    /// <summary>
+    /// 全局日志入口，供项目任意位置便捷使用，本项目统一使用静态访问方式。
+    /// </summary>
+    public static ILogger Logger { get; private set; }
+
     private static readonly IHost _host = Host.CreateDefaultBuilder()
-        .ConfigureLogging(logging => logging.ClearProviders())
+        .ConfigureLogging(logging => logging.ClearProviders()
+            .AddProvider(new FileLoggerProvider())
+            .AddFilter("Microsoft.Hosting.Lifetime", LogLevel.None))
         .ConfigureServices((context, services) =>
         {
             services.AddSingleton<INavigationViewPageProvider,
@@ -82,10 +89,12 @@ public partial class App : Application
             return;
         }
         Initializer.PushArgs(e.Args);
-        // 注册主题覆盖字典的自动替换（监听 ApplicationThemeManager.Changed）。
+        // 主题字典自动覆盖（监听 ApplicationThemeManager.Changed）。
         ThemeOverridesManager.Initialize();
-        // 必须要在 Settings.LoadSettings 后执行，否则它们依赖的 Settings 未就绪。
+        // _host.Start 必须要在 Settings.LoadSettings 后执行，否则它们依赖的 Settings 未就绪。
         _host.Start();
+        Logger = _host.Services.GetRequiredService<ILoggerFactory>()
+            .CreateLogger("Application");
     }
 
     private void ApplicationFinalization()
@@ -113,6 +122,7 @@ public partial class App : Application
     private void ExceptionHandler(object sender, DispatcherUnhandledExceptionEventArgs e)
     {
         e.Handled = true;
+        Logger?.LogCritical(e.Exception, "DispatcherUnhandledException");
         this._exceptionMessageBox ??= new ExceptionWindow()
         {
             Owner = Views.Windows.MainWindow.Current

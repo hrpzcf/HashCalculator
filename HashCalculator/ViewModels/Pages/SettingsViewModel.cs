@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Xml.Serialization;
 using HashCalculator.ViewModels.UserControls;
 using HashCalculator.Views.Windows;
+using Microsoft.Extensions.Logging;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 
@@ -38,6 +39,9 @@ public class SettingsViewModel : BaseViewModel, IJsonOnSerializing, IJsonOnDeser
     private double filterOperationWindowLeft = double.NaN;
     private double filterOperationWindowWidth = 800;
     private double filterOperationWindowHeight = 600;
+
+    private bool isApplicationLoggingEnabled = true;
+    private LogLevel applicationLoggingLevel = FileLogOptions.DefaultLevel;
 
     private bool mainWndTopmost = false;
     private bool showFileIcon = true;
@@ -405,6 +409,25 @@ public class SettingsViewModel : BaseViewModel, IJsonOnSerializing, IJsonOnDeser
     {
         get => this.filterOperationWindowHeight;
         set => this.SetPropNotify(ref this.filterOperationWindowHeight, value);
+    }
+
+    /// <summary>
+    /// 日志最低级别，只有达到该级别的日志才会被写入文件。
+    /// </summary>
+    public LogLevel ApplicationLoggingLevel
+    {
+        get => this.applicationLoggingLevel;
+        set => this.SetPropNotify(ref this.applicationLoggingLevel, value);
+    }
+
+    /// <summary>
+    /// 是否启用文件日志。设为 false 时 FileLogger 的 IsEnabled 返回 false，
+    /// 不再写入日志文件。
+    /// </summary>
+    public bool IsApplicationLoggingEnabled
+    {
+        get => this.isApplicationLoggingEnabled;
+        set => this.SetPropNotify(ref this.isApplicationLoggingEnabled, value);
     }
 
     public Dictionary<string, ColumnProperty> ColumnsOrder { get; set; } =
