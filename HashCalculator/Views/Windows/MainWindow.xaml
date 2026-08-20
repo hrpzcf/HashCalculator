@@ -67,6 +67,8 @@
                     <wpfui:MenuItem Click="MenuItemNavigateToAlgosPanelClick" Header="算法" />
                     <wpfui:MenuItem Click="MenuItemNavigateToSettingsClick" Header="设置" />
                     <Separator />
+                    <wpfui:MenuItem Click="MenuItemHideOrShowMainWindowClick" Header="隐藏" />
+                    <Separator />
                     <wpfui:MenuItem Click="MenuItemShutdownApplicationClick" Header="退出" />
                 </ContextMenu>
             </tray:NotifyIcon.Menu>

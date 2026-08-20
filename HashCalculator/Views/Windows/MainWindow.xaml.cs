@@ -89,8 +89,8 @@ public partial class MainWindow
     {
         if (Settings.Current.HideWindowToSystemTrayWhenClosing)
         {
-            this.Hide();
             this._homePageViewModel.FilterWindowInstance?.Hide();
+            this.Hide();
             e.Cancel = true;
         }
         else
@@ -429,6 +429,18 @@ public partial class MainWindow
     {
         this.EnsureWindowIsShownAndActivated();
         this._navigationService.Navigate(typeof(SettingsPanelPage));
+    }
+
+    private void MenuItemHideOrShowMainWindowClick(object sender, RoutedEventArgs e)
+    {
+        if (this._homePageViewModel.FilterWindowInstance?.IsVisible == true)
+        {
+            this._homePageViewModel.FilterWindowInstance.Hide();
+        }
+        if (this.IsVisible)
+        {
+            this.Hide();
+        }
     }
 
     private void MenuItemShutdownApplicationClick(object sender, RoutedEventArgs e)
