@@ -121,6 +121,9 @@ public partial class MainWindow
 
     private async void MainWindowLoaded(object sender, RoutedEventArgs e)
     {
+        // 添加主窗口的边框强调色，使其在主窗口背景色下更显眼
+        //this.SetValue(BorderThicknessProperty, new Thickness(2));
+        //this.SetValue(BorderBrushProperty, this.FindResource("SystemAccentColorBrush"));
         this._navigationService.Navigate(typeof(HomePage));
         WndHandle = new WindowInteropHelper(this).Handle;
         this.presentationSrc = PresentationSource.FromVisual(this);
