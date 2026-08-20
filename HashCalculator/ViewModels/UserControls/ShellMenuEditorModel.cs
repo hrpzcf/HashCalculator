@@ -21,6 +21,7 @@ public class ShellMenuEditorModel : BaseViewModel
     {
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
+        NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals,
     };
     private RelayCommand _addMenuCmd;
     private RelayCommand _deleteMenuCmd;

@@ -99,8 +99,13 @@ namespace HashCalculator
             }
             // 选窗口：优先 owner；否则当前激活窗口；再否则应用主窗口。
             Window window = owner
-                ?? Application.Current.Windows.OfType<Window>().First(w => w.IsActive)
+                ?? Application.Current.Windows.OfType<Window>().FirstOrDefault(w => w.IsActive)
                 ?? Application.Current.MainWindow;
+            // 兜底：owner、激活窗口、主窗口都不可用（如应用正在关闭）时不弹，避免后续崩溃
+            if (window == null)
+            {
+                return ContentDialogResult.None;
+            }
             ContentDialogHost contentDialogHost = ContentDialogHost.GetForWindow(window)
                 ?? ContentDialogHost.GetForWindow(Application.Current.MainWindow);
             ContentDialog toBeShownContentDialogInstance = new ContentDialog(contentDialogHost)
