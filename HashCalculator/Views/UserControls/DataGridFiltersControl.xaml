@@ -86,16 +86,24 @@
                         <wpfui:ListView.ItemTemplate>
                             <DataTemplate>
                                 <!--  使用 TextBlock 显示 Display 原因是防止一点列表项就自动勾选  -->
-                                <StackPanel Margin="8,5" Orientation="Horizontal">
-                                    <CheckBox
-                                        Padding="0"
+                                <Grid Margin="8,5,0,5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock
+                                        Grid.Column="0"
                                         VerticalAlignment="Center"
+                                        Text="{Binding Display}" />
+                                    <CheckBox
+                                        Grid.Column="1"
+                                        Margin="16,0,0,0"
+                                        Padding="0"
                                         Command="{Binding FilterChangedCmd}"
                                         IsChecked="{Binding Selected, Mode=TwoWay}"
                                         PreviewMouseDown="FiltersItemPreviewMouseDown"
                                         Style="{StaticResource NoMinCheckBoxStyle}" />
-                                    <TextBlock VerticalAlignment="Center" Text="{Binding Display}" />
-                                </StackPanel>
+                                </Grid>
                             </DataTemplate>
                         </wpfui:ListView.ItemTemplate>
                     </wpfui:ListView>

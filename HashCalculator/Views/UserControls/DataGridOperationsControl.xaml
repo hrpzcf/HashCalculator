@@ -29,16 +29,11 @@
                 Margin="-1,-1,0,0"
                 Content="{Binding SelectTableLinesCmder.UserInterface}" />
             <Grid Grid.Row="1" Margin="0,4,0,0">
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Border
-                    Grid.Row="0"
                     Grid.Column="0"
                     Padding="4"
                     BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
@@ -52,31 +47,43 @@
                         SelectionMode="Single">
                         <wpfui:ListView.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock
-                                    Padding="8,6"
-                                    VerticalAlignment="Center"
-                                    Text="{Binding Display}" />
+                                <Grid Margin="8,5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        VerticalAlignment="Center"
+                                        Text="{Binding Display}" />
+                                    <wpfui:Flyout
+                                        x:Name="eleFlyout"
+                                        Grid.Column="0"
+                                        Placement="Top">
+                                        <TextBlock Text="{Binding Description}" TextWrapping="WrapWithOverflow" />
+                                    </wpfui:Flyout>
+                                    <Button
+                                        Grid.Column="1"
+                                        Margin="4,0,0,0"
+                                        Padding="0"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=DataContext.ShowDescriptionCmd}"
+                                        CommandParameter="{Binding ElementName=eleFlyout}">
+                                        <wpfui:SymbolIcon Symbol="QuestionCircle12" />
+                                    </Button>
+                                </Grid>
                             </DataTemplate>
                         </wpfui:ListView.ItemTemplate>
                     </wpfui:ListView>
                 </Border>
                 <ScrollViewer
-                    Grid.Row="0"
                     Grid.Column="1"
                     Margin="4,-1,0,0"
                     HorizontalScrollBarVisibility="Disabled"
                     VerticalScrollBarVisibility="Auto">
                     <ContentControl Content="{Binding SelectedCmder.UserInterface}" />
                 </ScrollViewer>
-                <wpfui:InfoBar
-                    Title="{Binding SelectedCmder.Display}"
-                    Grid.Row="1"
-                    Grid.Column="0"
-                    Grid.ColumnSpan="2"
-                    Margin="-1,4,0,-1"
-                    VerticalContentAlignment="Center"
-                    IsOpen="{Binding IsInformationBarOpened, Mode=OneWay}"
-                    Message="{Binding SelectedCmder.Description}" />
             </Grid>
         </Grid>
     </Border>

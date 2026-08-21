@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using HashCalculator.ViewModels.Pages;
@@ -16,15 +16,9 @@ public partial class DataGridFiltersControl : UserControl
         this.InitializeComponent();
     }
 
-    // TODO: 需要移到窗口的 cs 代码逻辑里
-    private void PanelClosed(object sender, EventArgs e)
-    {
-        this._viewModel.ResetFiltersAndRefresh();
-    }
-
     private void FiltersItemPreviewMouseDown(object sender, MouseButtonEventArgs e)
     {
-        if (sender is CheckBox checkBox && checkBox.DataContext is AbsHashViewFilter filter)
+        if (sender is FrameworkElement element && element.DataContext is AbsHashViewFilter filter)
         {
             this._viewModel.SelectedFilter = filter;
         }

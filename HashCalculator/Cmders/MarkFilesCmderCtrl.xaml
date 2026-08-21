@@ -21,13 +21,14 @@
                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                         Text="选择如何给文件写入哈希标记以改变文件的哈希值。"
                         TextWrapping="WrapWithOverflow" />
+                    <ComboBox
+                        Margin="-2,4,0,0"
+                        DisplayMemberPath="Display"
+                        ItemsSource="{x:Static local:MarkFilesCmder.AvailableMarkFilesOptions}"
+                        SelectedValue="{Binding MarkFilesOption, Mode=TwoWay}"
+                        SelectedValuePath="ItemValue" />
                 </StackPanel>
             </wpfui:CardControl.Header>
-            <ComboBox
-                DisplayMemberPath="Display"
-                ItemsSource="{x:Static local:MarkFilesCmder.AvailableMarkFilesOptions}"
-                SelectedValue="{Binding MarkFilesOption, Mode=TwoWay}"
-                SelectedValuePath="ItemValue" />
         </wpfui:CardControl>
         <wpfui:CardControl
             Margin="0,4,0,0"

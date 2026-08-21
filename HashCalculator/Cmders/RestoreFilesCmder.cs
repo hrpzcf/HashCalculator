@@ -26,7 +26,7 @@ internal class RestoreFilesCmder : AbsHashesCmder
 
     public override string Display => "还原被改变哈希值的文件";
 
-    public override string Description => "功能一：在主窗口【哈希标记】列中显示被改变哈希值的文件内记录的原文件哈希值。" +
+    public override string Description => "功能一：在主窗口【哈希标记】列中显示被改变哈希值的文件内记录的原文件哈希值。\n" +
         "功能二：将被改变过哈希值的文件还原，没有用本程序改变过哈希值的文件将被忽略。";
 
     public EditFileOption RestoreFilesOption

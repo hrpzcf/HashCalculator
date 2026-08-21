@@ -37,13 +37,14 @@
                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                         Text="执行重命名操作时，每行都使用各自的与用户在此处指定的算法相同的算法的哈希值进行重命名。"
                         TextWrapping="WrapWithOverflow" />
+                    <ComboBox
+                        Margin="-2,4,0,0"
+                        DisplayMemberPath="AlgoName"
+                        ItemsSource="{x:Static pagemodels:AlgorithmsModel.ProvidedAlgos}"
+                        SelectedValue="{Binding SelectedAlgorithmType, Mode=TwoWay}"
+                        SelectedValuePath="AlgoType" />
                 </StackPanel>
             </wpfui:CardControl.Header>
-            <ComboBox
-                DisplayMemberPath="AlgoName"
-                ItemsSource="{x:Static pagemodels:AlgorithmsModel.ProvidedAlgos}"
-                SelectedValue="{Binding SelectedAlgorithmType, Mode=TwoWay}"
-                SelectedValuePath="AlgoType" />
         </wpfui:CardControl>
         <wpfui:CardControl Margin="0,4,0,0" Padding="8">
             <wpfui:CardControl.Header>
@@ -54,13 +55,14 @@
                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                         Text="把哈希值转换为该格式的字符串作为文件名，不支持 Base64 格式的原因是某些字符不能作为文件名。"
                         TextWrapping="WrapWithOverflow" />
+                    <ComboBox
+                        Margin="-2,4,0,0"
+                        DisplayMemberPath="Display"
+                        ItemsSource="{x:Static local:RenameFileCmder.AvailableOutputTypes}"
+                        SelectedValue="{Binding BeingUsedOutput, Mode=TwoWay}"
+                        SelectedValuePath="ItemValue" />
                 </StackPanel>
             </wpfui:CardControl.Header>
-            <ComboBox
-                DisplayMemberPath="Display"
-                ItemsSource="{x:Static local:RenameFileCmder.AvailableOutputTypes}"
-                SelectedValue="{Binding BeingUsedOutput, Mode=TwoWay}"
-                SelectedValuePath="ItemValue" />
         </wpfui:CardControl>
         <wpfui:CardControl Margin="0,4,0,0" Padding="8">
             <wpfui:CardControl.Header>
@@ -71,13 +73,14 @@
                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                         Text="指定把哈希值放在原文件名中的位置或者指定用哈希值替换文件名。"
                         TextWrapping="WrapWithOverflow" />
+                    <ComboBox
+                        Margin="-2,4,0,0"
+                        DisplayMemberPath="Display"
+                        ItemsSource="{x:Static local:RenameFileCmder.AvailableRenameFileMethods}"
+                        SelectedValue="{Binding MethodForRenameFile, Mode=TwoWay}"
+                        SelectedValuePath="ItemValue" />
                 </StackPanel>
             </wpfui:CardControl.Header>
-            <ComboBox
-                DisplayMemberPath="Display"
-                ItemsSource="{x:Static local:RenameFileCmder.AvailableRenameFileMethods}"
-                SelectedValue="{Binding MethodForRenameFile, Mode=TwoWay}"
-                SelectedValuePath="ItemValue" />
         </wpfui:CardControl>
         <wpfui:CardControl Margin="0,4,0,0" Padding="8">
             <wpfui:CardControl.Header>

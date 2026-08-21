@@ -21,13 +21,14 @@
                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                         Text="选择如何还原为了改变哈希值而添加哈希标记的文件，没有标记的文件不会被还原。"
                         TextWrapping="WrapWithOverflow" />
+                    <ComboBox
+                        Margin="-2,4,0,0"
+                        DisplayMemberPath="Display"
+                        ItemsSource="{x:Static local:RestoreFilesCmder.AvailableRestoreFileOptions}"
+                        SelectedValue="{Binding RestoreFilesOption, Mode=TwoWay}"
+                        SelectedValuePath="ItemValue" />
                 </StackPanel>
             </wpfui:CardControl.Header>
-            <ComboBox
-                DisplayMemberPath="Display"
-                ItemsSource="{x:Static local:RestoreFilesCmder.AvailableRestoreFileOptions}"
-                SelectedValue="{Binding RestoreFilesOption, Mode=TwoWay}"
-                SelectedValuePath="ItemValue" />
         </wpfui:CardControl>
         <wpfui:CardControl
             Margin="0,4,0,0"

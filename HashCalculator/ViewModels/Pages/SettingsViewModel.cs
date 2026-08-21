@@ -37,8 +37,8 @@ public class SettingsViewModel : BaseViewModel, IJsonOnSerializing, IJsonOnDeser
     private double exceptionWindowHeight = 600.0;
     private double filterOperationWindowTop = double.NaN;
     private double filterOperationWindowLeft = double.NaN;
-    private double filterOperationWindowWidth = 800;
-    private double filterOperationWindowHeight = 600;
+    private double filterOperationWindowWidth = 690;
+    private double filterOperationWindowHeight = 520;
 
     private bool isApplicationLoggingEnabled = true;
     private LogLevel applicationLoggingLevel = FileLogOptions.DefaultLevel;

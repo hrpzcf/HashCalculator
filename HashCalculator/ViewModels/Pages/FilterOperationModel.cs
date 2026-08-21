@@ -23,6 +23,7 @@ public class FilterOperationModel : BaseViewModel
     private RelayCommand moveFilterUpCmd;
     private RelayCommand moveFilterDownCmd;
     private RelayCommand clearFilterSelectionCmd;
+    private RelayCommand showDescriptionCmd;
 
     private bool _isFiltersApplied = false;
     private bool _stateForRefreshFilters = false;
@@ -178,6 +179,23 @@ public class FilterOperationModel : BaseViewModel
         {
             this.clearFilterSelectionCmd ??= new RelayCommand(this.ClearFilterSelectionAction);
             return this.clearFilterSelectionCmd;
+        }
+    }
+
+    private void ShowDescriptionAction(object param)
+    {
+        if (param is Flyout flyout)
+        {
+            flyout.IsOpen = true;
+        }
+    }
+
+    public ICommand ShowDescriptionCmd
+    {
+        get
+        {
+            this.showDescriptionCmd ??= new RelayCommand(this.ShowDescriptionAction);
+            return this.showDescriptionCmd;
         }
     }
 

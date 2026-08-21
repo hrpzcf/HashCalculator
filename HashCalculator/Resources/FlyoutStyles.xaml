@@ -10,6 +10,7 @@
         同时无需为了容纳阴影而过度扩大装饰区导致 Flyout 定位偏差。
     -->
     <Style BasedOn="{StaticResource DefaultFlyoutStyle}" TargetType="{x:Type wpfui:Flyout}">
+        <Setter Property="FontSize" Value="12" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type wpfui:Flyout}">
