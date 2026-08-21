@@ -32,6 +32,7 @@
             <wpfui:ListView
                 Grid.IsSharedSizeScope="True"
                 ItemsSource="{x:Static pagemodels:AlgorithmsModel.AlgoGroups}"
+                ScrollViewer.VerticalScrollBarVisibility="Auto"
                 SelectedItem="{Binding SelectedAlgoGroup}">
                 <wpfui:ListView.ItemTemplate>
                     <DataTemplate>
