@@ -260,7 +260,7 @@
                             Margin="0,2,0,0"
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            Text="{Binding Ver, StringFormat='HashCalculator 当前版本 ( {0} ) 所使用的开源项目清单。'}"
+                            Text="{Binding Ver, StringFormat='HashCalculator 当前版本 ( {0} ) 所使用的开源哈希算法等项目清单。'}"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
                 </wpfui:CardExpander.Header>
