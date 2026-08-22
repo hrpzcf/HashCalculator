@@ -15,4 +15,7 @@
     <SolidColorBrush x:Key="AnchorPressedBackground" Color="#0AFFFFFF" />
     <SolidColorBrush x:Key="AnchorMouseOverBackground" Color="#0DFFFFFF" />
 
+    <!--  深色主题次级文本：覆盖 wpfui 默认的 77% 透明白 (#C5FFFFFF)，降为 56% 透明白，明显变暗接近 Terminal 观感  -->
+    <SolidColorBrush x:Key="TextFillColorSecondaryBrush" Color="#90FFFFFF" />
+
 </ResourceDictionary>
