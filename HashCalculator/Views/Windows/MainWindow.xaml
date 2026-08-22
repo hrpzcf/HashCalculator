@@ -1,4 +1,4 @@
-﻿<wpfui:FluentWindow
+﻿<local:CustomFluentWindow
     x:Class="HashCalculator.Views.Windows.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -75,4 +75,4 @@
         </tray:NotifyIcon>
         <wpfui:ContentDialogHost x:Name="RootContentDialogHost" />
     </Grid>
-</wpfui:FluentWindow>
+</local:CustomFluentWindow>

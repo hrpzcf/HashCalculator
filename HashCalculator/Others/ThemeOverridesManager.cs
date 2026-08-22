@@ -30,10 +30,7 @@ internal static class ThemeOverridesManager
             ApplicationThemeManager.Changed += OnThemeChanged;
             // 启动时立即加载当前主题对应的覆盖字典，避免依赖后续的 Changed 事件
             // （该事件只在主题切换时触发，启动时可能不触发）。
-            // 注意：Initialize() 在 Settings.LoadSettings() 之后调用，后者反序列化时会触发
-            // SelectedApplicationThemeIndex setter -> ApplicationThemeManager.Apply，因此
-            // GetAppTheme() 此时必然返回已应用的主题（Dark/Light），不会是 Unknown。
-            OnThemeChanged(ApplicationThemeManager.GetAppTheme(), Colors.Transparent);
+            OnThemeChanged(ApplicationTheme.Unknown, Colors.Transparent);
         }
     }
 
@@ -42,6 +39,10 @@ internal static class ThemeOverridesManager
     /// </summary>
     private static void OnThemeChanged(ApplicationTheme theme, Color accent)
     {
+        if (theme == ApplicationTheme.Unknown)
+        {
+            theme = ApplicationThemeManager.GetAppTheme();
+        }
         string resourceUri = theme switch
         {
             ApplicationTheme.Dark => DarkOverridesUri,

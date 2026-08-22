@@ -1,4 +1,4 @@
-﻿<wpfui:FluentWindow
+﻿<local:CustomFluentWindow
     x:Class="HashCalculator.Views.Windows.HowToExportResults"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -66,4 +66,4 @@
         </Grid>
         <wpfui:ContentDialogHost x:Name="RootContentDialogHost" />
     </Grid>
-</wpfui:FluentWindow>
+</local:CustomFluentWindow>
