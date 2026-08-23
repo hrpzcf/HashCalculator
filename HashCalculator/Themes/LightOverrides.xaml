@@ -5,7 +5,7 @@
     <SolidColorBrush x:Key="NavigationViewContentGridBorderBrush" Color="Transparent" />
 
     <!--  浅色背景色对齐 WinUI3 标准 (#FFF3F3F3)（无效）  -->
-    <!--<Color x:Key="ApplicationBackgroundColor">#FFF3F3F3</Color>-->
+    <SolidColorBrush x:Key="ApplicationBackgroundBrush">#FFF3F3F3</SolidColorBrush>
 
     <!--  主页顶部 Image 按钮的悬停/按下反馈背景色（浅色主题）  -->
     <SolidColorBrush x:Key="ImageBtnBackgroundPressed" Color="#1F000000" />

@@ -4,8 +4,8 @@
     <SolidColorBrush x:Key="NavigationViewContentBackground" Color="Transparent" />
     <SolidColorBrush x:Key="NavigationViewContentGridBorderBrush" Color="Transparent" />
 
-    <!--  深色窗口背景：提亮为 #FF2E2E2E （无效） -->
-    <!--<Color x:Key="ApplicationBackgroundColor">#FF2E2E2E</Color>-->
+    <!--  深色窗口背景：提亮为 #FF282828 （无效） -->
+    <SolidColorBrush x:Key="ApplicationBackgroundBrush">#FF282828</SolidColorBrush>
 
     <!--  主页顶部 Image 按钮的悬停/按下反馈背景色（深色主题）  -->
     <SolidColorBrush x:Key="ImageBtnBackgroundPressed" Color="#08FFFFFF" />
