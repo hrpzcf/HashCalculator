@@ -18,7 +18,7 @@
             <controls:MinLimitedCardControl>
                 <controls:MinLimitedCardControl.Header>
                     <StackPanel>
-                        <wpfui:TextBlock Text="配置文件保存位置" />
+                        <wpfui:TextBlock Text="配置文件储存位置" />
                         <wpfui:TextBlock
                             Margin="0,2,0,0"
                             FontTypography="Caption"
@@ -29,7 +29,7 @@
                             Margin="0,4,0,0"
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            Text="{Binding DisplayingActiveConfigDir, StringFormat=实际保存位置：{0}}"
+                            Text="{Binding DisplayingActiveConfigDir, StringFormat=实际储存位置：{0}}"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
                 </controls:MinLimitedCardControl.Header>
@@ -54,7 +54,7 @@
                             Margin="0,4,0,0"
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            Text="{Binding DisplayingLogDirectoryPath, StringFormat=日志保存位置：{0}}"
+                            Text="{Binding DisplayingLogDirectoryPath, StringFormat=日志储存位置：{0}}"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
                 </controls:MinLimitedCardControl.Header>
