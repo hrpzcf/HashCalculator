@@ -115,6 +115,7 @@ public class SettingsViewModel : BaseViewModel, IJsonOnSerializing, IJsonOnDeser
     private string displayingShellExtensionDir = null;
     private string displayingShellInstallationScope = null;
     private string displayingShellInstallationState = null;
+    private string displayingLogFileDirectoryPath = null;
     private string formatForGenerateText = "#$algo$ *$hash$ *$name$";
     private string serialColumnLeftDoubleClick = string.Empty;
     private string fileNameColumnLeftDoubleClick = string.Empty;
@@ -1070,6 +1071,13 @@ public class SettingsViewModel : BaseViewModel, IJsonOnSerializing, IJsonOnDeser
     }
 
     [JsonIgnore, XmlIgnore]
+    public string DisplayingLogDirectoryPath
+    {
+        get => this.displayingLogFileDirectoryPath;
+        set => this.SetPropNotify(ref this.displayingLogFileDirectoryPath, value);
+    }
+
+    [JsonIgnore, XmlIgnore]
     public bool ProcessingShellExtension
     {
         get => this.processingShellExtension;
@@ -1890,6 +1898,17 @@ public class SettingsViewModel : BaseViewModel, IJsonOnSerializing, IJsonOnDeser
         new GenericItemModel("用户目录", ConfigLocation.UserDir),
         new GenericItemModel("公用用户目录", ConfigLocation.PublicUser),
         new GenericItemModel("程序数据目录", ConfigLocation.ProgramData),
+    };
+
+    [JsonIgnore, XmlIgnore]
+    public GenericItemModel[] AvailableLoggingLevels { get; } =
+    {
+        new GenericItemModel("关闭", LogLevel.None),
+        new GenericItemModel("严重", LogLevel.Critical),
+        new GenericItemModel("错误", LogLevel.Error),
+        new GenericItemModel("警告", LogLevel.Warning),
+        new GenericItemModel("信息", LogLevel.Information),
+        new GenericItemModel("调试", LogLevel.Debug),
     };
 
     [JsonIgnore, XmlIgnore]

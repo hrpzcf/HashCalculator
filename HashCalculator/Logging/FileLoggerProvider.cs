@@ -24,6 +24,12 @@ internal sealed class FileLoggerProvider : ILoggerProvider
     private string _logDirectory = null;
     private StreamWriter _streamWriter = null;
 
+    public FileLoggerProvider()
+    {
+        // 用于首次刷新 DisplayingLogDirectoryPath 属性
+        _ = this.GetLogDirectoryPath();
+    }
+
     public ILogger CreateLogger(string categoryName)
     {
         return new FileLogger(this, categoryName);
@@ -56,44 +62,53 @@ internal sealed class FileLoggerProvider : ILoggerProvider
     /// <summary>
     /// 获取日志目录，并确保目录存在（按需延迟创建）。
     /// </summary>
-    private string GetLogDirectory()
+    private string GetLogDirectoryPath()
     {
+        // 进入读互斥模式
         this._dirLock.EnterReadLock();
         try
         {
             if (this._logDirectory != null)
             {
+                Settings.Current.DisplayingLogDirectoryPath = this._logDirectory;
                 return this._logDirectory;
             }
         }
         finally
         {
+            // 退出读互斥模式
             this._dirLock.ExitReadLock();
         }
+        // 进入写互斥模式
         this._dirLock.EnterWriteLock();
         try
         {
             if (this._logDirectory == null)
             {
-                string logDir = Path.Combine(Settings.ConfigInfo.ActiveConfigDir,
+                string dir = Path.Combine(Settings.ConfigInfo.ActiveConfigDir,
                     FileLogOptions.LogDirectoryName);
-                try
+                for (int attempt = 0; attempt < 2; attempt++)
                 {
-                    Directory.CreateDirectory(logDir);
+                    try
+                    {
+                        Directory.CreateDirectory(dir);
+                        break;
+                    }
+                    catch
+                    {
+                        if (attempt >= 1) return default(string);
+                        // 目录创建失败（权限等）时退回 exe 所在目录，保证日志仍可写入
+                        dir = Path.Combine(ConfigPaths.ConfigDirExec, FileLogOptions.LogDirectoryName);
+                    }
                 }
-                catch
-                {
-                    // 目录创建失败（权限等）时退回 exe 所在目录，保证日志仍可写入
-                    logDir = Path.Combine(
-                        ConfigPaths.ConfigDirExec, FileLogOptions.LogDirectoryName);
-                    Directory.CreateDirectory(logDir);
-                }
-                this._logDirectory = logDir;
+                this._logDirectory = dir;
+                Settings.Current.DisplayingLogDirectoryPath = this._logDirectory;
             }
             return this._logDirectory;
         }
         finally
         {
+            // 退出写互斥模式
             this._dirLock.ExitWriteLock();
         }
     }
@@ -112,7 +127,7 @@ internal sealed class FileLoggerProvider : ILoggerProvider
         // 日期变化或首次写入，重建文件流
         this._streamWriter?.Dispose();
         this._currentDate = today;
-        string filePath = Path.Combine(this.GetLogDirectory(),
+        string filePath = Path.Combine(this.GetLogDirectoryPath(),
             string.Format(FileLogOptions.FileNameTemplate, today));
         this._streamWriter = new StreamWriter(filePath, append: true, Encoding.UTF8,
             bufferSize: 4096);

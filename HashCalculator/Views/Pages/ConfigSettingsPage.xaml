@@ -26,7 +26,7 @@
                             Text="软件启动时按下拉列表所示位置从上到下查找配置文件，找到则停止，默认当前目录。&#x0a;软件只会在启动时从配置文件加载一次配置，在正常退出时在所选位置保存配置文件。如果想把软件复制到其他位置使用，则只需要复制 exe 文件和 json 配置文件即可。"
                             TextWrapping="WrapWithOverflow" />
                         <wpfui:TextBlock
-                            Margin="0,2,0,0"
+                            Margin="0,4,0,0"
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                             Text="{Binding DisplayingActiveConfigDir, StringFormat=实际保存位置：{0}}"
@@ -38,6 +38,31 @@
                     IsEnabled="{Binding ProcessingShellExtension, Converter={StaticResource ReverseBooleanValueCvt}}"
                     ItemsSource="{Binding AvailableLocationsForSavingConfigFile}"
                     SelectedValue="{Binding LocationForSavingConfigFiles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    SelectedValuePath="ItemValue" />
+            </controls:MinLimitedCardControl>
+            <controls:MinLimitedCardControl Margin="0,4,0,0">
+                <controls:MinLimitedCardControl.Header>
+                    <StackPanel>
+                        <wpfui:TextBlock Text="日志记录详细程度" />
+                        <wpfui:TextBlock
+                            Margin="0,2,0,0"
+                            FontTypography="Caption"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            Text="选择日志记录的详细程度，选择下拉列表越靠前的项输出信息越少，越靠后输出越详细。"
+                            TextWrapping="WrapWithOverflow" />
+                        <wpfui:TextBlock
+                            Margin="0,4,0,0"
+                            FontTypography="Caption"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            Text="{Binding DisplayingLogDirectoryPath, StringFormat=日志保存位置：{0}}"
+                            TextWrapping="WrapWithOverflow" />
+                    </StackPanel>
+                </controls:MinLimitedCardControl.Header>
+                <ComboBox
+                    DisplayMemberPath="Display"
+                    IsEnabled="{Binding ProcessingShellExtension, Converter={StaticResource ReverseBooleanValueCvt}}"
+                    ItemsSource="{Binding AvailableLoggingLevels}"
+                    SelectedValue="{Binding ApplicationLoggingLevel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     SelectedValuePath="ItemValue" />
             </controls:MinLimitedCardControl>
         </StackPanel>

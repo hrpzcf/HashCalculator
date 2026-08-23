@@ -8,7 +8,7 @@ namespace HashCalculator;
 internal static class FileLogOptions
 {
     /// <summary>日志级别默认值。</summary>
-    public const LogLevel DefaultLevel = LogLevel.Warning;
+    public const LogLevel DefaultLevel = LogLevel.None;
 
     /// <summary>日志目录名（位于配置目录下）。</summary>
     public const string LogDirectoryName = "Logs";
