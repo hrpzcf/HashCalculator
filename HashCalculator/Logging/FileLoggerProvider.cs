@@ -35,6 +35,16 @@ internal sealed class FileLoggerProvider : ILoggerProvider
         return new FileLogger(this, categoryName);
     }
 
+    public void Dispose()
+    {
+        lock (this._writeLock)
+        {
+            this._streamWriter?.Dispose();
+            this._streamWriter = null;
+        }
+        this._dirLock.Dispose();
+    }
+
     /// <summary>
     /// 追加一行日志文本到当日日志文件。线程安全。
     /// </summary>
@@ -132,15 +142,5 @@ internal sealed class FileLoggerProvider : ILoggerProvider
         this._streamWriter = new StreamWriter(filePath, append: true, Encoding.UTF8,
             bufferSize: 4096);
         return this._streamWriter;
-    }
-
-    public void Dispose()
-    {
-        lock (this._writeLock)
-        {
-            this._streamWriter?.Dispose();
-            this._streamWriter = null;
-        }
-        this._dirLock.Dispose();
     }
 }

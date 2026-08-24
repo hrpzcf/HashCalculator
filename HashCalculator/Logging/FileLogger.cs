@@ -8,8 +8,8 @@ namespace HashCalculator;
 
 /// <summary>
 /// 将日志条目格式化后交给 <see cref="FileLoggerProvider"/> 写入 Logs 目录下
-/// 按天命名的文件。日志开关（<see cref="SettingsViewModel.IsApplicationLoggingEnabled"/>）
-/// 和最低级别（<see cref="SettingsViewModel.ApplicationLoggingLevel"/>）在每次写日志时实时读取。
+/// 按天命名的文件。最低级别（<see cref="SettingsViewModel.ApplicationLoggingLevel"/>）
+/// 在每次写日志时实时读取，设置调整后立即生效。
 /// </summary>
 internal sealed class FileLogger : ILogger
 {
@@ -48,13 +48,15 @@ internal sealed class FileLogger : ILogger
         }
     }
 
+    /// <summary>
+    /// 当 ApplicationLoggingLevel 设为 LogLevel.None（UI 上对应"关闭"）时，
+    /// 任何正常业务日志级别（Trace~Critical）都小于 None，因此均被过滤，日志关闭。
+    /// 注意：若手动传入 LogLevel.None，此判断会返回 true 而绕过过滤，但业务代码均
+    /// 通过 LogTrace/LogDebug 等扩展方法调用，不会传入 None，可忽略此边界。
+    /// </summary>
     public bool IsEnabled(LogLevel logLevel)
     {
-        if (Settings.Current.IsApplicationLoggingEnabled)
-        {
-            return logLevel >= Settings.Current.ApplicationLoggingLevel;
-        }
-        return false;
+        return logLevel >= Settings.Current.ApplicationLoggingLevel;
     }
 
     public IDisposable BeginScope<TState>(TState state) where TState : notnull

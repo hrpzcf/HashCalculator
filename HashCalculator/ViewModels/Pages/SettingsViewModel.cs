@@ -40,9 +40,6 @@ public class SettingsViewModel : BaseViewModel, IJsonOnSerializing, IJsonOnDeser
     private double filterOperationWindowWidth = 690;
     private double filterOperationWindowHeight = 520;
 
-    private bool isApplicationLoggingEnabled = true;
-    private LogLevel applicationLoggingLevel = FileLogOptions.DefaultLevel;
-
     private bool mainWndTopmost = false;
     private bool showFileIcon = true;
     private bool showResultText = false;
@@ -109,6 +106,7 @@ public class SettingsViewModel : BaseViewModel, IJsonOnSerializing, IJsonOnDeser
     private WindowState mainWindowState = WindowState.Normal;
     private WindowState exceptionWindowState = WindowState.Normal;
     private ConfigLocation locationForSavingConfigFiles = ConfigLocation.Unset;
+    private LogLevel applicationLoggingLevel = FileLogOptions.DefaultLevel;
 
     private string lastUsedPath = string.Empty;
     private string displayingActiveConfigDir = null;
@@ -410,25 +408,6 @@ public class SettingsViewModel : BaseViewModel, IJsonOnSerializing, IJsonOnDeser
     {
         get => this.filterOperationWindowHeight;
         set => this.SetPropNotify(ref this.filterOperationWindowHeight, value);
-    }
-
-    /// <summary>
-    /// 日志最低级别，只有达到该级别的日志才会被写入文件。
-    /// </summary>
-    public LogLevel ApplicationLoggingLevel
-    {
-        get => this.applicationLoggingLevel;
-        set => this.SetPropNotify(ref this.applicationLoggingLevel, value);
-    }
-
-    /// <summary>
-    /// 是否启用文件日志。设为 false 时 FileLogger 的 IsEnabled 返回 false，
-    /// 不再写入日志文件。
-    /// </summary>
-    public bool IsApplicationLoggingEnabled
-    {
-        get => this.isApplicationLoggingEnabled;
-        set => this.SetPropNotify(ref this.isApplicationLoggingEnabled, value);
     }
 
     public Dictionary<string, ColumnProperty> ColumnsOrder { get; set; } =
@@ -847,6 +826,16 @@ public class SettingsViewModel : BaseViewModel, IJsonOnSerializing, IJsonOnDeser
     {
         get => this.locationForSavingConfigFiles;
         set => this.SetPropNotify(ref this.locationForSavingConfigFiles, value);
+    }
+
+    /// <summary>
+    /// 日志最低级别，只有达到该级别的日志才会被写入文件。
+    /// 设为 LogLevel.None（UI 上对应"关闭"）时，任何正常日志级别均小于它，日志关闭。
+    /// </summary>
+    public LogLevel ApplicationLoggingLevel
+    {
+        get => this.applicationLoggingLevel;
+        set => this.SetPropNotify(ref this.applicationLoggingLevel, value);
     }
 
     public bool ExportInMainControlsChildExports
