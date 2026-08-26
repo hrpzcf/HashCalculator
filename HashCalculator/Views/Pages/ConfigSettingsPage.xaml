@@ -48,7 +48,7 @@
                             Margin="0,2,0,0"
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            Text="选择日志记录的详细程度，选择下拉列表越靠前的项输出信息越少，越靠后输出越详细。"
+                            Text="选择下拉列表越靠前的项，输出信息越少，只记录重要事件；越靠后，输出越详细，适合排查问题时开启。"
                             TextWrapping="WrapWithOverflow" />
                         <wpfui:TextBlock
                             Margin="0,4,0,0"

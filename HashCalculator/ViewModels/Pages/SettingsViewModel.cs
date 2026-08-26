@@ -1825,6 +1825,15 @@ public class SettingsViewModel : BaseViewModel, IJsonOnSerializing, IJsonOnDeser
     };
 
     [JsonIgnore, XmlIgnore]
+    public GenericItemModel[] AvailableLoggingLevels { get; } =
+    {
+        new GenericItemModel("关闭", LogLevel.None),
+        new GenericItemModel("错误", LogLevel.Error),
+        new GenericItemModel("警告", LogLevel.Warning),
+        new GenericItemModel("调试", LogLevel.Debug),
+    };
+
+    [JsonIgnore, XmlIgnore]
     public GenericItemModel[] AvailableChoicesWhenNoVerb { get; } =
     {
         new GenericItemModel("计算所有输入文件的哈希值", MenuType.Compute),
@@ -1887,17 +1896,6 @@ public class SettingsViewModel : BaseViewModel, IJsonOnSerializing, IJsonOnDeser
         new GenericItemModel("用户目录", ConfigLocation.UserDir),
         new GenericItemModel("公用用户目录", ConfigLocation.PublicUser),
         new GenericItemModel("程序数据目录", ConfigLocation.ProgramData),
-    };
-
-    [JsonIgnore, XmlIgnore]
-    public GenericItemModel[] AvailableLoggingLevels { get; } =
-    {
-        new GenericItemModel("关闭", LogLevel.None),
-        new GenericItemModel("严重", LogLevel.Critical),
-        new GenericItemModel("错误", LogLevel.Error),
-        new GenericItemModel("警告", LogLevel.Warning),
-        new GenericItemModel("信息", LogLevel.Information),
-        new GenericItemModel("调试", LogLevel.Debug),
     };
 
     [JsonIgnore, XmlIgnore]
