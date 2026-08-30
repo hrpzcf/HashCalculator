@@ -176,7 +176,7 @@ public partial class MainWindow
                 Initializer.RunMultiMode = Settings.Current.RunInMultiInstMode;
                 break;
             case nameof(Settings.Current.SelectedTaskNumberLimit):
-                this._homePageViewModel.Starter.BeginAdjust(Settings.Current.SelectedTaskNumberLimit);
+                this._homePageViewModel.JobScheduler.SetConcurrency(Settings.Current.SelectedTaskNumberLimit);
                 break;
         }
     }

@@ -93,7 +93,7 @@
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowCopyAndRestartModelsButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
                     <Button
                         Command="{Binding CopyAndRestartModelsCmd}"
-                        IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBooleanCvt}}"
+                        IsEnabled="{Binding BatchStatus, Converter={StaticResource JobStatusStartedToBooleanFalseCvt}}"
                         Style="{StaticResource ImageButtonStyle2}"
                         ToolTip="复制表格中所有的行到新行并使用【算法】页中所选的算法重新计算新行的哈希值。">
                         <Image
@@ -113,7 +113,7 @@
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowRefreshOriginalModelsButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
                     <Button
                         Command="{Binding RefreshOriginalModelsCmd}"
-                        IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBooleanCvt}}"
+                        IsEnabled="{Binding BatchStatus, Converter={StaticResource JobStatusStartedToBooleanFalseCvt}}"
                         Style="{StaticResource ImageButtonStyle2}"
                         ToolTip="使用【算法】页中所选的算法重新计算表格中那些没有计算成功的行的哈希值。">
                         <Image
@@ -133,7 +133,7 @@
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowForceRefreshOriginalModelsButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
                     <Button
                         Command="{Binding ForceRefreshOriginalModelsCmd}"
-                        IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBooleanCvt}}"
+                        IsEnabled="{Binding BatchStatus, Converter={StaticResource JobStatusStartedToBooleanFalseCvt}}"
                         Style="{StaticResource ImageButtonStyle2}"
                         ToolTip="使用【算法】页中所选的算法重新计算表格中的所有行的哈希值。">
                         <Image
@@ -246,7 +246,7 @@
                             MinWidth="135"
                             VerticalAlignment="Center"
                             DisplayMemberPath="Display"
-                            IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBooleanCvt}}"
+                            IsEnabled="{Binding BatchStatus, Converter={StaticResource JobStatusStartedToBooleanFalseCvt}}"
                             ItemsSource="{x:Static pagemodels:SettingsViewModel.AvailableOutputTypesLong}"
                             SelectedValue="{Binding Source={x:Static local:Settings.Current}, Path=SelectedOutputType}"
                             SelectedValuePath="ItemValue"
@@ -269,7 +269,7 @@
                         ToolTip="左键点击应用/禁用【筛选】页面中勾选的筛选器并刷新视图，右键点击打开筛选与操作窗口。">
                         <Button.IsEnabled>
                             <MultiBinding Converter="{StaticResource CmdPanelCriticalControlsEnabledCvt}">
-                                <Binding Path="State" Source="{x:Static pagemodels:HomeViewModel.Current}" />
+                                <Binding Path="BatchStatus" Source="{x:Static pagemodels:HomeViewModel.Current}" />
                                 <Binding Path="IsFiltersAndCmdersIdle" Source="{x:Static local:Settings.Current}" />
                             </MultiBinding>
                         </Button.IsEnabled>
@@ -303,7 +303,7 @@
                     Visibility="{Binding Source={x:Static local:Settings.Current}, Path=ShowExportHashResultsButton, Converter={StaticResource FalseToVisibilityCollapsedCvt}}">
                     <Button
                         Command="{Binding ExportHashResultsCmd}"
-                        IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBooleanCvt}}"
+                        IsEnabled="{Binding BatchStatus, Converter={StaticResource JobStatusStartedToBooleanFalseCvt}}"
                         Style="{StaticResource ImageButtonStyle2}"
                         ToolTip="将表格中所有行的哈希值计算结果导出为文本文件&#10;导出的内容使用的输出方式受到【默认输出方式】的控制而不受各行自己的【输出方式】的控制&#10;只有计算成功且【导出】列被勾选的行的结果会被导出。">
                         <Image
@@ -371,8 +371,8 @@
                 VirtualizingPanel.IsVirtualizingWhenGrouping="True"
                 VirtualizingPanel.VirtualizationMode="Recycling">
                 <local:ExecTargetAttach.Monitoring>
-                    <MultiBinding Converter="{StaticResource StateAndSelectionWayToMonitoring}" Mode="OneWay">
-                        <Binding Mode="OneWay" Path="State" />
+                    <MultiBinding Converter="{StaticResource StatusAndSelectionWayToMonitoring}" Mode="OneWay">
+                        <Binding Mode="OneWay" Path="BatchStatus" />
                         <Binding
                             Mode="OneWay"
                             Path="IsMainRowSelectedByCheckBox"
@@ -1004,7 +1004,7 @@
                     Height="20"
                     Margin="0,0,12,0"
                     IsIndeterminate="True"
-                    Visibility="{Binding State, Converter={StaticResource LoadingImageVisiblityCvt}}" />
+                    Visibility="{Binding BatchStatus, Converter={StaticResource LoadingImageVisiblityCvt}}" />
                 <TextBlock
                     VerticalAlignment="Center"
                     FontFamily="{StaticResource IconFont}"
@@ -1030,7 +1030,7 @@
                     Margin="8,0,0,0"
                     VerticalAlignment="Center"
                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                    Text="{Binding TobeComputedModelsCount}"
+                    Text="{Binding PendingModelsCount}"
                     ToolTip="待计算行数..." />
             </StackPanel>
             <wpfui:TextBox
@@ -1057,7 +1057,7 @@
                 Appearance="Primary"
                 Command="{Binding StartCheckHashResultsCmd}"
                 Content="校验"
-                IsEnabled="{Binding State, Converter={StaticResource MainModelStateToBooleanCvt}}"
+                IsEnabled="{Binding BatchStatus, Converter={StaticResource JobStatusStartedToBooleanFalseCvt}}"
                 ToolTip="解析输入框的内容并检查哪些行的哈希值与输入框内的哈希值匹配并在【校验结果】列显示结果。&#10;如果检查时表格为空且校验信息是通用格式的校验信息文件路径，则：&#10;1. 点击【校验】后程序会自动解析文件并在相同目录下寻找要计算哈希值的文件完成计算并显示校验结果。&#10;2. 通用格式的校验信息文件请参考程序【导出结果】功能导出的文件的内容排布格式。" />
         </Grid>
     </Grid>

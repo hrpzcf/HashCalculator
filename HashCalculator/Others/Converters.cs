@@ -322,11 +322,11 @@ internal class StateNotRunningResultSucceededToVisibilityCvt : IMultiValueConver
     }
 }
 
-internal class MainModelStateToBooleanCvt : IValueConverter
+internal class JobStatusStartedToBooleanFalseCvt : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        if ((RunningState)value != RunningState.Started)
+        if ((JobStatus)value != JobStatus.Started)
         {
             return true;
         }
@@ -347,8 +347,8 @@ internal class CmdPanelCriticalControlsEnabledCvt : IMultiValueConverter
     public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
     {
         Debug.Assert(values?.Length == 2);
-        return values[0] is RunningState state &&
-            state != RunningState.Started &&
+        return values[0] is JobStatus status &&
+            status != JobStatus.Started &&
             values[1] is bool filterAndCmderEnabled &&
             filterAndCmderEnabled;
     }
@@ -386,7 +386,7 @@ internal class LoadingImageVisiblityCvt : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        if ((RunningState)value == RunningState.Started)
+        if ((JobStatus)value == JobStatus.Started)
         {
             return Visibility.Visible;
         }
@@ -804,13 +804,13 @@ internal class StringToValidDoubleValueCvt : IValueConverter
     }
 }
 
-internal class StateAndSelectionWayToMonitoring : IMultiValueConverter
+internal class StatusAndSelectionWayToMonitoring : IMultiValueConverter
 {
     public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
     {
         Debug.Assert(values?.Length == 2);
-        return values[0] is RunningState state && values[1] is bool selectedByCheckbox &&
-            state != RunningState.Started && !selectedByCheckbox;
+        return values[0] is JobStatus status && values[1] is bool selectedByCheckbox &&
+            status != JobStatus.Started && !selectedByCheckbox;
     }
 
     public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

@@ -42,7 +42,7 @@ namespace HashCalculator
                 {
                     multiSelector.SelectionChanged -= MultiSelectorSelectionChanged;
                     // 理论上在取消订阅 SelectionChanged 后也应该同步，但没必要
-                    // 主窗口 State == Started 导致的取消会在 State != Started 时进入上面分支同步
+                    // 主窗口 Status == Started 导致的取消会在 Status != Started 时进入上面分支同步
                     // 而使用筛选与操作面板的选择按钮导致取消时也会由按钮动作进行同步
                 }
             }

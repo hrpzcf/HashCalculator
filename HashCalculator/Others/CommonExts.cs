@@ -83,7 +83,7 @@ namespace HashCalculator
         }
 
         /// <summary>
-        /// 为 HashViewModel 的 ModelCapturedEvent 和 ModelReleasedEvent 事件提供异步执行的扩展方法 
+        /// 为 HashViewModel 的 ReadyToComputeEvent 事件提供异步执行的扩展方法 
         /// </summary>
         public static void InvokeAsync(this Action<HashViewModel> action, HashViewModel model)
         {
@@ -91,7 +91,7 @@ namespace HashCalculator
         }
 
         /// <summary>
-        /// 为 HashViewModel 的 ModelCapturedEvent 和 ModelReleasedEvent 事件提供延迟异步执行的扩展方法 
+        /// 为 HashViewModel 的 ReadyToComputeEvent 事件提供延迟异步执行的扩展方法 
         /// </summary>
         public static async void InvokeAsync(this Action<HashViewModel> action, HashViewModel model, int delay)
         {

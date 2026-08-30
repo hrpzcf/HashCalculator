@@ -21,23 +21,19 @@ namespace HashCalculator.ViewModels.Pages;
 
 public class HomeViewModel : BaseViewModel
 {
-    private const int interval = 600;
-    private readonly Timer checkStateTimer = null;
     private readonly Action<HashModelArg> addModelAction;
     private readonly Action<IEnumerable<HashModelArg>> addModelItemsAction;
     private readonly Lock displayingModelLock = new Lock();
-    private readonly Lock changeRunningStateLock = new Lock();
     private volatile int serial = 0;
-    private int computedModelsCount = 0;
-    private int tobeComputedModelsCount = 0;
+    private int pendingModelsCount = 0;
     private object selectedHashVieModel = -1;
     private List<HashViewModel> displayedModels = new List<HashViewModel>();
     private CancellationTokenSource _cancellation = new CancellationTokenSource();
     private CancellationTokenSource searchCancellation = new CancellationTokenSource();
+    private NavigationService navigationService = null;
     private string hashCheckReport = string.Empty;
     private string hashValueStringOrChecklistPath = null;
-    private RunningState runningState = RunningState.None;
-    private NavigationService _navigationService = null;
+    private JobStatus batchStatus = JobStatus.None;
 
     private RelayCommand mainWindowTopmostCmd;
     private RelayCommand clearAllTableLinesCmd;
@@ -78,13 +74,20 @@ public class HomeViewModel : BaseViewModel
         this.FilterAndOperationModel = model;
         this.addModelAction = new Action<HashModelArg>(this.AddModelAction);
         this.addModelItemsAction = new Action<IEnumerable<HashModelArg>>(this.AddModelItemsAction);
-        this.checkStateTimer = new Timer(this.CheckStateAction);
+        this.JobScheduler = new JobScheduler(Settings.Current.SelectedTaskNumberLimit);
+        this.JobScheduler.JobStatusChanged += status =>
+        {
+            Synchronization.UI.Invoke(() => { this.BatchStatus = status; });
+        };
+        this.JobScheduler.PendingCountChanged += count =>
+        {
+            Synchronization.UI.Invoke(() => { this.PendingModelsCount = count; });
+        };
     }
 
     public static HomeViewModel Current { get; private set; }
 
-    public ModelStarter Starter { get; } =
-        new ModelStarter(Settings.Current.SelectedTaskNumberLimit, 32);
+    public JobScheduler JobScheduler { get; }
 
     public FilterOperationWindow FilterWindowInstance { get; private set; }
 
@@ -118,28 +121,28 @@ public class HomeViewModel : BaseViewModel
         set => this.SetPropNotify(ref this.hashValueStringOrChecklistPath, value);
     }
 
-    public RunningState State
+    public JobStatus BatchStatus
     {
-        get => this.runningState;
+        get => this.batchStatus;
         set
         {
-            if ((this.runningState != RunningState.Started) && value == RunningState.Started)
+            if ((this.batchStatus != JobStatus.Started) && value == JobStatus.Started)
             {
                 this.Report = string.Empty;
-                this.SetPropNotify(ref this.runningState, value);
+                this.SetPropNotify(ref this.batchStatus, value);
             }
-            else if (this.runningState == RunningState.Started && value == RunningState.Stopped)
+            else if (this.batchStatus == JobStatus.Started && value == JobStatus.Stopped)
             {
                 this.GenerateFileHashCheckReport();
-                this.SetPropNotify(ref this.runningState, value);
+                this.SetPropNotify(ref this.batchStatus, value);
             }
         }
     }
 
-    public int TobeComputedModelsCount
+    public int PendingModelsCount
     {
-        get => this.tobeComputedModelsCount;
-        set => this.SetPropNotify(ref this.tobeComputedModelsCount, value);
+        get => this.pendingModelsCount;
+        set => this.SetPropNotify(ref this.pendingModelsCount, value);
     }
 
     private CancellationTokenSource Cancellation
@@ -160,7 +163,7 @@ public class HomeViewModel : BaseViewModel
 
     public void SetModelNavigationService(NavigationService service)
     {
-        this._navigationService = service;
+        this.navigationService = service;
     }
 
     /// <summary>
@@ -187,7 +190,7 @@ public class HomeViewModel : BaseViewModel
         if (HashModelStore.HashViewModels.AnyItem() &&
             this.TestClipboardTextGetChecklist() is HashChecklist checklist)
         {
-            if (this.State != RunningState.Started && this.CheckFilesHashBasedOnStringOrChecklist(checklist) &&
+            if (this.BatchStatus != JobStatus.Started && this.CheckFilesHashBasedOnStringOrChecklist(checklist) &&
                 Settings.Current.SwitchMainWndFgWhenNewHashCopied)
             {
                 CommonUtils.ShowWindowForeground(MainWindow.ProcessId);
@@ -196,49 +199,11 @@ public class HomeViewModel : BaseViewModel
         }
     }
 
-    private void CheckStateAction(object state)
-    {
-        lock (this.changeRunningStateLock)
-        {
-            this.TobeComputedModelsCount -= this.computedModelsCount;
-            this.computedModelsCount = 0;
-            if (this.TobeComputedModelsCount == 0)
-            {
-                Synchronization.UI.Invoke(() => { this.State = RunningState.Stopped; });
-                this.checkStateTimer.Change(-1, -1);
-            }
-        }
-    }
-
-    private void ModelReleasedAction(HashViewModel model)
-    {
-        lock (this.changeRunningStateLock)
-        {
-            ++this.computedModelsCount;
-        }
-    }
-
-    private void ModelCapturedAction(HashViewModel model)
-    {
-        // 在最外层套上 Synchronization.UiDispatch.Invoke 在主线程执行逻辑虽然也能达到锁效果，
-        // 但每次更改 TobeComputedModelsCount 的值都要 Invoke 占用主线程资源，没有必要
-        lock (this.changeRunningStateLock)
-        {
-            if (++this.TobeComputedModelsCount == 1)
-            {
-                Synchronization.UI.Invoke(() => { this.State = RunningState.Started; });
-                this.checkStateTimer.Change(interval, interval);
-            }
-        }
-    }
-
     private void AddModelAction(HashModelArg arg)
     {
         HashViewModel model = new HashViewModel(++this.serial, arg);
         this.displayedModels.Add(model);
-        model.ModelCapturedEvent += this.ModelCapturedAction;
-        model.ModelCapturedEvent += this.Starter.PendingModel;
-        model.ModelReleasedEvent += this.ModelReleasedAction;
+        model.ReadyToComputeEvent += this.JobScheduler.Submit;
         HashModelStore.HashViewModels.Add(model);
         if (Settings.Current.AutomaticallyStartTaskAfterFileAdded)
         {
@@ -266,9 +231,7 @@ public class HomeViewModel : BaseViewModel
         {
             HashViewModel model = new HashViewModel(++this.serial, arg);
             preprocessedModels.Add(model);
-            model.ModelCapturedEvent += this.ModelCapturedAction;
-            model.ModelCapturedEvent += this.Starter.PendingModel;
-            model.ModelReleasedEvent += this.ModelReleasedAction;
+            model.ReadyToComputeEvent += this.JobScheduler.Submit;
             if (automaticallyStartTaskAfterFileAdded)
             {
                 if (delayTheStartOfCalculationTasks)

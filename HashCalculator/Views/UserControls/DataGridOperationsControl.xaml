@@ -14,7 +14,7 @@
     <Border BorderThickness="0">
         <Border.IsEnabled>
             <MultiBinding Converter="{StaticResource CmdPanelCriticalControlsEnabledCvt}">
-                <Binding Path="State" Source="{x:Static pagemodels:HomeViewModel.Current}" />
+                <Binding Path="BatchStatus" Source="{x:Static pagemodels:HomeViewModel.Current}" />
                 <Binding Path="IsFiltersAndCmdersIdle" Source="{x:Static local:Settings.Current}" />
             </MultiBinding>
         </Border.IsEnabled>

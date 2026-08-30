@@ -64,7 +64,7 @@
     /// <summary>
     /// 哈希值计算队列任务的完成状态
     /// </summary>
-    public enum RunningState
+    public enum JobStatus
     {
         /// <summary>
         /// 启动前

@@ -54,16 +54,9 @@ namespace HashCalculator
         /// <summary>
         /// 调用 StartupModel 方法且满足相关条件则触发此事件，
         /// 表示可以外部调用此事件发出的 HashViewModel 的 ComputeManyHashValue 方法。<br/>
-        /// 此事件是异步事件。
+        /// 此事件是异步事件，订阅者负责把该模型提交给调度器（JobScheduler）。
         /// </summary>
-        public event Action<HashViewModel> ModelCapturedEvent;
-
-        /// <summary>
-        /// 调用 ShutdownModel 方法时如果 State 是 Waitting，则退出时会触发此事件。
-        /// 或者 HashViewModel 的 State 由 Running 变为 Finished 后触发也会触发此事件。<br/>
-        /// 此事件是异步事件。
-        /// </summary>
-        public event Action<HashViewModel> ModelReleasedEvent;
+        public event Action<HashViewModel> ReadyToComputeEvent;
 
         public HashViewModel(int serial, HashModelArg arg)
         {
@@ -571,7 +564,7 @@ namespace HashCalculator
                 if (conditionMatched)
                 {
                     this.ResetHashViewModel();
-                    this.ModelCapturedEvent?.InvokeAsync(this, delay);
+                    this.ReadyToComputeEvent?.InvokeAsync(this, delay);
                     startupModelResult = true;
                 }
                 Monitor.Exit(this.computeHashOperationLock);
@@ -587,8 +580,6 @@ namespace HashCalculator
             if (this.State == HashState.NoState || this.State == HashState.Waiting)
             {
                 this.State = HashState.Finished;
-                // TODO: 是否需要 InvokeAsync?
-                this.ModelReleasedEvent?.InvokeAsync(this);
             }
             Monitor.Exit(this.computeHashOperationLock);
         }
@@ -606,7 +597,6 @@ namespace HashCalculator
                         break;
                     case HashState.Waiting:
                         this.State = HashState.Finished;
-                        this.ModelReleasedEvent?.InvokeAsync(this);
                         break;
                 }
                 Monitor.Exit(this.computeHashOperationLock);
@@ -668,33 +658,21 @@ namespace HashCalculator
             return false;
         }
 
-        private bool MarkAsWaiting()
+        /// <summary>
+        /// 把本模型标记为"排队待计算"状态。由调度器在 Submit 时调用，
+        /// 保证 State=Waiting 与待计算计数 +1 同步发生，避免取消竞态。
+        /// </summary>
+        public void MarkAsWaiting()
         {
-            // StartupModel 时已经重置了 State 和 Result，为什么这里还要判断？
-            // 因为 StartupModel 里 ModelCapturedEvent 是异步调用的，有可能发生：
-            // StartupModel 后 ShutdownModel 使状态变化才执行到 MarkAsWaiting
-            if (this.State == HashState.NoState && this.Result != HashResult.Canceled)
+            // Submit 在 ReadyToComputeEvent 的异步回调（线程池线程）中执行，
+            // 设置 UI 绑定属性 State 必须回到主线程，故用 synchronization.Invoke
+            synchronization.Invoke(() =>
             {
-                this.State = HashState.Waiting;
-                return true;
-            }
-            return false;
-        }
-
-        public bool MarkAsWaiting(bool queueContainsThis)
-        {
-            if (queueContainsThis)
-            {
-                synchronization.Invoke(() => { this.State = HashState.Waiting; });
-                return false;
-            }
-            // 增加一个 private bool MarkAsWaiting 方法的原因是：
-            // ModelCapturedEvent 是异步调用，所以调用链中的本函数是在子线程中执行，
-            // State = HashState.Waiting 要在 synchronization 中执行以使界面及时变化，
-            // 判断语句也放在 synchronization 执行的原因是：
-            // 不会发生执行判断语句后、等待 synchronization.Invoke 前，主线程 ShutdownModel 使 State 和 Result 状态改变，
-            // 因为 synchronization.Invoke 也是在主线程执行的，不会和主线程 ShutdownModel 同时发生
-            return synchronization.Invoke(this.MarkAsWaiting);
+                if (this.State == HashState.NoState && this.Result != HashResult.Canceled)
+                {
+                    this.State = HashState.Waiting;
+                }
+            });
         }
 
         public void SetHashCheckResultForModel(HashChecklist checklist)
@@ -933,7 +911,6 @@ namespace HashCalculator
                 this.DurationofTask = duration;
                 this.State = HashState.Finished;
             });
-            this.ModelReleasedEvent?.InvokeAsync(this);
             Monitor.Exit(this.computeHashOperationLock);
         }
 
