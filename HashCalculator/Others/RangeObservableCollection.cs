@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Windows.Threading;
 
 namespace HashCalculator;
 
@@ -11,16 +12,75 @@ namespace HashCalculator;
 /// </summary>
 public class RangeObservableCollection<T> : ObservableCollection<T>
 {
+    private bool lazyCountDirty;
+
+    /// <summary>
+    /// 节流的集合元素数量，供界面绑定等只要求及时而非实时的场景使用。<br/>
+    /// 无论元素被逐个添加/移除还是批量增删，本属性都按 100 毫秒的间隔更新一次，
+    /// 避免大量逐个添加时频繁通知界面造成的开销。<br/>
+    /// 与基类的 Count 不同：Count 每次变化都立即通知，用于需要实时性的绑定。
+    /// </summary>
+    public int LazyCount { get; private set; }
+    private DispatcherTimer lazyCountReportTimer;
+
     /// <summary>
     /// WPF 绑定系统约定的索引器属性名，用于通知集合内容变更。
     /// </summary>
     private const string IndexerPropertyName = "Item[]";
 
-    public RangeObservableCollection() : base() { }
+    public RangeObservableCollection() : base()
+    {
+        this.InitializeLazyCount();
+    }
 
-    public RangeObservableCollection(IEnumerable<T> collection) : base(collection) { }
+    public RangeObservableCollection(IEnumerable<T> collection) : base(collection)
+    {
+        this.InitializeLazyCount();
+    }
 
-    public RangeObservableCollection(List<T> list) : base(list) { }
+    public RangeObservableCollection(List<T> list) : base(list)
+    {
+        this.InitializeLazyCount();
+    }
+
+    /// <summary>
+    /// 初始化 LazyCount 的节流上报：订阅自身的属性变更，使 Count 无论因逐个增删、
+    /// 批量增删还是清空而变化，都能被统一捕获并按固定间隔节流上报。
+    /// </summary>
+    private void InitializeLazyCount()
+    {
+        this.PropertyChanged += this.OnCountChanged;
+        this.lazyCountReportTimer = new DispatcherTimer(DispatcherPriority.Background)
+        {
+            Interval = TimeSpan.FromMilliseconds(100),
+        };
+        this.lazyCountReportTimer.Tick += this.LazyCountReportTimerTick;
+    }
+
+    private void OnCountChanged(object sender, PropertyChangedEventArgs e)
+    {
+        // 只关注 Count：以"结果"为触发源，不必逐一覆盖增删改方法，覆盖更全面
+        // 值实际未变化（例如增删数量相同）时无需上报
+        if (e.PropertyName == nameof(this.Count) && this.LazyCount != this.Count)
+        {
+            this.lazyCountDirty = true;
+            if (!this.lazyCountReportTimer.IsEnabled)
+            {
+                this.lazyCountReportTimer.Start();
+            }
+        }
+    }
+
+    private void LazyCountReportTimerTick(object sender, EventArgs e)
+    {
+        if (this.lazyCountDirty)
+        {
+            this.lazyCountDirty = false;
+            this.LazyCount = this.Count;
+            this.OnPropertyChanged(new PropertyChangedEventArgs(nameof(this.LazyCount)));
+        }
+        this.lazyCountReportTimer.Stop();
+    }
 
     /// <summary>
     /// 批量添加项。

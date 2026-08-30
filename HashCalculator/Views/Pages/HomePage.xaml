@@ -1016,7 +1016,7 @@
                     Margin="8,0,0,0"
                     VerticalAlignment="Center"
                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                    Text="{Binding Source={x:Static others:HashModelStore.HashViewModels}, Path=Count}"
+                    Text="{Binding Source={x:Static others:HashModelStore.HashViewModels}, Path=LazyCount}"
                     ToolTip="表格总行数..." />
                 <TextBlock
                     Margin="16,0,0,0"
