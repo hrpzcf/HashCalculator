@@ -682,6 +682,9 @@ internal static class CommonUtils
                     Drawing.Icon icon = Drawing.Icon.FromHandle(info.hIcon);
                     BitmapSource bitmapImage = Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty,
                         BitmapSizeOptions.FromEmptyOptions());
+                    // BitmapSource 是 Freezable，未冻结时只能在创建它的线程上访问
+                    // 冻结后才能跨线程使用，例如在后台线程构造图标、在界面线程绑定 Image.Source
+                    bitmapImage.Freeze();
                     return bitmapImage;
                 }
                 catch (Exception) { }
