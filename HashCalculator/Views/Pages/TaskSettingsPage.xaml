@@ -36,26 +36,6 @@
             <controls:MinLimitedCardControl Margin="0,4,0,0" Header="任务包含多个算法时多个算法并行计算">
                 <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding ParallelBetweenAlgos, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </controls:MinLimitedCardControl>
-            <controls:MinLimitedCardControl Margin="0,4,0,0" Header="延迟启动被添加到表格中的哈希值计算任务">
-                <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding DelayTheStartOfCalculationTasks, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-            </controls:MinLimitedCardControl>
-            <controls:MinLimitedCardControl Margin="0,4,0,0" IsEnabled="{Binding DelayTheStartOfCalculationTasks, Mode=OneWay}">
-                <controls:MinLimitedCardControl.Header>
-                    <StackPanel>
-                        <TextBlock Text="延迟启动的毫秒数" />
-                        <wpfui:TextBlock
-                            Margin="0,2,0,0"
-                            FontTypography="Caption"
-                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            Text="此项设置可一定程度缓解“添加任务”和“启动任务”同时进行导致的表格显示卡顿。"
-                            TextWrapping="WrapWithOverflow" />
-                    </StackPanel>
-                </controls:MinLimitedCardControl.Header>
-                <TextBox
-                    MinWidth="100"
-                    MaxLines="1"
-                    Text="{Binding MillisecondsOfDelayedStartup, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
-            </controls:MinLimitedCardControl>
             <controls:MinLimitedCardControl Margin="0,4,0,0" Header="文件被添加后自动启动对该文件的计算任务">
                 <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding AutomaticallyStartTaskAfterFileAdded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </controls:MinLimitedCardControl>

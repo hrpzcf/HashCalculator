@@ -69,7 +69,6 @@ public class SettingsViewModel : BaseViewModel, IJsonOnSerializing, IJsonOnDeser
     private bool useUnixStyleLineBreaks = true;
     private bool eachAlgoExportedToSeparateFile = false;
     private bool askUserHowToExportResultsEveryTime = true;
-    private bool delayTheStartOfCalculationTasks = false;
     private bool markTheSameHashValues = false;
     private bool automaticallyStartTaskAfterFileAdded = true;
     private bool clearTableBeforeAddingFilesByCmdLine = false;
@@ -132,7 +131,6 @@ public class SettingsViewModel : BaseViewModel, IJsonOnSerializing, IJsonOnDeser
     private int selectedTaskNumberLimit = 1;
     private int minCopiedCharsToTriggerHashCheck = 8;
     private int maxCopiedCharsToTriggerHashCheck = 512;
-    private int millisecondsOfDelayedStartup = 360;
     private int luminanceOfTableRowsWithSameHash = 100;
     private int saturationOfTableRowsWithSameHash = 240;
     private int luminanceOfTableCellsWithSameDirectory = 100;
@@ -848,25 +846,6 @@ public class SettingsViewModel : BaseViewModel, IJsonOnSerializing, IJsonOnDeser
     {
         get => this.caseOfCopiedAlgNameFollowsOutputType;
         set => this.SetPropNotify(ref this.caseOfCopiedAlgNameFollowsOutputType, value);
-    }
-
-    public int MillisecondsOfDelayedStartup
-    {
-        get => this.millisecondsOfDelayedStartup;
-        set
-        {
-            if (value < 0)
-            {
-                value = 0;
-            }
-            this.SetPropNotify(ref this.millisecondsOfDelayedStartup, value);
-        }
-    }
-
-    public bool DelayTheStartOfCalculationTasks
-    {
-        get => this.delayTheStartOfCalculationTasks;
-        set => this.SetPropNotify(ref this.delayTheStartOfCalculationTasks, value);
     }
 
     private static void AdjustLuminanceOrSaturation(ref int target)
