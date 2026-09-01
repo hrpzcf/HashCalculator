@@ -195,6 +195,23 @@ public class HomeViewModel : BaseViewModel
         }
     }
 
+    private void AddModelToDisplay(HashModelArg arg, CancellationToken token)
+    {
+        // 若不在此拦截，取消/清空之后仍会有漏网的任务完成
+        if (token.IsCancellationRequested)
+        {
+            return;
+        }
+        // 实测在 UI 线程构造 Model，添加到列表的速度是最快的
+        HashViewModel hashViewModel = new(++this.serial, arg);
+        if (Settings.Current.AutomaticallyStartAfterModelAdded)
+        {
+            this.JobScheduler.Start(hashViewModel, force: false);
+        }
+        this.displayedModels.Add(hashViewModel);
+        HashModelStore.HashViewModels.Add(hashViewModel);
+    }
+
     private void AddModelsToDisplayList(List<HashModelArg> args, CancellationToken token)
     {
         // 若不在此拦截，取消/清空之后仍会有漏网的任务完成
@@ -205,7 +222,7 @@ public class HomeViewModel : BaseViewModel
         List<HashViewModel> constructedModels = new();
         foreach (HashModelArg arg in args)
         {
-            // 实测在 UI 线程构造且经 Invoke 同步投递是最快的
+            // 实测在 UI 线程构造 Model，添加到列表的速度是最快的
             HashViewModel hashViewModel = new(++this.serial, arg);
             constructedModels.Add(hashViewModel);
         }
@@ -225,26 +242,42 @@ public class HomeViewModel : BaseViewModel
             lock (this.displayingModelLock)
             {
                 int batchSize = Settings.Current.AddHashViewModelsBatchSize;
-                List<HashModelArg> buffer = new(Math.Max(1, batchSize));
-                foreach (HashModelArg arg in models.Select(i => i.Arguments))
+                if (batchSize <= 1)
                 {
-                    if (token.IsCancellationRequested)
+                    foreach (HashModelArg arg in models.Select(i => i.Arguments))
                     {
-                        break;
+                        if (token.IsCancellationRequested)
+                        {
+                            break;
+                        }
+                        arg.PresetAlgos = null;
+                        Synchronization.UI.Invoke(() => this.AddModelToDisplay(arg, token),
+                            DispatcherPriority.Background);
                     }
-                    arg.PresetAlgos = null;
-                    buffer.Add(arg);
-                    if (buffer.Count >= batchSize)
+                }
+                else
+                {
+                    List<HashModelArg> buffer = new(batchSize);
+                    foreach (HashModelArg arg in models.Select(i => i.Arguments))
+                    {
+                        if (token.IsCancellationRequested)
+                        {
+                            break;
+                        }
+                        arg.PresetAlgos = null;
+                        buffer.Add(arg);
+                        if (buffer.Count >= batchSize)
+                        {
+                            Synchronization.UI.Invoke(() => this.AddModelsToDisplayList(buffer, token),
+                                DispatcherPriority.Background);
+                            buffer.Clear();
+                        }
+                    }
+                    if (buffer.Count > 0)
                     {
                         Synchronization.UI.Invoke(() => this.AddModelsToDisplayList(buffer, token),
                             DispatcherPriority.Background);
-                        buffer.Clear();
                     }
-                }
-                if (buffer.Count > 0)
-                {
-                    Synchronization.UI.Invoke(() => this.AddModelsToDisplayList(buffer, token),
-                        DispatcherPriority.Background);
                 }
             }
         }, token);
@@ -259,34 +292,58 @@ public class HomeViewModel : BaseViewModel
             lock (this.displayingModelLock)
             {
                 int batchSize = Settings.Current.AddHashViewModelsBatchSize;
-                List<HashModelArg> buffer = new(Math.Max(1, batchSize));
-                foreach (PathPackage package in packages)
+                if (batchSize <= 1)
                 {
-                    if (token.IsCancellationRequested ||
-                        stopSearchingToken.IsCancellationRequested)
+                    foreach (PathPackage package in packages)
                     {
-                        break;
-                    }
-                    package.StopSearchingToken = stopSearchingToken;
-                    foreach (HashModelArg arg in package)
-                    {
-                        if (token.IsCancellationRequested)
+                        if (token.IsCancellationRequested ||
+                            stopSearchingToken.IsCancellationRequested)
                         {
                             break;
                         }
-                        buffer.Add(arg);
-                        if (buffer.Count >= batchSize)
+                        package.StopSearchingToken = stopSearchingToken;
+                        foreach (HashModelArg arg in package)
                         {
-                            Synchronization.UI.Invoke(() => this.AddModelsToDisplayList(buffer, token),
+                            if (token.IsCancellationRequested)
+                            {
+                                break;
+                            }
+                            Synchronization.UI.Invoke(() => this.AddModelToDisplay(arg, token),
                                 DispatcherPriority.Background);
-                            buffer.Clear();
                         }
                     }
                 }
-                if (buffer.Count > 0)
+                else
                 {
-                    Synchronization.UI.Invoke(() => this.AddModelsToDisplayList(buffer, token),
-                        DispatcherPriority.Background);
+                    List<HashModelArg> buffer = new(batchSize);
+                    foreach (PathPackage package in packages)
+                    {
+                        if (token.IsCancellationRequested ||
+                            stopSearchingToken.IsCancellationRequested)
+                        {
+                            break;
+                        }
+                        package.StopSearchingToken = stopSearchingToken;
+                        foreach (HashModelArg arg in package)
+                        {
+                            if (token.IsCancellationRequested)
+                            {
+                                break;
+                            }
+                            buffer.Add(arg);
+                            if (buffer.Count >= batchSize)
+                            {
+                                Synchronization.UI.Invoke(() => this.AddModelsToDisplayList(buffer, token),
+                                    DispatcherPriority.Background);
+                                buffer.Clear();
+                            }
+                        }
+                    }
+                    if (buffer.Count > 0)
+                    {
+                        Synchronization.UI.Invoke(() => this.AddModelsToDisplayList(buffer, token),
+                            DispatcherPriority.Background);
+                    }
                 }
             }
         }, token);
