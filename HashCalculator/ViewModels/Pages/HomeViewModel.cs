@@ -25,6 +25,12 @@ public class HomeViewModel : BaseViewModel
     private readonly Action<IEnumerable<HashModelArg>> addModelItemsAction;
     private readonly Lock displayingModelLock = new Lock();
     private volatile int serial = 0;
+    /// <summary>
+    /// 停止添加行的标志。<br/>
+    /// 添加行的委托是同步投递到界面线程的，取消/清空时已经投递但尚未执行的那一个无法撤销，
+    /// 而 Cancellation 在取消时会被立即重建，那批委托无法据此判断"刚刚取消过"，故另设此标志，让它们整批跳过。
+    /// </summary>
+    private volatile bool stopAddingModels = false;
     private int pendingModelsCount = 0;
     private object selectedHashVieModel = -1;
     private List<HashViewModel> displayedModels = new List<HashViewModel>();
@@ -201,47 +207,41 @@ public class HomeViewModel : BaseViewModel
 
     private void AddModelAction(HashModelArg arg)
     {
+        // 添加委托是同步投递到界面线程的，取消时已经投递但尚未执行的那一批无法撤销，
+        // 若不在此拦截，取消/清空之后仍会添加新行并开始计算，表现为"取消后还有任务完成"
+        if (this.stopAddingModels)
+        {
+            return;
+        }
         HashViewModel model = new HashViewModel(++this.serial, arg);
         this.displayedModels.Add(model);
-        model.ReadyToComputeEvent += this.JobScheduler.Submit;
         HashModelStore.HashViewModels.Add(model);
+        // 新添加的行状态为 NoState，直接启动即可满足启动条件
         if (Settings.Current.AutomaticallyStartTaskAfterFileAdded)
         {
-            if (Settings.Current.DelayTheStartOfCalculationTasks)
-            {
-                model.StartupModel(force: false, Settings.Current.MillisecondsOfDelayedStartup);
-            }
-            else
-            {
-                model.StartupModel(force: false);
-            }
+            this.JobScheduler.Start(model, force: false);
         }
     }
 
     private void AddModelItemsAction(IEnumerable<HashModelArg> args)
     {
+        // 添加委托是同步投递到界面线程的，取消时已经投递但尚未执行的那一批无法撤销，
+        // 若不在此拦截，取消/清空之后仍会添加新行并开始计算，表现为"取消后还有任务完成"
+        if (this.stopAddingModels)
+        {
+            return;
+        }
         List<HashViewModel> preprocessedModels = new();
-        bool delayTheStartOfCalculationTasks =
-            Settings.Current.DelayTheStartOfCalculationTasks;
         bool automaticallyStartTaskAfterFileAdded =
             Settings.Current.AutomaticallyStartTaskAfterFileAdded;
-        int millisecondsOfDelayedStartup =
-            Settings.Current.MillisecondsOfDelayedStartup;
         foreach (HashModelArg arg in args)
         {
             HashViewModel model = new HashViewModel(++this.serial, arg);
             preprocessedModels.Add(model);
-            model.ReadyToComputeEvent += this.JobScheduler.Submit;
             if (automaticallyStartTaskAfterFileAdded)
             {
-                if (delayTheStartOfCalculationTasks)
-                {
-                    model.StartupModel(force: false, millisecondsOfDelayedStartup);
-                }
-                else
-                {
-                    model.StartupModel(force: false);
-                }
+                // 新添加的行状态为 NoState，直接启动即可满足启动条件
+                this.JobScheduler.Start(model, force: false);
             }
         }
         this.displayedModels.AddRange(preprocessedModels);
@@ -250,6 +250,7 @@ public class HomeViewModel : BaseViewModel
 
     public async void BeginDisplayModels(IEnumerable<HashViewModel> models)
     {
+        this.stopAddingModels = false;
         CancellationToken token = this.Cancellation.Token;
         await Task.Run(() =>
         {
@@ -299,6 +300,7 @@ public class HomeViewModel : BaseViewModel
 
     public async void BeginDisplayModels(params PathPackage[] packages)
     {
+        this.stopAddingModels = false;
         CancellationToken token = this.Cancellation.Token;
         await Task.Run(() =>
         {
@@ -856,10 +858,7 @@ public class HomeViewModel : BaseViewModel
                 Owner = MainWindow.Current,
             };
             HashViewModel[] targets = selectedModels.Cast<HashViewModel>().ToArray();
-            foreach (HashViewModel model in targets)
-            {
-                model.ShutdownModel();
-            }
+            this.JobScheduler.Cancel(targets);
             HashModelStore.HashViewModels.RemoveItems(targets);
             Task<string> deleteFileTask = Task.Run(() =>
             {
@@ -930,13 +929,12 @@ public class HomeViewModel : BaseViewModel
         if (param is IList selectedModels)
         {
             HashViewModel[] models = selectedModels.Cast<HashViewModel>().ToArray();
+            this.JobScheduler.Cancel(models);
             foreach (HashViewModel model in models)
             {
-                model.ShutdownModel();
-                // 对 HashViewModels 的增删操作是在主线程上进行的，不用加锁
                 this.displayedModels.Remove(model);
-                HashModelStore.HashViewModels.Remove(model);
             }
+            HashModelStore.HashViewModels.RemoveItems(models);
             this.GenerateFileHashCheckReport();
         }
     }
@@ -1197,19 +1195,13 @@ public class HomeViewModel : BaseViewModel
     {
         if (!newLines)
         {
-            foreach (HashViewModel model in HashModelStore.HashViewModels)
-            {
-                model.StartupModel(force);
-            }
+            this.JobScheduler.Start(HashModelStore.HashViewModels, force);
         }
-        else
+        else if (this.displayedModels.Count != 0)
         {
-            if (this.displayedModels.Count != 0)
-            {
-                List<HashViewModel> args = this.displayedModels;
-                this.displayedModels = new List<HashViewModel>();
-                this.BeginDisplayModels(args);
-            }
+            List<HashViewModel> args = this.displayedModels;
+            this.displayedModels = new List<HashViewModel>();
+            this.BeginDisplayModels(args);
         }
     }
 
@@ -1442,10 +1434,17 @@ public class HomeViewModel : BaseViewModel
 
     private void CancelDisplayedModelsAction(object param)
     {
+        // Cancellation 用于终止正在向表格添加行的搜索过程，与计算无关，故不交给调度器处理
+        // 先置标志再取消：界面线程可能已排入尚未执行的添加委托，
+        // 它们会在本方法返回之后才被处理，必须让它们整批跳过
+        this.stopAddingModels = true;
         this.Cancellation?.Cancel();
+        this.JobScheduler.CancelAll();
+        // 从未启动的作业不在调度器的作业集合内，须在此单独终结，
+        // 本按钮承诺的范围包含"未开始"的作业
         foreach (HashViewModel model in HashModelStore.HashViewModels)
         {
-            model.ShutdownModel();
+            model.MarkCanceled();
         }
         this.Cancellation?.Dispose();
         this.Cancellation = new CancellationTokenSource();
@@ -1462,10 +1461,7 @@ public class HomeViewModel : BaseViewModel
 
     private void PauseDisplayedModelsAction(object param)
     {
-        foreach (HashViewModel model in HashModelStore.HashViewModels)
-        {
-            model.PauseOrContinueModel(PauseMode.Pause);
-        }
+        this.JobScheduler.PauseAll();
     }
 
     public ICommand PauseDisplayedModelsCmd
@@ -1479,10 +1475,12 @@ public class HomeViewModel : BaseViewModel
 
     private void ContinueDisplayedModelsAction(object param)
     {
-        foreach (HashViewModel model in HashModelStore.HashViewModels)
-        {
-            model.PauseOrContinueModel(PauseMode.Continue);
-        }
+        // 已暂停的由调度器唤醒，从未启动的在此启动。
+        // 已结束的（含被取消的）留白给【计算缺值项】，本按钮不启动它们
+        this.JobScheduler.ResumeAll();
+        this.JobScheduler.Start(
+            HashModelStore.HashViewModels.Where(i => i.State == HashState.NoState),
+            force: false);
     }
 
     public ICommand ContinueDisplayedModelsCmd
@@ -1498,10 +1496,7 @@ public class HomeViewModel : BaseViewModel
     {
         if (param is IList selectedModels)
         {
-            foreach (HashViewModel model in selectedModels)
-            {
-                model.PauseOrContinueModel(PauseMode.Pause);
-            }
+            this.JobScheduler.Pause(selectedModels.Cast<HashViewModel>());
         }
     }
 
@@ -1509,10 +1504,7 @@ public class HomeViewModel : BaseViewModel
     {
         if (param is IList selectedModels)
         {
-            foreach (HashViewModel model in selectedModels)
-            {
-                model.ShutdownModel();
-            }
+            this.JobScheduler.Cancel(selectedModels.Cast<HashViewModel>());
         }
     }
 
@@ -1520,10 +1512,7 @@ public class HomeViewModel : BaseViewModel
     {
         if (param is IList selectedModels)
         {
-            foreach (HashViewModel model in selectedModels)
-            {
-                model.PauseOrContinueModel(PauseMode.Continue);
-            }
+            this.JobScheduler.Resume(selectedModels.Cast<HashViewModel>());
         }
     }
 
@@ -1531,10 +1520,7 @@ public class HomeViewModel : BaseViewModel
     {
         if (param is IList selectedModels)
         {
-            foreach (HashViewModel model in selectedModels)
-            {
-                model.StartupModel(true);
-            }
+            this.JobScheduler.Start(selectedModels.Cast<HashViewModel>(), force: true);
         }
     }
 
@@ -1542,10 +1528,7 @@ public class HomeViewModel : BaseViewModel
     {
         if (param is IList selectedModels)
         {
-            foreach (HashViewModel model in selectedModels)
-            {
-                model.StartupModel(false);
-            }
+            this.JobScheduler.Start(selectedModels.Cast<HashViewModel>(), force: false);
         }
     }
 

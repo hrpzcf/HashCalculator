@@ -738,7 +738,7 @@
                                     <Button
                                         Grid.Column="4"
                                         Padding="4"
-                                        Command="{Binding PauseOrContinueModelSelfCmd}"
+                                        Command="{Binding PauseOrResumeModelSelfCmd}"
                                         Content="{Binding State, Converter={StaticResource SubBtnPauseOrContinueTextCvt}}"
                                         FontFamily="{StaticResource IconFont}"
                                         FontSize="15pt"

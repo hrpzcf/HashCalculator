@@ -43,25 +43,6 @@
     }
 
     /// <summary>
-    /// HashViewModel 的 PauseOrContinueModel 方法参数
-    /// </summary>
-    public enum PauseMode
-    {
-        /// <summary>
-        /// 暂停任务
-        /// </summary>
-        Pause,
-        /// <summary>
-        /// 继续任务
-        /// </summary>
-        Continue,
-        /// <summary>
-        /// 反转状态
-        /// </summary>
-        Invert,
-    }
-
-    /// <summary>
     /// 哈希值计算队列任务的完成状态
     /// </summary>
     public enum JobStatus
