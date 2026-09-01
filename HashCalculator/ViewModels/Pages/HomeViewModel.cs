@@ -195,25 +195,26 @@ public class HomeViewModel : BaseViewModel
         }
     }
 
-    private void AddModelsToDisplayList(HashViewModel[] models, CancellationToken token)
+    private void AddModelsToDisplayList(List<HashModelArg> args, CancellationToken token)
     {
-        // 添加委托是异步投递到界面线程的，取消时已经投递但尚未执行的那一批无法撤销，
-        // 若不在此拦截，取消/清空之后仍会添加新行并开始计算，表现为"取消后还有任务完成"。
+        // 若不在此拦截，取消/清空之后仍会有漏网的任务完成
         if (token.IsCancellationRequested)
         {
             return;
         }
-        foreach (HashViewModel model in models)
+        List<HashViewModel> constructedModels = new();
+        foreach (HashModelArg arg in args)
         {
-            if (Settings.Current.AutomaticallyStartAfterModelAdded)
-            {
-                // 新添加的行状态为 NoState，直接启动即可满足启动条件
-                this.JobScheduler.Start(model, force: false);
-            }
+            // 实测在 UI 线程构造且经 Invoke 同步投递是最快的
+            HashViewModel hashViewModel = new(++this.serial, arg);
+            constructedModels.Add(hashViewModel);
         }
-        // models 是 BeginInvoke 投递的独立快照，可直接使用，无需再复制一份
-        this.displayedModels.AddRange(models);
-        HashModelStore.HashViewModels.AddItems(models);
+        if (Settings.Current.AutomaticallyStartAfterModelAdded)
+        {
+            this.JobScheduler.Start(constructedModels, force: false);
+        }
+        this.displayedModels.AddRange(constructedModels);
+        HashModelStore.HashViewModels.AddItems(constructedModels);
     }
 
     public async void BeginDisplayModels(IEnumerable<HashViewModel> models)
@@ -224,7 +225,7 @@ public class HomeViewModel : BaseViewModel
             lock (this.displayingModelLock)
             {
                 int batchSize = Settings.Current.AddHashViewModelsBatchSize;
-                List<HashViewModel> bufferList = new(Math.Max(1, batchSize));
+                List<HashModelArg> buffer = new(Math.Max(1, batchSize));
                 foreach (HashModelArg arg in models.Select(i => i.Arguments))
                 {
                     if (token.IsCancellationRequested)
@@ -232,21 +233,17 @@ public class HomeViewModel : BaseViewModel
                         break;
                     }
                     arg.PresetAlgos = null;
-                    // 后台线程构造 model：GetFileIcon 已 Freeze，可跨线程使用
-                    HashViewModel model = new HashViewModel(++this.serial, arg);
-                    bufferList.Add(model);
-                    if (bufferList.Count >= batchSize)
+                    buffer.Add(arg);
+                    if (buffer.Count >= batchSize)
                     {
-                        HashViewModel[] snap = bufferList.ToArray();
-                        bufferList.Clear();
-                        Synchronization.UI.BeginInvoke(() => this.AddModelsToDisplayList(snap, token),
+                        Synchronization.UI.Invoke(() => this.AddModelsToDisplayList(buffer, token),
                             DispatcherPriority.Background);
+                        buffer.Clear();
                     }
                 }
-                if (bufferList.Count > 0)
+                if (buffer.Count > 0)
                 {
-                    Synchronization.UI.BeginInvoke(
-                        () => this.AddModelsToDisplayList(bufferList.ToArray(), token),
+                    Synchronization.UI.Invoke(() => this.AddModelsToDisplayList(buffer, token),
                         DispatcherPriority.Background);
                 }
             }
@@ -262,7 +259,7 @@ public class HomeViewModel : BaseViewModel
             lock (this.displayingModelLock)
             {
                 int batchSize = Settings.Current.AddHashViewModelsBatchSize;
-                List<HashViewModel> bufferList = new(Math.Max(1, batchSize));
+                List<HashModelArg> buffer = new(Math.Max(1, batchSize));
                 foreach (PathPackage package in packages)
                 {
                     if (token.IsCancellationRequested ||
@@ -277,22 +274,18 @@ public class HomeViewModel : BaseViewModel
                         {
                             break;
                         }
-                        // 后台线程构造 model：GetFileIcon 已 Freeze，可跨线程使用
-                        HashViewModel model = new HashViewModel(++this.serial, arg);
-                        bufferList.Add(model);
-                        if (bufferList.Count >= batchSize)
+                        buffer.Add(arg);
+                        if (buffer.Count >= batchSize)
                         {
-                            HashViewModel[] snap = bufferList.ToArray();
-                            bufferList.Clear();
-                            Synchronization.UI.BeginInvoke(() => this.AddModelsToDisplayList(snap, token),
+                            Synchronization.UI.Invoke(() => this.AddModelsToDisplayList(buffer, token),
                                 DispatcherPriority.Background);
+                            buffer.Clear();
                         }
                     }
                 }
-                if (bufferList.Count > 0)
+                if (buffer.Count > 0)
                 {
-                    Synchronization.UI.BeginInvoke(
-                        () => this.AddModelsToDisplayList(bufferList.ToArray(), token),
+                    Synchronization.UI.Invoke(() => this.AddModelsToDisplayList(buffer, token),
                         DispatcherPriority.Background);
                 }
             }
