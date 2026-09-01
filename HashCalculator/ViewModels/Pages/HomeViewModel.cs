@@ -21,16 +21,8 @@ namespace HashCalculator.ViewModels.Pages;
 
 public class HomeViewModel : BaseViewModel
 {
-    private readonly Action<HashModelArg> addModelAction;
-    private readonly Action<IEnumerable<HashModelArg>> addModelItemsAction;
     private readonly Lock displayingModelLock = new Lock();
     private volatile int serial = 0;
-    /// <summary>
-    /// 停止添加行的标志。<br/>
-    /// 添加行的委托是同步投递到界面线程的，取消/清空时已经投递但尚未执行的那一个无法撤销，
-    /// 而 Cancellation 在取消时会被立即重建，那批委托无法据此判断"刚刚取消过"，故另设此标志，让它们整批跳过。
-    /// </summary>
-    private volatile bool stopAddingModels = false;
     private int pendingModelsCount = 0;
     private object selectedHashVieModel = -1;
     private List<HashViewModel> displayedModels = new List<HashViewModel>();
@@ -78,8 +70,6 @@ public class HomeViewModel : BaseViewModel
     {
         Current = this;
         this.FilterAndOperationModel = model;
-        this.addModelAction = new Action<HashModelArg>(this.AddModelAction);
-        this.addModelItemsAction = new Action<IEnumerable<HashModelArg>>(this.AddModelItemsAction);
         this.JobScheduler = new JobScheduler(Settings.Current.SelectedTaskNumberLimit);
         this.JobScheduler.JobStatusChanged += status =>
         {
@@ -196,8 +186,8 @@ public class HomeViewModel : BaseViewModel
         if (HashModelStore.HashViewModels.AnyItem() &&
             this.TestClipboardTextGetChecklist() is HashChecklist checklist)
         {
-            if (this.BatchStatus != JobStatus.Started && this.CheckFilesHashBasedOnStringOrChecklist(checklist) &&
-                Settings.Current.SwitchMainWndFgWhenNewHashCopied)
+            if (this.BatchStatus != JobStatus.Started && this.CheckFilesHashBasedOnStringOrChecklist(checklist)
+                && Settings.Current.SwitchMainWndFgWhenNewHashCopied)
             {
                 CommonUtils.ShowWindowForeground(MainWindow.ProcessId);
                 // TODO: 实现跨进程导航至主页
@@ -205,94 +195,59 @@ public class HomeViewModel : BaseViewModel
         }
     }
 
-    private void AddModelAction(HashModelArg arg)
+    private void AddModelsToDisplayList(HashViewModel[] models, CancellationToken token)
     {
-        // 添加委托是同步投递到界面线程的，取消时已经投递但尚未执行的那一批无法撤销，
-        // 若不在此拦截，取消/清空之后仍会添加新行并开始计算，表现为"取消后还有任务完成"
-        if (this.stopAddingModels)
+        // 添加委托是异步投递到界面线程的，取消时已经投递但尚未执行的那一批无法撤销，
+        // 若不在此拦截，取消/清空之后仍会添加新行并开始计算，表现为"取消后还有任务完成"。
+        if (token.IsCancellationRequested)
         {
             return;
         }
-        HashViewModel model = new HashViewModel(++this.serial, arg);
-        this.displayedModels.Add(model);
-        HashModelStore.HashViewModels.Add(model);
-        // 新添加的行状态为 NoState，直接启动即可满足启动条件
-        if (Settings.Current.AutomaticallyStartTaskAfterFileAdded)
+        foreach (HashViewModel model in models)
         {
-            this.JobScheduler.Start(model, force: false);
-        }
-    }
-
-    private void AddModelItemsAction(IEnumerable<HashModelArg> args)
-    {
-        // 添加委托是同步投递到界面线程的，取消时已经投递但尚未执行的那一批无法撤销，
-        // 若不在此拦截，取消/清空之后仍会添加新行并开始计算，表现为"取消后还有任务完成"
-        if (this.stopAddingModels)
-        {
-            return;
-        }
-        List<HashViewModel> preprocessedModels = new();
-        bool automaticallyStartTaskAfterFileAdded =
-            Settings.Current.AutomaticallyStartTaskAfterFileAdded;
-        foreach (HashModelArg arg in args)
-        {
-            HashViewModel model = new HashViewModel(++this.serial, arg);
-            preprocessedModels.Add(model);
-            if (automaticallyStartTaskAfterFileAdded)
+            if (Settings.Current.AutomaticallyStartAfterModelAdded)
             {
                 // 新添加的行状态为 NoState，直接启动即可满足启动条件
                 this.JobScheduler.Start(model, force: false);
             }
         }
-        this.displayedModels.AddRange(preprocessedModels);
-        HashModelStore.HashViewModels.AddItems(preprocessedModels);
+        // models 是 BeginInvoke 投递的独立快照，可直接使用，无需再复制一份
+        this.displayedModels.AddRange(models);
+        HashModelStore.HashViewModels.AddItems(models);
     }
 
     public async void BeginDisplayModels(IEnumerable<HashViewModel> models)
     {
-        this.stopAddingModels = false;
         CancellationToken token = this.Cancellation.Token;
         await Task.Run(() =>
         {
             lock (this.displayingModelLock)
             {
                 int batchSize = Settings.Current.AddHashViewModelsBatchSize;
-                if (batchSize <= 1)
+                List<HashViewModel> bufferList = new(Math.Max(1, batchSize));
+                foreach (HashModelArg arg in models.Select(i => i.Arguments))
                 {
-                    foreach (HashModelArg arg in models.Select(i => i.Arguments))
+                    if (token.IsCancellationRequested)
                     {
-                        if (token.IsCancellationRequested)
-                        {
-                            break;
-                        }
-                        arg.PresetAlgos = null;
-                        Synchronization.UI.Invoke(this.addModelAction,
-                            DispatcherPriority.Background, arg);
+                        break;
+                    }
+                    arg.PresetAlgos = null;
+                    // 后台线程构造 model：GetFileIcon 已 Freeze，可跨线程使用
+                    HashViewModel model = new HashViewModel(++this.serial, arg);
+                    bufferList.Add(model);
+                    if (bufferList.Count >= batchSize)
+                    {
+                        HashViewModel[] snap = bufferList.ToArray();
+                        bufferList.Clear();
+                        Synchronization.UI.BeginInvoke(() => this.AddModelsToDisplayList(snap, token),
+                            DispatcherPriority.Background);
                     }
                 }
-                else
+                if (bufferList.Count > 0)
                 {
-                    List<HashModelArg> buffer = new(batchSize);
-                    foreach (HashModelArg arg in models.Select(i => i.Arguments))
-                    {
-                        if (token.IsCancellationRequested)
-                        {
-                            break;
-                        }
-                        arg.PresetAlgos = null;
-                        buffer.Add(arg);
-                        if (buffer.Count >= batchSize)
-                        {
-                            Synchronization.UI.Invoke(this.addModelItemsAction,
-                                DispatcherPriority.Background, buffer);
-                            buffer.Clear();
-                        }
-                    }
-                    if (buffer.Count > 0)
-                    {
-                        Synchronization.UI.Invoke(this.addModelItemsAction,
-                            DispatcherPriority.Background, buffer);
-                    }
+                    Synchronization.UI.BeginInvoke(
+                        () => this.AddModelsToDisplayList(bufferList.ToArray(), token),
+                        DispatcherPriority.Background);
                 }
             }
         }, token);
@@ -300,7 +255,6 @@ public class HomeViewModel : BaseViewModel
 
     public async void BeginDisplayModels(params PathPackage[] packages)
     {
-        this.stopAddingModels = false;
         CancellationToken token = this.Cancellation.Token;
         await Task.Run(() =>
         {
@@ -308,58 +262,38 @@ public class HomeViewModel : BaseViewModel
             lock (this.displayingModelLock)
             {
                 int batchSize = Settings.Current.AddHashViewModelsBatchSize;
-                if (batchSize <= 1)
+                List<HashViewModel> bufferList = new(Math.Max(1, batchSize));
+                foreach (PathPackage package in packages)
                 {
-                    foreach (PathPackage package in packages)
+                    if (token.IsCancellationRequested ||
+                        stopSearchingToken.IsCancellationRequested)
                     {
-                        if (token.IsCancellationRequested ||
-                            stopSearchingToken.IsCancellationRequested)
+                        break;
+                    }
+                    package.StopSearchingToken = stopSearchingToken;
+                    foreach (HashModelArg arg in package)
+                    {
+                        if (token.IsCancellationRequested)
                         {
                             break;
                         }
-                        package.StopSearchingToken = stopSearchingToken;
-                        foreach (HashModelArg arg in package)
+                        // 后台线程构造 model：GetFileIcon 已 Freeze，可跨线程使用
+                        HashViewModel model = new HashViewModel(++this.serial, arg);
+                        bufferList.Add(model);
+                        if (bufferList.Count >= batchSize)
                         {
-                            if (token.IsCancellationRequested)
-                            {
-                                break;
-                            }
-                            Synchronization.UI.Invoke(this.addModelAction,
-                                DispatcherPriority.Background, arg);
+                            HashViewModel[] snap = bufferList.ToArray();
+                            bufferList.Clear();
+                            Synchronization.UI.BeginInvoke(() => this.AddModelsToDisplayList(snap, token),
+                                DispatcherPriority.Background);
                         }
                     }
                 }
-                else
+                if (bufferList.Count > 0)
                 {
-                    List<HashModelArg> buffer = new(batchSize);
-                    foreach (PathPackage package in packages)
-                    {
-                        if (token.IsCancellationRequested ||
-                            stopSearchingToken.IsCancellationRequested)
-                        {
-                            break;
-                        }
-                        package.StopSearchingToken = stopSearchingToken;
-                        foreach (HashModelArg arg in package)
-                        {
-                            if (token.IsCancellationRequested)
-                            {
-                                break;
-                            }
-                            buffer.Add(arg);
-                            if (buffer.Count >= batchSize)
-                            {
-                                Synchronization.UI.Invoke(this.addModelItemsAction,
-                                    DispatcherPriority.Background, buffer);
-                                buffer.Clear();
-                            }
-                        }
-                    }
-                    if (buffer.Count > 0)
-                    {
-                        Synchronization.UI.Invoke(this.addModelItemsAction,
-                            DispatcherPriority.Background, buffer);
-                    }
+                    Synchronization.UI.BeginInvoke(
+                        () => this.AddModelsToDisplayList(bufferList.ToArray(), token),
+                        DispatcherPriority.Background);
                 }
             }
         }, token);
@@ -1434,14 +1368,12 @@ public class HomeViewModel : BaseViewModel
 
     private void CancelDisplayedModelsAction(object param)
     {
-        // Cancellation 用于终止正在向表格添加行的搜索过程，与计算无关，故不交给调度器处理
-        // 先置标志再取消：界面线程可能已排入尚未执行的添加委托，
-        // 它们会在本方法返回之后才被处理，必须让它们整批跳过
-        this.stopAddingModels = true;
         this.Cancellation?.Cancel();
         this.JobScheduler.CancelAll();
-        // 从未启动的作业不在调度器的作业集合内，须在此单独终结，
-        // 本按钮承诺的范围包含"未开始"的作业
+        // 本按钮承诺的范围包含"未开始"的作业，此类作业（State=NoState）从未入队，
+        // 不在调度器的 queuedJobs/runningJobs 集合内，CancelAll 覆盖不到，必须在此全表终结。
+        // 与 CancelAll 重叠的 Waiting 作业会被 MarkCanceled 重复调用，但其内部有状态守卫，
+        // 幂等无害，故此处全表遍历不可省略
         foreach (HashViewModel model in HashModelStore.HashViewModels)
         {
             model.MarkCanceled();

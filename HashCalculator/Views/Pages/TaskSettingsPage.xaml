@@ -37,7 +37,7 @@
                 <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding ParallelBetweenAlgos, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </controls:MinLimitedCardControl>
             <controls:MinLimitedCardControl Margin="0,4,0,0" Header="文件被添加后自动启动对该文件的计算任务">
-                <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding AutomaticallyStartTaskAfterFileAdded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding AutomaticallyStartAfterModelAdded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </controls:MinLimitedCardControl>
             <controls:MinLimitedCardControl Margin="0,4,0,0">
                 <controls:MinLimitedCardControl.Header>

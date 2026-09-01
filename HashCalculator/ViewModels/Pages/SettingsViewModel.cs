@@ -70,7 +70,7 @@ public class SettingsViewModel : BaseViewModel, IJsonOnSerializing, IJsonOnDeser
     private bool eachAlgoExportedToSeparateFile = false;
     private bool askUserHowToExportResultsEveryTime = true;
     private bool markTheSameHashValues = false;
-    private bool automaticallyStartTaskAfterFileAdded = true;
+    private bool automaticallyStartAfterModelAdded = true;
     private bool clearTableBeforeAddingFilesByCmdLine = false;
     private bool clearSelectedItemsAfterCompletion = false;
     private bool isMainWindowNavigationViewPaneOpen = true;
@@ -496,10 +496,10 @@ public class SettingsViewModel : BaseViewModel, IJsonOnSerializing, IJsonOnDeser
         set => this.SetPropNotify(ref this.markTheSameHashValues, value);
     }
 
-    public bool AutomaticallyStartTaskAfterFileAdded
+    public bool AutomaticallyStartAfterModelAdded
     {
-        get => this.automaticallyStartTaskAfterFileAdded;
-        set => this.SetPropNotify(ref this.automaticallyStartTaskAfterFileAdded, value);
+        get => this.automaticallyStartAfterModelAdded;
+        set => this.SetPropNotify(ref this.automaticallyStartAfterModelAdded, value);
     }
 
     public bool ClearSelectedItemsAfterCompletion
