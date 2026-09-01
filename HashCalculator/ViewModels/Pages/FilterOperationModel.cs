@@ -2,7 +2,6 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Input;
 using HashCalculator.Others;
 using HashCalculator.Views.UserControls;
@@ -237,7 +236,7 @@ public class FilterOperationModel : BaseViewModel
                         }
                         catch (Exception ex)
                         {
-                            Application.Current.Dispatcher.Invoke(() =>
+                            Synchronization.UI.Invoke(() =>
                             {
                                 NotificationSender.ShowMessageBox(MainWindow.Current,
                                     "筛选出错", $"筛选器名：{filter.Display}\n错误详情：{ex.Message}");

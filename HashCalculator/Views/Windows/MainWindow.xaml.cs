@@ -253,18 +253,18 @@ public partial class MainWindow
             string[] filePaths = paths.Where(i => File.Exists(i) || Directory.Exists(i)).ToArray();
             // 此处逻辑针对命令行传来的待计算文件/文件夹路径，一般由右键菜单生成命令
             // 如果是用户手动输入命令，则这些路径有可能分属不同的父目录，所以逐个处理
-            PathPackage[] packages = new PathPackage[filePaths.Length];
+            PathPackage[] pathPackages = new PathPackage[filePaths.Length];
             for (int i = 0; i < filePaths.Length; ++i)
             {
                 // 当 filePaths[i] 是分区根目录时 GetDirectoryName 返回 null
                 string parent = Path.GetDirectoryName(filePaths[i]) ?? filePaths[i];
                 PathPackage package = new PathPackage(parent, filePaths[i], hashChecklist,
                     Settings.Current.SelectedSearchMethodForDragDrop);
-                packages[i] = package;
+                pathPackages[i] = package;
                 package.OnlyFilesThatExistInChecklist = false;
                 package.PresetAlgoTypes = this.GetAlgoTypesFromOption(algoStr);
             }
-            this._homePageViewModel.BeginDisplayModels(packages);
+            this._homePageViewModel.BeginDisplayModels(pathPackages);
         }
     }
 
@@ -277,7 +277,7 @@ public partial class MainWindow
                 types);
             if (newChecklist.ReasonForFailure != null)
             {
-                Application.Current.Dispatcher.Invoke(() =>
+                Synchronization.UI.Invoke(() =>
                 {
                     NotificationSender.ShowMessageBox(this, "错误", newChecklist.ReasonForFailure);
                 });
@@ -294,10 +294,10 @@ public partial class MainWindow
                 // 这里添加要计算哈希值的文件时，看作以多选文件的方式添，所以
                 // PathPackage 的 parent 参数应是 checklistPath 所在目录
                 string filesDir = Path.GetDirectoryName(checklistPath);
-                PathPackage package = new PathPackage(filesDir, filesDir, newChecklist,
+                PathPackage pathPackage = new PathPackage(filesDir, filesDir, newChecklist,
                     Settings.Current.SelectedSearchMethodForChecklist);
-                package.PresetAlgoTypes = types;
-                this._homePageViewModel.BeginDisplayModels(package);
+                pathPackage.PresetAlgoTypes = types;
+                this._homePageViewModel.BeginDisplayModels(pathPackage);
             }
         }
     }

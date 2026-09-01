@@ -8,10 +8,9 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using System.Windows.Threading;
+using HashCalculator.Others;
 using HashCalculator.ViewModels.Pages;
 using HashCalculator.Views.Windows;
 
@@ -44,8 +43,6 @@ public class HashViewModel : BaseViewModel
     private RelayCommand copyThisModelAllHashesCmd;
     private RelayCommand tableColumnDoubleClickCmd;
 
-    private static readonly Dispatcher synchronization =
-        Application.Current.Dispatcher;
     private readonly ManualResetEvent manualPauseController =
         new ManualResetEvent(true);
     private readonly object computeHashOperationLock = new object();
@@ -574,13 +571,13 @@ public class HashViewModel : BaseViewModel
             return;
         }
         this.desiredState = state;
-        if (synchronization.CheckAccess())
+        if (Synchronization.UI.CheckAccess())
         {
             this.State = state;
         }
         else
         {
-            synchronization.BeginInvoke(new Action(() => { this.State = this.desiredState; }));
+            Synchronization.UI.BeginInvoke(() => { this.State = this.desiredState; });
         }
     }
 
@@ -708,13 +705,10 @@ public class HashViewModel : BaseViewModel
         this.HasBeenRun = true;
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.Start();
-        synchronization.Invoke(() =>
-        {
-            this.State = HashState.Running;
-        });
+        Synchronization.UI.Invoke(() => this.State = HashState.Running);
         if (this.Arguments.Deprecated)
         {
-            synchronization.Invoke(() =>
+            Synchronization.UI.Invoke(() =>
             {
                 this.Result = HashResult.Failed;
                 this.ErrorDetails = this.Arguments.Message;
@@ -724,7 +718,7 @@ public class HashViewModel : BaseViewModel
         // 需要调用 FileInfo 的 Refresh 方法才能更新 FileInfo.Exists
         else if (!File.Exists(this.Information.FullName))
         {
-            synchronization.Invoke(() =>
+            Synchronization.UI.Invoke(() =>
             {
                 this.Result = HashResult.Failed;
                 this.ErrorDetails = "此文件不存在或无法访问...";
@@ -736,7 +730,7 @@ public class HashViewModel : BaseViewModel
         {
             using (FileStream fs = this.Information.OpenRead())
             {
-                synchronization.Invoke(() =>
+                Synchronization.UI.Invoke(() =>
                 {
                     this.MakeSureAlgoModelArrayNotEmpty();
                     // 刷新大小，应对文件被添加后，计算前发生变化或被替换的情况
@@ -750,7 +744,7 @@ public class HashViewModel : BaseViewModel
                 });
                 if (fs.Length == 0 && Settings.Current.DoNotHashForEmptyFile)
                 {
-                    synchronization.Invoke(() =>
+                    Synchronization.UI.Invoke(() =>
                     {
                         this.Result = HashResult.Failed;
                         this.ErrorDetails = "是空文件，终止计算并标记为失败...";
@@ -763,7 +757,7 @@ public class HashViewModel : BaseViewModel
                 }
                 int actualReadCount = 0;
                 CommonUtils.Suggest(ref buffer, this.FileLength);
-                Action<int> updateProgress = size => { this.Progress += size; };
+                Action<int> updateProgress = size => this.Progress += size;
                 bool terminateByCancellation = false;
                 if (Settings.Current.ParallelBetweenAlgos)
                 {
@@ -779,7 +773,7 @@ public class HashViewModel : BaseViewModel
                             this.manualPauseController.WaitOne();
                             stopwatch.Start();
                             actualReadCount = fs.Read(buffer, 0, buffer.Length);
-                            synchronization.BeginInvoke(updateProgress, actualReadCount);
+                            Synchronization.UI.BeginInvoke(updateProgress, actualReadCount);
                         }))
                     {
                         void DoTransformBlocks(AlgoInOutModel model)
@@ -823,7 +817,7 @@ public class HashViewModel : BaseViewModel
                         {
                             algoInOut.Algo.TransformBlock(buffer, 0, actualReadCount, null, 0);
                         }
-                        synchronization.BeginInvoke(updateProgress, actualReadCount);
+                        Synchronization.UI.BeginInvoke(updateProgress, actualReadCount);
                     }
                 }
                 if (!terminateByCancellation)
@@ -836,9 +830,9 @@ public class HashViewModel : BaseViewModel
                     foreach (AlgoInOutModel item in this.AlgoInOutModels)
                     {
                         item.Algo.TransformFinalBlock(buffer, 0, 0);
-                        synchronization.Invoke(updateHashBytes, item);
+                        Synchronization.UI.Invoke(updateHashBytes, item);
                     }
-                    synchronization.Invoke(() =>
+                    Synchronization.UI.Invoke(() =>
                     {
                         this.SetHashCheckResultForInOutModelAndSetCurModel();
                         this.Result = HashResult.Succeeded;
@@ -848,7 +842,7 @@ public class HashViewModel : BaseViewModel
         }
         catch
         {
-            synchronization.Invoke(() =>
+            Synchronization.UI.Invoke(() =>
             {
                 this.Result = HashResult.Failed;
                 this.ErrorDetails = "文件读取失败或进行计算时出错...";
@@ -868,7 +862,7 @@ public class HashViewModel : BaseViewModel
         }
         stopwatch.Stop();
         double duration = stopwatch.Elapsed.TotalSeconds;
-        synchronization.Invoke(() =>
+        Synchronization.UI.Invoke(() =>
         {
             this.DurationofTask = duration;
             this.State = HashState.Finished;
