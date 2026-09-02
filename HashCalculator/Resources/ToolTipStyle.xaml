@@ -10,7 +10,7 @@
         3. 重写 Template，将 TextBlock.TextWrapping 从 WrapWithOverflow 改为 Wrap。
     -->
     <Style BasedOn="{StaticResource DefaultToolTipStyle}" TargetType="{x:Type ToolTip}">
-        <Setter Property="MaxWidth" Value="450" />
+        <Setter Property="MaxWidth" Value="600" />
         <Setter Property="TextBlock.TextAlignment" Value="Left" />
         <Setter Property="Template">
             <Setter.Value>
