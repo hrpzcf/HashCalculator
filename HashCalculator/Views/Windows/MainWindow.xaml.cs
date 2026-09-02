@@ -107,7 +107,6 @@ public partial class MainWindow
             hwndSource.RemoveHook(this.WindowProcedure);
             hwndSource.Dispose();
         }
-        this.ProcIdMonitorFlag = false;
         this._homePage.MainDataGrid.Columns.CollectGridColumns(Settings.Current.ColumnsOrder);
         // 此处与 ProcessIdMonitorProc 方法内的 PIdSynchronizer.Set 不重复，原因：
         // 如果是本进程实例内的 ProcessIdMonitorProc 方法内的 PIdSynchronizer.Wait 抢到了锁，
@@ -116,6 +115,7 @@ public partial class MainWindow
         // 3. 然后在其他进程实例内启动 ComputeCrossProcessFilesMonitor 保证其他进程能监控第三方进程的参数推送。
         // 如果是其他进程实例内的 ProcessIdMonitorProc 方法内的 PIdSynchronizer.Wait 抢到了锁，
         // 则直接进入步骤 3，本进程实例 ProcessIdMonitorProc 方法内的 PIdSynchronizer.Wait 抢不到锁不会往下执行。
+        this.ProcIdMonitorFlag = false;
         Initializer.PIdSynchronizer.Set();
     }
 

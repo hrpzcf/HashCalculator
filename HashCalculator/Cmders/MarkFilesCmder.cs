@@ -25,7 +25,7 @@ internal class MarkFilesCmder : AbsHashesCmder
     public override string Display => "添加标记改变文件的哈希值";
 
     public override string Description => "给文件添加哈希标记以改变其哈希值，部分文件可正常使用，一般用于在某些" +
-        "情况下避过相同文件检测。\n对于改变哈希值后不能正常使用的文件，用【还原被改变哈希值的文件】对其进行还原即可得到原文件。";
+        "情况下避过相同文件检测。\n对于改变哈希值后不能正常使用的文件，用〈还原被改变哈希值的文件〉对其进行还原即可得到原文件。";
 
     public EditFileOption MarkFilesOption
     {
@@ -188,7 +188,7 @@ internal class MarkFilesCmder : AbsHashesCmder
                 if (NotificationSender.ShowMessageBox(
                     MainWindow.Current,
                     "提示",
-                    "没有应用【有效的文件】筛选器，要继续操作吗？",
+                    "没有应用〈有效的文件〉筛选器，要继续操作吗？",
                     closeButtonText: "否",
                     primaryButtonText: "是") != Wpfctrls.ContentDialogResult.Primary)
                 {

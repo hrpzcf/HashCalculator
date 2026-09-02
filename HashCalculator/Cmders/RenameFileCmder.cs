@@ -87,7 +87,7 @@ namespace HashCalculator
                     if (NotificationSender.ShowMessageBox(
                         MainWindow.Current,
                         "提示",
-                        "没有应用【有效的文件】筛选器，要继续操作吗？",
+                        "没有应用〈有效的文件〉筛选器，要继续操作吗？",
                         closeButtonText: "否",
                         primaryButtonText: "是") != Wpfctrls.ContentDialogResult.Primary)
                     {

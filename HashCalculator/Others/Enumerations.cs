@@ -366,7 +366,7 @@
     }
 
     /// <summary>
-    /// 【重命名文件】筛选器的重命名逻辑
+    /// 〈重命名文件〉筛选器的重命名逻辑
     /// </summary>
     public enum RenameFileMethod
     {

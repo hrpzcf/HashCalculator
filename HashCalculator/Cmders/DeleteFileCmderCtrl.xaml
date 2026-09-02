@@ -15,11 +15,11 @@
         <wpfui:CardControl Padding="8">
             <wpfui:CardControl.Header>
                 <StackPanel>
-                    <wpfui:TextBlock FontTypography="BodyStrong" Text="检查是否应用【有效的文件】筛选器" />
+                    <wpfui:TextBlock FontTypography="BodyStrong" Text="检查是否应用〈有效的文件〉筛选器" />
                     <wpfui:TextBlock
                         FontTypography="Caption"
                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                        Text="检查当前显示的所有行是否都已经经过【有效的文件】筛选器的筛选以避免误操作。"
+                        Text="检查当前显示的所有行是否都已经经过〈有效的文件〉筛选器的筛选以避免误操作。"
                         TextWrapping="WrapWithOverflow" />
                 </StackPanel>
             </wpfui:CardControl.Header>
@@ -32,7 +32,7 @@
                     <wpfui:TextBlock
                         FontTypography="Caption"
                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                        Text="直接删除操作目标，删除前请确认是否正确勾选了要删除的文件。应用【有效的文件】筛选器过滤重复目标可以避免出现误删。"
+                        Text="直接删除操作目标，删除前请确认是否正确勾选了要删除的文件。应用〈有效的文件〉筛选器过滤重复目标可以避免出现误删。"
                         TextWrapping="WrapWithOverflow" />
                 </StackPanel>
             </wpfui:CardControl.Header>
@@ -52,7 +52,7 @@
                     <wpfui:TextBlock
                         FontTypography="Caption"
                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                        Text="把操作目标所指文件移动到回收站，删除前请确认是否正确勾选了要删除的文件。应用【有效的文件】筛选器过滤重复目标可以避免出现误删。"
+                        Text="把操作目标所指文件移动到回收站，删除前请确认是否正确勾选了要删除的文件。应用〈有效的文件〉筛选器过滤重复目标可以避免出现误删。"
                         TextWrapping="WrapWithOverflow" />
                 </StackPanel>
             </wpfui:CardControl.Header>

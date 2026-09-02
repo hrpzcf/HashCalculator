@@ -63,11 +63,11 @@
         <wpfui:CardControl Margin="0,4,0,0" Padding="8">
             <wpfui:CardControl.Header>
                 <StackPanel>
-                    <wpfui:TextBlock FontTypography="BodyStrong" Text="检查是否应用【有效的文件】筛选器" />
+                    <wpfui:TextBlock FontTypography="BodyStrong" Text="检查是否应用〈有效的文件〉筛选器" />
                     <wpfui:TextBlock
                         FontTypography="Caption"
                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                        Text="检查当前显示的所有行是否都已经经过【有效的文件】筛选器的筛选以避免误操作。"
+                        Text="检查当前显示的所有行是否都已经经过〈有效的文件〉筛选器的筛选以避免误操作。"
                         TextWrapping="WrapWithOverflow" />
                 </StackPanel>
             </wpfui:CardControl.Header>
@@ -96,11 +96,11 @@
         <wpfui:CardControl Margin="0,4,0,0" Padding="8">
             <wpfui:CardControl.Header>
                 <StackPanel>
-                    <wpfui:TextBlock FontTypography="BodyStrong" Text="在主页【哈希标记】列中显示哈希标记" />
+                    <wpfui:TextBlock FontTypography="BodyStrong" Text="在主页〈哈希标记〉列中显示哈希标记" />
                     <wpfui:TextBlock
                         FontTypography="Caption"
                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                        Text="在主页的【哈希标记】列中显示被改变过哈希值的文件内记录的原文件哈希值和算法。"
+                        Text="在主页的〈哈希标记〉列中显示被改变过哈希值的文件内记录的原文件哈希值和算法。"
                         TextWrapping="WrapWithOverflow" />
                 </StackPanel>
             </wpfui:CardControl.Header>
@@ -115,7 +115,7 @@
         </wpfui:CardControl>
         <wpfui:CardControl Margin="0,4,0,0" Padding="8">
             <wpfui:CardControl.Header>
-                <wpfui:TextBlock FontTypography="BodyStrong" Text="清空并隐藏主页的【哈希标记】列" />
+                <wpfui:TextBlock FontTypography="BodyStrong" Text="清空并隐藏主页的〈哈希标记〉列" />
             </wpfui:CardControl.Header>
             <Button
                 Padding="16,6"

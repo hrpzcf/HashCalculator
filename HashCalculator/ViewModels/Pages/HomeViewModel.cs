@@ -972,7 +972,7 @@ public class HomeViewModel : BaseViewModel
         }
         if (Settings.Current.TemplatesForExport?.Any() != true)
         {
-            NotificationSender.SnackbarWarning("没有可用的导出方案，请到【导出行为】中添加。");
+            NotificationSender.SnackbarWarning("没有可用的导出方案，请到〈导出行为〉中添加。");
             return;
         }
         if (Settings.Current.AskUserHowToExportResultsEveryTime)
@@ -1005,7 +1005,7 @@ public class HomeViewModel : BaseViewModel
         if (usedModels.Count == 0)
         {
             NotificationSender.SnackbarWarning(
-                "没有可用方案，可能方案的扩展名中存在不能用作文件名的字符，请到【导出行为】中修改。");
+                "没有可用方案，可能方案的扩展名中存在不能用作文件名的字符，请到〈导出行为〉中修改。");
             return;
         }
         try
@@ -1458,7 +1458,7 @@ public class HomeViewModel : BaseViewModel
     private void ContinueDisplayedModelsAction(object param)
     {
         // 已暂停的由调度器唤醒，从未启动的在此启动。
-        // 已结束的（含被取消的）留白给【计算缺值项】，本按钮不启动它们
+        // 已结束的（含被取消的）留白给〈计算缺值项〉，本按钮不启动它们
         this.JobScheduler.ResumeAll();
         this.JobScheduler.Start(
             HashModelStore.HashViewModels.Where(i => i.State == HashState.NoState),

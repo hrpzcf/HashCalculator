@@ -20,7 +20,7 @@
                         Margin="0,2,0,0"
                         FontTypography="Caption"
                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                        Text="导出计算结果时【另存为】对话框的【保存类型】列表内的可选方案，包括导出模板、文件类型、文件编码等。点击【导出结果】按钮打开【另存为】对话框后，在【保存类型】下拉列表即可选择方案。"
+                        Text="导出计算结果时〈另存为〉对话框的〈保存类型〉列表内的可选方案，包括导出模板、文件类型、文件编码等。点击〈导出结果〉按钮打开〈另存为〉对话框后，在〈保存类型〉下拉列表即可选择方案。"
                         TextWrapping="WrapWithOverflow" />
                 </StackPanel>
             </wpfui:CardExpander.Header>

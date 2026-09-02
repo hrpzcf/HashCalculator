@@ -213,19 +213,19 @@ public class ShellMenuEditorModel : BaseViewModel
             }
             if (hcCtxMenuModel.MenuType == MenuType.Unknown)
             {
-                return $"主菜单项【{hcCtxMenuModel.Title}】没有选择有效的菜单类型！";
+                return $"主菜单项〈{hcCtxMenuModel.Title}〉没有选择有效的菜单类型！";
             }
             if (hcCtxMenuModel.HasSubmenus)
             {
                 if (hcCtxMenuModel.Submenus == null || !hcCtxMenuModel.Submenus.Any())
                 {
-                    return $"主菜单项【{hcCtxMenuModel.Title}】设置为\"有子菜单\"但未添加任何子菜单！";
+                    return $"主菜单项〈{hcCtxMenuModel.Title}〉设置为\"有子菜单\"但未添加任何子菜单！";
                 }
                 foreach (HcCtxMenuModel submenu in hcCtxMenuModel.Submenus)
                 {
                     if (string.IsNullOrEmpty(submenu.Title))
                     {
-                        return $"主菜单【{hcCtxMenuModel.Title}】的某项子菜单标题为空，请添加子菜单标题！";
+                        return $"主菜单〈{hcCtxMenuModel.Title}〉的某项子菜单标题为空，请添加子菜单标题！";
                     }
                 }
             }

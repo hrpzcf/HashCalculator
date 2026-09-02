@@ -48,7 +48,7 @@
                         Margin="0,2,0,0"
                         FontTypography="Caption"
                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                        Text="使【导出】复选框控制该行所有子算法的导出状态，关闭则仅控制当前显示算法的导出状态。"
+                        Text="使〈导出〉复选框控制该行所有子算法的导出状态，关闭则仅控制当前显示算法的导出状态。"
                         TextWrapping="WrapWithOverflow" />
                 </StackPanel>
             </wpfui:CardControl.Header>
@@ -76,7 +76,7 @@
                         Margin="0,2,0,0"
                         FontTypography="Caption"
                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                        Text="如果开启此选项，则导出结果时在【另存为】对话框的【文件类型】下拉列表选择的方案只有导出模板和文件编码起作用，扩展名不起作用，用算法名作为扩展名，同时【仅导出每行当前显示的算法的结果】设置不生效，默认导出所有算法结果。"
+                        Text="如果开启此选项，则导出结果时在〈另存为〉对话框的〈文件类型〉下拉列表选择的方案只有导出模板和文件编码起作用，扩展名不起作用，用算法名作为扩展名，同时〈仅导出每行当前显示的算法的结果〉设置不生效，默认导出所有算法结果。"
                         TextWrapping="WrapWithOverflow" />
                 </StackPanel>
             </wpfui:CardControl.Header>

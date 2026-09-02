@@ -24,7 +24,7 @@ namespace HashCalculator
 
         public override ContentControl UserInterface { get; }
 
-        public override string Display => "选择操作目标（在主窗口表格中显示【操作目标】列并勾选相关行）";
+        public override string Display => "选择操作目标（在主窗口表格中显示〈操作目标〉列并勾选相关行）";
 
         public override string Description => "提供不同的快速选择方法来选择不同的行以用作其他操作器的目标。";
 
@@ -52,7 +52,7 @@ namespace HashCalculator
                 }
                 if (showTips)
                 {
-                    NotificationSender.SnackbarSecondary($"已取消所有行的选择状态并隐藏【操作目标】列...");
+                    NotificationSender.SnackbarSecondary($"已取消所有行的选择状态并隐藏〈操作目标〉列...");
                 }
                 Settings.Current.IsMainRowSelectedByCheckBox = false;
             }

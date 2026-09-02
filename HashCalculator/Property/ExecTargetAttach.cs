@@ -34,7 +34,7 @@ namespace HashCalculator
                 {
                     // 同步在未订阅 SelectionChanged 时发生的选择变动
                     // 同步的意思是：刷新 ItemsSource 子项的 IsExecutionTarget 的值
-                    // 使该值在不显示【操作目标】列时与主窗口所选择的行相一一对应
+                    // 使该值在不显示〈操作目标〉列时与主窗口所选择的行相一一对应
                     MultiSelectorSelectionChanged(obj, null);
                     multiSelector.SelectionChanged += MultiSelectorSelectionChanged;
                 }

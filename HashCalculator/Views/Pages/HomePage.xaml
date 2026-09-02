@@ -30,7 +30,7 @@
                     <Button
                         Command="{Binding SelectFilesToHashCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
-                        ToolTip="打开【选择文件】对话框以选择/多选文件进行计算，也可以将文件和文件夹直接拖放到列表中。">
+                        ToolTip="打开〈选择文件〉对话框以选择/多选文件进行计算，也可以将文件和文件夹直接拖放到列表中">
                         <Image
                             Width="32"
                             Height="32"
@@ -49,7 +49,7 @@
                     <Button
                         Command="{Binding SelectFoldersToHashCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
-                        ToolTip="打开【选择文件夹】对话框以选择/多选文件夹进行计算，也可以将文件和文件夹直接拖放到列表中。">
+                        ToolTip="打开〈选择文件夹〉对话框以选择/多选文件夹进行计算，也可以将文件和文件夹直接拖放到列表中">
                         <Image
                             Width="32"
                             Height="32"
@@ -68,7 +68,7 @@
                     <Button
                         Command="{Binding StopEnumeratingPackageCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
-                        ToolTip="如果程序正持续搜索文件并向列表新增文件，则立即停止搜索文件，但不停止现有的任务。">
+                        ToolTip="如果程序正持续搜索文件并向列表新增文件，则立即停止搜索文件，但不停止现有的任务">
                         <Image
                             Width="32"
                             Height="32"
@@ -95,7 +95,7 @@
                         Command="{Binding CopyAndRestartModelsCmd}"
                         IsEnabled="{Binding BatchStatus, Converter={StaticResource JobStatusStartedToBooleanFalseCvt}}"
                         Style="{StaticResource ImageButtonStyle2}"
-                        ToolTip="复制列表中所有的行到新行并使用【算法】页中所选的算法计算新行的哈希值。">
+                        ToolTip="复制列表中所有的行到新行并使用〈算法〉页中所选的算法计算新行的哈希值">
                         <Image
                             Width="32"
                             Height="32"
@@ -115,7 +115,7 @@
                         Command="{Binding RefreshOriginalModelsCmd}"
                         IsEnabled="{Binding BatchStatus, Converter={StaticResource JobStatusStartedToBooleanFalseCvt}}"
                         Style="{StaticResource ImageButtonStyle2}"
-                        ToolTip="使用【算法】页中所选的算法重新计算列表中没有计算成功的行的哈希值。">
+                        ToolTip="使用〈算法〉页中所选的算法重新计算列表中没有计算成功的行的哈希值">
                         <Image
                             Width="32"
                             Height="32"
@@ -135,7 +135,7 @@
                         Command="{Binding ForceRefreshOriginalModelsCmd}"
                         IsEnabled="{Binding BatchStatus, Converter={StaticResource JobStatusStartedToBooleanFalseCvt}}"
                         Style="{StaticResource ImageButtonStyle2}"
-                        ToolTip="使用【算法】页中所选的算法重新计算列表中的所有行的哈希值。">
+                        ToolTip="使用〈算法〉页中所选的算法重新计算列表中的所有行的哈希值">
                         <Image
                             Width="32"
                             Height="32"
@@ -161,7 +161,7 @@
                     <Button
                         Command="{Binding ContinueDisplayedModelsCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
-                        ToolTip="开始所有未开始或已暂停的任务，但不会重新开始已停止的任务。">
+                        ToolTip="开始所有未开始或已暂停的任务，但不会重新开始已停止的任务">
                         <Image
                             Width="32"
                             Height="32"
@@ -180,7 +180,7 @@
                     <Button
                         Command="{Binding PauseDisplayedModelsCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
-                        ToolTip="暂停所有正在运行的任务并暂停派发新任务。">
+                        ToolTip="暂停所有正在运行的任务并暂停派发新任务">
                         <Image
                             Width="32"
                             Height="32"
@@ -199,7 +199,7 @@
                     <Button
                         Command="{Binding CancelDisplayedModelsCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
-                        ToolTip="停止和取消所有未开始、排队中、运行中和已暂停的任务。">
+                        ToolTip="停止和取消所有未开始、排队中、运行中和已暂停的任务">
                         <Image
                             Width="32"
                             Height="32"
@@ -218,7 +218,7 @@
                     <Button
                         Command="{Binding ClearAllTableLinesCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
-                        ToolTip="停止和取消所有未开始、排队中、运行中和已暂停的任务并清空列表。">
+                        ToolTip="停止和取消所有未开始、排队中、运行中和已暂停的任务并清空列表">
                         <Image
                             Width="32"
                             Height="32"
@@ -251,7 +251,7 @@
                             SelectedValue="{Binding Source={x:Static local:Settings.Current}, Path=SelectedOutputType}"
                             SelectedValuePath="ItemValue"
                             SelectionChanged="DefaultOutputTypeSelectionChanged"
-                            ToolTip="切换后刷新所有行的输出方式，同时影响【导出结果】按钮的行为，其中十六进制大/小写是常用的输出方式。" />
+                            ToolTip="切换后刷新所有行的输出方式，同时影响〈导出结果〉按钮的行为，其中十六进制大/小写是常用的输出方式" />
                     </Border>
                     <TextBlock
                         HorizontalAlignment="Left"
@@ -266,7 +266,7 @@
                     <Button
                         Command="{Binding FilterAndOperationModel.HomePageRefreshFiltersCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
-                        ToolTip="左键点击应用/禁用【筛选】页面中勾选的筛选器并刷新视图，右键点击打开筛选与操作窗口。">
+                        ToolTip="左键点击应用/禁用〈筛选〉页面中勾选的筛选器并刷新视图，右键点击打开筛选与操作窗口">
                         <Button.IsEnabled>
                             <MultiBinding Converter="{StaticResource CmdPanelCriticalControlsEnabledCvt}">
                                 <Binding Path="BatchStatus" Source="{x:Static pagemodels:HomeViewModel.Current}" />
@@ -305,7 +305,7 @@
                         Command="{Binding ExportHashResultsCmd}"
                         IsEnabled="{Binding BatchStatus, Converter={StaticResource JobStatusStartedToBooleanFalseCvt}}"
                         Style="{StaticResource ImageButtonStyle2}"
-                        ToolTip="将列表中所有行的哈希值计算结果导出为文本文件&#10;导出的内容使用的输出方式受到【默认输出方式】的控制而不受各行自己的【输出方式】的控制&#10;只有计算成功且【导出】列被勾选的行的结果会被导出。">
+                        ToolTip="将列表中所有行的哈希值计算结果导出为文本文件&#10;导出的内容的输出方式受到〈默认输出方式〉的控制而不受各行自己的〈输出方式〉的控制&#10;只有计算成功且〈导出〉列被勾选的行的结果会被导出">
                         <Image
                             Width="32"
                             Height="32"
@@ -331,7 +331,7 @@
                     <Button
                         Command="{Binding MainWindowTopmostCmd}"
                         Style="{StaticResource ImageButtonStyle2}"
-                        ToolTip="点击时把主窗口状态切换为【置顶】或【非置顶】，按钮为灰色代表主窗口非置顶，否则是已置顶。">
+                        ToolTip="点击时把主窗口状态切换为〈置顶〉或〈非置顶〉，按钮为灰色代表主窗口非置顶，否则是已置顶">
                         <Image
                             Width="32"
                             Height="32"
@@ -1011,13 +1011,13 @@
                     FontSize="16"
                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                     Text="&#xe607;"
-                    ToolTip="列表总行数..." />
+                    ToolTip="列表总行数" />
                 <TextBlock
                     Margin="8,0,0,0"
                     VerticalAlignment="Center"
                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                     Text="{Binding Source={x:Static others:HashModelStore.HashViewModels}, Path=Count}"
-                    ToolTip="列表总行数..." />
+                    ToolTip="列表总行数" />
                 <TextBlock
                     Margin="16,0,0,0"
                     VerticalAlignment="Center"
@@ -1025,13 +1025,13 @@
                     FontSize="16"
                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                     Text="&#xe67c;"
-                    ToolTip="待计算行数..." />
+                    ToolTip="待计算行数" />
                 <TextBlock
                     Margin="8,0,0,0"
                     VerticalAlignment="Center"
                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                     Text="{Binding PendingModelsCount}"
-                    ToolTip="待计算行数..." />
+                    ToolTip="待计算行数" />
             </StackPanel>
             <wpfui:TextBox
                 Grid.Column="1"
@@ -1039,7 +1039,7 @@
                 AcceptsReturn="True"
                 AllowDrop="True"
                 MaxLines="3"
-                PlaceholderText="校验信息：可在此输入单个或多个哈希值(每行一个)、使用后面的 [...] 按钮选择校验信息文件、粘贴检验信息文件的单行或多行内容"
+                PlaceholderText="校验信息：可在此输入单个或多个哈希值(每行一个)、使用后面的〈...〉按钮选择校验信息文件、粘贴检验信息文件的单行或多行内容"
                 PreviewDragOver="HashStringOrChecklistPathPreviewDragOver"
                 PreviewDrop="TextBoxHashOrFilePathPreviewDrop"
                 Text="{Binding HashStringOrChecklistPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -1050,7 +1050,7 @@
                 Appearance="Secondary"
                 Command="{Binding SelectChecklistFileCmd}"
                 Content="..."
-                ToolTip="打开【选择文件】对话框选择校验信息文件，将选择的文件路径填充到校验信息输入框中。" />
+                ToolTip="打开〈选择文件〉对话框选择校验信息文件，将选择的文件路径填充到校验信息输入框中" />
             <wpfui:Button
                 Grid.Column="3"
                 Margin="8,0,0,0"
@@ -1058,7 +1058,7 @@
                 Command="{Binding StartCheckHashResultsCmd}"
                 Content="校验"
                 IsEnabled="{Binding BatchStatus, Converter={StaticResource JobStatusStartedToBooleanFalseCvt}}"
-                ToolTip="解析输入框的内容并检查哪些行的哈希值与输入框内的哈希值匹配并在【校验结果】列显示结果。&#10;如果检查时列表为空且校验信息是通用格式的校验信息文件路径，则：&#10;1. 点击【校验】后程序会自动解析文件并在相同目录下寻找要计算哈希值的文件完成计算并显示校验结果。&#10;2. 通用格式的校验信息文件请参考程序【导出结果】功能导出的文件的内容排布格式。" />
+                ToolTip="解析输入框的内容并检查哪些行的哈希值与输入框内的哈希值匹配并在〈校验结果〉列显示结果&#10;如果输入的是校验信息文件路径，则点击〈校验〉后程序会自动解析文件并在相同目录下寻找要计算哈希值的文件完成计算并显示校验结果" />
         </Grid>
     </Grid>
 </Page>

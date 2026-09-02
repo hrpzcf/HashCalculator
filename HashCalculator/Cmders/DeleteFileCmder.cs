@@ -22,7 +22,7 @@ namespace HashCalculator
 
         public override string Display => "删除操作目标所指的文件";
 
-        public override string Description => "直接删除操作目标所指的文件或移动到回收站，通常使用【相同哈希值】筛选器进行文件筛选后再使用此功能。";
+        public override string Description => "直接删除操作目标所指的文件或移动到回收站，通常使用〈相同哈希值〉筛选器进行文件筛选后再使用此功能。";
 
         public bool CheckIfUsingDistinctFilesFilter { get; set; } = true;
 
@@ -58,7 +58,7 @@ namespace HashCalculator
                             if (NotificationSender.ShowMessageBox(
                                 MainWindow.Current,
                                 "提示",
-                                "没有应用【有效的文件】筛选器，要继续操作吗？",
+                                "没有应用〈有效的文件〉筛选器，要继续操作吗？",
                                 closeButtonText: "否",
                                 primaryButtonText: "是") != Wpfctrls.ContentDialogResult.Primary)
                             {

@@ -102,11 +102,11 @@
         <wpfui:CardControl Margin="0,4,0,0" Padding="8">
             <wpfui:CardControl.Header>
                 <StackPanel>
-                    <wpfui:TextBlock FontTypography="BodyStrong" Text="检查是否应用【有效的文件】筛选器" />
+                    <wpfui:TextBlock FontTypography="BodyStrong" Text="检查是否应用〈有效的文件〉筛选器" />
                     <wpfui:TextBlock
                         FontTypography="Caption"
                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                        Text="检查当前显示的所有行是否都已经经过【有效的文件】筛选器的筛选以避免误操作。"
+                        Text="检查当前显示的所有行是否都已经经过〈有效的文件〉筛选器的筛选以避免误操作。"
                         TextWrapping="WrapWithOverflow" />
                 </StackPanel>
             </wpfui:CardControl.Header>
@@ -119,7 +119,7 @@
                     <wpfui:TextBlock
                         FontTypography="Caption"
                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                        Text="把指定算法的哈希值转换为指定格式的字符串，将该字符串作为文件名重命名操作目标所指的文件；应用【有效的文件】筛选器过滤重复目标可以避免重复重命名和其他误操作。"
+                        Text="把指定算法的哈希值转换为指定格式的字符串，将该字符串作为文件名重命名操作目标所指的文件；应用〈有效的文件〉筛选器过滤重复目标可以避免重复重命名和其他误操作。"
                         TextWrapping="WrapWithOverflow" />
                 </StackPanel>
             </wpfui:CardControl.Header>

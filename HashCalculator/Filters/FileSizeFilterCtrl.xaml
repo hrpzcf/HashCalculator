@@ -33,7 +33,7 @@
                     <wpfui:TextBlock
                         FontTypography="Caption"
                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                        Text="如果【文件大小上限 &lt; 文件大小下限】则代表不设上限。"
+                        Text="如果〈文件大小上限 &lt; 文件大小下限〉则代表不设上限。"
                         TextWrapping="WrapWithOverflow" />
                 </StackPanel>
             </wpfui:CardControl.Header>

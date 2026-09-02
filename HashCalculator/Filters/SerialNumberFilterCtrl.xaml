@@ -25,7 +25,7 @@
                     <wpfui:TextBlock
                         FontTypography="Caption"
                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                        Text="如果【结束序号 &lt; 开始序号】则代表结束序号不设上限。"
+                        Text="如果〈结束序号 &lt; 开始序号〉则代表结束序号不设上限。"
                         TextWrapping="WrapWithOverflow" />
                 </StackPanel>
             </wpfui:CardControl.Header>

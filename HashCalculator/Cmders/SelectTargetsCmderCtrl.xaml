@@ -24,7 +24,7 @@
                         Content="按相同哈希值组选择"
                         Foreground="WhiteSmoke"
                         Style="{StaticResource IndepButtonStyle}"
-                        ToolTip="只针对【相同哈希值】筛选器的分组结果，每组选择除了第一行外的所有行，否则取消选择所有行。" />
+                        ToolTip="只针对〈相同哈希值〉筛选器的分组结果，每组选择除了第一行外的所有行，否则取消选择所有行" />
                     <Button
                         Margin="0,0,8,8"
                         Padding="16,6"
@@ -34,7 +34,7 @@
                         Content="按相同内嵌哈希值组选择"
                         Foreground="WhiteSmoke"
                         Style="{StaticResource IndepButtonStyle}"
-                        ToolTip="只针对【相同哈希值】筛选器的分组结果，每组选择除了第一行外的所有行，否则取消选择所有行。" />
+                        ToolTip="只针对〈相同哈希值〉筛选器的分组结果，每组选择除了第一行外的所有行，否则取消选择所有行" />
                     <Button
                         Margin="0,0,8,8"
                         Padding="16,6"
@@ -44,7 +44,7 @@
                         Content="按相同文件夹组选择"
                         Foreground="WhiteSmoke"
                         Style="{StaticResource IndepButtonStyle}"
-                        ToolTip="只针对【相同文件夹】筛选器的分组结果，每组选择除了第一行外的所有行，否则取消选择所有行。" />
+                        ToolTip="只针对〈相同文件夹〉筛选器的分组结果，每组选择除了第一行外的所有行，否则取消选择所有行" />
                     <Button
                         Margin="0,0,8,8"
                         Padding="16,6"
@@ -54,7 +54,7 @@
                         Content="按多级嵌套分组选择"
                         Foreground="WhiteSmoke"
                         Style="{StaticResource IndepButtonStyle}"
-                        ToolTip="综合考虑【相同哈希值】和【相同文件夹】的嵌套分组结果，每个最底级子组选择除了第一行外的所有行，否则取消选择所有行。" />
+                        ToolTip="综合考虑〈相同哈希值〉和〈相同文件夹〉的嵌套分组结果，每个最底级子组选择除了第一行外的所有行，否则取消选择所有行" />
                     <Button
                         Margin="0,0,8,8"
                         Padding="16,6"
@@ -64,7 +64,7 @@
                         Content="全选"
                         Foreground="WhiteSmoke"
                         Style="{StaticResource IndepButtonStyle}"
-                        ToolTip="选择所有行。" />
+                        ToolTip="选择所有行" />
                     <Button
                         Margin="0,0,8,8"
                         Padding="16,6"
@@ -74,7 +74,7 @@
                         Content="反选"
                         Foreground="WhiteSmoke"
                         Style="{StaticResource IndepButtonStyle}"
-                        ToolTip="把所有行的选择状态改为相反状态。" />
+                        ToolTip="把所有行的选择状态改为相反状态" />
                     <Button
                         Margin="0,0,8,8"
                         Padding="16,6"
@@ -84,7 +84,7 @@
                         Content="全不选"
                         Foreground="WhiteSmoke"
                         Style="{StaticResource IndepButtonStyle}"
-                        ToolTip="取消选择所有行。" />
+                        ToolTip="取消选择所有行" />
                     <Button
                         Margin="0,0,8,8"
                         Padding="16,6"
@@ -94,12 +94,12 @@
                         Content="取消选择"
                         Foreground="WhiteSmoke"
                         Style="{StaticResource IndepButtonStyle}"
-                        ToolTip="取消选择所有行并隐藏主窗口的【操作目标】列。" />
+                        ToolTip="取消选择所有行并隐藏主窗口的〈操作目标〉列" />
                 </WrapPanel>
                 <wpfui:TextBlock
                     FontTypography="Caption"
                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                    Text="可以用以上按钮来显示【操作目标】列并勾选操作目标，也可以取消后在主窗口选中多行作为目标。当主窗口显示【操作目标】列时以该列被勾选的对象为目标，不显示则以主窗口被选中的行为目标。"
+                    Text="可以用以上按钮来显示〈操作目标〉列并勾选操作目标，也可以取消后在主窗口选中多行作为目标。当主窗口显示〈操作目标〉列时以该列被勾选的对象为目标，不显示则以主窗口被选中的行为目标。"
                     TextWrapping="Wrap" />
             </StackPanel>
         </wpfui:CardControl.Header>
