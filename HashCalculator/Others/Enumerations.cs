@@ -202,28 +202,6 @@
     }
 
     /// <summary>
-    /// 约定的 MemoryMappedFile 内容排布方案版本
-    /// 默认约定：MemoryMappedFile 内的前 4 个字节总是代表内容排布方案版本，转为 int 值后强转为此枚举
-    /// </summary>
-    public enum MappedVer
-    {
-        /// <summary>
-        /// 未知版本，不读取 MemoryMappedFile 的内容
-        /// </summary>
-        Unknown,
-
-        /// <summary>
-        /// 版本 1，按版本 1 的规则读取 MemoryMappedFile 内容：<br/>
-        /// a. 00~03(含) 字节：版本号，MemoryMappedFile 内容排布方案版本，所有版本都固定<br/>
-        /// b. 04~07(含) 字节：内容数量(非字节数)，MemoryMappedFile 内容的条目的数量<br/>
-        /// c. 08~11(含) 字节：第一个条目的字节数，表示这个条目从第 12 字节开始占用的字节数
-        /// d. 12~n (含) 字节：第一个条目的内容，n 是 [8~11(含) 字节内容转为 int 值] + 11<br/>
-        /// e. 下一个条目从第 n + 1 字节开始，以此类推......
-        /// </summary>
-        Version1,
-    }
-
-    /// <summary>
     /// 筛选器的筛选逻辑
     /// </summary>
     public enum FilterLogic

@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using System.Windows;
 using System.Windows.Threading;
+using HashCalculator.IPC;
 using HashCalculator.Services;
 using HashCalculator.ViewModels.Pages;
 using HashCalculator.ViewModels.Windows;
@@ -75,20 +76,57 @@ public partial class App : Application
         return _host.Services.GetRequiredService<T>();
     }
 
-    private void StartupHandler(object sender, StartupEventArgs e)
+    private async void StartupHandler(object sender, StartupEventArgs e)
     {
         // 用于兼容 .NET Core 及以上版本，避免找不到 GB18030 等编码。
         // 注册 CodePagesEncodingProvider.Instance 后，
         // 在 Windows 上， GetEncoding(0) 返回与系统的活动代码页匹配的编码，
         // 该代码与 .NET Framework 中的行为相同。
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-        Settings.LoadSettings();
-        if (Initializer.ParseArgsForShell(e.Args))
+        if (ShellExtHelper.ParseArgumentsForShell(e.Args))
         {
             Current.Shutdown();
             return;
         }
-        Initializer.PushArgs(e.Args);
+        // 是否已有其他实例在运行（本实例尚未计入）
+        if (InstanceDiscovery.TryGetOldestAlive(out InstanceEndpoint target))
+        {
+            // 询问现存最早实例的多实例模式，据此决定本实例是并入它还是独立成为新实例
+            IPCMessageSendBack modeOutcome = await CommandClient.SendAsync(
+                target.PipeName, IPCMessageKind.GetAppMultiMode);
+            bool targetMultiMode = modeOutcome.Result == IPCSendResult.Delivered
+                && modeOutcome.Payload?.Length > 0 && modeOutcome.Payload[0] != 0;
+            if (!targetMultiMode)
+            {
+                // 现存实例是单实例模式：本实例不与之共存，把工作交给它后退出。
+                // 转发路径到此即止，不再加载 Settings，避免无谓开销。
+                if (e.Args.Length > 0)
+                {
+                    await CommandClient.SendAsync(target.PipeName, IPCMessageKind.ParseArguments,
+                        EncodeArguments(e.Args));
+                }
+                await CommandClient.SendAsync(target.PipeName, IPCMessageKind.Activate);
+                Current.Shutdown();
+                return;
+            }
+        }
+        // 本地启动：至此才需要加载 Settings
+        Settings.LoadSettings();
+        // 若已有其他实例（多实例模式），把本实例的多实例模式同步为现存实例的值，
+        // 因为广播收不到刚启动的自己，需主动询问以保持一致。
+        if (InstanceDiscovery.TryGetOldestAlive(out InstanceEndpoint running))
+        {
+            IPCMessageSendBack syncOutcome = await CommandClient.SendAsync(
+                running.PipeName, IPCMessageKind.GetAppMultiMode);
+            if (syncOutcome.Result == IPCSendResult.Delivered && syncOutcome.Payload?.Length > 0)
+            {
+                Settings.Current.RunInMultiInstMode = syncOutcome.Payload[0] != 0;
+            }
+        }
+        if (e.Args.Length > 0)
+        {
+            Views.Windows.MainWindow.AcceptLocalStartupArguments(e.Args);
+        }
         // 主题字典自动覆盖（监听 ApplicationThemeManager.Changed）。
         ThemeOverridesManager.Initialize();
         // _host.Start 必须要在 Settings.LoadSettings 后执行，否则它们依赖的 Settings 未就绪。
@@ -97,9 +135,16 @@ public partial class App : Application
             .CreateLogger("Application");
     }
 
+    /// <summary>
+    /// 把命令行参数数组编码为跨进程 ParseArguments 的 Payload（ANSI，多个参数以 \0 分隔）
+    /// </summary>
+    private static byte[] EncodeArguments(string[] args)
+    {
+        return IPCPayloadCodecs.Encode(string.Join('\0', args));
+    }
+
     private void ApplicationFinalization()
     {
-        Settings.Current.RunInMultiInstMode = Initializer.RunMultiMode;
         Settings.SaveSettings();
     }
 

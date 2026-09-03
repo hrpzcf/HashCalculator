@@ -12,7 +12,6 @@ public partial class SettingsPanelPage : Page, INavigableView<MainWindowModel>
     {
         this.ViewModel = viewModel;
         this.DataContext = viewModel;
-        Settings.Current.RunInMultiInstMode = Initializer.RunMultiMode;
         this.InitializeComponent();
     }
 }

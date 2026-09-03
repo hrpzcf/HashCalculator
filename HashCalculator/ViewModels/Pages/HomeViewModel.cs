@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using HashCalculator.Others;
 using HashCalculator.ViewModels.Windows;
+using HashCalculator.Views.Pages;
 using HashCalculator.Views.Windows;
 using Microsoft.Win32;
 using Wpf.Ui;
@@ -189,8 +190,11 @@ public class HomeViewModel : BaseViewModel
             if (this.BatchStatus != JobStatus.Started && this.CheckFilesHashBasedOnStringOrChecklist(checklist)
                 && Settings.Current.SwitchMainWndFgWhenNewHashCopied)
             {
-                CommonUtils.ShowWindowForeground(MainWindow.ProcessId);
-                // TODO: 实现跨进程导航至主页
+                // 先导航回主页，再激活窗口：导航是状态切换，激活是把窗口带到前台。
+                // 注意：多实例时各实例都会做此动作（剪贴板校验需在所有实例内尝试），
+                // 因此可能出现多个窗口同时尝试抢占前台，此为本功能固有的多实例边界情况。
+                MainWindow.Current?.NavigateTo(typeof(HomePage));
+                MainWindow.Current?.EnsureWindowIsShownAndActivated();
             }
         }
     }

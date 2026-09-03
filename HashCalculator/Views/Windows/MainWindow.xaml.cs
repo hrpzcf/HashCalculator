@@ -5,9 +5,10 @@ using System.CommandLine.Parsing;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
+using HashCalculator.IPC;
 using HashCalculator.Others;
 using HashCalculator.ViewModels.Pages;
 using HashCalculator.ViewModels.Windows;
@@ -30,7 +31,6 @@ public partial class MainWindow
     private readonly HomePage _homePage = null;
     private readonly HomeViewModel _homePageViewModel = null;
 
-    private static string[] startupArgs = null;
     private static readonly TimeSpan clipboardTriggerMinInterval =
         TimeSpan.FromMilliseconds(10);
 
@@ -38,9 +38,15 @@ public partial class MainWindow
 
     public static MainWindow Current { get; private set; }
 
-    public static int ProcessId { get; } = Environment.ProcessId;
+    // 本实例作为"本地启动"实例（首实例或多实例模式的后续实例）启动时，
+    // 由 App.StartupHandler 暂存的本机命令行参数，待主窗口 Loaded 后处理。
+    // 用 static 是因为它属于进程级启动数据，且 MainWindowLoaded 可能晚于启动决策执行。
+    private static string[] localStartupArguments = null;
 
-    private bool ProcIdMonitorFlag { get; set; } = true;
+    // 为 true 时，RunInMultiInstMode 变更不广播给其他实例。
+    // 由 SetMultiModeHandler 收到跨进程广播后应用设置时置位，
+    // 防止"收到广播 → 更新设置 → 触发 PropertyChanged → 又广播回去"的无限循环。
+    private bool suppressAppRunMultiModeBroadcast;
 
     public MainWindow(
         MainWindowModel viewModel,
@@ -60,6 +66,9 @@ public partial class MainWindow
         {
             SystemThemeWatcher.Watch(this, Wpfctrls.WindowBackdropType.None);
         }
+        // 管道监听的生命周期等于进程存活期，而窗口可能被关闭到托盘再重开，
+        // 故在此启动并依赖 IPCHost 的判空保证只启动一次。
+        IPCHost.Start();
     }
 
     private void InitializeNavigation()
@@ -108,15 +117,6 @@ public partial class MainWindow
             hwndSource.Dispose();
         }
         this._homePage.MainDataGrid.Columns.CollectGridColumns(Settings.Current.ColumnsOrder);
-        // 此处与 ProcessIdMonitorProc 方法内的 PIdSynchronizer.Set 不重复，原因：
-        // 如果是本进程实例内的 ProcessIdMonitorProc 方法内的 PIdSynchronizer.Wait 抢到了锁，
-        // 1. 本进程实例 ProcessIdMonitorProc 方法内进入 if (!this.ProcIdMonitorFlag) 分支，
-        // 2. 分支内再执行一次 PIdSynchronizer.Set 以保证可以有其他进程实例（如果有）能抢到锁，
-        // 3. 然后在其他进程实例内启动 ComputeCrossProcessFilesMonitor 保证其他进程能监控第三方进程的参数推送。
-        // 如果是其他进程实例内的 ProcessIdMonitorProc 方法内的 PIdSynchronizer.Wait 抢到了锁，
-        // 则直接进入步骤 3，本进程实例 ProcessIdMonitorProc 方法内的 PIdSynchronizer.Wait 抢不到锁不会往下执行。
-        this.ProcIdMonitorFlag = false;
-        Initializer.PIdSynchronizer.Set();
     }
 
     private async void MainWindowLoaded(object sender, RoutedEventArgs e)
@@ -140,13 +140,12 @@ public partial class MainWindow
         {
             this.Title += " （管理员）";
         }
-        if (startupArgs != null)
+        if (localStartupArguments != null)
         {
-            this.ComputeInProcessFiles(startupArgs);
+            // 本机启动携带的参数（首实例或后续多实例），窗口 Loaded 后才处理。
+            this.HandleReceivedCommandLine(localStartupArguments);
+            localStartupArguments = null;
         }
-        Thread thread = new Thread(this.ProcessIdMonitorProc);
-        thread.IsBackground = true;
-        thread.Start();
         this._homePage.MainDataGrid.Columns.ReorderGridColumns(Settings.Current.ColumnsOrder);
         if (await Settings.TestCompatibilityOfShellExt() is string notification)
         {
@@ -173,12 +172,50 @@ public partial class MainWindow
                 }
                 break;
             case nameof(Settings.Current.RunInMultiInstMode):
-                Initializer.RunMultiMode = Settings.Current.RunInMultiInstMode;
+                if (!this.suppressAppRunMultiModeBroadcast)
+                {
+                    this.BroadcastAppRunMultiModeChanged();
+                }
                 break;
             case nameof(Settings.Current.SelectedTaskNumberLimit):
                 this._homePageViewModel.JobScheduler.SetConcurrency(Settings.Current.SelectedTaskNumberLimit);
                 break;
         }
+    }
+
+    /// <summary>
+    /// 供 SetMultiModeHandler 调用：把收到的跨进程多实例模式值应用到本实例设置。
+    /// 置位抑制标志，使这次设置变更不触发向其他实例的广播，从而避免循环广播。
+    /// </summary>
+    internal void ApplyAppMultiModeFromIPC(bool value)
+    {
+        this.suppressAppRunMultiModeBroadcast = true;
+        try
+        {
+            Settings.Current.RunInMultiInstMode = value;
+        }
+        finally
+        {
+            this.suppressAppRunMultiModeBroadcast = false;
+        }
+    }
+
+    /// <summary>
+    /// 本实例的多实例模式被用户改动后，把新值广播给其他所有存活实例。
+    /// 广播是异步网络操作，这里不等待，用 fire-and-forget；
+    /// 每个目标各自独立发送，个别失败（实例恰好在退出）不影响其余。
+    /// </summary>
+    private void BroadcastAppRunMultiModeChanged()
+    {
+        Task.Run(async () =>
+        {
+            byte newValue = Convert.ToByte(Settings.Current.RunInMultiInstMode);
+            foreach (InstanceEndpoint endpoint in InstanceDiscovery.Discover())
+            {
+                await CommandClient.SendAsync(endpoint.PipeName, IPCMessageKind.SetAppMultiMode,
+                    new byte[] { newValue });
+            }
+        });
     }
 
     public void AddClipboardListener()
@@ -324,7 +361,23 @@ public partial class MainWindow
         return argList;
     }
 
-    private void InternalParseArguments(string[] args)
+    /// <summary>
+    /// 由 App.StartupHandler 在判定本实例为「本地启动」（首实例或多实例模式的后续实例）
+    /// 时调用，暂存本机携带的命令行参数，待主窗口 Loaded 后再由 HandleReceivedCommandLine 处理。
+    /// 用 static 是因为 MainWindow 构造与 Loaded 都晚于启动决策执行。
+    /// </summary>
+    internal static void AcceptLocalStartupArguments(string[] args)
+    {
+        localStartupArguments = args;
+    }
+
+    /// <summary>
+    /// 处理一条待执行的文件计算/校验命令行参数。
+    /// 是本机启动携带的参数与跨进程 ParseArgumentsHandler 转发的参数的共同入口，
+    /// 因此为 internal 供 handler 通过 MainWindow.Current 调用。
+    /// 依赖 <see cref="Settings.Current"/> 与主窗口所属的 HomeViewModel，须在 UI 线程执行。
+    /// </summary>
+    internal void HandleReceivedCommandLine(string[] args)
     {
         ParseResult result = CmdOptions.RootCommand.Parse(args);
         // 仅当"未指定任何 verb 且存在参数 token"时尝试自动插入 verb，其余情况忽略
@@ -352,51 +405,7 @@ public partial class MainWindow
         }
     }
 
-    public static void PushStartupArgs(string[] args)
-    {
-        startupArgs = args;
-    }
-
-    /// <summary>
-    /// 多实例模式启动使用此方法处理不同进程传入的待处理的文件、目录路径
-    /// </summary>
-    private void ComputeInProcessFiles(string[] args)
-    {
-        this.InternalParseArguments(args);
-    }
-
-    /// <summary>
-    /// 单实例模式启动使用此方法处理不同进程传入的待处理的文件、目录路径
-    /// </summary>
-    private void ComputeCrossProcessFilesMonitor()
-    {
-        Initializer.ExistingProcessId = ProcessId;
-        while (true)
-        {
-            Initializer.Synchronizer.Wait();
-            // ToArray 能避免 GetArgs 方法在 ParseArguments 内被执行多次
-            string[] args = Initializer.GetArgs().ToArray();
-            this.InternalParseArguments(args);
-        }
-    }
-
-    private void ProcessIdMonitorProc()
-    {
-        while (true)
-        {
-            Initializer.PIdSynchronizer.Wait();
-            if (!this.ProcIdMonitorFlag)
-            {
-                Initializer.PIdSynchronizer.Set();
-                break;
-            }
-            Thread thread = new Thread(this.ComputeCrossProcessFilesMonitor);
-            thread.IsBackground = true;
-            thread.Start();
-        }
-    }
-
-    private void EnsureWindowIsShownAndActivated()
+    internal void EnsureWindowIsShownAndActivated()
     {
         if (!this.IsVisible)
         {
@@ -414,6 +423,12 @@ public partial class MainWindow
         {
             this.Activate();
         }
+    }
+
+    /// <summary>把主窗口导航到指定页面，供本进程各处的统一调用</summary>
+    internal void NavigateTo(Type pageType)
+    {
+        this._navigationService.Navigate(pageType);
     }
 
     private void MenuItemNavigateToHomePageClick(object sender, RoutedEventArgs e)

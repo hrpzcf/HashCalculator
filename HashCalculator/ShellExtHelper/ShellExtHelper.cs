@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.CommandLine;
+using System.CommandLine.Parsing;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Resources;
 using System.Security;
+using System.Windows;
 using HashCalculator.Others;
+using HashCalculator.ViewModels.UserControls;
 using HashCalculator.Views.Windows;
 using Microsoft.Win32;
 using Wpfctrls = Wpf.Ui.Controls;
@@ -514,6 +518,74 @@ namespace HashCalculator
             {
             }
             return null;
+        }
+
+        /// <summary>
+        /// 处理 shell 扩展的安装/卸载参数（shell install/uninstall）。
+        /// 命中 shell 场景时执行安装/卸载并返回 true，交由调用方结束进程；
+        /// 其他 verb 或解析失败返回 false。
+        /// </summary>
+        public static bool ParseArgumentsForShell(string[] args)
+        {
+            ParseResult root = CmdOptions.RootCommand.Parse(args);
+            // 仅处理 shell 场景；其他 verb 或解析失败交由后续流程处理
+            if (root.Errors.Count != 0 ||
+                root.GetResult(CmdOptions.ShellExtCommand) is not CommandResult command)
+            {
+                return false;
+            }
+            bool install = command.GetValue(CmdOptions.InstallOption);
+            bool uninstall = command.GetValue(CmdOptions.UninstallOption);
+            bool silently = command.GetValue(CmdOptions.SilentOption);
+            if (install && uninstall)
+            {
+                if (!silently)
+                {
+                    MessageBox.Show("--install 和 --uninstall 选项不能同时使用。", "错误",
+                        MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK,
+                        MessageBoxOptions.ServiceNotification);
+                }
+                return true;
+            }
+            // 执行 shell 安装/卸载需要真实的 ConfigInfo，故此刻才加载 Settings
+            Settings.LoadSettings();
+            if (install)
+            {
+                Exception exception = InstallShellExtension();
+                if (exception != null)
+                {
+                    if (!silently)
+                    {
+                        MessageBox.Show(exception.Message, "错误",
+                            MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK,
+                            MessageBoxOptions.ServiceNotification);
+                    }
+                }
+                else
+                {
+                    if (!File.Exists(Settings.ConfigInfo.MenuConfigFile))
+                    {
+                        string message = new ShellMenuEditorModel().SaveMenuListToJsonFile();
+                        if (!string.IsNullOrEmpty(message) && !silently)
+                        {
+                            MessageBox.Show($"扩展模块配置文件创建失败，快捷菜单将不显示，原因：{message}",
+                                "错误", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK,
+                                MessageBoxOptions.ServiceNotification);
+                        }
+                    }
+                }
+            }
+            else if (uninstall)
+            {
+                Exception exception = UninstallShellExtension();
+                if (exception != null && !silently)
+                {
+                    MessageBox.Show(exception.Message, "错误",
+                        MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK,
+                        MessageBoxOptions.ServiceNotification);
+                }
+            }
+            return true;
         }
 
         private const string keyNameHashCalculator = "HashCalculator.exe";
