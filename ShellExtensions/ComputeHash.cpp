@@ -179,8 +179,8 @@ STDMETHODIMP CComputeHash::QueryContextMenu(HMENU hMenu, UINT indexMenu, UINT id
     if (uFlags & CMF_DEFAULTONLY) {
         return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, 0);
     }
-    // 时会触发两次（Directory 和 Directory\Background），
-    // 那我们选择此时不插入 Directory(即 m_isBackgroundContext==false) 的菜单
+    // 右击固定在快速访问的目录时会触发两次：Directory 和 Directory\Background，
+    // 那我们选择此时不插入 Directory（即 m_isBackgroundContext == false）的菜单
 
     // QueryContextMenu uFlags
     // #define CMF_NORMAL              0x00000000
