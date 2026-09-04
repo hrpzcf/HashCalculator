@@ -29,8 +29,8 @@ VOID CComputeHash::CreateGUIProcessComputeHash(LPCSTR algo) {
     }
     SIZE_T cmd_characters = command_line.length() + 1;
     for (SIZE_T i = 0; i < this->vFilepathList.size(); ++i) {
-        if (this->vFilepathList[i].back() == L'\\') {
-            this->vFilepathList[i] += L'\\';
+        if (this->vFilepathList[i].back() == '\\') {
+            this->vFilepathList[i] += '\\';
         }
         string file_path = " \"" + this->vFilepathList[i] + "\"";
         SIZE_T file_path_characters = cmd_characters + file_path.length();
