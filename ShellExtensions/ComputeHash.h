@@ -9,7 +9,6 @@
 #include <atlcom.h>
 #include <atldef.h>
 #include <map>
-#include <ocidl.h>
 #include <ShObjIdl_core.h>
 #include <shtypes.h>
 #include <string>
