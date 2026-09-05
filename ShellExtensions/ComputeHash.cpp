@@ -5,137 +5,126 @@
 #include "pch.h"
 #include "commons.h"
 #include "ComputeHash.h"
+#include "resource.h"
+#include <atlcore.h>
+#include <climits>
+#include <map>
 #include <shlobj_core.h>
+#include <Shlwapi.h>
+#include <ShObjIdl_core.h>
+#include <shtypes.h>
+#include <string>
 #include <strsafe.h>
+#include <utility>
+#include <vector>
+#include <wchar.h>
+#include <Windows.h>
 
 
-VOID CComputeHash::CreateGUIProcessComputeHash(LPCSTR algo) {
-    if (this->vFilepathList.empty()) return;
-    DWORD bufferSize = MAX_PATH;
-    LPSTR exePathBuffer = new CHAR[bufferSize]();
-    if (!GetHashCalculatorPath(&exePathBuffer, &bufferSize) || !PathFileExistsA(exePathBuffer)) {
-        delete[] exePathBuffer;
-        ShowMessageType(this->hModule, IDS_TITLE_ERROR, IDS_NO_EXECUTABLE_PATH, MB_TOPMOST | MB_ICONERROR);
+VOID CComputeHash::CreateGUIProcessComputeHash(const wstring& algos) {
+    if (this->vFilepathList.empty()) {
         return;
     }
-    // 此处的字符 'p' 不是传给 HashCalculator 的命令，仅作为占位符，C# 程序接收不到此字符。
-    // 因为 C# 程序 Main 函数的 string[] args 参数仅从 CreateProcessA 第二个参数解析得来，
-    // 且 C# Main 函数的 string[] args 参数为了不带可执行文件名，CLR 又无脑地删除了解析得到的列表的第一项，
-    // 它以为第一项一定是可执行文件名，但在此函数末尾作者根本没有把可执行文件名和命令合并放在 CreateProcessA 第二个参数，
-    // 就造成了 C# CLR 错误地把命令行参数的第一项（也就是此处的字符 'p'）当作可执行文件名给删了。
-    string command_line = string("p compute");
-    if (nullptr != algo && 0 != strlen(algo)) {
-        command_line += string(" --algo ") + algo;
+    wstring exe_path = GetHashCalculatorPath();
+    if (exe_path.empty() || !PathFileExistsW(exe_path.c_str())) {
+        ShowMessageType(this->hModule, IDS_TITLE_ERROR, IDS_NO_EXECUTABLE_PATH,
+            MB_TOPMOST | MB_ICONERROR);
+        return;
     }
-    SIZE_T cmd_characters = command_line.length() + 1;
+    // 此处的字符 'p' 不是传给 HashCalculator 的命令，仅作为占位符，C# 程序接收不到此字符
+    // 因为 C# 程序 Main 函数的 string[] args 参数仅从 CreateProcessW 第二个参数解析得来，
+    // 且 C# Main 函数的 string[] args 参数为了不带可执行文件名，无条件删除解析得到的列表第一项，
+    // 但在此函数的末尾，根本没有把可执行文件名和命令合并放在 CreateProcessW 第二个参数，
+    // 就造成了 C# 程序错误把命令行参数的第一项（也就是此处的字符 'p'）当作可执行文件名给删掉
+    wstring command_line_buffer = wstring(L"p compute");
+    if (!algos.empty()) {
+        command_line_buffer.append(L" --algo ");
+        command_line_buffer.append(algos);
+    }
+    // 不算终止符的情况下，总长不得 >= CreateProcessW 的命令行上限 SHRT_MAX
     for (SIZE_T i = 0; i < this->vFilepathList.size(); ++i) {
-        if (this->vFilepathList[i].back() == '\\') {
-            this->vFilepathList[i] += '\\';
+        // 以 '\' 结尾的路径，直接用双引号包裹会让末尾的 '\' 紧贴结束引号，
+        // 被 C# 端按 CommandLineToArgvW 规则误判为转义符而吞掉引号；补 '\' 成 '\\'，
+        // 则被解析为一个字面反斜杠，引号正常闭合。文件路径不以 '\' 结尾，无需处理
+        if (this->vFilepathList[i].back() == L'\\') {
+            this->vFilepathList[i].push_back(L'\\');
         }
-        string file_path = " \"" + this->vFilepathList[i] + "\"";
-        SIZE_T file_path_characters = cmd_characters + file_path.length();
-        if (file_path_characters < MAX_CMD_CHARS) {
-            command_line += file_path;
-            cmd_characters = file_path_characters;
-        }
-        else if (file_path_characters > MAX_CMD_CHARS) {
+        // 该段路径为 ' ' + '"' + 路径 + '"'，长度即路径长 + 3
+        SIZE_T item_length = this->vFilepathList[i].length() + 3;
+        if (command_line_buffer.length() + item_length >= SHRT_MAX) {
+            // 已经超过命令行参数字符数上限，丢弃该路径及后续路径
             break;
         }
-        else if (file_path_characters == MAX_CMD_CHARS) {
-            command_line += file_path;
-            cmd_characters = file_path_characters;
-            break;
-        }
+        command_line_buffer.append(L" \"");
+        command_line_buffer.append(this->vFilepathList[i]);
+        command_line_buffer.push_back(L'"');
     }
-    LPSTR commandline_buffer = new CHAR[cmd_characters];
-    StringCchCopyA(commandline_buffer, cmd_characters, command_line.c_str());
-    STARTUPINFOA startup_info = { 0 };
+    // CreateProcessW 要求 lpCommandLine 为可写的缓冲，且有可能写入包括终止符
+    // 因为 C++ 11 保证有终止符但不可写，所以我们用 push_back(L'\0') 意在补一个可写空间
+    // 注意：补了 '\0' 后不得再把 command_line_buffer 当成普通字符串拼接或求长
+    command_line_buffer.push_back(L'\0');
+    STARTUPINFOW startup_info = { 0 };
     startup_info.cb = sizeof(startup_info);
     PROCESS_INFORMATION proc_info = { 0 };
-    if (CreateProcessA(exePathBuffer, commandline_buffer, NULL, NULL, FALSE, NORMAL_PRIORITY_CLASS, NULL,
-        NULL, &startup_info, &proc_info)) {
+    if (CreateProcessW(exe_path.c_str(), &command_line_buffer[0], NULL, NULL, FALSE, NORMAL_PRIORITY_CLASS,
+        NULL, NULL, &startup_info, &proc_info)) {
         CloseHandle(proc_info.hThread);
         CloseHandle(proc_info.hProcess);
     }
-    delete[] commandline_buffer;
 }
 
 
 CComputeHash::CComputeHash() {
     this->hModule = _AtlBaseModule.GetModuleInstance();
-    this->hBitmapMenu = (HBITMAP)LoadImageA(
-        this->hModule, MAKEINTRESOURCEA(IDB_BITMAP_MENU1), IMAGE_BITMAP, 0, 0,
+    this->hBitmapMenu = (HBITMAP)LoadImageW(
+        this->hModule, MAKEINTRESOURCEW(IDB_BITMAP_MENU1), IMAGE_BITMAP, 0, 0,
         LR_DEFAULTSIZE | LR_SHARED);
-    DWORD bufsize = MAX_PATH;
-    LPSTR  modulePathBuffer = new CHAR[bufsize]();
-    while (true) {
-        GetModuleFileNameA(this->hModule, modulePathBuffer, bufsize);
-        if (GetLastError() == ERROR_INSUFFICIENT_BUFFER) {
-            delete[]  modulePathBuffer;
-            bufsize += MAX_PATH;
-            modulePathBuffer = new CHAR[bufsize]();
-            continue;
-        }
-        if (!PathRemoveFileSpecA(modulePathBuffer)) {
+    // 动态获取模块路径：返回值 >= 缓冲容量即表示缓冲不足、路径被截断，故扩容重试
+    wstring module_path;
+    DWORD capacity = MAX_PATH;
+    DWORD path_length = 0;
+    for (;;) {
+        module_path.resize((SIZE_T)capacity);
+        path_length = GetModuleFileNameW(this->hModule, &module_path[0], capacity);
+        // 返回 0 表示失败；小于容量表示缓冲充足、路径完整
+        if (0 == path_length || path_length < capacity) {
             break;
         }
-        SIZE_T pathChLength = strlen(modulePathBuffer);
-        if (pathChLength == 0) {
-            break;
-        }
-        SIZE_T menuJsonPathTotalChLength = pathChLength + 2 + strlen(MENU_JSONNAME);
-        this->MenuJsonPath = new CHAR[menuJsonPathTotalChLength]();
-        StringCchCatA(this->MenuJsonPath, menuJsonPathTotalChLength, modulePathBuffer);
-        StringCchCatA(this->MenuJsonPath, menuJsonPathTotalChLength, "\\");
-        StringCchCatA(this->MenuJsonPath, menuJsonPathTotalChLength, MENU_JSONNAME);
-        break;
+        capacity += MAX_PATH;
     }
-    delete[] modulePathBuffer;
+    // GetModuleFileNameW 保证 '\0' 结尾，PathRemoveFileSpecW 只认 '\0'，故不需先 resize
+    if (0 != path_length && path_length < capacity && PathRemoveFileSpecW(&module_path[0])) {
+        // PathRemoveFileSpecW 不更新 size，而 wstring 拼接按 size 非 '\0'，先 resize 同步
+        module_path.resize(wcslen(module_path.c_str()));
+        this->MenuJsonPath.append(module_path).push_back(L'\\');
+        this->MenuJsonPath.append(MENU_JSONNAME);
+    }
 }
 
 
 CComputeHash::~CComputeHash() {
-    DeleteCmdDictBuffer(this->mCmdDict);
-    delete[] this->MenuJsonPath;
-    if (m_pSite) {
-        m_pSite->Release();
-        m_pSite = nullptr;
-    }
-}
-
-
-STDMETHODIMP CComputeHash::SetSite(IUnknown* pUnkSite) {
-    if (m_pSite) {
-        m_pSite->Release();
-        m_pSite = nullptr;
-    }
-    m_pSite = pUnkSite;
-    if (m_pSite) {
-        m_pSite->AddRef();
-    }
-    return S_OK;
-}
-
-
-STDMETHODIMP CComputeHash::GetSite(REFIID riid, void** ppvSite) {
-    if (m_pSite == nullptr) {
-        return E_FAIL;
-    }
-    return m_pSite->QueryInterface(riid, ppvSite);
 }
 
 
 STDMETHODIMP CComputeHash::Initialize(PCIDLIST_ABSOLUTE pidlFolder, IDataObject* pdtobj,
     HKEY hkeyProgID) {
 
-    CHAR filepath_buffer[MAX_PATH];
     this->vFilepathList.clear();
-    this->m_isBackgroundContext = false;
+    this->mIsBackgroundContext = false;
     if (nullptr != pidlFolder) {
         // Directory\Background 上下文
-        this->m_isBackgroundContext = true;
-        if (SHGetPathFromIDListA(pidlFolder, filepath_buffer)) {
-            this->vFilepathList.push_back(filepath_buffer);
+        this->mIsBackgroundContext = true;
+        // SHGetPathFromIDListW 固定按 MAX_PATH 写入，无法容纳长路径，
+        // 故改用 SHGetPathFromIDListEx：它接受显式字符容量，可摆脱 260 上限。
+        // 该 API 不提供「查询所需长度」的模式，故先给一个充裕的容量（MAX_PATH * 8 = 2080）
+        // 写入成功后以已知容量 resize 收紧到实际长度。
+        wstring directory_path;
+        directory_path.resize((SIZE_T)(MAX_PATH * 8));
+        if (SHGetPathFromIDListEx(pidlFolder, &directory_path[0],
+            (DWORD)directory_path.size(), GPFIDL_DEFAULT)) {
+            // 收紧到实际长度：wcslen 不含终止符，wstring 自行维护终止符，故 size 即实际字符数
+            directory_path.resize(wcslen(directory_path.c_str()));
+            this->vFilepathList.push_back(std::move(directory_path));
             return S_OK;
         }
         return E_INVALIDARG;
@@ -156,15 +145,26 @@ STDMETHODIMP CComputeHash::Initialize(PCIDLIST_ABSOLUTE pidlFolder, IDataObject*
         ReleaseStgMedium(&stg);
         return E_INVALIDARG;
     }
-    UINT file_count = DragQueryFileA(drop_handle, INFINITE, nullptr, 0);
+    // 传入 INFINITE 时 DragQueryFile 返回拖放的文件数量，A/W 版本结果一致
+    UINT file_count = DragQueryFileW(drop_handle, INFINITE, nullptr, 0);
     if (0 == file_count) {
         GlobalUnlock(stg.hGlobal);
         ReleaseStgMedium(&stg);
         return E_INVALIDARG;
     }
     for (UINT index = 0; index < file_count; index++) {
-        if (0 != DragQueryFileA(drop_handle, index, filepath_buffer, MAX_PATH)) {
-            this->vFilepathList.push_back(filepath_buffer);
+        // 两段式取路径：先查所需字符数（不含终止符）
+        UINT content_chars = DragQueryFileW(drop_handle, index, nullptr, 0);
+        if (0 == content_chars) {
+            continue;
+        }
+        wstring file_path;
+        // 多分配 1 个字符用于容纳 DragQueryFile 写入的终止符，否则会越界写 1 个 wchar_t
+        file_path.resize((SIZE_T)content_chars + 1);
+        if (0 != DragQueryFileW(drop_handle, index, &file_path[0], content_chars + 1)) {
+            // 收紧：wstring 自行维护终止符，不计入 size
+            file_path.resize((SIZE_T)content_chars);
+            this->vFilepathList.push_back(std::move(file_path));
         }
     }
     GlobalUnlock(stg.hGlobal);
@@ -176,7 +176,7 @@ STDMETHODIMP CComputeHash::Initialize(PCIDLIST_ABSOLUTE pidlFolder, IDataObject*
 STDMETHODIMP CComputeHash::QueryContextMenu(HMENU hMenu, UINT indexMenu, UINT idCmdFirst,
     UINT idCmdLast, UINT uFlags) {
 
-    if (uFlags & CMF_DEFAULTONLY) {
+    if (uFlags & CMF_DEFAULTONLY || this->MenuJsonPath.empty()) {
         return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, 0);
     }
     // 右击固定在快速访问的目录时会触发两次：Directory 和 Directory\Background，
@@ -215,18 +215,18 @@ STDMETHODIMP CComputeHash::QueryContextMenu(HMENU hMenu, UINT indexMenu, UINT id
     // uFlags==0x00020494: CMF_EXPLORE|CMF_CANRENAME|CMF_ITEMMENU|CMF_ASYNCVERBSTATE|CMF_RESERVED
 
     // 有 3 个判断方法：
-    // m_isBackgroundContext = false 且 uFlags 没有 CMF_ITEMMENU 标识 → 快速访问
-    // m_isBackgroundContext = false 且 uFlags 没有 CMF_RESERVED 标识 → 快速访问
+    // mIsBackgroundContext = false 且 uFlags 没有 CMF_ITEMMENU 标识 → 快速访问
+    // mIsBackgroundContext = false 且 uFlags 没有 CMF_RESERVED 标识 → 快速访问
     // uFlags == 0x00000414 → 快速访问
-    if (!this->m_isBackgroundContext && !(uFlags & CMF_ITEMMENU)) {
+    if (!this->mIsBackgroundContext && !(uFlags & CMF_ITEMMENU)) {
         return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, 0);
     }
-    UINT idCmdCurrent = 0;
-    if (!InsertMenuFromJsonFile(this->MenuJsonPath, hMenu, indexMenu, idCmdFirst, idCmdLast, MENUTYPE_COMPUTE,
-        &idCmdCurrent, this->mCmdDict, this->hBitmapMenu)) {
+    UINT id_cmd_current = 0;
+    if (!InsertMenuFromJsonFile(this->MenuJsonPath, hMenu, indexMenu, idCmdFirst, idCmdLast,
+        MENUTYPE_COMPUTE, &id_cmd_current, this->mIDCmdToAlgos, this->hBitmapMenu)) {
         return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, 0);
     }
-    return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, idCmdCurrent);
+    return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, id_cmd_current);
 }
 
 
@@ -234,8 +234,8 @@ STDMETHODIMP CComputeHash::InvokeCommand(CMINVOKECOMMANDINFO* pici) {
     if (0 != HIWORD(pici->lpVerb)) {
         return E_INVALIDARG;
     }
-    map<UINT, CHAR*>::iterator iter = mCmdDict.find(LOWORD(pici->lpVerb));
-    if (iter == mCmdDict.end()) {
+    map<UINT, wstring>::iterator iter = this->mIDCmdToAlgos.find(LOWORD(pici->lpVerb));
+    if (iter == this->mIDCmdToAlgos.end()) {
         return E_INVALIDARG;
     }
     this->CreateGUIProcessComputeHash(iter->second);

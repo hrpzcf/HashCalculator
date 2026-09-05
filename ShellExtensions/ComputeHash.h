@@ -5,14 +5,21 @@
 #pragma once
 #include "resource.h"
 #include "ShellExtensions_i.h"
+#include <atlbase.h>
+#include <atlcom.h>
+#include <atldef.h>
 #include <map>
+#include <ocidl.h>
+#include <ShObjIdl_core.h>
+#include <shtypes.h>
 #include <string>
 #include <vector>
+#include <Windows.h>
 
 using namespace ATL;
 using std::map;
 using std::vector;
-using std::string;
+using std::wstring;
 
 
 class ATL_NO_VTABLE CComputeHash :
@@ -20,18 +27,14 @@ class ATL_NO_VTABLE CComputeHash :
     public CComCoClass<CComputeHash, &CLSID_ComputeHash>,
     public IDispatchImpl<IComputeHash, &IID_IComputeHash, &LIBID_ShellExtensionsLib, /*wMajor =*/ 1, /*wMinor =*/ 0>,
     public IShellExtInit,
-    public IContextMenu,
-    public IObjectWithSite {
-    LPSTR MenuJsonPath = nullptr;
+    public IContextMenu {
+    wstring MenuJsonPath;
     HINSTANCE hModule = nullptr;
     HBITMAP hBitmapMenu = nullptr;
-    map<UINT, CHAR*> mCmdDict;
-    vector<string> vFilepathList;
-    VOID CreateGUIProcessComputeHash(LPCSTR);
-
-    // IObjectWithSite 成员
-    IUnknown* m_pSite = nullptr;
-    bool m_isBackgroundContext = false;
+    bool mIsBackgroundContext = false;
+    map<UINT, wstring> mIDCmdToAlgos;
+    vector<wstring> vFilepathList;
+    VOID CreateGUIProcessComputeHash(const wstring&);
 
 public:
     CComputeHash();
@@ -44,7 +47,6 @@ public:
         COM_INTERFACE_ENTRY(IDispatch)
         COM_INTERFACE_ENTRY(IShellExtInit)
         COM_INTERFACE_ENTRY(IContextMenu)
-        COM_INTERFACE_ENTRY(IObjectWithSite)
     END_COM_MAP()
 
     DECLARE_PROTECT_FINAL_CONSTRUCT();
@@ -55,9 +57,6 @@ public:
     STDMETHOD(QueryContextMenu)(HMENU, UINT, UINT, UINT, UINT);
     STDMETHOD(InvokeCommand)(CMINVOKECOMMANDINFO*);
     STDMETHOD(GetCommandString)(UINT_PTR, UINT, UINT*, CHAR*, UINT);
-    // IObjectWithSite 方法
-    STDMETHOD(SetSite)(IUnknown* pUnkSite);
-    STDMETHOD(GetSite)(REFIID riid, void** ppvSite);
 };
 
 OBJECT_ENTRY_AUTO(__uuidof(ComputeHash), CComputeHash)

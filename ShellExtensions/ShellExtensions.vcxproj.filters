@@ -40,13 +40,10 @@
     <ClInclude Include="pch.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="ResString.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="OpenAsChecklist.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="commons.h">
+    <ClInclude Include="Commons.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="ComputeHash.h">
@@ -75,7 +72,7 @@
     <ClCompile Include="ComputeHash.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="commons.cpp">
+    <ClCompile Include="Commons.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="TinyJson\tiny-json.c">

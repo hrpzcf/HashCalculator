@@ -1,14 +1,18 @@
 ﻿#pragma once
 #include "resource.h"
 #include "ShellExtensions_i.h"
+#include <atlbase.h>
+#include <atlcom.h>
+#include <atldef.h>
 #include <map>
+#include <ShObjIdl_core.h>
+#include <shtypes.h>
 #include <string>
-#include <vector>
+#include <Windows.h>
 
 using namespace ATL;
 using std::map;
-using std::vector;
-using std::string;
+using std::wstring;
 
 
 class ATL_NO_VTABLE COpenAsChecklist :
@@ -17,12 +21,12 @@ class ATL_NO_VTABLE COpenAsChecklist :
     public IDispatchImpl<IOpenAsChecklist, &IID_IOpenAsChecklist, &LIBID_ShellExtensionsLib, /*wMajor =*/ 1, /*wMinor =*/ 0>,
     public IShellExtInit,
     public IContextMenu {
-    LPSTR MenuJsonPath = nullptr;
+    wstring MenuJsonPath;
     HINSTANCE hModule = nullptr;
-    LPSTR checklistPath = nullptr;
+    wstring mChecklistPath;
     HBITMAP hBitmapMenu = nullptr;
-    map<UINT, CHAR*> mCmdDict;
-    VOID CreateGUIProcessVerifyHash(LPCSTR) const;
+    map<UINT, wstring> mIDCmdToAlgos;
+    VOID CreateGUIProcessVerifyHash(const wstring&) const;
 
 public:
     COpenAsChecklist();
