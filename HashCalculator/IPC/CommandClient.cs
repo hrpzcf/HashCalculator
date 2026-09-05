@@ -36,10 +36,10 @@ internal static class CommandClient
         {
             IPCMessageHeader header = new()
             {
-                Version = IPCMessageHeader.CurrentVersion,
+                Version = IPCMessageHeader.CurrentVer,
                 Kind = (uint)kind,
                 PayloadBytes = (uint)payload.Length,
-                SourcePid = (uint)Environment.ProcessId,
+                SourcePID = (uint)Environment.ProcessId,
             };
             byte[] headerBytes = new byte[IPCMessageHeader.Size];
             MemoryMarshal.Write(headerBytes, in header);

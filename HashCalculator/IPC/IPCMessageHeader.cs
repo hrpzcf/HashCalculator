@@ -11,12 +11,12 @@ namespace HashCalculator.IPC;
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
 internal struct IPCMessageHeader
 {
-    public const uint CurrentVersion = 1;
+    public const uint CurrentVer = 1;
 
     /// <summary>单次消息允许的最大 Payload 字节数，防止损坏的长度字段导致超大内存分配</summary>
     public const int MaxPayloadBytes = 8 * 1024 * 1024;
 
-    public readonly bool IsValid => this.Version == CurrentVersion
+    public readonly bool IsValid => this.Version == CurrentVer
         && this.PayloadBytes <= MaxPayloadBytes;
 
     public uint Version;
@@ -27,7 +27,7 @@ internal struct IPCMessageHeader
     /// <summary>Payload 的字节数，0 表示无 Payload</summary>
     public uint PayloadBytes;
 
-    public uint SourcePid;
+    public uint SourcePID;
 
     public static int Size => Unsafe.SizeOf<IPCMessageHeader>();
 }
