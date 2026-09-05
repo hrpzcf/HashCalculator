@@ -8,12 +8,14 @@ namespace HashCalculator.IPC;
 
 /// <summary>
 /// 每个实例监听一条以自己进程 ID 命名的管道。
-/// 只用一个监听循环：管道名唯一，不存在多个客户端争抢同一条管道的情况，
-/// 因此不需要维持多个空闲实例。
+/// 常驻 ListenerInstanceCount 个并行的监听循环：Shell 扩展常会连续快速发起多条请求，
+/// 若只有一个监听循环，则在"accept 完一条、补建下一条 pipeServer"的空窗里接不住紧随其后的连接，
+/// 故用多个常驻实例互相兜底。每个实例处理完请求后在 HandleAsync 里 DisposeAsync。
 /// </summary>
 internal sealed class CommandServer : IDisposable
 {
-    private const int BufferSize = 64 * 1024;
+    private const int InOutBufferSize = 64 * 1024;
+    private const int ListenerInstanceCount = 2;
     private readonly CommandExecutor executor;
     private readonly CancellationTokenSource cts = new();
 
@@ -24,8 +26,13 @@ internal sealed class CommandServer : IDisposable
 
     public void Start()
     {
-        // 它已捕获全部异常，不会把未观察异常抛给线程池。
-        _ = Task.Run(this.ListeningLoopAsync);
+        // 保持最多 ListenerInstanceCount 个 pipeServer 待命，防止
+        // 多个客户端瞬发连接不上（比如为 1 时接不住 Shell 里的接连两次请求）
+        for (int i = 0; i < ListenerInstanceCount; i++)
+        {
+            // 每个循环已捕获全部异常，不会把未观察异常抛给线程池
+            _ = Task.Run(this.ListeningLoopAsync);
+        }
     }
 
     public void Dispose()
@@ -33,7 +40,7 @@ internal sealed class CommandServer : IDisposable
         // 只取消，不 Dispose：监听循环还要访问 cts.Token，
         // 而 Dispose 之后该属性会抛 ObjectDisposedException，
         // 它不是 OperationCanceledException，会被循环底部的 catch(Exception)
-        // 吞掉并 continue，进而造成不断创建管道实例死循环。
+        // 吞掉并 continue，进而造成不断创建管道实例的死循环
         this.cts.Cancel();
     }
 
@@ -41,31 +48,33 @@ internal sealed class CommandServer : IDisposable
     {
         while (!this.cts.IsCancellationRequested)
         {
-            NamedPipeServerStream server = null;
+            NamedPipeServerStream pipeServer = null;
+            PipeOptions pipeServerOptions = PipeOptions.Asynchronous |
+                PipeOptions.CurrentUserOnly;
             try
             {
-                server = new NamedPipeServerStream(
+                pipeServer = new NamedPipeServerStream(
                     InstanceDiscovery.OwnPipeName,
                     PipeDirection.InOut,
-                    maxNumberOfServerInstances: 1,
+                    ListenerInstanceCount,
                     PipeTransmissionMode.Message,
-                    PipeOptions.Asynchronous | PipeOptions.CurrentUserOnly,
-                    inBufferSize: BufferSize,
-                    outBufferSize: BufferSize);
-                await server.WaitForConnectionAsync(this.cts.Token);
+                    pipeServerOptions,
+                    inBufferSize: InOutBufferSize,
+                    outBufferSize: InOutBufferSize);
+                await pipeServer.WaitForConnectionAsync(this.cts.Token);
             }
             catch (OperationCanceledException)
             {
-                server?.Dispose();
+                pipeServer?.Dispose();
                 return;
             }
             catch (Exception)
             {
-                server?.Dispose();
+                pipeServer?.Dispose();
                 continue;
             }
             // 不等待处理完成，避免某个命令处理耗时期间无法接收后续命令
-            _ = Task.Run(() => this.HandleAsync(server));
+            _ = Task.Run(() => this.HandleAsync(pipeServer));
         }
     }
 
@@ -102,21 +111,21 @@ internal sealed class CommandServer : IDisposable
     /// <summary>
     /// 分两次写：先写固定 8 字节响应头，若带数据段再写第二段。
     /// 数据段不打包进头（头无法承载变长数据），由 PayloadBytes 说明其长度，
-    /// 客户端据此决定是否再读一段，与请求方向 CommandServer 读取 payload 的方式对称。
+    /// 客户端据此决定是否再读一段，与请求方向 CommandServer 读取 extraPayload 的方式对称。
     /// </summary>
     private static async Task WriteResponseAsync(NamedPipeServerStream server, CommandResponse response)
     {
-        byte[] payload = response.Payload ?? [];
+        byte[] extraPayload = response.Payload ?? [];
         byte[] headerBytes = new byte[IPCResponseHeader.Size];
         MemoryMarshal.Write(headerBytes, new IPCResponseHeader()
         {
             Status = (uint)response.Status,
-            PayloadBytes = (uint)payload.Length,
+            PayloadBytes = (uint)extraPayload.Length,
         });
         await server.WriteAsync(headerBytes);
-        if (payload.Length != 0)
+        if (extraPayload.Length != 0)
         {
-            await server.WriteAsync(payload);
+            await server.WriteAsync(extraPayload);
         }
     }
 }
