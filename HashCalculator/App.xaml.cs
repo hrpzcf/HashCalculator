@@ -131,8 +131,7 @@ public partial class App : Application
         ThemeOverridesManager.Initialize();
         // _host.Start 必须要在 Settings.LoadSettings 后执行，否则它们依赖的 Settings 未就绪。
         _host.Start();
-        Logger = _host.Services.GetRequiredService<ILoggerFactory>()
-            .CreateLogger("Application");
+        Logger = _host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Application");
     }
 
     /// <summary>
