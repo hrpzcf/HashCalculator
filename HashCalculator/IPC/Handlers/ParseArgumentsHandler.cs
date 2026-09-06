@@ -21,6 +21,7 @@ internal sealed class ParseArgumentsHandler : ICommandHandler
     public Task<CommandResponse> HandleAsync(ReadOnlyMemory<byte> payload, CancellationToken token)
     {
         string[] arguments = IPCPayloadCodecs.Decode(payload).Split('\0', StringSplitOptions.RemoveEmptyEntries);
+        MainWindow.Current?.EnsureWindowIsShownAndActivated();
         MainWindow.Current?.HandleReceivedCommandLine(arguments);
         return Task.FromResult(CommandResponse.Ok);
     }
