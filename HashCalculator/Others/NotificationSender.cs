@@ -97,7 +97,7 @@ namespace HashCalculator
             {
                 closeButtonText = "确定";
             }
-            // 选窗口：优先 owner；否则当前激活窗口；再否则应用主窗口。
+            // 选窗口：优先 owner；否则当前激活窗口；再否则应用主窗口
             Window window = owner
                 ?? Application.Current.Windows.OfType<Window>().FirstOrDefault(w => w.IsActive)
                 ?? Application.Current.MainWindow;
@@ -119,9 +119,9 @@ namespace HashCalculator
             };
 
             // 不能用 .GetAwaiter().GetResult()：ContentDialog.ShowAsync
-            // 内部用了 RunContinuationsAsynchronously，同步阻塞会卡死。
-            // 改用 DispatcherFrame 跑嵌套消息循环：调用栈同步阻塞、UI 仍能响应、
-            // 同步返回结果。这是 WPF Window.ShowDialog() 的实现原理。
+            // 内部用了 RunContinuationsAsynchronously，同步阻塞会卡死
+            // 改用 DispatcherFrame 跑消息循环：调用栈同步阻塞、UI 仍能响应、同步返回结果
+            // 这也是 WPF Window.ShowDialog() 的实现原理
             return ShowDialogSync(toBeShownContentDialogInstance);
         }
 
