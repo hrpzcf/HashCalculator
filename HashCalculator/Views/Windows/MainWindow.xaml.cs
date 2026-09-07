@@ -423,6 +423,12 @@ public partial class MainWindow
         {
             this.Activate();
         }
+        // 应对已显示窗口但未不在顶层的状况（无条件 Activate() 也无效）
+        if (!this.Topmost)
+        {
+            this.Topmost = true;
+            this.Topmost = false;
+        }
     }
 
     /// <summary>把主窗口导航到指定页面，供本进程各处的统一调用</summary>
