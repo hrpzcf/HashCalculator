@@ -455,36 +455,27 @@ internal static class CommonUtils
         return colors.ToArray();
     }
 
-    public static bool ShowWindowForeground(int processId)
+    public static void ShowWindowForeground(Window window)
     {
-        IntPtr handle;
         try
         {
-            handle = Process.GetProcessById(processId).MainWindowHandle;
-        }
-        catch (Exception)
-        {
-            return false;
-        }
-        if (handle != IntPtr.Zero)
-        {
+            IntPtr handle = new WindowInteropHelper(window).Handle;
+            if (!USER32.IsWindowVisible(handle))
+            {
+                USER32.ShowWindow(handle, SW.SW_SHOW);
+            }
             if (USER32.IsIconic(handle))
             {
-                return USER32.ShowWindow(handle, SW.SW_RESTORE);
+                USER32.ShowWindow(handle, SW.SW_RESTORE);
             }
-            else if (USER32.IsWindowVisible(handle))
+            if ((USER32.GetWindowLongPtrW(handle, GWL.GWL_EXSTYLE) & WS.WS_EX_TOPMOST) != WS.WS_EX_TOPMOST)
             {
-                bool executionResult = USER32.ShowWindow(handle, SW.SW_SHOW);
-                if ((USER32.GetWindowLongPtrW(handle, GWL.GWL_EXSTYLE) & WS.WS_EX_TOPMOST) != WS.WS_EX_TOPMOST)
-                {
-                    uint uFlags = SWP.SWP_NOMOVE | SWP.SWP_NOSIZE;
-                    USER32.SetWindowPos(handle, SWP.HWND_TOPMOST, 0, 0, 0, 0, uFlags);
-                    USER32.SetWindowPos(handle, SWP.HWND_NOTOPMOST, 0, 0, 0, 0, uFlags);
-                }
-                return executionResult;
+                uint flags = SWP.SWP_NOMOVE | SWP.SWP_NOSIZE;
+                USER32.SetWindowPos(handle, SWP.HWND_TOPMOST, 0, 0, 0, 0, flags);
+                USER32.SetWindowPos(handle, SWP.HWND_NOTOPMOST, 0, 0, 0, 0, flags);
             }
         }
-        return false;
+        catch (Exception) { }
     }
 
     public static bool ClipboardSetText(string text)
