@@ -67,8 +67,8 @@ public partial class MainWindow
             SystemThemeWatcher.Watch(this, Wpfctrls.WindowBackdropType.None);
         }
         // 管道监听的生命周期等于进程存活期，而窗口可能被关闭到托盘再重开，
-        // 故在此启动并依赖 IPCHost 的判空保证只启动一次。
-        IPCHost.Start();
+        // 故在此启动并依赖 PipeCommandHost 的判空保证只启动一次。
+        PipeCommandHost.Start();
     }
 
     private void InitializeNavigation()
@@ -187,7 +187,7 @@ public partial class MainWindow
     /// 供 SetMultiModeHandler 调用：把收到的跨进程多实例模式值应用到本实例设置。
     /// 置位抑制标志，使这次设置变更不触发向其他实例的广播，从而避免循环广播。
     /// </summary>
-    internal void ApplyAppMultiModeFromIPC(bool value)
+    internal void ApplyMultiModeFromIpc(bool value)
     {
         this.suppressAppRunMultiModeBroadcast = true;
         try
@@ -209,11 +209,11 @@ public partial class MainWindow
     {
         Task.Run(async () =>
         {
-            byte newValue = Convert.ToByte(Settings.Current.RunInMultiInstMode);
-            foreach (InstanceEndpoint endpoint in InstanceDiscovery.Discover())
+            byte value = Convert.ToByte(Settings.Current.RunInMultiInstMode);
+            foreach (PipeEndpoint endpoint in PipeDiscovery.Discover())
             {
-                await CommandClient.SendAsync(endpoint.PipeName, IPCMessageKind.SetAppMultiMode,
-                    new byte[] { newValue });
+                await PipeCommandHost.RequestAsync(
+                    endpoint.PipeName, HandlerIdentity.SetAppMultiMode, new byte[] { value });
             }
         });
     }

@@ -617,8 +617,8 @@ public class HashViewModel : BaseViewModel
     /// <summary>
     /// 把尚未开始计算的本模型终结为已取消。<br/>
     /// 已经派发过的作业走各自的取消与执行结束流程，故此处只对未开始的和排队中的生效。<br/>
-    /// 必须显式设置 Result：从未启动过的作业其 cancellation 为 null，
-    /// 不会触发 ResetHashViewModel 中注册的 Token 回调，Result 会一直停在无结果，
+    /// 必须显式设置 Status：从未启动过的作业其 cancellation 为 null，
+    /// 不会触发 ResetHashViewModel 中注册的 Token 回调，Status 会一直停在无结果，
     /// 界面显示"无结果"而非"已取消"。
     /// </summary>
     internal void MarkCanceled()

@@ -11,13 +11,13 @@ namespace HashCalculator.IPC.Handlers;
 /// 因为目标窗口隐藏到托盘时 MainWindowHandle 为 0，外部无法激活，
 /// 只有它自己能 Show() 并恢复最小化前状态。
 /// </summary>
-internal sealed class ActivateAppHandler : ICommandHandler
+internal sealed class ActivateAppHandler : IHandler
 {
-    public IPCMessageKind Kind => IPCMessageKind.Activate;
+    public HandlerIdentity Identity => HandlerIdentity.Activate;
 
-    public Task<CommandResponse> HandleAsync(ReadOnlyMemory<byte> payload, CancellationToken token)
+    public Task<HandlerResult> HandleAsync(ReadOnlyMemory<byte> payload, CancellationToken token)
     {
         MainWindow.Current?.EnsureWindowIsShownAndActivated();
-        return Task.FromResult(CommandResponse.Ok);
+        return Task.FromResult(HandlerResult.OfStatus(HandlerStatus.OK));
     }
 }

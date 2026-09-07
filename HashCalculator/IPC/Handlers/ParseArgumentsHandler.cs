@@ -15,16 +15,16 @@ namespace HashCalculator.IPC.Handlers;
 /// 用参数数组而非整条命令行，是因为各参数在 Shell 侧已是独立 token，无需再按引号/空格规则解析，
 /// 也避免路径含空格时的拆分歧义。
 /// </summary>
-internal sealed class ParseArgumentsHandler : ICommandHandler
+internal sealed class ParseArgumentsHandler : IHandler
 {
-    public IPCMessageKind Kind => IPCMessageKind.ParseArguments;
+    public HandlerIdentity Identity => HandlerIdentity.ParseArguments;
 
-    public Task<CommandResponse> HandleAsync(ReadOnlyMemory<byte> payload, CancellationToken token)
+    public Task<HandlerResult> HandleAsync(ReadOnlyMemory<byte> payload, CancellationToken token)
     {
-        string[] arguments = IPCPayloadCodecs.Decode(payload).Split('\0', StringSplitOptions.RemoveEmptyEntries);
+        string[] arguments = PayloadCodecs.Decode(payload).Split('\0', StringSplitOptions.RemoveEmptyEntries);
         MainWindow.Current?.NavigateTo(typeof(HomePage));
         MainWindow.Current?.EnsureWindowIsShownAndActivated();
         MainWindow.Current?.HandleReceivedCommandLine(arguments);
-        return Task.FromResult(CommandResponse.Ok);
+        return Task.FromResult(HandlerResult.OfStatus(HandlerStatus.OK));
     }
 }

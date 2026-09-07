@@ -9,7 +9,7 @@ namespace HashCalculator.IPC;
 /// Shell 扩展以 UTF-16LE 编码的字节，C# 端用同一代码页的编码器解码即可还原，
 /// 因此两端无需关心具体是哪个代码页。
 /// </summary>
-internal static class IPCPayloadCodecs
+internal static class PayloadCodecs
 {
     private static readonly Encoding PayloadEncoding = Encoding.Unicode;
 

@@ -8,20 +8,20 @@ namespace HashCalculator.IPC.Handlers;
 /// <summary>
 /// 更新本实例的多实例模式设置。
 /// Payload 为单字节 0/1（0 单实例，1 多实例）。
-/// 通过 MainWindow.ApplyAppMultiModeFromIPC 应用，使抑制标志生效，
+/// 通过 MainWindow.ApplyMultiModeFromIpc 应用，使抑制标志生效，
 /// 避免本实例因这次改动再次向其他实例广播，造成循环广播。
 /// </summary>
-internal sealed class SetMultiModeHandler : ICommandHandler
+internal sealed class SetMultiModeHandler : IHandler
 {
-    public IPCMessageKind Kind => IPCMessageKind.SetAppMultiMode;
+    public HandlerIdentity Identity => HandlerIdentity.SetAppMultiMode;
 
-    public Task<CommandResponse> HandleAsync(ReadOnlyMemory<byte> payload, CancellationToken token)
+    public Task<HandlerResult> HandleAsync(ReadOnlyMemory<byte> payload, CancellationToken token)
     {
         if (payload.Length != 1)
         {
-            return Task.FromResult(new CommandResponse { Status = IPCMessageStatus.BadPayload });
+            return Task.FromResult(new HandlerResult { Status = HandlerStatus.BadPayload });
         }
-        MainWindow.Current?.ApplyAppMultiModeFromIPC(payload.Span[0] != 0);
-        return Task.FromResult(CommandResponse.Ok);
+        MainWindow.Current?.ApplyMultiModeFromIpc(payload.Span[0] != 0);
+        return Task.FromResult(HandlerResult.OfStatus(HandlerStatus.OK));
     }
 }

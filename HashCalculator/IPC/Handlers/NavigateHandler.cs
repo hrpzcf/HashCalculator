@@ -11,9 +11,9 @@ namespace HashCalculator.IPC.Handlers;
 /// 导航命令：把主窗口切换到指定页面。
 /// Payload 为页面标识字符串（ANSI，见 <see cref="PageNames"/>）。
 /// </summary>
-internal sealed class NavigateHandler : ICommandHandler
+internal sealed class NavigateHandler : IHandler
 {
-    public IPCMessageKind Kind => IPCMessageKind.NavigateTo;
+    public HandlerIdentity Identity => HandlerIdentity.NavigateTo;
 
     /// <summary>可供跨进程导航的页面标识</summary>
     public static class PageNames
@@ -30,14 +30,14 @@ internal sealed class NavigateHandler : ICommandHandler
         [PageNames.Settings] = typeof(SettingsPanelPage),
     };
 
-    public Task<CommandResponse> HandleAsync(ReadOnlyMemory<byte> payload, CancellationToken token)
+    public Task<HandlerResult> HandleAsync(ReadOnlyMemory<byte> payload, CancellationToken token)
     {
-        string name = IPCPayloadCodecs.Decode(payload);
+        string name = PayloadCodecs.Decode(payload);
         if (pageMap.TryGetValue(name, out Type pageType))
         {
             MainWindow.Current?.NavigateTo(pageType);
-            return Task.FromResult(CommandResponse.Ok);
+            return Task.FromResult(HandlerResult.OfStatus(HandlerStatus.OK));
         }
-        return Task.FromResult(new CommandResponse { Status = IPCMessageStatus.BadPayload });
+        return Task.FromResult(new HandlerResult { Status = HandlerStatus.BadPayload });
     }
 }

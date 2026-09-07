@@ -10,7 +10,7 @@ namespace HashCalculator.IPC;
 /// 其他实例通过枚举管道目录即可得知有哪些实例存活及其启动先后，
 /// 因此不需要额外的注册表、共享内存或本地文件。
 /// </summary>
-internal static class InstanceDiscovery
+internal static class PipeDiscovery
 {
     private const string PipeDirectory = @"\\.\pipe\";
 
@@ -22,9 +22,9 @@ internal static class InstanceDiscovery
         $"{PipeNamePrefix}{Environment.ProcessId}.{StartTicks}";
 
     /// <summary>枚举其他存活实例，排除自己</summary>
-    public static InstanceEndpoint[] Discover()
+    public static PipeEndpoint[] Discover()
     {
-        List<InstanceEndpoint> endpoints = [];
+        List<PipeEndpoint> endpoints = [];
         string[] pipePaths;
         try
         {
@@ -33,11 +33,11 @@ internal static class InstanceDiscovery
         catch (Exception)
         {
             // 管道目录不可枚举时视为无其他实例，调用方自己处理参数
-            return Array.Empty<InstanceEndpoint>();
+            return Array.Empty<PipeEndpoint>();
         }
         foreach (string path in pipePaths)
         {
-            if (TryParse(path, out InstanceEndpoint endpoint) &&
+            if (TryParse(path, out PipeEndpoint endpoint) &&
                 endpoint.ProcessId != Environment.ProcessId)
             {
                 endpoints.Add(endpoint);
@@ -50,10 +50,10 @@ internal static class InstanceDiscovery
     /// 尝试获取最早启动的存活实例，即单实例模式下的命令行参数转发目标。
     /// 没有其他实例时返回 false，此时调用方应自己处理参数并正常启动。
     /// </summary>
-    public static bool TryGetOldestAlive(out InstanceEndpoint endpoint)
+    public static bool TryGetOldestAlive(out PipeEndpoint endpoint)
     {
-        InstanceEndpoint oldest = null;
-        foreach (InstanceEndpoint item in Discover())
+        PipeEndpoint oldest = null;
+        foreach (PipeEndpoint item in Discover())
         {
             if (oldest is null || item.StartTicks < oldest.StartTicks)
             {
@@ -65,7 +65,7 @@ internal static class InstanceDiscovery
     }
 
     /// <summary>解析成功时 endpoint 必定不为 null</summary>
-    private static bool TryParse(string pipePath, out InstanceEndpoint endpoint)
+    private static bool TryParse(string pipePath, out PipeEndpoint endpoint)
     {
         endpoint = default;
         if (pipePath.Length <= PipeDirectory.Length)
@@ -93,7 +93,7 @@ internal static class InstanceDiscovery
         {
             return false;
         }
-        endpoint = new InstanceEndpoint(name, processId, startTicks);
+        endpoint = new PipeEndpoint(name, processId, startTicks);
         return true;
     }
 }

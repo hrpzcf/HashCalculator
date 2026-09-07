@@ -5,7 +5,7 @@
 /// 管道名格式为 HashCalculator.Ipc.{PID}.{启动时间戳}，
 /// 因此无需连接即可得知各实例的进程 ID 与启动先后。
 /// </summary>
-internal sealed class InstanceEndpoint(string name, int id, long ticks)
+internal sealed class PipeEndpoint(string name, int id, long ticks)
 {
     /// <summary>
     /// 不含有 \\.\pipe\ 前缀的管道名

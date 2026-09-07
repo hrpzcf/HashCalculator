@@ -89,12 +89,12 @@ public partial class App : Application
             return;
         }
         // 是否已有其他实例在运行（本实例尚未计入）
-        if (InstanceDiscovery.TryGetOldestAlive(out InstanceEndpoint target))
+        if (PipeDiscovery.TryGetOldestAlive(out PipeEndpoint oldestPipe))
         {
             // 询问现存最早实例的多实例模式，据此决定本实例是并入它还是独立成为新实例
-            IPCMessageSendBack modeOutcome = await CommandClient.SendAsync(
-                target.PipeName, IPCMessageKind.GetAppMultiMode);
-            bool targetMultiMode = modeOutcome.Result == IPCSendResult.Delivered
+            RequestResult modeOutcome = await PipeCommandHost.RequestAsync(
+                oldestPipe.PipeName, HandlerIdentity.GetAppMultiMode);
+            bool targetMultiMode = modeOutcome.Status == RequestStatus.OK
                 && modeOutcome.Payload?.Length > 0 && modeOutcome.Payload[0] != 0;
             if (!targetMultiMode)
             {
@@ -102,10 +102,10 @@ public partial class App : Application
                 // 转发路径到此即止，不再加载 Settings，避免无谓开销。
                 if (e.Args.Length > 0)
                 {
-                    await CommandClient.SendAsync(target.PipeName, IPCMessageKind.ParseArguments,
+                    await PipeCommandHost.RequestAsync(oldestPipe.PipeName, HandlerIdentity.ParseArguments,
                         EncodeArguments(e.Args));
                 }
-                await CommandClient.SendAsync(target.PipeName, IPCMessageKind.Activate);
+                await PipeCommandHost.RequestAsync(oldestPipe.PipeName, HandlerIdentity.Activate);
                 Current.Shutdown();
                 return;
             }
@@ -114,11 +114,11 @@ public partial class App : Application
         Settings.LoadSettings();
         // 若已有其他实例（多实例模式），把本实例的多实例模式同步为现存实例的值，
         // 因为广播收不到刚启动的自己，需主动询问以保持一致。
-        if (InstanceDiscovery.TryGetOldestAlive(out InstanceEndpoint running))
+        if (oldestPipe is not null)
         {
-            IPCMessageSendBack syncOutcome = await CommandClient.SendAsync(
-                running.PipeName, IPCMessageKind.GetAppMultiMode);
-            if (syncOutcome.Result == IPCSendResult.Delivered && syncOutcome.Payload?.Length > 0)
+            RequestResult syncOutcome = await PipeCommandHost.RequestAsync(
+                oldestPipe.PipeName, HandlerIdentity.GetAppMultiMode);
+            if (syncOutcome.Status == RequestStatus.OK && syncOutcome.Payload?.Length > 0)
             {
                 Settings.Current.RunInMultiInstMode = syncOutcome.Payload[0] != 0;
             }
@@ -139,7 +139,7 @@ public partial class App : Application
     /// </summary>
     private static byte[] EncodeArguments(string[] args)
     {
-        return IPCPayloadCodecs.Encode(string.Join('\0', args));
+        return PayloadCodecs.Encode(string.Join('\0', args));
     }
 
     private void ApplicationFinalization()
