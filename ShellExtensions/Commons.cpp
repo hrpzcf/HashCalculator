@@ -142,9 +142,8 @@ BOOL InsertMenuFromJsonFile(const wstring& menuJson, HMENU hMenu,
     UINT indexMenu, UINT idCmdFirst, UINT idCmdLast, MenuType_t menuType, UINT* pIdCurrent,
     map<UINT, wstring>& mIDCmdToAlgos, HBITMAP bitMapHandle) {
 
-    // utf8_data 供 tiny-json 解析使用：该库为原地解析器，只接受单/多字节编码的缓冲区，
-    // 喂给它 WCHAR[] 会因大量内嵌的 '\0' 而解析失败，故此处必须保持窄字符。
-    // 必须用 UTF-8 而非 ANSI(CP_ACP)：UTF-8 的后续字节恒为 0x80~0xBF，绝不与 JSON 语法字符
+    // utf8_data 供 tiny-json 解析使用：该库只支持单/多字节编码的缓冲区，
+    // 必须用 UTF-8 而非 ANSI(CP_ACP)：UTF-8 的后续字节恒为 0x80~0xBF，不与 JSON 语法字符
     // （{ } [ ] " : , 及转义符 \）冲突；而 GBK 等双字节编码的第二字节可能为 0x5C，
     // 会被解析器误判为转义符，导致解析错位。
     LPSTR utf8_data = NULL;
@@ -153,109 +152,152 @@ BOOL InsertMenuFromJsonFile(const wstring& menuJson, HMENU hMenu,
     UINT index_top_current = indexMenu;
     FILE* json_file = NULL;
     json_t* json_memory = NULL;
-    // 旧菜单项在此统一丢弃：map 存的是 wstring，清空即自动释放，无需手工 delete[]
+
+    // 旧菜单项在此统一丢弃：map 存的是 wstring，清空即自动释放
     mIDCmdToAlgos.clear();
+
     if (menuType == MENUTYPE_UNKNOWN) {
         return FALSE;
     }
-    // 用 _wfopen_s 直接以宽字符路径打开，避免路径含非 ANSI 字符时打不开菜单配置文件
+    // 用 _wfopen_s 以宽字符路径打开，避免路径含非 ANSI 字符时打不开菜单配置文件
     errno_t error = _wfopen_s(&json_file, menuJson.c_str(), L"rb");
+
     if (error != 0 || NULL == json_file) {
         goto FinalizeAndReturn;
     }
+
     fseek(json_file, 0L, SEEK_END);
     SIZE_T file_size = ftell(json_file);
+
     if (file_size < 2 || file_size % sizeof(WCHAR) != 0) {
         goto FinalizeAndReturn;
     }
+
     // 验证 UTF-16LE 编码的文件头部 2 字节是否是 FFFE
     const SIZE_T head_count = 2;
     CHAR utf16le_head[head_count] = { 0 };
     rewind(json_file);
+
     if (head_count != fread(utf16le_head, sizeof(CHAR), head_count, json_file)) {
         goto FinalizeAndReturn;
     }
+
     // 在小端字节序下 FFFE 两个字节对应的数值是 0xFEFF
     if (0xFEFFu != *((WORD*)utf16le_head)) {
         goto FinalizeAndReturn;
     }
+
     SIZE_T wch_count = file_size / sizeof(WCHAR);
+
     // 此处给 unicode_data 分配空间时不用为字符串末尾的 L'\0' 而 wchCount + 1，
     // 因为 UTF-16LE 编码文件头有 2 字节的标识 FFFE，不读取这两个字节省下的空间刚好够 L'\0'
     unicode_data = new WCHAR[wch_count];
     unicode_data[wch_count - 1] = 0;
     SIZE_T expected_count = file_size - head_count;
-    SIZE_T byte_count_read = fread(unicode_data, sizeof(CHAR), expected_count, json_file);
-    if (byte_count_read != expected_count) {
+    SIZE_T read_count = fread(unicode_data, sizeof(CHAR), expected_count, json_file);
+
+    if (read_count != expected_count) {
         goto FinalizeAndReturn;
     }
-    INT req_size = WideCharToMultiByte(CP_UTF8, 0, unicode_data, -1, NULL, 0, NULL, NULL);
-    if (0 == req_size) {
+
+    INT needed = WideCharToMultiByte(CP_UTF8, 0, unicode_data, -1, NULL, 0, NULL, NULL);
+
+    if (0 == needed) {
         goto FinalizeAndReturn;
     }
-    utf8_data = new CHAR[req_size]();
-    utf8_data[req_size - 1] = 0;
-    if (0 == WideCharToMultiByte(CP_UTF8, 0, unicode_data, -1, utf8_data, req_size, NULL, NULL)) {
+
+    utf8_data = new CHAR[needed]();
+    utf8_data[needed - 1] = 0;
+
+    if (0 == WideCharToMultiByte(CP_UTF8, 0, unicode_data, -1, utf8_data, needed, NULL, NULL)) {
         goto FinalizeAndReturn;
     }
+
     json_memory = new json_t[MAX_JSON_PROP];
     const json_t* top_list_json = json_create(utf8_data, json_memory, MAX_JSON_PROP);
+
     if (NULL == top_list_json || JSON_ARRAY != json_getType(top_list_json)) {
         goto FinalizeAndReturn;
     }
+
     const json_t* top_menu_json = NULL;
+
     for (top_menu_json = json_getChild(top_list_json);
         top_menu_json;
         top_menu_json = json_getSibling(top_menu_json)) {
-        int64_t i64_menu_type;
+
+        int64_t menu_type;
         const char* top_menu_title;
-        if (!GetPropValueByType(top_menu_json, JSON_MENUTYPE, JSON_INTEGER, &i64_menu_type)
-            || i64_menu_type != (int64_t)menuType
+
+        if (!GetPropValueByType(top_menu_json, JSON_MENUTYPE, JSON_INTEGER, &menu_type)
+            || menu_type != (int64_t)menuType
             || !GetPropValueByType(top_menu_json, JSON_TITLE, JSON_TEXT, &top_menu_title)) {
             continue;
         }
-        // InsertMenuItemW/AppendMenuW 会自行复制标题字符串，故转换结果用局部 wstring 保存即可
+
+        // InsertMenuItemW/AppendMenuW 会自行复制字符串，故结果用局部 wstring 保存即可
         wstring top_menu_title_wide = MultiByteToWideString(top_menu_title, CP_UTF8);
+
         MENUITEMINFOW top_menu_submenu_info = { 0 };
-        top_menu_submenu_info.fMask = MIIM_ID | MIIM_STRING | MIIM_BITMAP;
         top_menu_submenu_info.cbSize = sizeof(top_menu_submenu_info);
-        top_menu_submenu_info.wID = idCmdFirst + *pIdCurrent;
-        top_menu_submenu_info.cch = (UINT)top_menu_title_wide.length();
-        top_menu_submenu_info.dwTypeData = &top_menu_title_wide[0];
         top_menu_submenu_info.hbmpItem = bitMapHandle;
+        top_menu_submenu_info.wID = idCmdFirst + *pIdCurrent;
+        top_menu_submenu_info.dwTypeData = &top_menu_title_wide[0];
+        top_menu_submenu_info.cch = (UINT)top_menu_title_wide.length();
+        top_menu_submenu_info.fMask = MIIM_ID | MIIM_STRING | MIIM_BITMAP;
+
         const json_t* sub_list_json = json_getProperty(top_menu_json, JSON_SUBMENUS);
+
         if (NULL == sub_list_json) {
-            const char* algorithms_str;
-            if (GetPropValueByType(top_menu_json, JSON_ALGTYPES, JSON_TEXT, &algorithms_str) &&
+
+            const char* algos_str;
+
+            if (GetPropValueByType(top_menu_json, JSON_ALGTYPES, JSON_TEXT, &algos_str) &&
                 InsertMenuItemW(hMenu, index_top_current, true, &top_menu_submenu_info)) {
+
                 ++index_top_current;
-                mIDCmdToAlgos.emplace(*pIdCurrent, MultiByteToWideString(algorithms_str, CP_UTF8));
+                mIDCmdToAlgos.emplace(*pIdCurrent, MultiByteToWideString(algos_str, CP_UTF8));
                 *pIdCurrent = *pIdCurrent + 1;
             }
+            continue;
         }
-        else if (JSON_ARRAY == json_getType(sub_list_json)) {
-            HMENU h_submenu_container = CreatePopupMenu();
-            top_menu_submenu_info.hSubMenu = h_submenu_container;
-            top_menu_submenu_info.fMask |= MIIM_SUBMENU;
-            UINT appended_submenu_count = 0U;
+
+        if (JSON_ARRAY == json_getType(sub_list_json)) {
+
             LONG flag = MF_STRING | MF_POPUP;
+            UINT appended_submenu_count = 0U;
             const json_t* submenu_json = NULL;
+
+            HMENU h_submenu_container = CreatePopupMenu();
+            top_menu_submenu_info.fMask |= MIIM_SUBMENU;
+            top_menu_submenu_info.hSubMenu = h_submenu_container;
+
             for (submenu_json = json_getChild(sub_list_json);
                 submenu_json;
                 submenu_json = json_getSibling(submenu_json)) {
+
                 const char* submenu_title, * submenu_algos_str;
-                if (GetPropValueByType(submenu_json, JSON_TITLE, JSON_TEXT, &submenu_title)
-                    && GetPropValueByType(submenu_json, JSON_ALGTYPES, JSON_TEXT, &submenu_algos_str)) {
-                    wstring submenu_title_wide = MultiByteToWideString(submenu_title, CP_UTF8);
-                    if (AppendMenuW(h_submenu_container, flag, idCmdFirst + *pIdCurrent, submenu_title_wide.c_str())) {
-                        ++appended_submenu_count;
-                        mIDCmdToAlgos.emplace(*pIdCurrent, MultiByteToWideString(submenu_algos_str, CP_UTF8));
-                        *pIdCurrent = *pIdCurrent + 1;
-                    }
+
+                if (!GetPropValueByType(submenu_json, JSON_TITLE, JSON_TEXT, &submenu_title) ||
+                    !GetPropValueByType(submenu_json, JSON_ALGTYPES, JSON_TEXT, &submenu_algos_str)) {
+                    continue;
+                }
+
+                wstring submenu_title_wide = MultiByteToWideString(submenu_title, CP_UTF8);
+
+                if (AppendMenuW(h_submenu_container, flag,
+                    static_cast<UINT_PTR>(idCmdFirst) + *pIdCurrent,
+                    submenu_title_wide.c_str())) {
+
+                    ++appended_submenu_count;
+                    mIDCmdToAlgos.emplace(*pIdCurrent, MultiByteToWideString(submenu_algos_str, CP_UTF8));
+                    *pIdCurrent = *pIdCurrent + 1;
                 }
             }
+
             if (0 != appended_submenu_count &&
                 InsertMenuItemW(hMenu, index_top_current, true, &top_menu_submenu_info)) {
+
                 ++index_top_current;
                 *pIdCurrent = *pIdCurrent + 1;
                 continue;

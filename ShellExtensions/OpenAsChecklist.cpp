@@ -1,5 +1,6 @@
 ﻿#include "pch.h"
 #include "commons.h"
+#include "IPC.hpp"
 #include "OpenAsChecklist.h"
 #include "resource.h"
 #include <atlcore.h>
@@ -163,7 +164,10 @@ STDMETHODIMP COpenAsChecklist::InvokeCommand(CMINVOKECOMMANDINFO* pici) {
     if (iter == this->mIDCmdToAlgos.end()) {
         return E_INVALIDARG;
     }
-    this->CreateGUIProcessVerifyHash(iter->second);
+    // 优先经管道交给已运行的实例；无实例/多实例模式/失败则回退本地启动。
+    if (IPC_HANDLE_FAILED == TryHandleVerifyViaPipe(iter->second, this->mChecklistPath)) {
+        this->CreateGUIProcessVerifyHash(iter->second);
+    }
     return S_OK;
 }
 

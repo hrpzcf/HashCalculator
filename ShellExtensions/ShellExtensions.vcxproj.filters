@@ -20,6 +20,9 @@
     <Filter Include="TinyJson">
       <UniqueIdentifier>{729d0601-957a-4ecb-b129-bb4e620540cb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="IPC">
+      <UniqueIdentifier>{6f2a9c1e-7b4d-4f2a-9d3e-1c8f6a5b0d7e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -52,6 +55,9 @@
     <ClInclude Include="TinyJson\tiny-json.h">
       <Filter>TinyJson</Filter>
     </ClInclude>
+    <ClInclude Include="IPC\IPC.hpp">
+      <Filter>IPC</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ShellExtensions.cpp">
@@ -77,6 +83,9 @@
     </ClCompile>
     <ClCompile Include="TinyJson\tiny-json.c">
       <Filter>TinyJson</Filter>
+    </ClCompile>
+    <ClCompile Include="IPC\IPC.cpp">
+      <Filter>IPC</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
