@@ -419,19 +419,42 @@ public partial class MainWindow
         {
             this.WindowState = Settings.Current.MainWindowStateWithoutMinimized;
         }
-        if (!this.IsActive)
-        {
-            this.Activate();
-        }
-        // 应对已显示窗口但未不在顶层的状况（无条件 Activate() 也无效）
-        if (!this.Topmost)
-        {
-            this.Topmost = true;
-            this.Topmost = false;
-        }
+        // 此方法用于应对某些特定情况下窗口无法用窗口方法调到前台的情况，原因：
+        // 用 Activate 或 Focus 时受 Windows 前台锁限制：调用方非用户输入源，
+        // 会被系统判定无权抢前台，且 IsActive 在“被强制带出”的中间态下可能失真，
+        // 所以不依赖 IsActive 判断，无条件尝试切前台；是否真在前台由方法内部
+        // 用 GetForegroundWindow（系统真实前台状态）判断，已在前台则不重复抢
+        this.ForceForegroundAndActivate();
     }
 
-    /// <summary>把主窗口导航到指定页面，供本进程各处的统一调用</summary>
+    /// <summary>
+    /// 突破前台锁，把窗口真正切到前台并取得键盘焦点。<br/>
+    /// 窗口已在前台时（以 GetForegroundWindow 的 OS 真实状态判断）直接确保焦点即返回，不强抢。
+    /// </summary>
+    private void ForceForegroundAndActivate()
+    {
+        IntPtr myHwnd = new WindowInteropHelper(this).Handle;
+        IntPtr fgHwnd = USER32.GetForegroundWindow();
+        if (myHwnd == fgHwnd)
+        {
+            return;
+        }
+        bool isAttached = false;
+        uint fgThreadId = USER32.GetWindowThreadProcessId(fgHwnd);
+        uint myThreadId = KERNEL32.GetCurrentThreadId();
+        if (fgThreadId != 0 && fgThreadId != myThreadId)
+        {
+            isAttached = USER32.AttachThreadInput(myThreadId, fgThreadId, true);
+        }
+        USER32.BringWindowToTop(myHwnd);
+        USER32.SetForegroundWindow(myHwnd);
+        if (isAttached)
+        {
+            _ = USER32.AttachThreadInput(myThreadId, fgThreadId, false);
+        }
+        this.Activate();
+    }
+
     internal void NavigateTo(Type pageType)
     {
         this._navigationService.Navigate(pageType);

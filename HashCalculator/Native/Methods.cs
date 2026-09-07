@@ -85,7 +85,8 @@ internal static class USER32
     /// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowpos
     /// </summary>
     [DllImport("user32.dll")]
-    internal static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+    internal static extern bool SetWindowPos(
+        IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
 
     /// <summary>
     /// https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-isiconic
@@ -176,6 +177,38 @@ internal static class USER32
     /// </summary>
     [DllImport("user32.dll")]
     internal static extern bool RemoveClipboardFormatListener(IntPtr handle);
+
+    /// <summary>
+    /// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setfocus
+    /// </summary>
+    [DllImport("user32.dll")]
+    internal static extern IntPtr SetFocus(IntPtr hWnd);
+
+    /// <summary>
+    /// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-bringwindowtotop
+    /// </summary>
+    [DllImport("user32.dll")]
+    internal static extern bool BringWindowToTop(IntPtr hWnd);
+
+    /// <summary>
+    /// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getforegroundwindow
+    /// </summary>
+    [DllImport("user32.dll")]
+    internal static extern IntPtr GetForegroundWindow();
+
+    /// <summary>
+    /// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowthreadprocessid
+    /// </summary>
+    [DllImport("user32.dll")]
+    internal static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+
+    internal static uint GetWindowThreadProcessId(IntPtr hWnd) => GetWindowThreadProcessId(hWnd, out _);
+
+    /// <summary>
+    /// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-attachthreadinput
+    /// </summary>
+    [DllImport("user32.dll")]
+    internal static extern bool AttachThreadInput(uint idAttach, uint idAttachTo, bool fAttach);
 }
 
 internal static class SHLWAPI
@@ -321,4 +354,10 @@ internal static class KERNEL32
     /// </summary>
     [DllImport("kernel32.dll")]
     internal static extern IntPtr LocalFree(IntPtr hMem);
+
+    /// <summary>
+    /// https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentthreadid
+    /// </summary>
+    [DllImport("kernel32.dll")]
+    internal static extern uint GetCurrentThreadId();
 }
