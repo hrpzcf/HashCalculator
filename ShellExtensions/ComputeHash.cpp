@@ -180,8 +180,6 @@ STDMETHODIMP CComputeHash::QueryContextMenu(HMENU hMenu, UINT indexMenu, UINT id
     if (uFlags & CMF_DEFAULTONLY || this->MenuJsonPath.empty()) {
         return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, 0);
     }
-    // 右击固定在快速访问的目录时会触发两次：Directory 和 Directory\Background，
-    // 那我们选择此时不插入 Directory（即 m_isBackgroundContext == false）的菜单
 
     // QueryContextMenu uFlags
     // #define CMF_NORMAL              0x00000000
@@ -219,7 +217,11 @@ STDMETHODIMP CComputeHash::QueryContextMenu(HMENU hMenu, UINT indexMenu, UINT id
     // mIsBackgroundContext = false 且 uFlags 没有 CMF_ITEMMENU 标识 → 快速访问
     // mIsBackgroundContext = false 且 uFlags 没有 CMF_RESERVED 标识 → 快速访问
     // uFlags == 0x00000414 → 快速访问
-    if (!this->mIsBackgroundContext && !(uFlags & CMF_ITEMMENU)) {
+
+    // 右击固定在快速访问的目录时触发两次：Directory 和 Directory\Background，
+    // 那我们选择此时不插入 Directory\Background（mIsBackgroundContext == true）的菜单
+    if (this->mIsBackgroundContext &&
+        uFlags == (CMF_EXPLORE | CMF_CANRENAME | CMF_ASYNCVERBSTATE)) {
         return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, 0);
     }
     UINT id_cmd_current = 0;
