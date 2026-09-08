@@ -419,38 +419,49 @@ public partial class MainWindow
         {
             this.WindowState = Settings.Current.MainWindowStateWithoutMinimized;
         }
-        // 此方法用于应对某些特定情况下窗口无法用窗口方法调到前台的情况，原因：
-        // 用 Activate 或 Focus 时受 Windows 前台锁限制：调用方非用户输入源，
-        // 会被系统判定无权抢前台，且 IsActive 在“被强制带出”的中间态下可能失真，
-        // 所以不依赖 IsActive 判断，无条件尝试切前台；是否真在前台由方法内部
-        // 用 GetForegroundWindow（系统真实前台状态）判断，已在前台则不重复抢
-        this.ForceForegroundAndActivate();
-    }
-
-    /// <summary>
-    /// 突破前台锁，把窗口真正切到前台并取得键盘焦点。<br/>
-    /// 窗口已在前台时（以 GetForegroundWindow 的 OS 真实状态判断）直接确保焦点即返回，不强抢。
-    /// </summary>
-    private void ForceForegroundAndActivate()
-    {
+        // 用于应对某些特定情况下无法用 WPF 窗口的方法调到前台的情况：
+        // 用 Activate 时受 Windows 前台锁限制：调用方非用户输入源，
+        // 会被系统判定无权抢前台，且 IsActive 在〈被强制带出〉的状态下可能失真，
+        // 所以不依赖 IsActive 判断，先无条件轻量 Activate()，尝试，
+        // 以 GetForegroundWindow 判断真实激活状态，如果还未在前台则强抢，
+        // 把强抢逻辑通过 BeginInvoke 放到 UI 线程里空闲时执行，避免同步执行
+        // 线程附加（AttachThreadInput + BringWindowToTop）而导致死锁
+        this.Activate();
         IntPtr myHwnd = new WindowInteropHelper(this).Handle;
         IntPtr fgHwnd = USER32.GetForegroundWindow();
         if (myHwnd == fgHwnd)
         {
             return;
         }
-        bool isAttached = false;
+        // 调用 Activate() 后仍不在前台，则在 UI 线程异步强抢前台
+        this.Dispatcher.BeginInvoke(() => this.DoForceForeground(myHwnd));
+    }
+
+    /// <summary>
+    /// 突破前台锁，把窗口真正切到前台并取得键盘焦点。
+    /// </summary>
+    private void DoForceForeground(IntPtr myHwnd)
+    {
+        // 到执行时前台可能已变，重新取真实前台判断
+        IntPtr fgHwnd = USER32.GetForegroundWindow();
+        if (myHwnd == fgHwnd)
+        {
+            return;
+        }
         uint fgThreadId = USER32.GetWindowThreadProcessId(fgHwnd);
         uint myThreadId = KERNEL32.GetCurrentThreadId();
-        if (fgThreadId != 0 && fgThreadId != myThreadId)
+        try
         {
-            isAttached = USER32.AttachThreadInput(myThreadId, fgThreadId, true);
+            if (fgThreadId != 0 && fgThreadId != myThreadId)
+            {
+                USER32.AttachThreadInput(myThreadId, fgThreadId, true);
+            }
+            USER32.BringWindowToTop(myHwnd);
+            USER32.SetForegroundWindow(myHwnd);
         }
-        USER32.BringWindowToTop(myHwnd);
-        USER32.SetForegroundWindow(myHwnd);
-        if (isAttached)
+        finally
         {
-            _ = USER32.AttachThreadInput(myThreadId, fgThreadId, false);
+            USER32.AttachThreadInput(myThreadId, fgThreadId, false);
         }
         this.Activate();
     }
