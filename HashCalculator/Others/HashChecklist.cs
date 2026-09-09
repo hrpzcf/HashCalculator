@@ -37,7 +37,7 @@ namespace HashCalculator
             this.fileIndependent = relpath == string.Empty;
         }
 
-        public CmpRes GetCheckResult(AlgoType algoType, byte[] hashBytes)
+        public CmpRes ComparisonResultOf(AlgoType algoType, byte[] hashBytes)
         {
             if (hashBytes == null || this.algoHashDict.Count == 0)
             {
@@ -77,13 +77,13 @@ namespace HashCalculator
             return CmpRes.Unrelated;
         }
 
-        public void SetModelCheckResult(HashViewModel model)
+        public void SetComparisonResult(HashViewModel model)
         {
             if (model != null && model.AlgoInOutModels != null)
             {
                 foreach (AlgoInOutModel inOut in model.AlgoInOutModels)
                 {
-                    inOut.HashCmpResult = this.GetCheckResult(inOut.AlgoType, inOut.HashResult);
+                    inOut.HashCmpResult = this.ComparisonResultOf(inOut.AlgoType, inOut.HashResult);
                 }
             }
         }

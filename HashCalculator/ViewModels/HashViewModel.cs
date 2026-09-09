@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -33,6 +34,7 @@ public class HashViewModel : BaseViewModel
     private ComparableColor _hashGroupId = null;
     private ComparableColor _embeddedHashGroupId = null;
     private ComparableColor _folderGroupId = null;
+    private HashSet<AlgoType> _algoTypesToCompute = null;
     private HashState _currentState = HashState.NoState;
     private HashResult _currentResult = HashResult.NoResult;
     private OutputType _selectedOutput = OutputType.Unknown;
@@ -43,9 +45,9 @@ public class HashViewModel : BaseViewModel
     private RelayCommand copyThisModelAllHashesCmd;
     private RelayCommand tableColumnDoubleClickCmd;
 
-    private readonly ManualResetEvent manualPauseController =
+    private readonly ManualResetEvent _manualPauseController =
         new ManualResetEvent(true);
-    private readonly object computeHashOperationLock = new object();
+    private readonly object _hashComputationExclusiveLock = new object();
     private CancellationTokenSource cancellation;
     /// <summary>
     /// 调度器期望本模型处于的状态。<br/>
@@ -447,7 +449,7 @@ public class HashViewModel : BaseViewModel
         return false;
     }
 
-    private void MakeSureAlgoModelArrayNotEmpty()
+    private void MakeSureAlgoInOutModelsNotEmpty()
     {
         if (this.AlgoInOutModels == null || this.AlgoInOutModels.Count == 0)
         {
@@ -491,9 +493,10 @@ public class HashViewModel : BaseViewModel
         // 设置 this.State 后 ErrorDetails 也被自动设置
         this.State = HashState.NoState;
         this.desiredState = HashState.NoState;
+        this._algoTypesToCompute = null;
         // 上一轮若以暂停收场，暂停信号仍处在阻断状态，此处必须解除：
         // 否则重新开始的这一轮会在第一个数据块处永久阻塞
-        this.manualPauseController.Set();
+        this._manualPauseController.Set();
         this.Result = HashResult.NoResult;
         try
         {
@@ -547,13 +550,13 @@ public class HashViewModel : BaseViewModel
     public void ShutdownModelWait()
     {
         this.cancellation?.Cancel();
-        this.manualPauseController.Set();
-        Monitor.Enter(this.computeHashOperationLock);
+        this._manualPauseController.Set();
+        Monitor.Enter(this._hashComputationExclusiveLock);
         if (this.State == HashState.NoState || this.State == HashState.Waiting)
         {
             this.State = HashState.Finished;
         }
-        Monitor.Exit(this.computeHashOperationLock);
+        Monitor.Exit(this._hashComputationExclusiveLock);
     }
 
     /// <summary>
@@ -590,11 +593,11 @@ public class HashViewModel : BaseViewModel
     {
         if (!pause)
         {
-            this.manualPauseController.Set();
+            this._manualPauseController.Set();
         }
         else
         {
-            this.manualPauseController.Reset();
+            this._manualPauseController.Reset();
         }
     }
 
@@ -602,7 +605,7 @@ public class HashViewModel : BaseViewModel
     /// 当前是否处于暂停状态。基于实际暂停信号而非界面投影 State 判断，<br/>
     /// 因此该值是同步且权威的，不受 State 异步更新窗口期的影响。
     /// </summary>
-    internal bool IsPaused => !this.manualPauseController.WaitOne(0);
+    internal bool IsPaused => !this._manualPauseController.WaitOne(0);
 
     /// <summary>
     /// 请求取消本次计算，同时解除暂停信号以唤醒可能正阻塞在暂停点的计算线程，
@@ -611,15 +614,15 @@ public class HashViewModel : BaseViewModel
     internal void RequestCancellation()
     {
         this.cancellation?.Cancel();
-        this.manualPauseController.Set();
+        this._manualPauseController.Set();
     }
 
     /// <summary>
     /// 把尚未开始计算的本模型终结为已取消。<br/>
-    /// 已经派发过的作业走各自的取消与执行结束流程，故此处只对未开始的和排队中的生效。<br/>
-    /// 必须显式设置 Status：从未启动过的作业其 cancellation 为 null，
-    /// 不会触发 ResetHashViewModel 中注册的 Token 回调，Status 会一直停在无结果，
-    /// 界面显示"无结果"而非"已取消"。
+    /// 已经派发过的作业走各自的取消与执行结束流程，故此处只对未开始的和排队中的。<br/>
+    /// 必须显式设置 Status：从未启动过的作业其 cancellation 为 null，不会触发
+    /// ResetHashViewModel 中注册的 Token 回调，Status 会一直停在无结果，界面显示
+    /// "无结果"而非"已取消"。
     /// </summary>
     internal void MarkCanceled()
     {
@@ -634,61 +637,46 @@ public class HashViewModel : BaseViewModel
         this.SetStateAsync(HashState.Finished);
     }
 
-    public void SetHashCheckResultForModel(HashChecklist checklist)
+    /// <summary>
+    /// 用清单比对各算法结果，把比对结果（HashCmpResult）落到对应 AlgoInOutModel。<br/>
+    /// 仅当 Result 为 Succeeded 时才真正比对，否则全部置 NoResult。
+    /// 副作用：命中 AlgoToSwitchToAfterHashChecked 指定的结果时，会把 CurrentInOutModel 切到该算法。
+    /// </summary>
+    /// <param name="checklist">用于比对的校验清单。</param>
+    public void ApplyHashCmpResult(HashChecklist checklist)
     {
-        if (checklist != null && this.AlgoInOutModels != null)
+        if (checklist == null || this.AlgoInOutModels == null)
         {
-            if (this.Result != HashResult.Succeeded)
+            return;
+        }
+        if (this.Result != HashResult.Succeeded)
+        {
+            foreach (AlgoInOutModel model in this.AlgoInOutModels)
             {
-                foreach (AlgoInOutModel model in this.AlgoInOutModels)
-                {
-                    model.HashCmpResult = CmpRes.NoResult;
-                }
+                model.HashCmpResult = CmpRes.NoResult;
             }
-            else
+            return;
+        }
+        if (checklist.TryGetFileOrEmptyStrHashChecker(this.RelativePath, out HashChecker checker))
+        {
+            checker.SetComparisonResult(this);
+        }
+        else
+        {
+            foreach (AlgoInOutModel model in this.AlgoInOutModels)
             {
-                if (checklist.TryGetFileOrEmptyStrHashChecker(this.RelativePath, out HashChecker checker))
-                {
-                    checker.SetModelCheckResult(this);
-                }
-                else
-                {
-                    foreach (AlgoInOutModel model in this.AlgoInOutModels)
-                    {
-                        model.HashCmpResult = CmpRes.Unrelated;
-                    }
-                }
-                if (Settings.Current.AlgoToSwitchToAfterHashChecked != CmpRes.NoResult)
-                {
-                    foreach (AlgoInOutModel model in this.AlgoInOutModels)
-                    {
-                        if (model.HashCmpResult == Settings.Current.AlgoToSwitchToAfterHashChecked &&
-                            (this.CurrentInOutModel == null || this.CurrentInOutModel.HashCmpResult != model.HashCmpResult))
-                        {
-                            this.CurrentInOutModel = model;
-                            break;
-                        }
-                    }
-                }
+                model.HashCmpResult = CmpRes.Unrelated;
             }
         }
-    }
-
-    private void SetHashCheckResultForInOutModelAndSetCurModel()
-    {
-        if (this.AlgoInOutModels != null &&
-            this.Arguments.HashChecklist?.TryGetFileOrEmptyStrHashChecker(this.RelativePath,
-                out HashChecker checker) == true)
+        if (Settings.Current.AlgoToSwitchToAfterHashChecked != CmpRes.NoResult)
         {
-            foreach (AlgoInOutModel item in this.AlgoInOutModels)
+            foreach (AlgoInOutModel model in this.AlgoInOutModels)
             {
-                CmpRes hashCheckResult = checker.GetCheckResult(item.AlgoType, item.HashResult);
-                item.HashCmpResult = hashCheckResult;
-                if (Settings.Current.AlgoToSwitchToAfterHashChecked != CmpRes.NoResult &&
-                    hashCheckResult == Settings.Current.AlgoToSwitchToAfterHashChecked &&
-                    (this.CurrentInOutModel == null || this.CurrentInOutModel.HashCmpResult != hashCheckResult))
+                if (model.HashCmpResult == Settings.Current.AlgoToSwitchToAfterHashChecked &&
+                    (this.CurrentInOutModel == null || this.CurrentInOutModel.HashCmpResult != model.HashCmpResult))
                 {
-                    this.CurrentInOutModel = item;
+                    this.CurrentInOutModel = model;
+                    break;
                 }
             }
         }
@@ -696,43 +684,40 @@ public class HashViewModel : BaseViewModel
 
     public void ComputeManyHashValue()
     {
-        Monitor.Enter(this.computeHashOperationLock);
-        if (this.cancellation.IsCancellationRequested)
-        {
-            Monitor.Exit(this.computeHashOperationLock);
-            return;
-        }
-        this.HasBeenRun = true;
-        Stopwatch stopwatch = new Stopwatch();
-        stopwatch.Start();
-        Synchronization.UI.Invoke(() => this.State = HashState.Running);
-        if (this.Arguments.Deprecated)
-        {
-            Synchronization.UI.Invoke(() =>
-            {
-                this.Result = HashResult.Failed;
-                this.ErrorDetails = this.Arguments.Message;
-            });
-            goto FinishingTouchesBeforeExiting;
-        }
-        // 需要调用 FileInfo 的 Refresh 方法才能更新 FileInfo.Exists
-        else if (!File.Exists(this.Information.FullName))
-        {
-            Synchronization.UI.Invoke(() =>
-            {
-                this.Result = HashResult.Failed;
-                this.ErrorDetails = "此文件不存在或无法访问...";
-            });
-            goto FinishingTouchesBeforeExiting;
-        }
         byte[] buffer = null;
+        AlgoInOutModel[] frozenAlgoInOutModels = null;
+        Stopwatch stopwatch = null;
+        Monitor.Enter(this._hashComputationExclusiveLock);
         try
         {
+            if (this.cancellation.IsCancellationRequested)
+            {
+                return;
+            }
+            this.HasBeenRun = true;
+            stopwatch = new Stopwatch();
+            stopwatch.Start();
+            Synchronization.UI.Invoke(() => this.State = HashState.Running);
+            if (this.Arguments.Deprecated)
+            {
+                Synchronization.UI.Invoke(
+                    () => { this.Result = HashResult.Failed; this.ErrorDetails = this.Arguments.Message; }
+                    );
+                return;
+            }
+            // 需要调用 FileInfo 的 Refresh 方法才能更新 FileInfo.Exists
+            else if (!File.Exists(this.Information.FullName))
+            {
+                Synchronization.UI.Invoke(
+                    () => { this.Result = HashResult.Failed; this.ErrorDetails = "此文件不存在或无法访问..."; }
+                    );
+                return;
+            }
             using (FileStream fs = this.Information.OpenRead())
             {
                 Synchronization.UI.Invoke(() =>
                 {
-                    this.MakeSureAlgoModelArrayNotEmpty();
+                    this.MakeSureAlgoInOutModelsNotEmpty();
                     // 刷新大小，应对文件被添加后，计算前发生变化或被替换的情况
                     this.FileLength = fs.Length;
                     this.Progress = 0L;
@@ -749,9 +734,14 @@ public class HashViewModel : BaseViewModel
                         this.Result = HashResult.Failed;
                         this.ErrorDetails = "是空文件，终止计算并标记为失败...";
                     });
-                    goto FinishingTouchesBeforeExiting;
+                    return;
                 }
-                foreach (AlgoInOutModel model in this.AlgoInOutModels)
+                // 当 _algoTypesToCompute 为 null 时取所有算法
+                // 或只取 AlgoType 被 _algoTypesToCompute 包含的算法
+                frozenAlgoInOutModels = this.AlgoInOutModels.Where(
+                    model => this._algoTypesToCompute?.Contains(model.AlgoType) != false
+                    ).ToArray();
+                foreach (AlgoInOutModel model in frozenAlgoInOutModels)
                 {
                     model.Algo.Initialize();
                 }
@@ -759,9 +749,9 @@ public class HashViewModel : BaseViewModel
                 CommonUtils.Suggest(ref buffer, this.FileLength);
                 Action<int> updateProgress = size => this.Progress += size;
                 bool terminateByCancellation = false;
-                if (Settings.Current.ParallelBetweenAlgos)
+                if (frozenAlgoInOutModels.Length > 1 && Settings.Current.ParallelBetweenAlgos)
                 {
-                    int minThreads = this.AlgoInOutModels.Count;
+                    int minThreads = frozenAlgoInOutModels.Length;
                     ThreadPool.GetMinThreads(out int minwt, out int mincpt);
                     if (minwt < minThreads)
                     {
@@ -770,7 +760,7 @@ public class HashViewModel : BaseViewModel
                     using (Barrier barrier = new Barrier(minThreads, i =>
                         {
                             stopwatch.Stop();
-                            this.manualPauseController.WaitOne();
+                            this._manualPauseController.WaitOne();
                             stopwatch.Start();
                             actualReadCount = fs.Read(buffer, 0, buffer.Length);
                             Synchronization.UI.BeginInvoke(updateProgress, actualReadCount);
@@ -794,7 +784,7 @@ public class HashViewModel : BaseViewModel
                                 model.Algo.TransformBlock(buffer, 0, actualReadCount, null, 0);
                             }
                         }
-                        Parallel.ForEach(this.AlgoInOutModels, DoTransformBlocks);
+                        Parallel.ForEach(frozenAlgoInOutModels, DoTransformBlocks);
                     }
                 }
                 else
@@ -802,7 +792,7 @@ public class HashViewModel : BaseViewModel
                     while (true)
                     {
                         stopwatch.Stop();
-                        this.manualPauseController.WaitOne();
+                        this._manualPauseController.WaitOne();
                         stopwatch.Start();
                         if (this.cancellation.IsCancellationRequested)
                         {
@@ -813,7 +803,7 @@ public class HashViewModel : BaseViewModel
                         {
                             break;
                         }
-                        foreach (AlgoInOutModel algoInOut in this.AlgoInOutModels)
+                        foreach (AlgoInOutModel algoInOut in frozenAlgoInOutModels)
                         {
                             algoInOut.Algo.TransformBlock(buffer, 0, actualReadCount, null, 0);
                         }
@@ -827,47 +817,44 @@ public class HashViewModel : BaseViewModel
                         i.Export = true;
                         i.HashResult = i.Algo.Hash;
                     };
-                    foreach (AlgoInOutModel item in this.AlgoInOutModels)
+                    foreach (AlgoInOutModel item in frozenAlgoInOutModels)
                     {
                         item.Algo.TransformFinalBlock(buffer, 0, 0);
                         Synchronization.UI.Invoke(updateHashBytes, item);
                     }
                     Synchronization.UI.Invoke(() =>
                     {
-                        this.SetHashCheckResultForInOutModelAndSetCurModel();
+                        // 必须先设置 Succeeded，否则 ApplyHashCmpResult 一律设置 NoResult
                         this.Result = HashResult.Succeeded;
+                        this.ApplyHashCmpResult(this.Arguments.HashChecklist);
                     });
                 }
             }
         }
         catch
         {
-            Synchronization.UI.Invoke(() =>
-            {
-                this.Result = HashResult.Failed;
-                this.ErrorDetails = "文件读取失败或进行计算时出错...";
-            });
+            Synchronization.UI.Invoke(
+                () => { this.Result = HashResult.Failed; this.ErrorDetails = "文件读取失败或进行计算时出错..."; }
+                );
         }
         finally
         {
             CommonUtils.MakeSureBuffer(ref buffer, 0);
-        }
-    FinishingTouchesBeforeExiting:
-        if (this.AlgoInOutModels != null)
-        {
-            foreach (AlgoInOutModel model in this.AlgoInOutModels)
+            if (frozenAlgoInOutModels != null)
             {
-                model.Algo.Dispose();
+                foreach (AlgoInOutModel model in frozenAlgoInOutModels)
+                {
+                    model.Algo.Dispose();
+                }
             }
+            if (stopwatch is not null)
+            {
+                stopwatch.Stop();
+                double duration = stopwatch.Elapsed.TotalSeconds;
+                Synchronization.UI.Invoke(() => { this.DurationofTask = duration; this.State = HashState.Finished; });
+            }
+            Monitor.Exit(this._hashComputationExclusiveLock);
         }
-        stopwatch.Stop();
-        double duration = stopwatch.Elapsed.TotalSeconds;
-        Synchronization.UI.Invoke(() =>
-        {
-            this.DurationofTask = duration;
-            this.State = HashState.Finished;
-        });
-        Monitor.Exit(this.computeHashOperationLock);
     }
 
     public string GenerateTextInFormat(string format, OutputType output, bool all, bool endLine,

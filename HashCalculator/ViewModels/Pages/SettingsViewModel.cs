@@ -778,6 +778,10 @@ public class SettingsViewModel : BaseViewModel, IJsonOnSerializing, IJsonOnDeser
         }
     }
 
+    /// <summary>
+    /// 值是 NoResult 时代表保持现状不执行切换操作，详情见 
+    /// <see cref="AvailableResultsToSwitchTo" />
+    /// </summary>
     public CmpRes AlgoToSwitchToAfterHashChecked
     {
         get => this.algoToSwitchToAfterHashChecked;
