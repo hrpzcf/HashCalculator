@@ -1308,9 +1308,9 @@ public class HomeViewModel : BaseViewModel
         }
         if (localChecklist.ReasonForFailure == null)
         {
-            foreach (HashViewModel hm in HashModelStore.HashViewModels)
+            foreach (HashViewModel model in HashModelStore.HashViewModels)
             {
-                hm.SetHashCheckResultForModel(localChecklist);
+                model.ApplyHashCmpResult(localChecklist);
             }
             this.GenerateFileHashCheckReport();
         }
