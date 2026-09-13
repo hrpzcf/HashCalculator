@@ -2,53 +2,55 @@
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 
-namespace HashCalculator
+namespace HashCalculator;
+
+internal class StbrummeCrc32 : HashAlgorithm, IHashAlgoInfo
 {
-    internal class StbrummeCrc32 : HashAlgorithm, IHashAlgoInfo
+    private uint previousCrc32 = 0u;
+
+    [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+    private static extern uint crc32_update(byte[] input, ulong in_len, uint prevCrc32);
+
+    [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+    private static extern uint crc32_update(ref byte input, ulong in_len, uint prevCrc32);
+
+    public int DigestLength => 4;
+
+    public string AlgoName => "CRC32";
+
+    public AlgoType AlgoType => AlgoType.CRC32;
+
+    public override void Initialize()
     {
-        private uint previousCrc32 = 0u;
+        this.previousCrc32 = 0u;
+    }
 
-        [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern uint crc32_update(byte[] input, ulong in_len, uint prevCrc32);
+    // 没有需要一次性释放的非托管资源，每次 Initialize 会把计数归零
+    public void Release() { }
 
-        [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern uint crc32_update(ref byte input, ulong in_len, uint prevCrc32);
+    public IHashAlgoInfo NewInstance()
+    {
+        return new StbrummeCrc32();
+    }
 
-        public int DigestLength => 4;
-
-        public string AlgoName => "CRC32";
-
-        public AlgoType AlgoType => AlgoType.CRC32;
-
-        public override void Initialize()
+    protected override void HashCore(byte[] array, int ibStart, int cbSize)
+    {
+        if (ibStart == 0 && cbSize == array.Length)
         {
-            this.previousCrc32 = 0u;
+            this.previousCrc32 = crc32_update(array, (ulong)cbSize, this.previousCrc32);
         }
-
-        public IHashAlgoInfo NewInstance()
+        else
         {
-            return new StbrummeCrc32();
+            ReadOnlySpan<byte> span = new ReadOnlySpan<byte>(array, ibStart, cbSize);
+            ref byte input = ref MemoryMarshal.GetReference(span);
+            this.previousCrc32 = crc32_update(ref input, (ulong)cbSize, this.previousCrc32);
         }
+    }
 
-        protected override void HashCore(byte[] array, int ibStart, int cbSize)
-        {
-            if (ibStart == 0 && cbSize == array.Length)
-            {
-                this.previousCrc32 = crc32_update(array, (ulong)cbSize, this.previousCrc32);
-            }
-            else
-            {
-                ReadOnlySpan<byte> span = new ReadOnlySpan<byte>(array, ibStart, cbSize);
-                ref byte input = ref MemoryMarshal.GetReference(span);
-                this.previousCrc32 = crc32_update(ref input, (ulong)cbSize, this.previousCrc32);
-            }
-        }
-
-        protected override byte[] HashFinal()
-        {
-            byte[] resultBuffer = BitConverter.GetBytes(this.previousCrc32);
-            Array.Reverse(resultBuffer);
-            return resultBuffer;
-        }
+    protected override byte[] HashFinal()
+    {
+        byte[] resultBuffer = BitConverter.GetBytes(this.previousCrc32);
+        Array.Reverse(resultBuffer);
+        return resultBuffer;
     }
 }

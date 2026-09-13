@@ -390,6 +390,22 @@
                             CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
                             Header="打开位置" />
                         <Separator />
+                        <MenuItem Header="添加临时算法" ItemsSource="{Binding AddTemporaryAlgorithmCmds}">
+                            <MenuItem.ItemContainerStyle>
+                                <Style TargetType="MenuItem">
+                                    <Setter Property="Header" Value="{Binding Display}" />
+                                    <Setter Property="Command" Value="{Binding ItemValue}" />
+                                    <Setter Property="CommandParameter">
+                                        <Setter.Value>
+                                            <MultiBinding Converter="{StaticResource CloneParameterArrayCvt}">
+                                                <Binding Path="Param" />
+                                                <Binding Path="PlacementTarget.SelectedItems" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}" />
+                                            </MultiBinding>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </MenuItem.ItemContainerStyle>
+                        </MenuItem>
                         <MenuItem Header="任务控制" ItemsSource="{Binding CtrlHashViewModelTaskCmds}">
                             <MenuItem.ItemContainerStyle>
                                 <Style TargetType="MenuItem">

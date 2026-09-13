@@ -88,14 +88,14 @@ namespace HashCalculator
             }
         }
 
-        public AlgoType[] GetExistingAlgoTypes()
+        public HashSet<AlgoType> GetExistingAlgoTypes()
         {
-            return this.algoHashDict.Keys.Where(i => i != AlgoType.UNKNOWN).ToArray();
+            return this.algoHashDict.Keys.Where(i => i != AlgoType.UNKNOWN).ToHashSet();
         }
 
-        public int[] GetExistingDigestLengths()
+        public HashSet<int> GetExistingDigestLengths()
         {
-            return this.algoHashDict.Values.SelectMany(i => i).Select(j => j.Length).Distinct().ToArray();
+            return this.algoHashDict.Values.SelectMany(i => i).Select(j => j.Length).ToHashSet();
         }
     }
 

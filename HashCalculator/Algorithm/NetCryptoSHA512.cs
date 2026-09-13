@@ -1,22 +1,19 @@
 ﻿using System.Security.Cryptography;
 
-namespace HashCalculator
+namespace HashCalculator;
+
+internal class NetCryptoSHA512 : NetCryptoAbstract
 {
-    internal class NetCryptoSHA512 : NetCryptoAbstract
+    public override int DigestLength => 64;
+
+    public override string AlgoName => "SHA-512";
+
+    public override AlgoType AlgoType => AlgoType.SHA_512;
+
+    public override IHashAlgoInfo NewInstance()
     {
-        public override int DigestLength => 64;
-
-        public override string AlgoName => "SHA-512";
-
-        public override AlgoType AlgoType => AlgoType.SHA_512;
-
-        public override IHashAlgoInfo NewInstance()
-        {
-            return new NetCryptoSHA512();
-        }
-
-        public NetCryptoSHA512() : base(SHA512.Create())
-        {
-        }
+        return new NetCryptoSHA512();
     }
+
+    public NetCryptoSHA512() : base(SHA512.Create()) { }
 }

@@ -2,126 +2,127 @@
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 
-namespace HashCalculator
+namespace HashCalculator;
+
+internal abstract class OfficialBlake2 : HashAlgorithm, IHashAlgoInfo
 {
-    internal abstract class OfficialBlake2 : HashAlgorithm, IHashAlgoInfo
+    public readonly int bitLength;
+    private AlgoType algoType = AlgoType.UNKNOWN;
+    private int _errorCode = 0;
+    private IntPtr _statePtr = IntPtr.Zero;
+
+    public abstract string NamePrefix { get; }
+
+    public abstract int MaxOutputLength { get; }
+
+    public int DigestLength { get; }
+
+    public string AlgoName => $"{this.NamePrefix}-{this.bitLength}";
+
+    public AlgoType AlgoType
     {
-        public readonly int bitLength;
-        private AlgoType algoType = AlgoType.UNKNOWN;
-        private int _errorCode = 0;
-        private IntPtr _statePtr = IntPtr.Zero;
-
-        public abstract string NamePrefix { get; }
-
-        public abstract int MaxOutputLength { get; }
-
-        public int DigestLength { get; }
-
-        public string AlgoName => $"{this.NamePrefix}-{this.bitLength}";
-
-        public AlgoType AlgoType
+        get
         {
-            get
+            if (this.algoType == AlgoType.UNKNOWN &&
+                Enum.TryParse($"{this.NamePrefix}_{this.bitLength}", true, out AlgoType algo))
             {
-                if (this.algoType == AlgoType.UNKNOWN &&
-                    Enum.TryParse($"{this.NamePrefix}_{this.bitLength}", true, out AlgoType algo))
-                {
-                    this.algoType = algo;
-                }
-                return this.algoType;
+                this.algoType = algo;
             }
+            return this.algoType;
         }
+    }
 
-        public abstract void Blake2DeleteState(IntPtr statePtr);
+    public abstract void Blake2DeleteState(IntPtr statePtr);
 
-        public abstract IntPtr Blake2New();
+    public abstract IntPtr Blake2New();
 
-        public abstract int Blake2Init(IntPtr statePtr, ulong outlen);
+    public abstract int Blake2Init(IntPtr statePtr, ulong outlen);
 
-        public abstract int Blake2Update(IntPtr statePtr, byte[] input, ulong inlen);
+    public abstract int Blake2Update(IntPtr statePtr, byte[] input, ulong inlen);
 
-        public abstract int Blake2Update(IntPtr statePtr, ref byte input, ulong inlen);
+    public abstract int Blake2Update(IntPtr statePtr, ref byte input, ulong inlen);
 
-        public abstract int Blake2Final(IntPtr statePtr, byte[] output, ulong outlen);
+    public abstract int Blake2Final(IntPtr statePtr, byte[] output, ulong outlen);
 
-        public abstract IHashAlgoInfo NewInstance();
+    public abstract IHashAlgoInfo NewInstance();
 
-        private void DeleteState()
+    private void DeleteState()
+    {
+        if (this._statePtr != IntPtr.Zero)
         {
-            if (this._statePtr != IntPtr.Zero)
-            {
-                this.Blake2DeleteState(this._statePtr);
-                this._statePtr = IntPtr.Zero;
-            }
+            this.Blake2DeleteState(this._statePtr);
+            this._statePtr = IntPtr.Zero;
         }
+    }
 
-        protected override void Dispose(bool disposing)
-        {
-            this.DeleteState();
-            base.Dispose(disposing);
-        }
+    protected override void Dispose(bool disposing)
+    {
+        this.DeleteState();
+        base.Dispose(disposing);
+    }
 
-        public OfficialBlake2(int bitLength)
+    public OfficialBlake2(int bitLength)
+    {
+        int lengthInByte = bitLength / 8;
+        if (bitLength < 8 || bitLength % 8 != 0 || lengthInByte > this.MaxOutputLength)
         {
-            int lengthInByte = bitLength / 8;
-            if (bitLength < 8 || bitLength % 8 != 0 || lengthInByte > this.MaxOutputLength)
-            {
-                throw new ArgumentException($"Invalid bit length");
-            }
-            this.bitLength = bitLength;
-            this.DigestLength = lengthInByte;
+            throw new ArgumentException($"Invalid bit length");
         }
+        this.bitLength = bitLength;
+        this.DigestLength = lengthInByte;
+    }
 
-        public override void Initialize()
+    public override void Initialize()
+    {
+        this._errorCode = 0;
+        this.DeleteState();
+        this._statePtr = this.Blake2New();
+        if (this._statePtr == IntPtr.Zero)
         {
-            this._errorCode = 0;
-            this.DeleteState();
-            this._statePtr = this.Blake2New();
-            if (this._statePtr == IntPtr.Zero)
-            {
-                throw new Exception("Initialization failed");
-            }
-            this._errorCode = this.Blake2Init(this._statePtr, (ulong)this.DigestLength);
+            throw new Exception("Initialization failed");
         }
+        this._errorCode = this.Blake2Init(this._statePtr, (ulong)this.DigestLength);
+    }
 
-        protected override void HashCore(byte[] array, int ibStart, int cbSize)
-        {
-            if (this._statePtr == IntPtr.Zero)
-            {
-                throw new InvalidOperationException("Not initialized yet");
-            }
-            else if (this._errorCode != 0)
-            {
-                throw new InvalidOperationException("An error has occurred");
-            }
-            if (ibStart != 0 || cbSize != array.Length)
-            {
-                ReadOnlySpan<byte> span = new ReadOnlySpan<byte>(array, ibStart, cbSize);
-                ref byte input = ref MemoryMarshal.GetReference(span);
-                this._errorCode = this.Blake2Update(this._statePtr, ref input, (ulong)cbSize);
-            }
-            else
-            {
-                this._errorCode = this.Blake2Update(this._statePtr, array, (ulong)cbSize);
-            }
-        }
+    public void Release() => this.DeleteState();
 
-        protected override byte[] HashFinal()
+    protected override void HashCore(byte[] array, int ibStart, int cbSize)
+    {
+        if (this._statePtr == IntPtr.Zero)
         {
-            if (this._statePtr == IntPtr.Zero)
-            {
-                throw new InvalidOperationException("Not initialized yet");
-            }
-            else if (this._errorCode != 0)
-            {
-                throw new InvalidOperationException("An error has occurred");
-            }
-            byte[] resultBuffer = new byte[this.DigestLength];
-            if (this.Blake2Final(this._statePtr, resultBuffer, (ulong)this.DigestLength) != 0)
-            {
-                throw new InvalidOperationException("An error has occurred");
-            }
-            return resultBuffer;
+            throw new InvalidOperationException("Not initialized yet");
         }
+        else if (this._errorCode != 0)
+        {
+            throw new InvalidOperationException("An error has occurred");
+        }
+        if (ibStart != 0 || cbSize != array.Length)
+        {
+            ReadOnlySpan<byte> span = new ReadOnlySpan<byte>(array, ibStart, cbSize);
+            ref byte input = ref MemoryMarshal.GetReference(span);
+            this._errorCode = this.Blake2Update(this._statePtr, ref input, (ulong)cbSize);
+        }
+        else
+        {
+            this._errorCode = this.Blake2Update(this._statePtr, array, (ulong)cbSize);
+        }
+    }
+
+    protected override byte[] HashFinal()
+    {
+        if (this._statePtr == IntPtr.Zero)
+        {
+            throw new InvalidOperationException("Not initialized yet");
+        }
+        else if (this._errorCode != 0)
+        {
+            throw new InvalidOperationException("An error has occurred");
+        }
+        byte[] resultBuffer = new byte[this.DigestLength];
+        if (this.Blake2Final(this._statePtr, resultBuffer, (ulong)this.DigestLength) != 0)
+        {
+            throw new InvalidOperationException("An error has occurred");
+        }
+        return resultBuffer;
     }
 }

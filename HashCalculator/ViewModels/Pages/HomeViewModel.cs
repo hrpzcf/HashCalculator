@@ -66,6 +66,7 @@ public class HomeViewModel : BaseViewModel
     private GenericItemModel[] switchDisplayedAlgoCmds;
     private GenericItemModel[] switchAlgoExportStateCmds;
     private GenericItemModel[] ctrlHashViewModelTaskCmds;
+    private GenericItemModel[] addTemporaryAlgorithmCmds;
 
     public HomeViewModel(FilterOperationModel model)
     {
@@ -210,7 +211,7 @@ public class HomeViewModel : BaseViewModel
         HashViewModel hashViewModel = new(++this.serial, arg);
         if (Settings.Current.AutomaticallyStartAfterModelAdded)
         {
-            this.JobScheduler.Start(hashViewModel, force: false);
+            this.JobScheduler.Start(hashViewModel, ComputeIntent.FillMissing);
         }
         this.displayedModels.Add(hashViewModel);
         HashModelStore.HashViewModels.Add(hashViewModel);
@@ -232,7 +233,7 @@ public class HomeViewModel : BaseViewModel
         }
         if (Settings.Current.AutomaticallyStartAfterModelAdded)
         {
-            this.JobScheduler.Start(constructedModels, force: false);
+            this.JobScheduler.Start(constructedModels, ComputeIntent.FillMissing);
         }
         this.displayedModels.AddRange(constructedModels);
         HashModelStore.HashViewModels.AddItems(constructedModels);
@@ -1183,7 +1184,8 @@ public class HomeViewModel : BaseViewModel
     {
         if (!newLines)
         {
-            this.JobScheduler.Start(HashModelStore.HashViewModels, force);
+            this.JobScheduler.Start(HashModelStore.HashViewModels,
+                force ? ComputeIntent.Recompute : ComputeIntent.FillMissing);
         }
         else if (this.displayedModels.Count != 0)
         {
@@ -1466,7 +1468,7 @@ public class HomeViewModel : BaseViewModel
         this.JobScheduler.ResumeAll();
         this.JobScheduler.Start(
             HashModelStore.HashViewModels.Where(i => i.State == HashState.NoState),
-            force: false);
+            ComputeIntent.FillMissing);
     }
 
     public ICommand ContinueDisplayedModelsCmd
@@ -1506,7 +1508,7 @@ public class HomeViewModel : BaseViewModel
     {
         if (param is IList selectedModels)
         {
-            this.JobScheduler.Start(selectedModels.Cast<HashViewModel>(), force: true);
+            this.JobScheduler.Start(selectedModels.Cast<HashViewModel>(), ComputeIntent.Recompute);
         }
     }
 
@@ -1514,7 +1516,7 @@ public class HomeViewModel : BaseViewModel
     {
         if (param is IList selectedModels)
         {
-            this.JobScheduler.Start(selectedModels.Cast<HashViewModel>(), force: false);
+            this.JobScheduler.Start(selectedModels.Cast<HashViewModel>(), ComputeIntent.FillMissing);
         }
     }
 
@@ -1648,6 +1650,41 @@ public class HomeViewModel : BaseViewModel
                     obj => new GenericItemModel(obj.AlgoName, obj.AlgoType, command)).ToArray();
             }
             return this.switchDisplayedAlgoCmds;
+        }
+    }
+
+    private void AddTemporaryAlgorithmAction(object param)
+    {
+        if (param is not object[] actionParams || actionParams.Length != 2 ||
+            actionParams[0] is not AlgoType algo || actionParams[1] is not IList selectedList)
+        {
+            return;
+        }
+        HashViewModel[] hashViewModels = selectedList.Cast<HashViewModel>().Where(
+            model => model.AddAddTemporaryAlgorithm(algo)).ToArray();
+        if (hashViewModels.Length > 0)
+        {
+            JobScheduler.Current?.Start(hashViewModels, ComputeIntent.AppendTemporary);
+        }
+        int modelsWithoutTemporaryAlgoCount = selectedList.Count - hashViewModels.Length;
+        if (modelsWithoutTemporaryAlgoCount > 0)
+        {
+            NotificationSender.ShowMessageBox(
+                "提示", $"未能给〈{modelsWithoutTemporaryAlgoCount}〉个未结束的任务添加临时算法！");
+        }
+    }
+
+    public GenericItemModel[] AddTemporaryAlgorithmCmds
+    {
+        get
+        {
+            if (this.addTemporaryAlgorithmCmds == null)
+            {
+                RelayCommand command = new RelayCommand(this.AddTemporaryAlgorithmAction);
+                this.addTemporaryAlgorithmCmds = AlgorithmsModel.ProvidedAlgos.Select(
+                    obj => new GenericItemModel(obj.AlgoName, obj.AlgoType, command)).ToArray();
+            }
+            return this.addTemporaryAlgorithmCmds;
         }
     }
 

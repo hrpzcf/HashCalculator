@@ -2,117 +2,118 @@
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 
-namespace HashCalculator
+namespace HashCalculator;
+
+internal class Gost34_11_2012 : HashAlgorithm, IHashAlgoInfo
 {
-    internal class Gost34_11_2012 : HashAlgorithm, IHashAlgoInfo
+    private readonly int bitLength;
+    private AlgoType algoType = AlgoType.UNKNOWN;
+    private IntPtr _state = IntPtr.Zero;
+
+    [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+    private static extern IntPtr streebog_new();
+
+    [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+    private static extern void streebog_delete(IntPtr state);
+
+    [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+    private static extern void streebog_init(IntPtr state, uint bitLength);
+
+    [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+    private static extern void streebog_update(IntPtr state, byte[] input, ulong size);
+
+    [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+    private static extern void streebog_update(IntPtr state, ref byte input, ulong size);
+
+    [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
+    private static extern void streebog_final(IntPtr state, byte[] output);
+
+    public int DigestLength { get; }
+
+    public string AlgoName => $"Streebog-{this.bitLength}";
+
+    public AlgoType AlgoType
     {
-        private readonly int bitLength;
-        private AlgoType algoType = AlgoType.UNKNOWN;
-        private IntPtr _state = IntPtr.Zero;
-
-        [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr streebog_new();
-
-        [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void streebog_delete(IntPtr state);
-
-        [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void streebog_init(IntPtr state, uint bitLength);
-
-        [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void streebog_update(IntPtr state, byte[] input, ulong size);
-
-        [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void streebog_update(IntPtr state, ref byte input, ulong size);
-
-        [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void streebog_final(IntPtr state, byte[] output);
-
-        public int DigestLength { get; }
-
-        public string AlgoName => $"Streebog-{this.bitLength}";
-
-        public AlgoType AlgoType
+        get
         {
-            get
+            if (this.algoType == AlgoType.UNKNOWN &&
+                Enum.TryParse($"STREEBOG_{this.bitLength}", true, out AlgoType algo))
             {
-                if (this.algoType == AlgoType.UNKNOWN &&
-                    Enum.TryParse($"STREEBOG_{this.bitLength}", true, out AlgoType algo))
-                {
-                    this.algoType = algo;
-                }
-                return this.algoType;
+                this.algoType = algo;
             }
+            return this.algoType;
         }
+    }
 
-        public Gost34_11_2012(int bitLength)
+    public Gost34_11_2012(int bitLength)
+    {
+        if (bitLength != 256 && bitLength != 512)
         {
-            if (bitLength != 256 && bitLength != 512)
-            {
-                throw new ArgumentException($"Invalid bit length");
-            }
-            this.bitLength = bitLength;
-            this.DigestLength = bitLength / 8;
+            throw new ArgumentException($"Invalid bit length");
         }
+        this.bitLength = bitLength;
+        this.DigestLength = bitLength / 8;
+    }
 
-        private void DeleteState()
+    private void DeleteState()
+    {
+        if (this._state != IntPtr.Zero)
         {
-            if (this._state != IntPtr.Zero)
-            {
-                streebog_delete(this._state);
-                this._state = IntPtr.Zero;
-            }
+            streebog_delete(this._state);
+            this._state = IntPtr.Zero;
         }
+    }
 
-        protected override void Dispose(bool disposing)
-        {
-            this.DeleteState();
-            base.Dispose(disposing);
-        }
+    protected override void Dispose(bool disposing)
+    {
+        this.DeleteState();
+        base.Dispose(disposing);
+    }
 
-        public override void Initialize()
+    public override void Initialize()
+    {
+        this.DeleteState();
+        this._state = streebog_new();
+        if (this._state == IntPtr.Zero)
         {
-            this.DeleteState();
-            this._state = streebog_new();
-            if (this._state == IntPtr.Zero)
-            {
-                throw new Exception("Initialization failed");
-            }
-            streebog_init(this._state, (uint)this.bitLength);
+            throw new Exception("Initialization failed");
         }
+        streebog_init(this._state, (uint)this.bitLength);
+    }
 
-        public IHashAlgoInfo NewInstance()
-        {
-            return new Gost34_11_2012(this.bitLength);
-        }
+    public void Release() => this.DeleteState();
 
-        protected override void HashCore(byte[] array, int ibStart, int cbSize)
-        {
-            if (this._state == IntPtr.Zero)
-            {
-                throw new InvalidOperationException("Not initialized yet");
-            }
-            if (ibStart == 0 && cbSize == array.Length)
-            {
-                streebog_update(this._state, array, (ulong)cbSize);
-            }
-            else
-            {
-                ReadOnlySpan<byte> span = new ReadOnlySpan<byte>(array, ibStart, cbSize);
-                ref byte input = ref MemoryMarshal.GetReference(span);
-                streebog_update(this._state, ref input, (ulong)cbSize);
-            }
-        }
+    public IHashAlgoInfo NewInstance()
+    {
+        return new Gost34_11_2012(this.bitLength);
+    }
 
-        protected override byte[] HashFinal()
+    protected override void HashCore(byte[] array, int ibStart, int cbSize)
+    {
+        if (this._state == IntPtr.Zero)
         {
-            if (this._state == IntPtr.Zero)
-            {
-                throw new InvalidOperationException("Not initialized yet");
-            }
-            byte[] resultBuffer = new byte[this.DigestLength];
-            streebog_final(this._state, resultBuffer);
-            return resultBuffer;
+            throw new InvalidOperationException("Not initialized yet");
         }
+        if (ibStart == 0 && cbSize == array.Length)
+        {
+            streebog_update(this._state, array, (ulong)cbSize);
+        }
+        else
+        {
+            ReadOnlySpan<byte> span = new ReadOnlySpan<byte>(array, ibStart, cbSize);
+            ref byte input = ref MemoryMarshal.GetReference(span);
+            streebog_update(this._state, ref input, (ulong)cbSize);
+        }
+    }
+
+    protected override byte[] HashFinal()
+    {
+        if (this._state == IntPtr.Zero)
+        {
+            throw new InvalidOperationException("Not initialized yet");
+        }
+        byte[] resultBuffer = new byte[this.DigestLength];
+        streebog_final(this._state, resultBuffer);
+        return resultBuffer;
     }
 }

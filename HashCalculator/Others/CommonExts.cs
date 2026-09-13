@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -17,6 +18,9 @@ namespace HashCalculator;
 
 internal static class CommonExts
 {
+    private static readonly FrozenDictionary<AlgoType, AlgoInOutModel> toAlgoInOut =
+        AlgorithmsModel.ProvidedAlgos.ToFrozenDictionary(a => a.AlgoType);
+
     /// <summary>
     /// 为 IList 类型对象提供低成本检查集合是否为空的扩展方法
     /// </summary>
@@ -79,22 +83,6 @@ internal static class CommonExts
     public static string Join(this string seperator, params string[] values)
     {
         return Join(seperator, values as IEnumerable<string>);
-    }
-
-    /// <summary>
-    /// 为 IEnumerable<T> 类型提供返回 HashSet<T> 的 ToHashSet 扩展方法
-    /// </summary>
-    public static HashSet<T> ToHashSet<T>(this IEnumerable<T> enumerale)
-    {
-        return new HashSet<T>(enumerale);
-    }
-
-    /// <summary>
-    /// 为 IEnumerable<T> 类型提供返回 HashSet<T> 的 ToHashSet 扩展方法
-    /// </summary>
-    public static HashSet<T> ToHashSet<T>(this IEnumerable<T> enumerale, IEqualityComparer<T> comparer)
-    {
-        return new HashSet<T>(enumerale, comparer);
     }
 
     /// <summary>
@@ -482,5 +470,14 @@ internal static class CommonExts
             };
         }
         return theme;
+    }
+
+    public static AlgoInOutModel ToAlgoInOutModel(this AlgoType algoType)
+    {
+        if (toAlgoInOut.TryGetValue(algoType, out AlgoInOutModel algoInOutModel))
+        {
+            return algoInOutModel.NewAlgoInOutModel();
+        }
+        return default(AlgoInOutModel);
     }
 }
