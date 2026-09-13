@@ -440,6 +440,7 @@ public enum ComputeIntent
 
     /// <summary>
     /// 追加临时算法：保留清单与已有结果，只补算临时追加的算法。
+    /// 仅适用于已结束的任务；取消/失败的任务其旧行结果留空。
     /// </summary>
     AppendTemporary,
 

@@ -503,8 +503,8 @@ public class HashViewModel : BaseViewModel
 
     /// <summary>
     /// 本任务能否按指定意图启动计算（准入属于任务自身的业务规则，故由本类提供）。<br/>
-    /// - Recompute：仅已结束（重算）；<br/>
-    /// - AppendTemporary：仅已成功（追加临时算法）；<br/>
+    /// - Recompute：已结束（重算）；<br/>
+    /// - AppendTemporary：已结束（追加临时算法：旧行结果保留，取消/失败的任务旧行留空）；<br/>
     /// - FillMissing：未开始（首次启动），或已结束但未成功 / 仍有缺结果的算法行（计算缺值项）。<br/>
     /// 判据一律读 desiredState（权威最新值）而非 State：State 由异步投影写入，
     /// 调度线程及刚结束瞬间可能仍是旧值，用它会误拒本应放行的启动。
@@ -513,9 +513,9 @@ public class HashViewModel : BaseViewModel
     {
         return intent switch
         {
-            ComputeIntent.Recompute => this.desiredState == HashState.Finished,
-            ComputeIntent.AppendTemporary => this.desiredState == HashState.Finished &&
-                this.Result == HashResult.Succeeded,
+            // 重算与追加临时算法都要求已结束，区别只在 PrepareAlgoTypeFilter 定下的计算范围
+            ComputeIntent.Recompute or ComputeIntent.AppendTemporary =>
+                this.desiredState == HashState.Finished,
             // ComputeIntent.FillMissing
             _ => this.desiredState == HashState.NoState || (this.desiredState == HashState.Finished &&
                 (this.Result != HashResult.Succeeded || this.HasMissingResults)
@@ -562,9 +562,10 @@ public class HashViewModel : BaseViewModel
     public void PrepareForRestartModel(ComputeIntent intent)
     {
         // 判断依据须在重置 State/Result 之前求值
-        bool resetOutputType = intent == ComputeIntent.Recompute ||
-            (this.State == HashState.Finished &&
-                this.Result != HashResult.Succeeded);
+        bool resetOutputType = intent ==
+            ComputeIntent.Recompute ||
+            (this.desiredState == HashState.Finished &&
+            this.Result != HashResult.Succeeded);
         this.IsExecutionTarget = false;
         this.HashGroupID = null;
         this.DurationofTask = double.NaN;
@@ -813,7 +814,8 @@ public class HashViewModel : BaseViewModel
 
     public bool AddAddTemporaryAlgorithm(AlgoType algoType)
     {
-        // 只允许对已成功算完的任务追加临时算法（与启动准入同一判据）
+        // 只允许对已算完的任务追加临时算法
+        // 与启动准入同一判据，取消/失败的任务旧行会留空
         if (!this.CanStart(ComputeIntent.AppendTemporary))
         {
             return false;
