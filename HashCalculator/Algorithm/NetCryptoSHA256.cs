@@ -1,22 +1,19 @@
 ﻿using System.Security.Cryptography;
 
-namespace HashCalculator
+namespace HashCalculator;
+
+internal class NetCryptoSHA256 : NetCryptoAbstract
 {
-    internal class NetCryptoSHA256 : NetCryptoAbstract
+    public override int DigestLength => 32;
+
+    public override string AlgoName => "SHA-256";
+
+    public override AlgoType AlgoType => AlgoType.SHA_256;
+
+    public override IHashAlgoInfo NewInstance()
     {
-        public override int DigestLength => 32;
-
-        public override string AlgoName => "SHA-256";
-
-        public override AlgoType AlgoType => AlgoType.SHA_256;
-
-        public override IHashAlgoInfo NewInstance()
-        {
-            return new NetCryptoSHA256();
-        }
-
-        public NetCryptoSHA256() : base(SHA256.Create())
-        {
-        }
+        return new NetCryptoSHA256();
     }
+
+    public NetCryptoSHA256() : base(SHA256.Create()) { }
 }

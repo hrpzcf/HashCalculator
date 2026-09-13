@@ -192,7 +192,7 @@ public class AlgorithmsModel : BaseViewModel
         return default(ObservableCollection<AlgoInOutModel>);
     }
 
-    public static List<AlgoInOutModel> NewInOutModelsByNames(AlgoType[] algoTypes)
+    public static IEnumerable<AlgoInOutModel> NewInOutModelsByNames(HashSet<AlgoType> algoTypes)
     {
         if (algoTypes != null)
         {
@@ -206,10 +206,10 @@ public class AlgorithmsModel : BaseViewModel
             }
             return algoInstances;
         }
-        return default(List<AlgoInOutModel>);
+        return default(IEnumerable<AlgoInOutModel>);
     }
 
-    public static IEnumerable<AlgoInOutModel> NewInOutModelsByDigestLengths(int[] lengths)
+    public static IEnumerable<AlgoInOutModel> NewInOutModelsByDigestLengths(HashSet<int> lengths)
     {
         if (lengths != null)
         {
@@ -251,8 +251,8 @@ public class AlgorithmsModel : BaseViewModel
             if (checklist.TryGetFileHashChecker(fileName, out HashChecker checker))
             {
                 IEnumerable<AlgoInOutModel> inOutModels;
-                AlgoType[] algoTypes = checker.GetExistingAlgoTypes();
-                if (algoTypes.Length != 0)
+                HashSet<AlgoType> algoTypes = checker.GetExistingAlgoTypes();
+                if (algoTypes.Count != 0)
                 {
                     inOutModels = NewInOutModelsByNames(algoTypes);
                     if (inOutModels != null)
