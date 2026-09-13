@@ -58,7 +58,7 @@ public class HashViewModel : BaseViewModel
     /// 用户本次追加、尚未被启动消费的临时算法。临时算法只服务一轮：
     /// 启动时由 PrepareForRestartModel 清空，故不会影响下一轮计算。
     /// </summary>
-    private readonly HashSet<AlgoType> _pendingTemporaryAlgos = new HashSet<AlgoType>();
+    private readonly HashSet<AlgoType> _pendingTempAlgos = new HashSet<AlgoType>();
     private CancellationTokenSource cancellation;
 
     /// <summary>
@@ -581,12 +581,12 @@ public class HashViewModel : BaseViewModel
         {
             this.SelectedOutputType = OutputType.Unknown;
         }
-        // 先把意图翻译成本轮运行计划，再应用到 AlgoInOutModels（本类是清单的唯一拥有者）
-        this.ApplyRunPlan(this.BuildRunPlan(intent));
+        // 依意图定下本轮算哪些算法，并应用到清单与算法筛选器
+        this.PrepareAlgoTypeFilter(intent);
         if (intent == ComputeIntent.AppendTemporary)
         {
-            // 临时算法只服务一轮：本轮启动后即清除登记
-            this._pendingTemporaryAlgos.Clear();
+            // 临时算法只服务一轮，本轮启动后就可以清除登记了，避免影响下一轮
+            this._pendingTempAlgos.Clear();
         }
         try
         {
@@ -614,52 +614,35 @@ public class HashViewModel : BaseViewModel
     }
 
     /// <summary>
-    /// 把计算意图翻译成本轮运行计划；纯函数，不修改任何集合。<br/>
-    /// - Recompute：丢弃现有清单，按当前设置的勾选算法重建（重建后全部计算）；<br/>
-    /// - AppendTemporary：保留清单，只算本次追加的临时算法；<br/>
-    /// - FillMissing：保留清单，只算尚无结果的算法行。
+    /// 依计算意图定下本轮算哪些算法，并把结果应用到算法清单与算法筛选器。<br/>
+    /// 筛选器为 null 表示丢弃现有清单、按当前勾选的算法重建并全部计算；非 null（可为空集）
+    /// 表示保留清单，只算集合内的算法行。
+    /// - Recompute：null；<br/>
+    /// - AppendTemporary：本次追加的临时算法；<br/>
+    /// - FillMissing：清单中尚无结果的算法行。
     /// </summary>
-    private AlgoRunPlan BuildRunPlan(ComputeIntent intent)
+    private void PrepareAlgoTypeFilter(ComputeIntent intent)
     {
-        return intent switch
+        HashSet<AlgoType> algoTypes = intent switch
         {
-            ComputeIntent.Recompute => new AlgoRunPlan
-            {
-                RebuildList = true,
-                TypesToHash = null,
-            },
-            ComputeIntent.AppendTemporary => new AlgoRunPlan
-            {
-                RebuildList = false,
-                TypesToHash = new HashSet<AlgoType>(this._pendingTemporaryAlgos),
-            },
+            ComputeIntent.Recompute => null,
+            ComputeIntent.AppendTemporary => new(this._pendingTempAlgos),
             // ComputeIntent.FillMissing
-            _ => new AlgoRunPlan
-            {
-                RebuildList = false,
-                TypesToHash = this.AlgoInOutModels.Where(i => i.HashResult == null)
-                    .Select(a => a.AlgoType).ToHashSet(),
-            },
+            _ => this.AlgoInOutModels.Where(i => i.HashResult == null)
+                .Select(a => a.AlgoType).ToHashSet(),
         };
-    }
-
-    /// <summary>
-    /// 把运行计划应用到算法清单：按需重建清单或补齐缺失的算法行，并维持当前显示算法有效。
-    /// </summary>
-    private void ApplyRunPlan(AlgoRunPlan plan)
-    {
-        if (plan.RebuildList)
+        if (algoTypes == null)
         {
             // 整体替换引用：比逐条增删更干脆，且天然触发绑定刷新
             this.AlgoInOutModels = new ObservableCollection<AlgoInOutModel>(
                 AlgorithmsModel.GetSelectedAlgos());
         }
-        else if (plan.TypesToHash != null)
+        else
         {
-            this.EnsureRowsForAlgos(plan.TypesToHash);
+            this.EnsureRowsForAlgos(algoTypes);
         }
         this.EnsureCurrentInOutModelValid();
-        this._algoTypeFilter = plan.TypesToHash;
+        this._algoTypeFilter = algoTypes;
     }
 
     /// <summary>
@@ -845,7 +828,7 @@ public class HashViewModel : BaseViewModel
         {
             return false;
         }
-        if (!this._pendingTemporaryAlgos.Add(algoType))
+        if (!this._pendingTempAlgos.Add(algoType))
         {
             return false;
         }
