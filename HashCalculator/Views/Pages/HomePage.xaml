@@ -406,7 +406,7 @@
                                 </Style>
                             </MenuItem.ItemContainerStyle>
                         </MenuItem>
-                        <MenuItem Header="任务控制" ItemsSource="{Binding CtrlHashViewModelTaskCmds}">
+                        <MenuItem Header="切换任务状态" ItemsSource="{Binding CtrlHashViewModelTaskCmds}">
                             <MenuItem.ItemContainerStyle>
                                 <Style TargetType="MenuItem">
                                     <Setter Property="Header" Value="{Binding Display}" />
@@ -415,7 +415,7 @@
                                 </Style>
                             </MenuItem.ItemContainerStyle>
                         </MenuItem>
-                        <MenuItem Header="切换所选行当前算法" ItemsSource="{Binding SwitchDisplayedAlgoCmds}">
+                        <MenuItem Header="切换显示算法" ItemsSource="{Binding SwitchDisplayedAlgoCmds}">
                             <MenuItem.ItemContainerStyle>
                                 <Style TargetType="MenuItem">
                                     <Setter Property="Header" Value="{Binding Display}" />
@@ -431,7 +431,7 @@
                                 </Style>
                             </MenuItem.ItemContainerStyle>
                         </MenuItem>
-                        <MenuItem Header="切换所选行导出状态" ItemsSource="{Binding SwitchAlgoExportStateCmds}">
+                        <MenuItem Header="切换导出状态" ItemsSource="{Binding SwitchAlgoExportStateCmds}">
                             <MenuItem.ItemContainerStyle>
                                 <Style TargetType="MenuItem">
                                     <Setter Property="Header" Value="{Binding Display}" />
@@ -448,7 +448,7 @@
                         <MenuItem
                             Command="{Binding CopyFilesFullPathCmd}"
                             CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}"
-                            Header="复制文件的完整路径" />
+                            Header="复制文件路径" />
                         <MenuItem
                             Header="按模板复制所选行当前结果"
                             IsEnabled="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems, Converter={StaticResource CopyModelsHashMenuEnabledCvt}}"
