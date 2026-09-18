@@ -56,13 +56,13 @@ public class HomeViewModel : BaseViewModel
     private RelayCommand removeSelectedModelsCmd;
     private RelayCommand stopEnumeratingPackageCmd;
     private RelayCommand changeAlgosExportStateCmd;
-    private RelayCommand copyModelsCurHashWithNoFormatCmd;
-    private RelayCommand copyModelsAllHashWithNoFormatCmd;
+    private RelayCommand copyFormattedModelsHashCmd;
+    private RelayCommand copyFormattedModelsHashesCmd;
+    private RelayCommand copyUnformattedModelsHashCmd;
+    private RelayCommand copyUnformattedModelsHashesCmd;
     private RelayCommand displayMainWindowButtonsCmd;
     private RelayCommand openFilterOperationWindowCmd;
 
-    private GenericItemModel[] copyModelsHashMenuCmds;
-    private GenericItemModel[] copyModelsAllHashesMenuCmds;
     private GenericItemModel[] switchDisplayedAlgoCmds;
     private GenericItemModel[] switchAlgoExportStateCmds;
     private GenericItemModel[] ctrlHashViewModelTaskCmds;
@@ -442,88 +442,6 @@ public class HomeViewModel : BaseViewModel
         }
     }
 
-    private void CopyModelsHashValueAction(object param, OutputType outputType, bool copyAll)
-    {
-        if (param is IList selectedModels && selectedModels.AnyItem())
-        {
-            StringBuilder stringBuilder = new StringBuilder();
-            string format = Settings.Current.GenerateTextInFormat ?
-                Settings.Current.FormatForGenerateText : null;
-            foreach (HashViewModel model in selectedModels)
-            {
-                if (model.GenerateTextInFormat(format, outputType, copyAll, endLine: true, seeExport: false,
-                    Settings.Current.CaseOfCopiedAlgNameFollowsOutputType) is string text)
-                {
-                    stringBuilder.Append(text);
-                }
-            }
-            if (stringBuilder.Length > 0)
-            {
-                stringBuilder.Remove(stringBuilder.Length - 1, 1);
-                CommonUtils.ClipboardSetText(stringBuilder.ToString());
-                NotificationSender.SnackbarSuccess($"已按模板复制所选行的当前结果或全部结果");
-            }
-        }
-    }
-
-    private void CopyModelsHashBase64Action(object param)
-    {
-        this.CopyModelsHashValueAction(param, OutputType.BASE64, false);
-    }
-
-    private void CopyModelsHashBinUpperAction(object param)
-    {
-        this.CopyModelsHashValueAction(param, OutputType.BinaryUpper, false);
-    }
-
-    private void CopyModelsHashBinLowerAction(object param)
-    {
-        this.CopyModelsHashValueAction(param, OutputType.BinaryLower, false);
-    }
-
-    public GenericItemModel[] CopyModelsHashMenuCmds
-    {
-        get
-        {
-            this.copyModelsHashMenuCmds ??= new GenericItemModel[]
-                {
-                    new GenericItemModel("Base64 格式", new RelayCommand(this.CopyModelsHashBase64Action)),
-                    new GenericItemModel("十六进制大写", new RelayCommand(this.CopyModelsHashBinUpperAction)),
-                    new GenericItemModel("十六进制小写", new RelayCommand(this.CopyModelsHashBinLowerAction)),
-                };
-            return this.copyModelsHashMenuCmds;
-        }
-    }
-
-    private void CopyModelsAllBase64HashesAction(object param)
-    {
-        this.CopyModelsHashValueAction(param, OutputType.BASE64, true);
-    }
-
-    private void CopyModelsAllBinUpperHashesAction(object param)
-    {
-        this.CopyModelsHashValueAction(param, OutputType.BinaryUpper, true);
-    }
-
-    private void CopyModelsAllBinLowerHashesAction(object param)
-    {
-        this.CopyModelsHashValueAction(param, OutputType.BinaryLower, true);
-    }
-
-    public GenericItemModel[] CopyModelsAllHashesMenuCmds
-    {
-        get
-        {
-            this.copyModelsAllHashesMenuCmds ??= new GenericItemModel[]
-                {
-                    new GenericItemModel("Base64 格式", new RelayCommand(this.CopyModelsAllBase64HashesAction)),
-                    new GenericItemModel("十六进制大写", new RelayCommand(this.CopyModelsAllBinUpperHashesAction)),
-                    new GenericItemModel("十六进制小写", new RelayCommand(this.CopyModelsAllBinLowerHashesAction)),
-                };
-            return this.copyModelsAllHashesMenuCmds;
-        }
-    }
-
     private void CopyFilesNameOrPathAction(object param, bool copyName)
     {
         if (param is IList selectedModels)
@@ -592,7 +510,51 @@ public class HomeViewModel : BaseViewModel
         }
     }
 
-    private void CopyModelsHashWithNoFormatAction(object param, OutputType outputType, bool copyAll)
+    private void CopyFormattedModelsHashAction(object param, OutputType outputType, bool copyAll)
+    {
+        if (param is IList selectedModels && selectedModels.AnyItem())
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            string format = Settings.Current.GenerateTextInFormat ?
+                Settings.Current.FormatForGenerateText : null;
+            foreach (HashViewModel model in selectedModels)
+            {
+                if (model.GenerateTextInFormat(format, outputType, copyAll, endLine: true, seeExport: false,
+                    Settings.Current.CaseOfCopiedAlgNameFollowsOutputType) is string text)
+                {
+                    stringBuilder.Append(text);
+                }
+            }
+            if (stringBuilder.Length > 0)
+            {
+                stringBuilder.Remove(stringBuilder.Length - 1, 1);
+                CommonUtils.ClipboardSetText(stringBuilder.ToString());
+                NotificationSender.SnackbarSuccess($"已按模板复制所选行的当前结果或全部结果");
+            }
+        }
+    }
+
+    public ICommand CopyFormattedModelsHashCmd
+    {
+        get
+        {
+            this.copyFormattedModelsHashCmd ??= new RelayCommand(
+                param => this.CopyFormattedModelsHashAction(param, OutputType.Unknown, false));
+            return this.copyFormattedModelsHashCmd;
+        }
+    }
+
+    public ICommand CopyFormattedModelsHashesCmd
+    {
+        get
+        {
+            this.copyFormattedModelsHashesCmd ??= new RelayCommand(
+                param => this.CopyFormattedModelsHashAction(param, OutputType.Unknown, true));
+            return this.copyFormattedModelsHashesCmd;
+        }
+    }
+
+    private void CopyUnformattedModelsHashAction(object param, OutputType outputType, bool copyAll)
     {
         if (param is IList selectedModels && selectedModels.AnyItem())
         {
@@ -614,31 +576,23 @@ public class HomeViewModel : BaseViewModel
         }
     }
 
-    private void CopyModelsCurHashWithNoFormatAction(object param)
-    {
-        this.CopyModelsHashWithNoFormatAction(param, OutputType.Unknown, copyAll: false);
-    }
-
-    public ICommand CopyModelsCurHashWithNoFormatCmd
+    public ICommand CopyUnformattedModelsHashCmd
     {
         get
         {
-            this.copyModelsCurHashWithNoFormatCmd ??= new RelayCommand(this.CopyModelsCurHashWithNoFormatAction);
-            return this.copyModelsCurHashWithNoFormatCmd;
+            this.copyUnformattedModelsHashCmd ??= new RelayCommand(
+                param => this.CopyUnformattedModelsHashAction(param, OutputType.Unknown, copyAll: false));
+            return this.copyUnformattedModelsHashCmd;
         }
     }
 
-    private void CopyModelsAllHashWithNoFormatAction(object param)
-    {
-        this.CopyModelsHashWithNoFormatAction(param, OutputType.Unknown, copyAll: true);
-    }
-
-    public ICommand CopyModelsAllHashWithNoFormatCmd
+    public ICommand CopyUnformattedModelsHashesCmd
     {
         get
         {
-            this.copyModelsAllHashWithNoFormatCmd ??= new RelayCommand(this.CopyModelsAllHashWithNoFormatAction);
-            return this.copyModelsAllHashWithNoFormatCmd;
+            this.copyUnformattedModelsHashesCmd ??= new RelayCommand(
+                param => this.CopyUnformattedModelsHashAction(param, OutputType.Unknown, copyAll: true));
+            return this.copyUnformattedModelsHashesCmd;
         }
     }
 

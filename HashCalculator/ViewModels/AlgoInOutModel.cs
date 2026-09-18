@@ -171,15 +171,11 @@ public class AlgoInOutModel : BaseViewModel
                 string algoName = this.AlgoName;
                 if (casedAlgName)
                 {
-                    switch (output)
+                    algoName = output switch
                     {
-                        case OutputType.BinaryLower:
-                            algoName = algoName.ToLower();
-                            break;
-                        case OutputType.BinaryUpper:
-                            algoName = algoName.ToUpper();
-                            break;
-                    }
+                        OutputType.BinaryLower => algoName.ToLower(),
+                        _ => algoName.ToUpper(),
+                    };
                 }
                 StringBuilder formatBuilder = new StringBuilder(format);
                 if (endLine)
