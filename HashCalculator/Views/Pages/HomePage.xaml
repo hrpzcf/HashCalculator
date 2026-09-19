@@ -394,13 +394,21 @@
                             <MenuItem.ItemContainerStyle>
                                 <Style TargetType="MenuItem">
                                     <Setter Property="Header" Value="{Binding Display}" />
-                                    <Setter Property="Command" Value="{Binding ItemValue}" />
-                                    <Setter Property="CommandParameter">
+                                    <Setter Property="ItemsSource" Value="{Binding Items}" />
+                                    <Setter Property="ItemContainerStyle">
                                         <Setter.Value>
-                                            <MultiBinding Converter="{StaticResource CloneParameterArrayCvt}">
-                                                <Binding Path="Param" />
-                                                <Binding Path="PlacementTarget.SelectedItems" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}" />
-                                            </MultiBinding>
+                                            <Style TargetType="MenuItem">
+                                                <Setter Property="Header" Value="{Binding Display}" />
+                                                <Setter Property="Command" Value="{Binding ItemValue}" />
+                                                <Setter Property="CommandParameter">
+                                                    <Setter.Value>
+                                                        <MultiBinding Converter="{StaticResource CloneParameterArrayCvt}">
+                                                            <Binding Path="Param" />
+                                                            <Binding Path="PlacementTarget.SelectedItems" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}" />
+                                                        </MultiBinding>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
                                         </Setter.Value>
                                     </Setter>
                                 </Style>
@@ -419,13 +427,21 @@
                             <MenuItem.ItemContainerStyle>
                                 <Style TargetType="MenuItem">
                                     <Setter Property="Header" Value="{Binding Display}" />
-                                    <Setter Property="Command" Value="{Binding ItemValue}" />
-                                    <Setter Property="CommandParameter">
+                                    <Setter Property="ItemsSource" Value="{Binding Items}" />
+                                    <Setter Property="ItemContainerStyle">
                                         <Setter.Value>
-                                            <MultiBinding Converter="{StaticResource CloneParameterArrayCvt}">
-                                                <Binding Path="Param" />
-                                                <Binding Path="PlacementTarget.SelectedItems" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}" />
-                                            </MultiBinding>
+                                            <Style TargetType="MenuItem">
+                                                <Setter Property="Header" Value="{Binding Display}" />
+                                                <Setter Property="Command" Value="{Binding ItemValue}" />
+                                                <Setter Property="CommandParameter">
+                                                    <Setter.Value>
+                                                        <MultiBinding Converter="{StaticResource CloneParameterArrayCvt}">
+                                                            <Binding Path="Param" />
+                                                            <Binding Path="PlacementTarget.SelectedItems" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}" />
+                                                        </MultiBinding>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
                                         </Setter.Value>
                                     </Setter>
                                 </Style>

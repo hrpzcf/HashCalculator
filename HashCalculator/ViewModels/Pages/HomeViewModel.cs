@@ -63,10 +63,12 @@ public class HomeViewModel : BaseViewModel
     private RelayCommand displayMainWindowButtonsCmd;
     private RelayCommand openFilterOperationWindowCmd;
 
-    private GenericItemModel[] switchDisplayedAlgoCmds;
     private GenericItemModel[] switchAlgoExportStateCmds;
     private GenericItemModel[] ctrlHashViewModelTaskCmds;
-    private GenericItemModel[] addTemporaryAlgorithmCmds;
+
+    // 注意数组类型和上面不一样，是 GroupedItemModel 非 GenericItemModel
+    private GroupedItemModel[] switchDisplayedAlgoCmds;
+    private GroupedItemModel[] addTemporaryAlgorithmCmds;
 
     public HomeViewModel(FilterOperationModel model)
     {
@@ -1593,15 +1595,20 @@ public class HomeViewModel : BaseViewModel
         }
     }
 
-    public GenericItemModel[] SwitchDisplayedAlgoCmds
+    public GroupedItemModel[] SwitchDisplayedAlgoCmds
     {
         get
         {
             if (this.switchDisplayedAlgoCmds == null)
             {
                 RelayCommand command = new RelayCommand(this.SwitchDisplayedAlgoAction);
-                this.switchDisplayedAlgoCmds = AlgorithmsModel.ProvidedAlgos.Select(
-                    obj => new GenericItemModel(obj.AlgoName, obj.AlgoType, command)).ToArray();
+                // Skip(1)：跳过 AlgoGroups 首项（总览视图），其算法与各分组重复
+                this.switchDisplayedAlgoCmds = AlgorithmsModel.AlgoGroups.Skip(1).Select(
+                    group => new GroupedItemModel(
+                        group.GroupName,
+                        group.Items.Select(
+                            item => new GenericItemModel(item.AlgoName, item.AlgoType, command)).ToArray())
+                ).ToArray();
             }
             return this.switchDisplayedAlgoCmds;
         }
@@ -1629,15 +1636,20 @@ public class HomeViewModel : BaseViewModel
         }
     }
 
-    public GenericItemModel[] AddTemporaryAlgorithmCmds
+    public GroupedItemModel[] AddTemporaryAlgorithmCmds
     {
         get
         {
             if (this.addTemporaryAlgorithmCmds == null)
             {
                 RelayCommand command = new RelayCommand(this.AddTemporaryAlgorithmAction);
-                this.addTemporaryAlgorithmCmds = AlgorithmsModel.ProvidedAlgos.Select(
-                    obj => new GenericItemModel(obj.AlgoName, obj.AlgoType, command)).ToArray();
+                // Skip(1)：跳过 AlgoGroups 首项（总览视图），其算法与各分组重复
+                this.addTemporaryAlgorithmCmds = AlgorithmsModel.AlgoGroups.Skip(1).Select(
+                    group => new GroupedItemModel(
+                        group.GroupName,
+                        group.Items.Select(
+                            item => new GenericItemModel(item.AlgoName, item.AlgoType, command)).ToArray())
+                ).ToArray();
             }
             return this.addTemporaryAlgorithmCmds;
         }
