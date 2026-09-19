@@ -1624,7 +1624,8 @@ public class HomeViewModel : BaseViewModel
         if (modelsWithoutTemporaryAlgoCount > 0)
         {
             NotificationSender.ShowMessageBox(
-                "提示", $"未能给〈{modelsWithoutTemporaryAlgoCount}〉个未结束的任务添加临时算法！");
+                "提示", $"未能给〈{modelsWithoutTemporaryAlgoCount}〉个任务添加临时算法：任务尚未结束，" +
+                $"或其算法清单中已包含该算法。");
         }
     }
 

@@ -36,10 +36,10 @@ public class HashViewModel : BaseViewModel
     private ComparableColor _folderGroupId = null;
 
     /// <summary>
-    /// 本轮要计算的算法（运行计划的一部分）；为 null 表示清单内全部算法。
+    /// 本轮要计算的算法；为 null 表示清单内全部算法，非 null 时可为空集（一个都不算）。
     /// 由 PrepareForRestartModel 依据计算意图设置，计算结束在 finally 中清空。
     /// </summary>
-    private HashSet<AlgoType> _algoTypeFilter = null;
+    private HashSet<AlgoType> _algoTypesToCompute = null;
     private HashState _currentState = HashState.NoState;
     private HashResult _currentResult = HashResult.NoResult;
     private OutputType _selectedOutput = OutputType.Unknown;
@@ -513,7 +513,7 @@ public class HashViewModel : BaseViewModel
     {
         return intent switch
         {
-            // 重算与追加临时算法都要求已结束，区别只在 PrepareAlgoTypeFilter 定下的计算范围
+            // 重算与追加临时算法都要求已结束，区别只在 PrepareAlgoTypesToCompute 定下的计算范围
             ComputeIntent.Recompute or ComputeIntent.AppendTemporary =>
                 this.desiredState == HashState.Finished,
             // ComputeIntent.FillMissing
@@ -582,13 +582,8 @@ public class HashViewModel : BaseViewModel
         {
             this.SelectedOutputType = OutputType.Unknown;
         }
-        // 依意图定下本轮算哪些算法，并应用到清单与算法筛选器
-        this.PrepareAlgoTypeFilter(intent);
-        if (intent == ComputeIntent.AppendTemporary)
-        {
-            // 临时算法只服务一轮，本轮启动后就可以清除登记了，避免影响下一轮
-            this._pendingTempAlgos.Clear();
-        }
+        // 依意图定下本轮算哪些算法（含临时算法登记的清理），并应用到算法清单
+        this.PrepareAlgoTypesToCompute(intent);
         try
         {
             if (!this.Arguments.Deprecated)
@@ -615,14 +610,14 @@ public class HashViewModel : BaseViewModel
     }
 
     /// <summary>
-    /// 依计算意图定下本轮算哪些算法，并把结果应用到算法清单与算法筛选器。<br/>
-    /// 筛选器为 null 表示丢弃现有清单、按当前勾选的算法重建并全部计算；非 null（可为空集）
+    /// 依计算意图定下本轮要算哪些算法，并应用到算法清单。<br/>
+    /// 为 null 表示丢弃现有清单、按当前勾选的算法重建并全部计算；非 null（可为空集）
     /// 表示保留清单，只算集合内的算法行。
     /// - Recompute：null；<br/>
-    /// - AppendTemporary：本次追加的临时算法；<br/>
+    /// - AppendTemporary：本次追加的临时算法（取走后即清除登记）；<br/>
     /// - FillMissing：清单中尚无结果的算法行。
     /// </summary>
-    private void PrepareAlgoTypeFilter(ComputeIntent intent)
+    private void PrepareAlgoTypesToCompute(ComputeIntent intent)
     {
         HashSet<AlgoType> algoTypes = intent switch
         {
@@ -632,36 +627,33 @@ public class HashViewModel : BaseViewModel
             _ => this.AlgoInOutModels.Where(i => i.HashResult == null)
                 .Select(a => a.AlgoType).ToHashSet(),
         };
+        // 临时算法在本轮启动后及时清理，避免影响下一轮，清空须在读取登记之后
+        if (intent == ComputeIntent.AppendTemporary)
+        {
+            this._pendingTempAlgos.Clear();
+        }
         if (algoTypes == null)
         {
-            // 整体替换引用：比逐条增删更干脆，且天然触发绑定刷新
             this.AlgoInOutModels = new ObservableCollection<AlgoInOutModel>(
                 AlgorithmsModel.GetSelectedAlgos());
         }
         else
         {
-            this.EnsureRowsForAlgos(algoTypes);
+            // 保留现有清单，只补齐缺失的算法行：已有行跨轮复用，不替换
+            foreach (AlgoType algoType in algoTypes)
+            {
+                if (this.AlgoInOutModels.Any(m => m.AlgoType == algoType))
+                {
+                    continue;
+                }
+                if (algoType.ToAlgoInOutModel() is AlgoInOutModel algoInOutModel)
+                {
+                    this.AlgoInOutModels.Add(algoInOutModel);
+                }
+            }
         }
         this.EnsureCurrentInOutModelValid();
-        this._algoTypeFilter = algoTypes;
-    }
-
-    /// <summary>
-    /// 保证清单中存在这些算法的行；缺失的按模板补一行（不替换已有行，行实例可跨轮复用）。
-    /// </summary>
-    private void EnsureRowsForAlgos(HashSet<AlgoType> algoTypes)
-    {
-        foreach (AlgoType algoType in algoTypes)
-        {
-            if (this.AlgoInOutModels.Any(m => m.AlgoType == algoType))
-            {
-                continue;
-            }
-            if (algoType.ToAlgoInOutModel() is AlgoInOutModel model)
-            {
-                this.AlgoInOutModels.Add(model);
-            }
-        }
+        this._algoTypesToCompute = algoTypes;
     }
 
     /// <summary>
@@ -669,11 +661,10 @@ public class HashViewModel : BaseViewModel
     /// </summary>
     private void EnsureCurrentInOutModelValid()
     {
-        if (this.CurrentInOutModel is null ||
-            this.AlgoInOutModels?.Contains(this.CurrentInOutModel) != true)
+        if (this.AlgoInOutModels?.Contains(this.CurrentInOutModel) != true)
         {
-            this.CurrentInOutModel = this.AlgoInOutModels?.Count > 0
-                ? this.AlgoInOutModels[0] : null;
+            this.CurrentInOutModel = this.AlgoInOutModels?.Count > 0 ?
+                this.AlgoInOutModels[0] : null;
         }
     }
 
@@ -895,9 +886,9 @@ public class HashViewModel : BaseViewModel
                     });
                     return;
                 }
-                // 只读快照：本轮要算的行 = 清单中命中算法筛选器的行（筛选器为 null 即全部）
+                // 只读快照：本轮要算的行 = 清单中属于本轮计算范围的算法行（范围为 null 即全部）
                 frozenAlgoModels = this.AlgoInOutModels.Where(
-                    model => this._algoTypeFilter?.Contains(model.AlgoType) != false
+                    model => this._algoTypesToCompute?.Contains(model.AlgoType) != false
                     ).ToArray();
                 foreach (AlgoInOutModel model in frozenAlgoModels)
                 {
@@ -997,9 +988,9 @@ public class HashViewModel : BaseViewModel
         }
         finally
         {
-            // 算法清单是"本轮"限定，一轮算完（含取消/异常）即失效，避免残留影响下一轮
+            // 本轮计算范围是"本轮"限定，一轮算完（含取消/异常）即失效，避免残留影响下一轮
             // 否则某轮追加临时算法留下的子集会让下次"全部重算/计算缺值项"漏算其它算法
-            this._algoTypeFilter = null;
+            this._algoTypesToCompute = null;
             CommonUtils.MakeSureBuffer(ref buffer, 0);
             if (frozenAlgoModels != null)
             {
