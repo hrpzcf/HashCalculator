@@ -392,12 +392,12 @@
                         <Separator />
                         <MenuItem Header="添加临时算法" ItemsSource="{Binding AddTemporaryAlgorithmCmds}">
                             <MenuItem.ItemContainerStyle>
-                                <Style TargetType="MenuItem">
+                                <Style BasedOn="{StaticResource HashCtxMenuItem}" TargetType="MenuItem">
                                     <Setter Property="Header" Value="{Binding Display}" />
                                     <Setter Property="ItemsSource" Value="{Binding Items}" />
                                     <Setter Property="ItemContainerStyle">
                                         <Setter.Value>
-                                            <Style TargetType="MenuItem">
+                                            <Style BasedOn="{StaticResource HashCtxMenuItem}" TargetType="MenuItem">
                                                 <Setter Property="Header" Value="{Binding Display}" />
                                                 <Setter Property="Command" Value="{Binding ItemValue}" />
                                                 <Setter Property="CommandParameter">
@@ -416,7 +416,7 @@
                         </MenuItem>
                         <MenuItem Header="切换任务状态" ItemsSource="{Binding CtrlHashViewModelTaskCmds}">
                             <MenuItem.ItemContainerStyle>
-                                <Style TargetType="MenuItem">
+                                <Style BasedOn="{StaticResource HashCtxMenuItem}" TargetType="MenuItem">
                                     <Setter Property="Header" Value="{Binding Display}" />
                                     <Setter Property="Command" Value="{Binding ItemValue}" />
                                     <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}" />
@@ -425,12 +425,12 @@
                         </MenuItem>
                         <MenuItem Header="切换显示算法" ItemsSource="{Binding SwitchDisplayedAlgoCmds}">
                             <MenuItem.ItemContainerStyle>
-                                <Style TargetType="MenuItem">
+                                <Style BasedOn="{StaticResource HashCtxMenuItem}" TargetType="MenuItem">
                                     <Setter Property="Header" Value="{Binding Display}" />
                                     <Setter Property="ItemsSource" Value="{Binding Items}" />
                                     <Setter Property="ItemContainerStyle">
                                         <Setter.Value>
-                                            <Style TargetType="MenuItem">
+                                            <Style BasedOn="{StaticResource HashCtxMenuItem}" TargetType="MenuItem">
                                                 <Setter Property="Header" Value="{Binding Display}" />
                                                 <Setter Property="Command" Value="{Binding ItemValue}" />
                                                 <Setter Property="CommandParameter">
@@ -449,7 +449,7 @@
                         </MenuItem>
                         <MenuItem Header="切换导出状态" ItemsSource="{Binding SwitchAlgoExportStateCmds}">
                             <MenuItem.ItemContainerStyle>
-                                <Style TargetType="MenuItem">
+                                <Style BasedOn="{StaticResource HashCtxMenuItem}" TargetType="MenuItem">
                                     <Setter Property="Header" Value="{Binding Display}" />
                                     <Setter Property="Command" Value="{Binding ItemValue}" />
                                     <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}, AncestorLevel=1}, Path=PlacementTarget.SelectedItems}" />

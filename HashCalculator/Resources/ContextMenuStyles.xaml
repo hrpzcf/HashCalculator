@@ -4,6 +4,39 @@
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml">
 
     <!--
+        菜单项统一样式：在 wpfui 的 UiMenuItem 基础上加大文字与高亮块之间的左右间距。
+        注意：给菜单显式设置了 ItemContainerStyle 的地方，生成的子项不会自动继承隐式样式，
+        需要在自己的 Style 上写 BasedOn="{StaticResource HashCtxMenuItem}"。
+    -->
+    <Style
+        x:Key="HashCtxMenuItem"
+        BasedOn="{StaticResource UiMenuItem}"
+        TargetType="{x:Type MenuItem}">
+        <!--
+            菜单项模板里文字到高亮块的内边距是硬编码的（Grid Margin 左右 8），且没有绑定
+            Padding，Style 里设 Padding 无效，因此这里用 HeaderTemplate 给文字再叠加一段
+            左右外边距（文字所在列为 * 且有拉伸，右侧必须显式加上才能与左侧对称）；
+            高亮块本身仍紧贴菜单边框。
+        -->
+        <Setter Property="HeaderTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <TextBlock Margin="6,0,8,0" Text="{Binding}" />
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--
+        覆盖 wpfui 的隐式 MenuItem 样式，使 XAML 里手写的菜单项直接共享上面这份样式。
+        作用范围是普通 MenuItem；主窗口菜单栏用的是 wpfui:MenuItem，隐式样式键不同，不受影响。
+    -->
+    <Style
+        x:Key="{x:Type MenuItem}"
+        BasedOn="{StaticResource HashCtxMenuItem}"
+        TargetType="{x:Type MenuItem}" />
+
+    <!--
         基于 wpfui 默认 ContextMenu 样式（UiContextMenu），仅将 EffectThicknessDecorator 的
         Thickness 从 30 改为 32（4 的倍数），避免非 100% DPI 下装饰器非整数 Margin
         导致内容重采样模糊。保留装饰器结构（定位正确，官方已验证）。
