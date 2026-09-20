@@ -13,7 +13,10 @@
     ScrollViewer.CanContentScroll="False"
     SnapsToDevicePixels="True"
     mc:Ignorable="d">
-    <Grid>
+    <Grid
+        AllowDrop="True"
+        DragOver="PageDragOver"
+        Drop="PageDrop">
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition Height="Auto" />
@@ -54,43 +57,44 @@
                 </wpfui:ListView.ItemTemplate>
             </wpfui:ListView>
         </Border>
-        <ScrollViewer
+        <Grid
             Grid.Row="0"
             Grid.Column="1"
             Margin="8,0,0,0"
-            HorizontalScrollBarVisibility="Auto"
-            VerticalScrollBarVisibility="Disabled">
-            <ItemsControl ItemsSource="{Binding SelectedAlgoGroup.Items}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel Orientation="Vertical" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Grid
-                            Margin="16,0,0,8"
-                            AllowDrop="True"
-                            DragLeave="AlgoItemDragLeave"
-                            DragOver="AlgoItemDragOver"
-                            Drop="AlgoItemDrop"
-                            PreviewMouseLeftButtonDown="AlgoItemPreviewMouseLeftButtonDown"
-                            PreviewMouseMove="AlgoItemPreviewMouseMove">
-                            <wpfui:CardControl Padding="12" Header="{Binding AlgoName}">
-                                <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding Selected, Mode=TwoWay}" />
-                            </wpfui:CardControl>
-                            <Rectangle
-                                Height="2"
-                                Margin="4,0,4,0"
-                                VerticalAlignment="Top"
-                                Fill="{DynamicResource AccentFillColorDefaultBrush}"
-                                IsHitTestVisible="False"
-                                Visibility="Collapsed" />
-                        </Grid>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
+            AllowDrop="True"
+            Background="Transparent">
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                <ItemsControl x:Name="AlgoItemsControl" ItemsSource="{Binding SelectedAlgoGroup.Items}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Vertical" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid
+                                Margin="16,0,0,8"
+                                AllowDrop="True"
+                                DragOver="AlgoItemDragOver"
+                                Drop="AlgoItemDrop"
+                                PreviewMouseLeftButtonDown="AlgoItemPreviewMouseLeftButtonDown"
+                                PreviewMouseMove="AlgoItemPreviewMouseMove">
+                                <wpfui:CardControl Padding="12" Header="{Binding AlgoName}">
+                                    <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding Selected, Mode=TwoWay}" />
+                                </wpfui:CardControl>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+            <Canvas x:Name="InsertionLineLayer" IsHitTestVisible="False">
+                <Rectangle
+                    x:Name="InsertionLine"
+                    Height="2"
+                    Fill="{DynamicResource AccentFillColorDefaultBrush}"
+                    Visibility="Collapsed" />
+            </Canvas>
+        </Grid>
         <Grid
             Grid.Row="1"
             Grid.Column="0"
