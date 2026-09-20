@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 
 namespace HashCalculator
@@ -8,10 +9,19 @@ namespace HashCalculator
     {
         private int _selectedAlgoCount = 0;
 
-        public AlgoGroupModel(string name, AlgoInOutModel[] models)
+        public AlgoGroupModel(string name, AlgoInOutModel[] models) :
+            this(name, models == null ? null : new ObservableCollection<AlgoInOutModel>(models))
         {
-            ArgumentNullException.ThrowIfNull(models);
-            this.Items = models;
+        }
+
+        /// <summary>
+        /// 以已有的集合作为本组条目集合，供"总览视图"使用：<br/>
+        /// 它直接持有 AlgorithmsModel 中作为排序依据的主列表。
+        /// </summary>
+        public AlgoGroupModel(string name, ObservableCollection<AlgoInOutModel> items)
+        {
+            ArgumentNullException.ThrowIfNull(items);
+            this.Items = items;
             this.GroupName = name;
             foreach (AlgoInOutModel model in this.Items)
             {
@@ -21,7 +31,7 @@ namespace HashCalculator
 
         public string GroupName { get; }
 
-        public AlgoInOutModel[] Items { get; }
+        public ObservableCollection<AlgoInOutModel> Items { get; }
 
         public int SelectedAlgoCount
         {
@@ -29,18 +39,25 @@ namespace HashCalculator
             set => this.SetPropNotify(ref this._selectedAlgoCount, value);
         }
 
-        public IEnumerable<AlgoInOutModel> CombineItems(params AlgoGroupModel[] groups)
+        /// <summary>
+        /// 按主列表（总览视图的条目顺序）重排本组的条目：<br/>
+        /// 本组的成员不变，只把它们的顺序调整得与主列表中的相对顺序一致。
+        /// </summary>
+        public void SyncOrderFrom(IList<AlgoInOutModel> masterList)
         {
-            foreach (AlgoInOutModel model in this.Items)
+            int insertIndex = 0;
+            foreach (AlgoInOutModel model in masterList)
             {
-                yield return model;
-            }
-            foreach (AlgoGroupModel group in groups)
-            {
-                foreach (AlgoInOutModel model in group.Items)
+                int oldIndex = this.Items.IndexOf(model);
+                if (oldIndex < 0)
                 {
-                    yield return model;
+                    continue;
                 }
+                if (oldIndex != insertIndex)
+                {
+                    this.Items.Move(oldIndex, insertIndex);
+                }
+                insertIndex++;
             }
         }
 

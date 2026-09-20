@@ -83,6 +83,16 @@ public class HomeViewModel : BaseViewModel
         {
             Synchronization.UI.Invoke(() => { this.PendingModelsCount = count; });
         };
+        // 算法被重新排序后，缓存的分组算法菜单需要重建以跟随新顺序
+        AlgorithmsModel.AlgoOrderChanged += this.InvalidateAlgoCmds;
+    }
+
+    private void InvalidateAlgoCmds()
+    {
+        this.switchDisplayedAlgoCmds = null;
+        this.addTemporaryAlgorithmCmds = null;
+        this.NotifyPropertyChanged(nameof(this.SwitchDisplayedAlgoCmds));
+        this.NotifyPropertyChanged(nameof(this.AddTemporaryAlgorithmCmds));
     }
 
     public static HomeViewModel Current { get; private set; }

@@ -8,6 +8,7 @@ namespace HashCalculator.ViewModels.Pages;
 
 public class AlgorithmsModel : BaseViewModel
 {
+    private RelayCommand resetAlgoOrderCmd;
     private RelayCommand clearAllSelectedCmd;
 
     private static readonly AlgoGroupModel _groupOthers = new AlgoGroupModel(
@@ -112,19 +113,28 @@ public class AlgorithmsModel : BaseViewModel
             new AlgoInOutModel(new Gost34_11_2012(256), "Streebog256,GOST-2012-256,GOST 2012 (256)"),
             new AlgoInOutModel(new Gost34_11_2012(512), "Streebog512,GOST-2012-512,GOST 2012 (512)"),
         });
+    /// <summary>
+    /// 所有算法的主列表，是算法排序的唯一依据，同时作为"总览视图"展示的条目集合
+    /// </summary>
+    private static readonly ObservableCollection<AlgoInOutModel> _providedAlgos =
+        new ObservableCollection<AlgoInOutModel>(
+            _groupOthers.Items
+                .Concat(_groupXXHash.Items)
+                .Concat(_groupSHA2.Items)
+                .Concat(_groupSHA3.Items)
+                .Concat(_groupBlake2b.Items)
+                .Concat(_groupBlake2bp.Items)
+                .Concat(_groupBlake2s.Items)
+                .Concat(_groupBlake2sp.Items)
+                .Concat(_groupBlake3.Items)
+                .Concat(_groupStreebog.Items));
     private static readonly AlgoGroupModel _groupAll = new AlgoGroupModel(
-        "总览视图",
-        _groupOthers.CombineItems(
-            _groupXXHash,
-            _groupSHA2,
-            _groupSHA3,
-            _groupBlake2b,
-            _groupBlake2bp,
-            _groupBlake2s,
-            _groupBlake2sp,
-            _groupBlake3,
-            _groupStreebog
-        ).ToArray());
+        "总览视图", _providedAlgos);
+    /// <summary>
+    /// 内置的默认算法顺序，用于"恢复默认排序"
+    /// </summary>
+    private static readonly AlgoType[] _defaultAlgoOrder = _providedAlgos.Select(
+        i => i.AlgoType).ToArray();
     private AlgoGroupModel _selectedAlgoGroup = _groupAll;
 
     public static AlgoGroupModel[] AlgoGroups { get; } = new AlgoGroupModel[]
@@ -142,7 +152,104 @@ public class AlgorithmsModel : BaseViewModel
             _groupStreebog,
         };
 
-    public static AlgoInOutModel[] ProvidedAlgos => _groupAll.Items;
+    public static ObservableCollection<AlgoInOutModel> ProvidedAlgos => _groupAll.Items;
+
+    /// <summary>
+    /// 算法的排序发生变化后触发（拖动排序、恢复默认排序、按配置还原排序）
+    /// </summary>
+    public static event Action AlgoOrderChanged;
+
+    /// <summary>
+    /// 把 source 移动到 target 的前面或后面，并把各分组的条目顺序同步为主列表中的相对顺序。
+    /// </summary>
+    public static void MoveAlgo(AlgoInOutModel source, AlgoInOutModel target, bool insertAfter)
+    {
+        if (source == null || target == null || source == target)
+        {
+            return;
+        }
+        int sourceIndex = _providedAlgos.IndexOf(source);
+        int targetIndex = _providedAlgos.IndexOf(target);
+        if (sourceIndex < 0 || targetIndex < 0)
+        {
+            return;
+        }
+        int insertIndex = insertAfter ? targetIndex + 1 : targetIndex;
+        // source 被移走后，排在它后面的条目的下标都会减一
+        if (sourceIndex < insertIndex)
+        {
+            insertIndex--;
+        }
+        if (insertIndex == sourceIndex)
+        {
+            return;
+        }
+        _providedAlgos.Move(sourceIndex, insertIndex);
+        SyncAllGroupOrders();
+        AlgoOrderChanged?.Invoke();
+    }
+
+    /// <summary>
+    /// 按给定的算法类型顺序重排主列表，order 中没有出现的算法保持默认相对顺序排在末尾。
+    /// </summary>
+    public static void ApplyAlgoOrder(IEnumerable<AlgoType> order)
+    {
+        if (order == null)
+        {
+            return;
+        }
+        Dictionary<AlgoType, AlgoInOutModel> algosByType = _providedAlgos.ToDictionary(
+            i => i.AlgoType);
+        List<AlgoInOutModel> expectedOrder = new List<AlgoInOutModel>(_providedAlgos.Count);
+        HashSet<AlgoType> arrangedTypes = new HashSet<AlgoType>();
+        foreach (AlgoType algoType in order)
+        {
+            if (arrangedTypes.Add(algoType) &&
+                algosByType.TryGetValue(algoType, out AlgoInOutModel arrangedAlgo))
+            {
+                expectedOrder.Add(arrangedAlgo);
+            }
+        }
+        if (expectedOrder.Count == 0)
+        {
+            return;
+        }
+        foreach (AlgoInOutModel algo in _providedAlgos)
+        {
+            if (!arrangedTypes.Contains(algo.AlgoType))
+            {
+                expectedOrder.Add(algo);
+            }
+        }
+        // 逐个把目标位置的条目搬到前面，而不是重建集合，因为外部静态绑定了同一个集合实例
+        for (int i = 0; i < expectedOrder.Count; i++)
+        {
+            int currentIndex = _providedAlgos.IndexOf(expectedOrder[i]);
+            if (currentIndex > i)
+            {
+                _providedAlgos.Move(currentIndex, i);
+            }
+        }
+        SyncAllGroupOrders();
+        AlgoOrderChanged?.Invoke();
+    }
+
+    /// <summary>
+    /// 把算法的顺序恢复为内置的默认顺序
+    /// </summary>
+    public static void ResetAlgoOrder()
+    {
+        ApplyAlgoOrder(_defaultAlgoOrder);
+    }
+
+    private static void SyncAllGroupOrders()
+    {
+        // 总览视图的条目集合就是主列表，同步它自身不会产生变化
+        foreach (AlgoGroupModel group in AlgoGroups)
+        {
+            group.SyncOrderFrom(_providedAlgos);
+        }
+    }
 
     public static bool TryGetAlgoType(string name, out AlgoType algorithm)
     {
@@ -294,6 +401,20 @@ public class AlgorithmsModel : BaseViewModel
         {
             this.clearAllSelectedCmd ??= new RelayCommand(this.ClearAllSelectedAction);
             return this.clearAllSelectedCmd;
+        }
+    }
+
+    private void ResetAlgoOrderAction(object param)
+    {
+        ResetAlgoOrder();
+    }
+
+    public ICommand ResetAlgoOrderCmd
+    {
+        get
+        {
+            this.resetAlgoOrderCmd ??= new RelayCommand(this.ResetAlgoOrderAction);
+            return this.resetAlgoOrderCmd;
         }
     }
 }

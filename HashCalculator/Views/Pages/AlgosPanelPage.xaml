@@ -68,25 +68,53 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <wpfui:CardControl
+                        <Grid
                             Margin="16,0,0,8"
-                            Padding="12"
-                            Header="{Binding AlgoName}">
-                            <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding Selected, Mode=TwoWay}" />
-                        </wpfui:CardControl>
+                            AllowDrop="True"
+                            DragLeave="AlgoItemDragLeave"
+                            DragOver="AlgoItemDragOver"
+                            Drop="AlgoItemDrop"
+                            PreviewMouseLeftButtonDown="AlgoItemPreviewMouseLeftButtonDown"
+                            PreviewMouseMove="AlgoItemPreviewMouseMove">
+                            <wpfui:CardControl Padding="12" Header="{Binding AlgoName}">
+                                <wpfui:ToggleSwitch HorizontalAlignment="Right" IsChecked="{Binding Selected, Mode=TwoWay}" />
+                            </wpfui:CardControl>
+                            <Rectangle
+                                Height="2"
+                                Margin="4,0,4,0"
+                                VerticalAlignment="Top"
+                                Fill="{DynamicResource AccentFillColorDefaultBrush}"
+                                IsHitTestVisible="False"
+                                Visibility="Collapsed" />
+                        </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
-        <wpfui:Button
+        <Grid
             Grid.Row="1"
             Grid.Column="0"
-            Margin="0,8,0,0"
-            Padding="16,8"
-            HorizontalAlignment="Stretch"
-            Appearance="Primary"
-            Command="{Binding ClearAllSelectedCmd}"
-            Content="清除所有选择" />
+            Margin="0,8,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <wpfui:Button
+                Grid.Column="0"
+                Padding="16,8"
+                HorizontalAlignment="Stretch"
+                Appearance="Caution"
+                Command="{Binding ResetAlgoOrderCmd}"
+                Content="恢复默认排序" />
+            <wpfui:Button
+                Grid.Column="1"
+                Margin="12,0,0,0"
+                Padding="16,8"
+                HorizontalAlignment="Stretch"
+                Appearance="Primary"
+                Command="{Binding ClearAllSelectedCmd}"
+                Content="清除所有选择" />
+        </Grid>
         <wpfui:TextBlock
             Grid.Row="1"
             Grid.Column="1"
@@ -94,6 +122,6 @@
             VerticalAlignment="Bottom"
             FontTypography="Caption"
             Foreground="{DynamicResource TextFillColorTertiaryBrush}"
-            Text="不建议选择太多算法，否则计算时容易造成程序无响应。" />
+            Text="拖动算法卡片可调整算法的顺序，顺序会被保存；不建议选择太多算法，否则计算时容易造成程序无响应。" />
     </Grid>
 </Page>

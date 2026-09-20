@@ -1000,6 +1000,11 @@ public class SettingsViewModel : BaseViewModel, IJsonOnSerializing, IJsonOnDeser
 
     public AlgoType[] SelectedAlgos { get; set; }
 
+    /// <summary>
+    /// 算法页拖动排序产生的算法顺序，元素为算法类型，反序列化时用于还原该顺序
+    /// </summary>
+    public AlgoType[] AlgorithmOrder { get; set; }
+
     public Dictionary<AlgoType, string> AlgorithmAliasList { get; set; }
 
     public ObservableCollection<TemplateForExportModel> TemplatesForExport
@@ -1697,6 +1702,7 @@ public class SettingsViewModel : BaseViewModel, IJsonOnSerializing, IJsonOnDeser
         }
         this.SelectedAlgos = AlgorithmsModel.ProvidedAlgos.Where(i => i.Selected).Select(
             i => i.AlgoType).ToArray();
+        this.AlgorithmOrder = AlgorithmsModel.ProvidedAlgos.Select(i => i.AlgoType).ToArray();
     }
 
     void IJsonOnDeserialized.OnDeserialized()
@@ -1727,6 +1733,7 @@ public class SettingsViewModel : BaseViewModel, IJsonOnSerializing, IJsonOnDeser
         {
             model.Selected = this.SelectedAlgos?.Contains(model.AlgoType) ?? false;
         }
+        AlgorithmsModel.ApplyAlgoOrder(this.AlgorithmOrder);
         if (this.MainWindowState == WindowState.Minimized)
         {
             this.MainWindowState = this.MainWindowStateWithoutMinimized;
