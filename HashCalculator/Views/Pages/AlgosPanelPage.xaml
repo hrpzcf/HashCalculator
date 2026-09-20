@@ -27,6 +27,7 @@
         </Grid.ColumnDefinitions>
         <Border
             Grid.Row="0"
+            Grid.RowSpan="2"
             Grid.Column="0"
             Padding="8"
             BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
@@ -41,7 +42,7 @@
                     <DataTemplate>
                         <Grid Margin="8,4">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" SharedSizeGroup="algGroupCol" />
+                                <ColumnDefinition SharedSizeGroup="algGroupCol" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <TextBlock
@@ -105,35 +106,41 @@
         </Grid>
         <Grid
             Grid.Row="1"
-            Grid.Column="0"
-            Margin="0,8,0,0">
+            Grid.Column="1"
+            Margin="24,8,0,2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
+            <wpfui:TextBlock
+                Grid.Row="0"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="0,0,0,8"
+                VerticalAlignment="Center"
+                Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                Text="拖动算法卡片可调整算法的顺序，顺序会被保存；不建议选择太多算法，否则计算时容易造成程序无响应。" />
             <wpfui:Button
+                Grid.Row="1"
                 Grid.Column="0"
                 Padding="16,8"
-                HorizontalAlignment="Stretch"
+                HorizontalAlignment="Left"
                 Appearance="Light"
                 Command="{Binding ResetAlgoOrderCmd}"
                 Content="恢复默认排序" />
             <wpfui:Button
+                Grid.Row="1"
                 Grid.Column="1"
                 Margin="12,0,0,0"
                 Padding="16,8"
-                HorizontalAlignment="Stretch"
+                HorizontalAlignment="Left"
                 Appearance="Primary"
                 Command="{Binding ClearAllSelectedCmd}"
                 Content="清除所有选择" />
         </Grid>
-        <wpfui:TextBlock
-            Grid.Row="1"
-            Grid.Column="1"
-            Margin="20,0,0,0"
-            VerticalAlignment="Bottom"
-            FontTypography="Caption"
-            Foreground="{DynamicResource TextFillColorTertiaryBrush}"
-            Text="拖动算法卡片可调整算法的顺序，顺序会被保存；不建议选择太多算法，否则计算时容易造成程序无响应。" />
     </Grid>
 </Page>
