@@ -11,15 +11,15 @@ namespace HashCalculator.Views.Pages;
 
 public partial class AlgosPanelPage : Page, INavigableView<AlgorithmsModel>
 {
-    private const string AlgoDragDataFormat = "HashCalculator.AlgoInOutModel";
     // 插入线两端各留出的距离，避开卡片 4px 的圆角
     private const double InsertionLineInset = 4;
+    private const string AlgoDragDataFormat = "HashCalculator.AlgoInOutModel";
 
+    private bool blankDropAfterTarget;
     private Point dragStartPoint;
     private AlgoInOutModel dragPendingAlgo;
     // 鼠标落在卡片间隙或空白处时的插入目标
     private AlgoInOutModel blankDropTarget;
-    private bool blankDropAfterTarget;
 
     public AlgorithmsModel ViewModel { get; }
 
@@ -73,8 +73,26 @@ public partial class AlgosPanelPage : Page, INavigableView<AlgorithmsModel>
         AlgoInOutModel draggedAlgo = this.dragPendingAlgo;
         this.dragPendingAlgo = null;
         DataObject dragData = new DataObject(AlgoDragDataFormat, draggedAlgo);
+        this.ShowDragOutline(grid);
         DragDrop.DoDragDrop(grid, dragData, DragDropEffects.Move);
-        // 拖拽结束（含按 Esc 取消）后收起插入线
+        // 拖拽结束（含按 Esc 取消）后收起虚线框和插入线
+        this.EndDragVisual();
+    }
+
+    // 拖动时给被拖动的卡片画一个虚线框，标记它正在被拖动
+    private void ShowDragOutline(Grid item)
+    {
+        Point itemOrigin = item.TranslatePoint(new Point(0, 0), this.InsertionLineLayer);
+        this.DragOutline.Width = item.ActualWidth;
+        this.DragOutline.Height = item.ActualHeight;
+        Canvas.SetLeft(this.DragOutline, itemOrigin.X);
+        Canvas.SetTop(this.DragOutline, itemOrigin.Y);
+        this.DragOutline.Visibility = Visibility.Visible;
+    }
+
+    private void EndDragVisual()
+    {
+        this.DragOutline.Visibility = Visibility.Collapsed;
         this.InsertionLine.Visibility = Visibility.Collapsed;
     }
 

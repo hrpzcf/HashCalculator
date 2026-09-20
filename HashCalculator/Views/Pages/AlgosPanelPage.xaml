@@ -89,6 +89,14 @@
             </ScrollViewer>
             <Canvas x:Name="InsertionLineLayer" IsHitTestVisible="False">
                 <Rectangle
+                    x:Name="DragOutline"
+                    RadiusX="4"
+                    RadiusY="4"
+                    Stroke="{DynamicResource AccentFillColorDefaultBrush}"
+                    StrokeDashArray="3 3"
+                    StrokeThickness="1"
+                    Visibility="Collapsed" />
+                <Rectangle
                     x:Name="InsertionLine"
                     Height="2"
                     Fill="{DynamicResource AccentFillColorDefaultBrush}"
@@ -107,7 +115,7 @@
                 Grid.Column="0"
                 Padding="16,8"
                 HorizontalAlignment="Stretch"
-                Appearance="Caution"
+                Appearance="Light"
                 Command="{Binding ResetAlgoOrderCmd}"
                 Content="恢复默认排序" />
             <wpfui:Button
