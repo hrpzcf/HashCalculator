@@ -64,7 +64,10 @@
             Margin="8,0,0,0"
             AllowDrop="True"
             Background="Transparent">
-            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+            <ScrollViewer
+                x:Name="AlgoScrollViewer"
+                HorizontalScrollBarVisibility="Auto"
+                VerticalScrollBarVisibility="Disabled">
                 <ItemsControl x:Name="AlgoItemsControl" ItemsSource="{Binding SelectedAlgoGroup.Items}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
@@ -88,7 +91,10 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </ScrollViewer>
-            <Canvas x:Name="InsertionLineLayer" IsHitTestVisible="False">
+            <Canvas
+                x:Name="InsertionLineLayer"
+                ClipToBounds="True"
+                IsHitTestVisible="False">
                 <Rectangle
                     x:Name="DragOutline"
                     RadiusX="4"

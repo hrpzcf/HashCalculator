@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 using HashCalculator.ViewModels.Pages;
 using Wpf.Ui.Abstractions.Controls;
 using Wpf.Ui.Controls;
@@ -14,12 +15,23 @@ public partial class AlgosPanelPage : Page, INavigableView<AlgorithmsModel>
     // 插入线两端各留出的距离，避开卡片 4px 的圆角
     private const double InsertionLineInset = 4;
     private const string AlgoDragDataFormat = "HashCalculator.AlgoInOutModel";
+    // 自动滚动：鼠标进入边缘多少像素内触发、每次滚动像素数的下限与上限、定时器间隔
+    private const double AutoScrollHotZone = 40;
+    private const double AutoScrollMaxStep = 30;
+    private const double AutoScrollMinStep = 5;
+    private const int AutoScrollIntervalMs = 30;
 
     private bool blankDropAfterTarget;
     private Point dragStartPoint;
     private AlgoInOutModel dragPendingAlgo;
     // 鼠标落在卡片间隙或空白处时的插入目标
     private AlgoInOutModel blankDropTarget;
+    // 被拖动的卡片，仅用于卡片因滚动而平移时刷新虚线框的位置
+    private Grid draggedItem;
+    // 自动滚动：定时器、最近一次鼠标位置（相对插入线所在画布）、每次滚动的像素数（带方向）
+    private readonly DispatcherTimer autoScrollTimer = new DispatcherTimer();
+    private double autoScrollStep;
+    private Point lastMousePosition;
 
     public AlgorithmsModel ViewModel { get; }
 
@@ -28,6 +40,8 @@ public partial class AlgosPanelPage : Page, INavigableView<AlgorithmsModel>
         this.ViewModel = model;
         this.DataContext = this.ViewModel;
         this.InitializeComponent();
+        this.autoScrollTimer.Interval = TimeSpan.FromMilliseconds(AutoScrollIntervalMs);
+        this.autoScrollTimer.Tick += this.AutoScrollTimerTick;
     }
 
     private void AlgoItemPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -82,16 +96,29 @@ public partial class AlgosPanelPage : Page, INavigableView<AlgorithmsModel>
     // 拖动时给被拖动的卡片画一个虚线框，标记它正在被拖动
     private void ShowDragOutline(Grid item)
     {
-        Point itemOrigin = item.TranslatePoint(new Point(0, 0), this.InsertionLineLayer);
-        this.DragOutline.Width = item.ActualWidth;
-        this.DragOutline.Height = item.ActualHeight;
+        this.draggedItem = item;
+        this.DragOutline.Visibility = Visibility.Visible;
+        this.UpdateDragOutline();
+    }
+
+    // 卡片会因为滚动而整体平移，虚线框的位置要跟着刷新
+    private void UpdateDragOutline()
+    {
+        if (this.draggedItem == null)
+        {
+            return;
+        }
+        Point itemOrigin = this.draggedItem.TranslatePoint(new Point(0, 0), this.InsertionLineLayer);
+        this.DragOutline.Width = this.draggedItem.ActualWidth;
+        this.DragOutline.Height = this.draggedItem.ActualHeight;
         Canvas.SetLeft(this.DragOutline, itemOrigin.X);
         Canvas.SetTop(this.DragOutline, itemOrigin.Y);
-        this.DragOutline.Visibility = Visibility.Visible;
     }
 
     private void EndDragVisual()
     {
+        this.draggedItem = null;
+        this.StopAutoScroll();
         this.DragOutline.Visibility = Visibility.Collapsed;
         this.InsertionLine.Visibility = Visibility.Collapsed;
     }
@@ -115,14 +142,121 @@ public partial class AlgosPanelPage : Page, INavigableView<AlgorithmsModel>
 
     private void AlgoItemDragOver(object sender, DragEventArgs e)
     {
-        if (sender is not Grid grid || !e.Data.GetDataPresent(AlgoDragDataFormat))
+        if (!e.Data.GetDataPresent(AlgoDragDataFormat))
         {
             return;
         }
-        this.blankDropTarget = null;
         e.Effects = DragDropEffects.Move;
         e.Handled = true;
-        this.ShowInsertionLine(grid, IsDropAfterMiddle(e, grid));
+        this.UpdateDragFeedback(e.GetPosition(this.InsertionLineLayer));
+    }
+
+    // 按鼠标位置刷新插入线，并在鼠标靠近左右边缘时启动自动滚动
+    private bool UpdateDragFeedback(Point mouse)
+    {
+        this.lastMousePosition = mouse;
+        this.UpdateDragOutline();
+        bool hasDropTarget = this.UpdateInsertionVisual(mouse);
+        this.UpdateAutoScroll(mouse);
+        return hasDropTarget;
+    }
+
+    // 鼠标压在某张卡片上时按上下半区决定插入位置，否则按鼠标下方最近的卡片决定
+    private bool UpdateInsertionVisual(Point mouse)
+    {
+        WrapPanel itemsPanel = FindVisualDescendant<WrapPanel>(this.AlgoItemsControl);
+        if (itemsPanel == null)
+        {
+            return false;
+        }
+        this.blankDropTarget = null;
+        Grid hoveredItem = this.FindItemAt(itemsPanel, mouse);
+        if (hoveredItem != null)
+        {
+            Point itemOrigin = hoveredItem.TranslatePoint(new Point(0, 0), this.InsertionLineLayer);
+            this.ShowInsertionLine(
+                hoveredItem,
+                mouse.Y > itemOrigin.Y + (hoveredItem.ActualHeight / 2));
+            return true;
+        }
+        if (this.TryShowInsertionLineForBlankArea(itemsPanel, mouse))
+        {
+            return true;
+        }
+        this.InsertionLine.Visibility = Visibility.Collapsed;
+        return false;
+    }
+
+    private Grid FindItemAt(WrapPanel itemsPanel, Point mouse)
+    {
+        foreach (UIElement child in itemsPanel.Children)
+        {
+            if (child is not ContentPresenter container || FindItemGrid(container) is not Grid item)
+            {
+                continue;
+            }
+            Point itemOrigin = item.TranslatePoint(new Point(0, 0), this.InsertionLineLayer);
+            if (mouse.X >= itemOrigin.X &&
+                mouse.X <= itemOrigin.X + item.ActualWidth &&
+                mouse.Y >= itemOrigin.Y &&
+                mouse.Y <= itemOrigin.Y + item.ActualHeight)
+            {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    // 鼠标进入算法区左右边缘的热区时开始滚动，越靠近边缘滚得越快
+    private void UpdateAutoScroll(Point mouse)
+    {
+        double viewportWidth = this.InsertionLineLayer.ActualWidth;
+        double edgeOffset;
+        if (mouse.X < AutoScrollHotZone)
+        {
+            edgeOffset = mouse.X - AutoScrollHotZone;
+        }
+        else if (mouse.X > viewportWidth - AutoScrollHotZone)
+        {
+            edgeOffset = mouse.X - (viewportWidth - AutoScrollHotZone);
+        }
+        else
+        {
+            this.StopAutoScroll();
+            return;
+        }
+        double ratio = Math.Min(1, Math.Abs(edgeOffset) / AutoScrollHotZone);
+        this.autoScrollStep = Math.Sign(edgeOffset) *
+            (AutoScrollMinStep + ((AutoScrollMaxStep - AutoScrollMinStep) * ratio));
+        if (!this.autoScrollTimer.IsEnabled)
+        {
+            this.autoScrollTimer.Start();
+        }
+    }
+
+    // 滚动会让所有卡片整体平移，因此每滚一步都要刷新虚线框，并按鼠标当前位置重算插入线
+    private void AutoScrollTimerTick(object sender, EventArgs e)
+    {
+        double currentOffset = this.AlgoScrollViewer.HorizontalOffset;
+        double nextOffset = Math.Clamp(
+            currentOffset + this.autoScrollStep,
+            0,
+            this.AlgoScrollViewer.ScrollableWidth);
+        if (nextOffset == currentOffset)
+        {
+            // 已经滚到尽头或者没有可滚动的内容，就没有必要继续
+            this.StopAutoScroll();
+            return;
+        }
+        this.AlgoScrollViewer.ScrollToHorizontalOffset(nextOffset);
+        this.UpdateDragOutline();
+        this.UpdateInsertionVisual(this.lastMousePosition);
+    }
+
+    private void StopAutoScroll()
+    {
+        this.autoScrollTimer.Stop();
+        this.autoScrollStep = 0;
     }
 
     private void ShowInsertionLine(Grid hoveredItem, bool dropAfterMiddle)
@@ -187,10 +321,9 @@ public partial class AlgosPanelPage : Page, INavigableView<AlgorithmsModel>
     private void PageDragOver(object sender, DragEventArgs e)
     {
         // 卡片的 DragOver 已经标记为已处理，能冒泡到这里说明鼠标落在卡片间隙或空白处
-        this.blankDropTarget = null;
-        if (!e.Data.GetDataPresent(AlgoDragDataFormat) || !this.TryShowInsertionLineForBlankArea(e))
+        if (!e.Data.GetDataPresent(AlgoDragDataFormat) ||
+            !this.UpdateDragFeedback(e.GetPosition(this.InsertionLineLayer)))
         {
-            this.InsertionLine.Visibility = Visibility.Collapsed;
             return;
         }
         e.Effects = DragDropEffects.Move;
@@ -199,14 +332,8 @@ public partial class AlgosPanelPage : Page, INavigableView<AlgorithmsModel>
 
     // 鼠标落在卡片间隙或空白处时，以同列中鼠标下方最近的一项为插入目标（插到它之前）；
     // 该列下方已经没有卡片时，以该列最后一项为插入目标（插到它之后）。
-    private bool TryShowInsertionLineForBlankArea(DragEventArgs e)
+    private bool TryShowInsertionLineForBlankArea(WrapPanel itemsPanel, Point mouse)
     {
-        WrapPanel itemsPanel = FindVisualDescendant<WrapPanel>(this.AlgoItemsControl);
-        if (itemsPanel == null)
-        {
-            return false;
-        }
-        Point mouse = e.GetPosition(this.InsertionLineLayer);
         Grid followingItem = null;
         double followingItemTop = double.MaxValue;
         Grid lastItemInColumn = null;
