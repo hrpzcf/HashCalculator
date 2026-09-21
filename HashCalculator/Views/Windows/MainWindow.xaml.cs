@@ -172,6 +172,8 @@ public partial class MainWindow
                 }
                 break;
             case nameof(Settings.Current.RunInMultiInstMode):
+                // 立刻更新跨进程发布的模式位，供之后启动的实例直接读取
+                InstanceClaim.PublishMultiInstMode(Settings.Current.RunInMultiInstMode);
                 if (!this.suppressAppRunMultiModeBroadcast)
                 {
                     this.BroadcastAppRunMultiModeChanged();

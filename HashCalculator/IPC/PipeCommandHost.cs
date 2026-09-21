@@ -6,19 +6,33 @@ using System.Threading;
 using System.Threading.Tasks;
 using HashCalculator.IPC.Handlers;
 using HashCalculator.Others;
+using Microsoft.Extensions.Logging;
 
 namespace HashCalculator.IPC;
 
 /// <summary>
 /// 跨进程管道命令的宿主，每个 HashCaclulator 实例监听一条以自己进程 ID 命名的管道。<br/>
-/// 常驻 ListenerInstanceCount 个并行的监听循环：Shell 扩展常会连续快速发起多条请求，
-/// 若只有一个监听循环，则在"accept 一条、补建下一条 namedPipeServer"的空窗里接不住紧随其后的连接，
-/// 故常驻多个监听循环互相兜底。每个监听循环处理完请求后在 PipeHandleAsync 里 DisposeAsync。
+/// 常驻 ListenerLoopCount 条并行的监听循环，每条循环长期持有并复用同一条服务实例
+/// （等连接 → 处理 → Disconnect → 再等连接）：处理期间该实例不接新连接，故常驻多条循环互相兜底，
+/// 接得住 Shell 扩展接连发起的多条请求。
 /// </summary>
 internal static class PipeCommandHost
 {
     private const int DefaultTimeoutMs = 200;
-    private const int ListenerInstanceCount = 2;
+
+    /// <summary>
+    /// 常驻监听循环数。复用式下每条循环长期持有并复用同一条服务实例，
+    /// 因此这个数既是一次可同时处理的请求数，也是该管道名的实例上限，两者必然相等。
+    /// （旧实现每条连接都重建新实例，实例上限还须额外预留"在途处理"的数量，
+    /// 否则重建必然撞满配额、抛 IOException 空转。）
+    /// </summary>
+    private const int ListenerLoopCount = 4;
+
+    /// <summary>
+    /// 创建服务实例失败后的重试间隔，避免失败时空转
+    /// </summary>
+    private const int ListenerRetryDelayMs = 50;
+
     private const int InOutBufferSize = 64 * 1024;
 
     private static readonly CancellationTokenSource cts = new();
@@ -111,9 +125,9 @@ internal static class PipeCommandHost
             new NavigateHandler(),
             new ParseArgumentsHandler(),
             new SetMultiModeHandler());
-        // 保持最多 ListenerInstanceCount 个 namedPipeServer 待命，防止
-        // 多个客户端瞬发连接不上（比如为 1 时接不住 Shell 里的接连两次请求）
-        for (int i = 0; i < ListenerInstanceCount; i++)
+        // 常驻 ListenerLoopCount 条循环，各自持有并复用一条服务实例，
+        // 某条正在处理请求时它不接新连接，其余循环继续兜底
+        for (int i = 0; i < ListenerLoopCount; i++)
         {
             _ = Task.Run(PipeListeningLoopAsync);
         }
@@ -131,36 +145,65 @@ internal static class PipeCommandHost
     {
         while (!cts.IsCancellationRequested)
         {
-            NamedPipeServerStream namedPipeServer = null;
-            PipeOptions pipeServerOptions = PipeOptions.Asynchronous
-                | PipeOptions.CurrentUserOnly;
-            try
+            NamedPipeServerStream pipeServer = await CreateServerAsync();
+            if (pipeServer is null)
             {
-                namedPipeServer = new NamedPipeServerStream(
-                    PipeDiscovery.OwnPipeName,
-                    PipeDirection.InOut,
-                    ListenerInstanceCount,
-                    PipeTransmissionMode.Message,
-                    pipeServerOptions,
-                    inBufferSize: InOutBufferSize,
-                    outBufferSize: InOutBufferSize);
-                await namedPipeServer.WaitForConnectionAsync(cts.Token);
-            }
-            catch (OperationCanceledException)
-            {
-                namedPipeServer?.Dispose();
-                return;
-            }
-            catch (Exception)
-            {
-                namedPipeServer?.Dispose();
                 continue;
             }
-            // 不等待完成，避免某个命令处理耗时期间无法接收后续命令
-            _ = Task.Run(() => PipeHandleAsync(namedPipeServer));
+            // 一条实例反复复用：等连接 → 处理 → Disconnect → 再等连接，
+            // 直到它报废（等待或断开失败）才换新的一条
+            while (!cts.IsCancellationRequested)
+            {
+                try
+                {
+                    await pipeServer.WaitForConnectionAsync(cts.Token);
+                    await PipeHandleAsync(pipeServer);
+                    pipeServer.Disconnect();
+                }
+                catch (OperationCanceledException)
+                {
+                    pipeServer.Dispose();
+                    return;
+                }
+                catch (Exception exception)
+                {
+                    // App.Logger 在 _host.Start() 之后才赋值，而本循环就在 _host.Start() 期间启动
+                    App.Logger?.LogError(exception, "命名管道服务实例报废，将重建");
+                    pipeServer.Dispose();
+                    break;
+                }
+            }
         }
     }
 
+    /// <summary>
+    /// 创建一条服务实例；失败时记录并等待一小段时间，返回 null 让调用方重试
+    /// </summary>
+    private static async Task<NamedPipeServerStream> CreateServerAsync()
+    {
+        try
+        {
+            return new NamedPipeServerStream(
+                PipeDiscovery.OwnPipeName,
+                PipeDirection.InOut,
+                ListenerLoopCount,
+                PipeTransmissionMode.Message,
+                PipeOptions.Asynchronous | PipeOptions.CurrentUserOnly,
+                inBufferSize: InOutBufferSize,
+                outBufferSize: InOutBufferSize);
+        }
+        catch (Exception exception)
+        {
+            App.Logger?.LogError(exception, "创建命名管道服务实例失败");
+            await Task.Delay(ListenerRetryDelayMs);
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// 读取并处理一条请求。不释放 server：
+    /// 正常返回后由调用方 Disconnect 并复用这同一条实例。
+    /// </summary>
     private static async Task PipeHandleAsync(NamedPipeServerStream server)
     {
         try
@@ -183,10 +226,6 @@ internal static class PipeCommandHost
         catch (Exception)
         {
             // 客户端可能已断开，此时响应写不出去，丢弃即可
-        }
-        finally
-        {
-            await server.DisposeAsync();
         }
     }
 

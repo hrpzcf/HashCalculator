@@ -88,40 +88,44 @@ public partial class App : Application
             Current.Shutdown();
             return;
         }
-        // 是否已有其他实例在运行（本实例尚未计入）
-        if (PipeDiscovery.TryGetOldestAlive(out PipeEndpoint oldestPipe))
+        bool existingMultiInstMode = false;
+        // 是否已有其他实例在运行（本实例尚未计入）：内核对象由首个实例创建并持续持有，
+        // 创建成功即本实例是首个实例，创建失败即已有实例在运行。
+        bool isFirstInstance = InstanceClaim.TryClaim();
+        if (!isFirstInstance)
         {
-            // 询问现存最早实例的多实例模式，据此决定本实例是并入它还是独立成为新实例
-            RequestResult modeOutcome = await PipeCommandHost.RequestAsync(
-                oldestPipe.PipeName, HandlerIdentity.GetAppMultiMode);
-            bool targetMultiMode = modeOutcome.Status == RequestStatus.OK
-                && modeOutcome.Payload?.Length > 0 && modeOutcome.Payload[0] != 0;
-            if (!targetMultiMode)
+            // 读现存实例发布的模式位（不是读配置文件）：
+            // 读到 true 即现存实例处于多实例模式，本实例与它并存
+            if (InstanceClaim.TryReadMultiInstMode(out existingMultiInstMode)
+                && !existingMultiInstMode)
             {
-                // 现存实例是单实例模式：本实例不与之共存，把工作交给它后退出。
-                // 转发路径到此即止，不再加载 Settings，避免无谓开销。
-                if (e.Args.Length > 0)
+                // 现存实例是单实例模式：本实例不与之共存，把工作交给它后退出
+                // 转发路径到此即止，不再加载 Settings，避免无谓开销
+                if (PipeDiscovery.TryGetOldestAlive(out PipeEndpoint oldestPipe))
                 {
-                    await PipeCommandHost.RequestAsync(oldestPipe.PipeName, HandlerIdentity.ParseArguments,
-                        EncodeArguments(e.Args));
+                    if (e.Args.Length > 0)
+                    {
+                        await PipeCommandHost.RequestAsync(oldestPipe.PipeName,
+                            HandlerIdentity.ParseArguments, EncodeArguments(e.Args));
+                    }
+                    await PipeCommandHost.RequestAsync(oldestPipe.PipeName, HandlerIdentity.Activate);
                 }
-                await PipeCommandHost.RequestAsync(oldestPipe.PipeName, HandlerIdentity.Activate);
                 Current.Shutdown();
                 return;
             }
+            // 读不到（打不开内核对象）：按本地启动处理
         }
         // 本地启动：至此才需要加载 Settings
         Settings.LoadSettings();
-        // 若已有其他实例（多实例模式），把本实例的多实例模式同步为现存实例的值，
-        // 因为广播收不到刚启动的自己，需主动询问以保持一致。
-        if (oldestPipe is not null)
+        if (existingMultiInstMode)
         {
-            RequestResult syncOutcome = await PipeCommandHost.RequestAsync(
-                oldestPipe.PipeName, HandlerIdentity.GetAppMultiMode);
-            if (syncOutcome.Status == RequestStatus.OK && syncOutcome.Payload?.Length > 0)
-            {
-                Settings.Current.RunInMultiInstMode = syncOutcome.Payload[0] != 0;
-            }
+            // 与并存实例的多实例模式保持一致
+            Settings.Current.RunInMultiInstMode = true;
+        }
+        if (isFirstInstance)
+        {
+            // 首个实例加载设置后才知道自己的模式，此刻把真实值发布出去
+            InstanceClaim.PublishMultiInstMode(Settings.Current.RunInMultiInstMode);
         }
         if (e.Args.Length > 0)
         {
