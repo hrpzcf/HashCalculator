@@ -2,12 +2,10 @@
 using System.Buffers;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
-using System.Text;
 using System.Threading;
 using System.Windows;
 using System.Windows.Interop;
@@ -203,25 +201,18 @@ internal static class CommonUtils
 
     public static string ToHexStringUpper(byte[] passedInBytes)
     {
-        return ToHexString(passedInBytes, "X2");
+        if (passedInBytes != null)
+        {
+            return Convert.ToHexString(passedInBytes);
+        }
+        return default(string);
     }
 
     public static string ToHexStringLower(byte[] passedInBytes)
     {
-        return ToHexString(passedInBytes, "x2");
-    }
-
-    private static string ToHexString(byte[] passedInBytes, string format)
-    {
-        Debug.Assert(new string[] { "x2", "X2" }.Contains(format));
         if (passedInBytes != null)
         {
-            StringBuilder stringBuilder = new StringBuilder(passedInBytes.Length * 2);
-            for (int i = 0; i < passedInBytes.Length; ++i)
-            {
-                stringBuilder.Append(passedInBytes[i].ToString(format));
-            }
-            return stringBuilder.ToString();
+            return Convert.ToHexStringLower(passedInBytes);
         }
         return default(string);
     }
@@ -234,9 +225,7 @@ internal static class CommonUtils
             {
                 return Convert.FromBase64String(base64String);
             }
-            catch
-            {
-            }
+            catch { }
         }
         return default(byte[]);
     }
@@ -247,16 +236,9 @@ internal static class CommonUtils
         {
             try
             {
-                byte[] resultBytes = new byte[hexString.Length / 2];
-                for (int i = 0; i < resultBytes.Length; ++i)
-                {
-                    resultBytes[i] = Convert.ToByte(hexString.Substring(i * 2, 2), 16);
-                }
-                return resultBytes;
+                return Convert.FromHexString(hexString);
             }
-            catch
-            {
-            }
+            catch { }
         }
         return default(byte[]);
     }
