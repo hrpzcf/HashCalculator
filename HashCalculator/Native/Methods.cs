@@ -227,7 +227,8 @@ internal static class SHELL32
     /// </summary>
     [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
     internal static extern UIntPtr SHGetFileInfoW([MarshalAs(UnmanagedType.LPWStr)] string pszPath,
-        uint dwFileAttributes, ref SHFILEINFOW psfi, uint cbFileInfo, SHGFI uFlags);
+        [MarshalAs(UnmanagedType.U4)] FileAttributes dwFileAttributes, ref SHFILEINFOW psfi, uint cbFileInfo,
+        SHGFI uFlags);
 
     /// <summary>
     /// http://www.pinvoke.net/default.aspx/shell32/SHOpenFolderAndSelectItems.html

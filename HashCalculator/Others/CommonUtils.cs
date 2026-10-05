@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Buffers;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -33,6 +34,19 @@ internal static class CommonUtils
         Path.DirectorySeparatorChar,
         Path.AltDirectorySeparatorChar
     };
+
+    /// <summary>
+    /// 缓存条目上限：图标类型极多时（例如几百上千个图标各异的 .exe）防止缓存自身膨胀。
+    /// 达到上限后不再新增条目，退化为原来的"每次新建"行为。
+    /// </summary>
+    private const int fileIconCacheLimit = 2048;
+
+    /// <summary>
+    /// 文件图标缓存：同一个图标只创建一份已冻结的 BitmapSource 供表格各行共享。
+    /// 每行各持一份 32×32 位图时（8000 行约 46 MB），共享后占用降到"图标类型数"级别。
+    /// </summary>
+    private static readonly ConcurrentDictionary<FileIconCacheKey, BitmapSource> fileIconCache =
+        new ConcurrentDictionary<FileIconCacheKey, BitmapSource>();
 
     /// <summary>
     /// 请确保 array 是 null 或通过 ArrayPool<T>.Shared.Rent 分配
@@ -643,30 +657,97 @@ internal static class CommonUtils
 
     public static BitmapSource GetFileIcon(string filePath, bool largeIcon = false)
     {
-        if (File.Exists(filePath))
+        if (!File.Exists(filePath))
         {
-            SHFILEINFOW info = new SHFILEINFOW();
-            SHGFI uFlags = SHGFI.SHGFI_ICON | (largeIcon ? SHGFI.SHGFI_LARGEICON : SHGFI.SHGFI_SMALLICON);
-            UIntPtr result = SHELL32.SHGetFileInfoW(filePath, 0, ref info, shfileinfowSize, uFlags);
-            if (result.ToUInt32() != 0)
+            return default(BitmapSource);
+        }
+        // 扩展名的大小写由 FileIconCacheKey 的判等与哈希统一忽略，此处无需小写化
+        string extension = Path.GetExtension(filePath);
+        bool iconFromFileItself = FileIconCacheKey.IsIconFromFileItself(extension);
+        // 快路径键（ImageListIndex = -1）：图标由文件类型关联决定的扩展名，
+        // 命中时不询问 shell，直接使用共享的图标
+        FileIconCacheKey extensionOnlyKey = new FileIconCacheKey(extension, -1, largeIcon);
+        if (!iconFromFileItself && fileIconCache.TryGetValue(extensionOnlyKey, out BitmapSource cachedIcon))
+        {
+            return cachedIcon;
+        }
+        SHGFI uFlags = SHGFI.SHGFI_ICON |
+            (largeIcon ? SHGFI.SHGFI_LARGEICON : SHGFI.SHGFI_SMALLICON);
+        if (iconFromFileItself)
+        {
+            // 图标取自文件自身：必须传真实路径（shell 需读取文件资源），
+            // 并取系统图像列表索引以区分不同文件的图标
+            uFlags |= SHGFI.SHGFI_SYSICONINDEX;
+        }
+        else
+        {
+            // 图标由文件类型关联决定：只按扩展名取图标，不访问磁盘
+            uFlags |= SHGFI.SHGFI_USEFILEATTRIBUTES;
+        }
+        SHFILEINFOW info = new SHFILEINFOW();
+        // dwFileAttributes 只在 SHGFI_USEFILEATTRIBUTES 生效时被 shell 使用（表示
+        // "当作存在一个带常规属性的文件"），另一分支会忽略该参数，故统一传 Normal
+        UIntPtr result = SHELL32.SHGetFileInfoW(filePath, FileAttributes.Normal, ref info, shfileinfowSize, uFlags);
+        // 返回值语义随标志而变：不带 SHGFI_SYSICONINDEX 时是"非零即成功"的布尔值，
+        // 带该标志时则是系统图像列表句柄（指针宽度，64 位下可能超出 UInt32，
+        // 用它调 ToUInt32 会抛 OverflowException），故一律与 UIntPtr.Zero 比较
+        if (result == UIntPtr.Zero)
+        {
+            return default(BitmapSource);
+        }
+        try
+        {
+            // 图标取自文件自身时要拿到 iIcon 才知道缓存键，其余情况用扩展名键
+            FileIconCacheKey cacheKey = iconFromFileItself ?
+                new FileIconCacheKey(extension, info.iIcon, largeIcon) : extensionOnlyKey;
+            if (iconFromFileItself && fileIconCache.TryGetValue(cacheKey, out BitmapSource cachedByIndex))
             {
-                try
+                return cachedByIndex;
+            }
+            BitmapSource bitmapImage = CreateFrozenBitmapSource(info.hIcon);
+            if (bitmapImage == null)
+            {
+                return default(BitmapSource);
+            }
+            if (fileIconCache.Count < fileIconCacheLimit)
+            {
+                // 不用 GetOrAdd：并发时它的工厂可能被多次调用，多创建的位图会成为垃圾。
+                // TryAdd 失败说明别的线程已放入同一份图标，此时用那一份。
+                if (!fileIconCache.TryAdd(cacheKey, bitmapImage) &&
+                    fileIconCache.TryGetValue(cacheKey, out BitmapSource existedIcon))
                 {
-                    Drawing.Icon icon = Drawing.Icon.FromHandle(info.hIcon);
-                    BitmapSource bitmapImage = Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty,
-                        BitmapSizeOptions.FromEmptyOptions());
-                    // BitmapSource 是 Freezable，未冻结时只能在创建它的线程上访问
-                    // 冻结后才能跨线程使用，例如在后台线程构造图标、在界面线程绑定 Image.Source
-                    bitmapImage.Freeze();
-                    return bitmapImage;
-                }
-                catch (Exception) { }
-                finally
-                {
-                    USER32.DestroyIcon(info.hIcon);
+                    return existedIcon;
                 }
             }
+            return bitmapImage;
         }
-        return default(BitmapSource);
+        finally
+        {
+            // 命中缓存提前返回时也不能漏：每次调用都会新分配一个 HICON
+            USER32.DestroyIcon(info.hIcon);
+        }
+    }
+
+    /// <summary>
+    /// 由 HICON 创建已冻结的 BitmapSource。冻结后才能跨线程使用（例如后台线程构造图标、
+    /// 界面线程绑定 Image.Source），也才能被表格中的多行共享同一个实例。
+    /// </summary>
+    private static BitmapSource CreateFrozenBitmapSource(IntPtr hIcon)
+    {
+        try
+        {
+            Drawing.Icon icon = Drawing.Icon.FromHandle(hIcon);
+            BitmapSource bitmapImage = Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty,
+                BitmapSizeOptions.FromEmptyOptions());
+            if (bitmapImage.CanFreeze && !bitmapImage.IsFrozen)
+            {
+                bitmapImage.Freeze();
+            }
+            return bitmapImage;
+        }
+        catch (Exception)
+        {
+            return default(BitmapSource);
+        }
     }
 }

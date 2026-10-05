@@ -1,42 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
-namespace HashCalculator
+namespace HashCalculator;
+
+/// <summary>
+/// 两个 byte[] 之间的内容相等性对比器
+/// </summary>
+internal class BytesComparer : IEqualityComparer<byte[]>
 {
-    /// <summary>
-    /// 检查两个 IEnumerable<byte> 之间每对相同下标的 byte 是否都相等
-    /// </summary>
-    internal class BytesComparer : IEqualityComparer<IEnumerable<byte>>
+    public static BytesComparer Default { get; } = new BytesComparer();
+
+    public bool Equals(byte[] a, byte[] b)
     {
-        public static BytesComparer Default { get; } = new BytesComparer();
-
-        public bool Equals(IEnumerable<byte> a, IEnumerable<byte> b)
+        if (a is null || b is null)
         {
-            if (a == null || b == null)
-            {
-                return a == b;
-            }
-            else
-            {
-                return a.SequenceEqual(b);
-            }
+            return a is null && b is null;
         }
-
-        /// <summary>
-        /// 经验证，两个 IEnumerable<byte>，元素数量和值都相同但顺序不同，合并得到的 HashCode 不同
-        /// </summary>
-        public int GetHashCode(IEnumerable<byte> bytes)
+        else
         {
-            HashCode enumerableBytesHashCodeBuilder = new HashCode();
-            if (bytes != null)
-            {
-                foreach (byte oneByteFromEnumerableBytes in bytes)
-                {
-                    enumerableBytesHashCodeBuilder.Add(oneByteFromEnumerableBytes);
-                }
-            }
-            return enumerableBytesHashCodeBuilder.ToHashCode();
+            return a.SequenceEqual(b.AsSpan());
         }
+    }
+
+    /// <summary>
+    /// 经验证，两个仅元素顺序不同的 byte[]，合并得到的 HashCode 不同
+    /// </summary>
+    public int GetHashCode(byte[] bytes)
+    {
+        HashCode hashCodeBuilder = new HashCode();
+        hashCodeBuilder.AddBytes(bytes ?? Array.Empty<byte>());
+        return hashCodeBuilder.ToHashCode();
     }
 }
