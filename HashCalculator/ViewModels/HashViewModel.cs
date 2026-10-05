@@ -79,7 +79,10 @@ public class HashViewModel : BaseViewModel
             if (!arg.Deprecated)
             {
                 this.FileLength = this.Information.Length;
-                this.FileIcon = CommonUtils.GetFileIcon(arg.FilePath, true);
+                // 关闭"显示文件图标"时不取图标：省掉逐行的 shell 调用与位图创建
+                // （此时图标列本身也是折叠的：HomePage.xaml 绑定同一个设置，不会出现空白占位）
+                this.FileIcon = Settings.Current.ShowFileIcon ?
+                    CommonUtils.GetFileIcon(arg.FilePath, true) : null;
             }
             else
             {
