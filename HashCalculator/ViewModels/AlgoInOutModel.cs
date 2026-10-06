@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -15,7 +13,7 @@ public class AlgoInOutModel : BaseViewModel
     private bool _export = false;
     private bool _selected = false;
     private string _algorithmAlias = null;
-    private IEnumerable<string> _algoAliasWords = null;
+    private string[] _aliasWords = null;
     private readonly string _defaultAlias = null;
     private RelayCommand _copyHashResultCmd;
 
@@ -38,7 +36,6 @@ public class AlgoInOutModel : BaseViewModel
         this.AlgoType = algoInfo.AlgoType;
         this.Algo = (HashAlgorithm)algoInfo;
         this._defaultAlias = defaultAlias;
-        this.PropertyChanged += this.GenerateAliasWords;
         this.AlgorithmAlias = alias ?? defaultAlias;
     }
 
@@ -85,7 +82,33 @@ public class AlgoInOutModel : BaseViewModel
     public string AlgorithmAlias
     {
         get => this._algorithmAlias;
-        set => this.SetPropNotify(ref this._algorithmAlias, value);
+        set
+        {
+            // 值未变则不通知；值变了要作废分词缓存
+            if (this.AlgorithmAlias?.Equals(value) != true)
+            {
+                this._algorithmAlias = value;
+                this._aliasWords = null;
+                this.NotifyPropertyChanged();
+            }
+        }
+    }
+
+    /// <summary>
+    /// 别名的分词结果（按逗号/换行拆分并去除首尾空白），供匹配用，只在第一次被读取时拆分并缓存。<br/>
+    /// 之所以按需计算：别名匹配只服务于"把算法名解析成 AlgoType"这一件事，而该事只在
+    /// AlgorithmsModel.ProvidedAlgos 上展开；表格里每个文件对应的行模型数量可达数十万，从不读取本属性。
+    /// 若在构造时为每个实例都预备一份分词结果（数组 + 惰性迭代器 + 属性变更订阅），会有几十 MB 的无谓占用。
+    /// </summary>
+    private string[] AliasWords
+    {
+        get
+        {
+            return this._aliasWords ??= string.IsNullOrEmpty(this._algorithmAlias) ?
+                Array.Empty<string>() :
+                this._algorithmAlias.Split(separators, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(i => i.Trim()).ToArray();
+        }
     }
 
     public AlgoInOutModel NewAlgoInOutModel()
@@ -94,23 +117,25 @@ public class AlgoInOutModel : BaseViewModel
             this._defaultAlias);
     }
 
+    /// <summary>
+    /// 指定名称是否为本算法的别名之一。一个算法可以有多个用逗号/换行分隔的等价别名。
+    /// </summary>
     public bool IsMyAliasWord(string alias, StringComparer comparer)
     {
-        return this._algoAliasWords?.Contains(alias, comparer) ?? false;
+        string[] words = this.AliasWords;
+        for (int i = 0; i < words.Length; ++i)
+        {
+            if (comparer.Equals(words[i], alias))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void ResetAlias()
     {
         this.AlgorithmAlias = this._defaultAlias;
-    }
-
-    private void GenerateAliasWords(object sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName == nameof(this.AlgorithmAlias))
-        {
-            this._algoAliasWords = this.AlgorithmAlias?.Split(separators,
-                StringSplitOptions.RemoveEmptyEntries).Select(i => i.Trim());
-        }
     }
 
     private void CopyHashResultAction(object param)
