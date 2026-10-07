@@ -895,6 +895,8 @@ public class HashViewModel : BaseViewModel
                     ).ToArray();
                 foreach (AlgoInOutModel model in frozenAlgoModels)
                 {
+                    // 首次读取 Algo 会创建本模型的计算实例：放在这里的单线程阶段创建，
+                    // 避免并行阶段出现懒创建
                     model.Algo.Initialize();
                 }
                 int actualReadCount = 0;
@@ -999,9 +1001,11 @@ public class HashViewModel : BaseViewModel
             {
                 foreach (AlgoInOutModel model in frozenAlgoModels)
                 {
-                    // 只释放非托管状态，不调用 HashAlgorithm.Dispose —— 后者会让实例永久不可用，
-                    // 而算法实例需跨轮复用（下轮 Initialize 会重新创建状态）
-                    model.IAlgo.Release();
+                    // 释放非托管状态并丢弃计算实例：
+                    // 哈希值已存入 HashResult，本轮的实例再无用处；
+                    // 留着它会让"每行 × 算法"的实例常驻，全表可达几十 MB。
+                    // 下轮需要时由 Algo 属性重新创建。
+                    model.ReleaseAlgo();
                 }
             }
             if (stopwatch is not null)

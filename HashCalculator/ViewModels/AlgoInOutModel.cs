@@ -15,7 +15,18 @@ public class AlgoInOutModel : BaseViewModel
     private string _algorithmAlias = null;
     private string[] _aliasWords = null;
     private readonly string _defaultAlias = null;
-    private RelayCommand _copyHashResultCmd;
+
+    /// <summary>
+    /// 本模型自己的计算实例，含计算状态：按需创建，一轮计算结束由
+    /// <see cref="ReleaseAlgo"/> 释放并丢弃，下次需要时重新创建。
+    /// </summary>
+    private IHashAlgoInfo _algoInstance;
+
+    /// <summary>
+    /// 共享的算法信息：同一算法的所有模型（模板与各行的克隆）共用同一个实例，
+    /// 只用于读取元数据（AlgoName/AlgoType/DigestLength）与创建计算实例，不含计算状态。
+    /// </summary>
+    private readonly IHashAlgoInfo _algoInfo;
 
     private static readonly string[] separators = new string[]
     {
@@ -24,6 +35,8 @@ public class AlgoInOutModel : BaseViewModel
         "\r\n",
     };
 
+    private RelayCommand _copyHashResultCmd;
+
     public AlgoInOutModel(IHashAlgoInfo algoInfo, string defaultAlias) :
         this(algoInfo, defaultAlias, alias: null)
     {
@@ -31,10 +44,9 @@ public class AlgoInOutModel : BaseViewModel
 
     public AlgoInOutModel(IHashAlgoInfo algoInfo, string defaultAlias, string alias)
     {
-        this.IAlgo = algoInfo;
+        this._algoInfo = algoInfo;
         this.AlgoName = algoInfo.AlgoName;
         this.AlgoType = algoInfo.AlgoType;
-        this.Algo = (HashAlgorithm)algoInfo;
         this._defaultAlias = defaultAlias;
         this.AlgorithmAlias = alias ?? defaultAlias;
     }
@@ -43,9 +55,26 @@ public class AlgoInOutModel : BaseViewModel
 
     public AlgoType AlgoType { get; }
 
-    public HashAlgorithm Algo { get; }
+    /// <summary>
+    /// 共享的算法信息，供读取元数据与创建计算实例使用。
+    /// </summary>
+    public IHashAlgoInfo IAlgo => this._algoInfo;
 
-    public IHashAlgoInfo IAlgo { get; }
+    /// <summary>
+    /// 本模型的计算实例，按需创建。一轮计算结束后由 <see cref="ReleaseAlgo"/> 置空，
+    /// 所以不要跨轮长期持有它，需要时重新读取本属性即可。
+    /// </summary>
+    public HashAlgorithm Algo => (HashAlgorithm)(this._algoInstance ??= this._algoInfo.NewInstance());
+
+    /// <summary>
+    /// 释放计算实例的非托管状态并丢弃实例，重算时会重新创建。<br/>
+    /// 不调用 HashAlgorithm.Dispose：它会让实例永久不可用，而这里只需要释放状态。
+    /// </summary>
+    public void ReleaseAlgo()
+    {
+        this._algoInstance?.Release();
+        this._algoInstance = null;
+    }
 
     public bool Export
     {
@@ -98,7 +127,7 @@ public class AlgoInOutModel : BaseViewModel
     /// 别名的分词结果（按逗号/换行拆分并去除首尾空白），供匹配用，只在第一次被读取时拆分并缓存。<br/>
     /// 之所以按需计算：别名匹配只服务于"把算法名解析成 AlgoType"这一件事，而该事只在
     /// AlgorithmsModel.ProvidedAlgos 上展开；表格里每个文件对应的行模型数量可达数十万，从不读取本属性。
-    /// 若在构造时为每个实例都预备一份分词结果（数组 + 惰性迭代器 + 属性变更订阅），会有几十 MB 的无谓占用。
+    /// 若在构造时为每个实例都预备一份分词结果（数组 + 懒迭代器 + 属性变更订阅），会有几十 MB 的无谓占用。
     /// </summary>
     private string[] AliasWords
     {
@@ -111,10 +140,13 @@ public class AlgoInOutModel : BaseViewModel
         }
     }
 
+    /// <summary>
+    /// 由本模型克隆出一个新模型（表格里每个文件的行模型都由模板克隆而来）。<br/>
+    /// 只共享算法信息，不预先创建计算实例：实例在真正要计算时才创建，算完即弃。
+    /// </summary>
     public AlgoInOutModel NewAlgoInOutModel()
     {
-        return new AlgoInOutModel(this.IAlgo.NewInstance(), this.AlgorithmAlias,
-            this._defaultAlias);
+        return new AlgoInOutModel(this._algoInfo, this.AlgorithmAlias, this._defaultAlias);
     }
 
     /// <summary>
