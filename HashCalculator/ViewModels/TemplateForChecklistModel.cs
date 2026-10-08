@@ -215,9 +215,15 @@ public class TemplateForChecklistModel
         return new TemplateForChecklistModel(newName, this.Extension, this.Template);
     }
 
-    internal bool ExtendChecklistWithLines(string lines, HashChecklist checklist)
+    /// <summary>
+    /// 用本方案解析一段文本，返回是否至少加入了一条校验信息。<br/>
+    /// <paramref name="consumed"/> 为最后一个成功匹配的结束位置（没有匹配时为 0，与是否真的加入了条目无关），
+    /// 调用方据此判断这段文本里哪些内容已经处理完、哪些要留给下一段。
+    /// </summary>
+    internal bool ExtendChecklistWithLines(string lines, HashChecklist checklist, out int consumed)
     {
         int checkItemCount = 0;
+        consumed = 0;
         if (!string.IsNullOrEmpty(lines) && checklist != null && this.InitializeRegex())
         {
             try
@@ -226,6 +232,7 @@ public class TemplateForChecklistModel
                 // 那样把整份匹配结果（大型校验信息文件可达数十万个 Match）保留到枚举结束
                 for (Match match = this.regex.Match(lines); match.Success; match = match.NextMatch())
                 {
+                    consumed = match.Index + match.Length;
                     if (checklist.AddChecklistItem(match.Groups[algoGroup].Value, match.Groups[hashGroup].Value,
                         match.Groups[nameGroup].Value))
                     {

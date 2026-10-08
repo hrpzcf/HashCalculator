@@ -139,6 +139,14 @@ public class HashChecklist : IEnumerable<KeyValuePair<string, HashChecker>>
     /// </summary>
     private const int ChecklistChunkChars = 4 * 1024 * 1024;
 
+    /// <summary>
+    /// 缓冲允许等待解析的字符数上限（安全阀）。<br/>
+    /// 缓冲里保留的只是"还没解析完的部分"：正常情况下只有最后一条成功匹配之后的一小段，
+    /// 远达不到这个量；只有整份文件都没有换行、或某条记录本身极大的文件才会逼近它。
+    /// 到顶时按"解析不了"处理并报错，避免缓冲无限增长。
+    /// </summary>
+    private const int ChecklistWaitChars = 32 * 1024 * 1024;
+
     private static Encoding[] _supportedEncodings = null;
     private static readonly char[] directorySeparators = new char[] { '/', '\\' };
     private Dictionary<string, HashChecker> fileHashCheckerDict = null;
@@ -312,11 +320,13 @@ public class HashChecklist : IEnumerable<KeyValuePair<string, HashChecker>>
             {
                 this.AlgoTypeFromFileExt = algoType;
             }
-            bool contentDecoded = false;
             if (_supportedEncodings == null)
             {
                 PrepareSupportedEncodings();
             }
+            // 逐个候选编码充当探测：解码失败会抛 DecoderFallbackException（可能出现在读取中途），
+            // 此时清掉已解析出的内容并换下一个编码；能读到底就采用这个编码，不再试后面的。
+            // 所以 ExtendChecklistWithReader 不需要返回值：它不抛异常就代表"这份编码可用"。
             foreach (Encoding encoding in _supportedEncodings)
             {
                 using (StreamReader reader = new StreamReader(filePath, encoding, true,
@@ -325,26 +335,20 @@ public class HashChecklist : IEnumerable<KeyValuePair<string, HashChecker>>
                     try
                     {
                         this.ExtendChecklistWithReader(reader, fileExt);
-                        contentDecoded = true;
+                        return this.ReasonForFailure;
                     }
                     catch (DecoderFallbackException)
                     {
-                        // 分块读取时解码失败可能出现在中途，此前已解析出的内容必须清掉
                         this.Initialize();
-                        continue;
                     }
-                    break;
                 }
             }
-            if (!contentDecoded)
-            {
-                this.ReasonForFailure = "只支持 UTF8/ANSI/UNICODE/GB18030 及兼容编码的校验信息文件。";
-            }
+            this.ReasonForFailure = "只支持 UTF8/ANSI/UNICODE/GB18030 及兼容编码的校验信息文件。";
         }
         catch (Exception ex)
         {
             this.fileHashCheckerDict?.Clear();
-            this.ReasonForFailure = $"出现异常导致搜集校验信息失败：\n{ex.Message}";
+            this.ReasonForFailure = $"出现异常导致解析校验信息失败：\n{ex.Message}";
         }
         return this.ReasonForFailure;
     }
@@ -355,72 +359,153 @@ public class HashChecklist : IEnumerable<KeyValuePair<string, HashChecker>>
     /// </summary>
     private void ExtendChecklistWithReader(StreamReader reader, string fileExt)
     {
+        // 解析方案只取决于扩展名与设置，与文件内容无关：先判空，省掉整份文件的读取与逐块切字符串
+        ChecklistParserSession parserSession = new ChecklistParserSession(fileExt);
+        if (parserSession.IsEmpty)
+        {
+            this.ReasonForFailure = "没有可用的校验信息解析方案。";
+            return;
+        }
         int readCount;
         char[] readBuffer = new char[ChecklistReadChars];
-        TemplateForChecklistModel settledParser = null;
         StringBuilder chunkBuilder = new StringBuilder(ChecklistChunkChars);
-        List<TemplateForChecklistModel> parsers = GetParsers(fileExt).ToList();
+        // 上次解析时缓冲的长度。这里用"缓冲又攒够一块"（而不是"缓冲长度超过一块"）决定是否解析：
+        // 解析时会把还没匹配上的内容留在缓冲里（见 ExtendChecklistWithChunk），缓冲会长期大于一块，
+        // 若按长度判断，则每读入一小段（ChecklistReadChars）都会重新解析整段，并切出一份与缓冲等长的
+        // 大字符串（4M 字符约 8 MB，会进大对象堆），白白产生大对象
+        int parsedLength = 0;
         // 直接按字符块读取而不是用 ReadLine：后者会为每一行分配一个临时字符串，
         // 数十万行的文件会产生同量级的短命垃圾，加重 GC 负担
         while ((readCount = reader.Read(readBuffer, 0, readBuffer.Length)) > 0)
         {
             chunkBuilder.Append(readBuffer, 0, readCount);
-            if (chunkBuilder.Length >= ChecklistChunkChars)
+            if (chunkBuilder.Length - parsedLength < ChecklistChunkChars)
             {
-                this.ExtendChecklistWithChunk(chunkBuilder, ref settledParser, parsers);
+                continue;
             }
+            if (!this.ExtendChecklistWithChunk(chunkBuilder, parserSession))
+            {
+                return;   // 等待解析的内容已到上限，ReasonForFailure 已设置
+            }
+            parsedLength = chunkBuilder.Length;   // 解析后缓冲已变短，按当前长度重新计时
         }
         if (chunkBuilder.Length != 0)
         {
-            this.ExtendChecklistWithChunk(chunkBuilder, ref settledParser, parsers);
+            // 文件已读完，不存在"下一块"：剩余内容必须整块解析，
+            // 否则被留给下一块补全的最后一行会因为没有下一块而永远得不到解析
+            this.ExtendChecklistWithChunk(chunkBuilder, parserSession, isLastChunk: true);
         }
-        if (parsers.Count == 0)
+        // 走到这里说明方案列表不为空（为空时已在开头返回）：没有任何方案匹配上内容时给出提示
+        if (!parserSession.HasSettled)
         {
-            this.ReasonForFailure = "没有可用的校验信息解析方案。";
-        }
-        else if (settledParser == null)
-        {
-            this.ReasonForFailure = "没有搜集到校验信息，请检查校验信息文件内容。";
+            this.ReasonForFailure = "没有解析到校验信息，请检查解析方案或校验信息文件内容。";
         }
     }
 
     /// <summary>
-    /// 解析缓冲中已累积的一块，并把块尾最后一条完整行及其后的残行留给下一块：
-    /// 跨行的解析方案（.SUMS/.HASH）需要上一行与当前行在同一块内才能匹配，残行则等后续补全后再解析。
+    /// 解析缓冲中已累积的一块，把已解析完的部分移除。<br/>
+    /// 非最后一块只交完整行（残行交过去可能匹配出被截断的假记录）；只消费到最后一个成功匹配的结束位置，
+    /// 之后的内容留给下一块（那里可能有下一条记录的起始部分）。<br/>
+    /// 最后一块（<paramref name="isLastChunk"/> 为 true）必须整块解析，否则文件最后一行永远得不到解析。<br/>
+    /// 返回 false 表示等待解析的内容超过上限（失败原因已设置），读取应当中止。
     /// </summary>
-    private void ExtendChecklistWithChunk(StringBuilder chunkBuilder,
-        ref TemplateForChecklistModel settledParser, List<TemplateForChecklistModel> parsers)
+    private bool ExtendChecklistWithChunk(StringBuilder chunkBuilder,
+        ChecklistParserSession parserSession, bool isLastChunk = false)
     {
-        // 从末尾往回找第二个换行符，切在它之后：它之后的内容就是最后一条完整行及其后的残行
-        int cutIndex = 0;
-        int newlineCount = 0;
-        for (int i = chunkBuilder.Length - 1; i >= 0; --i)
+        // 默认整块：最后一块之后不会再读到内容，剩余内容都要解析
+        int lineEnd = chunkBuilder.Length;
+        if (!isLastChunk)
         {
-            if (chunkBuilder[i] == '\n' && ++newlineCount == 2)
+            // 非最后一块只把"已经完整的内容"交给解析器：
+            // 把还没读到换行的残行交过去，会让以 $ 结尾的解析方案在文本末尾匹配成功，
+            // 产出一条被截断的假记录
+            int lastNewline = -1;
+            for (int i = chunkBuilder.Length - 1; i >= 0; --i)
             {
-                cutIndex = i + 1;
-                break;
+                if (chunkBuilder[i] == '\n')
+                {
+                    lastNewline = i;
+                    break;
+                }
             }
+            if (lastNewline < 0)
+            {
+                // 整个缓冲里一个换行符都没有：无法区分"内容到此结束"和"内容被切断"，
+                // 先不解析也不消费，等下一块（读到换行或读到文件末尾时再解析）
+                return this.TryAccumulateMoreContent(chunkBuilder, 0);
+            }
+            lineEnd = lastNewline + 1;
         }
-        if (cutIndex == 0)
+        string lines = chunkBuilder.ToString(0, lineEnd);
+        // 只消费到最后一个成功匹配的结束位置：之后的内容留给下一块，
+        // 那里可能有下一条记录的起始部分；一条都没匹配上时也全部留着
+        int consumed = parserSession.Extend(lines, this);
+        if (isLastChunk)
         {
-            // 块内不足两条完整行（例如单行就超过块大小）时无法再往后推，只能整块解析
-            cutIndex = chunkBuilder.Length;
+            // 最后一块之后不会再读到内容：不管匹配到哪，剩下的都已经解析过，整块消费
+            consumed = lineEnd;
         }
-        foreach (TemplateForChecklistModel parser in parsers)
+        else if (!this.TryAccumulateMoreContent(chunkBuilder, consumed))
         {
-            // 一个校验信息文件只含一种格式，方案一经选定就用于余下各块，不再改变
-            if (settledParser != null && !ReferenceEquals(parser, settledParser))
-            {
-                continue;
-            }
-            if (parser.ExtendChecklistWithLines(chunkBuilder.ToString(0, cutIndex), this))
-            {
-                settledParser = parser;
-                break;
-            }
+            return false;
         }
-        chunkBuilder.Remove(0, cutIndex);
+        chunkBuilder.Remove(0, consumed);
+        return true;
+    }
+
+    /// <summary>
+    /// 判断缓冲还能不能继续等待更多内容（等待量 = 缓冲长度 − 已消费位置）：超过
+    /// <see cref="ChecklistWaitChars"/> 时设置失败原因并返回 false，避免缓冲无限增长。
+    /// </summary>
+    private bool TryAccumulateMoreContent(StringBuilder chunkBuilder, int consumed)
+    {
+        if (chunkBuilder.Length - consumed > ChecklistWaitChars)
+        {
+            this.ReasonForFailure = "校验信息文件里存在超长单行内容，无法解析。";
+            return false;
+        }
+        return true;
+    }
+
+    /// <summary>
+    /// 校验信息的解析方案会话：未定居前逐块尝试各个方案，定居后只用定居的方案。<br/>
+    /// 一个校验信息文件只含一种格式，方案一经选定就用于余下各块，不再改变。
+    /// </summary>
+    private sealed class ChecklistParserSession
+    {
+        private readonly TemplateForChecklistModel[] parsers;
+        private TemplateForChecklistModel settledParser = null;
+
+        public ChecklistParserSession(string fileExt)
+        {
+            // 物化成数组：方案只需确定一次，也可以在读文件之前就判断有没有可用方案
+            this.parsers = GetParsers(fileExt).ToArray();
+        }
+
+        public bool IsEmpty => this.parsers.Length == 0;
+
+        public bool HasSettled => this.settledParser != null;
+
+        /// <summary>
+        /// 解析一段文本，返回其中已消费到的字符位置；返回 0 表示这段文本里没有可解析的内容。
+        /// </summary>
+        public int Extend(string lines, HashChecklist checklist)
+        {
+            if (this.settledParser != null)
+            {
+                this.settledParser.ExtendChecklistWithLines(lines, checklist, out int consumed);
+                return consumed;
+            }
+            foreach (TemplateForChecklistModel parser in this.parsers)
+            {
+                if (parser.ExtendChecklistWithLines(lines, checklist, out int consumedWhenSettled))
+                {
+                    this.settledParser = parser;
+                    return consumedWhenSettled;
+                }
+            }
+            return 0;
+        }
     }
 
     public string UpdateWithText(string paragraph)
@@ -431,7 +516,7 @@ public class HashChecklist : IEnumerable<KeyValuePair<string, HashChecker>>
         foreach (TemplateForChecklistModel parser in GetParsers(null))
         {
             anyPaser = true;
-            if (parser.ExtendChecklistWithLines(paragraph, this))
+            if (parser.ExtendChecklistWithLines(paragraph, this, out _))
             {
                 anyItemAdded = true;
                 break;
@@ -443,7 +528,7 @@ public class HashChecklist : IEnumerable<KeyValuePair<string, HashChecker>>
         }
         else if (!anyItemAdded)
         {
-            this.ReasonForFailure = "没有搜集到校验信息，请检查输入的文本内容。";
+            this.ReasonForFailure = "没有解析到校验信息，请检查解析方案或输入的文本内容。";
         }
         return this.ReasonForFailure;
     }
