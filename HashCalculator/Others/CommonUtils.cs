@@ -657,19 +657,22 @@ internal static class CommonUtils
 
     public static BitmapSource GetFileIcon(string filePath, bool largeIcon = false)
     {
-        if (!File.Exists(filePath))
-        {
-            return default(BitmapSource);
-        }
         // 扩展名的大小写由 FileIconCacheKey 的判等与哈希统一忽略，此处无需小写化
         string extension = Path.GetExtension(filePath);
         bool iconFromFileItself = FileIconCacheKey.IsIconFromFileItself(extension);
         // 快路径键（ImageListIndex = -1）：图标由文件类型关联决定的扩展名，
-        // 命中时不询问 shell，直接使用共享的图标
+        // 命中时既不询问 shell 也不检查文件是否存在，直接使用共享的图标。
+        // 这里必须先查缓存再检查文件：否则每行都要付出一次 File.Exists 的磁盘调用，
+        // 而按扩展名取图标的文件，同一扩展名只需第一行付出这次调用
         FileIconCacheKey extensionOnlyKey = new FileIconCacheKey(extension, -1, largeIcon);
         if (!iconFromFileItself && fileIconCache.TryGetValue(extensionOnlyKey, out BitmapSource cachedIcon))
         {
             return cachedIcon;
+        }
+        // 慢路径（要读文件自身的图标，或按扩展名首次取图标）才需要文件存在
+        if (!File.Exists(filePath))
+        {
+            return default(BitmapSource);
         }
         SHGFI uFlags = SHGFI.SHGFI_ICON |
             (largeIcon ? SHGFI.SHGFI_LARGEICON : SHGFI.SHGFI_SMALLICON);
