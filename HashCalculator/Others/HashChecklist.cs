@@ -354,8 +354,9 @@ public class HashChecklist : IEnumerable<KeyValuePair<string, HashChecker>>
     }
 
     /// <summary>
-    /// 分块读取并解析校验信息，避免整份文本常驻内存：
-    /// 每块累积到 <see cref="ChecklistChunkChars"/> 个字符就立即解析并丢弃。
+    /// 分块读取并解析校验信息，避免整份文本常驻内存。<br/>
+    /// 仅支持"匹配跨度有界"的解析方案：跨度无界的正则（如 (?s)、[\s\S]*）无法分块；
+    /// 积累的未解析内容超过 <see cref="ChecklistWaitChars"/> 个字符即报错终止。
     /// </summary>
     private void ExtendChecklistWithReader(StreamReader reader, string fileExt)
     {
@@ -461,7 +462,11 @@ public class HashChecklist : IEnumerable<KeyValuePair<string, HashChecker>>
     {
         if (chunkBuilder.Length - consumed > ChecklistWaitChars)
         {
-            this.ReasonForFailure = "校验信息文件里存在超长单行内容，无法解析。";
+            // 触发原因不一定是"单行超长"：多行文件里出现一大段任何解析方案都匹配不上的内容时，
+            // 这段内容同样会一直留在这里等待解析，直到超过上限
+            this.ReasonForFailure =
+                $"校验信息文件中有一段内容超过 {ChecklistWaitChars / (1024 * 1024)}M 字符仍未解析，" +
+                "可能是超长单行，或大段内容无法被现有解析方案解析。";
             return false;
         }
         return true;
