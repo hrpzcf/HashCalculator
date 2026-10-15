@@ -1,4 +1,5 @@
-﻿using System.Windows.Media;
+﻿using System;
+using System.Windows.Media;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 
@@ -28,6 +29,16 @@ public class CustomFluentWindow : FluentWindow
         this.OnAppThemeChanged(ApplicationTheme.Unknown, Colors.Transparent);
         // 订阅主题变化，切换主题时自动更新所有窗口背景色
         ApplicationThemeManager.Changed += this.OnAppThemeChanged;
+    }
+
+    /// <summary>
+    /// 窗口关闭时退订主题变化事件：<see cref="ApplicationThemeManager.Changed"/> 是静态事件，
+    /// 会强引用订阅者，不退订会让窗口（连同它的整棵可视树）在关闭后仍然存活。
+    /// </summary>
+    protected override void OnClosed(EventArgs e)
+    {
+        ApplicationThemeManager.Changed -= this.OnAppThemeChanged;
+        base.OnClosed(e);
     }
 
     private void OnAppThemeChanged(ApplicationTheme theme, Color accent)
