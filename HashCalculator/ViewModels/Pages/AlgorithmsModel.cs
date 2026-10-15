@@ -276,22 +276,31 @@ public class AlgorithmsModel : BaseViewModel
 
     public static IEnumerable<AlgoInOutModel> GetSelectedAlgos()
     {
-        IEnumerable<AlgoInOutModel> selectedAlgos = ProvidedAlgos.Where(
-            i => i.Selected).Select(i => i.NewAlgoInOutModel());
-        if (!selectedAlgos.Any())
+        // 判空只查源集合。若改成像下面返回的那种惰性查询上调用 Any()，那次枚举同样会执行
+        // Select 里的 NewAlgoInOutModel()，于是白建一个模型（连同它的算法实例）后随即丢弃；
+        // 而查询本身保持惰性返回，调用方取够自己需要的元素就能停下，不必建出全部模型
+        if (!ProvidedAlgos.Any(i => i.Selected))
         {
             return new AlgoInOutModel[] { ProvidedAlgos[0].NewAlgoInOutModel() };
         }
-        return selectedAlgos;
+        return ProvidedAlgos.Where(i => i.Selected).Select(i => i.NewAlgoInOutModel());
     }
 
     public static ObservableCollection<AlgoInOutModel> GetKnownAlgos(List<AlgoType> algoTypes)
     {
         if (algoTypes != null)
         {
-            IEnumerable<AlgoInOutModel> matchingAlgos = ProvidedAlgos.Where(
-                i => algoTypes.Contains(i.IAlgo.AlgoType)).Select(i => i.NewAlgoInOutModel());
-            if (matchingAlgos.Any())
+            // 不直接 new ObservableCollection 再经 Add 逐条加入原因：
+            // Add 每次都会构造 NotifyCollectionChangedEventArgs（哪怕没有订阅者）
+            List<AlgoInOutModel> matchingAlgos = new List<AlgoInOutModel>();
+            foreach (AlgoInOutModel model in ProvidedAlgos)
+            {
+                if (algoTypes.Contains(model.IAlgo.AlgoType))
+                {
+                    matchingAlgos.Add(model.NewAlgoInOutModel());
+                }
+            }
+            if (matchingAlgos.Count != 0)
             {
                 return new ObservableCollection<AlgoInOutModel>(matchingAlgos);
             }
@@ -354,29 +363,14 @@ public class AlgorithmsModel : BaseViewModel
     {
         if (checklist != null)
         {
-            List<AlgoInOutModel> finalInOutModels = new List<AlgoInOutModel>();
+            IEnumerable<AlgoInOutModel> models = null;
             if (checklist.TryGetFileHashChecker(fileName, out HashChecker checker))
             {
-                IEnumerable<AlgoInOutModel> inOutModels;
                 HashSet<AlgoType> algoTypes = checker.GetExistingAlgoTypes();
-                if (algoTypes.Count != 0)
-                {
-                    inOutModels = NewInOutModelsByNames(algoTypes);
-                    if (inOutModels != null)
-                    {
-                        finalInOutModels.AddRange(inOutModels);
-                    }
-                }
-                else
-                {
-                    inOutModels = NewInOutModelsByDigestLengths(checker.GetExistingDigestLengths());
-                    if (inOutModels != null)
-                    {
-                        finalInOutModels.AddRange(inOutModels);
-                    }
-                }
+                models = algoTypes.Count != 0 ? NewInOutModelsByNames(algoTypes) :
+                    NewInOutModelsByDigestLengths(checker.GetExistingDigestLengths());
             }
-            return new ObservableCollection<AlgoInOutModel>(finalInOutModels);
+            return new ObservableCollection<AlgoInOutModel>(models ?? Array.Empty<AlgoInOutModel>());
         }
         return default(ObservableCollection<AlgoInOutModel>);
     }
