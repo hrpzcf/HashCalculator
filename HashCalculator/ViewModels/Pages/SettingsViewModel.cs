@@ -1944,10 +1944,6 @@ public class SettingsViewModel : BaseViewModel, IJsonOnSerializing, IJsonOnDeser
             "https://github.com/guanzhi/GmSSL",
             "提供 SM3 哈希算法的实现。"),
         new GenericItemModel(
-            "OpenHashTab",
-            "https://github.com/namazso/OpenHashTab",
-            "提供 CRC64 哈希算法的实现。"),
-        new GenericItemModel(
             "QuickXorHash",
             "https://github.com/namazso/QuickXorHash",
             "提供 QuickXor 哈希算法的实现。"),
@@ -1967,6 +1963,10 @@ public class SettingsViewModel : BaseViewModel, IJsonOnSerializing, IJsonOnDeser
             "xxHash",
             "https://github.com/Cyan4973/xxHash",
             "提供 XXH 系列极快速哈希算法的实现。"),
+        new GenericItemModel(
+            "xz-embedded",
+            "https://github.com/tukaani-project/xz-embedded",
+            "提供 CRC64 哈希算法的实现。"),
         new GenericItemModel(
             "WPF UI",
             "https://github.com/lepoco/wpfui",

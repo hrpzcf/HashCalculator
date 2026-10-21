@@ -22,7 +22,7 @@ public class AlgorithmsModel : BaseViewModel
             new AlgoInOutModel(new NetCryptoMD5(), null),
             // CrcHash
             new AlgoInOutModel(new StbrummeCrc32(), null),
-            new AlgoInOutModel(new OpenHashTabCrc64(), null),
+            new AlgoInOutModel(new Crc64Xz(), null),
             // QuickXor
             new AlgoInOutModel(new NamazsoQuickXor(), "QuickXorHash"),
             // Whirlpool
