@@ -8,9 +8,6 @@ internal class Crc64Xz : HashAlgorithm, IHashAlgoInfo
 {
     private ulong previousCrc64 = 0ul;
 
-    [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-    private static extern void crc64_init();
-
     // 原生函数 length 类型是 size_t，对应 C# 的 nuint（x86 上 4 字节、x64 上 8 字节）
     [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
     private static extern ulong crc64_update(byte[] input, nuint length, ulong prevCrc64);
@@ -23,12 +20,6 @@ internal class Crc64Xz : HashAlgorithm, IHashAlgoInfo
     public string AlgoName => "CRC64";
 
     public AlgoType AlgoType => AlgoType.CRC64;
-
-    static Crc64Xz()
-    {
-        // DLL 加载后其静态查表在进程内只有一份，只需初始化一次
-        crc64_init();
-    }
 
     public override void Initialize()
     {
