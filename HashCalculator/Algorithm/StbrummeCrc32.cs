@@ -8,11 +8,12 @@ internal class StbrummeCrc32 : HashAlgorithm, IHashAlgoInfo
 {
     private uint previousCrc32 = 0u;
 
+    // 原生函数 length 类型是 size_t，对应 C# 的 nuint（x86 上 4 字节、x64 上 8 字节）
     [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-    private static extern uint crc32_update(byte[] input, ulong in_len, uint prevCrc32);
+    private static extern uint crc32_update(byte[] input, nuint length, uint prevCrc32);
 
     [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-    private static extern uint crc32_update(ref byte input, ulong in_len, uint prevCrc32);
+    private static extern uint crc32_update(ref byte input, nuint length, uint prevCrc32);
 
     public int DigestLength => 4;
 
@@ -37,13 +38,13 @@ internal class StbrummeCrc32 : HashAlgorithm, IHashAlgoInfo
     {
         if (ibStart == 0 && cbSize == array.Length)
         {
-            this.previousCrc32 = crc32_update(array, (ulong)cbSize, this.previousCrc32);
+            this.previousCrc32 = crc32_update(array, (nuint)cbSize, this.previousCrc32);
         }
         else
         {
             ReadOnlySpan<byte> span = new ReadOnlySpan<byte>(array, ibStart, cbSize);
             ref byte input = ref MemoryMarshal.GetReference(span);
-            this.previousCrc32 = crc32_update(ref input, (ulong)cbSize, this.previousCrc32);
+            this.previousCrc32 = crc32_update(ref input, (nuint)cbSize, this.previousCrc32);
         }
     }
 

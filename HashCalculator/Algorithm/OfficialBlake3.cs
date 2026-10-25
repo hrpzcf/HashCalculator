@@ -19,14 +19,15 @@ internal class OfficialBlake3 : HashAlgorithm, IHashAlgoInfo
     [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
     private static extern void blake3_init(IntPtr state);
 
+    // 原生函数 length 类型是 size_t，对应 C# 的 nuint（x86 上 4 字节、x64 上 8 字节）
     [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-    private static extern void blake3_update(IntPtr state, byte[] input, ulong size);
+    private static extern void blake3_update(IntPtr state, byte[] input, nuint length);
 
     [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-    private static extern void blake3_update(IntPtr state, ref byte input, ulong size);
+    private static extern void blake3_update(IntPtr state, ref byte input, nuint length);
 
     [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-    private static extern void blake3_final(IntPtr state, byte[] output, ulong size);
+    private static extern void blake3_final(IntPtr state, byte[] output, nuint length);
 
     public int DigestLength { get; }
 
@@ -96,13 +97,13 @@ internal class OfficialBlake3 : HashAlgorithm, IHashAlgoInfo
         }
         if (ibStart == 0 && cbSize == array.Length)
         {
-            blake3_update(this._state, array, (ulong)cbSize);
+            blake3_update(this._state, array, (nuint)cbSize);
         }
         else
         {
             ReadOnlySpan<byte> sp = new ReadOnlySpan<byte>(array, ibStart, cbSize);
             ref byte input = ref MemoryMarshal.GetReference(sp);
-            blake3_update(this._state, ref input, (ulong)cbSize);
+            blake3_update(this._state, ref input, (nuint)cbSize);
         }
     }
 
@@ -113,7 +114,7 @@ internal class OfficialBlake3 : HashAlgorithm, IHashAlgoInfo
             throw new InvalidOperationException("Not initialized yet");
         }
         byte[] resultBuffer = new byte[this.DigestLength];
-        blake3_final(this._state, resultBuffer, (ulong)this.DigestLength);
+        blake3_final(this._state, resultBuffer, (nuint)this.DigestLength);
         return resultBuffer;
     }
 }

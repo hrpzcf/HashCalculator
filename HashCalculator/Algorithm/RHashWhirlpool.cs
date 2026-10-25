@@ -17,11 +17,12 @@ internal class RHashWhirlpool : HashAlgorithm, IHashAlgoInfo
     [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
     private static extern void whirlpool_init(IntPtr state);
 
+    // 原生函数 length 类型是 size_t，对应 C# 的 nuint（x86 上 4 字节、x64 上 8 字节）
     [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-    private static extern void whirlpool_update(IntPtr state, byte[] input, ulong inlen);
+    private static extern void whirlpool_update(IntPtr state, byte[] input, nuint length);
 
     [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-    private static extern void whirlpool_update(IntPtr state, ref byte input, ulong inlen);
+    private static extern void whirlpool_update(IntPtr state, ref byte input, nuint length);
 
     [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
     private static extern void whirlpool_final(IntPtr state, byte[] output);
@@ -73,13 +74,13 @@ internal class RHashWhirlpool : HashAlgorithm, IHashAlgoInfo
         }
         if (ibStart == 0 && cbSize == array.Length)
         {
-            whirlpool_update(this._state, array, (ulong)cbSize);
+            whirlpool_update(this._state, array, (nuint)cbSize);
         }
         else
         {
             ReadOnlySpan<byte> span = new ReadOnlySpan<byte>(array, ibStart, cbSize);
             ref byte input = ref MemoryMarshal.GetReference(span);
-            whirlpool_update(this._state, ref input, (ulong)cbSize);
+            whirlpool_update(this._state, ref input, (nuint)cbSize);
         }
     }
 

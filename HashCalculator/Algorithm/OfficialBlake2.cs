@@ -36,13 +36,14 @@ internal abstract class OfficialBlake2 : HashAlgorithm, IHashAlgoInfo
 
     public abstract IntPtr Blake2New();
 
-    public abstract int Blake2Init(IntPtr statePtr, ulong outlen);
+    // 原生函数 length 类型是 size_t，对应 C# 的 nuint（x86 上 4 字节、x64 上 8 字节）
+    public abstract int Blake2Init(IntPtr statePtr, nuint length);
 
-    public abstract int Blake2Update(IntPtr statePtr, byte[] input, ulong inlen);
+    public abstract int Blake2Update(IntPtr statePtr, byte[] input, nuint length);
 
-    public abstract int Blake2Update(IntPtr statePtr, ref byte input, ulong inlen);
+    public abstract int Blake2Update(IntPtr statePtr, ref byte input, nuint length);
 
-    public abstract int Blake2Final(IntPtr statePtr, byte[] output, ulong outlen);
+    public abstract int Blake2Final(IntPtr statePtr, byte[] output, nuint length);
 
     public abstract IHashAlgoInfo NewInstance();
 
@@ -81,7 +82,7 @@ internal abstract class OfficialBlake2 : HashAlgorithm, IHashAlgoInfo
         {
             throw new Exception("Initialization failed");
         }
-        this._errorCode = this.Blake2Init(this._statePtr, (ulong)this.DigestLength);
+        this._errorCode = this.Blake2Init(this._statePtr, (nuint)this.DigestLength);
     }
 
     public void Release() => this.DeleteState();
@@ -100,11 +101,11 @@ internal abstract class OfficialBlake2 : HashAlgorithm, IHashAlgoInfo
         {
             ReadOnlySpan<byte> span = new ReadOnlySpan<byte>(array, ibStart, cbSize);
             ref byte input = ref MemoryMarshal.GetReference(span);
-            this._errorCode = this.Blake2Update(this._statePtr, ref input, (ulong)cbSize);
+            this._errorCode = this.Blake2Update(this._statePtr, ref input, (nuint)cbSize);
         }
         else
         {
-            this._errorCode = this.Blake2Update(this._statePtr, array, (ulong)cbSize);
+            this._errorCode = this.Blake2Update(this._statePtr, array, (nuint)cbSize);
         }
     }
 
@@ -119,7 +120,7 @@ internal abstract class OfficialBlake2 : HashAlgorithm, IHashAlgoInfo
             throw new InvalidOperationException("An error has occurred");
         }
         byte[] resultBuffer = new byte[this.DigestLength];
-        if (this.Blake2Final(this._statePtr, resultBuffer, (ulong)this.DigestLength) != 0)
+        if (this.Blake2Final(this._statePtr, resultBuffer, (nuint)this.DigestLength) != 0)
         {
             throw new InvalidOperationException("An error has occurred");
         }

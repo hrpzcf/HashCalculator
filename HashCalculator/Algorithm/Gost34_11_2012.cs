@@ -19,11 +19,12 @@ internal class Gost34_11_2012 : HashAlgorithm, IHashAlgoInfo
     [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
     private static extern void streebog_init(IntPtr state, uint bitLength);
 
+    // 原生函数 length 类型是 size_t，对应 C# 的 nuint（x86 上 4 字节、x64 上 8 字节）
     [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-    private static extern void streebog_update(IntPtr state, byte[] input, ulong size);
+    private static extern void streebog_update(IntPtr state, byte[] input, nuint length);
 
     [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-    private static extern void streebog_update(IntPtr state, ref byte input, ulong size);
+    private static extern void streebog_update(IntPtr state, ref byte input, nuint length);
 
     [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
     private static extern void streebog_final(IntPtr state, byte[] output);
@@ -96,13 +97,13 @@ internal class Gost34_11_2012 : HashAlgorithm, IHashAlgoInfo
         }
         if (ibStart == 0 && cbSize == array.Length)
         {
-            streebog_update(this._state, array, (ulong)cbSize);
+            streebog_update(this._state, array, (nuint)cbSize);
         }
         else
         {
             ReadOnlySpan<byte> span = new ReadOnlySpan<byte>(array, ibStart, cbSize);
             ref byte input = ref MemoryMarshal.GetReference(span);
-            streebog_update(this._state, ref input, (ulong)cbSize);
+            streebog_update(this._state, ref input, (nuint)cbSize);
         }
     }
 

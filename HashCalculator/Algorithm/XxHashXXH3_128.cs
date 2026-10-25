@@ -22,11 +22,12 @@ internal class XxHashXXH3_128 : HashAlgorithm, IHashAlgoInfo
     [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
     private static extern XXHErrorCode xxh3_128_init(IntPtr state);
 
+    // 原生函数 length 类型是 size_t，对应 C# 的 nuint（x86 上 4 字节、x64 上 8 字节）
     [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-    private static extern XXHErrorCode xxh3_128_update(IntPtr state, byte[] input, ulong length);
+    private static extern XXHErrorCode xxh3_128_update(IntPtr state, byte[] input, nuint length);
 
     [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-    private static extern XXHErrorCode xxh3_128_update(IntPtr state, ref byte input, ulong length);
+    private static extern XXHErrorCode xxh3_128_update(IntPtr state, ref byte input, nuint length);
 
     [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
     private static extern XXH128Hash xxh3_128_final(IntPtr state);
@@ -87,11 +88,11 @@ internal class XxHashXXH3_128 : HashAlgorithm, IHashAlgoInfo
         {
             ReadOnlySpan<byte> span = new ReadOnlySpan<byte>(array, ibStart, cbSize);
             ref byte input = ref MemoryMarshal.GetReference(span);
-            this._errorCode = xxh3_128_update(this._state, ref input, (ulong)cbSize);
+            this._errorCode = xxh3_128_update(this._state, ref input, (nuint)cbSize);
         }
         else
         {
-            this._errorCode = xxh3_128_update(this._state, array, (ulong)cbSize);
+            this._errorCode = xxh3_128_update(this._state, array, (nuint)cbSize);
         }
     }
 

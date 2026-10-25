@@ -15,11 +15,12 @@ internal class XxHashXXH_32 : HashAlgorithm, IHashAlgoInfo
     [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
     private static extern XXHErrorCode xxh32_init(IntPtr statePtr);
 
+    // 原生函数 length 类型是 size_t，对应 C# 的 nuint（x86 上 4 字节、x64 上 8 字节）
     [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-    private static extern XXHErrorCode xxh32_update(IntPtr statePtr, byte[] input, ulong length);
+    private static extern XXHErrorCode xxh32_update(IntPtr statePtr, byte[] input, nuint length);
 
     [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-    private static extern XXHErrorCode xxh32_update(IntPtr statePtr, ref byte input, ulong length);
+    private static extern XXHErrorCode xxh32_update(IntPtr statePtr, ref byte input, nuint length);
 
     [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
     private static extern uint xxh32_final(IntPtr statePtr);
@@ -79,13 +80,13 @@ internal class XxHashXXH_32 : HashAlgorithm, IHashAlgoInfo
         }
         if (ibStart == 0 && cbSize == array.Length)
         {
-            this._errorCode = xxh32_update(this._state, array, (ulong)cbSize);
+            this._errorCode = xxh32_update(this._state, array, (nuint)cbSize);
         }
         else
         {
             ReadOnlySpan<byte> span = new ReadOnlySpan<byte>(array, ibStart, cbSize);
             ref byte input = ref MemoryMarshal.GetReference(span);
-            this._errorCode = xxh32_update(this._state, ref input, (ulong)cbSize);
+            this._errorCode = xxh32_update(this._state, ref input, (nuint)cbSize);
         }
     }
 

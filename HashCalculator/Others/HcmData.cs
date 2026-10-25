@@ -121,11 +121,12 @@ namespace HashCalculator
         /// </summary>
         private static readonly byte[] MARKER = { 0xF3, 0x48, 0x43, 0x4D };
 
+        // 原生函数 length 类型是 size_t，对应 C# 的 nuint（x86 上 4 字节、x64 上 8 字节）
         [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern uint crc32_update(byte[] input, ulong in_len, uint prevCrc32);
+        private static extern uint crc32_update(byte[] input, nuint length, uint prevCrc32);
 
         [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-        private static extern uint crc32_update(ref byte input, ulong in_len, uint prevCrc32);
+        private static extern uint crc32_update(ref byte input, nuint length, uint prevCrc32);
 
         public HcmData(long position, bool marker = false)
         {
@@ -233,18 +234,18 @@ namespace HashCalculator
             try
             {
                 hash = 0u;
-                hash = crc32_update(ref this.hcmInfo.NameLength, 1ul, hash);
+                hash = crc32_update(ref this.hcmInfo.NameLength, 1, hash);
                 byte[] hashLengthBytes = BitConverter.GetBytes(this.hcmInfo.HashLength);
-                hash = crc32_update(hashLengthBytes, (ulong)hashLengthBytes.Length, hash);
-                hash = crc32_update(ref this.hcmInfo.RandomLength, 1ul, hash);
-                hash = crc32_update(this.separator, (ulong)this.separator.Length, hash);
+                hash = crc32_update(hashLengthBytes, (nuint)hashLengthBytes.Length, hash);
+                hash = crc32_update(ref this.hcmInfo.RandomLength, 1, hash);
+                hash = crc32_update(this.separator, (nuint)this.separator.Length, hash);
                 if (this.nameBytes != null)
                 {
-                    hash = crc32_update(this.nameBytes, (ulong)this.nameBytes.Length, hash);
+                    hash = crc32_update(this.nameBytes, (nuint)this.nameBytes.Length, hash);
                 }
                 if (this.hashBytes != null)
                 {
-                    hash = crc32_update(this.hashBytes, (ulong)this.hashBytes.Length, hash);
+                    hash = crc32_update(this.hashBytes, (nuint)this.hashBytes.Length, hash);
                 }
                 return true;
             }

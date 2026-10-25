@@ -11,17 +11,18 @@ internal class OfficialBlake2bp : OfficialBlake2
     [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
     private static extern void blake2bp_delete(IntPtr statePtr);
 
+    // 原生函数 length 类型是 size_t，对应 C# 的 nuint（x86 上 4 字节、x64 上 8 字节）
     [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-    private static extern int blake2bp_init(IntPtr statePtr, ulong outlen);
+    private static extern int blake2bp_init(IntPtr statePtr, nuint length);
 
     [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-    private static extern int blake2bp_update(IntPtr statePtr, byte[] input, ulong inlen);
+    private static extern int blake2bp_update(IntPtr statePtr, byte[] input, nuint length);
 
     [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-    private static extern int blake2bp_update(IntPtr statePtr, ref byte input, ulong inlen);
+    private static extern int blake2bp_update(IntPtr statePtr, ref byte input, nuint length);
 
     [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-    private static extern int blake2bp_final(IntPtr statePtr, byte[] output, ulong outlen);
+    private static extern int blake2bp_final(IntPtr statePtr, byte[] output, nuint length);
 
     public override int MaxOutputLength => 64;
 
@@ -44,23 +45,23 @@ internal class OfficialBlake2bp : OfficialBlake2
         return blake2bp_new();
     }
 
-    public override int Blake2Init(IntPtr statePtr, ulong outlen)
+    public override int Blake2Init(IntPtr statePtr, nuint length)
     {
-        return blake2bp_init(statePtr, outlen);
+        return blake2bp_init(statePtr, length);
     }
 
-    public override int Blake2Update(IntPtr statePtr, byte[] input, ulong inlen)
+    public override int Blake2Update(IntPtr statePtr, byte[] input, nuint length)
     {
-        return blake2bp_update(statePtr, input, inlen);
+        return blake2bp_update(statePtr, input, length);
     }
 
-    public override int Blake2Update(IntPtr statePtr, ref byte input, ulong inlen)
+    public override int Blake2Update(IntPtr statePtr, ref byte input, nuint length)
     {
-        return blake2bp_update(statePtr, ref input, inlen);
+        return blake2bp_update(statePtr, ref input, length);
     }
 
-    public override int Blake2Final(IntPtr statePtr, byte[] output, ulong outlen)
+    public override int Blake2Final(IntPtr statePtr, byte[] output, nuint length)
     {
-        return blake2bp_final(statePtr, output, outlen);
+        return blake2bp_final(statePtr, output, length);
     }
 }

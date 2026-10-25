@@ -20,11 +20,13 @@ internal class XkcpSHA3 : HashAlgorithm, IHashAlgoInfo
     [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
     private static extern int sha3_init(IntPtr state, int bitLength);
 
+    // 原生函数 bitLength 类型是 XKCP 的 BitLength（size_t），
+    // 对应 C# 的 nuint（宽度与指针一致，x86 上 4 字节、x64 上 8 字节）
     [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-    private static extern int sha3_update(IntPtr state, byte[] input, ulong bitLength);
+    private static extern int sha3_update(IntPtr state, byte[] input, nuint bitLength);
 
     [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
-    private static extern int sha3_update(IntPtr state, ref byte input, ulong bitLength);
+    private static extern int sha3_update(IntPtr state, ref byte input, nuint bitLength);
 
     [DllImport(Settings.HashAlgs, CallingConvention = CallingConvention.Cdecl)]
     private static extern int sha3_final(IntPtr state, byte[] output);
@@ -107,13 +109,13 @@ internal class XkcpSHA3 : HashAlgorithm, IHashAlgoInfo
         }
         if (ibStart == 0 && cbSize == array.Length)
         {
-            this._errorCode = sha3_update(this._state, array, (ulong)cbSize << 3);
+            this._errorCode = sha3_update(this._state, array, (nuint)cbSize << 3);
         }
         else
         {
             ReadOnlySpan<byte> span = new ReadOnlySpan<byte>(array, ibStart, cbSize);
             ref byte input = ref MemoryMarshal.GetReference(span);
-            this._errorCode = sha3_update(this._state, ref input, (ulong)cbSize << 3);
+            this._errorCode = sha3_update(this._state, ref input, (nuint)cbSize << 3);
         }
     }
 
