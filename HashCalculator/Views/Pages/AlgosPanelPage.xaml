@@ -129,7 +129,7 @@
                 Margin="0,0,0,8"
                 VerticalAlignment="Center"
                 Foreground="{DynamicResource TextFillColorTertiaryBrush}"
-                Text="拖动算法卡片可调整算法的顺序，顺序会被保存；不建议选择太多算法，否则计算时容易造成程序无响应。" />
+                Text="拖动算法卡片可调整算法的顺序，顺序会被保存；不建议启用太多算法，否则计算时容易造成程序无响应。" />
             <wpfui:Button
                 Grid.Row="1"
                 Grid.Column="0"
