@@ -169,6 +169,7 @@ public class SettingsViewModel : BaseViewModel, IJsonOnSerializing, IJsonOnDeser
     private RelayCommand copyTemplatePlaceholderCmd;
     private RelayCommand openBrowserNavigateToWebsiteCmd;
     private RelayCommand settingsPagesInputBindingsCmd;
+    private RelayCommand showLicenseCmd;
 
     [JsonIgnore, XmlIgnore]
     public const string CmdStrShowDetails = "SHOW_DETAILS";
@@ -1639,6 +1640,49 @@ public class SettingsViewModel : BaseViewModel, IJsonOnSerializing, IJsonOnDeser
         }
     }
 
+    private void ShowLicenseAction(object param)
+    {
+        if (param is not ThirdPartyComponent component)
+        {
+            return;
+        }
+        ContentDialogHost contentDialogHost =
+            ContentDialogHost.GetForWindow(MainWindow.Current);
+        if (contentDialogHost == null)
+        {
+            return;
+        }
+        // 只读 TextBox 而非 TextBlock：许可全文需要能全选复制，供核对或留存
+        System.Windows.Controls.TextBox licenseBox = new()
+        {
+            Text = LicenseTexts.Get(component.LicenseResource),
+            IsReadOnly = true,
+            IsReadOnlyCaretVisible = true,
+            AcceptsReturn = true,
+            FontFamily = new System.Windows.Media.FontFamily("Consolas"),
+            TextWrapping = TextWrapping.Wrap,
+            VerticalScrollBarVisibility = System.Windows.Controls.ScrollBarVisibility.Auto,
+        };
+        ContentDialog contentDialog = new(contentDialogHost)
+        {
+            DialogWidth = 720,
+            Title = $"{component.Name} 开源许可协议（{component.License}）",
+            Content = licenseBox,
+            CloseButtonText = "关闭",
+        };
+        _ = contentDialog.ShowAsync();
+    }
+
+    [JsonIgnore, XmlIgnore]
+    public ICommand ShowLicenseCmd
+    {
+        get
+        {
+            this.showLicenseCmd ??= new RelayCommand(this.ShowLicenseAction);
+            return this.showLicenseCmd;
+        }
+    }
+
     private void SettingsPagesInputBindingsAction(object param)
     {
         if (param is KeyEventArgs keyEventArgs)
@@ -1925,56 +1969,80 @@ public class SettingsViewModel : BaseViewModel, IJsonOnSerializing, IJsonOnDeser
     public string Website => Info.Website;
 
     [JsonIgnore, XmlIgnore]
-    public GenericItemModel[] ThirdPartyComponents { get; } = new GenericItemModel[]
+    public ThirdPartyComponent[] ThirdPartyComponents { get; } = new ThirdPartyComponent[]
     {
-        new GenericItemModel(
+        new ThirdPartyComponent(
             "BLAKE2",
+            "提供 BLAKE2 系列哈希算法的实现。",
+            "CC0 1.0",
             "https://github.com/BLAKE2/BLAKE2",
-            "提供 BLAKE2 系列哈希算法的实现。"),
-        new GenericItemModel(
+            "LICENSE.blake2"),
+        new ThirdPartyComponent(
             "BLAKE3",
+            "提供 BLAKE3 系列哈希算法的实现。",
+            "CC0 1.0",
             "https://github.com/BLAKE3-team/BLAKE3",
-            "提供 BLAKE3 系列哈希算法的实现。"),
-        new GenericItemModel(
+            "LICENSE.blake3"),
+        new ThirdPartyComponent(
             "CRC32",
+            "提供 CRC32 哈希算法的实现。",
+            "zlib",
             "https://github.com/stbrumme/crc32",
-            "提供 CRC32 哈希算法的实现。"),
-        new GenericItemModel(
+            "LICENSE.crc32"),
+        new ThirdPartyComponent(
             "GmSSL",
+            "提供 SM3 哈希算法的实现。",
+            "Apache-2.0",
             "https://github.com/guanzhi/GmSSL",
-            "提供 SM3 哈希算法的实现。"),
-        new GenericItemModel(
+            "LICENSE.gmssl"),
+        new ThirdPartyComponent(
             "QuickXorHash",
+            "提供 QuickXor 哈希算法的实现。",
+            "0BSD",
             "https://github.com/namazso/QuickXorHash",
-            "提供 QuickXor 哈希算法的实现。"),
-        new GenericItemModel(
+            "LICENSE.quickxorhash"),
+        new ThirdPartyComponent(
             "RHash",
+            "提供 eD2k/Has160/MD4/RipeMD160/SHA224/Whirlpool 算法的实现。",
+            "0BSD",
             "https://github.com/rhash/RHash",
-            "提供 eD2k/Has160/MD4/RipeMD160/SHA224/Whirlpool 算法的实现。"),
-        new GenericItemModel(
+            "LICENSE.rhash"),
+        new ThirdPartyComponent(
             "Streebog",
+            "提供 Streebog 系列哈希算法的实现。",
+            "BSD-2-Clause",
             "https://github.com/adegtyarev/streebog",
-            "提供 Streebog 系列哈希算法的实现。"),
-        new GenericItemModel(
+            "LICENSE.streebog"),
+        new ThirdPartyComponent(
             "XKCP",
+            "提供 SHA3 系列哈希算法的实现。",
+            "CC0 1.0",
             "https://github.com/XKCP/XKCP",
-            "提供 SHA3 系列哈希算法的实现。"),
-        new GenericItemModel(
-            "xxHash",
+            "LICENSE.xkcp"),
+        new ThirdPartyComponent(
+            "XxHash",
+            "提供 XXH 系列极快速哈希算法的实现。",
+            "BSD-2-Clause",
             "https://github.com/Cyan4973/xxHash",
-            "提供 XXH 系列极快速哈希算法的实现。"),
-        new GenericItemModel(
-            "xz-embedded",
+            "LICENSE.xxhash"),
+        new ThirdPartyComponent(
+            "XZ-Embedded",
+            "提供 CRC64 算法 xz 变体的参数定义与实现参考。",
+            "0BSD",
             "https://github.com/tukaani-project/xz-embedded",
-            "提供 CRC64 哈希算法的实现。"),
-        new GenericItemModel(
+            "LICENSE.xzembedded"),
+        new ThirdPartyComponent(
             "WPF UI",
+            "给 HashCalculator 提供 Fluent Design 控件和样式。",
+            "MIT",
             "https://github.com/lepoco/wpfui",
-            "给 HashCalculator 提供 Fluent Design 控件和样式。"),
-        new GenericItemModel(
-            "Tiny-json",
+            "LICENSE.wpfui"),
+        new ThirdPartyComponent(
+            "Tiny-Json",
+            "用于读取和保存外壳扩展的相关配置文件。",
+            "MIT",
             "https://github.com/rafagafe/tiny-json",
-            "用于读取和保存外壳扩展的相关配置文件。"),
+            "LICENSE.tinyjson"),
     };
 
     [JsonIgnore, XmlIgnore]

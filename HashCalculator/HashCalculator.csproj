@@ -40,6 +40,49 @@
         <EmbeddedResource Include="LibraryFiles\HashCalculator32.dll" />
     </ItemGroup>
 
+    <!--
+        第三方组件许可全文：除 WPF UI（NuGet 包）外均直接链接上游许可文件，
+        避免在仓库中维护副本。LogicalName 统一为 LICENSE.{组件名}，资源名在程序集内必须唯一。
+        Link 只影响 VS 解决方案资源管理器中的显示位置，不会复制文件。
+    -->
+    <ItemGroup>
+        <EmbeddedResource Include="..\OpenHashLibs\Blake2\Blake2\COPYING"
+                          Link="Licenses\BLAKE2.txt"
+                          LogicalName="HashCalculator.Licenses.LICENSE.blake2" />
+        <EmbeddedResource Include="..\OpenHashLibs\Blake3\Blake3\LICENSE_CC0"
+                          Link="Licenses\BLAKE3.txt"
+                          LogicalName="HashCalculator.Licenses.LICENSE.blake3" />
+        <EmbeddedResource Include="..\OpenHashLibs\CRC32\CRC32\LICENSE"
+                          Link="Licenses\CRC32.txt"
+                          LogicalName="HashCalculator.Licenses.LICENSE.crc32" />
+        <EmbeddedResource Include="..\OpenHashLibs\SM3\GmSSL\LICENSE"
+                          Link="Licenses\GmSSL.txt"
+                          LogicalName="HashCalculator.Licenses.LICENSE.gmssl" />
+        <EmbeddedResource Include="..\OpenHashLibs\QuickXor\QuickXorHash\LICENSE"
+                          Link="Licenses\QuickXorHash.txt"
+                          LogicalName="HashCalculator.Licenses.LICENSE.quickxorhash" />
+        <EmbeddedResource Include="..\OpenHashLibs\RHash\RHash\COPYING"
+                          Link="Licenses\RHash.txt"
+                          LogicalName="HashCalculator.Licenses.LICENSE.rhash" />
+        <EmbeddedResource Include="..\OpenHashLibs\Streebog\Streebog\LICENSE"
+                          Link="Licenses\Streebog.txt"
+                          LogicalName="HashCalculator.Licenses.LICENSE.streebog" />
+        <EmbeddedResource Include="..\OpenHashLibs\Keccak\XKCP\LICENSE"
+                          Link="Licenses\XKCP.txt"
+                          LogicalName="HashCalculator.Licenses.LICENSE.xkcp" />
+        <EmbeddedResource Include="..\OpenHashLibs\XxHash\xxHash\LICENSE"
+                          Link="Licenses\xxHash.txt"
+                          LogicalName="HashCalculator.Licenses.LICENSE.xxhash" />
+        <EmbeddedResource Include="..\OpenHashLibs\CRC64\xz-embedded\COPYING"
+                          Link="Licenses\xz-embedded.txt"
+                          LogicalName="HashCalculator.Licenses.LICENSE.xzembedded" />
+        <EmbeddedResource Include="..\ShellExtensions\TinyJson\LICENSE"
+                          Link="Licenses\Tiny-json.txt"
+                          LogicalName="HashCalculator.Licenses.LICENSE.tinyjson" />
+        <EmbeddedResource Include="Licenses\WpfUi.txt"
+                          LogicalName="HashCalculator.Licenses.LICENSE.wpfui" />
+    </ItemGroup>
+
     <ItemGroup Condition="'$(Platform)' == 'x64'">
         <None Include="LibraryFiles\hashalgs_x64.dll" TargetPath="hashalgs.dll">
             <CopyToOutputDirectory>IfDifferent</CopyToOutputDirectory>

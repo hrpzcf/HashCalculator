@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:HashCalculator"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="clr-namespace:HashCalculator.ViewModels"
     xmlns:pagemodels="clr-namespace:HashCalculator.ViewModels.Pages"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     d:DataContext="{d:DesignInstance Type=pagemodels:SettingsViewModel}"
@@ -271,45 +272,66 @@
                     ItemsSource="{Binding ThirdPartyComponents}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <wpfui:Anchor
-                                Padding="16"
-                                HorizontalAlignment="Stretch"
-                                HorizontalContentAlignment="Stretch"
-                                d:DataContext="{d:DesignInstance Type=local:GenericItemModel}"
-                                Background="Transparent"
-                                BorderThickness="0,0,0,1"
-                                CornerRadius="0"
-                                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                NavigateUri="{Binding Param}">
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition />
-                                        <RowDefinition />
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <wpfui:TextBlock
-                                        Grid.Row="0"
-                                        Grid.Column="0"
-                                        FontTypography="Caption"
-                                        Text="{Binding Display}"
-                                        TextWrapping="WrapWithOverflow" />
-                                    <wpfui:TextBlock
-                                        Grid.Row="1"
-                                        Grid.Column="0"
-                                        FontTypography="Caption"
-                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                        Text="{Binding ItemValue}"
-                                        TextWrapping="WrapWithOverflow" />
-                                    <wpfui:SymbolIcon
-                                        Grid.Row="0"
-                                        Grid.RowSpan="2"
-                                        Grid.Column="1"
-                                        Symbol="Link24" />
-                                </Grid>
-                            </wpfui:Anchor>
+                            <Grid d:DataContext="{d:DesignInstance Type=models:ThirdPartyComponent}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="licenseButton" />
+                                </Grid.ColumnDefinitions>
+                                <wpfui:Anchor
+                                    Grid.Column="0"
+                                    Margin="0,0,8,0"
+                                    Padding="16"
+                                    HorizontalAlignment="Stretch"
+                                    HorizontalContentAlignment="Stretch"
+                                    Background="Transparent"
+                                    BorderThickness="0,0,0,1"
+                                    CornerRadius="0"
+                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                    NavigateUri="{Binding RepositoryUrl}">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <wpfui:TextBlock
+                                            Grid.Row="0"
+                                            FontTypography="Caption"
+                                            Text="{Binding Name}"
+                                            TextWrapping="WrapWithOverflow" />
+                                        <wpfui:TextBlock
+                                            Grid.Row="1"
+                                            Margin="0,2,0,0"
+                                            FontTypography="Caption"
+                                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                            TextWrapping="WrapWithOverflow">
+                                            <wpfui:TextBlock.Text>
+                                                <MultiBinding StringFormat="开源许可协议：{1}；{0}">
+                                                    <Binding Path="Usage" />
+                                                    <Binding Path="License" />
+                                                </MultiBinding>
+                                            </wpfui:TextBlock.Text>
+                                        </wpfui:TextBlock>
+                                        <wpfui:SymbolIcon
+                                            Grid.Row="0"
+                                            Grid.RowSpan="2"
+                                            Grid.Column="1"
+                                            Symbol="Link24" />
+                                    </Grid>
+                                </wpfui:Anchor>
+                                <wpfui:Button
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
+                                    Appearance="Transparent"
+                                    Command="{Binding DataContext.ShowLicenseCmd, RelativeSource={RelativeSource AncestorType=Page}}"
+                                    CommandParameter="{Binding}"
+                                    Content="许可全文" />
+                            </Grid>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
