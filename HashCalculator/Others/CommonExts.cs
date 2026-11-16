@@ -341,9 +341,9 @@ internal static class CommonExts
             byte[] largerValueBytes = new byte[bytes.Length * 2];
             for (int i = 0; i < bytes.Length; ++i)
             {
-                // 第一个字节储存原字节的低 4 位
+                // 第一个字节存储原字节的低 4 位
                 largerValueBytes[i * 2] = (byte)(bytes[i] | 0xF0);
-                // 第二个字节储存原字节的高 4 位
+                // 第二个字节存储原字节的高 4 位
                 largerValueBytes[(i * 2) + 1] = (byte)((bytes[i] >> 4) | 0xF0);
             }
             return largerValueBytes;

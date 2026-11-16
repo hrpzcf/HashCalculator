@@ -82,9 +82,9 @@ public class MainWindowModel : BaseViewModel
                 TargetPageTag = "部分列的鼠标左键双击响应行为设置项。"
             },
             new NavigationViewItem(
-                "储存与日志", SymbolRegular.Save20, typeof(ConfigSettingsPage))
+                "配置与日志", SymbolRegular.Save20, typeof(ConfigSettingsPage))
             {
-                TargetPageTag = "程序的配置文件的储存位置和日志记录的详细程度的设置项。"
+                TargetPageTag = "程序的配置文件的存储位置和日志记录的详细程度的设置项。"
             },
             new NavigationViewItem("关于软件", SymbolRegular.Info20, typeof(AboutSettingsPage))
             {
