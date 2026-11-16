@@ -62,7 +62,7 @@
                     <wpfui:TextBlock
                         FontTypography="Caption"
                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                        Text="只有通过本软件添加标记改变哈希值的文件有内嵌的哈希值，内嵌的哈希值是文件被添加标记之前的哈希值，即原文件哈希值。"
+                        Text="只有通过本程序添加标记改变哈希值的文件有内嵌的哈希值，内嵌的哈希值是文件被添加标记之前的哈希值，即原文件哈希值。"
                         TextWrapping="WrapWithOverflow" />
                 </StackPanel>
             </wpfui:CardControl.Header>

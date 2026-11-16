@@ -88,7 +88,7 @@ public class MainWindowModel : BaseViewModel
             },
             new NavigationViewItem("关于软件", SymbolRegular.Info20, typeof(AboutSettingsPage))
             {
-                TargetPageTag = "本程序的项目信息、链接、使用的开源项目等。"
+                TargetPageTag = "程序版本、版权、相关链接及第三方组件声明。"
             }
         ];
         this.SettingsNavigationItem.MenuItemsSource = this.SettingsNavigationItemsSource;

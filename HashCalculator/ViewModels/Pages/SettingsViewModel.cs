@@ -1925,7 +1925,7 @@ public class SettingsViewModel : BaseViewModel, IJsonOnSerializing, IJsonOnDeser
     public string Website => Info.Website;
 
     [JsonIgnore, XmlIgnore]
-    public GenericItemModel[] OpenSourceProjects { get; } = new GenericItemModel[]
+    public GenericItemModel[] ThirdPartyComponents { get; } = new GenericItemModel[]
     {
         new GenericItemModel(
             "BLAKE2",

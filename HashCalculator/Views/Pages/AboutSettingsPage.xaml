@@ -255,12 +255,12 @@
                                         FontSize=32}">
                 <wpfui:CardExpander.Header>
                     <StackPanel>
-                        <wpfui:TextBlock Margin="2,0,0,0" Text="使用的开源项目" />
+                        <wpfui:TextBlock Margin="2,0,0,0" Text="第三方组件声明" />
                         <wpfui:TextBlock
                             Margin="0,2,0,0"
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            Text="{Binding Ver, StringFormat='HashCalculator 当前版本 ( {0} ) 所使用的开源哈希算法等项目清单。'}"
+                            Text="{Binding Ver, StringFormat='本程序 ( {0} ) 使用了以下第三方开源组件，其著作权归各原作者所有，并分别遵循各自的开源许可协议。'}"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
                 </wpfui:CardExpander.Header>
@@ -268,7 +268,7 @@
                     Grid.Row="3"
                     d:ItemsSource="{d:SampleData ItemCount=10}"
                     Grid.IsSharedSizeScope="True"
-                    ItemsSource="{Binding OpenSourceProjects}">
+                    ItemsSource="{Binding ThirdPartyComponents}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <wpfui:Anchor

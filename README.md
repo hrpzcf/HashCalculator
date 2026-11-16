@@ -102,6 +102,8 @@ HashCalculator 是一款**开源、免费、单文件免安装**的文件哈希�
 - **技术框架**：基于 .NET 10 的 WPF 桌面应用
 - **主要依赖**：
     - [WPF UI](https://github.com/lepoco/wpfui)（现代化 Fluent experience UI 控件）
+    - [Tiny-json](https://github.com/rafagafe/tiny-json)（系统右键菜单扩展模块读取和保存配置文件）
+    - 开源哈希算法实现库：BLAKE2、BLAKE3、CRC32、GmSSL、QuickXorHash、RHash、Streebog、XKCP、xxHash、xz-embedded（详见[第三方组件声明](OpenHashLibs/THIRD-PARTY-NOTICES.zh-CN.md)）
 - **运行环境**：
     - **系统要求**：推荐 Windows 10 及以上版本。本程序基于 .NET 10 开发，而 .NET 10 不支持 Windows 7，因此程序无法在 Windows 7 上运行。
     - **框架依赖**：本程序依赖 **.NET 10 桌面运行时**（.NET 10 Desktop Runtime），首次使用前请先下载 **.NET 10 桌面运行时** 安装程序进行安装。若未安装，程序将无法运行。
@@ -114,6 +116,8 @@ HashCalculator 是一款**开源、免费、单文件免安装**的文件哈希�
 ## 开源许可
 
 本项目使用 **GNU GPL v3.0** 开源协议授权，详情请参阅 [LICENSE](LICENSE.txt)。
+
+本程序使用了若干第三方开源组件，各组件著作权归其原作者所有，并分别遵循各自的开源许可协议，许可条款详情见[第三方组件声明](OpenHashLibs/THIRD-PARTY-NOTICES.zh-CN.md)。
 
 <br/>
 

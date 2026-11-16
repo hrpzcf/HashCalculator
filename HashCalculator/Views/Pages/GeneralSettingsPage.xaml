@@ -194,12 +194,12 @@
             <controls:MinLimitedCardControl Margin="0,4,0,0">
                 <controls:MinLimitedCardControl.Header>
                     <StackPanel>
-                        <wpfui:TextBlock Text="允许运行多个应用程序实例" />
+                        <wpfui:TextBlock Text="允许运行多个程序实例" />
                         <wpfui:TextBlock
                             Margin="0,2,0,0"
                             FontTypography="Caption"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            Text="打开此开关则允许运行多个应用程序实例，包括被系统右键菜单或关联的文件启动时，关闭则只允许运行一个实例。"
+                            Text="打开此开关则允许运行多个程序实例，包括被系统右键菜单或关联的文件启动时，关闭则只允许运行一个实例。"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
                 </controls:MinLimitedCardControl.Header>

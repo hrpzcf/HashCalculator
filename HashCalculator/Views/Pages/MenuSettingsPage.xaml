@@ -101,7 +101,7 @@
                                 <wpfui:TextBlock
                                     FontTypography="Caption"
                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                    Text="移动过应用程序位置后，需要更新应用程序路径或者重新安装右键菜单，否则右键菜单将无法调起程序。"
+                                    Text="移动过程序位置后，需要更新程序路径或者重新安装右键菜单，否则右键菜单将无法调起程序。"
                                     TextWrapping="WrapWithOverflow" />
                             </StackPanel>
                         </wpfui:CardControl.Header>
