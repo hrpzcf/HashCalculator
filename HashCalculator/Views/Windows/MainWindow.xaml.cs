@@ -273,7 +273,7 @@ public partial class MainWindow
         return default(List<AlgoType>);
     }
 
-    private void ParsedComputeHashHandler(IEnumerable<string> paths, string algoStr)
+    private async void ParsedComputeHashHandler(IEnumerable<string> paths, string algoStr)
     {
         if (paths != null)
         {
@@ -287,7 +287,7 @@ public partial class MainWindow
             }
             if (Settings.Current.UseExistingClipboardTextForCheck)
             {
-                hashChecklist = this._homePageViewModel.TestClipboardTextGetChecklist();
+                hashChecklist = await this._homePageViewModel.GetClipboardChecklistAsync();
             }
             string[] filePaths = paths.Where(i => File.Exists(i) || Directory.Exists(i)).ToArray();
             // 此处逻辑针对命令行传来的待计算文件/文件夹路径，一般由右键菜单生成命令
@@ -307,13 +307,22 @@ public partial class MainWindow
         }
     }
 
-    private void ParsedVerifyHashHandler(string checklistPath, string algoStr)
+    private async void ParsedVerifyHashHandler(string checklistPath, string algoStr)
     {
         if (File.Exists(checklistPath))
         {
             List<AlgoType> types = this.GetAlgoTypesFromOption(algoStr);
-            HashChecklist newChecklist = HashChecklist.File(checklistPath,
-                types);
+            HashChecklist newChecklist;
+            this._homePageViewModel.EnterBusy("正在打开校验信息文件...");
+            try
+            {
+                newChecklist = await Task.Run(() => HashChecklist.File(checklistPath,
+                    types));
+            }
+            finally
+            {
+                this._homePageViewModel.ExitBusy();
+            }
             if (newChecklist.ReasonForFailure != null)
             {
                 Synchronization.UI.Invoke(() =>

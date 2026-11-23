@@ -267,9 +267,12 @@ public class HashChecklist : IEnumerable<KeyValuePair<string, HashChecker>>
 
     private static IEnumerable<TemplateForChecklistModel> GetParsers(string extension)
     {
+        // 解析可能运行在后台线程（见 HomeViewModel 的异步解析），
+        // 先取快照再枚举，避免与 UI 线程修改解析方案集合时产生枚举冲突
+        TemplateForChecklistModel[] templates = Settings.Current.TemplatesForChecklist.ToArray();
         if (!string.IsNullOrEmpty(extension))
         {
-            foreach (TemplateForChecklistModel model in Settings.Current.TemplatesForChecklist)
+            foreach (TemplateForChecklistModel model in templates)
             {
                 if (model.ContainsExtension(extension))
                 {
@@ -277,7 +280,7 @@ public class HashChecklist : IEnumerable<KeyValuePair<string, HashChecker>>
                 }
             }
         }
-        foreach (TemplateForChecklistModel template in Settings.Current.TemplatesForChecklist)
+        foreach (TemplateForChecklistModel template in templates)
         {
             if (template.ContainsExtension(null))
             {

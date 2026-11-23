@@ -33,6 +33,8 @@ public class HomeViewModel : BaseViewModel
     private string hashCheckReport = string.Empty;
     private string hashValueStringOrChecklistPath = null;
     private JobStatus batchStatus = JobStatus.None;
+    private bool isBusy = false;
+    private string busyText = string.Empty;
 
     private RelayCommand mainWindowTopmostCmd;
     private RelayCommand clearAllTableLinesCmd;
@@ -149,6 +151,30 @@ public class HomeViewModel : BaseViewModel
         }
     }
 
+    public bool IsBusy
+    {
+        get => this.isBusy;
+        set => this.SetPropNotify(ref this.isBusy, value);
+    }
+
+    public string BusyText
+    {
+        get => this.busyText;
+        set => this.SetPropNotify(ref this.busyText, value);
+    }
+
+    internal void EnterBusy(string text)
+    {
+        this.BusyText = text;
+        this.IsBusy = true;
+    }
+
+    internal void ExitBusy()
+    {
+        this.IsBusy = false;
+        this.BusyText = string.Empty;
+    }
+
     public int PendingModelsCount
     {
         get => this.pendingModelsCount;
@@ -179,13 +205,29 @@ public class HomeViewModel : BaseViewModel
     /// <summary>
     /// 检查剪贴板字符，在符合要求时把它设置到主窗口的校验信息输入框内
     /// </summary>
-    public HashChecklist TestClipboardTextGetChecklist()
+    public async Task<HashChecklist> GetClipboardChecklistAsync()
     {
         if (CommonUtils.ClipboardGetText(out string text) &&
             text.Length >= Settings.Current.MinCopiedCharsToTriggerHashCheck &&
             text.Length <= Settings.Current.MaxCopiedCharsToTriggerHashCheck)
         {
-            HashChecklist checklist = File.Exists(text) ? HashChecklist.File(text) : HashChecklist.Text(text);
+            HashChecklist checklist;
+            if (File.Exists(text))
+            {
+                this.EnterBusy("正在打开校验信息文件...");
+                try
+                {
+                    checklist = await Task.Run(() => HashChecklist.File(text));
+                }
+                finally
+                {
+                    this.ExitBusy();
+                }
+            }
+            else
+            {
+                checklist = HashChecklist.Text(text);
+            }
             if (checklist.ReasonForFailure == null)
             {
                 this.HashStringOrChecklistPath = text;
@@ -195,13 +237,14 @@ public class HomeViewModel : BaseViewModel
         return default(HashChecklist);
     }
 
-    public void CheckHashUseClipboardText()
+    public async void CheckHashUseClipboardText()
     {
         if (HashModelStore.HashViewModels.AnyItem() &&
-            this.TestClipboardTextGetChecklist() is HashChecklist checklist)
+            (await this.GetClipboardChecklistAsync()) is HashChecklist checklist)
         {
-            if (this.BatchStatus != JobStatus.Started && this.CheckFilesHashBasedOnStringOrChecklist(checklist)
-                && Settings.Current.SwitchMainWndFgWhenNewHashCopied)
+            if (this.BatchStatus != JobStatus.Started &&
+                await this.CheckFilesHashBasedOnStringOrChecklistAsync(checklist) &&
+                Settings.Current.SwitchMainWndFgWhenNewHashCopied)
             {
                 // 先导航回主页，再激活窗口：导航是状态切换，激活是把窗口带到前台。
                 // 注意：多实例时各实例都会做此动作（剪贴板校验需在所有实例内尝试），
@@ -1218,8 +1261,12 @@ public class HomeViewModel : BaseViewModel
         this.GenerateFileHashCheckReport();
     }
 
-    public bool CheckFilesHashBasedOnStringOrChecklist(HashChecklist checklist)
+    public async Task<bool> CheckFilesHashBasedOnStringOrChecklistAsync(HashChecklist checklist)
     {
+        if (this.IsBusy)
+        {
+            return false;
+        }
         HashChecklist localChecklist;
         if (checklist == null)
         {
@@ -1229,45 +1276,70 @@ public class HomeViewModel : BaseViewModel
                 NotificationSender.SnackbarWarning("校验信息输入框没有任何内容！");
                 return false;
             }
+            string path = this.HashStringOrChecklistPath;
             // HashStringOrChecklistPath 不是一个文件
-            if (!File.Exists(this.HashStringOrChecklistPath))
+            if (!File.Exists(path))
             {
-                localChecklist = HashChecklist.Text(this.HashStringOrChecklistPath);
+                this.EnterBusy("正在校验...");
+                try
+                {
+                    localChecklist = await Task.Run(() => HashChecklist.Text(path));
+                }
+                finally
+                {
+                    this.ExitBusy();
+                }
             }
             // HashStringOrChecklistPath 是一个文件，但哈希结果列表不是空
             else if (HashModelStore.HashViewModels.Any())
             {
-                localChecklist = HashChecklist.File(this.HashStringOrChecklistPath);
+                this.EnterBusy("正在打开校验信息文件...");
                 try
                 {
-                    string parent = Path.GetDirectoryName(this.HashStringOrChecklistPath);
-                    // TODO: 统一 AssertRelativeGetFull 方法的调用方式
-                    // 目前的情况是在此处有调用，在 PathPackage 内也有调用
-                    localChecklist.AssertRelativeGetFull(parent, out _);
+                    localChecklist = await Task.Run(() => HashChecklist.File(path));
+                    try
+                    {
+                        string parent = Path.GetDirectoryName(path);
+                        // TODO: 统一 AssertRelativeGetFull 方法的调用方式
+                        // 目前的情况是在此处有调用，在 PathPackage 内也有调用
+                        await Task.Run(() => localChecklist.AssertRelativeGetFull(parent, out _));
+                    }
+                    catch (Exception)
+                    {
+                        NotificationSender.SnackbarWarning("无法获取校验信息文件的目录信息。");
+                        return false;
+                    }
                 }
-                catch (Exception)
+                finally
                 {
-                    NotificationSender.SnackbarWarning("无法获取校验信息文件的目录信息。");
-                    return false;
+                    this.ExitBusy();
                 }
             }
             // HashStringOrChecklistPath 是一个文件，且哈希结果列表也是空
             else
             {
-                HashChecklist newChecklist = HashChecklist.File(this.HashStringOrChecklistPath);
-                if (newChecklist.ReasonForFailure != null)
+                this.EnterBusy("正在打开校验信息文件...");
+                try
                 {
-                    NotificationSender.SnackbarError(newChecklist.ReasonForFailure);
+                    HashChecklist newChecklist = await Task.Run(() => HashChecklist.File(path));
+                    if (newChecklist.ReasonForFailure != null)
+                    {
+                        NotificationSender.SnackbarError(newChecklist.ReasonForFailure);
+                    }
+                    else
+                    {
+                        // 这里添加要计算哈希值的文件时，看作以多选文件的方式添，所以
+                        // PathPackage 的 parent 参数应是 HashStringOrChecklistPath 所在目录
+                        string checklistDir = Path.GetDirectoryName(path);
+                        this.BeginDisplayModels(new PathPackage(checklistDir, checklistDir, newChecklist,
+                            Settings.Current.SelectedSearchMethodForChecklist));
+                    }
+                    return newChecklist.ReasonForFailure == null;
                 }
-                else
+                finally
                 {
-                    // 这里添加要计算哈希值的文件时，看作以多选文件的方式添，所以
-                    // PathPackage 的 parent 参数应是 HashStringOrChecklistPath 所在目录
-                    string checklistDir = Path.GetDirectoryName(this.HashStringOrChecklistPath);
-                    this.BeginDisplayModels(new PathPackage(checklistDir, checklistDir, newChecklist,
-                        Settings.Current.SelectedSearchMethodForChecklist));
+                    this.ExitBusy();
                 }
-                return newChecklist.ReasonForFailure == null;
             }
         }
         else
@@ -1276,11 +1348,25 @@ public class HomeViewModel : BaseViewModel
         }
         if (localChecklist.ReasonForFailure == null)
         {
-            foreach (HashViewModel model in HashModelStore.HashViewModels)
+            this.EnterBusy("正在校验...");
+            try
             {
-                model.ApplyHashCmpResult(localChecklist);
+                HashViewModel[] models = HashModelStore.HashViewModels.ToArray();
+                for (int i = 0; i < models.Length; ++i)
+                {
+                    models[i].ApplyHashCmpResult(localChecklist);
+                    // 逐行应用比对结果并周期性让出 UI 线程，保证遮罩的转圈动画能刷新
+                    if ((i & 0x3F) == 0x3F)
+                    {
+                        await Dispatcher.Yield(DispatcherPriority.Background);
+                    }
+                }
+                this.GenerateFileHashCheckReport();
             }
-            this.GenerateFileHashCheckReport();
+            finally
+            {
+                this.ExitBusy();
+            }
         }
         else
         {
@@ -1315,9 +1401,9 @@ public class HomeViewModel : BaseViewModel
         }
     }
 
-    private void StartCheckHashResultsAction(object param)
+    private async void StartCheckHashResultsAction(object param)
     {
-        this.CheckFilesHashBasedOnStringOrChecklist(null);
+        await this.CheckFilesHashBasedOnStringOrChecklistAsync(null);
     }
 
     public ICommand StartCheckHashResultsCmd
