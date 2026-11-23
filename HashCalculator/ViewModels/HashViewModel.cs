@@ -928,7 +928,25 @@ public class HashViewModel : BaseViewModel
                     return (blockLength = fs.Read(buffer, 0, buffer.Length)) > 0;
                 }
 
-                Action<int> updateProgress = size => this.Progress += size;
+                // 进度投递节流：逐块 BeginInvoke 会把 UI 消息队列淹掉，进度条反而更不流畅，
+                // 这里每 50 ms 最多投递一次，投递的是累计值而非增量
+                const double progressIntervalMs = 50;
+                long progressInterval = (long)(Stopwatch.Frequency * progressIntervalMs / 1000);
+                Action<long> setProgress = total => this.Progress = total;
+                long processedBytes = 0;
+                // 减去一个间隔，使第一块必定投递
+                long lastProgressReport = Stopwatch.GetTimestamp() - progressInterval;
+                void ReportProgressIfIntervalElapsed()
+                {
+                    processedBytes += blockLength;
+                    long now = Stopwatch.GetTimestamp();
+                    if (now - lastProgressReport < progressInterval)
+                    {
+                        return;
+                    }
+                    lastProgressReport = now;
+                    Synchronization.UI.BeginInvoke(setProgress, processedBytes);
+                }
                 bool terminateByCancellation = false;
                 if (frozenAlgoModels.Length > 1 && Settings.Current.ParallelBetweenAlgos)
                 {
@@ -946,7 +964,7 @@ public class HashViewModel : BaseViewModel
                             // 所有算法都已算完上一块，此时才能安全复用它的槽位读下一块
                             if (ReadNextBlock())
                             {
-                                Synchronization.UI.BeginInvoke(updateProgress, blockLength);
+                                ReportProgressIfIntervalElapsed();
                             }
                         }))
                     {
@@ -991,11 +1009,13 @@ public class HashViewModel : BaseViewModel
                         {
                             algoInOut.Algo.TransformBlock(blockBuffer, blockOffset, blockLength, null, 0);
                         }
-                        Synchronization.UI.BeginInvoke(updateProgress, blockLength);
+                        ReportProgressIfIntervalElapsed();
                     }
                 }
                 if (!terminateByCancellation)
                 {
+                    // 节流可能把最后几块并掉，这里补投最终值，保证进度条走到满
+                    Synchronization.UI.Invoke(setProgress, processedBytes);
                     Action<AlgoInOutModel> updateHashBytes = i =>
                     {
                         i.Export = true;

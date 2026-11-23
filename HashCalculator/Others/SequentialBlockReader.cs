@@ -1,18 +1,21 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using Microsoft.Extensions.Logging;
 
 namespace HashCalculator;
 
 /// <summary>
 /// 大文件分块读取器：用 FILE_FLAG_NO_BUFFERING 绕开系统文件缓存（省去内核到用户的一次拷贝），
-/// 用 FILE_FLAG_OVERLAPPED 保持一个在途异步读，使调用方计算当前块时磁盘已经在读下一块。<br/>
+/// 用 FILE_FLAG_OVERLAPPED 保持多块在途异步读，使调用方计算当前块时磁盘已经在读后续几块。<br/>
 /// 实测 8 GB 文件：普通 FileStream 同步读算约 7.7 s，本读取器约 3.8 s。
 /// </summary>
 /// <remarks>
 /// 非线程安全：<see cref="TryReadNextBlock"/> 只能由同一个线程依次调用。<br/>
-/// 取到一块数据后必须先把它处理完，再进行下一次调用：两个槽轮流复用，下一次提交会覆盖上一个槽的数据。
+/// 取到一块数据后必须先把它处理完，再进行下一次调用：槽按 SlotCount 个循环复用，
+/// 下一次提交会覆盖最早那个槽的数据。
 /// </remarks>
 internal sealed class SequentialBlockReader : IDisposable
 {
@@ -28,7 +31,11 @@ internal sealed class SequentialBlockReader : IDisposable
     /// </summary>
     public const int DefaultBlockSize = AlignmentSize * 64;
 
-    private const int SlotCount = 2;
+    /// <summary>
+    /// 槽位数（= 同时在途的异步读块数）。在途 3 块共 12 MiB：实测请求越大设备效率越高，
+    /// 故块取 4 MiB；槽数取 4 是为了让在途数据量不至于过大（内存 4 × (4 MiB + 64 KiB) ≈ 16.25 MiB）。
+    /// </summary>
+    private const int SlotCount = 4;
     private const uint Infinite = 0xFFFFFFFF;
 
     /// <summary>
@@ -36,6 +43,12 @@ internal sealed class SequentialBlockReader : IDisposable
     /// 这里只是极端情况下避免 Dispose 无限阻塞的兜底。
     /// </summary>
     private const uint DisposeWaitTimeout = 1000;
+
+    /// <summary>
+    /// 单块等待读取的耗时超过该毫秒数即记一条 Debug 日志，用于区分"读磁盘慢"与"算得慢"：
+    /// 计算总耗时里若出现多次这种尖峰，说明瓶颈在磁盘读取的瞬时延迟，而不是算法本身。
+    /// </summary>
+    private const double SlowReadThresholdMs = 5;
 
     private static readonly int OverlappedSize = Marshal.SizeOf<OVERLAPPED>();
 
@@ -225,9 +238,19 @@ internal sealed class SequentialBlockReader : IDisposable
             return this.TryReadTail(out offset, out length);
         }
         int slot = (int)(this._consumed % SlotCount);
-        if (KERNEL32.WaitForSingleObject(this._completionEvents[slot], Infinite) != 0)
+        // 只给等待本身计时：尖峰才记日志，正常路径仅多两次高精度时间戳读取
+        long waitStart = Stopwatch.GetTimestamp();
+        uint waitResult = KERNEL32.WaitForSingleObject(this._completionEvents[slot], Infinite);
+        if (waitResult != 0)
         {
             throw new IOException("等待读取完成失败", new Win32Exception(Marshal.GetLastWin32Error()));
+        }
+        double waited = Stopwatch.GetElapsedTime(waitStart).TotalMilliseconds;
+        if (waited >= SlowReadThresholdMs &&
+            App.Logger is { } logger && logger.IsEnabled(LogLevel.Debug))
+        {
+            logger.LogDebug("块读取等待尖峰：第 {Block} 块，偏移 {Position} 字节，等待 {Waited:F1} 毫秒",
+                this._consumed, this._consumed * this._blockSize, waited);
         }
         IntPtr overlapped = IntPtr.Add(this._overlapped, slot * OverlappedSize);
         // 错误码记在 OVERLAPPED.Internal（NTSTATUS），负值表示这次读失败；
